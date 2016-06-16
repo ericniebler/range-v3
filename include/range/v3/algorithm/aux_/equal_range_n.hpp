@@ -40,25 +40,35 @@ namespace ranges
                 operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
                     P proj_ = P{}) const
                 {
-                    RANGES_ASSERT(0 <= dist);
-                    auto &&pred = as_function(pred_);
-                    auto &&proj = as_function(proj_);
-                    while(0 != dist)
+                    if(0 < dist)
                     {
-                        auto half = dist / 2;
-                        auto middle = next(begin, half);
-                        if(pred(proj(*middle), val))
+                        auto && pred = as_function(pred_);
+                        auto && proj = as_function(proj_);
+                        do
                         {
-                            begin = std::move(++middle);
-                            dist -= half + 1;
-                        }
-                        else if(pred(val, proj(*middle)))
-                        {
-                            dist = half;
-                        }
-                        else
-                            return {lower_bound_n(std::move(begin), half, val, std::ref(pred)),
-                                    upper_bound_n(next(middle), dist - half - 1, val, std::ref(pred))};
+                            auto half = dist / 2;
+                            auto middle = next(begin, half);
+                            auto && v = *middle;
+                            auto && pv = proj((decltype(v) &&) v);
+                            if(pred(pv, val))
+                            {
+                                begin = std::move(++middle);
+                                dist -= half + 1;
+                            }
+                            else if(pred(val, pv))
+                            {
+                                dist = half;
+                            }
+                            else
+                            {
+                                return {
+                                    lower_bound_n(std::move(begin), half, val,
+                                        std::ref(pred), std::ref(proj)),
+                                    upper_bound_n(next(middle), dist - (half + 1),
+                                        val, std::ref(pred), std::ref(proj))
+                                };
+                            }
+                        } while(0 != dist);
                     }
                     return {begin, begin};
                 }

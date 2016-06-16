@@ -50,29 +50,32 @@ void not_totally_ordered()
     ranges::equal_range(vec, my_int{10}, compare);
 }
 
-template <class Iter, class Sent, class T>
+template <class Iter, class Sent, class T, class Proj = ranges::ident>
 void
-test(Iter first, Sent last, const T& value)
+test(Iter first, Sent last, const T& value, Proj proj = Proj{})
 {
-    ranges::iterator_range<Iter, Iter> i = ranges::equal_range(first, last, value);
+    ranges::iterator_range<Iter, Iter> i =
+        ranges::equal_range(first, last, value, ranges::ordered_less{}, proj);
+    auto p = ranges::as_function(proj);
     for (Iter j = first; j != i.begin(); ++j)
-        CHECK(*j < value);
+        CHECK(p(*j) < value);
     for (Iter j = i.begin(); j != last; ++j)
-        CHECK(!(*j < value));
+        CHECK(!(p(*j) < value));
     for (Iter j = first; j != i.end(); ++j)
-        CHECK(!(value < *j));
+        CHECK(!(value < p(*j)));
     for (Iter j = i.end(); j != last; ++j)
-        CHECK(value < *j);
+        CHECK(value < p(*j));
 
-    auto res = ranges::equal_range(ranges::make_iterator_range(first, last), value);
+    auto res = ranges::equal_range(
+        ranges::make_iterator_range(first, last), value, ranges::ordered_less{}, proj);
     for (Iter j = first; j != res.get_unsafe().begin(); ++j)
-        CHECK(*j < value);
+        CHECK(p(*j) < value);
     for (Iter j = res.get_unsafe().begin(); j != last; ++j)
-        CHECK(!(*j < value));
+        CHECK(!(p(*j) < value));
     for (Iter j = first; j != res.get_unsafe().end(); ++j)
-        CHECK(!(value < *j));
+        CHECK(!(value < p(*j)));
     for (Iter j = res.get_unsafe().end(); j != last; ++j)
-        CHECK(value < *j);
+        CHECK(value < p(*j));
 }
 
 template <class Iter, class Sent = Iter>
@@ -103,6 +106,13 @@ int main()
     test<forward_iterator<const int*>, sentinel<const int*> >();
     test<bidirectional_iterator<const int*>, sentinel<const int*> >();
     test<random_access_iterator<const int*>, sentinel<const int*> >();
+
+    {
+        struct foo { int i; };
+
+        foo some_foos[] = {{1}, {2}, {4}};
+        test(some_foos, some_foos + 3, 2, &foo::i);
+    }
 
     return ::test_result();
 }

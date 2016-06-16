@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -14,10 +15,7 @@
 #define RANGES_V3_ALGORITHM_AUX_LOWER_BOUND_N_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/algorithm/aux_/partition_point_n.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -26,6 +24,32 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            // [&](auto&& i){ return pred(i, val); }
+            template<typename Pred, typename Val>
+            struct lower_bound_predicate
+            {
+                Pred& pred_;
+                Val& val_;
+
+                template<typename T>
+                bool operator()(T&& t) const
+                {
+                    return pred_(std::forward<T>(t), val_);
+                }
+            };
+
+            template<typename Pred, typename Val>
+            lower_bound_predicate<Pred, Val>
+            make_lower_bound_predicate(Pred& pred, Val& val)
+            {
+                return {pred, val};
+            }
+        }
+        /// \endcond
+
         namespace aux
         {
             struct lower_bound_n_fn
@@ -33,24 +57,11 @@ namespace ranges
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V2, C, P>())>
                 I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred_ = C{},
-                    P proj_ = P{}) const
+                    P proj = P{}) const
                 {
-                    RANGES_ASSERT(0 <= d);
-                    auto &&pred = as_function(pred_);
-                    auto &&proj = as_function(proj_);
-                    while(0 != d)
-                    {
-                        auto half = d / 2;
-                        auto middle = next(begin, half);
-                        if(pred(proj(*middle), val))
-                        {
-                            begin = std::move(++middle);
-                            d -= half + 1;
-                        }
-                        else
-                            d = half;
-                    }
-                    return begin;
+                    auto&& pred = as_function(pred_);
+                    return partition_point_n(std::move(begin), d,
+                        detail::make_lower_bound_predicate(pred, val), std::move(proj));
                 }
             };
 
