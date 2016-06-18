@@ -49,13 +49,14 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                reference_ get(range_iterator_t<Rng> it) const
+                reference_ get(range_iterator_t<Rng> const &it) const
                 {
                     return *it;
                 }
-                rvalue_reference_ indirect_move(range_iterator_t<Rng> it) const
+                rvalue_reference_ indirect_move(range_iterator_t<Rng> const &it) const
+                    noexcept(noexcept(ranges::iter_move(it)))
                 {
-                    return iter_move(it);
+                    return ranges::iter_move(it);
                 }
             };
             adaptor begin_adaptor() const
@@ -71,8 +72,13 @@ namespace ranges
             explicit const_view(Rng rng)
               : const_view::view_adaptor{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             range_size_t<Rng> size() const
+            {
+                return ranges::size(this->base());
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            range_size_t<Rng> size()
             {
                 return ranges::size(this->base());
             }

@@ -193,16 +193,19 @@ namespace ranges
         public:
             CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
             constexpr box()
+                noexcept(std::is_nothrow_default_constructible<Element>::value)
               : value{}
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
             constexpr box(E && e)
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(detail::forward<E>(e))
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(detail::forward<E>(e))
             {}
 
@@ -227,16 +230,19 @@ namespace ranges
         public:
             CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
             constexpr box()
+                noexcept(std::is_nothrow_default_constructible<Element>::value)
               : Element{}
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
             constexpr box(E && e)
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(detail::forward<E>(e))
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(detail::forward<E>(e))
             {}
 

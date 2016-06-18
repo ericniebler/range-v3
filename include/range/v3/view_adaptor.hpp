@@ -52,25 +52,34 @@ namespace ranges
 
             template<typename BaseIter, typename Adapt, typename Enable = void>
             struct adaptor_value_type_2_
-            {};
+              : compressed_pair<BaseIter, Adapt>
+            {
+                using compressed_pair<BaseIter, Adapt>::compressed_pair;
+            };
 
             template<typename BaseIter, typename Adapt>
             struct adaptor_value_type_2_<
                 BaseIter,
                 Adapt,
                 meta::void_<decltype(Adapt::get(BaseIter{}, adaptor_base_current_mem_fn{}))>>
+              : compressed_pair<BaseIter, Adapt>
             {
+                using compressed_pair<BaseIter, Adapt>::compressed_pair;
                 using value_type = iterator_value_t<BaseIter>;
             };
 
             template<typename BaseIter, typename Adapt, typename Enable = void>
             struct adaptor_value_type_
               : adaptor_value_type_2_<BaseIter, Adapt>
-            {};
+            {
+                using adaptor_value_type_2_<BaseIter, Adapt>::adaptor_value_type_2_;
+            };
 
             template<typename BaseIter, typename Adapt>
             struct adaptor_value_type_<BaseIter, Adapt, meta::void_<typename Adapt::value_type>>
+              : compressed_pair<BaseIter, Adapt>
             {
+                using compressed_pair<BaseIter, Adapt>::compressed_pair;
                 using value_type = typename Adapt::value_type;
             };
         }
@@ -150,13 +159,13 @@ namespace ranges
         // adaptor that customizes behavior.
         template<typename BaseIter, typename Adapt>
         struct adaptor_cursor
-          : private compressed_pair<BaseIter, Adapt>
-          , private detail::adaptor_value_type_<BaseIter, Adapt>
+          : private detail::adaptor_value_type_<BaseIter, Adapt>
         {
         private:
             template<typename BaseSent, typename SentAdapt>
             friend struct adaptor_sentinel;
             friend range_access;
+            using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
             using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
@@ -173,8 +182,8 @@ namespace ranges
                 }
             };
 
-            using compressed_pair<BaseIter, Adapt>::first;
-            using compressed_pair<BaseIter, Adapt>::second;
+            using base_t::first;
+            using base_t::second;
 
             template<typename A = Adapt, typename R = decltype(
                 std::declval<A const &>().get(std::declval<BaseIter const &>()))>
@@ -310,7 +319,7 @@ namespace ranges
                 return indirect_move_(42);
             }
         public:
-            using compressed_pair<BaseIter, Adapt>::compressed_pair;
+            using base_t::base_t;
         };
 
         // Build a sentinel out of a sentinel into the adapted range, and an
