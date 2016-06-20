@@ -13,7 +13,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/chunk.hpp>
-#include <range/v3/view/drop.hpp>
+#include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/reverse.hpp>
@@ -28,7 +28,7 @@ int main()
 
     int rgi[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto rng0 = rgi | view::drop(6);
+    auto rng0 = rgi | view::drop_exactly(6);
     has_type<int &>(*begin(rng0));
     models<concepts::BoundedView>(rng0);
     models<concepts::SizedView>(rng0);
@@ -44,7 +44,7 @@ int main()
     ::check_equal(rng1, {10, 9, 8, 7, 6});
 
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng2 = v | view::drop(6) | view::reverse;
+    auto rng2 = v | view::drop_exactly(6) | view::reverse;
     has_type<int &>(*begin(rng2));
     models<concepts::BoundedView>(rng2);
     models<concepts::SizedView>(rng2);
@@ -52,7 +52,7 @@ int main()
     ::check_equal(rng2, {10, 9, 8, 7, 6});
 
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng3 = l | view::drop(6);
+    auto rng3 = l | view::drop_exactly(6);
     has_type<int &>(*begin(rng3));
     models<concepts::BoundedView>(rng3);
     models<concepts::SizedView>(rng3);
@@ -60,7 +60,7 @@ int main()
     models_not<concepts::RandomAccessIterator>(begin(rng3));
     ::check_equal(rng3, {6, 7, 8, 9, 10});
 
-    auto rng4 = view::iota(10) | view::drop(10);
+    auto rng4 = view::iota(10) | view::drop_exactly(10);
     ::models<concepts::View>(rng4);
     ::models_not<concepts::BoundedView>(rng4);
     ::models_not<concepts::SizedView>(rng4);
@@ -69,44 +69,12 @@ int main()
     CHECK(*b == 20);
     CHECK(*(b+1) == 21);
 
-    auto rng5 = view::iota(10) | view::drop(10) | view::take(10) | view::reverse;
+    auto rng5 = view::iota(10) | view::drop_exactly(10) | view::take(10) | view::reverse;
     ::models<concepts::BoundedView>(rng5);
     ::models<concepts::SizedView>(rng5);
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
     ::check_equal(rng5, {29, 28, 27, 26, 25, 24, 23, 22, 21, 20});
     CHECK(size(rng5) == 10u);
 
-    {
-        int some_ints[] = {0,1,2};
-        auto rng = make_iterator_range(some_ints + 0, some_ints + 1);
-        auto rng2 = view::drop(rng, 2);
-        CHECK(begin(rng2) == some_ints + 1);
-        CHECK(size(rng2) == 0u);
-    }
-
-    {
-        // Regression test for https://github.com/ericniebler/range-v3/issues/413
-        auto skips = [](std::vector<int> xs) -> std::vector<std::vector<int>> {
-            return view::ints(0, (int)xs.size())
-                | view::transform([&](int n) {
-                    return xs | view::chunk(n + 1)
-                              | view::transform(view::drop(n))
-                              | view::join;
-                });
-        };
-        auto skipped = skips({1,2,3,4,5,6,7,8});
-        CHECK(skipped.size() == 8u);
-        if(skipped.size() >= 8u)
-        {
-            ::check_equal(skipped[0], {1,2,3,4,5,6,7,8});
-            ::check_equal(skipped[1], {2,4,6,8});
-            ::check_equal(skipped[2], {3,6});
-            ::check_equal(skipped[3], {4,8});
-            ::check_equal(skipped[4], {5});
-            ::check_equal(skipped[5], {6});
-            ::check_equal(skipped[6], {7});
-            ::check_equal(skipped[7], {8});
-        }
-    }
     return test_result();
 }

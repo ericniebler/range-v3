@@ -31,6 +31,9 @@ add_test(test.view.delimit, view.delimit)
 add_executable(view.drop drop.cpp)
 add_test(test.view.drop, view.drop)
 
+add_executable(view.drop_exactly drop_exactly.cpp)
+add_test(test.view.drop_exactly, view.drop_exactly)
+
 add_executable(view.drop_while drop_while.cpp)
 add_test(test.view.drop_while, view.drop_while)
 

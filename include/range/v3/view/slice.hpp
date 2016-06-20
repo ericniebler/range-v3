@@ -28,7 +28,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
-#include <range/v3/view/drop.hpp>
+#include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -257,7 +257,7 @@ namespace ranges
                 static auto bind(slice_fn, Int from, end_fn)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(ranges::view::drop, std::placeholders::_1, from))
+                    make_pipeable(std::bind(ranges::view::drop_exactly, std::placeholders::_1, from))
                 )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 static auto bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
@@ -317,10 +317,10 @@ namespace ranges
                 template<typename Rng,
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> from, end_fn) const ->
-                    decltype(ranges::view::drop(std::forward<Rng>(rng), from))
+                    decltype(ranges::view::drop_exactly(std::forward<Rng>(rng), from))
                 {
                     RANGES_ASSERT(0 <= from);
-                    return ranges::view::drop(std::forward<Rng>(rng), from);
+                    return ranges::view::drop_exactly(std::forward<Rng>(rng), from);
                 }
                 // slice(rng, end-4, end)
                 template<typename Rng,
