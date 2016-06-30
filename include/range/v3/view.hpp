@@ -30,6 +30,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/drop.hpp>
+#include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/filter.hpp>

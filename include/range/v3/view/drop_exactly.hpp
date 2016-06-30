@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_VIEW_DROP_HPP
-#define RANGES_V3_VIEW_DROP_HPP
+#ifndef RANGES_V3_VIEW_DROP_EXACTLY_HPP
+#define RANGES_V3_VIEW_DROP_EXACTLY_HPP
 
 #include <type_traits>
 #include <meta/meta.hpp>
@@ -36,8 +36,8 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
-        struct drop_view
-          : view_interface<drop_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+        struct drop_exactly_view
+          : view_interface<drop_exactly_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
           , private meta::if_<
                 RandomAccessRange<Rng>,
                 meta::nil_,
@@ -52,14 +52,14 @@ namespace ranges
             // RandomAccessRange == true
             range_iterator_t<Rng> get_begin_(std::true_type) const
             {
-                return next(ranges::begin(rng_), n_, ranges::end(rng_));
+                return next(ranges::begin(rng_), n_);
             }
             // RandomAccessRange == false
             range_iterator_t<Rng> get_begin_(std::false_type)
             {
                 auto &begin_ = ranges::get<begin_tag>(*this);
                 if(!begin_)
-                    begin_ = next(ranges::begin(rng_), n_, ranges::end(rng_));
+                    begin_ = next(ranges::begin(rng_), n_);
                 return *begin_;
             }
             // RandomAccessRange == true
@@ -72,26 +72,26 @@ namespace ranges
                 begin_.reset();
             }
         public:
-            drop_view() = default;
-            drop_view(drop_view &&that)
+            drop_exactly_view() = default;
+            drop_exactly_view(drop_exactly_view &&that)
               : rng_(std::move(that).rng_), n_(that.n_)
             {}
-            drop_view(drop_view const &that)
+            drop_exactly_view(drop_exactly_view const &that)
               : rng_(that.rng_), n_(that.n_)
             {}
-            drop_view(Rng rng, difference_type_ n)
+            drop_exactly_view(Rng rng, difference_type_ n)
               : rng_(std::move(rng)), n_(n)
             {
                 RANGES_ASSERT(n >= 0);
             }
-            drop_view& operator=(drop_view &&that)
+            drop_exactly_view& operator=(drop_exactly_view &&that)
             {
                 rng_ = std::move(that).rng_;
                 n_ = that.n_;
                 this->dirty_(RandomAccessRange<Rng>{});
                 return *this;
             }
-            drop_view& operator=(drop_view const &that)
+            drop_exactly_view& operator=(drop_exactly_view const &that)
             {
                 rng_ = that.rng_;
                 n_ = that.n_;
@@ -121,16 +121,12 @@ namespace ranges
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             range_size_t<Rng> size() const
             {
-                auto const s = static_cast<range_size_t<Rng>>(ranges::size(rng_));
-                auto const n = static_cast<range_size_t<Rng>>(n_);
-                return s < n ? 0 : s - n;
+                return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size()
             {
-                auto const s = static_cast<range_size_t<Rng>>(ranges::size(rng_));
-                auto const n = static_cast<range_size_t<Rng>>(n_);
-                return s < n ? 0 : s - n;
+                return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
             }
             Rng & base()
             {
@@ -144,29 +140,29 @@ namespace ranges
 
         namespace view
         {
-            struct drop_fn
+            struct drop_exactly_fn
             {
             private:
                 friend view_access;
                 template<typename Int,
                     CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto bind(drop_fn drop, Int n)
+                static auto bind(drop_exactly_fn drop_exactly, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(drop, std::placeholders::_1, n))
+                    make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Int,
                     CONCEPT_REQUIRES_(!Integral<Int>())>
-                static detail::null_pipe bind(drop_fn, Int)
+                static detail::null_pipe bind(drop_exactly_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
-                        "The object passed to view::drop must be Integral");
+                        "The object passed to view::drop_exactly must be Integral");
                     return {};
                 }
             #endif
                 template<typename Rng>
-                static drop_view<all_t<Rng>>
+                static drop_exactly_view<all_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputRange*)
                 {
                     return {all(std::forward<Rng>(rng)), n};
@@ -183,7 +179,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_fn::invoke_(std::forward<Rng>(rng), n, range_concept<Rng>{})
+                    drop_exactly_fn::invoke_(std::forward<Rng>(rng), n, range_concept<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
@@ -191,18 +187,18 @@ namespace ranges
                 void operator()(Rng &&, T) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The first argument to view::drop must be a model of the InputRange concept");
+                        "The first argument to view::drop_exactly must be a model of the InputRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
-                        "The second argument to view::drop must be a model of the Integral concept");
+                        "The second argument to view::drop_exactly must be a model of the Integral concept");
                 }
             #endif
             };
 
-            /// \relates drop_fn
+            /// \relates drop_exactly_fn
             /// \ingroup group-views
             namespace
             {
-                constexpr auto&& drop = static_const<view<drop_fn>>::value;
+                constexpr auto&& drop_exactly = static_const<view<drop_exactly_fn>>::value;
             }
         }
         /// @}

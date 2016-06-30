@@ -555,6 +555,9 @@
     <ClCompile Include="test\view\drop.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="test\view\drop_exactly.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
     <ClCompile Include="test\view\drop_while.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -1176,6 +1179,9 @@
       <Filter>Header Files\range\v3\view</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\view\drop.hpp">
+      <Filter>Header Files\range\v3\view</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\view\drop_exactly.hpp">
       <Filter>Header Files\range\v3\view</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\view\drop_while.hpp">
