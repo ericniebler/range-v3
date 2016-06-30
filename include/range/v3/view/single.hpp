@@ -45,7 +45,7 @@ namespace ranges
                 bool done_;
             public:
                 cursor() = default;
-                cursor(Val value)
+                explicit cursor(Val value)
                   : value_(std::move(value)), done_(false)
                 {}
                 Val get() const
@@ -81,7 +81,7 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return {value_};
+                return cursor{value_};
             }
         public:
             single_view() = default;

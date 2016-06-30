@@ -65,10 +65,15 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 
 // Ugly platform-specific code for auto_seeded
+
+// Clang/C2 bug: __has_builtin(__builtin_readcyclecounter) reports true, but
+// there is no corresponding builtin in C2.
+#if !(defined(__clang__) && defined(__c2__))
 #if defined(__has_builtin)
     #if __has_builtin(__builtin_readcyclecounter)
         #define RANGES_CPU_ENTROPY __builtin_readcyclecounter()
     #endif
+#endif
 #endif
 #if !defined(RANGES_CPU_ENTROPY)
     #if __i386__
