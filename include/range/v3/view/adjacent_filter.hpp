@@ -124,10 +124,7 @@ namespace ranges
 
             /// \relates adjacent_filter_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& adjacent_filter = static_const<view<adjacent_filter_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<adjacent_filter_fn>, adjacent_filter)
         }
         /// @}
     }

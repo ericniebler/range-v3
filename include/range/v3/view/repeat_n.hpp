@@ -121,10 +121,7 @@ namespace ranges
 
             /// \relates repeat_n_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& repeat_n = static_const<repeat_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(repeat_n_fn, repeat_n)
         }
         /// @}
     }

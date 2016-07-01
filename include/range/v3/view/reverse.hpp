@@ -226,10 +226,7 @@ namespace ranges
 
             /// \relates reverse_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& reverse = static_const<view<reverse_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<reverse_fn>, reverse)
         }
         /// @}
     }

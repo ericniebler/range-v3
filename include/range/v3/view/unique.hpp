@@ -60,10 +60,7 @@ namespace ranges
 
             /// \relates unique_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& unique = static_const<view<unique_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
         }
         /// @}
     }

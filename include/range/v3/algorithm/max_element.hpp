@@ -57,11 +57,7 @@ namespace ranges
 
         /// \sa `max_element_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& max_element = static_const<with_braced_init_args<max_element_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<max_element_fn>, max_element)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -331,10 +331,7 @@ namespace ranges
 
             /// \relates concat_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& concat = static_const<concat_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(concat_fn, concat)
         }
         /// @}
     }

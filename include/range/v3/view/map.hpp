@@ -114,17 +114,11 @@ namespace ranges
 
             /// \relates keys_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& keys = static_const<view<keys_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<keys_fn>, keys)
 
             /// \relates values_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& values = static_const<view<values_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<values_fn>, values)
         }
         /// @}
     }

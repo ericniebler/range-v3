@@ -160,10 +160,7 @@ namespace ranges
 
             /// \relates replace_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& replace = static_const<view<replace_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<replace_fn>, replace)
         }
         /// @}
     }

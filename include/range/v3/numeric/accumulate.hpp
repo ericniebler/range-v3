@@ -59,10 +59,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto&& accumulate = static_const<with_braced_init_args<accumulate_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<accumulate_fn>, accumulate)
     }
 }
 

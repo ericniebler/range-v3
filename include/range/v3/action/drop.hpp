@@ -88,10 +88,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates drop_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& drop = static_const<action<drop_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
         }
         /// @}
     }

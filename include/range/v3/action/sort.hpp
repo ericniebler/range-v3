@@ -92,10 +92,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates sort_fn
             /// \sa `action`
-            namespace
-            {
-                constexpr auto&& sort = static_const<action<sort_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<sort_fn>, sort)
         }
         /// @}
     }

@@ -243,10 +243,7 @@ namespace ranges
 
             /// \relates sample_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& sample = static_const<view<sample_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
         }
         /// @}
     }

@@ -41,10 +41,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `at_fn`
-        namespace
-        {
-            constexpr auto&& at = static_const<at_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(at_fn, at)
     }
 }
 

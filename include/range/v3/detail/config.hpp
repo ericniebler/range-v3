@@ -282,14 +282,38 @@
 #define RANGES_NDEBUG_CONSTEXPR inline
 #endif
 
-// Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70552
-#if defined(__GNUC__) && !defined(__clang__) && \
-    ((__GNUC__ == 4 && __GNUC_MINOR__ == 9 && __GNUC_PATCHLEVEL__ >= 4) || \
-     (__GNUC__ == 5 && __GNUC_MINOR__ >= 3))
-#define RANGES_GCC_BROKEN_CUSTPOINT inline
+#define RANGES_CXX_INLINE_VARIABLES_11 0
+#define RANGES_CXX_INLINE_VARIABLES_14 0
+#define RANGES_CXX_INLINE_VARIABLES_17 201606
+#ifndef RANGES_CXX_INLINE_VARIABLES
+
+#ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
+#define RANGES_CXX_INLINE_VARIABLES __cpp_inline_variables
+#elif defined(__clang__) && \
+    (__clang__major__ > 3 || __clang_major__ == 3 && __clang_minor__ == 9) && \
+    __cplusplus > 201402L
+// TODO: remove once clang defines __cpp_inline_variables (or equivalent)
+#define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_INLINE_VARIABLES_17
 #else
-#define RANGES_GCC_BROKEN_CUSTPOINT
-#endif
+#define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_FEATURE(INLINE_VARIABLES)
+#endif  // __cpp_inline_variables
+
+#endif  // RANGES_CXX_INLINE_VARIABLES
+
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_INLINE_VARIABLE(type, name)                  \
+    inline namespace                   \
+    {                                                       \
+        constexpr auto& name = static_const<type>::value;   \
+    }                                                     
+
+#else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_INLINE_VARIABLE(type, name) \
+    inline namespace function_objects             \
+    {                                      \
+        inline constexpr type name{};      \
+    }
+#endif // RANGES_CXX_INLINE_VARIABLES
 
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \

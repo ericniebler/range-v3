@@ -92,10 +92,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates drop_while_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& drop_while = static_const<action<drop_while_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
         }
         /// @}
     }

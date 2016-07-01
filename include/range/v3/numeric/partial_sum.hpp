@@ -123,10 +123,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto&& partial_sum = static_const<partial_sum_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(partial_sum_fn, partial_sum)
     }
 }
 

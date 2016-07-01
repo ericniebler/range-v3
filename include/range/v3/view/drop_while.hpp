@@ -139,10 +139,7 @@ namespace ranges
 
             /// \relates drop_while_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& drop_while = static_const<view<drop_while_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
         }
         /// @}
     }

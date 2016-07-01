@@ -57,11 +57,7 @@ namespace ranges
 
         /// \sa `move_backward_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& move_backward = static_const<with_braced_init_args<move_backward_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<move_backward_fn>, move_backward)
         /// @}
     } // namespace v3
 } // namespace ranges

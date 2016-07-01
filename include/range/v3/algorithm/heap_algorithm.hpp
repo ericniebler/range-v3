@@ -75,10 +75,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& is_heap_until_n = static_const<is_heap_until_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(is_heap_until_n_fn, is_heap_until_n)
 
             struct is_heap_n_fn
             {
@@ -90,10 +87,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& is_heap_n = static_const<is_heap_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(is_heap_n_fn, is_heap_n)
         }
         /// \endcond
 
@@ -121,10 +115,8 @@ namespace ranges
 
         /// \sa `is_heap_until_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& is_heap_until = static_const<with_braced_init_args<is_heap_until_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<is_heap_until_fn>,
+                               is_heap_until)
 
         struct is_heap_fn
         {
@@ -147,10 +139,7 @@ namespace ranges
 
         /// \sa `is_heap_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& is_heap = static_const<with_braced_init_args<is_heap_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<is_heap_fn>, is_heap)
         /// @}
 
         /// \cond
@@ -186,10 +175,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& sift_up_n = static_const<sift_up_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(sift_up_n_fn, sift_up_n)
 
             struct sift_down_n_fn
             {
@@ -248,10 +234,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& sift_down_n = static_const<sift_down_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(sift_down_n_fn, sift_down_n)
         }
         /// \endcond
 
@@ -282,10 +265,7 @@ namespace ranges
 
         /// \sa `push_heap_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& push_heap = static_const<with_braced_init_args<push_heap_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<push_heap_fn>, push_heap)
         /// @}
 
         /// \cond
@@ -306,10 +286,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& pop_heap_n = static_const<pop_heap_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(pop_heap_n_fn, pop_heap_n)
         }
         /// \endcond
 
@@ -340,10 +317,7 @@ namespace ranges
 
         /// \sa `pop_heap_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& pop_heap = static_const<with_braced_init_args<pop_heap_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<pop_heap_fn>, pop_heap)
 
         struct make_heap_fn
         {
@@ -380,10 +354,7 @@ namespace ranges
 
         /// \sa `make_heap_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& make_heap = static_const<with_braced_init_args<make_heap_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<make_heap_fn>, make_heap)
 
         struct sort_heap_fn
         {
@@ -416,11 +387,7 @@ namespace ranges
 
         /// \sa `sort_heap_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& sort_heap = static_const<with_braced_init_args<sort_heap_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<sort_heap_fn>, sort_heap)
         /// @}
     } // namespace v3
 } // namespace ranges

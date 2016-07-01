@@ -198,10 +198,8 @@ namespace ranges
 
         /// \sa `is_permutation_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& is_permutation = static_const<with_braced_init_args<is_permutation_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<is_permutation_fn>,
+                               is_permutation)
 
         struct next_permutation_fn
         {
@@ -247,10 +245,8 @@ namespace ranges
 
         /// \sa `next_permutation_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& next_permutation = static_const<with_braced_init_args<next_permutation_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<next_permutation_fn>,
+                               next_permutation)
 
         struct prev_permutation_fn
         {
@@ -296,11 +292,8 @@ namespace ranges
 
         /// \sa `prev_permutation_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& prev_permutation = static_const<with_braced_init_args<prev_permutation_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<prev_permutation_fn>,
+                               prev_permutation)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -50,11 +50,7 @@ namespace ranges
 
         /// \sa `generate_n_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& generate_n = static_const<generate_n_fn>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(generate_n_fn, generate_n)
         // @}
     } // namespace v3
 } // namespace ranges

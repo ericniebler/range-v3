@@ -715,10 +715,7 @@ namespace ranges
 
         /// \sa `get_cursor_fn`
         /// \ingroup group-utility
-        namespace
-        {
-            constexpr auto &&get_cursor = static_const<get_cursor_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(get_cursor_fn, get_cursor)
         /// @}
 
         /// \cond

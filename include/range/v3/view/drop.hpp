@@ -200,10 +200,7 @@ namespace ranges
 
             /// \relates drop_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& drop = static_const<view<drop_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<drop_fn>, drop)
         }
         /// @}
     }

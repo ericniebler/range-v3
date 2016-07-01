@@ -78,10 +78,7 @@ namespace ranges
 
             /// \relates counted_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& counted = static_const<counted_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(counted_fn, counted)
         }
         /// @}
     }

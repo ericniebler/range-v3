@@ -55,10 +55,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_apply_fn`
-        namespace
-        {
-            constexpr auto&& tuple_apply = static_const<tuple_apply_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(tuple_apply_fn, tuple_apply)
 
         struct tuple_transform_fn
         {
@@ -98,10 +95,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_transform_fn`
-        namespace
-        {
-            constexpr auto&& tuple_transform = static_const<tuple_transform_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(tuple_transform_fn, tuple_transform)
 
         struct tuple_foldl_fn
         {
@@ -139,10 +133,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_foldl_fn`
-        namespace
-        {
-            constexpr auto&& tuple_foldl = static_const<tuple_foldl_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(tuple_foldl_fn, tuple_foldl)
 
         struct tuple_for_each_fn
         {
@@ -165,10 +156,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_for_each_fn`
-        namespace
-        {
-            constexpr auto&& tuple_for_each = static_const<tuple_for_each_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(tuple_for_each_fn, tuple_for_each)
 
         struct make_tuple_fn
         {
@@ -182,10 +170,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_tuple_fn`
-        namespace
-        {
-            constexpr auto&& make_tuple = static_const<make_tuple_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_tuple_fn, make_tuple)
         /// @}
     }
 }

@@ -170,17 +170,11 @@ namespace ranges
 
             /// \relates iter_take_while_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& iter_take_while = static_const<view<iter_take_while_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<iter_take_while_fn>, iter_take_while)
 
             /// \relates take_while_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& take_while = static_const<view<take_while_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<take_while_fn>, take_while)
         }
         /// @}
     }

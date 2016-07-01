@@ -99,10 +99,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \sa action
             /// \sa with_braced_init_args
-            namespace
-            {
-                constexpr auto&& remove_if = static_const<action<remove_if_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
         }
         /// @}
     }

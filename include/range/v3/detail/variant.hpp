@@ -52,11 +52,21 @@ namespace ranges
     #define RANGES_EMPLACED_INDEX_T(I) _emplaced_index_t_<I>
     #else
         /// \endcond
-        namespace
+
+    #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+        inline namespace
+        {
+            template <std::size_t I>
+            constexpr auto& emplaced_index = static_const<emplaced_index_t<I>>::value;
+        }
+    #else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+        inline namespace function_objects
         {
             template<std::size_t I>
-            constexpr auto &emplaced_index = static_const<emplaced_index_t<I>>::value;
+            inline constexpr emplaced_index_t<I> emplaced_index{};
         }
+    #endif  // RANGES_CXX_INLINE_VARIABLES
+
         /// \cond
     #define RANGES_EMPLACED_INDEX_T(I) emplaced_index_t<I>
     #endif

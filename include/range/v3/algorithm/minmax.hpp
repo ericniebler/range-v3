@@ -108,11 +108,7 @@ namespace ranges
 
         /// \sa `minmax_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& minmax = static_const<with_braced_init_args<minmax_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<minmax_fn>, minmax)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -232,10 +232,7 @@ namespace ranges
 
             /// \relates stride_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& stride = static_const<view<stride_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<stride_fn>, stride)
         }
         /// @}
     }

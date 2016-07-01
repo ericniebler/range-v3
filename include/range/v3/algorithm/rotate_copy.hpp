@@ -59,11 +59,7 @@ namespace ranges
 
         /// \sa `rotate_copy_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& rotate_copy = static_const<with_braced_init_args<rotate_copy_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<rotate_copy_fn>, rotate_copy)
         /// @}
     } // namespace v3
 } // namespace ranges

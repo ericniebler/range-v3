@@ -109,10 +109,7 @@ namespace ranges
 
             /// \relates repeat_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& repeat = static_const<repeat_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(repeat_fn, repeat)
         }
         /// @}
     }

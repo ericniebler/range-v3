@@ -55,10 +55,7 @@ namespace ranges
 
             /// \ingroup group-actions
             /// \relates make_action_fn
-            namespace
-            {
-                constexpr auto&& make_action = static_const<make_action_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
             template<typename Action>
             struct action : pipeable<action<Action>>

@@ -118,11 +118,7 @@ namespace ranges
 
         /// \sa `equal_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& equal = static_const<with_braced_init_args<equal_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<equal_fn>, equal)
         /// @}
     } // namespace v3
 } // namespace ranges

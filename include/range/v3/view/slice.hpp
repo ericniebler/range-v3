@@ -406,10 +406,7 @@ namespace ranges
 
             /// \relates slice_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& slice = static_const<view<slice_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<slice_fn>, slice)
         }
         /// @}
     }

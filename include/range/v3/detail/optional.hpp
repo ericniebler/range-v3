@@ -25,10 +25,7 @@ namespace ranges
     {
         /// \ingroup group-utility
         struct in_place_t {};
-        namespace
-        {
-            constexpr auto &in_place = static_const<in_place_t>::value;
-        }
+        RANGES_INLINE_VARIABLE(in_place_t, in_place)
 
         template<typename T>
         struct optional

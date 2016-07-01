@@ -95,10 +95,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_compressed_tuple_fn`
-        namespace
-        {
-            constexpr auto&& make_compressed_tuple = static_const<make_compressed_tuple_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_compressed_tuple_fn, make_compressed_tuple)
 
         template<typename... Ts>
         using tagged_compressed_tuple =
@@ -142,10 +139,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_compressed_pair_fn`
-        namespace
-        {
-            constexpr auto&& make_compressed_pair = static_const<make_compressed_pair_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_compressed_pair_fn, make_compressed_pair)
     }
 }
 

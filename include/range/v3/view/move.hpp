@@ -100,10 +100,7 @@ namespace ranges
 
             /// \relates move_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& move = static_const<view<move_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<move_fn>, move)
         }
         /// @}
     }

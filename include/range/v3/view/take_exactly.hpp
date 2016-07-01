@@ -203,10 +203,7 @@ namespace ranges
 
             /// \relates take_exactly_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& take_exactly = static_const<view<take_exactly_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<take_exactly_fn>, take_exactly)
         }
         /// @}
     }

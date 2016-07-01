@@ -99,10 +99,7 @@ namespace ranges
 
             /// \relates const_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& const_ = static_const<view<const_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<const_fn>, const_)
         }
         /// @}
     }

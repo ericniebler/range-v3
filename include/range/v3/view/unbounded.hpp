@@ -57,10 +57,7 @@ namespace ranges
 
             /// \relates unbounded_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& unbounded = static_const<unbounded_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(unbounded_fn, unbounded)
         }
         /// @}
     }

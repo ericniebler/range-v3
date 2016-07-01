@@ -38,10 +38,7 @@ namespace ranges
 
             /// \ingroup group-utility
             /// \sa `copy_fn`
-            namespace
-            {
-                constexpr auto&& copy = static_const<copy_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(copy_fn, copy)
 
             /// \ingroup group-utility
             /// \sa `copy_fn`

@@ -56,11 +56,7 @@ namespace ranges
 
         /// \sa `copy_n_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& copy_n = static_const<with_braced_init_args<copy_n_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<copy_n_fn>, copy_n)
         /// @}
     } // namespace v3
 } // namespace ranges

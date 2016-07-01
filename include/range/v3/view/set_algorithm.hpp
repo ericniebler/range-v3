@@ -248,10 +248,7 @@ namespace ranges
 
             /// \relates set_difference_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& set_difference = static_const<view<set_difference_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<set_difference_fn>, set_difference)
         }
         /// @}
 
@@ -422,10 +419,7 @@ namespace ranges
 
             /// \relates set_intersection_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& set_intersection = static_const<view<set_intersection_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<set_intersection_fn>, set_intersection)
         }
         /// @}
 
@@ -645,10 +639,7 @@ namespace ranges
 
             /// \relates set_union_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& set_union = static_const<view<set_union_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<set_union_fn>, set_union)
         }
         /// @}
 
@@ -874,10 +865,7 @@ namespace ranges
 
             /// \relates set_symmetric_difference_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& set_symmetric_difference = static_const<view<set_symmetric_difference_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<set_symmetric_difference_fn>, set_symmetric_difference)
         }
         /// @}
 

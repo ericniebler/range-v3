@@ -352,10 +352,7 @@ namespace ranges
 
             /// \relates iter_zip_with_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& iter_zip_with = static_const<iter_zip_with_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(iter_zip_with_fn, iter_zip_with)
 
             struct zip_with_fn
             {
@@ -392,10 +389,7 @@ namespace ranges
 
             /// \relates zip_with_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& zip_with = static_const<zip_with_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(zip_with_fn, zip_with)
         }
         /// @}
     }

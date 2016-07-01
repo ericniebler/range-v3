@@ -435,17 +435,11 @@ namespace ranges
 
             /// \relates iota_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& iota = static_const<iota_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(iota_fn, iota)
 
             /// \relates closed_iota_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& closed_iota = static_const<closed_iota_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(closed_iota_fn, closed_iota)
 
             struct ints_fn
               : iota_view<int>
@@ -512,17 +506,11 @@ namespace ranges
 
             /// \relates ints_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& ints = static_const<ints_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(ints_fn, ints)
 
             /// \relates closed_ints_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& closed_ints = static_const<closed_ints_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(closed_ints_fn, closed_ints)
         }
         /// @}
     }

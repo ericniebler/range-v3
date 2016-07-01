@@ -70,10 +70,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& upper_bound_n = static_const<upper_bound_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(upper_bound_n_fn, upper_bound_n)
         }
     } // namespace v3
 } // namespace ranges

@@ -103,10 +103,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates split_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& split = static_const<action<split_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<split_fn>, split)
         }
         /// @}
     }

@@ -272,10 +272,7 @@ namespace ranges
 
             /// \relates split_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& split = static_const<view<split_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<split_fn>, split)
         }
         /// @}
     }

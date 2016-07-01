@@ -40,10 +40,7 @@ namespace ranges
 
             /// \ingroup group-utility
             /// \sa `move_fn`
-            namespace
-            {
-                constexpr auto&& move = static_const<move_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(move_fn, move)
 
             /// \ingroup group-utility
             /// \sa `move_fn`
@@ -90,11 +87,7 @@ namespace ranges
         }
         /// \endcond
 
-        namespace
-        {
-            constexpr auto&& indirect_move =
-                static_const<adl_move_detail::indirect_move_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_move_detail::indirect_move_fn, indirect_move)
 
         namespace detail
         {

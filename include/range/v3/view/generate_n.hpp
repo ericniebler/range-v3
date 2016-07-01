@@ -124,10 +124,7 @@ namespace ranges
 
             /// \relates generate_n_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& generate_n = static_const<generate_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(generate_n_fn, generate_n)
         }
         /// @}
     }

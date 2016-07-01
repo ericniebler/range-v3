@@ -98,10 +98,9 @@ namespace ranges
         /// @{
 
         /// \ingroup group-core
-        namespace
-        {
-            constexpr auto&& to_vector = static_const<detail::to_container_fn<meta::quote<std::vector>>>::value;
-        }
+        RANGES_INLINE_VARIABLE(detail::to_container_fn<meta::quote<std::vector>>,
+                               to_vector)
+
 
         /// \brief For initializing a container of the specified type with the elements of an Range
         template<template<typename...> class ContT>

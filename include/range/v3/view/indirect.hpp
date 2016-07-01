@@ -108,10 +108,7 @@ namespace ranges
 
             /// \relates indirect_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& indirect = static_const<view<indirect_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<indirect_fn>, indirect)
         }
         /// @}
     }

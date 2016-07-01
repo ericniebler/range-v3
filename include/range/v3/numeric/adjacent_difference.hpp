@@ -128,10 +128,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto&& adjacent_difference = static_const<adjacent_difference_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adjacent_difference_fn, adjacent_difference)
     }
 }
 

@@ -173,10 +173,7 @@ namespace ranges
 
             /// \relates remove_if_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& remove_if = static_const<view<remove_if_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<remove_if_fn>, remove_if)
         }
         /// @}
     }

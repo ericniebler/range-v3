@@ -172,10 +172,9 @@ namespace ranges
             #endif
             };
 
-            namespace
-            {
-                constexpr auto &&chunk = static_const<view<chunk_fn>>::value;
-            }
+            /// \relates chunk_fn
+            /// \ingroup group-views
+            RANGES_INLINE_VARIABLE(view<chunk_fn>, chunk)
         }
         /// @}
     }

@@ -47,10 +47,7 @@ namespace ranges
 
             /// \relates filter_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& filter = static_const<filter_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(filter_fn, filter)
         }
     }
 }

@@ -93,10 +93,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates take_while_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& take_while = static_const<action<take_while_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<take_while_fn>, take_while)
         }
         /// @}
     }

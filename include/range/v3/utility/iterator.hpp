@@ -140,10 +140,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
-        namespace
-        {
-            constexpr auto&& advance = static_const<adl_advance_detail::advance_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn,advance)
 
         namespace adl_advance_detail
         {
@@ -240,10 +237,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `next_fn`
-        namespace
-        {
-            constexpr auto&& next = static_const<next_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(next_fn, next)
 
         struct prev_fn
         {
@@ -259,10 +253,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `prev_fn`
-        namespace
-        {
-            constexpr auto&& prev = static_const<prev_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(prev_fn, prev)
 
         struct iter_enumerate_fn
         {
@@ -307,10 +298,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_enumerate_fn`
-        namespace
-        {
-            constexpr auto&& iter_enumerate = static_const<iter_enumerate_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_enumerate_fn, iter_enumerate)
 
         struct iter_distance_fn
         {
@@ -342,10 +330,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_distance_fn`
-        namespace
-        {
-            constexpr auto&& iter_distance = static_const<iter_distance_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_distance_fn, iter_distance)
 
         struct iter_distance_compare_fn
         {
@@ -392,10 +377,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_distance_compare_fn`
-        namespace
-        {
-            constexpr auto&& iter_distance_compare = static_const<iter_distance_compare_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_distance_compare_fn, iter_distance_compare)
 
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
@@ -412,10 +394,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_size_fn`
-        namespace
-        {
-            constexpr auto&& iter_size = static_const<iter_size_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_size_fn, iter_size)
 
         struct iter_swap_fn
         {
@@ -431,10 +410,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_swap_fn`
-        namespace
-        {
-            constexpr auto&& iter_swap = static_const<iter_swap_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_swap_fn, iter_swap)
 
         struct iter_move_fn
         {
@@ -450,10 +426,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_move_fn`
-        namespace
-        {
-            constexpr auto&& iter_move = static_const<iter_move_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iter_move_fn, iter_move)
 
         /// \cond
         namespace detail
@@ -507,10 +480,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `back_inserter_fn`
-        namespace
-        {
-            constexpr auto&& back_inserter = static_const<back_inserter_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(back_inserter_fn, back_inserter)
 
         /// \cond
         namespace detail
@@ -564,10 +534,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `front_inserter_fn`
-        namespace
-        {
-            constexpr auto&& front_inserter = static_const<front_inserter_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(front_inserter_fn, front_inserter)
 
         /// \cond
         namespace detail
@@ -622,10 +589,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `inserter_fn`
-        namespace
-        {
-            constexpr auto&& inserter = static_const<inserter_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(inserter_fn, inserter)
 
         template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
         struct ostream_iterator
@@ -853,10 +817,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto &&make_move_iterator = static_const<make_move_iterator_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_move_iterator_fn, make_move_iterator)
 
         template<typename S>
         struct move_sentinel
@@ -930,10 +891,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto &&make_move_sentinel = static_const<make_move_sentinel_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_move_sentinel_fn, make_move_sentinel)
 
         /// \cond
         namespace detail
@@ -1042,10 +1000,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `move_into_fn`
-        namespace
-        {
-            constexpr auto&& move_into = static_const<move_into_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(move_into_fn, move_into)
         /// @}
 
         /// \cond
@@ -1089,11 +1044,10 @@ namespace ranges
 
         /// \addtogroup group-utility
         /// @{
-        namespace
-        {
-            constexpr auto&& uncounted = static_const<adl_uncounted_recounted_detail::uncounted_fn>::value;
-            constexpr auto&& recounted = static_const<adl_uncounted_recounted_detail::recounted_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::uncounted_fn,
+                               uncounted)
+        RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::recounted_fn,
+                               recounted)
         /// @}
     }
 }

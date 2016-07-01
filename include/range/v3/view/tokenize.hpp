@@ -202,10 +202,7 @@ namespace ranges
 
             /// \relates tokenize_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& tokenize = static_const<tokenize_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(tokenize_fn, tokenize)
         }
         /// @}
     }

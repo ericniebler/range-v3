@@ -93,10 +93,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates transform_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& transform = static_const<action<transform_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<transform_fn>, transform)
         }
         /// @}
     }

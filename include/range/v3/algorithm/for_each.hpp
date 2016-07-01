@@ -55,11 +55,7 @@ namespace ranges
 
         /// \sa `for_each_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& for_each = static_const<with_braced_init_args<for_each_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<for_each_fn>, for_each)
         /// @}
     } // namespace v3
 } // namespace ranges

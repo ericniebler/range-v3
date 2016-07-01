@@ -115,10 +115,9 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& c_str = static_const<c_str_fn>::value;
-            }
+            /// \relates c_str_fn
+            /// \ingroup group-views
+            RANGES_INLINE_VARIABLE(c_str_fn, c_str)
         }
     }
 }

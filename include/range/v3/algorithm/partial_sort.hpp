@@ -68,11 +68,8 @@ namespace ranges
 
         /// \sa `partial_sort_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& partial_sort = static_const<with_braced_init_args<partial_sort_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<partial_sort_fn>,
+                               partial_sort)
         /// @}
     } // namespace v3
 } // namespace ranges

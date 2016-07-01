@@ -159,10 +159,7 @@ namespace ranges
 
             /// \relates take_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& take = static_const<view<take_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<take_fn>, take)
         }
         /// @}
     }

@@ -130,10 +130,7 @@ namespace ranges
 
             /// \relates bounded_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& bounded = static_const<view<bounded_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<bounded_fn>, bounded)
 
             template<typename Rng>
             using bounded_t =
