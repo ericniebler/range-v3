@@ -640,14 +640,13 @@ namespace __gnu_debug
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;
 }
-
 #endif
 
-#if defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
-// TODO: && _LIBCPP_VERSION <= VERSION_THAT_FIXES_THIS
-// HACKHACK: workaround libc++ and libstdc++ underconstrained operator- for
-// reverse_iterator by disabling SizedSentinel when the base iterators do not
-// model SizedSentinel.
+#if defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 3900)
+// HACKHACK: workaround libc++ (https://llvm.org/bugs/show_bug.cgi?id=28421)
+// and libstdc++ (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71771)
+// underconstrained operator- for reverse_iterator by disabling SizedSentinel
+// when the base iterators do not model SizedSentinel.
 namespace ranges
 {
     inline namespace v3
@@ -658,7 +657,6 @@ namespace ranges
         {};
     }
 }
-
-#endif // _LIBCPP_VERSION
+#endif // defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 3900)
 
 #endif // RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP

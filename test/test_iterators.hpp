@@ -101,10 +101,11 @@ public:
 // For making sized iterator ranges:
 template<template<typename> class I, typename It>
 RANGES_CXX14_CONSTEXPR
-std::ptrdiff_t operator-(sentinel<It, true> end, I<It> begin)
-{
-    return base(end) - base(begin);
-}
+auto operator-(sentinel<It, true> end, I<It> begin)
+RANGES_DECLTYPE_AUTO_RETURN
+(
+    base(end) - base(begin)
+)
 
 template <class It>
 class output_iterator
@@ -383,11 +384,12 @@ operator>=(const random_access_iterator<T>& x, const random_access_iterator<U>& 
 
 template <class T, class U>
 RANGES_CXX14_CONSTEXPR
-typename std::iterator_traits<T>::difference_type
+auto
 operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
-{
-    return x.base() - y.base();
-}
+RANGES_DECLTYPE_AUTO_RETURN
+(
+    x.base() - y.base()
+)
 
 template<typename It, bool Sized = false>
 struct sentinel_type

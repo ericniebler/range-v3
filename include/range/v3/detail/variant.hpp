@@ -236,7 +236,7 @@ namespace ranges
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}
                     {}
-                    template<std::size_t N, typename... Args, CONCEPT_REQUIRES_(0 != N)>
+                    template<std::size_t N, typename... Args>
                     constexpr type(meta::size_t<N>, Args &&... args)
                       : tail{meta::size_t<N - 1>{}, ((Args &&) args)...}
                     {}
@@ -262,7 +262,7 @@ namespace ranges
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}
                     {}
-                    template<std::size_t N, typename... Args, CONCEPT_REQUIRES_(0 != N)>
+                    template<std::size_t N, typename... Args>
                     constexpr type(meta::size_t<N>, Args &&... args)
                       : tail{meta::size_t<N - 1>{}, ((Args &&) args)...}
                     {}
