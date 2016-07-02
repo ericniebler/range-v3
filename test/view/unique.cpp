@@ -17,7 +17,6 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/unique.hpp>
 #include <range/v3/view/counted.hpp>
-#include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"

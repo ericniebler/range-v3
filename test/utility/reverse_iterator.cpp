@@ -22,7 +22,6 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/begin_end.hpp>
-#include <range/v3/view/iota.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 

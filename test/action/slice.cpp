@@ -10,7 +10,7 @@
 #include <array>
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/view/iota.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
