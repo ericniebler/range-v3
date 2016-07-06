@@ -174,50 +174,62 @@ matrix:
     #   os: linux
     #   addons: *clang37
 
-    # Test clang-3.8: C++11/C++14, Build=Debug/Release, ASAN=On/Off
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
-    #   os: linux
-    #   addons: &clang38
-    #     apt:
-    #       packages:
-    #         - util-linux
-    #         - clang-3.8
-    #         - valgrind
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #         - llvm-toolchain-precise-3.8
+    # Test clang-3.9: C++11/C++14, Build=Debug/Release, ASAN=On/Off
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
+      os: linux
+      addons: &clang39
+        apt:
+          packages:
+            - util-linux
+            - clang-3.9
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    # Release + ASAN + C++11/14/1z           
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=On
-    #   os: linux
-    #   addons: *clang3# 8
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    # Release + Valgrind + C++11/14/1z           
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
-    #   os: linux
-    #   addons: *clang38
+    # Debug + C++11/14/1z           
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
 
-    # - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
-    #   os: linux
-    #   addons: *clang38
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
+
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang39
+
+    # Debug + C++11 + libstdc++
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *clang39
 
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off

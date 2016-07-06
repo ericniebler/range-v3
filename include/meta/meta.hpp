@@ -1965,8 +1965,17 @@ namespace meta
             template <typename... T, typename V>
             struct find_index_<list<T...>, V>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                    return find_index_i_(s_v, s_v + sizeof...(T));
+                }
+                using type = size_t<index_()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
                 using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -2017,8 +2026,17 @@ namespace meta
             template <typename... T, typename V>
             struct reverse_find_index_<list<T...>, V>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                    return reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T));
+                }
+                using type = size_t<index_()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
                 using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -2104,9 +2122,18 @@ namespace meta
             struct find_if_<list<List...>, Fun,
                             void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                    return detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v;
+                }
+                using type = drop_c<list<List...>, index_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                 using type =
                     drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -2159,11 +2186,20 @@ namespace meta
                 list<List...>, Fun,
                 void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                    return detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
+                                                      s_v + sizeof...(List)) - s_v;
+                }
+                using type = drop_c<list<List...>, index_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                 using type =
-                    drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
-                                                                     s_v + sizeof...(List)) -
-                                              s_v>;
+                  drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
+                                                                   s_v + sizeof...(List)) - s_v>;
+              #endif
             };
         }
         /// \endcond
@@ -2282,8 +2318,17 @@ namespace meta
             template <typename... List, typename T>
             struct count_<list<List...>, T>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t count__() {
+                    constexpr bool s_v[] = {std::is_same<T, List>::value...};
+                    return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
+                }
+                using type = meta::size_t<count__()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, List>::value...};
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+              #endif
             };
         }
 
@@ -2321,8 +2366,17 @@ namespace meta
             struct count_if_<list<List...>, Fn,
                              void_<integer_sequence<bool, bool(invoke<Fn, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t count_() {
+                    constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
+                    return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
+                }
+                using type = meta::size_t<count_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+              #endif
             };
         }
 
