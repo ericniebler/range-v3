@@ -643,27 +643,22 @@ namespace __gnu_debug
 
 #endif
 
-#if defined(_LIBCPP_VERSION) // TODO: && _LIBCPP_VERSION <= VERSION_THAT_FIXES_THIS
-// HACKHACK: workaround underconstrained operator- for libc++'s reverse_iterator
-// by disabling SizedSentinel if reverse_iterator is not a random access iterator.
+#if defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
+// TODO: && _LIBCPP_VERSION <= VERSION_THAT_FIXES_THIS
+// HACKHACK: workaround libc++ and libstdc++ underconstrained operator- for
+// reverse_iterator by disabling SizedSentinel when the base iterators do not
+// model SizedSentinel.
 namespace ranges
 {
-
     inline namespace v3
     {
-
         template<typename S, typename I>
         struct disable_sized_sentinel<std::reverse_iterator<S>, std::reverse_iterator<I>>
-          : meta::not_<
-                meta::and_<std::is_same<typename std::reverse_iterator<S>::iterator_category,
-                                        std::random_access_iterator_tag>,
-                           std::is_same<typename std::reverse_iterator<I>::iterator_category,
-                                        std::random_access_iterator_tag>>>
+          : meta::not_<SizedSentinel<I, S>>
         {};
-
     }
 }
 
-#endif  // _LIBCPP_VERSION
+#endif // _LIBCPP_VERSION
 
 #endif // RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP

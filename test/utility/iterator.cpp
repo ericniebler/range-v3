@@ -52,10 +52,24 @@ void test_move_iterator()
     ::check_equal(out, {"this","is","his","face"});
 }
 
+template<class I>
+using RI = std::reverse_iterator<I>;
+
+void issue_420_regression()
+{
+    // Verify that SizedSentinel<std::reverse_iterator<S>, std::reverse_iterator<I>>
+    // properly requires SizedSentinel<I, S>
+    CONCEPT_ASSERT(SizedSentinel<RI<int*>, RI<int*>>());
+    CONCEPT_ASSERT(!SizedSentinel<RI<int*>, RI<float*>>());
+    using BI = bidirectional_iterator<int*>;
+    CONCEPT_ASSERT(!SizedSentinel<RI<BI>, RI<BI>>());
+}
+
 int main()
 {
     test_insert_iterator();
     test_move_iterator();
+    issue_420_regression();
 
     return ::test_result();
 }
