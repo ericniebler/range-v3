@@ -196,10 +196,7 @@ namespace ranges
 
             /// \relates drop_exactly_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& drop_exactly = static_const<view<drop_exactly_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<drop_exactly_fn>, drop_exactly)
         }
         /// @}
     }

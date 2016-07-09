@@ -98,10 +98,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates slice_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& slice = static_const<action<slice_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<slice_fn>, slice)
         }
         /// @}
     }

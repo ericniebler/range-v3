@@ -79,10 +79,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates join_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& join = static_const<action<join_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<join_fn>, join)
         }
         /// @}
     }

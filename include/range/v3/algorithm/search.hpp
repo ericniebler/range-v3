@@ -173,11 +173,7 @@ namespace ranges
 
         /// \sa `search_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& search = static_const<with_braced_init_args<search_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<search_fn>, search)
         /// @}
     } // namespace v3
 } // namespace ranges

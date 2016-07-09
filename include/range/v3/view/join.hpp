@@ -354,10 +354,7 @@ namespace ranges
 
             /// \relates join_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& join = static_const<view<join_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<join_fn>, join)
         }
         /// @}
     }

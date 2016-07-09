@@ -161,10 +161,7 @@ namespace ranges
 
             /// \relates adjacent_remove_if_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& adjacent_remove_if = static_const<view<adjacent_remove_if_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<adjacent_remove_if_fn>, adjacent_remove_if)
         }
         /// @}
     }

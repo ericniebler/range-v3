@@ -120,10 +120,8 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto&& inner_product = static_const<with_braced_init_args<inner_product_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<inner_product_fn>,
+                               inner_product)
     }
 }
 

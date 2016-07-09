@@ -57,11 +57,7 @@ namespace ranges
 
         /// \sa `all_of_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& all_of = static_const<with_braced_init_args<all_of_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<all_of_fn>, all_of)
         /// @}
 
     } // inline namespace v3

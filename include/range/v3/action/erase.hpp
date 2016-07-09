@@ -67,10 +67,7 @@ namespace ranges
         /// \endcond
 
         /// \ingroup group-actions
-        namespace
-        {
-            constexpr auto&& erase = static_const<adl_erase_detail::erase_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_erase_detail::erase_fn, erase)
 
         namespace action
         {

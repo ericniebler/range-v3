@@ -100,11 +100,7 @@ namespace ranges
 
         /// \sa `merge_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& merge = static_const<with_braced_init_args<merge_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<merge_fn>, merge)
         /// @}
     } // namespace v3
 } // namespace ranges

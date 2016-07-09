@@ -196,10 +196,7 @@ namespace ranges
 
         /// \sa `sample_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& sample = static_const<with_braced_init_args<sample_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<sample_fn>, sample)
         /// @}
     } // namespace v3
 } // namespace ranges

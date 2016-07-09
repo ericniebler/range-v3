@@ -68,10 +68,7 @@ namespace ranges
 
             /// \ingroup group-views
             /// \sa make_view_fn
-            namespace
-            {
-                constexpr auto&& make_view = static_const<make_view_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
             template<typename Rng>
             using ViewableRange = meta::and_<

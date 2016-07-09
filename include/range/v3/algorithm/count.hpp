@@ -58,11 +58,8 @@ namespace ranges
 
         /// \sa `count_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& count = static_const<with_braced_init_args<with_braced_init_args<count_fn>>>::value;
-        }
-
+      RANGES_INLINE_VARIABLE(with_braced_init_args<with_braced_init_args<count_fn>>,
+                               count)
         /// @}
     } // namespace v3
 } // namespace ranges

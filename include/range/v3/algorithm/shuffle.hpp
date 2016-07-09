@@ -70,11 +70,7 @@ namespace ranges
 
         /// \sa `shuffle_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& shuffle = static_const<with_braced_init_args<shuffle_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<shuffle_fn>, shuffle)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -71,11 +71,8 @@ namespace ranges
 
         /// \sa `is_partitioned_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& is_partitioned = static_const<with_braced_init_args<is_partitioned_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<is_partitioned_fn>,
+                               is_partitioned)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -104,10 +104,8 @@ namespace ranges
         {
             /// \ingroup group-actions
             /// \sa with_braced_init_args
-            namespace
-            {
-                constexpr auto&& push_back = static_const<with_braced_init_args<action<adl_push_back_detail::push_back_fn>>>::value;
-            }
+            RANGES_INLINE_VARIABLE(with_braced_init_args<action<adl_push_back_detail::push_back_fn>>,
+                                   push_back)
         }
 
         using action::push_back;

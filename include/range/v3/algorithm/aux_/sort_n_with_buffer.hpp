@@ -64,11 +64,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& sort_n_with_buffer = static_const<sort_n_with_buffer_fn>::value;
-            }
-
+            RANGES_INLINE_VARIABLE(sort_n_with_buffer_fn, sort_n_with_buffer)
         } // namespace aux
     } // namespace v3
 } // namespace ranges

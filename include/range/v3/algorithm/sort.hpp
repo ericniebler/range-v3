@@ -202,11 +202,7 @@ namespace ranges
 
         /// \sa `sort_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& sort = static_const<with_braced_init_args<sort_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<sort_fn>, sort)
         /// @}
     } // namespace v3
 } // namespace ranges

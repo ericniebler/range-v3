@@ -229,11 +229,7 @@ namespace ranges
 
             /// \relates cycle_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto &&cycle = static_const<view<cycle_fn>>::value;
-            }
-
+            RANGES_INLINE_VARIABLE(view<cycle_fn>, cycle)
        } // namespace view
        /// @}
     } // namespace v3

@@ -65,11 +65,8 @@ namespace ranges
 
         /// \sa `binary_search_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& binary_search = static_const<with_braced_init_args<binary_search_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<binary_search_fn>,
+                               binary_search)
         /// @}
     } // namespace v3
 } // namespace ranges

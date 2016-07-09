@@ -62,10 +62,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `enumerate_fn`
-        namespace
-        {
-            constexpr auto&& enumerate = static_const<enumerate_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(enumerate_fn, enumerate)
 
         struct distance_fn : iter_distance_fn
         {
@@ -95,10 +92,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `distance_fn`
-        namespace
-        {
-            constexpr auto&& distance = static_const<distance_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(distance_fn, distance)
 
         // The interface of distance_compare is taken from Util.listLengthCmp in the GHC API.
         struct distance_compare_fn : iter_distance_compare_fn
@@ -141,11 +135,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `distance_compare_fn`
-        namespace
-        {
-            constexpr auto&& distance_compare = static_const<distance_compare_fn>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(distance_compare_fn, distance_compare)
         /// @}
     }
 }

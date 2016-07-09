@@ -45,11 +45,7 @@ namespace ranges
 
         /// \sa `fill_n_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& fill_n = static_const<fill_n_fn>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(fill_n_fn, fill_n)
         /// @}
     } // namespace v3
 } // namespace ranges

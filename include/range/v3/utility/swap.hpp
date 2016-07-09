@@ -257,17 +257,11 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \relates adl_swap_detail::swap_fn
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& swap = static_const<adl_swap_detail::swap_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
 
         /// \ingroup group-utility
         /// \relates adl_swap_detail::indirect_swap_fn
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& indirect_swap = static_const<adl_swap_detail::indirect_swap_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_swap_detail::indirect_swap_fn, indirect_swap)
     }
 }
 

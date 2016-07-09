@@ -60,10 +60,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& partition_point_n = static_const<partition_point_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(partition_point_n_fn, partition_point_n)
         }
     } // namespace v3
 } // namespace ranges

@@ -62,11 +62,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& merge_n_with_buffer = static_const<merge_n_with_buffer_fn>::value;
-            }
-
+            RANGES_INLINE_VARIABLE(merge_n_with_buffer_fn, merge_n_with_buffer)
         } // namespace aux
     } // namespace v3
 } // namespace ranges

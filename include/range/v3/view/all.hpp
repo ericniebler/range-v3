@@ -99,10 +99,7 @@ namespace ranges
 
             /// \relates all_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& all = static_const<all_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(all_fn, all)
 
             template<typename Rng>
             using all_t =

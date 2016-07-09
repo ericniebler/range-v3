@@ -286,11 +286,8 @@ namespace ranges
 
         /// \sa `stable_partition_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& stable_partition = static_const<with_braced_init_args<stable_partition_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<stable_partition_fn>,
+                               stable_partition)
         /// @}
     } // namespace v3
 } // namespace ranges

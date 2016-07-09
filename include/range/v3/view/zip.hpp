@@ -136,10 +136,7 @@ namespace ranges
 
             /// \relates zip_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& zip = static_const<zip_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(zip_fn, zip)
         }
         /// @}
     }

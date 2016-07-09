@@ -74,10 +74,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& equal_range_n = static_const<equal_range_n_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(equal_range_n_fn, equal_range_n)
         }
     } // namespace v3
 } // namespace ranges

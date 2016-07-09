@@ -230,10 +230,7 @@ namespace ranges
         /// \endcond
 
         /// \ingroup group-actions
-        namespace
-        {
-            constexpr auto&& insert = static_const<adl_insert_detail::insert_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_insert_detail::insert_fn, insert)
 
         namespace action
         {

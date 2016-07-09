@@ -91,10 +91,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates take_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& take = static_const<action<take_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<take_fn>, take)
         }
         /// @}
     }

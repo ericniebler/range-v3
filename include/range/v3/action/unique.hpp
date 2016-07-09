@@ -99,10 +99,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates unique_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& unique = static_const<action<unique_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
         }
         /// @}
     }

@@ -118,10 +118,7 @@ namespace ranges
 
             /// \relates single_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& single = static_const<single_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(single_fn, single)
         }
         /// @}
     }

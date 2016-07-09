@@ -43,10 +43,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto&& iota = static_const<iota_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(iota_fn, iota)
     }
 }
 

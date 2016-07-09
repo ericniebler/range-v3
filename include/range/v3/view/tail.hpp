@@ -115,10 +115,7 @@ namespace ranges
 
             /// \relates tail_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& tail = static_const<view<tail_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
         }
         /// @}
     }

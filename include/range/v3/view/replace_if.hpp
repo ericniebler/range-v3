@@ -166,10 +166,7 @@ namespace ranges
 
             /// \relates replace_if_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& replace_if = static_const<view<replace_if_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<replace_if_fn>, replace_if)
         }
         /// @}
     }

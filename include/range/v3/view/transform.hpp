@@ -408,10 +408,7 @@ namespace ranges
 
             /// \relates iter_transform_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& iter_transform = static_const<view<iter_transform_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<iter_transform_fn>, iter_transform)
 
             struct transform_fn
             {
@@ -486,10 +483,7 @@ namespace ranges
 
             /// \relates transform_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& transform = static_const<view<transform_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
         }
         /// @}
     }

@@ -38,10 +38,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `empty_fn`
-        namespace
-        {
-            constexpr auto&& empty = static_const<empty_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(empty_fn, empty)
     }
 }
 

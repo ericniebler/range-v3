@@ -89,10 +89,7 @@ namespace ranges
             }
         };
 
-        namespace
-        {
-            constexpr auto && getlines = static_const<getlines_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(getlines_fn, getlines)
         /// @}
     }
 }

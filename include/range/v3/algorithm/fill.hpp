@@ -48,11 +48,7 @@ namespace ranges
 
         /// \sa `fill_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& fill = static_const<with_braced_init_args<fill_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<fill_fn>, fill)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -99,10 +99,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& size = static_const<adl_size_detail::size_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(adl_size_detail::size_fn, size)
     }
 }
 

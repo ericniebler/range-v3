@@ -110,10 +110,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates stride_fn
             /// \sa action
-            namespace
-            {
-                constexpr auto&& stride = static_const<action<stride_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<stride_fn>, stride)
         }
         /// @}
     }

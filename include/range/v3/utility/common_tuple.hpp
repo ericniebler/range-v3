@@ -189,10 +189,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_common_tuple_fn`
-        namespace
-        {
-            constexpr auto&& make_common_tuple = static_const<make_common_tuple_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_common_tuple_fn, make_common_tuple)
 
         template<typename F, typename S>
         struct common_pair
@@ -379,10 +376,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_common_pair_fn`
-        namespace
-        {
-            constexpr auto&& make_common_pair = static_const<make_common_pair_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_common_pair_fn, make_common_pair)
 
         /// \cond
         namespace detail

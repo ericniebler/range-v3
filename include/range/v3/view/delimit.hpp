@@ -120,10 +120,7 @@ namespace ranges
 
             /// \relates delimit_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& delimit = static_const<delimit_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(delimit_fn, delimit)
         }
         /// @}
     }

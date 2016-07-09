@@ -97,10 +97,7 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates shuffle_fn
             /// \sa `action`
-            namespace
-            {
-                constexpr auto&& shuffle = static_const<action<shuffle_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(action<shuffle_fn>, shuffle)
         }
         /// @}
     }

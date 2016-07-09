@@ -66,11 +66,8 @@ namespace ranges
 
         /// \sa `lexicographical_compare_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& lexicographical_compare = static_const<with_braced_init_args<lexicographical_compare_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<lexicographical_compare_fn>,
+                               lexicographical_compare)
         /// @}
     } // namespace v3
 } // namespace ranges

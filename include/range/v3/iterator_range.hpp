@@ -187,10 +187,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `make_iterator_range_fn`
-        namespace
-        {
-            constexpr auto&& make_iterator_range = static_const<make_iterator_range_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_iterator_range_fn, make_iterator_range)
 
         /// Tuple-like access for `sized_iterator_range`
         template<std::size_t N, typename I, typename S,

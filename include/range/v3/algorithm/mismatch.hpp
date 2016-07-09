@@ -108,10 +108,7 @@ namespace ranges
 
         /// \sa `mismatch_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& mismatch = static_const<with_braced_init_args<mismatch_fn>>::value;
-        }
+        RANGES_INLINE_VARIABLE(with_braced_init_args<mismatch_fn>, mismatch)
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
         // that we can properly distinguish this case:

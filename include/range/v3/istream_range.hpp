@@ -107,12 +107,21 @@ namespace ranges
             }
         };
 
-        namespace
+    #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+        inline namespace
         {
-            template<typename Val>
-            constexpr auto && istream = static_const<istream_fn<Val>>::value;
+            template <typename Val>
+            constexpr auto& istream = static_const<istream_fn<Val>>::value;
         }
-    #endif
+    #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+        inline namespace function_objects
+        {
+            template <typename Val>
+            inline constexpr istream_fn<Val> istream{};
+        }
+    #endif  // RANGES_CXX_INLINE_VARIABLES
+
+    #endif  // RANGES_CXX_VARIABLE_TEMPLATES
         /// @}
     }
 }

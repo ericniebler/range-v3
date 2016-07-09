@@ -156,10 +156,7 @@ namespace ranges
 
             /// \relates group_by_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& group_by = static_const<view<group_by_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<group_by_fn>, group_by)
         }
         /// @}
     }

@@ -255,10 +255,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_invokable_fn`
-        namespace
-        {
-            constexpr auto&& as_function = static_const<as_function_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(as_function_fn, as_function)
 
         template<typename T>
         using function_type = decltype(as_function(std::declval<T>()));
@@ -356,10 +353,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `not_fn`
-        namespace
-        {
-            constexpr auto&& not_ = static_const<not_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(not_fn, not_)
 
         template<typename Second, typename First>
         struct composed
@@ -431,10 +425,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `compose_fn`
-        namespace
-        {
-            constexpr auto&& compose = static_const<compose_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(compose_fn, compose)
 
         template<>
         struct overloaded<>
@@ -506,10 +497,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `overload_fn`
-        namespace
-        {
-            constexpr auto&& overload = static_const<overload_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(overload_fn, overload)
 
         template<typename Fn>
         struct indirected
@@ -573,10 +561,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `indirect_fn`
-        namespace
-        {
-            constexpr auto&& indirect = static_const<indirect_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(indirect_fn, indirect)
 
         template<typename Fn1, typename Fn2>
         struct transformed
@@ -621,10 +606,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `on_fn`
-        namespace
-        {
-            constexpr auto&& on = static_const<on_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(on_fn, on)
 
         /// \cond
         namespace detail
@@ -665,10 +647,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_pipeable_fn`
-        namespace
-        {
-            constexpr auto&& make_pipeable = static_const<make_pipeable_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(make_pipeable_fn, make_pipeable)
 
         template<typename T,
             typename U = meta::if_<
@@ -882,10 +861,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `ref_fn`
-        namespace
-        {
-            constexpr auto&& ref = static_const<ref_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(ref_fn, ref)
 
         template<typename T>
         using ref_t = decltype(ref(std::declval<T>()));
@@ -909,10 +885,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `rref_fn`
-        namespace
-        {
-            constexpr auto&& rref = static_const<rref_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(rref_fn, rref)
 
         template<typename T>
         using rref_t = decltype(rref(std::declval<T>()));
@@ -940,10 +913,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `unwrap_reference_fn`
-        namespace
-        {
-            constexpr auto&& unwrap_reference = static_const<unwrap_reference_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(unwrap_reference_fn, unwrap_reference)
 
         template<typename T>
         using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
@@ -997,10 +967,7 @@ namespace ranges
         /// accidentally becoming a "nested" bind.
         /// \ingroup group-utility
         /// \sa `protect_fn`
-        namespace
-        {
-            constexpr auto&& protect = static_const<protect_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(protect_fn, protect)
 
         // Accepts initializer_lists as either the first or second parameter, or both,
         // and forwards on to an implementation.

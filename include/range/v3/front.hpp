@@ -40,10 +40,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `front_fn`
-        namespace
-        {
-            constexpr auto&& front = static_const<front_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(front_fn, front)
     }
 }
 

@@ -171,10 +171,7 @@ namespace ranges
 
             /// \relates partial_sum_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& partial_sum = static_const<view<partial_sum_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<partial_sum_fn>, partial_sum)
         }
         /// @}
     }

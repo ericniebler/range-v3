@@ -188,10 +188,7 @@ namespace ranges
 
             /// \relates intersperse_fn
             /// \ingroup group-views
-            namespace
-            {
-                constexpr auto&& intersperse = static_const<view<intersperse_fn>>::value;
-            }
+            RANGES_INLINE_VARIABLE(view<intersperse_fn>, intersperse)
         }
     }
 }

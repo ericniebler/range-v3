@@ -217,15 +217,35 @@ namespace ranges
                     return ranges::reverse_iterator<T const*>(il.begin());
                 }
             };
+        }
+        /// \endcond
 
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `begin` free function
+        RANGES_INLINE_VARIABLE(begin_fn, begin)
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `end` free function
+        RANGES_INLINE_VARIABLE(end_fn, end)
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rbegin` free function
+        RANGES_INLINE_VARIABLE(rbegin_fn, rbegin)
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rend` free function
+        RANGES_INLINE_VARIABLE(rend_fn, rend)
+
+        namespace adl_begin_end_detail
+        {
             struct cbegin_fn
             {
                 template<typename Rng>
                 constexpr auto operator()(Rng const & rng) const
-                    noexcept(noexcept(static_const<begin_fn>::value(rng))) ->
-                    decltype(static_const<begin_fn>::value(rng))
+                  noexcept(noexcept(::ranges::begin(rng)))
+                  -> decltype(::ranges::begin(rng))
                 {
-                    return static_const<begin_fn>::value(rng);
+                    return ::ranges::begin(rng);
                 }
             };
 
@@ -233,10 +253,10 @@ namespace ranges
             {
                 template<typename Rng>
                 constexpr auto operator()(Rng const & rng) const
-                    noexcept(noexcept(static_const<end_fn>::value(rng))) ->
-                    decltype(static_const<end_fn>::value(rng))
+                  noexcept(noexcept(::ranges::end(rng)))
+                  -> decltype(::ranges::end(rng))
                 {
-                    return static_const<end_fn>::value(rng);
+                    return ::ranges::end(rng);
                 }
             };
 
@@ -244,10 +264,10 @@ namespace ranges
             {
                 template<typename Rng>
                 constexpr auto operator()(Rng const & rng) const
-                    noexcept(noexcept(static_const<rbegin_fn>::value(rng))) ->
-                    decltype(static_const<rbegin_fn>::value(rng))
+                  noexcept(noexcept(::ranges::rbegin(rng)))
+                  -> decltype(::ranges::rbegin(rng))
                 {
-                    return static_const<rbegin_fn>::value(rng);
+                    return ::ranges::rbegin(rng);
                 }
             };
 
@@ -255,74 +275,33 @@ namespace ranges
             {
                 template<typename Rng>
                 constexpr auto operator()(Rng const & rng) const
-                    noexcept(noexcept(static_const<rend_fn>::value(rng))) ->
-                    decltype(static_const<rend_fn>::value(rng))
+                  noexcept(noexcept(::ranges::rend(rng)))
+                  -> decltype(::ranges::rend(rng))
                 {
-                    return static_const<rend_fn>::value(rng);
+                    return ::ranges::rend(rng);
                 }
             };
         }
-        /// \endcond
-
-        /// \ingroup group-core
-        /// \return The result of an unqualified call to the `begin` free function
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& begin = static_const<begin_fn>::value;
-        }
-
-        /// \ingroup group-core
-        /// \return The result of an unqualified call to the `end` free function
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& end = static_const<end_fn>::value;
-        }
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `begin` free function
         /// with a const-qualified argument.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& cbegin = static_const<cbegin_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(cbegin_fn, cbegin)
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `end` free function
         /// with a const-qualified argument.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& cend = static_const<cend_fn>::value;
-        }
-
-        /// \ingroup group-core
-        /// \return The result of an unqualified call to the `rbegin` free function
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& rbegin = static_const<rbegin_fn>::value;
-        }
-
-        /// \ingroup group-core
-        /// \return The result of an unqualified call to the `rend` free function
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& rend = static_const<rend_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(cend_fn, cend)
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rbegin` free function
         /// with a const-qualified argument.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& crbegin = static_const<crbegin_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(crbegin_fn, crbegin)
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rend` free function
         /// with a const-qualified argument.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& crend = static_const<crend_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(crend_fn, crend)
 
         /// \ingroup group-core
         struct safe_begin_fn
@@ -353,18 +332,12 @@ namespace ranges
         /// \ingroup group-core
         /// \return `begin(rng)` if `rng` is an lvalue; otherwise, it returns `begin(rng)`
         /// wrapped in \c ranges::dangling.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& safe_begin = static_const<safe_begin_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(safe_begin_fn, safe_begin)
 
         /// \ingroup group-core
         /// \return `end(rng)` if `rng` is an lvalue; otherwise, it returns `end(rng)`
         /// wrapped in \c ranges::dangling.
-        RANGES_GCC_BROKEN_CUSTPOINT namespace
-        {
-            constexpr auto&& safe_end = static_const<safe_end_fn>::value;
-        }
+        RANGES_INLINE_VARIABLE(safe_end_fn, safe_end)
     }
 }
 

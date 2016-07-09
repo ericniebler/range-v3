@@ -175,10 +175,7 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& merge_adaptive = static_const<merge_adaptive_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(merge_adaptive_fn, merge_adaptive)
 
             struct inplace_merge_no_buffer_fn
             {
@@ -192,10 +189,8 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                constexpr auto&& inplace_merge_no_buffer = static_const<inplace_merge_no_buffer_fn>::value;
-            }
+            RANGES_INLINE_VARIABLE(inplace_merge_no_buffer_fn,
+                                   inplace_merge_no_buffer)
         }
         /// \endcond
 
@@ -238,11 +233,8 @@ namespace ranges
 
         /// \sa `inplace_merge_fn`
         /// \ingroup group-algorithms
-        namespace
-        {
-            constexpr auto&& inplace_merge = static_const<with_braced_init_args<inplace_merge_fn>>::value;
-        }
-
+        RANGES_INLINE_VARIABLE(with_braced_init_args<inplace_merge_fn>,
+                               inplace_merge)
         /// @}
     } // namespace v3
 } // namespace ranges
