@@ -187,7 +187,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    # Release + ASAN + C++11/14/1z           
+    # Release + ASAN + C++11/14/1z
     - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
       os: linux
       addons: *clang39
@@ -200,7 +200,7 @@ matrix:
       os: linux
       addons: *clang39
 
-    # Release + Valgrind + C++11/14/1z           
+    # Release + Valgrind + C++11/14/1z
     - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
       os: linux
       addons: *clang39
@@ -213,7 +213,7 @@ matrix:
       os: linux
       addons: *clang39
 
-    # Debug + C++11/14/1z           
+    # Debug + C++11/14/1z
     - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
       os: linux
       addons: *clang39
@@ -284,22 +284,6 @@ matrix:
       os: linux
       addons: *gcc5
 
-    # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
-
-    # - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
-
-    # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
-
-    # - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
-
     - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=Off CXX_FLAGS="-DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR_11"
       os: linux
       addons: *gcc5
@@ -308,7 +292,7 @@ matrix:
       os: linux
       addons: *gcc5
 
-    # Test gcc-6: C++11/14, Build=Debug/Release, ASAN=Off
+    # Test gcc-6: C++11/14/1z, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
       os: linux
       addons: &gcc6
@@ -328,6 +312,14 @@ matrix:
       addons: *gcc6
 
     - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc6
+
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc6
+
+    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=1z ASAN=Off LIBCXX=Off
       os: linux
       addons: *gcc6
 
