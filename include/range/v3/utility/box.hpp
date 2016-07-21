@@ -157,9 +157,9 @@ namespace ranges
             }
             template<typename T, typename = meta::if_<
                 meta::strict_and<std::is_empty<T>, meta::not_<detail::is_final<T>>
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 6
-                    // GCC 6 finds empty lambdas' implicit conversion to function pointer when doing
-                    // overload resolution for function calls. That causes hard errors.
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 2
+                    // GCC 6.0 & 6.1 find empty lambdas' implicit conversion to function pointer
+                    // when doing overload resolution for function calls. That causes hard errors.
                     // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71117
                     , meta::not_<could_be_lambda<T>>
 #endif
