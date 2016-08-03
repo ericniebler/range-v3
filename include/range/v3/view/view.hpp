@@ -106,7 +106,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(Function<View, Rng>(),
                         "This view is not callable with this range type.");
                     static_assert(ranges::View<Rng>() || std::is_lvalue_reference<Rng>(),
-                        "You can't pipe an rvalue container into an view. First, save the container into "
+                        "You can't pipe an rvalue container into a view. First, save the container into "
                         "a named variable, and then pipe it to the view.");
                 }
             #endif
