@@ -19,6 +19,9 @@ add_test(test.alg.copy, alg.copy)
 add_executable(alg.copy_backward copy_backward.cpp)
 add_test(test.alg.copy_backward, alg.copy_backward)
 
+add_executable(alg.copy_n copy_n.cpp)
+add_test(test.alg.copy_n, alg.copy_n)
+
 add_executable(alg.count count.cpp)
 add_test(test.alg.count, alg.count)
 
