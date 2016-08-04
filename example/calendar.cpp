@@ -233,8 +233,8 @@ struct interleave_view<Rngs>::cursor  {
             for_each(its_, [](auto& it){ ++it; });
     }
     bool done() const {
-        return n_ == 0 && its_.end() != mismatch(its_,
-            view::transform(*rngs_, ranges::end), std::not_equal_to<>()).in1();
+        return n_ == 0 && its_.end() != mismatch(its_, *rngs_,
+            std::not_equal_to<>(), ident(), ranges::end).in1();
     }
     CONCEPT_REQUIRES(ForwardRange<range_value_t<Rngs>>())
     bool equal(cursor const& that) const {
