@@ -248,7 +248,7 @@ For instance, if you would like to write a function that takes an iterator/senti
 
 ~~~~~~~{.cpp}
     template<class Iter, class Sent, class Comp = /*...some_default..*/,
-        CONCEPT_REQUIRES_(IteratorRange<Iter, Sent>())>
+        CONCEPT_REQUIRES_(Sentinel<Sent, Iter>())>
     void my_algorithm(Iter first, Sent last, Comp comp = Comp{})
     {
         // ...

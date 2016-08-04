@@ -5,8 +5,8 @@
     ```
     template<typename I, typename S,
         CONCEPT_REQUIRES_(RandomAccessIterator<I>() &&
-                            SizedIteratorRange<I, S>() &&
-                            is_contiguous_iterator<I>())>
+                          SizedSentinel<S, I>() &&
+                          is_contiguous_iterator<I>())>
     iterator_range<std::add_pointer_t<iterator_reference_t<I>>>
     as_contiguous_range(I begin, S end)
     {
