@@ -9,6 +9,7 @@ var structranges_1_1v3_1_1drop__view =
     [ "operator=", "structranges_1_1v3_1_1drop__view.html#a65d8570785d995db36761a9784d0cb08", null ],
     [ "operator=", "structranges_1_1v3_1_1drop__view.html#a26c26f2cb12662402aeadb7911f9ab9f", null ],
     [ "size", "structranges_1_1v3_1_1drop__view.html#a08b836aa57ebaea9fbb1fa483a874dee", null ],
+    [ "size", "structranges_1_1v3_1_1drop__view.html#a932b5c43434747d9fbcd12608c3c0953", null ],
     [ "drop_view", "structranges_1_1v3_1_1drop__view.html#a4bac56657f8d9381899c834574d89d66", null ],
     [ "drop_view", "structranges_1_1v3_1_1drop__view.html#a882fd326b8a710be6f71686ceddb9991", null ],
     [ "drop_view", "structranges_1_1v3_1_1drop__view.html#a8ccbb0424109c2b455a5e0b228050410", null ],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['lambda',['lambda',['../group__trait.html#ga288e095a9834eab7fedc8ce234afdd04',1,'meta::v1']]],
+  ['lambda',['lambda',['../group__trait.html#gae8c0959d22f1e6e91bd3848d08da1b48',1,'meta']]],
   ['lazy',['lazy',['../group__lazy__composition.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__datatype.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__invocation.html',1,'']]],
@@ -12,9 +12,9 @@ var searchData=
   ['lazy',['lazy',['../group__lazy__transformation.html',1,'']]],
   ['lazy_5fyield_5fif_5ffn',['lazy_yield_if_fn',['../structranges_1_1v3_1_1lazy__yield__if__fn.html',1,'ranges::v3']]],
   ['less',['less',['../structranges_1_1v3_1_1less.html',1,'ranges::v3']]],
-  ['less',['less',['../group__math.html#gacd744cad5667d4fbf03a38655a78154d',1,'meta::v1::less()'],['../group__lazy__math.html#gaf85374b7537a86261fd478a48dccd2cd',1,'meta::lazy::less()']]],
-  ['less_5fequal',['less_equal',['../group__math.html#ga0889688de74bf375555f4b04bcca6170',1,'meta::v1::less_equal()'],['../group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5',1,'meta::lazy::less_equal()']]],
-  ['let',['let',['../group__trait.html#gaa435532ebfd257be0916b0db22a0c338',1,'meta::v1::let()'],['../group__lazy__trait.html#ga5355a955cf71163986bfdc7ad7c7e3e3',1,'meta::lazy::let()']]],
+  ['less',['less',['../group__math.html#gabdb640343287440ca84ce0217faf7741',1,'meta::less()'],['../group__lazy__math.html#gaf85374b7537a86261fd478a48dccd2cd',1,'meta::lazy::less()']]],
+  ['less_5fequal',['less_equal',['../group__math.html#gab2b03f0bfd42cbb237831b6aaf2f0ef5',1,'meta::less_equal()'],['../group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5',1,'meta::lazy::less_equal()']]],
+  ['let',['let',['../group__trait.html#ga029bb5c0d37db028d405490b0d77f28f',1,'meta::let()'],['../group__lazy__trait.html#ga5355a955cf71163986bfdc7ad7c7e3e3',1,'meta::lazy::let()']]],
   ['lexicographical_5fcompare_2ehpp',['lexicographical_compare.hpp',['../lexicographical__compare_8hpp.html',1,'']]],
   ['lexicographical_5fcompare_5ffn',['lexicographical_compare_fn',['../structranges_1_1v3_1_1lexicographical__compare__fn.html',1,'ranges::v3']]],
   ['list',['list',['../structmeta_1_1list.html',1,'meta']]],

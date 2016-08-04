@@ -1,14 +1,14 @@
 var group__logical =
 [
     [ "lazy", "group__lazy__logical.html", "group__lazy__logical" ],
-    [ "and_", "group__logical.html#gad54cc50cad194e8a691315a89c65487a", null ],
-    [ "and_c", "group__logical.html#gaa3de2ecb458a1b28fe3427a370632c6a", null ],
-    [ "if_", "group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247", null ],
-    [ "if_c", "group__logical.html#gaa963e8a54e9af9024d797cadc0f5cec7", null ],
-    [ "not_", "group__logical.html#gaf8450c31f31225fcaf29269c374e0972", null ],
-    [ "not_c", "group__logical.html#ga0a4d076241cea1636231ce8a074c1eb1", null ],
-    [ "or_", "group__logical.html#ga665ffdb3aca42c767792a713a5da618f", null ],
-    [ "or_c", "group__logical.html#ga3be612b737e3bd44f818aca870a9e1b4", null ],
-    [ "strict_and", "group__logical.html#gafd84174ff3bb928c022da973affa661e", null ],
-    [ "strict_or", "group__logical.html#ga0af0f8dc7393b75561306061e61bf44d", null ]
+    [ "and_", "group__logical.html#ga724f3a0fc2262e19d54086d2ddd1bfc2", null ],
+    [ "and_c", "group__logical.html#ga579196b8172d623a5bd5fc5247673972", null ],
+    [ "if_", "group__logical.html#ga17cd9b3d16111723bbb4132d2c80aafb", null ],
+    [ "if_c", "group__logical.html#ga76df8db18745b53e01c1f79dd3aa7ea7", null ],
+    [ "not_", "group__logical.html#ga9574392c8ceafc6a6007163877452daa", null ],
+    [ "not_c", "group__logical.html#gaecd7c4d9f92bf149ea9be7bef68337c9", null ],
+    [ "or_", "group__logical.html#ga7f33e09ccaa36f32d0f490a1606898bb", null ],
+    [ "or_c", "group__logical.html#gaea97bf3ed9f9e10492e7ca664fa0d5d0", null ],
+    [ "strict_and", "group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b", null ],
+    [ "strict_or", "group__logical.html#gab5151a9d169a2188366202a28731a4f7", null ]
 ];

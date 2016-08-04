@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['back',['back',['../group__list.html#ga038a57a969530acd33d11e4f2ac458d2',1,'meta::v1::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
+  ['back',['back',['../group__list.html#ga8129daa8249ae40ec7d8dae6434dc2be',1,'meta::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
   ['bind_5fback',['bind_back',['../group__lazy__composition.html#gae41e4e74e99239ffb097b8be64e38350',1,'meta::lazy']]],
   ['bind_5ffront',['bind_front',['../group__lazy__composition.html#ga0c923f50dbaede9cc03755903d65f984',1,'meta::lazy']]],
-  ['bit_5fand',['bit_and',['../group__math.html#ga0370b94d27fd8006e9e66310d53dd11e',1,'meta::v1::bit_and()'],['../group__lazy__math.html#gac5beeaf0a55dca594206a77c2c3520d0',1,'meta::lazy::bit_and()']]],
-  ['bit_5fnot',['bit_not',['../group__math.html#ga22aa42ab47581155e70a3c433da9bc4d',1,'meta::v1::bit_not()'],['../group__lazy__math.html#gacd324652050d5f60535ea469bdee8ba4',1,'meta::lazy::bit_not()']]],
-  ['bit_5for',['bit_or',['../group__math.html#ga5445318fafce925c6ad571fed6ac9f93',1,'meta::v1::bit_or()'],['../group__lazy__math.html#ga6a6c0ca1048b5a877938e8a2d0809134',1,'meta::lazy::bit_or()']]],
-  ['bit_5fxor',['bit_xor',['../group__math.html#ga3403c25ab888b17bc652741f89430384',1,'meta::v1::bit_xor()'],['../group__lazy__math.html#gaeabb12c687c3e43776deaa75bc49c83b',1,'meta::lazy::bit_xor()']]],
-  ['bool_5f',['bool_',['../group__integral.html#gafdfad3ad3966809dd806d05950bc00a5',1,'meta::v1']]]
+  ['bit_5fand',['bit_and',['../group__math.html#ga34d588aaca15812df2d4af67863bcfb4',1,'meta::bit_and()'],['../group__lazy__math.html#gac5beeaf0a55dca594206a77c2c3520d0',1,'meta::lazy::bit_and()']]],
+  ['bit_5fnot',['bit_not',['../group__math.html#ga7123fd4e34449e1357f8230c1c142f58',1,'meta::bit_not()'],['../group__lazy__math.html#gacd324652050d5f60535ea469bdee8ba4',1,'meta::lazy::bit_not()']]],
+  ['bit_5for',['bit_or',['../group__math.html#ga5ae6f56a9b7c7f29593cd48812ce09ca',1,'meta::bit_or()'],['../group__lazy__math.html#ga6a6c0ca1048b5a877938e8a2d0809134',1,'meta::lazy::bit_or()']]],
+  ['bit_5fxor',['bit_xor',['../group__math.html#ga1bc30e36ab8d456a9907e1f16cf21976',1,'meta::bit_xor()'],['../group__lazy__math.html#gaeabb12c687c3e43776deaa75bc49c83b',1,'meta::lazy::bit_xor()']]],
+  ['bool_5f',['bool_',['../group__integral.html#ga8cd5c79222ce70365f7469f35ece905a',1,'meta']]]
 ];

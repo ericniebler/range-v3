@@ -42,7 +42,6 @@ var utility_2concepts_8hpp =
     [ "SignedIntegral", "utility_2concepts_8hpp.html#gae6be884a50d38fc8c5723e84a79295eb", null ],
     [ "Swappable", "utility_2concepts_8hpp.html#ga33c6c4c22027e93dad8888a18a6352f9", null ],
     [ "TotallyOrdered", "utility_2concepts_8hpp.html#gac4dd1f5cfdd62967c3273cc9fc0559a0", null ],
-    [ "Transform", "utility_2concepts_8hpp.html#gaa9edfe3416c63a52664a386a7c0f2e0c", null ],
     [ "UnsignedIntegral", "utility_2concepts_8hpp.html#gadf2f3e56f8512eeb8d4966c17369f722", null ],
     [ "val_t", "utility_2concepts_8hpp.html#ga1afeac7bcdb98bc1a441051f5af2e267", null ],
     [ "WeaklyEqualityComparable", "utility_2concepts_8hpp.html#ga04bda369af99cfee607cbb765f60e225", null ],

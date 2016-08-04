@@ -18,7 +18,7 @@ var range__traits_8hpp =
     [ "range_sentinel", "range__traits_8hpp.html#gae938b2f261c2b7041090de103102bda3", null ],
     [ "range_sentinel_t", "range__traits_8hpp.html#gadd97c87835b5073dc1aafe1d050b8b16", null ],
     [ "range_size", "range__traits_8hpp.html#gadea9f0ffa2ad34f63d39c860ad287662", null ],
-    [ "range_size_t", "range__traits_8hpp.html#ga4c5ae462f61978be4e6cfb243502d692", null ],
+    [ "range_size_t", "range__traits_8hpp.html#ga4bbc61c4de0c99ad2af011de61979e49", null ],
     [ "range_value", "range__traits_8hpp.html#gabe1be208adf6d72d5c4b1fc77ce71efa", null ],
     [ "range_value_t", "range__traits_8hpp.html#ga44e8a54e7cadb479a24a21862c0f391e", null ]
 ];

@@ -6,8 +6,9 @@ var structranges_1_1v3_1_1bounded__view =
     [ "begin", "structranges_1_1v3_1_1bounded__view.html#a98b5cb73d8a5a369518b371c7b2afa92", null ],
     [ "end", "structranges_1_1v3_1_1bounded__view.html#ae25f13cd0369007f7ac194818ef6a79a", null ],
     [ "end", "structranges_1_1v3_1_1bounded__view.html#ab66523267691ec827175b5e2fa816d29", null ],
+    [ "size", "structranges_1_1v3_1_1bounded__view.html#a70d122c49887ce588a96d3f5e0cc61c9", null ],
     [ "size", "structranges_1_1v3_1_1bounded__view.html#af00aa12cb85a6bc95f413105087a8825", null ],
-    [ "iterator", "structranges_1_1v3_1_1bounded__view.html#a2ca7e314d3dabf7a96ed58b58f56cd6b", null ],
+    [ "iterator", "structranges_1_1v3_1_1bounded__view.html#a5007c5c4724b5067b7682b40854f8b24", null ],
     [ "bounded_view", "structranges_1_1v3_1_1bounded__view.html#a15a0790644c7b4d33ed6c1765eb6dc3f", null ],
     [ "bounded_view", "structranges_1_1v3_1_1bounded__view.html#a50b87cf47207045861a0cbd92f1e9d3c", null ]
 ];

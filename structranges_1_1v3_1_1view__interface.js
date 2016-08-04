@@ -14,6 +14,8 @@ var structranges_1_1v3_1_1view__interface =
     [ "operator Container", "structranges_1_1v3_1_1view__interface.html#a49defec46e93a7afdfeaf6508ed5c604", null ],
     [ "operator Container", "structranges_1_1v3_1_1view__interface.html#a49dc773f9e8565e29e97a90952438549", null ],
     [ "operator!", "structranges_1_1v3_1_1view__interface.html#a3fa68e9429797abc99e874d8b157465c", null ],
+    [ "operator=", "structranges_1_1v3_1_1view__interface.html#a361e6a4af49a3d41fd07eb83a7a5af25", null ],
+    [ "operator=", "structranges_1_1v3_1_1view__interface.html#a876d55eeffcf2dd9463b3f5cb2fc2728", null ],
     [ "operator[]", "structranges_1_1v3_1_1view__interface.html#a8f56fa858d27681d31cbc4db2a385d1c", null ],
     [ "operator[]", "structranges_1_1v3_1_1view__interface.html#a69a006a925c2a86bc6be5d99c746cde6", null ],
     [ "operator[]", "structranges_1_1v3_1_1view__interface.html#a7a7bb091314330b9d1a2f696146f00ef", null ],
@@ -27,5 +29,9 @@ var structranges_1_1v3_1_1view__interface =
     [ "operator[]", "structranges_1_1v3_1_1view__interface.html#a4d1c0be4ec4902a18532f409993f9004", null ],
     [ "operator[]", "structranges_1_1v3_1_1view__interface.html#a1f6ee6fa73e8bf56e9f83ec87c4fcab6", null ],
     [ "size", "structranges_1_1v3_1_1view__interface.html#ad1ab79542221706e15bbfc0e8dd2d28d", null ],
-    [ "size", "structranges_1_1v3_1_1view__interface.html#ad88be7d1432966616c5e63e74b4011df", null ]
+    [ "size", "structranges_1_1v3_1_1view__interface.html#ad88be7d1432966616c5e63e74b4011df", null ],
+    [ "~view_interface", "structranges_1_1v3_1_1view__interface.html#ab356e666dff0ce482dcdc2c9012ba2f8", null ],
+    [ "view_interface", "structranges_1_1v3_1_1view__interface.html#a24ef165886ed47b702fc51852fd363f8", null ],
+    [ "view_interface", "structranges_1_1v3_1_1view__interface.html#a26bec67a5967726e826e2a095b3377f2", null ],
+    [ "view_interface", "structranges_1_1v3_1_1view__interface.html#a730340024d303bbfcf4d86021a8bc5c1", null ]
 ];

@@ -1,8 +1,9 @@
 var range__fwd_8hpp =
 [
+    [ "action", "structranges_1_1v3_1_1action_1_1action.html", "structranges_1_1v3_1_1action_1_1action" ],
     [ "basic_view", "structranges_1_1v3_1_1basic__view.html", null ],
     [ "begin_tag", "structranges_1_1v3_1_1begin__tag.html", null ],
-    [ "compressed_pair", "structranges_1_1v3_1_1compressed__pair.html", "structranges_1_1v3_1_1compressed__pair" ],
+    [ "compressed_pair", "structranges_1_1v3_1_1compressed__pair.html", null ],
     [ "copy_tag", "structranges_1_1v3_1_1copy__tag.html", null ],
     [ "empty_view", "structranges_1_1v3_1_1empty__view.html", "structranges_1_1v3_1_1empty__view" ],
     [ "end_tag", "structranges_1_1v3_1_1end__tag.html", null ],
@@ -10,6 +11,7 @@ var range__fwd_8hpp =
     [ "move_tag", "structranges_1_1v3_1_1move__tag.html", null ],
     [ "overloaded", "structranges_1_1v3_1_1overloaded.html", null ],
     [ "take_view", "structranges_1_1v3_1_1take__view.html", "structranges_1_1v3_1_1take__view" ],
+    [ "variant", "structranges_1_1v3_1_1variant.html", null ],
     [ "view_base", "structranges_1_1v3_1_1view__base.html", null ],
     [ "bind_element_t", "range__fwd_8hpp.html#gaee532160e88da77b5a0327f093751cd2", null ],
     [ "common_iterator", "range__fwd_8hpp.html#aaa06a88a4a1b9a488655bbabd51cd9b8", null ],

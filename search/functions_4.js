@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['end',['end',['../structranges_1_1v3_1_1view__facade.html#a8951cedc15d9fd5ac252e6c34011f0ef',1,'ranges::v3::view_facade']]]
+  ['dangling',['dangling',['../structranges_1_1v3_1_1dangling.html#abbd58e069139d87219a2a656e90ad4a4',1,'ranges::v3::dangling']]],
+  ['derived',['derived',['../structranges_1_1v3_1_1view__interface.html#ad10f8a90ba1322b2a19e9118e17b7595',1,'ranges::v3::view_interface']]]
 ];
