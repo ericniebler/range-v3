@@ -405,8 +405,31 @@ int main()
 
         static_assert(b == 35, "");
 
-        using c = meta::integer_range<std::size_t, 5, 10>;
-        static_assert(std::is_same<c, meta::integer_sequence<std::size_t, 5, 6, 7, 8, 9>>{}, "");
+        constexpr std::size_t c = meta::fold<meta::as_list<meta::integer_range<std::size_t, 0, 20>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(c == 190, "");
+
+        using d = meta::integer_range<std::size_t, 5, 10>;
+        static_assert(std::is_same<d, meta::integer_sequence<std::size_t, 5, 6, 7, 8, 9>>{}, "");
+    }
+
+    // Check reverse_fold
+    {
+        constexpr std::size_t a = meta::reverse_fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(a == 10, "");
+
+        constexpr std::size_t b = meta::reverse_fold<meta::as_list<meta::integer_range<std::size_t, 5, 10>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(b == 35, "");
+
+        constexpr std::size_t c = meta::reverse_fold<meta::as_list<meta::integer_range<std::size_t, 0, 20>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(c == 190, "");
     }
 
     test_tuple_cat();
