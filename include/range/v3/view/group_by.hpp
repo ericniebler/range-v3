@@ -76,7 +76,7 @@ namespace ranges
                 }
                 void next()
                 {
-                    cur_ = ranges::next(adjacent_find(cur_, last_, not_(std::ref(fun_))), 1, last_);
+                    cur_ = ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
                 }
                 bool done() const
                 {
