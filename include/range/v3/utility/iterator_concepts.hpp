@@ -642,7 +642,7 @@ namespace __gnu_debug
 }
 #endif
 
-#if defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 3900)
+#if defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 3900)
 // HACKHACK: workaround libc++ (https://llvm.org/bugs/show_bug.cgi?id=28421)
 // and libstdc++ (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71771)
 // underconstrained operator- for reverse_iterator by disabling SizedSentinel
@@ -657,6 +657,6 @@ namespace ranges
         {};
     }
 }
-#endif // defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 3900)
+#endif // defined(__GLIBCXX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 3900)
 
 #endif // RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP
