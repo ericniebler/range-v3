@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_VIEW_REPEAT_N_HPP
 #define RANGES_V3_VIEW_REPEAT_N_HPP
 
+#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
@@ -45,16 +46,16 @@ namespace ranges
             struct cursor
             {
             private:
-                Val value_;
+                Val const *value_;
                 std::ptrdiff_t n_;
             public:
                 cursor() = default;
-                cursor(Val value, std::ptrdiff_t n)
-                  : value_(std::move(value)), n_(n)
+                cursor(Val const &value, std::ptrdiff_t n)
+                  : value_(std::addressof(value)), n_(n)
                 {}
-                Val get() const
+                Val const &get() const
                 {
-                    return value_;
+                    return *value_;
                 }
                 constexpr bool done() const
                 {
