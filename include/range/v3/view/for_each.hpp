@@ -95,11 +95,27 @@ namespace ranges
 
         struct yield_fn
         {
-            template<typename V>
+            template<typename V,
+                CONCEPT_REQUIRES_(SemiRegular<V>())>
             single_view<V> operator()(V v) const
             {
                 return view::single(std::move(v));
             }
+
+        #ifndef RANGES_DOXYGEN_INVOKED
+            template<typename Arg, typename Val = detail::decay_t<Arg>,
+                CONCEPT_REQUIRES_(!(SemiRegular<Val>() && Constructible<Val, Arg &&>()))>
+            void operator()(Arg &&) const
+            {
+                CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
+                    "The object passed to yield must be a model of the SemiRegular "
+                    "concept; that is, it needs to be default constructible, copy and move "
+                    "constructible, and destructible.");
+                CONCEPT_ASSERT_MSG(!SemiRegular<Val>() || Constructible<Val, Arg &&>(),
+                    "The object type passed to yield must be initializable from the "
+                    "actual argument expression.");
+            }
+        #endif
         };
 
         /// \relates yield_fn
