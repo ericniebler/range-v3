@@ -784,24 +784,42 @@ namespace ranges
     }
 }
 
+namespace ranges
+{
+    inline namespace v3
+    {
+        namespace detail
+        {
+            template<typename Cur, typename S, bool IsReadable = (bool) ReadableCursor<Cur>()>
+            struct std_iterator_traits
+              : iterator_associated_types_base<Cur, S>
+            {
+                using iterator_category = std::output_iterator_tag;
+                using value_type = void;
+                using reference = void;
+                using pointer = void;
+            };
+
+            template<typename Cur, typename S>
+            struct std_iterator_traits<Cur, S, true>
+              : iterator_associated_types_base<Cur, S>
+            {
+                using iterator_category =
+                    ::meta::_t<
+                        downgrade_iterator_category<
+                            typename std_iterator_traits::iterator_category,
+                            typename std_iterator_traits::reference>>;
+            };
+        }
+    }
+}
+
 namespace std
 {
     template<typename Cur, typename S>
     struct iterator_traits< ::ranges::basic_iterator<Cur, S>>
-    {
-    private:
-        using iterator = ::ranges::basic_iterator<Cur, S>;
-    public:
-        using difference_type = typename iterator::difference_type;
-        using value_type = typename iterator::value_type;
-        using reference = typename iterator::reference;
-        using iterator_category =
-            ::meta::_t<
-                ::ranges::detail::downgrade_iterator_category<
-                    typename iterator::iterator_category,
-                    reference>>;
-        using pointer = typename iterator::pointer;
-    };
+      : ::ranges::detail::std_iterator_traits<Cur, S>
+    {};
 }
 /// \endcond
 
