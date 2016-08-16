@@ -14,17 +14,18 @@
 #include <sstream>
 #include <memory>
 #include <range/v3/core.hpp>
-#include <range/v3/view/zip.hpp>
-#include <range/v3/view/zip_with.hpp>
-#include <range/v3/view/map.hpp>
-#include <range/v3/view/move.hpp>
-#include <range/v3/view/stride.hpp>
-#include <range/v3/view/bounded.hpp>
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/take_while.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/view/bounded.hpp>
+#include <range/v3/view/for_each.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/map.hpp>
+#include <range/v3/view/move.hpp>
+#include <range/v3/view/stride.hpp>
+#include <range/v3/view/take_while.hpp>
+#include <range/v3/view/zip.hpp>
+#include <range/v3/view/zip_with.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -213,6 +214,13 @@ int main()
         std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(y.begin());
         auto it = x.begin();
         static_assert(noexcept(iter_move(it)), "");
+    }
+
+    // Regression test for #439.
+    {
+        std::vector<int> vec{0,1,2};
+        auto rng = vec | view::for_each([](int i) { return ranges::yield(i); });
+        ranges::distance(view::zip(view::ints(0), rng) | view::bounded);
     }
 
     return test_result();

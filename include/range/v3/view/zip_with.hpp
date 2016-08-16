@@ -167,6 +167,7 @@ namespace ranges
                 {
                     tuple_for_each(its_, detail::inc);
                 }
+                CONCEPT_REQUIRES(meta::and_c<(bool) Sentinel<range_iterator_t<Rngs>, range_iterator_t<Rngs>>()...>::value)
                 bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
