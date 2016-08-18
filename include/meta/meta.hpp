@@ -635,27 +635,39 @@ namespace meta
                 using type = std::true_type;
             };
 
-            template <template <typename...> class, typename, typename = void>
-            struct defer_
+            struct defer_if_
             {
+                template <template <typename...> class C, typename... Ts>
+                struct result
+                {
+                    using type = C<Ts...>;
+                };
+                template <template <typename...> class C, typename... Ts,
+                    typename = C<Ts...>>
+                result<C, Ts...> try_();
+                template <template <typename...> class C, typename... Ts>
+                nil_ try_() const;
+            };
+
+            struct defer_i_if_
+            {
+                template <typename T, template <T...> class C, T... Is>
+                struct result
+                {
+                    using type = C<Is...>;
+                };
+                template <typename T, template <T...> class C, T... Is,
+                    typename = C<Is...>>
+                result<T, C, Is...> try_();
+                template <typename T, template <T...> class C, T... Is>
+                nil_ try_() const;
             };
 
             template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, void_<C<Ts...>>>
-            {
-                using type = C<Ts...>;
-            };
-
-            template <typename T, template <T...> class, typename, typename = void>
-            struct defer_i_
-            {
-            };
+            using defer_ = decltype(defer_if_{}.try_<C, Ts...>());
 
             template <typename T, template <T...> class C, T... Is>
-            struct defer_i_<T, C, integer_sequence<T, Is...>, void_<C<Is...>>>
-            {
-                using type = C<Is...>;
-            };
+            using defer_i_ = decltype(defer_i_if_{}.try_<T, C, Is...>());
 
             template <typename T>
             using _t_t = _t<_t<T>>;
@@ -697,7 +709,7 @@ namespace meta
         ///
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        struct defer : detail::defer_<C, list<Ts...>>
+        struct defer : detail::defer_<C, Ts...>
         {
         };
 
@@ -709,7 +721,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
-        struct defer_i : detail::defer_i_<T, C, integer_sequence<T, Is...>>
+        struct defer_i : detail::defer_i_<T, C, Is...>
         {
         };
 
@@ -721,7 +733,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        using defer_trait = defer<detail::_t_t, detail::defer_<C, list<Ts...>>>;
+        using defer_trait = defer<detail::_t_t, detail::defer_<C, Ts...>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i
@@ -732,7 +744,7 @@ namespace meta
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
         using defer_trait_i =
-            defer<detail::_t_t, detail::defer_i_<T, C, integer_sequence<T, Is...>>>;
+            defer<detail::_t_t, detail::defer_i_<T, C, Is...>>;
 
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
@@ -821,12 +833,11 @@ namespace meta
             // Indirection through defer here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<detail::defer_<C, list<Ts...>>>;
+            using invoke = _t<detail::defer_<C, Ts...>>;
         };
 
         /// Turn a class template or alias template \p C taking literals of type \p T
-        /// into a
-        /// Callable.
+        /// into a Callable.
         /// \ingroup composition
         template <typename T, template <T...> class C>
         struct quote_i
@@ -834,7 +845,7 @@ namespace meta
             // Indirection through defer_i here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<detail::defer_i_<T, C, integer_sequence<T, Ts::type::value...>>>;
+            using invoke = _t<detail::defer_i_<T, C, Ts::type::value...>>;
         };
 
 #if __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(__clang__) && !defined(META_DOXYGEN_INVOKED)
