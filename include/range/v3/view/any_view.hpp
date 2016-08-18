@@ -23,6 +23,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/utility/polymorphic_cast.hpp>
 
 namespace ranges
 {
@@ -122,8 +123,7 @@ namespace ranges
                 bool equal_(Input const &that) const
                 {
                     any_cursor_impl const *pthat =
-                        dynamic_cast<any_cursor_impl const *>(&that);
-                    RANGES_ASSERT(pthat != nullptr);
+                        polymorphic_downcast<any_cursor_impl const *>(&that);
                     return pthat->it_.get() == it_.get();
                 }
                 CONCEPT_REQUIRES(!EqualityComparable<I>())
@@ -169,8 +169,7 @@ namespace ranges
                     any_cursor_interface<Ref, category::random_access> const &that) const
                 {
                     any_cursor_impl const *pthat =
-                        dynamic_cast<any_cursor_impl const *>(&that);
-                    RANGES_ASSERT(pthat != nullptr);
+                        polymorphic_downcast<any_cursor_impl const *>(&that);
                     return static_cast<std::ptrdiff_t>(pthat->it_.get() - it_.get());
                 }
             };
@@ -195,8 +194,7 @@ namespace ranges
                 {}
                 bool equal(any_object const &that) const
                 {
-                    object<I> const *pthat = dynamic_cast<object<I> const *>(&that);
-                    RANGES_ASSERT(pthat != nullptr);
+                    object<I> const *pthat = polymorphic_downcast<object<I> const *>(&that);
                     return s_ == pthat->get();
                 }
                 any_sentinel_impl *clone() const
