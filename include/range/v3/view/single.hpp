@@ -105,13 +105,17 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                template<typename Val, CONCEPT_REQUIRES_(!SemiRegular<uncvref_t<Val>>())>
-                void operator()(Val &&) const
+                template<typename Arg, typename Val = detail::decay_t<Arg>,
+                    CONCEPT_REQUIRES_(!(SemiRegular<Val>() && Constructible<Val, Arg &&>()))>
+                void operator()(Arg &&) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
                         "The object passed to view::single must be a model of the SemiRegular "
                         "concept; that is, it needs to be default constructible, copy and move "
-                        " constructible, and destructible.");
+                        "constructible, and destructible.");
+                    CONCEPT_ASSERT_MSG(!SemiRegular<Val>() || Constructible<Val, Arg &&>(),
+                        "The object type passed to view::single must be initializable from the "
+                        "actual argument expression.");
                 }
             #endif
             };
