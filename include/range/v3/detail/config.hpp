@@ -115,7 +115,7 @@
 #define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS RANGES_DIAGNOSTIC_IGNORE(4068)
 #define RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
-#define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+#define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS RANGES_DIAGNOSTIC_IGNORE(4099)
 #define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 #define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
@@ -299,7 +299,7 @@
     inline namespace                   \
     {                                                       \
         constexpr auto& name = static_const<type>::value;   \
-    }                                                     
+    }
 
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_INLINE_VARIABLE(type, name) \
