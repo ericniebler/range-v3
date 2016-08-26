@@ -179,7 +179,6 @@ namespace ranges
           : coerce<T>
         {};
 
-        /// \addtogroup group-utility
         struct as_function_fn
         {
         private:

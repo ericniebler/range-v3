@@ -791,7 +791,7 @@ namespace meta
         /// \endcond
 
         /// Test whether a type \c T is an instantiation of class
-        /// template \t C.
+        /// template \c C.
         /// \ingroup trait
         template <typename T, template <typename...> class C>
         using is = _t<detail::is_<T, C>>;
