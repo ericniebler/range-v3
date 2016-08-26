@@ -81,6 +81,8 @@ namespace ranges
                 return static_cast<storage<T, I, Ts...> &&>(tuple).get();
             }
         }
+        /// \endcond
+
         using compressed_tuple_detail::compressed_tuple;
 
         struct make_compressed_tuple_fn
