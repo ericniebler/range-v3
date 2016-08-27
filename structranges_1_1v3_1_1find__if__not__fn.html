@@ -99,20 +99,20 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1find__if__not__f
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeb16f0b42404f1ad9643c4ac00941945"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename F , typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputIterator&lt; I &gt;()&amp;&amp;Sentinel&lt; S, I &gt;()&amp;&amp;                                                                           IndirectCallablePredicate&lt; F, projected&lt; I, P &gt; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aeb16f0b42404f1ad9643c4ac00941945"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#aeb16f0b42404f1ad9643c4ac00941945">operator()</a> (I begin, S end, F pred_, P proj_=P{}) const </td></tr>
-<tr class="memdesc:aeb16f0b42404f1ad9643c4ac00941945"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>find_if_not_fn::operator()</code>  <a href="#aeb16f0b42404f1ad9643c4ac00941945">More...</a><br /></td></tr>
-<tr class="separator:aeb16f0b42404f1ad9643c4ac00941945"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98e82c431d7a618aabbe1e7963de8b70"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename F , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()&amp;&amp;                                                                           IndirectCallablePredicate&lt; F, projected&lt; I, P &gt; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a98e82c431d7a618aabbe1e7963de8b70"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#a98e82c431d7a618aabbe1e7963de8b70">operator()</a> (Rng &amp;&amp;rng, F pred, P proj=P{}) const </td></tr>
-<tr class="separator:a98e82c431d7a618aabbe1e7963de8b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa653460dbf61067c01206a2e0e7040c6"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename F , typename P  = ident, requires  = (InputIterator&lt;I&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                    IndirectCallablePredicate&lt;F, projected&lt;I, P&gt; &gt;())&gt; </td></tr>
+<tr class="memitem:aa653460dbf61067c01206a2e0e7040c6"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#aa653460dbf61067c01206a2e0e7040c6">operator()</a> (I begin, S end, F pred_, P proj_=P{}) const </td></tr>
+<tr class="memdesc:aa653460dbf61067c01206a2e0e7040c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>find_if_not_fn::operator()</code>  <a href="#aa653460dbf61067c01206a2e0e7040c6">More...</a><br /></td></tr>
+<tr class="separator:aa653460dbf61067c01206a2e0e7040c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc74eec6ccb36eb5d7000ec5ef8637b3"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename F , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (InputRange&lt;Rng&gt;() &amp;&amp;                    IndirectCallablePredicate&lt;F, projected&lt;I, P&gt; &gt;())&gt; </td></tr>
+<tr class="memitem:abc74eec6ccb36eb5d7000ec5ef8637b3"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#abc74eec6ccb36eb5d7000ec5ef8637b3">operator()</a> (Rng &amp;&amp;rng, F pred, P proj=P{}) const </td></tr>
+<tr class="separator:abc74eec6ccb36eb5d7000ec5ef8637b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="aeb16f0b42404f1ad9643c4ac00941945"></a>
+<a class="anchor" id="aa653460dbf61067c01206a2e0e7040c6"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename I , typename S , typename F , typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputIterator&lt; I &gt;()&amp;&amp;Sentinel&lt; S, I &gt;()&amp;&amp;                                                                           IndirectCallablePredicate&lt; F, projected&lt; I, P &gt; &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename I , typename S , typename F , typename P  = ident, requires  = (InputIterator&lt;I&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                    IndirectCallablePredicate&lt;F, projected&lt;I, P&gt; &gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">I ranges::v3::find_if_not_fn::operator() </td>
@@ -158,13 +158,15 @@ template&lt;typename I , typename S , typename F , typename P  = ident, int _con
 <dd>
 <code>F</code> models <code>CallablePredicate&lt;X&gt;</code>, where <code>X</code> is the result type of <code>Callable&lt;P, V&gt;</code> </dd></dl>
 
+<p>References <a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a>, <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, and <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a98e82c431d7a618aabbe1e7963de8b70"></a>
+<a class="anchor" id="abc74eec6ccb36eb5d7000ec5ef8637b3"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename F , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()&amp;&amp;                                                                           IndirectCallablePredicate&lt; F, projected&lt; I, P &gt; &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename F , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (InputRange&lt;Rng&gt;() &amp;&amp;                    IndirectCallablePredicate&lt;F, projected&lt;I, P&gt; &gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_safe_iterator_t&lt;Rng&gt; ranges::v3::find_if_not_fn::operator() </td>
@@ -193,6 +195,8 @@ template&lt;typename Rng , typename F , typename P  = ident, typename I  = range
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
+<p>References <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>, and <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -200,7 +204,7 @@ template&lt;typename Rng , typename F , typename P  = ident, typename I  = range
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html">find_if_not_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html">find_if_not_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

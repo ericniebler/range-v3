@@ -99,11 +99,11 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adjacent__find__
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8da28b1da554c19d635cb12991dfb627"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = ident, int _concept_requires___LINE__ = 42&gt; </td></tr>
+<tr class="memitem:a8da28b1da554c19d635cb12991dfb627"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename C  = equal_to, typename P  = ident, requires  = (ForwardIterator&lt;I&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                    IndirectCallableRelation&lt;C, projected&lt;I, P&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:a8da28b1da554c19d635cb12991dfb627"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a8da28b1da554c19d635cb12991dfb627">operator()</a> (I begin, S end, C pred_=C{}, P proj_=P{}) const </td></tr>
 <tr class="memdesc:a8da28b1da554c19d635cb12991dfb627"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>adjacent_find_fn::operator()</code>  <a href="#a8da28b1da554c19d635cb12991dfb627">More...</a><br /></td></tr>
 <tr class="separator:a8da28b1da554c19d635cb12991dfb627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8ba2c371ccde73502bcbe392dca36f4"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42&gt; </td></tr>
+<tr class="memitem:ac8ba2c371ccde73502bcbe392dca36f4"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (ForwardRange&lt;Rng&gt;() &amp;&amp;                    IndirectCallableRelation&lt;C, projected&lt;I, P&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:ac8ba2c371ccde73502bcbe392dca36f4"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#ac8ba2c371ccde73502bcbe392dca36f4">operator()</a> (Rng &amp;&amp;rng, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:ac8ba2c371ccde73502bcbe392dca36f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -112,7 +112,7 @@ Public Member Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename I , typename S , typename C  = equal_to, typename P  = ident, int _concept_requires___LINE__ = 42&gt; </div>
+template&lt;typename I , typename S , typename C  = equal_to, typename P  = ident, requires  = (ForwardIterator&lt;I&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                    IndirectCallableRelation&lt;C, projected&lt;I, P&gt;&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">I ranges::v3::adjacent_find_fn::operator() </td>
@@ -152,13 +152,15 @@ template&lt;typename I , typename S , typename C  = equal_to, typename P  = iden
 <dd>
 <code>C</code> is a model of the <code>BinaryPredicate</code> concept </dd></dl>
 
+<p>References <a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a>, <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>, and <a class="el" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">ranges::v3::next</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ac8ba2c371ccde73502bcbe392dca36f4"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42&gt; </div>
+template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (ForwardRange&lt;Rng&gt;() &amp;&amp;                    IndirectCallableRelation&lt;C, projected&lt;I, P&gt;&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_safe_iterator_t&lt;Rng&gt; ranges::v3::adjacent_find_fn::operator() </td>
@@ -187,6 +189,8 @@ template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
+<p>References <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>, and <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -194,7 +198,7 @@ template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html">adjacent_find_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html">adjacent_find_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

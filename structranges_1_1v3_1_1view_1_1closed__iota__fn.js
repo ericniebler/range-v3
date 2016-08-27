@@ -1,4 +1,5 @@
 var structranges_1_1v3_1_1view_1_1closed__iota__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1view_1_1closed__iota__fn.html#abd2d91d02e5ab5a6bc6cf9e378b2186e", null ]
+    [ "closed_iota", "group__group-views.html#ga0a192f2f97f1a1f11e23eaf4384303e2", null ],
+    [ "operator()", "structranges_1_1v3_1_1view_1_1closed__iota__fn.html#adbfe5f977006c5cc183c8cb795ae6c41", null ]
 ];

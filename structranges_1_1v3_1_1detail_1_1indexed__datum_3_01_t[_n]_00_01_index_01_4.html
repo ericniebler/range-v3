@@ -105,38 +105,28 @@ T(&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () noexcep
 <tr class="memitem:a79bd089c1715f06abc45244c3a263151"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79bd089c1715f06abc45244c3a263151"></a>
 constexpr T const (&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () const noexcept)[N]</td></tr>
 <tr class="separator:a79bd089c1715f06abc45244c3a263151"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a551b37268431e5a2e1722906b97e8066"><td class="memTemplParams" colspan="2"><a class="anchor" id="a551b37268431e5a2e1722906b97e8066"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(DefaultConstructible&lt; T &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a551b37268431e5a2e1722906b97e8066"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (<a class="el" href="structmeta_1_1nil__.html">meta::nil_</a>={})</td></tr>
-<tr class="separator:a551b37268431e5a2e1722906b97e8066"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a473b0a221e201f4e4a9573162e27456b"><td class="memTemplParams" colspan="2"><a class="anchor" id="a473b0a221e201f4e4a9573162e27456b"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(MoveConstructible&lt; T &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a473b0a221e201f4e4a9573162e27456b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (indexed_datum &amp;&amp;that)</td></tr>
-<tr class="separator:a473b0a221e201f4e4a9573162e27456b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f72308d9b66904bd32c1926050bcbea"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3f72308d9b66904bd32c1926050bcbea"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(CopyConstructible&lt; T &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a3f72308d9b66904bd32c1926050bcbea"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (indexed_datum const &amp;that)</td></tr>
-<tr class="separator:a3f72308d9b66904bd32c1926050bcbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a4c511b044c42e05775931725616e7"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> (<a class="el" href="structmeta_1_1nil__.html">meta::nil_</a>={})</td></tr>
+<tr class="separator:a61a4c511b044c42e05775931725616e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0836d50c90725125f2494a4ee7993cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#ae0836d50c90725125f2494a4ee7993cf">indexed_datum</a> (indexed_datum &amp;&amp;that)</td></tr>
+<tr class="separator:ae0836d50c90725125f2494a4ee7993cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3ec1baebe46c4d65d3e0a8381e8a267"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#ae3ec1baebe46c4d65d3e0a8381e8a267">indexed_datum</a> (indexed_datum const &amp;that)</td></tr>
+<tr class="separator:ae3ec1baebe46c4d65d3e0a8381e8a267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58cca61771cec732a5485d45dbce4dc2"><td class="memTemplParams" colspan="2"><a class="anchor" id="a58cca61771cec732a5485d45dbce4dc2"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42&gt; </td></tr>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; InputIterator&lt;I&gt;() &amp;&amp;                        Constructible&lt;T, iterator_reference_t&lt;I&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:a58cca61771cec732a5485d45dbce4dc2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (I first, S last)</td></tr>
 <tr class="separator:a58cca61771cec732a5485d45dbce4dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc9ea11525d03f609377e544b9cfe6ea"><td class="memTemplParams" colspan="2"><a class="anchor" id="acc9ea11525d03f609377e544b9cfe6ea"></a>
-template&lt;typename R , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputRange&lt; R &gt;()&amp;&amp;Constructible&lt; T, range_reference_t&lt; R &gt; &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:acc9ea11525d03f609377e544b9cfe6ea"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (R &amp;&amp;r)</td></tr>
-<tr class="separator:acc9ea11525d03f609377e544b9cfe6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb7ddf47f36e0aac3b5661415166d6ce"><td class="memTemplParams" colspan="2"><a class="anchor" id="afb7ddf47f36e0aac3b5661415166d6ce"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Assignable&lt; T &amp;, T &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:afb7ddf47f36e0aac3b5661415166d6ce"><td class="memTemplItemLeft" align="right" valign="top">indexed_datum &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (indexed_datum &amp;&amp;that)</td></tr>
-<tr class="separator:afb7ddf47f36e0aac3b5661415166d6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a8a7350bf756fb1d12485260d00ef8f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4a8a7350bf756fb1d12485260d00ef8f"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Assignable&lt; T &amp;, T const &amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a4a8a7350bf756fb1d12485260d00ef8f"><td class="memTemplItemLeft" align="right" valign="top">indexed_datum &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (indexed_datum const &amp;that)</td></tr>
-<tr class="separator:a4a8a7350bf756fb1d12485260d00ef8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafc00edf8a8325a725d9564ca5022366"><td class="memTemplParams" colspan="2"><a class="anchor" id="aafc00edf8a8325a725d9564ca5022366"></a>
-template&lt;typename R , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(InputRange&lt; R &gt;()&amp;&amp;                                                                                           Assignable&lt; T &amp;, range_reference_t&lt; R &gt; &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aafc00edf8a8325a725d9564ca5022366"><td class="memTemplItemLeft" align="right" valign="top">indexed_datum &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (R &amp;&amp;r)</td></tr>
-<tr class="separator:aafc00edf8a8325a725d9564ca5022366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9441714d903d60c80a8a1666df0479"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9a9441714d903d60c80a8a1666df0479"></a>
+template&lt;typename R , requires  = (InputRange&lt;R&gt;() &amp;&amp; Constructible&lt;T, range_reference_t&lt;R&gt;&amp;&amp;&gt;())&gt; </td></tr>
+<tr class="memitem:a9a9441714d903d60c80a8a1666df0479"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indexed_datum</b> (R &amp;&amp;r)</td></tr>
+<tr class="separator:a9a9441714d903d60c80a8a1666df0479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3100f9207cb0f39f22d28e5d7d754e31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a3100f9207cb0f39f22d28e5d7d754e31">operator=</a> (<a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> &amp;&amp;that)</td></tr>
+<tr class="separator:a3100f9207cb0f39f22d28e5d7d754e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81e96b50e761af05c41993a1e88e56cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a81e96b50e761af05c41993a1e88e56cd">operator=</a> (<a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> const &amp;that)</td></tr>
+<tr class="separator:a81e96b50e761af05c41993a1e88e56cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a535f4f81ac3c607a19c00fdb77702d80"><td class="memTemplParams" colspan="2"><a class="anchor" id="a535f4f81ac3c607a19c00fdb77702d80"></a>
+template&lt;typename R , requires  = (InputRange&lt;R&gt;() &amp;&amp;                        Assignable&lt;T &amp;, range_reference_t&lt;R&gt;&amp;&amp;&gt;())&gt; </td></tr>
+<tr class="memitem:a535f4f81ac3c607a19c00fdb77702d80"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (R &amp;&amp;r)</td></tr>
+<tr class="separator:a535f4f81ac3c607a19c00fdb77702d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade84d21c0a6cc63d4639f21dbe457150"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade84d21c0a6cc63d4639f21dbe457150"></a>
 indexed_element&lt; T[N], Index::value &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b> ()</td></tr>
 <tr class="separator:ade84d21c0a6cc63d4639f21dbe457150"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,12 +134,115 @@ indexed_element&lt; T[N], Index::value &gt;&#160;</td><td class="memItemRight" v
 constexpr indexed_element&lt; T const [N], Index::value &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b> () const </td></tr>
 <tr class="separator:a02199296a522ad9eea2bdbe4071aa90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a3100f9207cb0f39f22d28e5d7d754e31"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, typename Index &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a>&amp; ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a>&lt; T[N], Index &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>Assignable&lt;T &amp;  T &amp;&amp;&gt;()) </dd></dl>
+
+<p>References <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81e96b50e761af05c41993a1e88e56cd"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, typename Index &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a>&amp; ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a61a4c511b044c42e05775931725616e7">indexed_datum</a>&lt; T[N], Index &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>Assignable&lt;T &amp;  T const &amp;&gt;()) </dd></dl>
+
+<p>References <a class="el" href="group__group-algorithms.html#gadca8b1ff5bdfca0e70575e53e50cba36">ranges::v3::copy</a>, and <a class="el" href="group__group-utility.html#gad3ba36f66e2dbc2468ec9a466dbc7e34">ranges::v3::ref</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a61a4c511b044c42e05775931725616e7"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, typename Index &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::indexed_datum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmeta_1_1nil__.html">meta::nil_</a>&#160;</td>
+          <td class="paramname"> = <code>{}</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>DefaultConstructible&lt;T&gt;() </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae0836d50c90725125f2494a4ee7993cf"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, typename Index &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::indexed_datum </td>
+          <td>(</td>
+          <td class="paramtype">indexed_datum&lt; T[N], Index &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>MoveConstructible&lt;T&gt;() </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae3ec1baebe46c4d65d3e0a8381e8a267"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, typename Index &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::indexed_datum </td>
+          <td>(</td>
+          <td class="paramtype">indexed_datum&lt; T[N], Index &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>CopyConstructible&lt;T&gt;() </dd></dl>
+
+<p>References <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, and <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><b>detail</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html">indexed_datum&lt; T[N], Index &gt;</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><b>detail</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html">indexed_datum&lt; T[N], Index &gt;</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

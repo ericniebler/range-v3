@@ -99,19 +99,19 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1make__iterator__
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a03d71c020b4c492b3212cad8946d0f67"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a03d71c020b4c492b3212cad8946d0f67"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1iterator__range.html">iterator_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html#a03d71c020b4c492b3212cad8946d0f67">operator()</a> (I begin, S end) const </td></tr>
-<tr class="separator:a03d71c020b4c492b3212cad8946d0f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c31ec7556fa2dd1b8485158e3a314e"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a41c31ec7556fa2dd1b8485158e3a314e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">sized_iterator_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html#a41c31ec7556fa2dd1b8485158e3a314e">operator()</a> (I begin, S end, iterator_size_t&lt; I &gt; size) const </td></tr>
-<tr class="separator:a41c31ec7556fa2dd1b8485158e3a314e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7509dadc232e6bdd607b713715334af7"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:a7509dadc232e6bdd607b713715334af7"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1iterator__range.html">iterator_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html#a7509dadc232e6bdd607b713715334af7">operator()</a> (I begin, S end) const </td></tr>
+<tr class="separator:a7509dadc232e6bdd607b713715334af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9433d94e0348d7db043886cb3e39ba0"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ac9433d94e0348d7db043886cb3e39ba0"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">sized_iterator_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html#ac9433d94e0348d7db043886cb3e39ba0">operator()</a> (I begin, S end, iterator_size_t&lt; I &gt; size) const </td></tr>
+<tr class="separator:ac9433d94e0348d7db043886cb3e39ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a03d71c020b4c492b3212cad8946d0f67"></a>
+<a class="anchor" id="a7509dadc232e6bdd607b713715334af7"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr <a class="el" href="structranges_1_1v3_1_1iterator__range.html">iterator_range</a>&lt;I, S&gt; ranges::v3::make_iterator_range_fn::operator() </td>
@@ -134,13 +134,15 @@ template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typen
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>{begin, end}</code> </dd></dl>
 
+<p>References <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a41c31ec7556fa2dd1b8485158e3a314e"></a>
+<a class="anchor" id="ac9433d94e0348d7db043886cb3e39ba0"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr <a class="el" href="structranges_1_1v3_1_1sized__iterator__range.html">sized_iterator_range</a>&lt;I, S&gt; ranges::v3::make_iterator_range_fn::operator() </td>
@@ -169,6 +171,8 @@ template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typen
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>{begin, end, size}</code> </dd></dl>
 
+<p>References <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -176,7 +180,7 @@ template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typen
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html">make_iterator_range_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html">make_iterator_range_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

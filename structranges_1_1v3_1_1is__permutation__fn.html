@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1is__permutation_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7b11b2eeaa325da2ccf665e2238f445c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7b11b2eeaa325da2ccf665e2238f445c"></a>
-template&lt;typename I1 , typename S1 , typename I2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S1, I1 &gt;()&amp;&amp;IsPermutationable&lt; I1, I2, C, P1, P2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a7b11b2eeaa325da2ccf665e2238f445c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, C pred_=C{}, P1 proj1_=P1{}, P2 proj2_=P2{}) const </td></tr>
-<tr class="separator:a7b11b2eeaa325da2ccf665e2238f445c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f18b54c590b89b0a6d58585d57d597c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f18b54c590b89b0a6d58585d57d597c"></a>
-template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S1, I1 &gt;()&amp;&amp;Sentinel&lt; S2, I2 &gt;()&amp;&amp;                                                                           IsPermutationable&lt; I1, I2, C, P1, P2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a1f18b54c590b89b0a6d58585d57d597c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
-<tr class="separator:a1f18b54c590b89b0a6d58585d57d597c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a693da16ac8bf55fa55ecaba2ed0340a0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a693da16ac8bf55fa55ecaba2ed0340a0"></a>
-template&lt;typename Rng1 , typename I2Ref , typename C  = equal_to, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = uncvref_t&lt;I2Ref&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(ForwardRange&lt; Rng1 &gt;()&amp;&amp;Iterator&lt; I2 &gt;()&amp;&amp;                                                                           IsPermutationable&lt; I1, I2, C, P1, P2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a693da16ac8bf55fa55ecaba2ed0340a0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, I2Ref &amp;&amp;begin2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
-<tr class="separator:a693da16ac8bf55fa55ecaba2ed0340a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99c4a97869ef30779870db471fc774fb"><td class="memTemplParams" colspan="2"><a class="anchor" id="a99c4a97869ef30779870db471fc774fb"></a>
-template&lt;typename Rng1 , typename Rng2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(ForwardRange&lt; Rng1 &gt;()&amp;&amp;ForwardRange&lt; Rng2 &gt;()&amp;&amp;                                                                           IsPermutationable&lt; I1, I2, C, P1, P2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a99c4a97869ef30779870db471fc774fb"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
-<tr class="separator:a99c4a97869ef30779870db471fc774fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2af7161a0f599505bc52389a61d1891"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad2af7161a0f599505bc52389a61d1891"></a>
+template&lt;typename I1 , typename S1 , typename I2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, requires  = (Sentinel&lt;S1, I1&gt;() &amp;&amp; IsPermutationable&lt;I1, I2, C, P1, P2&gt;())&gt; </td></tr>
+<tr class="memitem:ad2af7161a0f599505bc52389a61d1891"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, C pred_=C{}, P1 proj1_=P1{}, P2 proj2_=P2{}) const </td></tr>
+<tr class="separator:ad2af7161a0f599505bc52389a61d1891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe106f70df8182bc6d1bfbd8e9331f9d"><td class="memTemplParams" colspan="2"><a class="anchor" id="afe106f70df8182bc6d1bfbd8e9331f9d"></a>
+template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, requires  = (Sentinel&lt;S1, I1&gt;() &amp;&amp; Sentinel&lt;S2, I2&gt;() &amp;&amp;                    IsPermutationable&lt;I1, I2, C, P1, P2&gt;())&gt; </td></tr>
+<tr class="memitem:afe106f70df8182bc6d1bfbd8e9331f9d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
+<tr class="separator:afe106f70df8182bc6d1bfbd8e9331f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a20978bf549b3dafaf321b4ba4ad537"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8a20978bf549b3dafaf321b4ba4ad537"></a>
+template&lt;typename Rng1 , typename I2Ref , typename C  = equal_to, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = uncvref_t&lt;I2Ref&gt;, requires  = (ForwardRange&lt;Rng1&gt;() &amp;&amp; Iterator&lt;I2&gt;() &amp;&amp;                    IsPermutationable&lt;I1, I2, C, P1, P2&gt;())&gt; </td></tr>
+<tr class="memitem:a8a20978bf549b3dafaf321b4ba4ad537"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, I2Ref &amp;&amp;begin2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
+<tr class="separator:a8a20978bf549b3dafaf321b4ba4ad537"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cf05d83fb08bc87e51088ed4ab84152"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4cf05d83fb08bc87e51088ed4ab84152"></a>
+template&lt;typename Rng1 , typename Rng2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, requires  = (ForwardRange&lt;Rng1&gt;() &amp;&amp; ForwardRange&lt;Rng2&gt;() &amp;&amp;                    IsPermutationable&lt;I1, I2, C, P1, P2&gt;())&gt; </td></tr>
+<tr class="memitem:a4cf05d83fb08bc87e51088ed4ab84152"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
+<tr class="separator:a4cf05d83fb08bc87e51088ed4ab84152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1is__permutation__fn.html">is_permutation_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1is__permutation__fn.html">is_permutation_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

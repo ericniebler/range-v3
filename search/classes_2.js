@@ -80,7 +80,6 @@ var searchData=
   ['counted_5fview',['counted_view',['../structranges_1_1v3_1_1counted__view.html',1,'ranges::v3']]],
   ['crbegin_5ffn',['crbegin_fn',['../structranges_1_1v3_1_1adl__begin__end__detail_1_1crbegin__fn.html',1,'ranges::v3::adl_begin_end_detail']]],
   ['crend_5ffn',['crend_fn',['../structranges_1_1v3_1_1adl__begin__end__detail_1_1crend__fn.html',1,'ranges::v3::adl_begin_end_detail']]],
-  ['current',['current',['../structranges_1_1v3_1_1tag_1_1current.html',1,'ranges::v3::tag']]],
   ['cursor',['cursor',['../structranges_1_1v3_1_1interleave__view_1_1cursor.html',1,'ranges::v3::interleave_view']]],
   ['cycle_5ffn',['cycle_fn',['../structranges_1_1v3_1_1view_1_1cycle__fn.html',1,'ranges::v3::view']]],
   ['cycled_5fview',['cycled_view',['../structranges_1_1v3_1_1cycled__view.html',1,'ranges::v3']]]

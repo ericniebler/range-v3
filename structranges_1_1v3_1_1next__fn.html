@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1next__fn.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a84d4c28934ef2d2ab4ae01b28a6b1a1d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a84d4c28934ef2d2ab4ae01b28a6b1a1d"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a84d4c28934ef2d2ab4ae01b28a6b1a1d"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it) const </td></tr>
-<tr class="separator:a84d4c28934ef2d2ab4ae01b28a6b1a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac352a291dd930fa1858ca3dc2759b6e0"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac352a291dd930fa1858ca3dc2759b6e0"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ac352a291dd930fa1858ca3dc2759b6e0"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, iterator_difference_t&lt; I &gt; n) const </td></tr>
-<tr class="separator:ac352a291dd930fa1858ca3dc2759b6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a8ca2cf430c95300543da34818c5054"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3a8ca2cf430c95300543da34818c5054"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a3a8ca2cf430c95300543da34818c5054"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, S s) const </td></tr>
-<tr class="separator:a3a8ca2cf430c95300543da34818c5054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57ccefc13981298063f223befd512c09"><td class="memTemplParams" colspan="2"><a class="anchor" id="a57ccefc13981298063f223befd512c09"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a57ccefc13981298063f223befd512c09"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, iterator_difference_t&lt; I &gt; n, S bound) const </td></tr>
-<tr class="separator:a57ccefc13981298063f223befd512c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02f1877843ccc2a4165ffd9614d66fc"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab02f1877843ccc2a4165ffd9614d66fc"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:ab02f1877843ccc2a4165ffd9614d66fc"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it) const </td></tr>
+<tr class="separator:ab02f1877843ccc2a4165ffd9614d66fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07409c343fa161c34c58d65f4b899931"><td class="memTemplParams" colspan="2"><a class="anchor" id="a07409c343fa161c34c58d65f4b899931"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a07409c343fa161c34c58d65f4b899931"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, iterator_difference_t&lt; I &gt; n) const </td></tr>
+<tr class="separator:a07409c343fa161c34c58d65f4b899931"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c9c708eeaebf810d30b6ebaff24318e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1c9c708eeaebf810d30b6ebaff24318e"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:a1c9c708eeaebf810d30b6ebaff24318e"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, S s) const </td></tr>
+<tr class="separator:a1c9c708eeaebf810d30b6ebaff24318e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a788d7f0526d833b3c8cc26805e17334d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a788d7f0526d833b3c8cc26805e17334d"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:a788d7f0526d833b3c8cc26805e17334d"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I it, iterator_difference_t&lt; I &gt; n, S bound) const </td></tr>
+<tr class="separator:a788d7f0526d833b3c8cc26805e17334d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1next__fn.html">next_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1next__fn.html">next_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

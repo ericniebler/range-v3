@@ -91,7 +91,6 @@ $(document).ready(function(){initNavTree('utility_2move_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -107,12 +106,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__indirectly__movable.html">ranges::v3::is_indirectly_movable&lt; I, O &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__nothrow__indirectly__movable.html">ranges::v3::is_nothrow_indirectly_movable&lt; I, O &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -137,6 +130,9 @@ template&lt;typename I , typename O &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a0ae504afc985757efed8871cdc495574"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ae504afc985757efed8871cdc495574"></a>
+constexpr adl_move_detail::indirect_move_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::indirect_move</b> {}</td></tr>
+<tr class="separator:a0ae504afc985757efed8871cdc495574"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13bcb4901817fad98b6a0715790af4ef"><td class="memTemplParams" colspan="2"><a class="anchor" id="a13bcb4901817fad98b6a0715790af4ef"></a>
 template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:a13bcb4901817fad98b6a0715790af4ef"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga724f3a0fc2262e19d54086d2ddd1bfc2">meta::and_</a>&lt; std::is_constructible&lt; <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt;, std::is_assignable&lt; decltype(*std::declval&lt; O &amp; &gt;)), decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
@@ -145,6 +141,8 @@ template&lt;typename I , typename O &gt; </td></tr>
 template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:a2baa0a4ca37ee85ace55ebb4ad10eeba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga724f3a0fc2262e19d54086d2ddd1bfc2">meta::and_</a>&lt; std::is_nothrow_constructible&lt; <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt;, std::is_nothrow_assignable&lt; decltype(*std::declval&lt; O &amp; &gt;)), decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_nothrow_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
 <tr class="separator:a2baa0a4ca37ee85ace55ebb4ad10eeba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gacff94b96a5b7150b9ebc65e67ad5168b">ranges::v3::aux::move</a> {}</td></tr>
+<tr class="separator:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -99,21 +99,21 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1find__end__fn.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a557097d84c4f662caec19c0eb59974ae"><td class="memTemplParams" colspan="2"><a class="anchor" id="a557097d84c4f662caec19c0eb59974ae"></a>
-template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename R  = equal_to, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(ForwardIterator&lt; I1 &gt;()&amp;&amp;Sentinel&lt; S1, I1 &gt;()&amp;&amp;                                                                           ForwardIterator&lt; I2 &gt;()&amp;&amp;Sentinel&lt; S2, I2 &gt;()&amp;&amp;                                                                           IndirectCallableRelation&lt; R, projected&lt; I1, P &gt;, I2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a557097d84c4f662caec19c0eb59974ae"><td class="memTemplItemLeft" align="right" valign="top">I1&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, R pred=R{}, P proj=P{}) const </td></tr>
-<tr class="separator:a557097d84c4f662caec19c0eb59974ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74ee8a75e37f8f24a7a3adede6f817b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae74ee8a75e37f8f24a7a3adede6f817b"></a>
-template&lt;typename Rng1 , typename Rng2 , typename R  = equal_to, typename P  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(ForwardRange&lt; Rng1 &gt;()&amp;&amp;ForwardRange&lt; Rng2 &gt;()&amp;&amp;                                                                           IndirectCallableRelation&lt; R, projected&lt; I1, P &gt;, I2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ae74ee8a75e37f8f24a7a3adede6f817b"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng1 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, R pred=R{}, P proj=P{}) const </td></tr>
-<tr class="separator:ae74ee8a75e37f8f24a7a3adede6f817b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addf43d0da9b18ca233da70b1f5b34724"><td class="memTemplParams" colspan="2"><a class="anchor" id="addf43d0da9b18ca233da70b1f5b34724"></a>
+template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename R  = equal_to, typename P  = ident, requires  = (ForwardIterator&lt;I1&gt;() &amp;&amp; Sentinel&lt;S1, I1&gt;() &amp;&amp;                    ForwardIterator&lt;I2&gt;() &amp;&amp; Sentinel&lt;S2, I2&gt;() &amp;&amp;                    IndirectCallableRelation&lt;R, projected&lt;I1, P&gt;, I2&gt;())&gt; </td></tr>
+<tr class="memitem:addf43d0da9b18ca233da70b1f5b34724"><td class="memTemplItemLeft" align="right" valign="top">I1&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, R pred=R{}, P proj=P{}) const </td></tr>
+<tr class="separator:addf43d0da9b18ca233da70b1f5b34724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a923faa54bba5d1170ad1c8498bf13230"><td class="memTemplParams" colspan="2"><a class="anchor" id="a923faa54bba5d1170ad1c8498bf13230"></a>
+template&lt;typename Rng1 , typename Rng2 , typename R  = equal_to, typename P  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, requires  = (ForwardRange&lt;Rng1&gt;() &amp;&amp; ForwardRange&lt;Rng2&gt;() &amp;&amp;                    IndirectCallableRelation&lt;R, projected&lt;I1, P&gt;, I2&gt;())&gt; </td></tr>
+<tr class="memitem:a923faa54bba5d1170ad1c8498bf13230"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng1 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, R pred=R{}, P proj=P{}) const </td></tr>
+<tr class="separator:a923faa54bba5d1170ad1c8498bf13230"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1find__end__fn.html">find_end_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1find__end__fn.html">find_end_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

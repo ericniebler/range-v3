@@ -19,6 +19,5 @@ var searchData=
   ['forwardview',['ForwardView',['../structranges_1_1v3_1_1concepts_1_1_forward_view.html',1,'ranges::v3::concepts']]],
   ['front_5ffn',['front_fn',['../structranges_1_1v3_1_1front__fn.html',1,'ranges::v3']]],
   ['front_5finserter_5ffn',['front_inserter_fn',['../structranges_1_1v3_1_1front__inserter__fn.html',1,'ranges::v3']]],
-  ['fun',['fun',['../structranges_1_1v3_1_1tag_1_1fun.html',1,'ranges::v3::tag']]],
   ['function',['Function',['../structranges_1_1v3_1_1concepts_1_1_function.html',1,'ranges::v3::concepts']]]
 ];

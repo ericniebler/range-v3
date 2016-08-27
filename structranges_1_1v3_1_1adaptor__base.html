@@ -137,41 +137,41 @@ template&lt;typename Rng &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a1695f389acb81e225e74322c1338ddbf"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1695f389acb81e225e74322c1338ddbf"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(RandomAccessIterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a1695f389acb81e225e74322c1338ddbf"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (I &amp;it, iterator_difference_t&lt; I &gt; n)</td></tr>
-<tr class="separator:a1695f389acb81e225e74322c1338ddbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add7b4cccef5e51b5eaf42238c6efc9c2"><td class="memTemplParams" colspan="2"><a class="anchor" id="add7b4cccef5e51b5eaf42238c6efc9c2"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(SizedSentinel&lt; I, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:add7b4cccef5e51b5eaf42238c6efc9c2"><td class="memTemplItemLeft" align="right" valign="top">static iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (I const &amp;it0, I const &amp;it1)</td></tr>
-<tr class="separator:add7b4cccef5e51b5eaf42238c6efc9c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf2a59a41b81d0202044e68c54de6ac5"><td class="memTemplParams" colspan="2"><a class="anchor" id="adf2a59a41b81d0202044e68c54de6ac5"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:adf2a59a41b81d0202044e68c54de6ac5"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>empty</b> (I const &amp;it, S const &amp;end)</td></tr>
-<tr class="separator:adf2a59a41b81d0202044e68c54de6ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d369452774625741330ae8ea3a0df52"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5d369452774625741330ae8ea3a0df52"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(EqualityComparable&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a5d369452774625741330ae8ea3a0df52"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (I const &amp;it0, I const &amp;it1)</td></tr>
-<tr class="separator:a5d369452774625741330ae8ea3a0df52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37e3e0ffd8ccb352a2d36fcffafd5b5a"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37e3e0ffd8ccb352a2d36fcffafd5b5a"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a37e3e0ffd8ccb352a2d36fcffafd5b5a"><td class="memTemplItemLeft" align="right" valign="top">static iterator_reference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (I const &amp;it, detail::adaptor_base_current_mem_fn={}) noexcept(noexcept(iterator_reference_t&lt; I &gt;(*it)))</td></tr>
-<tr class="separator:a37e3e0ffd8ccb352a2d36fcffafd5b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fad8436342cd06e73e4d17ce7014831"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5fad8436342cd06e73e4d17ce7014831"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a5fad8436342cd06e73e4d17ce7014831"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> (I &amp;it)</td></tr>
-<tr class="separator:a5fad8436342cd06e73e4d17ce7014831"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b3ecf9ec9c92bf9da35adbb93e8fdaf"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b3ecf9ec9c92bf9da35adbb93e8fdaf"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(BidirectionalIterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a6b3ecf9ec9c92bf9da35adbb93e8fdaf"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> (I &amp;it)</td></tr>
-<tr class="separator:a6b3ecf9ec9c92bf9da35adbb93e8fdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97dca9542be2916346514cbc98ade2c0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a97dca9542be2916346514cbc98ade2c0"></a>
+template&lt;typename I , requires  = (RandomAccessIterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a97dca9542be2916346514cbc98ade2c0"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (I &amp;it, iterator_difference_t&lt; I &gt; n)</td></tr>
+<tr class="separator:a97dca9542be2916346514cbc98ade2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35035edc7a7e130af5efca7837890976"><td class="memTemplParams" colspan="2"><a class="anchor" id="a35035edc7a7e130af5efca7837890976"></a>
+template&lt;typename I , requires  = (SizedSentinel&lt;I, I&gt;())&gt; </td></tr>
+<tr class="memitem:a35035edc7a7e130af5efca7837890976"><td class="memTemplItemLeft" align="right" valign="top">static iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (I const &amp;it0, I const &amp;it1)</td></tr>
+<tr class="separator:a35035edc7a7e130af5efca7837890976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab954132efe705e69373c55c1be9f4229"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab954132efe705e69373c55c1be9f4229"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ab954132efe705e69373c55c1be9f4229"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>empty</b> (I const &amp;it, S const &amp;end)</td></tr>
+<tr class="separator:ab954132efe705e69373c55c1be9f4229"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a446774c5dc087eecd924111006d457d8"><td class="memTemplParams" colspan="2"><a class="anchor" id="a446774c5dc087eecd924111006d457d8"></a>
+template&lt;typename I , requires  = (EqualityComparable&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a446774c5dc087eecd924111006d457d8"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (I const &amp;it0, I const &amp;it1)</td></tr>
+<tr class="separator:a446774c5dc087eecd924111006d457d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eed7e0ead7fa905b52082c811c75481"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3eed7e0ead7fa905b52082c811c75481"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a3eed7e0ead7fa905b52082c811c75481"><td class="memTemplItemLeft" align="right" valign="top">static iterator_reference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (I const &amp;it, detail::adaptor_base_current_mem_fn={}) noexcept(noexcept(iterator_reference_t&lt; I &gt;(*it)))</td></tr>
+<tr class="separator:a3eed7e0ead7fa905b52082c811c75481"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7165dca549976308a7df22279d1f8acb"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7165dca549976308a7df22279d1f8acb"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a7165dca549976308a7df22279d1f8acb"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> (I &amp;it)</td></tr>
+<tr class="separator:a7165dca549976308a7df22279d1f8acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408272fa878a8662804c02ec281754fc"><td class="memTemplParams" colspan="2"><a class="anchor" id="a408272fa878a8662804c02ec281754fc"></a>
+template&lt;typename I , requires  = (BidirectionalIterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:a408272fa878a8662804c02ec281754fc"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> (I &amp;it)</td></tr>
+<tr class="separator:a408272fa878a8662804c02ec281754fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adaptor__base.html">adaptor_base</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adaptor__base.html">adaptor_base</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1transfor
 
 <div class="header">
   <div class="summary">
+<a href="#related">Synopsis of methods</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1view_1_1transform__fn-members.html">List of all members</a>  </div>
@@ -98,6 +99,12 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1transfor
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Synopsis of methods</h2></td></tr>
+<tr class="memitem:ga333737853b64c286fdbd7a22294c06e6"><td class="memItemLeft" align="right" valign="top">
+constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1v3_1_1view_1_1transform__fn.html">transform_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>transform</b> {}</td></tr>
+<tr class="separator:ga333737853b64c286fdbd7a22294c06e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a98fccf3b29d8879add3db8c4c83dccef"><td class="memTemplParams" colspan="2"><a class="anchor" id="a98fccf3b29d8879add3db8c4c83dccef"></a>
@@ -111,21 +118,21 @@ template&lt;typename Rng1 , typename Rng2 , typename Fun &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a85806e8c714d6f7c116c2eae21b32fde"><td class="memTemplParams" colspan="2"><a class="anchor" id="a85806e8c714d6f7c116c2eae21b32fde"></a>
-template&lt;typename Rng , typename Fun , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Concept&lt; Rng, Fun &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a85806e8c714d6f7c116c2eae21b32fde"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform__view.html">transform_view</a>&lt; all_t&lt; Rng &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const </td></tr>
-<tr class="separator:a85806e8c714d6f7c116c2eae21b32fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37591843b342d4672d3a9f4a9f6c1302"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37591843b342d4672d3a9f4a9f6c1302"></a>
-template&lt;typename Rng1 , typename Rng2 , typename Fun , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Concept2&lt; Rng1, Rng2, Fun &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a37591843b342d4672d3a9f4a9f6c1302"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform2__view.html">transform2_view</a>&lt; all_t&lt; Rng1 &gt;, all_t&lt; Rng2 &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, Fun fun) const </td></tr>
-<tr class="separator:a37591843b342d4672d3a9f4a9f6c1302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9435f63c0fc55f32897a9f3fd64d53c"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa9435f63c0fc55f32897a9f3fd64d53c"></a>
+template&lt;typename Rng , typename Fun , requires  = (Concept&lt;Rng, Fun&gt;())&gt; </td></tr>
+<tr class="memitem:aa9435f63c0fc55f32897a9f3fd64d53c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform__view.html">transform_view</a>&lt; all_t&lt; Rng &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const </td></tr>
+<tr class="separator:aa9435f63c0fc55f32897a9f3fd64d53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef6a4b1954c9802abde6d11d144880b0"><td class="memTemplParams" colspan="2"><a class="anchor" id="aef6a4b1954c9802abde6d11d144880b0"></a>
+template&lt;typename Rng1 , typename Rng2 , typename Fun , requires  = (Concept2&lt;Rng1, Rng2, Fun&gt;())&gt; </td></tr>
+<tr class="memitem:aef6a4b1954c9802abde6d11d144880b0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform2__view.html">transform2_view</a>&lt; all_t&lt; Rng1 &gt;, all_t&lt; Rng2 &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, Fun fun) const </td></tr>
+<tr class="separator:aef6a4b1954c9802abde6d11d144880b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><b>view</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1view_1_1transform__fn.html">transform_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><b>view</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1view_1_1transform__fn.html">transform_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

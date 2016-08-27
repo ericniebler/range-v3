@@ -9,7 +9,7 @@ var group__invocation =
     ] ],
     [ "_t", "group__invocation.html#ga08e2193149605769f6052795ff0a87b1", null ],
     [ "apply", "group__invocation.html#ga3f3ec323be1f393bdc77ff10de87e3d1", null ],
-    [ "defer_trait", "group__invocation.html#gac1c0946bbea78d129dc0745d6f5860b9", null ],
-    [ "defer_trait_i", "group__invocation.html#ga9671b6a9ed8ea5c7c1e2dc286a0dcbbc", null ],
+    [ "defer_trait", "group__invocation.html#ga74ef8c8a77c17e0cbca78b71d447aef7", null ],
+    [ "defer_trait_i", "group__invocation.html#ga2b8719fd4a8b0caa6b0c404fbcadba6c", null ],
     [ "invoke", "group__invocation.html#gaa20b4002ec6b258dec0b11affe7d9cdc", null ]
 ];

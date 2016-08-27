@@ -15,12 +15,9 @@ var dir_50daf2a60bc85f4226ffbd3f03a0b5c9 =
     [ "join.hpp", "action_2join_8hpp.html", [
       [ "join_fn", "structranges_1_1v3_1_1action_1_1join__fn.html", "structranges_1_1v3_1_1action_1_1join__fn" ]
     ] ],
-    [ "push_back.hpp", "push__back_8hpp.html", null ],
-    [ "push_front.hpp", "push__front_8hpp.html", null ],
-    [ "remove_if.hpp", "action_2remove__if_8hpp.html", [
-      [ "remove_if_fn", "structranges_1_1v3_1_1action_1_1remove__if__fn.html", "structranges_1_1v3_1_1action_1_1remove__if__fn" ],
-      [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl" ]
-    ] ],
+    [ "push_back.hpp", "push__back_8hpp.html", "push__back_8hpp" ],
+    [ "push_front.hpp", "push__front_8hpp.html", "push__front_8hpp" ],
+    [ "remove_if.hpp", "action_2remove__if_8hpp.html", "action_2remove__if_8hpp" ],
     [ "shuffle.hpp", "action_2shuffle_8hpp.html", [
       [ "shuffle_fn", "structranges_1_1v3_1_1action_1_1shuffle__fn.html", "structranges_1_1v3_1_1action_1_1shuffle__fn" ],
       [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl" ]

@@ -99,21 +99,21 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1set__union__fn.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6369a21dbc5ef488b3908b740c8c34b4"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6369a21dbc5ef488b3908b740c8c34b4"></a>
-template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename O , typename C  = ordered_less, typename P1  = ident, typename P2  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Mergeable&lt; I1, I2, O, C, P1, P2 &gt;()&amp;&amp;                                                                           Sentinel&lt; S1, I1 &gt;()&amp;&amp;Sentinel&lt; S2, I2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a6369a21dbc5ef488b3908b740c8c34b4"><td class="memTemplItemLeft" align="right" valign="top">tagged_tuple&lt; <a class="el" href="structranges_1_1v3_1_1tag_1_1in1.html">tag::in1</a>(I1), <a class="el" href="structranges_1_1v3_1_1tag_1_1in2.html">tag::in2</a>(I2), <a class="el" href="structranges_1_1v3_1_1tag_1_1out.html">tag::out</a>(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred_=C{}, P1 proj1_=P1{}, P2 proj2_=P2{}) const </td></tr>
-<tr class="separator:a6369a21dbc5ef488b3908b740c8c34b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9968b55d4b13e8e3bfdd0d2179479f57"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9968b55d4b13e8e3bfdd0d2179479f57"></a>
-template&lt;typename Rng1 , typename Rng2 , typename O , typename C  = ordered_less, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Mergeable&lt; I1, I2, O, C, P1, P2 &gt;()&amp;&amp;                                                                           Range&lt; Rng1 &gt;()&amp;&amp;Range&lt; Rng2 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a9968b55d4b13e8e3bfdd0d2179479f57"><td class="memTemplItemLeft" align="right" valign="top">tagged_tuple&lt; <a class="el" href="structranges_1_1v3_1_1tag_1_1in1.html">tag::in1</a>(range_safe_iterator_t&lt; Rng1 &gt;), <a class="el" href="structranges_1_1v3_1_1tag_1_1in2.html">tag::in2</a>(range_safe_iterator_t&lt; Rng2 &gt;), <a class="el" href="structranges_1_1v3_1_1tag_1_1out.html">tag::out</a>(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, O out, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
-<tr class="separator:a9968b55d4b13e8e3bfdd0d2179479f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8eab5f4890acac888522dbbe83ab8d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7d8eab5f4890acac888522dbbe83ab8d"></a>
+template&lt;typename I1 , typename S1 , typename I2 , typename S2 , typename O , typename C  = ordered_less, typename P1  = ident, typename P2  = ident, requires  = (Mergeable&lt;I1, I2, O, C, P1, P2&gt;() &amp;&amp;                    Sentinel&lt;S1, I1&gt;() &amp;&amp; Sentinel&lt;S2, I2&gt;())&gt; </td></tr>
+<tr class="memitem:a7d8eab5f4890acac888522dbbe83ab8d"><td class="memTemplItemLeft" align="right" valign="top">tagged_tuple&lt; tag::in1(I1), tag::in2(I2), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred_=C{}, P1 proj1_=P1{}, P2 proj2_=P2{}) const </td></tr>
+<tr class="separator:a7d8eab5f4890acac888522dbbe83ab8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ad590385b1dbab0bb9ae5310fbcd3cf"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8ad590385b1dbab0bb9ae5310fbcd3cf"></a>
+template&lt;typename Rng1 , typename Rng2 , typename O , typename C  = ordered_less, typename P1  = ident, typename P2  = ident, typename I1  = range_iterator_t&lt;Rng1&gt;, typename I2  = range_iterator_t&lt;Rng2&gt;, requires  = (Mergeable&lt;I1, I2, O, C, P1, P2&gt;() &amp;&amp;                    Range&lt;Rng1&gt;() &amp;&amp; Range&lt;Rng2&gt;())&gt; </td></tr>
+<tr class="memitem:a8ad590385b1dbab0bb9ae5310fbcd3cf"><td class="memTemplItemLeft" align="right" valign="top">tagged_tuple&lt; tag::in1(range_safe_iterator_t&lt; Rng1 &gt;), tag::in2(range_safe_iterator_t&lt; Rng2 &gt;), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, O out, C pred=C{}, P1 proj1=P1{}, P2 proj2=P2{}) const </td></tr>
+<tr class="separator:a8ad590385b1dbab0bb9ae5310fbcd3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1set__union__fn.html">set_union_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1set__union__fn.html">set_union_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

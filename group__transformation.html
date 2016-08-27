@@ -127,7 +127,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga5ba487579193bdb7232b81d85ce601e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>.  <a href="group__transformation.html#ga5ba487579193bdb7232b81d85ce601e8">More...</a><br /></td></tr>
 <tr class="separator:ga5ba487579193bdb7232b81d85ce601e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga82645b1c5d7aba7149ca44e98e62834f"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
-<tr class="memitem:ga82645b1c5d7aba7149ca44e98e62834f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga82645b1c5d7aba7149ca44e98e62834f">meta::filter</a> = join&lt; transform&lt; List, detail::filter_&lt; Pred &gt;&gt;&gt;</td></tr>
+<tr class="memitem:ga82645b1c5d7aba7149ca44e98e62834f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga82645b1c5d7aba7149ca44e98e62834f">meta::filter</a> = <a class="el" href="group__group-actions.html#gaf85c713c3d2cb80ef2c53b9c3212ccad">join</a>&lt; <a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>&lt; List, detail::filter_&lt; Pred &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga82645b1c5d7aba7149ca44e98e62834f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed".  <a href="group__transformation.html#ga82645b1c5d7aba7149ca44e98e62834f">More...</a><br /></td></tr>
 <tr class="separator:ga82645b1c5d7aba7149ca44e98e62834f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga346404b8752acfb857bcc0234cf725e6"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
@@ -179,7 +179,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga1232449533420b49364f2b3a27154cc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Callable <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Callable, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="group__transformation.html#ga1232449533420b49364f2b3a27154cc3">More...</a><br /></td></tr>
 <tr class="separator:ga1232449533420b49364f2b3a27154cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa1c30fa5c3283c27c250e341f6e784d5"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
-<tr class="memitem:gaa1c30fa5c3283c27c250e341f6e784d5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5">meta::transpose</a> = fold&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, list&lt;&gt;&gt;, bind_back&lt; quote&lt; transform &gt;, quote&lt; push_back &gt;&gt;&gt;</td></tr>
+<tr class="memitem:gaa1c30fa5c3283c27c250e341f6e784d5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5">meta::transpose</a> = fold&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, list&lt;&gt;&gt;, bind_back&lt; quote&lt; <a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a> &gt;, quote&lt; push_back &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:gaa1c30fa5c3283c27c250e341f6e784d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code>, transpose the elements from the lists.  <a href="group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5">More...</a><br /></td></tr>
 <tr class="separator:gaa1c30fa5c3283c27c250e341f6e784d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadf83711e56c6bc24311aa68b338cac7d"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
@@ -191,7 +191,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga559fdaee384c3d297b86ab217b26f601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code>, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>s.  <a href="group__transformation.html#ga559fdaee384c3d297b86ab217b26f601">More...</a><br /></td></tr>
 <tr class="separator:ga559fdaee384c3d297b86ab217b26f601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaeef9e5eb7abea34663e2aa0f8e0c5fa1"><td class="memTemplParams" colspan="2">template&lt;typename Fun , typename ListOfLists &gt; </td></tr>
-<tr class="memitem:gaeef9e5eb7abea34663e2aa0f8e0c5fa1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1">meta::zip_with</a> = transform&lt; transpose&lt; ListOfLists &gt;, uncurry&lt; Fun &gt;&gt;</td></tr>
+<tr class="memitem:gaeef9e5eb7abea34663e2aa0f8e0c5fa1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1">meta::zip_with</a> = <a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>&lt; transpose&lt; ListOfLists &gt;, uncurry&lt; Fun &gt;&gt;</td></tr>
 <tr class="memdesc:gaeef9e5eb7abea34663e2aa0f8e0c5fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code> and a Callable <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise.  <a href="group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1">More...</a><br /></td></tr>
 <tr class="separator:gaeef9e5eb7abea34663e2aa0f8e0c5fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -211,7 +211,7 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>An alias for <code><a class="el" href="group__transformation.html#ga346404b8752acfb857bcc0234cf725e6" title="Return a new meta::list constructed by doing a left fold of the list List using binary Callable Fun a...">meta::fold</a></code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -230,7 +230,7 @@ template&lt;typename ListOfLists &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Given a list of lists <code>ListOfLists</code>, return a new list of lists that is the Cartesian Product. Like the <code>sequence</code> function from the Haskell Prelude. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_5.png"/>, where <img class="formulaInl" alt="$ N $" src="form_6.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_7.png"/> is the size of the inner lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_7.png"/>, where <img class="formulaInl" alt="$ N $" src="form_8.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_9.png"/> is the size of the inner lists. </dd></dl>
 
 </div>
 </div>
@@ -239,18 +239,26 @@ template&lt;typename ListOfLists &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Lists&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga37b909e738292271af463b8d2b56d682">meta::concat</a> = typedef _t&lt;detail::concat_&lt;Lists...&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Concatenates several lists into a single list. </p>
 <dl class="section pre"><dt>Precondition</dt><dd>The parameters must all be instantiations of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>. </dd></dl>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_2.png"/> where <img class="formulaInl" alt="$ L $" src="form_3.png"/> is the number of lists in the list of lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_4.png"/> where <img class="formulaInl" alt="$ L $" src="form_5.png"/> is the number of lists in the list of lists. </dd></dl>
 
 </div>
 </div>
@@ -259,17 +267,25 @@ template&lt;typename... Lists&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename N &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga012d67e9ade36bb4d195610bf16f4425">meta::drop</a> = typedef _t&lt;detail::drop_&lt;List, N&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -288,7 +304,7 @@ template&lt;typename List , std::size_t N&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -297,17 +313,25 @@ template&lt;typename List , std::size_t N&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename Pred &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#ga82645b1c5d7aba7149ca44e98e62834f">meta::filter</a> = typedef join&lt;transform&lt;List, detail::filter_&lt;Pred&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#ga82645b1c5d7aba7149ca44e98e62834f">meta::filter</a> = typedef <a class="el" href="group__group-actions.html#gaf85c713c3d2cb80ef2c53b9c3212ccad">join</a>&lt;<a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>&lt;List, detail::filter_&lt;Pred&gt;&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed". </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -326,7 +350,7 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -335,18 +359,26 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename ListOfLists &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#gae8b919ad4c2cfe9b0fc7549cedae5e37">meta::join</a> = typedef apply&lt;quote&lt;concat&gt;, ListOfLists&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Joins a list of lists into a single list. </p>
 <dl class="section pre"><dt>Precondition</dt><dd>The parameter must be an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a>&lt;T</code>...&gt; where each <code>T</code> is itself an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>. </dd></dl>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_2.png"/> where <img class="formulaInl" alt="$ L $" src="form_3.png"/> is the number of lists in the list of lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_4.png"/> where <img class="formulaInl" alt="$ L $" src="form_5.png"/> is the number of lists in the list of lists. </dd></dl>
 
 </div>
 </div>
@@ -365,7 +397,7 @@ template&lt;typename List , typename Pred &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Returns a pair of lists, where the elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -384,7 +416,7 @@ template&lt;typename List &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first element from the front of <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -403,7 +435,7 @@ template&lt;typename List , typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the back of <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd><code>pop_back</code> not provided because it cannot be made to meet the complexity guarantees one would expect. </dd></dl>
 
 </div>
@@ -423,7 +455,7 @@ template&lt;typename List , typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the front of <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -432,17 +464,25 @@ template&lt;typename List , typename T &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T , typename U &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#gae3c48dcdc2c7a675f9c268d5e5ed0910">meta::replace</a> = typedef _t&lt;detail::replace_&lt;List, T, U&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all instances of type <code>T</code> have been replaced with <code>U</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -451,17 +491,25 @@ template&lt;typename List , typename T , typename U &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename C , typename U &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga9564754ddab1c4a725031b1bb093a549">meta::replace_if</a> = typedef _t&lt;detail::replace_if_&lt;List, C, U&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>invoke&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -470,17 +518,25 @@ template&lt;typename List , typename C , typename U &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga48591bc4c8610b8d1dc5e9186f74f9a4">meta::reverse</a> = typedef _t&lt;detail::reverse_&lt;List&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by reversing the elements in the list <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -499,7 +555,7 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -508,17 +564,25 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename Pred &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#gab460e9dcd1e6286afd17421242b2adfb">meta::sort</a> = typedef _t&lt;detail::sort_&lt;List, Pred&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Callable predicate <code>Pred</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd>Expected: <img class="formulaInl" alt="$ O(N log N) $" src="form_9.png"/> Worst case: <img class="formulaInl" alt="$ O(N^2) $" src="form_8.png"/>. <div class="fragment"><div class="line"><span class="keyword">using</span> L0 = list&lt;char[5], char[3], char[2], char[6], char[1], char[5], char[10]&gt;;</div><div class="line"><span class="keyword">using</span> L1 = <a class="code" href="group__transformation.html#gab460e9dcd1e6286afd17421242b2adfb">meta::sort&lt;L0, lambda&lt;_a, _b, lazy::less&lt;lazy::sizeof_&lt;_a&gt;</a>, lazy::sizeof_&lt;_b&gt;&gt;&gt;&gt;;</div><div class="line">static_assert(std::is_same&lt;L1, list&lt;<span class="keywordtype">char</span>[1], <span class="keywordtype">char</span>[2], <span class="keywordtype">char</span>[3], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[6], <span class="keywordtype">char</span>[10]&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div></div><!-- fragment --> </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd>Expected: <img class="formulaInl" alt="$ O(N log N) $" src="form_11.png"/> Worst case: <img class="formulaInl" alt="$ O(N^2) $" src="form_10.png"/>. <div class="fragment"><div class="line"><span class="keyword">using</span> L0 = list&lt;char[5], char[3], char[2], char[6], char[1], char[5], char[10]&gt;;</div><div class="line"><span class="keyword">using</span> L1 = <a class="code" href="group__transformation.html#gab460e9dcd1e6286afd17421242b2adfb">meta::sort&lt;L0, lambda&lt;_a, _b, lazy::less&lt;lazy::sizeof_&lt;_a&gt;</a>, lazy::sizeof_&lt;_b&gt;&gt;&gt;&gt;;</div><div class="line">static_assert(std::is_same&lt;L1, list&lt;<span class="keywordtype">char</span>[1], <span class="keywordtype">char</span>[2], <span class="keywordtype">char</span>[3], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[6], <span class="keywordtype">char</span>[10]&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div></div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
@@ -527,17 +591,25 @@ template&lt;typename List , typename Pred &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga1232449533420b49364f2b3a27154cc3">meta::transform</a> = typedef _t&lt;detail::transform_&lt;list&lt;Args...&gt;&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Callable <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Callable, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_3.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -548,7 +620,7 @@ template&lt;typename... Args&gt; </div>
 template&lt;typename ListOfLists &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5">meta::transpose</a> = typedef fold&lt;ListOfLists, repeat_n&lt;size&lt;front&lt;ListOfLists&gt;&gt;, list&lt;&gt;&gt;, bind_back&lt;quote&lt;transform&gt;, quote&lt;push_back&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5">meta::transpose</a> = typedef fold&lt;ListOfLists, repeat_n&lt;size&lt;front&lt;ListOfLists&gt;&gt;, list&lt;&gt;&gt;, bind_back&lt;quote&lt;<a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>&gt;, quote&lt;push_back&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -556,7 +628,7 @@ template&lt;typename ListOfLists &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Given a list of lists of types <code>ListOfLists</code>, transpose the elements from the lists. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_5.png"/>, where <img class="formulaInl" alt="$ N $" src="form_6.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_7.png"/> is the size of the inner lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_7.png"/>, where <img class="formulaInl" alt="$ N $" src="form_8.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_9.png"/> is the size of the inner lists. </dd></dl>
 
 </div>
 </div>
@@ -565,17 +637,25 @@ template&lt;typename ListOfLists &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d">meta::unique</a> = typedef fold&lt;List, list&lt;&gt;, quote_trait&lt;detail::insert_back_&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all duplicate elements have been removed. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N^2) $" src="form_8.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N^2) $" src="form_10.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -584,17 +664,25 @@ template&lt;typename List &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename ListOfLists &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="group__transformation.html#ga559fdaee384c3d297b86ab217b26f601">meta::zip</a> = typedef transpose&lt;ListOfLists&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Given a list of lists of types <code>ListOfLists</code>, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>s. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_5.png"/>, where <img class="formulaInl" alt="$ N $" src="form_6.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_7.png"/> is the size of the inner lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_7.png"/>, where <img class="formulaInl" alt="$ N $" src="form_8.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_9.png"/> is the size of the inner lists. </dd></dl>
 
 </div>
 </div>
@@ -603,17 +691,25 @@ template&lt;typename ListOfLists &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Fun , typename ListOfLists &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1">meta::zip_with</a> = typedef transform&lt;transpose&lt;ListOfLists&gt;, uncurry&lt;Fun&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1">meta::zip_with</a> = typedef <a class="el" href="group__group-actions.html#gaf9135baba87fb451e6e904428239ad19">transform</a>&lt;transpose&lt;ListOfLists&gt;, uncurry&lt;Fun&gt;&gt;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Given a list of lists of types <code>ListOfLists</code> and a Callable <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_5.png"/>, where <img class="formulaInl" alt="$ N $" src="form_6.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_7.png"/> is the size of the inner lists. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_7.png"/>, where <img class="formulaInl" alt="$ N $" src="form_8.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_9.png"/> is the size of the inner lists. </dd></dl>
 
 </div>
 </div>

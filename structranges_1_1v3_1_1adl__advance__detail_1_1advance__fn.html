@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adl__advance__de
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af1ecd96b7a596aa2d8846322300e696e"><td class="memTemplParams" colspan="2"><a class="anchor" id="af1ecd96b7a596aa2d8846322300e696e"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:af1ecd96b7a596aa2d8846322300e696e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, iterator_difference_t&lt; I &gt; n) const </td></tr>
-<tr class="separator:af1ecd96b7a596aa2d8846322300e696e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9ca4bd3eb28393ce5e0fc206fc3cead5"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;Assignable&lt; I &amp;, S &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, S s) const </td></tr>
-<tr class="separator:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9ca4bd3eb28393ce5e0fc206fc3cead5"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;!Assignable&lt; I &amp;, S &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, S s) const </td></tr>
-<tr class="separator:a9ca4bd3eb28393ce5e0fc206fc3cead5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefd7a4dc2306ec9b9fb158da76c6067a"><td class="memTemplParams" colspan="2"><a class="anchor" id="aefd7a4dc2306ec9b9fb158da76c6067a"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aefd7a4dc2306ec9b9fb158da76c6067a"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;it, iterator_difference_t&lt; I &gt; n, S bound) const </td></tr>
-<tr class="separator:aefd7a4dc2306ec9b9fb158da76c6067a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae31a9327992c310c6596c5e4bc19ea18"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae31a9327992c310c6596c5e4bc19ea18"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:ae31a9327992c310c6596c5e4bc19ea18"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, iterator_difference_t&lt; I &gt; n) const </td></tr>
+<tr class="separator:ae31a9327992c310c6596c5e4bc19ea18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f38425025114ad1ed6c606eb7d1b3e3"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; Assignable&lt;I&amp;, S&amp;&amp;&gt;())&gt; </td></tr>
+<tr class="memitem:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, S s) const </td></tr>
+<tr class="separator:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f38425025114ad1ed6c606eb7d1b3e3"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; !Assignable&lt;I&amp;, S&amp;&amp;&gt;())&gt; </td></tr>
+<tr class="memitem:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;i, S s) const </td></tr>
+<tr class="separator:a1f38425025114ad1ed6c606eb7d1b3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd55b0a16730890fc4412d5ea4c87c17"><td class="memTemplParams" colspan="2"><a class="anchor" id="abd55b0a16730890fc4412d5ea4c87c17"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:abd55b0a16730890fc4412d5ea4c87c17"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I &amp;it, iterator_difference_t&lt; I &gt; n, S bound) const </td></tr>
+<tr class="separator:abd55b0a16730890fc4412d5ea4c87c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><b>adl_advance_detail</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adl__advance__detail_1_1advance__fn.html">advance_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><b>adl_advance_detail</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adl__advance__detail_1_1advance__fn.html">advance_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

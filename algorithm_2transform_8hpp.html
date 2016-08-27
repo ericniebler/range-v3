@@ -91,8 +91,8 @@ $(document).ready(function(){initNavTree('algorithm_2transform_8hpp.html','');})
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">transform.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -101,12 +101,6 @@ $(document).ready(function(){initNavTree('algorithm_2transform_8hpp.html','');})
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1transform__fn.html">ranges::v3::transform_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -119,6 +113,11 @@ template&lt;typename I , typename O , typename F , typename P  = ident, typename
 template&lt;typename I0 , typename I1 , typename O , typename F , typename P0  = ident, typename P1  = ident, typename V0  = iterator_common_reference_t&lt;I0&gt;, typename X0  = concepts::Callable::result_t&lt;P0, V0&gt;, typename V1  = iterator_common_reference_t&lt;I1&gt;, typename X1  = concepts::Callable::result_t&lt;P1, V1&gt;, typename Y  = concepts::Callable::result_t&lt;F, X0, X1&gt;&gt; </td></tr>
 <tr class="memitem:ga6ed65fa70aaaef9909c49ec902e99368"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable2</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; InputIterator&lt; I0 &gt;, InputIterator&lt; I1 &gt;, WeaklyIncrementable&lt; O &gt;, IndirectCallable&lt; F, projected&lt; I0, P0 &gt;, projected&lt; I1, P1 &gt;&gt;, Writable&lt; O, Y &amp;&amp; &gt;&gt;</td></tr>
 <tr class="separator:ga6ed65fa70aaaef9909c49ec902e99368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga96739c9c340ea9a34d3b4d1cddd0d11e"><td class="memItemLeft" align="right" valign="top">constexpr with_braced_init_args&lt; transform_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-algorithms.html#ga96739c9c340ea9a34d3b4d1cddd0d11e">ranges::v3::transform</a> {}</td></tr>
+<tr class="separator:ga96739c9c340ea9a34d3b4d1cddd0d11e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

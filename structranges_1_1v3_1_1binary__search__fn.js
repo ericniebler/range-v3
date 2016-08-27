@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1binary__search__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1binary__search__fn.html#ad768e385f53daf39cca1b2623a6e87e6", null ],
-    [ "operator()", "structranges_1_1v3_1_1binary__search__fn.html#a152a1b1c6dd44c3400771287b59f2c74", null ]
+    [ "operator()", "structranges_1_1v3_1_1binary__search__fn.html#a386b87522adf8f21520e86f5390a4445", null ],
+    [ "operator()", "structranges_1_1v3_1_1binary__search__fn.html#a76d1ec4c465594758937c1058254ae97", null ]
 ];

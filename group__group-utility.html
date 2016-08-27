@@ -91,7 +91,6 @@ $(document).ready(function(){initNavTree('group__group-utility.html','');});
 <div class="header">
   <div class="summary">
 <a href="#groups">Modules</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -107,12 +106,6 @@ $(document).ready(function(){initNavTree('group__group-utility.html','');});
 Modules</h2></td></tr>
 <tr class="memitem:group__group-concepts"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-concepts.html">Concepts</a></td></tr>
 <tr class="memdesc:group__group-concepts"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept-checking classes and utilities. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -434,10 +427,10 @@ template&lt;std::size_t I, typename Element , detail::box_compress BC&gt; </td><
 template&lt;std::size_t I, typename Element , detail::box_compress BC&gt; </td></tr>
 <tr class="memitem:ga710ea75316b8373fdce02b16eec89229"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_element.html">Element</a> &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (box&lt; <a class="el" href="class_element.html">Element</a>, <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; I &gt;, BC &gt; &amp;&amp;b) noexcept</td></tr>
 <tr class="separator:ga710ea75316b8373fdce02b16eec89229"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gace2cb816b578caa8647163778f314aec"><td class="memTemplParams" colspan="2"><a class="anchor" id="gace2cb816b578caa8647163778f314aec"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gace2cb816b578caa8647163778f314aec"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_counted_iterator</b> (I i, iterator_difference_t&lt; I &gt; n)</td></tr>
-<tr class="separator:gace2cb816b578caa8647163778f314aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab454e1e3e5835ebf70f94145eabafdb0"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab454e1e3e5835ebf70f94145eabafdb0"></a>
+template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
+<tr class="memitem:gab454e1e3e5835ebf70f94145eabafdb0"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_counted_iterator</b> (I i, iterator_difference_t&lt; I &gt; n)</td></tr>
+<tr class="separator:gab454e1e3e5835ebf70f94145eabafdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7788de72e9a9997bd85308f363955f51"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga7788de72e9a9997bd85308f363955f51"></a>
 template&lt;typename V , typename I , typename D &gt; </td></tr>
 <tr class="memitem:ga7788de72e9a9997bd85308f363955f51"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; raw_storage_iterator&lt; I, V &gt;, detail::external_count&lt; D &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_counted_raw_storage_iterator</b> (I i, D &amp;d)</td></tr>
@@ -446,39 +439,122 @@ template&lt;typename V , typename I , typename D &gt; </td></tr>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga316dccac9d1ecbc0259442b9d3c979c6"><td class="memTemplItemLeft" align="right" valign="top">reverse_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_reverse_iterator</b> (I i)</td></tr>
 <tr class="separator:ga316dccac9d1ecbc0259442b9d3c979c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5122df45228d2cdcf044d9331104a71e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga5122df45228d2cdcf044d9331104a71e"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga5122df45228d2cdcf044d9331104a71e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_iterator&lt; S &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
-<tr class="separator:ga5122df45228d2cdcf044d9331104a71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacc30c0ffd2b96276ca5315d1a3cc59e7"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
-<tr class="separator:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga09afa27b6d4943b647b2bdb4cf90e278"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_iterator&lt; I &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
-<tr class="separator:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga73e7b9fcad8801f472f6b8b51c4cefbc"></a>
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
-<tr class="separator:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa57770e673a56982f02c16430f9569aa"><td class="memTemplParams" colspan="2">template&lt;typename T , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Constructible&lt; detail::decay_t&lt; T &gt;, T &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gaa57770e673a56982f02c16430f9569aa"><td class="memTemplItemLeft" align="right" valign="top">detail::decay_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa57770e673a56982f02c16430f9569aa">ranges::v3::aux::operator|</a> (T &amp;&amp;t, copy_fn)</td></tr>
-<tr class="separator:gaa57770e673a56982f02c16430f9569aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80e3372d642e61a9fed598831a1ce452"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga80e3372d642e61a9fed598831a1ce452"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga80e3372d642e61a9fed598831a1ce452"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_iterator&lt; S &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
+<tr class="separator:ga80e3372d642e61a9fed598831a1ce452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga595f619314aa843ceeb6ecafcd176912"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga595f619314aa843ceeb6ecafcd176912"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga595f619314aa843ceeb6ecafcd176912"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
+<tr class="separator:ga595f619314aa843ceeb6ecafcd176912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab23201fc3f68bcbbe0ecb8bc2375a92d"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_iterator&lt; I &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
+<tr class="separator:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0c3c1eb53de4527355208fd50dfc4340"></a>
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
+<tr class="separator:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40947d06a54effe04c84688102fc6ce1"><td class="memTemplParams" colspan="2">template&lt;typename T , requires  = (Constructible&lt;detail::decay_t&lt;T&gt;, T &amp;&amp;&gt;())&gt; </td></tr>
+<tr class="memitem:ga40947d06a54effe04c84688102fc6ce1"><td class="memTemplItemLeft" align="right" valign="top">detail::decay_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga40947d06a54effe04c84688102fc6ce1">ranges::v3::aux::operator|</a> (T &amp;&amp;t, copy_fn)</td></tr>
+<tr class="separator:ga40947d06a54effe04c84688102fc6ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; T &gt; &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga666ada406594f0fc35648f34b069d5a7">ranges::v3::aux::operator|</a> (T &amp;&amp;t, move_fn move) noexcept</td></tr>
 <tr class="separator:ga666ada406594f0fc35648f34b069d5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga77b687fbebc266ac4e5fae7a989b6c98"></a>
-template&lt;typename Arg , typename Pipe , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(!is_pipeable&lt; Arg &gt;()&amp;&amp;is_pipeable&lt; Pipe &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
-<tr class="separator:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga140bb40ec8b29f58bcf9989b9f57225c"></a>
-template&lt;typename Pipe0 , typename Pipe1 , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(is_pipeable&lt; Pipe0 &gt;()&amp;&amp;is_pipeable&lt; Pipe1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>
-<tr class="separator:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga67df89791cd36fa8a858ede615c77ae8"></a>
+template&lt;typename Arg , typename Pipe , requires  = (!is_pipeable&lt;Arg&gt;() &amp;&amp; is_pipeable&lt;Pipe&gt;())&gt; </td></tr>
+<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
+<tr class="separator:ga67df89791cd36fa8a858ede615c77ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8d2ca72a205107a619125498af79f14b"></a>
+template&lt;typename Pipe0 , typename Pipe1 , requires  = (is_pipeable&lt;Pipe0&gt;() &amp;&amp; is_pipeable&lt;Pipe1&gt;())&gt; </td></tr>
+<tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>
+<tr class="separator:ga8d2ca72a205107a619125498af79f14b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:gad0b4e45e8ad1e530dfe9018f2119aeed"><td class="memItemLeft" align="right" valign="top">constexpr adl_advance_detail::advance_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a> {}</td></tr>
+<tr class="separator:gad0b4e45e8ad1e530dfe9018f2119aeed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade368ed71b50f5c28a8c44c49d22e7b3"><td class="memItemLeft" align="right" valign="top">constexpr as_function_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a> {}</td></tr>
+<tr class="separator:gade368ed71b50f5c28a8c44c49d22e7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga904de33592539c73d8ab35911c185807"><td class="memItemLeft" align="right" valign="top">constexpr back_inserter_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga904de33592539c73d8ab35911c185807">ranges::v3::back_inserter</a> {}</td></tr>
+<tr class="separator:ga904de33592539c73d8ab35911c185807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44ca8bae41d72e1845434f43055249b5"><td class="memItemLeft" align="right" valign="top">constexpr compose_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga44ca8bae41d72e1845434f43055249b5">ranges::v3::compose</a> {}</td></tr>
+<tr class="separator:ga44ca8bae41d72e1845434f43055249b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad722a0deecae60c4458bc3bcfa7caa5b"><td class="memItemLeft" align="right" valign="top">constexpr copy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad722a0deecae60c4458bc3bcfa7caa5b">ranges::v3::aux::copy</a> {}</td></tr>
+<tr class="separator:gad722a0deecae60c4458bc3bcfa7caa5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace4e3d9471bb3afb11c46d54b8c5ec6e"><td class="memItemLeft" align="right" valign="top">constexpr front_inserter_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gace4e3d9471bb3afb11c46d54b8c5ec6e">ranges::v3::front_inserter</a> {}</td></tr>
+<tr class="separator:gace4e3d9471bb3afb11c46d54b8c5ec6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7c5182174c7fa86b188812312a383cd2"><td class="memItemLeft" align="right" valign="top">constexpr get_cursor_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7c5182174c7fa86b188812312a383cd2">ranges::v3::get_cursor</a> {}</td></tr>
+<tr class="separator:ga7c5182174c7fa86b188812312a383cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ea92d2e2decac4b4c9d9231081a61df"><td class="memItemLeft" align="right" valign="top">constexpr indirect_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7ea92d2e2decac4b4c9d9231081a61df">ranges::v3::indirect</a> {}</td></tr>
+<tr class="separator:ga7ea92d2e2decac4b4c9d9231081a61df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b15cb4c1735a17e540aaf640bc8a736"><td class="memItemLeft" align="right" valign="top">constexpr adl_swap_detail::indirect_swap_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga8b15cb4c1735a17e540aaf640bc8a736">indirect_swap</a> {}</td></tr>
+<tr class="separator:ga8b15cb4c1735a17e540aaf640bc8a736"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad02e0f6a8c7adcb455acca20b7f3892d"><td class="memItemLeft" align="right" valign="top">constexpr iter_distance_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad02e0f6a8c7adcb455acca20b7f3892d">ranges::v3::iter_distance</a> {}</td></tr>
+<tr class="separator:gad02e0f6a8c7adcb455acca20b7f3892d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87e03f1e0748b2469048a560ee5043ae"><td class="memItemLeft" align="right" valign="top">constexpr iter_distance_compare_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga87e03f1e0748b2469048a560ee5043ae">ranges::v3::iter_distance_compare</a> {}</td></tr>
+<tr class="separator:ga87e03f1e0748b2469048a560ee5043ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa1cf3fbf1dfb84a039e64caee6aa8bb"><td class="memItemLeft" align="right" valign="top">constexpr iter_enumerate_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaaa1cf3fbf1dfb84a039e64caee6aa8bb">ranges::v3::iter_enumerate</a> {}</td></tr>
+<tr class="separator:gaaa1cf3fbf1dfb84a039e64caee6aa8bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaba2aff983114b2344c02769a0d65017d"><td class="memItemLeft" align="right" valign="top">constexpr iter_move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaba2aff983114b2344c02769a0d65017d">ranges::v3::iter_move</a> {}</td></tr>
+<tr class="separator:gaba2aff983114b2344c02769a0d65017d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb4794dab236aa51bcb63ff398085bfa"><td class="memItemLeft" align="right" valign="top">constexpr iter_size_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gadb4794dab236aa51bcb63ff398085bfa">ranges::v3::iter_size</a> {}</td></tr>
+<tr class="separator:gadb4794dab236aa51bcb63ff398085bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa98246dd9c8ae0b575829de2b8ff74ed"><td class="memItemLeft" align="right" valign="top">constexpr iter_swap_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa98246dd9c8ae0b575829de2b8ff74ed">ranges::v3::iter_swap</a> {}</td></tr>
+<tr class="separator:gaa98246dd9c8ae0b575829de2b8ff74ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5badc0c2257f49561c20179a64785648"><td class="memItemLeft" align="right" valign="top">constexpr make_common_pair_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga5badc0c2257f49561c20179a64785648">ranges::v3::make_common_pair</a> {}</td></tr>
+<tr class="separator:ga5badc0c2257f49561c20179a64785648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga85d624a417336a4492c6563deae8fcd4"><td class="memItemLeft" align="right" valign="top">constexpr make_common_tuple_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga85d624a417336a4492c6563deae8fcd4">ranges::v3::make_common_tuple</a> {}</td></tr>
+<tr class="separator:ga85d624a417336a4492c6563deae8fcd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga51a68b31d090818fc35926d2d534ea80"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga51a68b31d090818fc35926d2d534ea80"></a>
+constexpr make_move_iterator_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::make_move_iterator</b> {}</td></tr>
+<tr class="separator:ga51a68b31d090818fc35926d2d534ea80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d3e801e8240bfec2a9971296a4764a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6d3e801e8240bfec2a9971296a4764a4"></a>
+constexpr make_move_sentinel_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::make_move_sentinel</b> {}</td></tr>
+<tr class="separator:ga6d3e801e8240bfec2a9971296a4764a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9421f091b207dbe3e5ea63db5d36550a"><td class="memItemLeft" align="right" valign="top">constexpr make_pipeable_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga9421f091b207dbe3e5ea63db5d36550a">ranges::v3::make_pipeable</a> {}</td></tr>
+<tr class="separator:ga9421f091b207dbe3e5ea63db5d36550a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9808273ef5ec1ecaf6200f7ca5f4d667"><td class="memItemLeft" align="right" valign="top">constexpr make_tuple_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga9808273ef5ec1ecaf6200f7ca5f4d667">ranges::v3::make_tuple</a> {}</td></tr>
+<tr class="separator:ga9808273ef5ec1ecaf6200f7ca5f4d667"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gacff94b96a5b7150b9ebc65e67ad5168b">ranges::v3::aux::move</a> {}</td></tr>
+<tr class="separator:gacff94b96a5b7150b9ebc65e67ad5168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae1096593ef0a9a2f805d0684bec0b9a8"><td class="memItemLeft" align="right" valign="top">constexpr move_into_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gae1096593ef0a9a2f805d0684bec0b9a8">ranges::v3::move_into</a> {}</td></tr>
+<tr class="separator:gae1096593ef0a9a2f805d0684bec0b9a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga70320521358b8e16455a2931d524bab9"><td class="memItemLeft" align="right" valign="top">constexpr next_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">ranges::v3::next</a> {}</td></tr>
+<tr class="separator:ga70320521358b8e16455a2931d524bab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96f82ad60be7e34fc2d213fc8db110c3"><td class="memItemLeft" align="right" valign="top">constexpr not_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga96f82ad60be7e34fc2d213fc8db110c3">ranges::v3::not_</a> {}</td></tr>
+<tr class="separator:ga96f82ad60be7e34fc2d213fc8db110c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga449a35367989a11bc16b1b8614582d73"><td class="memItemLeft" align="right" valign="top">constexpr on_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga449a35367989a11bc16b1b8614582d73">ranges::v3::on</a> {}</td></tr>
+<tr class="separator:ga449a35367989a11bc16b1b8614582d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab204304447e26278830f46f14f48bdb5"><td class="memItemLeft" align="right" valign="top">constexpr overload_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gab204304447e26278830f46f14f48bdb5">ranges::v3::overload</a> {}</td></tr>
+<tr class="separator:gab204304447e26278830f46f14f48bdb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93ed84b86d8219a3018f2f5605c2492c"><td class="memItemLeft" align="right" valign="top">constexpr prev_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga93ed84b86d8219a3018f2f5605c2492c">ranges::v3::prev</a> {}</td></tr>
+<tr class="separator:ga93ed84b86d8219a3018f2f5605c2492c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="memItemLeft" align="right" valign="top">constexpr protect_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga64c3de8c98a3647d8dd38ecc290bbfaf">ranges::v3::protect</a> {}</td></tr>
+<tr class="memdesc:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind.  <a href="group__group-utility.html#ga64c3de8c98a3647d8dd38ecc290bbfaf">More...</a><br /></td></tr>
+<tr class="separator:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga801f11e0f09048572cf91353749d08aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga801f11e0f09048572cf91353749d08aa"></a>
+constexpr adl_uncounted_recounted_detail::recounted_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::recounted</b> {}</td></tr>
+<tr class="separator:ga801f11e0f09048572cf91353749d08aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memItemLeft" align="right" valign="top">constexpr ref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad3ba36f66e2dbc2468ec9a466dbc7e34">ranges::v3::ref</a> {}</td></tr>
+<tr class="separator:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7dab19fb704dc640477cf57ded30b59f"><td class="memItemLeft" align="right" valign="top">constexpr rref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7dab19fb704dc640477cf57ded30b59f">ranges::v3::rref</a> {}</td></tr>
+<tr class="separator:ga7dab19fb704dc640477cf57ded30b59f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc3f2ae3cb4de40cc57b69395bef108f"><td class="memItemLeft" align="right" valign="top">constexpr adl_swap_detail::swap_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gabc3f2ae3cb4de40cc57b69395bef108f">swap</a> {}</td></tr>
+<tr class="separator:gabc3f2ae3cb4de40cc57b69395bef108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03e7f57977cd9016805e6f6fbdd39172"><td class="memItemLeft" align="right" valign="top">constexpr tuple_apply_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga03e7f57977cd9016805e6f6fbdd39172">ranges::v3::tuple_apply</a> {}</td></tr>
+<tr class="separator:ga03e7f57977cd9016805e6f6fbdd39172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75824b7b18e324c10ed32469fddf0d67"><td class="memItemLeft" align="right" valign="top">constexpr tuple_foldl_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga75824b7b18e324c10ed32469fddf0d67">ranges::v3::tuple_foldl</a> {}</td></tr>
+<tr class="separator:ga75824b7b18e324c10ed32469fddf0d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1626410840e13d86ad9fcddeab06b494"><td class="memItemLeft" align="right" valign="top">constexpr tuple_for_each_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga1626410840e13d86ad9fcddeab06b494">ranges::v3::tuple_for_each</a> {}</td></tr>
+<tr class="separator:ga1626410840e13d86ad9fcddeab06b494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10882b5cf3191be4668cf6a48b95e98f"><td class="memItemLeft" align="right" valign="top">constexpr tuple_transform_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga10882b5cf3191be4668cf6a48b95e98f">ranges::v3::tuple_transform</a> {}</td></tr>
+<tr class="separator:ga10882b5cf3191be4668cf6a48b95e98f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab195392d2b1ff411d69745e30553526c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gab195392d2b1ff411d69745e30553526c"></a>
+constexpr adl_uncounted_recounted_detail::uncounted_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::uncounted</b> {}</td></tr>
+<tr class="separator:gab195392d2b1ff411d69745e30553526c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa6bceaad1449d5660daa86733cf4790a"><td class="memItemLeft" align="right" valign="top">constexpr unwrap_reference_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa6bceaad1449d5660daa86733cf4790a">ranges::v3::unwrap_reference</a> {}</td></tr>
+<tr class="separator:gaa6bceaad1449d5660daa86733cf4790a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9057bf901da7bd0cbee599782d850354"><td class="memItemLeft" align="right" valign="top">static constexpr T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga9057bf901da7bd0cbee599782d850354">ranges::v3::static_const&lt; T &gt;::value</a> {}</td></tr>
 <tr class="separator:ga9057bf901da7bd0cbee599782d850354"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -501,11 +577,11 @@ template&lt;typename R &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="gaa57770e673a56982f02c16430f9569aa"></a>
+<a class="anchor" id="ga40947d06a54effe04c84688102fc6ce1"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Constructible&lt; detail::decay_t&lt; T &gt;, T &amp;&amp; &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename T , requires  = (Constructible&lt;detail::decay_t&lt;T&gt;, T &amp;&amp;&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">detail::decay_t&lt;T&gt; ranges::v3::aux::operator| </td>
@@ -529,10 +605,6 @@ template&lt;typename T , int _concept_requires___LINE__ = 42, typename std::enab
 
 <p><code>#include &lt;<a class="el" href="utility_2copy_8hpp.html">range/v3/utility/copy.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1copy__fn.html">copy_fn</a></code> </dd></dl>
-
-<p>References <a class="el" href="group__group-utility.html#gaa57770e673a56982f02c16430f9569aa">ranges::v3::aux::operator|()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__group-utility.html#gaa57770e673a56982f02c16430f9569aa">ranges::v3::aux::operator|()</a>.</p>
 
 </div>
 </div>
@@ -573,11 +645,576 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="utility_2move_8hpp.html">range/v3/utility/move.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1move__fn.html">move_fn</a></code> </dd></dl>
 
-<p>References <a class="el" href="group__group-utility.html#gaa57770e673a56982f02c16430f9569aa">ranges::v3::aux::operator|()</a>.</p>
+<p>References <a class="el" href="group__group-utility.html#gacff94b96a5b7150b9ebc65e67ad5168b">ranges::v3::aux::move</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="gad0b4e45e8ad1e530dfe9018f2119aeed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr adl_advance_detail::advance_fn ranges::v3::advance {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code>advance_fn</code> </dd></dl>
+
+<p>Referenced by <a class="el" href="group__group-views.html#ga67b9c328efd3d2b06045a291d7f05c5e">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>, <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html#a6552348e82f4b1e942c58ad8f9b5d475">ranges::v3::chunk_view&lt; Rng &gt;::adaptor::advance()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#af37cae590ec4c4508330afb96944549b">ranges::v3::basic_iterator&lt; Cur, S &gt;::operator+=()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ad0f512a3beea26c9d4b117959728fb54">ranges::v3::basic_iterator&lt; Cur, S &gt;::operator-=()</a>, and <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html#ac676ba024ffdb72ce8b1632c1dd7cbbc">ranges::v3::chunk_view&lt; Rng &gt;::adaptor::prev()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gade368ed71b50f5c28a8c44c49d22e7b3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr as_function_fn ranges::v3::as_function {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code>make_invokable_fn</code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a8da28b1da554c19d635cb12991dfb627">ranges::v3::adjacent_find_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a386b87522adf8f21520e86f5390a4445">ranges::v3::binary_search_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1unique__fn.html#ab19ab57a1667c3377780dfd00ec27b30">ranges::v3::unique_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1find__fn.html#a17a581c876da9f15f1a5df79bc6870f0">ranges::v3::find_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1is__sorted__until__fn.html#aa6db7dced152a82b81a330b9878c1073">ranges::v3::is_sorted_until_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#ac82c2434e52edc2969a582ebfd526bce">ranges::v3::upper_bound_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1find__if__fn.html#a61d76681927b1cf35a44ba58de768ae8">ranges::v3::find_if_fn::operator()()</a>, and <a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#aa653460dbf61067c01206a2e0e7040c6">ranges::v3::find_if_not_fn::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga904de33592539c73d8ab35911c185807"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr back_inserter_fn ranges::v3::back_inserter {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1back__inserter__fn.html">back_inserter_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga44ca8bae41d72e1845434f43055249b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr compose_fn ranges::v3::compose {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1compose__fn.html">compose_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gad722a0deecae60c4458bc3bcfa7caa5b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr copy_fn ranges::v3::aux::copy {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="utility_2copy_8hpp.html">range/v3/utility/copy.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1copy__fn.html">copy_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gace4e3d9471bb3afb11c46d54b8c5ec6e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr front_inserter_fn ranges::v3::front_inserter {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1front__inserter__fn.html">front_inserter_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7c5182174c7fa86b188812312a383cd2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr get_cursor_fn ranges::v3::get_cursor {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="basic__iterator_8hpp.html">range/v3/utility/basic_iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1get__cursor__fn.html" title="Get a cursor from a basic_iterator. ">get_cursor_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7ea92d2e2decac4b4c9d9231081a61df"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr indirect_fn ranges::v3::indirect {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1indirect__fn.html">indirect_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1iter__transform__view.html#a183f06f3cc5ffd6d78bf665f09715299">ranges::v3::iter_transform_view&lt; Rng, indirected&lt; Fun &gt; &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga8b15cb4c1735a17e540aaf640bc8a736"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr adl_swap_detail::indirect_swap_fn indirect_swap {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="swap_8hpp.html">range/v3/utility/swap.hpp</a>&gt;</code></p>
+
+</div>
+</div>
+<a class="anchor" id="gad02e0f6a8c7adcb455acca20b7f3892d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_distance_fn ranges::v3::iter_distance {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__distance__fn.html">iter_distance_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga87e03f1e0748b2469048a560ee5043ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_distance_compare_fn ranges::v3::iter_distance_compare {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__distance__compare__fn.html">iter_distance_compare_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaaa1cf3fbf1dfb84a039e64caee6aa8bb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_enumerate_fn ranges::v3::iter_enumerate {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__enumerate__fn.html">iter_enumerate_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaba2aff983114b2344c02769a0d65017d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_move_fn ranges::v3::iter_move {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__move__fn.html">iter_move_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1unique__fn.html#ab19ab57a1667c3377780dfd00ec27b30">ranges::v3::unique_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1join__view_3_01_rng_00_01void_01_4.html#a9576cc6dbfc85cefb0c1e3a6f85d34b5">ranges::v3::join_view&lt; Rng, void &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1join__view.html#a4d2be3c1b19a1b4f6678dcf5f8d5a5dc">ranges::v3::join_view&lt; transform_view&lt; Rng, F &gt; &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gadb4794dab236aa51bcb63ff398085bfa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_size_fn ranges::v3::iter_size {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__size__fn.html">iter_size_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1view__interface.html#ad88be7d1432966616c5e63e74b4011df">ranges::v3::view_interface&lt; stride_view&lt; Rng &gt;, Cardinality &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gaa98246dd9c8ae0b575829de2b8ff74ed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr iter_swap_fn ranges::v3::iter_swap {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__swap__fn.html">iter_swap_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga5badc0c2257f49561c20179a64785648"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr make_common_pair_fn ranges::v3::make_common_pair {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="common__tuple_8hpp.html">range/v3/utility/common_tuple.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__common__pair__fn.html">make_common_pair_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga85d624a417336a4492c6563deae8fcd4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr make_common_tuple_fn ranges::v3::make_common_tuple {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="common__tuple_8hpp.html">range/v3/utility/common_tuple.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__common__tuple__fn.html">make_common_tuple_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga9421f091b207dbe3e5ea63db5d36550a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr make_pipeable_fn ranges::v3::make_pipeable {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__pipeable__fn.html">make_pipeable_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga9808273ef5ec1ecaf6200f7ca5f4d667"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr make_tuple_fn ranges::v3::make_tuple {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__tuple__fn.html">make_tuple_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gacff94b96a5b7150b9ebc65e67ad5168b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr move_fn ranges::v3::aux::move {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="utility_2move_8hpp.html">range/v3/utility/move.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1move__fn.html">move_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="group__group-utility.html#ga666ada406594f0fc35648f34b069d5a7">ranges::v3::aux::operator|()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gae1096593ef0a9a2f805d0684bec0b9a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr move_into_fn ranges::v3::move_into {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1move__into__fn.html">move_into_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga70320521358b8e16455a2931d524bab9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr next_fn ranges::v3::next {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1next__fn.html">next_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1tail__view.html#afbd352f7be8ee2bb4723d4c51c8cb375">ranges::v3::tail_view&lt; Rng &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a8da28b1da554c19d635cb12991dfb627">ranges::v3::adjacent_find_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1unique__fn.html#ab19ab57a1667c3377780dfd00ec27b30">ranges::v3::unique_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1join__view_3_01_rng_00_01void_01_4.html#a9576cc6dbfc85cefb0c1e3a6f85d34b5">ranges::v3::join_view&lt; Rng, void &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1join__view.html#a4d2be3c1b19a1b4f6678dcf5f8d5a5dc">ranges::v3::join_view&lt; transform_view&lt; Rng, F &gt; &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga96f82ad60be7e34fc2d213fc8db110c3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr not_fn ranges::v3::not_ {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1not__fn.html">not_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga449a35367989a11bc16b1b8614582d73"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr on_fn ranges::v3::on {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1on__fn.html">on_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gab204304447e26278830f46f14f48bdb5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr overload_fn ranges::v3::overload {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1overload__fn.html">overload_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga93ed84b86d8219a3018f2f5605c2492c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr prev_fn ranges::v3::prev {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1prev__fn.html">prev_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1view__interface.html#a63803c5324ee40459599def14354adb8">ranges::v3::view_interface&lt; stride_view&lt; Rng &gt;, Cardinality &gt;::back()</a>, <a class="el" href="structranges_1_1v3_1_1back__fn.html#ad173581db0ca9d4e97eda867691efbd7">ranges::v3::back_fn::operator()()</a>, and <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a81dac2184f04ba5a588ad29d3450111a">ranges::v3::basic_iterator&lt; Cur, S &gt;::operator--()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga64c3de8c98a3647d8dd38ecc290bbfaf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr protect_fn ranges::v3::protect {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+
+<p>Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. </p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1protect__fn.html">protect_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gad3ba36f66e2dbc2468ec9a466dbc7e34"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ref_fn ranges::v3::ref {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1ref__fn.html">ref_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1unique__fn.html#ab19ab57a1667c3377780dfd00ec27b30">ranges::v3::unique_fn::operator()()</a>, and <a class="el" href="structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a81e96b50e761af05c41993a1e88e56cd">ranges::v3::detail::indexed_datum&lt; T[N], Index &gt;::operator=()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga7dab19fb704dc640477cf57ded30b59f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr rref_fn ranges::v3::rref {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1rref__fn.html">rref_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gabc3f2ae3cb4de40cc57b69395bef108f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr adl_swap_detail::swap_fn swap {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="swap_8hpp.html">range/v3/utility/swap.hpp</a>&gt;</code></p>
+
+<p>Referenced by <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a0290f2cb92d9ea5615c77b0aac11e0cf">ranges::v3::tagged_detail::tagged&lt; Base, Tags &gt;::tagged()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga03e7f57977cd9016805e6f6fbdd39172"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr tuple_apply_fn ranges::v3::tuple_apply {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__apply__fn.html">tuple_apply_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga75824b7b18e324c10ed32469fddf0d67"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr tuple_foldl_fn ranges::v3::tuple_foldl {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__foldl__fn.html">tuple_foldl_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#a1fbee39dd7880261cc016a232604a312">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#a47696e0bf1326ea12fb1089eb72c46b1">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga1626410840e13d86ad9fcddeab06b494"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr tuple_for_each_fn ranges::v3::tuple_for_each {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__for__each__fn.html">tuple_for_each_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga10882b5cf3191be4668cf6a48b95e98f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr tuple_transform_fn ranges::v3::tuple_transform {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__transform__fn.html">tuple_transform_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="structranges_1_1v3_1_1common__tuple.html#afcf9aafd6f64c42e9c825fd09a7152bb">ranges::v3::common_tuple&lt; Ts &gt;::common_tuple()</a>, <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#a1fbee39dd7880261cc016a232604a312">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#a47696e0bf1326ea12fb1089eb72c46b1">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gaa6bceaad1449d5660daa86733cf4790a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr unwrap_reference_fn ranges::v3::unwrap_reference {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1unwrap__reference__fn.html">unwrap_reference_fn</a></code> </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga9057bf901da7bd0cbee599782d850354"></a>
 <div class="memitem">
 <div class="memproto">

@@ -99,20 +99,20 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1upper__bound__fn
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6e022e09e6c90774ff8dbe54821f289c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6e022e09e6c90774ff8dbe54821f289c"></a>
-template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a6e022e09e6c90774ff8dbe54821f289c"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, V2 const &amp;val, C pred_=C{}, P proj=P{}) const </td></tr>
-<tr class="separator:a6e022e09e6c90774ff8dbe54821f289c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96398658a982ffb4a1c084b347274eb8"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a96398658a982ffb4a1c084b347274eb8"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#a96398658a982ffb4a1c084b347274eb8">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred_=C{}, P proj=P{}) const </td></tr>
-<tr class="separator:a96398658a982ffb4a1c084b347274eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f9b205d6676d6c87949e643f4a047ea"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5f9b205d6676d6c87949e643f4a047ea"></a>
+template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:a5f9b205d6676d6c87949e643f4a047ea"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, V2 const &amp;val, C pred_=C{}, P proj=P{}) const </td></tr>
+<tr class="separator:a5f9b205d6676d6c87949e643f4a047ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82c2434e52edc2969a582ebfd526bce"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:ac82c2434e52edc2969a582ebfd526bce"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#ac82c2434e52edc2969a582ebfd526bce">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred_=C{}, P proj=P{}) const </td></tr>
+<tr class="separator:ac82c2434e52edc2969a582ebfd526bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a96398658a982ffb4a1c084b347274eb8"></a>
+<a class="anchor" id="ac82c2434e52edc2969a582ebfd526bce"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_safe_iterator_t&lt;Rng&gt; ranges::v3::upper_bound_fn::operator() </td>
@@ -147,6 +147,8 @@ template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P 
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
+<p>References <a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a>, <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>, and <a class="el" href="group__group-algorithms.html#gad6f000d1aa20b82d25bdbebb7595b2c8">ranges::v3::partition_point</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -154,7 +156,7 @@ template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html">upper_bound_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html">upper_bound_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

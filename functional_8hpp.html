@@ -91,9 +91,9 @@ $(document).ready(function(){initNavTree('functional_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">functional.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -214,12 +214,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1with__braced__init__args.html">ranges::v3::with_braced_init_args&lt; ImplFn &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gacb28d17846c271166dcee181c22ca032"><td class="memTemplParams" colspan="2">
@@ -273,14 +267,40 @@ template&lt;typename T , typename U  = meta::if_&lt;                std::is_lval
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga2e97de15d43ecc8788f50e3fc1ab469d"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::bind_forward</b> (<a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; T &gt;&gt; &amp;&amp;t) noexcept</td></tr>
 <tr class="separator:ga2e97de15d43ecc8788f50e3fc1ab469d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplParams" colspan="2">
-template&lt;typename Arg , typename Pipe , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(!is_pipeable&lt; Arg &gt;()&amp;&amp;is_pipeable&lt; Pipe &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
-<tr class="separator:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplParams" colspan="2">
-template&lt;typename Pipe0 , typename Pipe1 , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(is_pipeable&lt; Pipe0 &gt;()&amp;&amp;is_pipeable&lt; Pipe1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>
-<tr class="separator:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplParams" colspan="2">
+template&lt;typename Arg , typename Pipe , requires  = (!is_pipeable&lt;Arg&gt;() &amp;&amp; is_pipeable&lt;Pipe&gt;())&gt; </td></tr>
+<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
+<tr class="separator:ga67df89791cd36fa8a858ede615c77ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplParams" colspan="2">
+template&lt;typename Pipe0 , typename Pipe1 , requires  = (is_pipeable&lt;Pipe0&gt;() &amp;&amp; is_pipeable&lt;Pipe1&gt;())&gt; </td></tr>
+<tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>
+<tr class="separator:ga8d2ca72a205107a619125498af79f14b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gade368ed71b50f5c28a8c44c49d22e7b3"><td class="memItemLeft" align="right" valign="top">constexpr as_function_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a> {}</td></tr>
+<tr class="separator:gade368ed71b50f5c28a8c44c49d22e7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44ca8bae41d72e1845434f43055249b5"><td class="memItemLeft" align="right" valign="top">constexpr compose_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga44ca8bae41d72e1845434f43055249b5">ranges::v3::compose</a> {}</td></tr>
+<tr class="separator:ga44ca8bae41d72e1845434f43055249b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ea92d2e2decac4b4c9d9231081a61df"><td class="memItemLeft" align="right" valign="top">constexpr indirect_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7ea92d2e2decac4b4c9d9231081a61df">ranges::v3::indirect</a> {}</td></tr>
+<tr class="separator:ga7ea92d2e2decac4b4c9d9231081a61df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9421f091b207dbe3e5ea63db5d36550a"><td class="memItemLeft" align="right" valign="top">constexpr make_pipeable_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga9421f091b207dbe3e5ea63db5d36550a">ranges::v3::make_pipeable</a> {}</td></tr>
+<tr class="separator:ga9421f091b207dbe3e5ea63db5d36550a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96f82ad60be7e34fc2d213fc8db110c3"><td class="memItemLeft" align="right" valign="top">constexpr not_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga96f82ad60be7e34fc2d213fc8db110c3">ranges::v3::not_</a> {}</td></tr>
+<tr class="separator:ga96f82ad60be7e34fc2d213fc8db110c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga449a35367989a11bc16b1b8614582d73"><td class="memItemLeft" align="right" valign="top">constexpr on_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga449a35367989a11bc16b1b8614582d73">ranges::v3::on</a> {}</td></tr>
+<tr class="separator:ga449a35367989a11bc16b1b8614582d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab204304447e26278830f46f14f48bdb5"><td class="memItemLeft" align="right" valign="top">constexpr overload_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gab204304447e26278830f46f14f48bdb5">ranges::v3::overload</a> {}</td></tr>
+<tr class="separator:gab204304447e26278830f46f14f48bdb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="memItemLeft" align="right" valign="top">constexpr protect_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga64c3de8c98a3647d8dd38ecc290bbfaf">ranges::v3::protect</a> {}</td></tr>
+<tr class="memdesc:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind.  <a href="group__group-utility.html#ga64c3de8c98a3647d8dd38ecc290bbfaf">More...</a><br /></td></tr>
+<tr class="separator:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memItemLeft" align="right" valign="top">constexpr ref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad3ba36f66e2dbc2468ec9a466dbc7e34">ranges::v3::ref</a> {}</td></tr>
+<tr class="separator:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7dab19fb704dc640477cf57ded30b59f"><td class="memItemLeft" align="right" valign="top">constexpr rref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7dab19fb704dc640477cf57ded30b59f">ranges::v3::rref</a> {}</td></tr>
+<tr class="separator:ga7dab19fb704dc640477cf57ded30b59f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa6bceaad1449d5660daa86733cf4790a"><td class="memItemLeft" align="right" valign="top">constexpr unwrap_reference_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa6bceaad1449d5660daa86733cf4790a">ranges::v3::unwrap_reference</a> {}</td></tr>
+<tr class="separator:gaa6bceaad1449d5660daa86733cf4790a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

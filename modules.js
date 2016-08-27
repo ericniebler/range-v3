@@ -5,5 +5,5 @@ var modules =
     [ "Core", "group__group-core.html", "group__group-core" ],
     [ "Algorithms", "group__group-algorithms.html", "group__group-algorithms" ],
     [ "Views", "group__group-views.html", "group__group-views" ],
-    [ "Actions", "group__group-actions.html", null ]
+    [ "Actions", "group__group-actions.html", "group__group-actions" ]
 ];

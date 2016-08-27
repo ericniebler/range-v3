@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1partition__point
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a61c3ec3ef5d495a9dce154706fc1f5bf"><td class="memTemplParams" colspan="2"><a class="anchor" id="a61c3ec3ef5d495a9dce154706fc1f5bf"></a>
-template&lt;typename I , typename S , typename C , typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(PartitionPointable&lt; I, C, P &gt;()&amp;&amp;                                                                           Sentinel&lt; S, I &gt;()&amp;&amp;!SizedSentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a61c3ec3ef5d495a9dce154706fc1f5bf"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, C pred_, P proj_=P{}) const </td></tr>
-<tr class="separator:a61c3ec3ef5d495a9dce154706fc1f5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a639b7a40301faf3bd7e30e1fde717f18"><td class="memTemplParams" colspan="2"><a class="anchor" id="a639b7a40301faf3bd7e30e1fde717f18"></a>
-template&lt;typename I , typename S , typename C , typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(PartitionPointable&lt; I, C, P &gt;()&amp;&amp;                                                                           SizedSentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a639b7a40301faf3bd7e30e1fde717f18"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, C pred, P proj=P{}) const </td></tr>
-<tr class="separator:a639b7a40301faf3bd7e30e1fde717f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9450282d05872c0f058ee9e1237fa162"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9450282d05872c0f058ee9e1237fa162"></a>
-template&lt;typename Rng , typename C , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;!SizedRange&lt; Rng &gt;()&amp;&amp;                                                                           PartitionPointable&lt; I, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a9450282d05872c0f058ee9e1237fa162"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const </td></tr>
-<tr class="separator:a9450282d05872c0f058ee9e1237fa162"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9450282d05872c0f058ee9e1237fa162"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9450282d05872c0f058ee9e1237fa162"></a>
-template&lt;typename Rng , typename C , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(SizedRange&lt; Rng &gt;()&amp;&amp;PartitionPointable&lt; I, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a9450282d05872c0f058ee9e1237fa162"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const </td></tr>
-<tr class="separator:a9450282d05872c0f058ee9e1237fa162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa58d87bad46f522f6d2d75be6117743f"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa58d87bad46f522f6d2d75be6117743f"></a>
+template&lt;typename I , typename S , typename C , typename P  = ident, requires  = (PartitionPointable&lt;I, C, P&gt;() &amp;&amp;                    Sentinel&lt;S, I&gt;() &amp;&amp; !SizedSentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:aa58d87bad46f522f6d2d75be6117743f"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, C pred_, P proj_=P{}) const </td></tr>
+<tr class="separator:aa58d87bad46f522f6d2d75be6117743f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c5c71f6012de1622df0dff3b04d7447"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8c5c71f6012de1622df0dff3b04d7447"></a>
+template&lt;typename I , typename S , typename C , typename P  = ident, requires  = (PartitionPointable&lt;I, C, P&gt;() &amp;&amp;                    SizedSentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:a8c5c71f6012de1622df0dff3b04d7447"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, C pred, P proj=P{}) const </td></tr>
+<tr class="separator:a8c5c71f6012de1622df0dff3b04d7447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b671aa591309b1dc82dd97c1b437009"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4b671aa591309b1dc82dd97c1b437009"></a>
+template&lt;typename Rng , typename C , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; !SizedRange&lt;Rng&gt;() &amp;&amp;                    PartitionPointable&lt;I, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:a4b671aa591309b1dc82dd97c1b437009"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const </td></tr>
+<tr class="separator:a4b671aa591309b1dc82dd97c1b437009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b671aa591309b1dc82dd97c1b437009"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4b671aa591309b1dc82dd97c1b437009"></a>
+template&lt;typename Rng , typename C , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (SizedRange&lt;Rng&gt;() &amp;&amp; PartitionPointable&lt;I, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:a4b671aa591309b1dc82dd97c1b437009"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred, P proj=P{}) const </td></tr>
+<tr class="separator:a4b671aa591309b1dc82dd97c1b437009"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1partition__point__fn.html">partition_point_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1partition__point__fn.html">partition_point_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

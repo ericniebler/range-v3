@@ -18,6 +18,17 @@ var functional_8hpp =
     [ "unwrap_reference_t", "functional_8hpp.html#ga6a060e5743cd7f42249ab97b17a4b441", null ],
     [ "bind_forward", "functional_8hpp.html#ga6e02c818ad4d5430f129e1c9fd972b29", null ],
     [ "bind_forward", "functional_8hpp.html#ga2e97de15d43ecc8788f50e3fc1ab469d", null ],
-    [ "operator|", "functional_8hpp.html#ga77b687fbebc266ac4e5fae7a989b6c98", null ],
-    [ "operator|", "functional_8hpp.html#ga140bb40ec8b29f58bcf9989b9f57225c", null ]
+    [ "operator|", "functional_8hpp.html#ga67df89791cd36fa8a858ede615c77ae8", null ],
+    [ "operator|", "functional_8hpp.html#ga8d2ca72a205107a619125498af79f14b", null ],
+    [ "as_function", "functional_8hpp.html#gade368ed71b50f5c28a8c44c49d22e7b3", null ],
+    [ "compose", "functional_8hpp.html#ga44ca8bae41d72e1845434f43055249b5", null ],
+    [ "indirect", "functional_8hpp.html#ga7ea92d2e2decac4b4c9d9231081a61df", null ],
+    [ "make_pipeable", "functional_8hpp.html#ga9421f091b207dbe3e5ea63db5d36550a", null ],
+    [ "not_", "functional_8hpp.html#ga96f82ad60be7e34fc2d213fc8db110c3", null ],
+    [ "on", "functional_8hpp.html#ga449a35367989a11bc16b1b8614582d73", null ],
+    [ "overload", "functional_8hpp.html#gab204304447e26278830f46f14f48bdb5", null ],
+    [ "protect", "functional_8hpp.html#ga64c3de8c98a3647d8dd38ecc290bbfaf", null ],
+    [ "ref", "functional_8hpp.html#gad3ba36f66e2dbc2468ec9a466dbc7e34", null ],
+    [ "rref", "functional_8hpp.html#ga7dab19fb704dc640477cf57ded30b59f", null ],
+    [ "unwrap_reference", "functional_8hpp.html#gaa6bceaad1449d5660daa86733cf4790a", null ]
 ];

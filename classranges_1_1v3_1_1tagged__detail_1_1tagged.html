@@ -133,14 +133,10 @@ template&lt;typename U , typename  = meta::if_c&lt;!std::is_same&lt;tagged, deta
 template&lt;int dummy_ = 42&gt; </td></tr>
 <tr class="memitem:a204fdeff8191c2f3aa48043a937d83ad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga76df8db18745b53e01c1f79dd3aa7ea7">meta::if_c</a>&lt; dummy_==43||<a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; Base &amp; &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;that) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; Base &amp; &gt;::value)</td></tr>
 <tr class="separator:a204fdeff8191c2f3aa48043a937d83ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00b3c5aab3993591626e351a3e9a0d1f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a00b3c5aab3993591626e351a3e9a0d1f"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(MoveConstructible&lt; Base &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a00b3c5aab3993591626e351a3e9a0d1f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)</td></tr>
-<tr class="separator:a00b3c5aab3993591626e351a3e9a0d1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58576e31c693825abdb940ed502a5da1"><td class="memTemplParams" colspan="2"><a class="anchor" id="a58576e31c693825abdb940ed502a5da1"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(CopyConstructible&lt; Base &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a58576e31c693825abdb940ed502a5da1"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)</td></tr>
-<tr class="separator:a58576e31c693825abdb940ed502a5da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8adf6535297981be1c2aef6f3ff43c80"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a8adf6535297981be1c2aef6f3ff43c80">tagged</a> (Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)</td></tr>
+<tr class="separator:a8adf6535297981be1c2aef6f3ff43c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0290f2cb92d9ea5615c77b0aac11e0cf"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a0290f2cb92d9ea5615c77b0aac11e0cf">tagged</a> (Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)</td></tr>
+<tr class="separator:a0290f2cb92d9ea5615c77b0aac11e0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e1ccc4e19af8d88f1e77c3de3ff27dc"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3e1ccc4e19af8d88f1e77c3de3ff27dc"></a>
 template&lt;typename Other , typename  = meta::if_&lt;can_convert&lt;Other&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a3e1ccc4e19af8d88f1e77c3de3ff27dc"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a>&lt; Other, Tags... &gt; &amp;&amp;that) noexcept(std::is_nothrow_constructible&lt; Base, Other &gt;::value)</td></tr>
@@ -150,12 +146,69 @@ template&lt;typename Other , typename  = meta::if_&lt;can_convert&lt;Other&gt;&g
 <tr class="memitem:a4809c8eed5208953de1ea6d93cc2c07a"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a>&lt; Other, Tags... &gt; const &amp;that) noexcept(std::is_nothrow_constructible&lt; Base, Other const &amp; &gt;::value)</td></tr>
 <tr class="separator:a4809c8eed5208953de1ea6d93cc2c07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a8adf6535297981be1c2aef6f3ff43c80"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Base, typename... Tags&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">ranges::v3::tagged_detail::tagged</a>&lt; Base, Tags &gt;::<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> </td>
+          <td>(</td>
+          <td class="paramtype">Base &amp;&amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>MoveConstructible&lt;Base&gt;() </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0290f2cb92d9ea5615c77b0aac11e0cf"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Base, typename... Tags&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">ranges::v3::tagged_detail::tagged</a>&lt; Base, Tags &gt;::<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> </td>
+          <td>(</td>
+          <td class="paramtype">Base const &amp;&#160;</td>
+          <td class="paramname"><em>that</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>CopyConstructible&lt;Base&gt;() </dd></dl>
+
+<p>References <a class="el" href="group__group-utility.html#gabc3f2ae3cb4de40cc57b69395bef108f">swap</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><b>tagged_detail</b></li><li class="navelem"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><b>tagged_detail</b></li><li class="navelem"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

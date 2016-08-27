@@ -91,9 +91,9 @@ $(document).ready(function(){initNavTree('insert_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">insert.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -106,12 +106,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1insert__fn.html">ranges::v3::insert_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga3823e8373e2a77b9c595b4efc1e2b425"><td class="memTemplParams" colspan="2">
@@ -121,14 +115,20 @@ template&lt;typename Rng , typename... Rest&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa36ce898762c44adf13cba668717cf77"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa36ce898762c44adf13cba668717cf77"></a>
-template&lt;typename Cont , typename P , typename I , typename S , typename C  = common_iterator&lt;I, S&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(LvalueContainerLike&lt; Cont &gt;()&amp;&amp;Iterator&lt; P &gt;()&amp;&amp;Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aa36ce898762c44adf13cba668717cf77"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, P p, I i, S j) -&gt; decltype(detail::insert_impl(std::forward&lt; Cont &gt;(cont), std::move(p), std::move(i), std::move(j),                                                                                                                                           <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; RandomAccessReservable&lt; Cont &gt;, SizedSentinel&lt; S, I &gt;&gt;</td></tr>
-<tr class="separator:aa36ce898762c44adf13cba668717cf77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af675498621f8354499c67ade10e7d1b8"><td class="memTemplParams" colspan="2"><a class="anchor" id="af675498621f8354499c67ade10e7d1b8"></a>
-template&lt;typename Cont , typename I , typename Rng , typename C  = range_common_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(LvalueContainerLike&lt; Cont &gt;()&amp;&amp;Iterator&lt; I &gt;()&amp;&amp;Range&lt; Rng &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:af675498621f8354499c67ade10e7d1b8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, I p, Rng &amp;&amp;rng) -&gt; decltype(detail::insert_impl(std::forward&lt; Cont &gt;(cont), std::move(p), std::forward&lt; Rng &gt;(rng),                                                                                                                                           <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; RandomAccessReservable&lt; Cont &gt;, SizedRange&lt; Rng &gt;&gt;</td></tr>
-<tr class="separator:af675498621f8354499c67ade10e7d1b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4688238b640a23d8cb153884f1869a37"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4688238b640a23d8cb153884f1869a37"></a>
+template&lt;typename Cont , typename P , typename I , typename S , typename C  = common_iterator&lt;I, S&gt;, requires  = (LvalueContainerLike&lt;Cont&gt;() &amp;&amp; Iterator&lt;P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:a4688238b640a23d8cb153884f1869a37"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, P p, I i, S j) -&gt; decltype(detail::insert_impl(std::forward&lt; Cont &gt;(cont), std::move(p), std::move(i), std::move(j),                                                                                                                                           <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; RandomAccessReservable&lt; Cont &gt;, SizedSentinel&lt; S, I &gt;&gt;</td></tr>
+<tr class="separator:a4688238b640a23d8cb153884f1869a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57aa22da9cc39bb98d9c6daa80e7c2ad"><td class="memTemplParams" colspan="2"><a class="anchor" id="a57aa22da9cc39bb98d9c6daa80e7c2ad"></a>
+template&lt;typename Cont , typename I , typename Rng , typename C  = range_common_iterator_t&lt;Rng&gt;, requires  = (LvalueContainerLike&lt;Cont&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Range&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a57aa22da9cc39bb98d9c6daa80e7c2ad"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::insert</b> (Cont &amp;&amp;cont, I p, Rng &amp;&amp;rng) -&gt; decltype(detail::insert_impl(std::forward&lt; Cont &gt;(cont), std::move(p), std::forward&lt; Rng &gt;(rng),                                                                                                                                           <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; RandomAccessReservable&lt; Cont &gt;, SizedRange&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a57aa22da9cc39bb98d9c6daa80e7c2ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gade8cf570c27cf211eb6390954c837e5e"><td class="memItemLeft" align="right" valign="top">
+constexpr adl_insert_detail::insert_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::insert</b> {}</td></tr>
+<tr class="separator:gade8cf570c27cf211eb6390954c837e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

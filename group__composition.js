@@ -12,10 +12,10 @@ var group__composition =
       [ "invoke", "structmeta_1_1flip.html#a720dbbdef122313d1178e31d31c54537", null ]
     ] ],
     [ "quote", "structmeta_1_1quote.html", [
-      [ "invoke", "structmeta_1_1quote.html#ab20943e97ff8d99275833e1be0e8f0bb", null ]
+      [ "invoke", "structmeta_1_1quote.html#abd8c2aa60ac715f0803d3d35a4576ccd", null ]
     ] ],
     [ "quote_i", "structmeta_1_1quote__i.html", [
-      [ "invoke", "structmeta_1_1quote__i.html#af92f7d7802130f07592de54a43761278", null ]
+      [ "invoke", "structmeta_1_1quote__i.html#a211dad101e93c0f7bd22d0df3a246ee9", null ]
     ] ],
     [ "curry", "group__composition.html#ga208c20d6d38a9efe6230dd116bd20758", null ],
     [ "on", "group__composition.html#ga5509ba80767f533bd5ebb33f6c8cc60a", null ],

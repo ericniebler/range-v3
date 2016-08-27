@@ -91,8 +91,8 @@ $(document).ready(function(){initNavTree('to__container_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">to_container.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -104,12 +104,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">STL class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplParams" colspan="2">
@@ -117,22 +111,47 @@ template&lt;template&lt; typename... &gt; class ContT&gt; </td></tr>
 <tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplItemLeft" align="right" valign="top">detail::to_container_fn&lt; <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; ContT &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga1e0608aee3b230471bba14364d27f60f">ranges::v3::to_</a> ()</td></tr>
 <tr class="memdesc:ga1e0608aee3b230471bba14364d27f60f"><td class="mdescLeft">&#160;</td><td class="mdescRight">For initializing a container of the specified type with the elements of an Range. <br /></td></tr>
 <tr class="separator:ga1e0608aee3b230471bba14364d27f60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaa3c3c6d5397ec7d9b71cea471c178c7a">ranges::v3::to_</a> (Rng &amp;&amp;rng)</td></tr>
-<tr class="separator:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, T&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga224d07a6098c94b7a1468e8b1fe02aa7">ranges::v3::to_</a> (std::initializer_list&lt; T &gt; list)</td></tr>
-<tr class="separator:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplParams" colspan="2">template&lt;typename Cont &gt; </td></tr>
-<tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplItemLeft" align="right" valign="top">detail::to_container_fn&lt; <a class="el" href="structmeta_1_1id.html">meta::id</a>&lt; Cont &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html#ga1e0608aee3b230471bba14364d27f60f">ranges::v3::to_</a> ()</td></tr>
-<tr class="separator:ga1e0608aee3b230471bba14364d27f60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga48fe919d5bedd95e5d54a851a32a258d"><td class="memTemplParams" colspan="2">template&lt;typename Cont , typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ga48fe919d5bedd95e5d54a851a32a258d"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; detail::ConvertibleToContainer&lt;Rng, Cont&gt;())&gt; </td></tr>
 <tr class="memitem:ga48fe919d5bedd95e5d54a851a32a258d"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga48fe919d5bedd95e5d54a851a32a258d">ranges::v3::to_</a> (Rng &amp;&amp;rng)</td></tr>
 <tr class="separator:ga48fe919d5bedd95e5d54a851a32a258d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab0d59e96bd91d7a5212c47978cd48cac"><td class="memTemplParams" colspan="2">template&lt;typename Cont , typename T , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:gab0d59e96bd91d7a5212c47978cd48cac"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, T&gt;, requires  = (detail::ConvertibleToContainer&lt;std::initializer_list&lt;T&gt;, Cont&gt;())&gt; </td></tr>
 <tr class="memitem:gab0d59e96bd91d7a5212c47978cd48cac"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#gab0d59e96bd91d7a5212c47978cd48cac">ranges::v3::to_</a> (std::initializer_list&lt; T &gt; list)</td></tr>
 <tr class="separator:gab0d59e96bd91d7a5212c47978cd48cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplParams" colspan="2">template&lt;typename Cont &gt; </td></tr>
+<tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplItemLeft" align="right" valign="top">detail::to_container_fn&lt; <a class="el" href="structmeta_1_1id.html">meta::id</a>&lt; Cont &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="to__container_8hpp.html#ga1e0608aee3b230471bba14364d27f60f">ranges::v3::to_</a> ()</td></tr>
+<tr class="separator:ga1e0608aee3b230471bba14364d27f60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae2382456ac2867ee5b7839296ede0fe"><td class="memTemplParams" colspan="2">template&lt;typename Cont , typename Rng , requires  = (Range&lt;Rng&gt;() &amp;&amp; detail::ConvertibleToContainer&lt;Rng, Cont&gt;())&gt; </td></tr>
+<tr class="memitem:gaae2382456ac2867ee5b7839296ede0fe"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaae2382456ac2867ee5b7839296ede0fe">ranges::v3::to_</a> (Rng &amp;&amp;rng)</td></tr>
+<tr class="separator:gaae2382456ac2867ee5b7839296ede0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga495fcac34aa66d97dd7c1e7b582aa883"><td class="memTemplParams" colspan="2">template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToContainer&lt;std::initializer_list&lt;T&gt;, Cont&gt;())&gt; </td></tr>
+<tr class="memitem:ga495fcac34aa66d97dd7c1e7b582aa883"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga495fcac34aa66d97dd7c1e7b582aa883">ranges::v3::to_</a> (std::initializer_list&lt; T &gt; list)</td></tr>
+<tr class="separator:ga495fcac34aa66d97dd7c1e7b582aa883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gaa0e5926a948bbde0a851d17c6720b88b"><td class="memItemLeft" align="right" valign="top">
+constexpr detail::to_container_fn&lt; <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; std::vector &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::to_vector</b> {}</td></tr>
+<tr class="separator:gaa0e5926a948bbde0a851d17c6720b88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="file_ga1e0608aee3b230471bba14364d27f60f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Cont &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">detail::to_container_fn&lt;<a class="el" href="structmeta_1_1id.html">meta::id</a>&lt;Cont&gt; &gt; ranges::v3::to_ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

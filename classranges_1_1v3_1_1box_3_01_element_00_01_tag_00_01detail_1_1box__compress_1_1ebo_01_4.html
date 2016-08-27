@@ -110,14 +110,16 @@ $(document).ready(function(){initNavTree('classranges_1_1v3_1_1box_3_01_element_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7d390d9cf62531c08b50505927ab209c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7d390d9cf62531c08b50505927ab209c"></a>
-template&lt;typename E , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(std::is_constructible&lt; Element, E &gt;::value &amp;&amp;std::is_convertible&lt; E, Element &gt;::value),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a7d390d9cf62531c08b50505927ab209c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
-<tr class="separator:a7d390d9cf62531c08b50505927ab209c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d390d9cf62531c08b50505927ab209c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7d390d9cf62531c08b50505927ab209c"></a>
-template&lt;typename E , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(std::is_constructible&lt; Element, E &gt;::value &amp;&amp;!std::is_convertible&lt; E, Element &gt;::value),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a7d390d9cf62531c08b50505927ab209c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
-<tr class="separator:a7d390d9cf62531c08b50505927ab209c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa71a2007968cc7d628671ae44f804f8d"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1ebo_01_4.html#aa71a2007968cc7d628671ae44f804f8d">box</a> () noexcept(std::is_nothrow_default_constructible&lt; <a class="el" href="class_element.html">Element</a> &gt;::value)</td></tr>
+<tr class="separator:aa71a2007968cc7d628671ae44f804f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee8da60944ccc41e252b3145e5cb129"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2ee8da60944ccc41e252b3145e5cb129"></a>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+<tr class="memitem:a2ee8da60944ccc41e252b3145e5cb129"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
+<tr class="separator:a2ee8da60944ccc41e252b3145e5cb129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee8da60944ccc41e252b3145e5cb129"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2ee8da60944ccc41e252b3145e5cb129"></a>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; !std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+<tr class="memitem:a2ee8da60944ccc41e252b3145e5cb129"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
+<tr class="separator:a2ee8da60944ccc41e252b3145e5cb129"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae116ac169d15c693ecd0bec01d25f2ee"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae116ac169d15c693ecd0bec01d25f2ee"></a>
 <a class="el" href="class_element.html">Element</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()&amp;noexcept</td></tr>
 <tr class="separator:ae116ac169d15c693ecd0bec01d25f2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,12 +130,41 @@ constexpr <a class="el" href="class_element.html">Element</a> const &amp;&#160;<
 <a class="el" href="class_element.html">Element</a> &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()&amp;&amp;noexcept</td></tr>
 <tr class="separator:ad0d07ea481e0588cea3ffd5a7ff2b4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="aa71a2007968cc7d628671ae44f804f8d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Element , typename Tag &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classranges_1_1v3_1_1box.html">ranges::v3::box</a>&lt; <a class="el" href="class_element.html">Element</a>, Tag, detail::box_compress::ebo &gt;::<a class="el" href="classranges_1_1v3_1_1box.html">box</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>std::is_default_constructible&lt;Element&gt;::value </dd></dl>
+
+<p>References <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1ebo_01_4.html">box&lt; Element, Tag, detail::box_compress::ebo &gt;</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1ebo_01_4.html">box&lt; Element, Tag, detail::box_compress::ebo &gt;</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

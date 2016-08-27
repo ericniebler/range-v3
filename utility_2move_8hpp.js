@@ -6,6 +6,8 @@ var utility_2move_8hpp =
     [ "is_indirectly_movable_", "utility_2move_8hpp.html#a23872dab33761abda65f24be633574c8", null ],
     [ "is_nothrow_indirectly_movable_", "utility_2move_8hpp.html#a95fa5cf9a4fdb21763d3fbdd11ecd916", null ],
     [ "operator|", "utility_2move_8hpp.html#ga666ada406594f0fc35648f34b069d5a7", null ],
+    [ "indirect_move", "utility_2move_8hpp.html#a0ae504afc985757efed8871cdc495574", null ],
     [ "is_indirectly_movable_", "utility_2move_8hpp.html#a13bcb4901817fad98b6a0715790af4ef", null ],
-    [ "is_nothrow_indirectly_movable_", "utility_2move_8hpp.html#a2baa0a4ca37ee85ace55ebb4ad10eeba", null ]
+    [ "is_nothrow_indirectly_movable_", "utility_2move_8hpp.html#a2baa0a4ca37ee85ace55ebb4ad10eeba", null ],
+    [ "move", "utility_2move_8hpp.html#gacff94b96a5b7150b9ebc65e67ad5168b", null ]
 ];

@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1join__fn
 
 <div class="header">
   <div class="summary">
+<a href="#related">Synopsis of methods</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1view_1_1join__fn-members.html">List of all members</a>  </div>
@@ -98,6 +99,12 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1join__fn
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Synopsis of methods</h2></td></tr>
+<tr class="memitem:ga4c265de67279f05d48f0306864417660"><td class="memItemLeft" align="right" valign="top">
+constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html">join_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> {}</td></tr>
+<tr class="separator:ga4c265de67279f05d48f0306864417660"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a6760748225ab4a97f043569432ef7be0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6760748225ab4a97f043569432ef7be0"></a>
@@ -107,25 +114,25 @@ template&lt;typename Rng &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7cf849fac34db56a5850638ea352e8d4"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7cf849fac34db56a5850638ea352e8d4"></a>
-template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(JoinableRange_&lt; Rng &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a7cf849fac34db56a5850638ea352e8d4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const </td></tr>
-<tr class="separator:a7cf849fac34db56a5850638ea352e8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeea6d34688589f9ce99764c750bcfcd"><td class="memTemplParams" colspan="2"><a class="anchor" id="abeea6d34688589f9ce99764c750bcfcd"></a>
-template&lt;typename Rng , typename Val  = range_value_t&lt;range_reference_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(JoinableRange_&lt; Rng &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:abeea6d34688589f9ce99764c750bcfcd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1single__view.html">single_view</a>&lt; Val &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, <a class="el" href="group__trait.html#gaffc87ffaaeaffb889b348d8292dc22be">meta::id_t</a>&lt; Val &gt; v) const </td></tr>
-<tr class="separator:abeea6d34688589f9ce99764c750bcfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20481869d4bd4c5634df6687384c0b32"><td class="memTemplParams" colspan="2"><a class="anchor" id="a20481869d4bd4c5634df6687384c0b32"></a>
-template&lt;typename Rng , typename ValRng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(JoinableRange_&lt; Rng &gt;()&amp;&amp;ForwardRange&lt; ValRng &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a20481869d4bd4c5634df6687384c0b32"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt;, all_t&lt; ValRng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, ValRng &amp;&amp;val) const </td></tr>
-<tr class="separator:a20481869d4bd4c5634df6687384c0b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9f0073d5abbc241beb03adf246da918"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab9f0073d5abbc241beb03adf246da918"></a>
+template&lt;typename Rng , requires  = (JoinableRange_&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:ab9f0073d5abbc241beb03adf246da918"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const </td></tr>
+<tr class="separator:ab9f0073d5abbc241beb03adf246da918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ee7d3c9485fe2d7124f7f56684a9922"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7ee7d3c9485fe2d7124f7f56684a9922"></a>
+template&lt;typename Rng , typename Val  = range_value_t&lt;range_reference_t&lt;Rng&gt;&gt;, requires  = (JoinableRange_&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a7ee7d3c9485fe2d7124f7f56684a9922"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1single__view.html">single_view</a>&lt; Val &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, <a class="el" href="group__trait.html#gaffc87ffaaeaffb889b348d8292dc22be">meta::id_t</a>&lt; Val &gt; v) const </td></tr>
+<tr class="separator:a7ee7d3c9485fe2d7124f7f56684a9922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabb6b298f8d59887914083e4aa35772e"><td class="memTemplParams" colspan="2"><a class="anchor" id="aabb6b298f8d59887914083e4aa35772e"></a>
+template&lt;typename Rng , typename ValRng , requires  = (JoinableRange_&lt;Rng&gt;() &amp;&amp; ForwardRange&lt;ValRng&gt;())&gt; </td></tr>
+<tr class="memitem:aabb6b298f8d59887914083e4aa35772e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1join__view.html">join_view</a>&lt; all_t&lt; Rng &gt;, all_t&lt; ValRng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, ValRng &amp;&amp;val) const </td></tr>
+<tr class="separator:aabb6b298f8d59887914083e4aa35772e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><b>view</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html">join_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><b>view</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html">join_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

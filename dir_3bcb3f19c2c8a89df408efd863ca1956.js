@@ -1,51 +1,51 @@
 var dir_3bcb3f19c2c8a89df408efd863ca1956 =
 [
-    [ "adjacent_find.hpp", "adjacent__find_8hpp.html", null ],
-    [ "all_of.hpp", "all__of_8hpp.html", null ],
-    [ "any_of.hpp", "any__of_8hpp.html", null ],
-    [ "binary_search.hpp", "binary__search_8hpp.html", null ],
-    [ "copy.hpp", "algorithm_2copy_8hpp.html", null ],
-    [ "copy_backward.hpp", "copy__backward_8hpp.html", null ],
-    [ "copy_if.hpp", "copy__if_8hpp.html", null ],
-    [ "copy_n.hpp", "copy__n_8hpp.html", null ],
-    [ "count.hpp", "count_8hpp.html", null ],
-    [ "count_if.hpp", "count__if_8hpp.html", null ],
-    [ "equal.hpp", "equal_8hpp.html", null ],
-    [ "equal_range.hpp", "equal__range_8hpp.html", null ],
-    [ "fill.hpp", "fill_8hpp.html", null ],
-    [ "fill_n.hpp", "fill__n_8hpp.html", null ],
-    [ "find.hpp", "find_8hpp.html", null ],
-    [ "find_end.hpp", "find__end_8hpp.html", null ],
-    [ "find_first_of.hpp", "find__first__of_8hpp.html", null ],
-    [ "find_if.hpp", "find__if_8hpp.html", null ],
-    [ "find_if_not.hpp", "find__if__not_8hpp.html", null ],
-    [ "for_each.hpp", "algorithm_2for__each_8hpp.html", null ],
-    [ "generate.hpp", "algorithm_2generate_8hpp.html", null ],
-    [ "generate_n.hpp", "algorithm_2generate__n_8hpp.html", null ],
+    [ "adjacent_find.hpp", "adjacent__find_8hpp.html", "adjacent__find_8hpp" ],
+    [ "all_of.hpp", "all__of_8hpp.html", "all__of_8hpp" ],
+    [ "any_of.hpp", "any__of_8hpp.html", "any__of_8hpp" ],
+    [ "binary_search.hpp", "binary__search_8hpp.html", "binary__search_8hpp" ],
+    [ "copy.hpp", "algorithm_2copy_8hpp.html", "algorithm_2copy_8hpp" ],
+    [ "copy_backward.hpp", "copy__backward_8hpp.html", "copy__backward_8hpp" ],
+    [ "copy_if.hpp", "copy__if_8hpp.html", "copy__if_8hpp" ],
+    [ "copy_n.hpp", "copy__n_8hpp.html", "copy__n_8hpp" ],
+    [ "count.hpp", "count_8hpp.html", "count_8hpp" ],
+    [ "count_if.hpp", "count__if_8hpp.html", "count__if_8hpp" ],
+    [ "equal.hpp", "equal_8hpp.html", "equal_8hpp" ],
+    [ "equal_range.hpp", "equal__range_8hpp.html", "equal__range_8hpp" ],
+    [ "fill.hpp", "fill_8hpp.html", "fill_8hpp" ],
+    [ "fill_n.hpp", "fill__n_8hpp.html", "fill__n_8hpp" ],
+    [ "find.hpp", "find_8hpp.html", "find_8hpp" ],
+    [ "find_end.hpp", "find__end_8hpp.html", "find__end_8hpp" ],
+    [ "find_first_of.hpp", "find__first__of_8hpp.html", "find__first__of_8hpp" ],
+    [ "find_if.hpp", "find__if_8hpp.html", "find__if_8hpp" ],
+    [ "find_if_not.hpp", "find__if__not_8hpp.html", "find__if__not_8hpp" ],
+    [ "for_each.hpp", "algorithm_2for__each_8hpp.html", "algorithm_2for__each_8hpp" ],
+    [ "generate.hpp", "algorithm_2generate_8hpp.html", "algorithm_2generate_8hpp" ],
+    [ "generate_n.hpp", "algorithm_2generate__n_8hpp.html", "algorithm_2generate__n_8hpp" ],
     [ "heap_algorithm.hpp", "heap__algorithm_8hpp.html", "heap__algorithm_8hpp" ],
-    [ "inplace_merge.hpp", "inplace__merge_8hpp.html", null ],
+    [ "inplace_merge.hpp", "inplace__merge_8hpp.html", "inplace__merge_8hpp" ],
     [ "is_partitioned.hpp", "is__partitioned_8hpp.html", "is__partitioned_8hpp" ],
-    [ "is_sorted.hpp", "is__sorted_8hpp.html", null ],
-    [ "is_sorted_until.hpp", "is__sorted__until_8hpp.html", null ],
-    [ "lexicographical_compare.hpp", "lexicographical__compare_8hpp.html", null ],
-    [ "lower_bound.hpp", "lower__bound_8hpp.html", null ],
-    [ "max.hpp", "max_8hpp.html", null ],
-    [ "max_element.hpp", "max__element_8hpp.html", null ],
-    [ "merge.hpp", "merge_8hpp.html", null ],
-    [ "min.hpp", "min_8hpp.html", null ],
-    [ "min_element.hpp", "min__element_8hpp.html", null ],
-    [ "minmax.hpp", "minmax_8hpp.html", null ],
-    [ "minmax_element.hpp", "minmax__element_8hpp.html", null ],
+    [ "is_sorted.hpp", "is__sorted_8hpp.html", "is__sorted_8hpp" ],
+    [ "is_sorted_until.hpp", "is__sorted__until_8hpp.html", "is__sorted__until_8hpp" ],
+    [ "lexicographical_compare.hpp", "lexicographical__compare_8hpp.html", "lexicographical__compare_8hpp" ],
+    [ "lower_bound.hpp", "lower__bound_8hpp.html", "lower__bound_8hpp" ],
+    [ "max.hpp", "max_8hpp.html", "max_8hpp" ],
+    [ "max_element.hpp", "max__element_8hpp.html", "max__element_8hpp" ],
+    [ "merge.hpp", "merge_8hpp.html", "merge_8hpp" ],
+    [ "min.hpp", "min_8hpp.html", "min_8hpp" ],
+    [ "min_element.hpp", "min__element_8hpp.html", "min__element_8hpp" ],
+    [ "minmax.hpp", "minmax_8hpp.html", "minmax_8hpp" ],
+    [ "minmax_element.hpp", "minmax__element_8hpp.html", "minmax__element_8hpp" ],
     [ "mismatch.hpp", "mismatch_8hpp.html", "mismatch_8hpp" ],
-    [ "move.hpp", "algorithm_2move_8hpp.html", null ],
-    [ "move_backward.hpp", "move__backward_8hpp.html", null ],
-    [ "none_of.hpp", "none__of_8hpp.html", null ],
-    [ "nth_element.hpp", "nth__element_8hpp.html", null ],
-    [ "partial_sort.hpp", "partial__sort_8hpp.html", null ],
+    [ "move.hpp", "algorithm_2move_8hpp.html", "algorithm_2move_8hpp" ],
+    [ "move_backward.hpp", "move__backward_8hpp.html", "move__backward_8hpp" ],
+    [ "none_of.hpp", "none__of_8hpp.html", "none__of_8hpp" ],
+    [ "nth_element.hpp", "nth__element_8hpp.html", "nth__element_8hpp" ],
+    [ "partial_sort.hpp", "partial__sort_8hpp.html", "partial__sort_8hpp" ],
     [ "partial_sort_copy.hpp", "partial__sort__copy_8hpp.html", "partial__sort__copy_8hpp" ],
     [ "partition.hpp", "partition_8hpp.html", "partition_8hpp" ],
     [ "partition_copy.hpp", "partition__copy_8hpp.html", "partition__copy_8hpp" ],
-    [ "partition_point.hpp", "partition__point_8hpp.html", null ],
+    [ "partition_point.hpp", "partition__point_8hpp.html", "partition__point_8hpp" ],
     [ "permutation.hpp", "permutation_8hpp.html", "permutation_8hpp" ],
     [ "remove.hpp", "remove_8hpp.html", "remove_8hpp" ],
     [ "remove_copy.hpp", "remove__copy_8hpp.html", "remove__copy_8hpp" ],
@@ -55,83 +55,22 @@ var dir_3bcb3f19c2c8a89df408efd863ca1956 =
     [ "replace_copy.hpp", "replace__copy_8hpp.html", "replace__copy_8hpp" ],
     [ "replace_copy_if.hpp", "replace__copy__if_8hpp.html", "replace__copy__if_8hpp" ],
     [ "replace_if.hpp", "algorithm_2replace__if_8hpp.html", "algorithm_2replace__if_8hpp" ],
-    [ "reverse.hpp", "algorithm_2reverse_8hpp.html", null ],
+    [ "reverse.hpp", "algorithm_2reverse_8hpp.html", "algorithm_2reverse_8hpp" ],
     [ "reverse_copy.hpp", "reverse__copy_8hpp.html", "reverse__copy_8hpp" ],
-    [ "rotate.hpp", "rotate_8hpp.html", null ],
-    [ "rotate_copy.hpp", "rotate__copy_8hpp.html", null ],
-    [ "sample.hpp", "algorithm_2sample_8hpp.html", null ],
+    [ "rotate.hpp", "rotate_8hpp.html", "rotate_8hpp" ],
+    [ "rotate_copy.hpp", "rotate__copy_8hpp.html", "rotate__copy_8hpp" ],
+    [ "sample.hpp", "algorithm_2sample_8hpp.html", "algorithm_2sample_8hpp" ],
     [ "search.hpp", "search_8hpp.html", "search_8hpp" ],
     [ "search_n.hpp", "search__n_8hpp.html", "search__n_8hpp" ],
-    [ "set_algorithm.hpp", "algorithm_2set__algorithm_8hpp.html", null ],
-    [ "shuffle.hpp", "algorithm_2shuffle_8hpp.html", null ],
-    [ "sort.hpp", "algorithm_2sort_8hpp.html", null ],
+    [ "set_algorithm.hpp", "algorithm_2set__algorithm_8hpp.html", "algorithm_2set__algorithm_8hpp" ],
+    [ "shuffle.hpp", "algorithm_2shuffle_8hpp.html", "algorithm_2shuffle_8hpp" ],
+    [ "sort.hpp", "algorithm_2sort_8hpp.html", "algorithm_2sort_8hpp" ],
     [ "stable_partition.hpp", "stable__partition_8hpp.html", "stable__partition_8hpp" ],
-    [ "stable_sort.hpp", "algorithm_2stable__sort_8hpp.html", null ],
-    [ "swap_ranges.hpp", "swap__ranges_8hpp.html", null ],
-    [ "tagspec.hpp", "tagspec_8hpp.html", [
-      [ "begin", "structranges_1_1v3_1_1tag_1_1begin.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1begin_1_1getter.html", "classranges_1_1v3_1_1tag_1_1begin_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1begin_1_1getter.html", "classranges_1_1v3_1_1tag_1_1begin_1_1getter" ],
-      [ "current", "structranges_1_1v3_1_1tag_1_1current.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1current_1_1getter.html", "classranges_1_1v3_1_1tag_1_1current_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1current_1_1getter.html", "classranges_1_1v3_1_1tag_1_1current_1_1getter" ],
-      [ "end", "structranges_1_1v3_1_1tag_1_1end.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1end_1_1getter.html", "classranges_1_1v3_1_1tag_1_1end_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1end_1_1getter.html", "classranges_1_1v3_1_1tag_1_1end_1_1getter" ],
-      [ "engine", "structranges_1_1v3_1_1tag_1_1engine.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1engine_1_1getter.html", "classranges_1_1v3_1_1tag_1_1engine_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1engine_1_1getter.html", "classranges_1_1v3_1_1tag_1_1engine_1_1getter" ],
-      [ "fun", "structranges_1_1v3_1_1tag_1_1fun.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1fun_1_1getter.html", "classranges_1_1v3_1_1tag_1_1fun_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1fun_1_1getter.html", "classranges_1_1v3_1_1tag_1_1fun_1_1getter" ],
-      [ "in", "structranges_1_1v3_1_1tag_1_1in.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1in_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in_1_1getter" ]
-      ] ],
-      [ "in1", "structranges_1_1v3_1_1tag_1_1in1.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1in1_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in1_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1in1_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in1_1_1getter" ],
-      [ "in2", "structranges_1_1v3_1_1tag_1_1in2.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1in2_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in2_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1in2_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in2_1_1getter" ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1in_1_1getter.html", "classranges_1_1v3_1_1tag_1_1in_1_1getter" ],
-      [ "max", "structranges_1_1v3_1_1tag_1_1max.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1max_1_1getter.html", "classranges_1_1v3_1_1tag_1_1max_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1max_1_1getter.html", "classranges_1_1v3_1_1tag_1_1max_1_1getter" ],
-      [ "min", "structranges_1_1v3_1_1tag_1_1min.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1min_1_1getter.html", "classranges_1_1v3_1_1tag_1_1min_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1min_1_1getter.html", "classranges_1_1v3_1_1tag_1_1min_1_1getter" ],
-      [ "out", "structranges_1_1v3_1_1tag_1_1out.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1out_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out_1_1getter" ]
-      ] ],
-      [ "out1", "structranges_1_1v3_1_1tag_1_1out1.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1out1_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out1_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1out1_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out1_1_1getter" ],
-      [ "out2", "structranges_1_1v3_1_1tag_1_1out2.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1out2_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out2_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1out2_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out2_1_1getter" ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1out_1_1getter.html", "classranges_1_1v3_1_1tag_1_1out_1_1getter" ],
-      [ "range", "structranges_1_1v3_1_1tag_1_1range.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1range_1_1getter.html", "classranges_1_1v3_1_1tag_1_1range_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1range_1_1getter.html", "classranges_1_1v3_1_1tag_1_1range_1_1getter" ],
-      [ "size", "structranges_1_1v3_1_1tag_1_1size.html", [
-        [ "getter", "classranges_1_1v3_1_1tag_1_1size_1_1getter.html", "classranges_1_1v3_1_1tag_1_1size_1_1getter" ]
-      ] ],
-      [ "getter", "classranges_1_1v3_1_1tag_1_1size_1_1getter.html", "classranges_1_1v3_1_1tag_1_1size_1_1getter" ]
-    ] ],
+    [ "stable_sort.hpp", "algorithm_2stable__sort_8hpp.html", "algorithm_2stable__sort_8hpp" ],
+    [ "swap_ranges.hpp", "swap__ranges_8hpp.html", "swap__ranges_8hpp" ],
+    [ "tagspec.hpp", "tagspec_8hpp.html", null ],
     [ "transform.hpp", "algorithm_2transform_8hpp.html", "algorithm_2transform_8hpp" ],
-    [ "unique.hpp", "algorithm_2unique_8hpp.html", null ],
+    [ "unique.hpp", "algorithm_2unique_8hpp.html", "algorithm_2unique_8hpp" ],
     [ "unique_copy.hpp", "unique__copy_8hpp.html", "unique__copy_8hpp" ],
-    [ "upper_bound.hpp", "upper__bound_8hpp.html", null ]
+    [ "upper_bound.hpp", "upper__bound_8hpp.html", "upper__bound_8hpp" ]
 ];

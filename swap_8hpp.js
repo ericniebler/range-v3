@@ -1,4 +1,5 @@
 var swap_8hpp =
 [
-    [ "swap", "swap_8hpp.html#ga36379e08842f8cd77857a4a6d79e1ed8", null ]
+    [ "indirect_swap", "group__group-utility.html#ga8b15cb4c1735a17e540aaf640bc8a736", null ],
+    [ "swap", "group__group-utility.html#gabc3f2ae3cb4de40cc57b69395bef108f", null ]
 ];

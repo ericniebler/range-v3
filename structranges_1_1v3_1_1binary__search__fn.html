@@ -99,20 +99,20 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1binary__search__
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad768e385f53daf39cca1b2623a6e87e6"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ad768e385f53daf39cca1b2623a6e87e6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#ad768e385f53daf39cca1b2623a6e87e6">operator()</a> (I begin, S end, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
-<tr class="memdesc:ad768e385f53daf39cca1b2623a6e87e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>binary_search_fn::operator()</code>  <a href="#ad768e385f53daf39cca1b2623a6e87e6">More...</a><br /></td></tr>
-<tr class="separator:ad768e385f53daf39cca1b2623a6e87e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a152a1b1c6dd44c3400771287b59f2c74"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a152a1b1c6dd44c3400771287b59f2c74"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a152a1b1c6dd44c3400771287b59f2c74">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
-<tr class="separator:a152a1b1c6dd44c3400771287b59f2c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a386b87522adf8f21520e86f5390a4445"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:a386b87522adf8f21520e86f5390a4445"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a386b87522adf8f21520e86f5390a4445">operator()</a> (I begin, S end, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
+<tr class="memdesc:a386b87522adf8f21520e86f5390a4445"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>binary_search_fn::operator()</code>  <a href="#a386b87522adf8f21520e86f5390a4445">More...</a><br /></td></tr>
+<tr class="separator:a386b87522adf8f21520e86f5390a4445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d1ec4c465594758937c1058254ae97"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </td></tr>
+<tr class="memitem:a76d1ec4c465594758937c1058254ae97"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a76d1ec4c465594758937c1058254ae97">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
+<tr class="separator:a76d1ec4c465594758937c1058254ae97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ad768e385f53daf39cca1b2623a6e87e6"></a>
+<a class="anchor" id="a386b87522adf8f21520e86f5390a4445"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool ranges::v3::binary_search_fn::operator() </td>
@@ -156,13 +156,15 @@ template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, 
 <p>range-based version of the <code>binary_search</code> std algorithm</p>
 <dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>Range</code> concept </dd></dl>
 
+<p>References <a class="el" href="group__group-utility.html#gade368ed71b50f5c28a8c44c49d22e7b3">ranges::v3::as_function</a>, <a class="el" href="group__group-algorithms.html#ga5d2d3ba4758e38ba9a6e9e7b77ff3d8f">ranges::v3::lower_bound</a>, and <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a152a1b1c6dd44c3400771287b59f2c74"></a>
+<a class="anchor" id="a76d1ec4c465594758937c1058254ae97"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, requires  = (Range&lt;Rng&gt;() &amp;&amp; BinarySearchable&lt;I, V2, C, P&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool ranges::v3::binary_search_fn::operator() </td>
@@ -197,6 +199,8 @@ template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P 
 </div><div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
+<p>References <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>, <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>, and <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -204,7 +208,7 @@ template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html">binary_search_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html">binary_search_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

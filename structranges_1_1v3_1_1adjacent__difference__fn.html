@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adjacent__differ
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a230ab8e708fffeb7c5d0ccb43e1aa933"><td class="memTemplParams" colspan="2"><a class="anchor" id="a230ab8e708fffeb7c5d0ccb43e1aa933"></a>
-template&lt;typename I , typename S , typename O , typename BOp  = minus, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;                                                                                                                                                           AdjacentDifferentiable&lt; I, O, BOp, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a230ab8e708fffeb7c5d0ccb43e1aa933"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, BOp bop_=BOp{}, P proj_=P{}) const </td></tr>
-<tr class="separator:a230ab8e708fffeb7c5d0ccb43e1aa933"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b77bc50c2b92850c9eb69dee1176016"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4b77bc50c2b92850c9eb69dee1176016"></a>
-template&lt;typename I , typename S , typename O , typename S2 , typename BOp  = minus, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()&amp;&amp;Sentinel&lt; S2, O &gt;()&amp;&amp;                                                                                                                                                           AdjacentDifferentiable&lt; I, O, BOp, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a4b77bc50c2b92850c9eb69dee1176016"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, S2 end_result, BOp bop_=BOp{}, P proj_=P{}) const </td></tr>
-<tr class="separator:a4b77bc50c2b92850c9eb69dee1176016"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a910fbc61541becde3d1506fc273b3204"><td class="memTemplParams" colspan="2"><a class="anchor" id="a910fbc61541becde3d1506fc273b3204"></a>
-template&lt;typename Rng , typename ORef , typename BOp  = minus, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, typename O  = uncvref_t&lt;ORef&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &amp; &gt;()&amp;&amp;                                                                                                                                                           AdjacentDifferentiable&lt; I, O, BOp, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a910fbc61541becde3d1506fc273b3204"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, ORef &amp;&amp;result, BOp bop=BOp{}, P proj=P{}) const </td></tr>
-<tr class="separator:a910fbc61541becde3d1506fc273b3204"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeeab9c8c224c3e5c2ff52182b7d7370"><td class="memTemplParams" colspan="2"><a class="anchor" id="aeeeab9c8c224c3e5c2ff52182b7d7370"></a>
-template&lt;typename Rng , typename ORng , typename BOp  = minus, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, typename O  = range_iterator_t&lt;ORng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &amp; &gt;()&amp;&amp;Range&lt; ORng &amp; &gt;()&amp;&amp;                                                                                                                                                           AdjacentDifferentiable&lt; I, O, BOp, P &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aeeeab9c8c224c3e5c2ff52182b7d7370"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, ORng &amp;result, BOp bop=BOp{}, P proj=P{}) const </td></tr>
-<tr class="separator:aeeeab9c8c224c3e5c2ff52182b7d7370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a064032d9f9f13b7b637c4ac7ebd1e583"><td class="memTemplParams" colspan="2"><a class="anchor" id="a064032d9f9f13b7b637c4ac7ebd1e583"></a>
+template&lt;typename I , typename S , typename O , typename BOp  = minus, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp;                                        AdjacentDifferentiable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
+<tr class="memitem:a064032d9f9f13b7b637c4ac7ebd1e583"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, BOp bop_=BOp{}, P proj_=P{}) const </td></tr>
+<tr class="separator:a064032d9f9f13b7b637c4ac7ebd1e583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22392b6e92c4c33222e9c557ae88403"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa22392b6e92c4c33222e9c557ae88403"></a>
+template&lt;typename I , typename S , typename O , typename S2 , typename BOp  = minus, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; Sentinel&lt;S2, O&gt;() &amp;&amp;                                        AdjacentDifferentiable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
+<tr class="memitem:aa22392b6e92c4c33222e9c557ae88403"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, S2 end_result, BOp bop_=BOp{}, P proj_=P{}) const </td></tr>
+<tr class="separator:aa22392b6e92c4c33222e9c557ae88403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa6c1684b7d99752cc612c4c9bd30d26"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaa6c1684b7d99752cc612c4c9bd30d26"></a>
+template&lt;typename Rng , typename ORef , typename BOp  = minus, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, typename O  = uncvref_t&lt;ORef&gt;, requires  = (Range&lt;Rng &amp;&gt;() &amp;&amp;                                        AdjacentDifferentiable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
+<tr class="memitem:aaa6c1684b7d99752cc612c4c9bd30d26"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, ORef &amp;&amp;result, BOp bop=BOp{}, P proj=P{}) const </td></tr>
+<tr class="separator:aaa6c1684b7d99752cc612c4c9bd30d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a06e64e555e672b67300b32bea1d432"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5a06e64e555e672b67300b32bea1d432"></a>
+template&lt;typename Rng , typename ORng , typename BOp  = minus, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, typename O  = range_iterator_t&lt;ORng&gt;, requires  = (Range&lt;Rng &amp;&gt;() &amp;&amp; Range&lt;ORng &amp;&gt;() &amp;&amp;                                        AdjacentDifferentiable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
+<tr class="memitem:a5a06e64e555e672b67300b32bea1d432"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, ORng &amp;result, BOp bop=BOp{}, P proj=P{}) const </td></tr>
+<tr class="separator:a5a06e64e555e672b67300b32bea1d432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adjacent__difference__fn.html">adjacent_difference_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1adjacent__difference__fn.html">adjacent_difference_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>

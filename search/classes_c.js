@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['next',['Next',['../class_next.html',1,'']]],
   ['next_5ffn',['next_fn',['../structranges_1_1v3_1_1next__fn.html',1,'ranges::v3']]],
   ['next_5fpermutation_5ffn',['next_permutation_fn',['../structranges_1_1v3_1_1next__permutation__fn.html',1,'ranges::v3']]],
   ['nil_5f',['nil_',['../structmeta_1_1nil__.html',1,'meta']]],

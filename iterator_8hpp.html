@@ -91,9 +91,9 @@ $(document).ready(function(){initNavTree('iterator_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">iterator.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -130,12 +130,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1next__fn.html">ranges::v3::next_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1prev__fn.html">ranges::v3::prev_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
-<tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -175,22 +169,61 @@ template&lt;typename I &gt; </td></tr>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga316dccac9d1ecbc0259442b9d3c979c6"><td class="memTemplItemLeft" align="right" valign="top">reverse_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_reverse_iterator</b> (I i)</td></tr>
 <tr class="separator:ga316dccac9d1ecbc0259442b9d3c979c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5122df45228d2cdcf044d9331104a71e"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga5122df45228d2cdcf044d9331104a71e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_iterator&lt; S &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
-<tr class="separator:ga5122df45228d2cdcf044d9331104a71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
-<tr class="separator:gacc30c0ffd2b96276ca5315d1a3cc59e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_iterator&lt; I &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
-<tr class="separator:ga09afa27b6d4943b647b2bdb4cf90e278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memTemplParams" colspan="2">
-template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S, I &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
-<tr class="separator:ga73e7b9fcad8801f472f6b8b51c4cefbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80e3372d642e61a9fed598831a1ce452"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga80e3372d642e61a9fed598831a1ce452"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_iterator&lt; S &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
+<tr class="separator:ga80e3372d642e61a9fed598831a1ce452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga595f619314aa843ceeb6ecafcd176912"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga595f619314aa843ceeb6ecafcd176912"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
+<tr class="separator:ga595f619314aa843ceeb6ecafcd176912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_iterator&lt; I &gt; const &amp;i, move_sentinel&lt; S &gt; const &amp;s)</td></tr>
+<tr class="separator:gab23201fc3f68bcbbe0ecb8bc2375a92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memTemplParams" colspan="2">
+template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; </td></tr>
+<tr class="memitem:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (move_sentinel&lt; S &gt; const &amp;s, move_iterator&lt; S &gt; const &amp;i)</td></tr>
+<tr class="separator:ga0c3c1eb53de4527355208fd50dfc4340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gad0b4e45e8ad1e530dfe9018f2119aeed"><td class="memItemLeft" align="right" valign="top">constexpr adl_advance_detail::advance_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a> {}</td></tr>
+<tr class="separator:gad0b4e45e8ad1e530dfe9018f2119aeed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga904de33592539c73d8ab35911c185807"><td class="memItemLeft" align="right" valign="top">constexpr back_inserter_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga904de33592539c73d8ab35911c185807">ranges::v3::back_inserter</a> {}</td></tr>
+<tr class="separator:ga904de33592539c73d8ab35911c185807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace4e3d9471bb3afb11c46d54b8c5ec6e"><td class="memItemLeft" align="right" valign="top">constexpr front_inserter_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gace4e3d9471bb3afb11c46d54b8c5ec6e">ranges::v3::front_inserter</a> {}</td></tr>
+<tr class="separator:gace4e3d9471bb3afb11c46d54b8c5ec6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad02e0f6a8c7adcb455acca20b7f3892d"><td class="memItemLeft" align="right" valign="top">constexpr iter_distance_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad02e0f6a8c7adcb455acca20b7f3892d">ranges::v3::iter_distance</a> {}</td></tr>
+<tr class="separator:gad02e0f6a8c7adcb455acca20b7f3892d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87e03f1e0748b2469048a560ee5043ae"><td class="memItemLeft" align="right" valign="top">constexpr iter_distance_compare_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga87e03f1e0748b2469048a560ee5043ae">ranges::v3::iter_distance_compare</a> {}</td></tr>
+<tr class="separator:ga87e03f1e0748b2469048a560ee5043ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa1cf3fbf1dfb84a039e64caee6aa8bb"><td class="memItemLeft" align="right" valign="top">constexpr iter_enumerate_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaaa1cf3fbf1dfb84a039e64caee6aa8bb">ranges::v3::iter_enumerate</a> {}</td></tr>
+<tr class="separator:gaaa1cf3fbf1dfb84a039e64caee6aa8bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaba2aff983114b2344c02769a0d65017d"><td class="memItemLeft" align="right" valign="top">constexpr iter_move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaba2aff983114b2344c02769a0d65017d">ranges::v3::iter_move</a> {}</td></tr>
+<tr class="separator:gaba2aff983114b2344c02769a0d65017d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb4794dab236aa51bcb63ff398085bfa"><td class="memItemLeft" align="right" valign="top">constexpr iter_size_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gadb4794dab236aa51bcb63ff398085bfa">ranges::v3::iter_size</a> {}</td></tr>
+<tr class="separator:gadb4794dab236aa51bcb63ff398085bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa98246dd9c8ae0b575829de2b8ff74ed"><td class="memItemLeft" align="right" valign="top">constexpr iter_swap_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa98246dd9c8ae0b575829de2b8ff74ed">ranges::v3::iter_swap</a> {}</td></tr>
+<tr class="separator:gaa98246dd9c8ae0b575829de2b8ff74ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga51a68b31d090818fc35926d2d534ea80"><td class="memItemLeft" align="right" valign="top">
+constexpr make_move_iterator_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::make_move_iterator</b> {}</td></tr>
+<tr class="separator:ga51a68b31d090818fc35926d2d534ea80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d3e801e8240bfec2a9971296a4764a4"><td class="memItemLeft" align="right" valign="top">
+constexpr make_move_sentinel_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::make_move_sentinel</b> {}</td></tr>
+<tr class="separator:ga6d3e801e8240bfec2a9971296a4764a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae1096593ef0a9a2f805d0684bec0b9a8"><td class="memItemLeft" align="right" valign="top">constexpr move_into_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gae1096593ef0a9a2f805d0684bec0b9a8">ranges::v3::move_into</a> {}</td></tr>
+<tr class="separator:gae1096593ef0a9a2f805d0684bec0b9a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga70320521358b8e16455a2931d524bab9"><td class="memItemLeft" align="right" valign="top">constexpr next_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">ranges::v3::next</a> {}</td></tr>
+<tr class="separator:ga70320521358b8e16455a2931d524bab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93ed84b86d8219a3018f2f5605c2492c"><td class="memItemLeft" align="right" valign="top">constexpr prev_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga93ed84b86d8219a3018f2f5605c2492c">ranges::v3::prev</a> {}</td></tr>
+<tr class="separator:ga93ed84b86d8219a3018f2f5605c2492c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga801f11e0f09048572cf91353749d08aa"><td class="memItemLeft" align="right" valign="top">
+constexpr adl_uncounted_recounted_detail::recounted_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::recounted</b> {}</td></tr>
+<tr class="separator:ga801f11e0f09048572cf91353749d08aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab195392d2b1ff411d69745e30553526c"><td class="memItemLeft" align="right" valign="top">
+constexpr adl_uncounted_recounted_detail::uncounted_fn&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::uncounted</b> {}</td></tr>
+<tr class="separator:gab195392d2b1ff411d69745e30553526c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

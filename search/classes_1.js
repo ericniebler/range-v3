@@ -11,7 +11,6 @@ var searchData=
   ['basic_5fsentinel',['basic_sentinel',['../structranges_1_1v3_1_1basic__sentinel.html',1,'ranges::v3']]],
   ['basic_5fview',['basic_view',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['basic_5fview_3c_20cardinality_20_3e',['basic_view&lt; Cardinality &gt;',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
-  ['begin',['begin',['../structranges_1_1v3_1_1tag_1_1begin.html',1,'ranges::v3::tag']]],
   ['begin_5ftag',['begin_tag',['../structranges_1_1v3_1_1begin__tag.html',1,'ranges::v3']]],
   ['bidirectional_5fiterator_5ftag',['bidirectional_iterator_tag',['../structranges_1_1v3_1_1bidirectional__iterator__tag.html',1,'ranges::v3']]],
   ['bidirectionalincrementable',['BidirectionalIncrementable',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_incrementable.html',1,'ranges::v3::concepts']]],

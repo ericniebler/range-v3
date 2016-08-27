@@ -1,5 +1,6 @@
 var structranges_1_1v3_1_1view_1_1c__str__fn =
 [
+    [ "c_str", "group__group-views.html#ga2b479ed5f302954c8a1dff3582c9f177", null ],
     [ "operator()", "group__group-views.html#ga2bfccf9cb322e29e70caefc5736efea2", null ],
     [ "operator()", "group__group-views.html#gaee4feab89e8a109f79c43d55e55157a1", null ],
     [ "operator()", "group__group-views.html#ga2dd1342b32cb69b6c3e0cf0c9c5dbaf3", null ],

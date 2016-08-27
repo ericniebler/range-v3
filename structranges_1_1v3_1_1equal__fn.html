@@ -99,29 +99,29 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1equal__fn.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a11deaefa5783a3997965a1fb1cde59fa"><td class="memTemplParams" colspan="2"><a class="anchor" id="a11deaefa5783a3997965a1fb1cde59fa"></a>
-template&lt;typename I0 , typename S0 , typename I1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S0, I0 &gt;()&amp;&amp;                                                                           Comparable&lt; I0, I1, C, P0, P1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a11deaefa5783a3997965a1fb1cde59fa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I0 begin0, S0 end0, I1 begin1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
-<tr class="separator:a11deaefa5783a3997965a1fb1cde59fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af58563f5a377afa0f788b15a1d54b4fa"><td class="memTemplParams" colspan="2"><a class="anchor" id="af58563f5a377afa0f788b15a1d54b4fa"></a>
-template&lt;typename I0 , typename S0 , typename I1 , typename S1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Sentinel&lt; S0, I0 &gt;()&amp;&amp;Sentinel&lt; S1, I1 &gt;()&amp;&amp;                                                                           Comparable&lt; I0, I1, C, P0, P1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:af58563f5a377afa0f788b15a1d54b4fa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
-<tr class="separator:af58563f5a377afa0f788b15a1d54b4fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30835572ee7b1db6684848f507521779"><td class="memTemplParams" colspan="2"><a class="anchor" id="a30835572ee7b1db6684848f507521779"></a>
-template&lt;typename Rng0 , typename I1Ref , typename C  = equal_to, typename P0  = ident, typename P1  = ident, typename I0  = range_iterator_t&lt;Rng0&gt;, typename I1  = uncvref_t&lt;I1Ref&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng0 &gt;()&amp;&amp;Iterator&lt; I1 &gt;()&amp;&amp;                                                                           Comparable&lt; I0, I1, C, P0, P1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a30835572ee7b1db6684848f507521779"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng0 &amp;&amp;rng0, I1Ref &amp;&amp;begin1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
-<tr class="separator:a30835572ee7b1db6684848f507521779"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd2b67bedf8f7596e47ab328054bf7d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1fd2b67bedf8f7596e47ab328054bf7d"></a>
-template&lt;typename Rng0 , typename Rng1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, typename I0  = range_iterator_t&lt;Rng0&gt;, typename I1  = range_iterator_t&lt;Rng1&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng0 &gt;()&amp;&amp;Range&lt; Rng1 &gt;()&amp;&amp;                                                                           Comparable&lt; I0, I1, C, P0, P1 &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a1fd2b67bedf8f7596e47ab328054bf7d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng0 &amp;&amp;rng0, Rng1 &amp;&amp;rng1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
-<tr class="separator:a1fd2b67bedf8f7596e47ab328054bf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a349b10514a934ac6cc8b4a4661a60705"><td class="memTemplParams" colspan="2"><a class="anchor" id="a349b10514a934ac6cc8b4a4661a60705"></a>
+template&lt;typename I0 , typename S0 , typename I1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, requires  = (                    Sentinel&lt;S0, I0&gt;() &amp;&amp;                    Comparable&lt;I0, I1, C, P0, P1&gt;()                )&gt; </td></tr>
+<tr class="memitem:a349b10514a934ac6cc8b4a4661a60705"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I0 begin0, S0 end0, I1 begin1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
+<tr class="separator:a349b10514a934ac6cc8b4a4661a60705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c09dd322e5ab89f9ba797cace8ce3f9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8c09dd322e5ab89f9ba797cace8ce3f9"></a>
+template&lt;typename I0 , typename S0 , typename I1 , typename S1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, requires  = (                    Sentinel&lt;S0, I0&gt;() &amp;&amp; Sentinel&lt;S1, I1&gt;() &amp;&amp;                    Comparable&lt;I0, I1, C, P0, P1&gt;()                )&gt; </td></tr>
+<tr class="memitem:a8c09dd322e5ab89f9ba797cace8ce3f9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
+<tr class="separator:a8c09dd322e5ab89f9ba797cace8ce3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c6a23e228617357bdaed4e60c7f0a5e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3c6a23e228617357bdaed4e60c7f0a5e"></a>
+template&lt;typename Rng0 , typename I1Ref , typename C  = equal_to, typename P0  = ident, typename P1  = ident, typename I0  = range_iterator_t&lt;Rng0&gt;, typename I1  = uncvref_t&lt;I1Ref&gt;, requires  = (                    Range&lt;Rng0&gt;() &amp;&amp; Iterator&lt;I1&gt;() &amp;&amp;                    Comparable&lt;I0, I1, C, P0, P1&gt;()                )&gt; </td></tr>
+<tr class="memitem:a3c6a23e228617357bdaed4e60c7f0a5e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng0 &amp;&amp;rng0, I1Ref &amp;&amp;begin1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
+<tr class="separator:a3c6a23e228617357bdaed4e60c7f0a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9ec8f84816b568153e91734ed79ac1e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad9ec8f84816b568153e91734ed79ac1e"></a>
+template&lt;typename Rng0 , typename Rng1 , typename C  = equal_to, typename P0  = ident, typename P1  = ident, typename I0  = range_iterator_t&lt;Rng0&gt;, typename I1  = range_iterator_t&lt;Rng1&gt;, requires  = (                    Range&lt;Rng0&gt;() &amp;&amp; Range&lt;Rng1&gt;() &amp;&amp;                    Comparable&lt;I0, I1, C, P0, P1&gt;()                )&gt; </td></tr>
+<tr class="memitem:ad9ec8f84816b568153e91734ed79ac1e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng0 &amp;&amp;rng0, Rng1 &amp;&amp;rng1, C pred_=C{}, P0 proj0_=P0{}, P1 proj1_=P1{}) const </td></tr>
+<tr class="separator:ad9ec8f84816b568153e91734ed79ac1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>ranges</b></li><li class="navelem"><a class="el" href="namespaceranges_1_1v3.html">v3</a></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1equal__fn.html">equal_fn</a></li>
+    <li class="navelem"><b>ranges</b></li><li class="navelem"><b>v3</b></li><li class="navelem"><a class="el" href="structranges_1_1v3_1_1equal__fn.html">equal_fn</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>
