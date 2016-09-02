@@ -27,7 +27,7 @@ Other resources (mind the dates, the library probably has changed since then):
 - Design / Implementation:
   - Rationale behind range-v3: [N4128: Ranges for the standard library Revision 1](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html), 2014.
   - Ranges TS: [N4560: C++ Extensions for Ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4560.pdf), 2015.
-  - Implementation of customization points in range-v3: 
+  - Implementation of customization points in range-v3:
     - [N4381: Suggested Design for Customization Points](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html), 2015.
     - [P0386: Inline variables](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0386r0.pdf), 2016.
     - [Customization Point Design in C++11 and Beyond](http://ericniebler.com/2014/10/21/customization-point-design-in-c11-and-beyond/), 2014.
@@ -54,10 +54,13 @@ The code is known to work on the following compilers:
 
 - clang 3.5.2
 - GCC 4.8.5 (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
+- VS2015 Update 3 "Clang with Microsoft CodeGen" (Clang/C2)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
-**Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
+**Build status**
+- on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
+- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/yh3fufmhm53rkf3d/branch/master?svg=true)](https://ci.appveyor.com/project/devdiv/range-v3)
 
 Say Thanks!
 -----------
