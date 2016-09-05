@@ -151,14 +151,14 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 namespace std
 {
     template<typename... Ts, size_t... Is>
-    struct tuple_size< ::ranges::v3::compressed_tuple_detail::compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>>>
+    struct tuple_size< ::ranges::v3::compressed_tuple_detail::compressed_tuple_<::meta::list<Ts...>, ::meta::index_sequence<Is...>>>
       : integral_constant<size_t, sizeof...(Ts)>
     {};
 
     template<size_t I, typename... Ts, size_t... Is>
-    struct tuple_element<I, ::ranges::v3::compressed_tuple_detail::compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>>>
+    struct tuple_element<I, ::ranges::v3::compressed_tuple_detail::compressed_tuple_<::meta::list<Ts...>, ::meta::index_sequence<Is...>>>
     {
-        using type = ::meta::at_c<meta::list<Ts...>, I>;
+        using type = ::meta::at_c<::meta::list<Ts...>, I>;
     };
 
     template<typename First, typename Second>

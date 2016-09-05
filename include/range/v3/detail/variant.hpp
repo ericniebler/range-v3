@@ -750,12 +750,12 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 namespace std
 {
     template<typename...Ts>
-    struct tuple_size<ranges::variant<Ts...>>
+    struct tuple_size<::ranges::variant<Ts...>>
       : tuple_size<tuple<Ts...>>
     {};
 
     template<size_t I, typename...Ts>
-    struct tuple_element<I, ranges::variant<Ts...>>
+    struct tuple_element<I, ::ranges::variant<Ts...>>
       : tuple_element<I, tuple<Ts...>>
     {};
 }

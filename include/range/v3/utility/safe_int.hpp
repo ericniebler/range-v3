@@ -306,15 +306,15 @@ namespace ranges
 namespace std
 {
     template<typename T>
-    struct is_integral<ranges::v3::safe_int<T>>
+    struct is_integral<::ranges::v3::safe_int<T>>
       : is_integral<T>
     {};
 
     template<typename T>
-    class numeric_limits<ranges::v3::safe_int<T>>
+    class numeric_limits<::ranges::v3::safe_int<T>>
       : public numeric_limits<T>
     {
-        using safe_int = ranges::v3::safe_int<T>;
+        using safe_int = ::ranges::v3::safe_int<T>;
     public:
         static constexpr bool is_specialized = true;
         static constexpr safe_int min() noexcept { return safe_int{-numeric_limits<T>::max() + 1}; }
@@ -327,13 +327,13 @@ namespace std
     };
 
     template<typename T>
-    constexpr bool numeric_limits<ranges::v3::safe_int<T>>::is_specialized;
+    constexpr bool numeric_limits<::ranges::v3::safe_int<T>>::is_specialized;
 
     template<typename T>
-    constexpr bool numeric_limits<ranges::v3::safe_int<T>>::has_infinity;
+    constexpr bool numeric_limits<::ranges::v3::safe_int<T>>::has_infinity;
 
     template<typename T>
-    constexpr bool numeric_limits<ranges::v3::safe_int<T>>::has_quiet_NaN;
+    constexpr bool numeric_limits<::ranges::v3::safe_int<T>>::has_quiet_NaN;
 }
 
 #endif
