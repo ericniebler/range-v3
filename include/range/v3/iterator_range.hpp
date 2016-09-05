@@ -258,7 +258,7 @@ namespace std
     template<typename I, typename S>
     struct tuple_element<2, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = ranges::v3::iterator_size_t<I>;
+        using type = ::ranges::v3::iterator_size_t<I>;
     };
 }
 /// \endcond
