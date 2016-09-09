@@ -90,15 +90,14 @@ namespace ranges
                     return ranges::get<1>(data_);
                 }
                 CONCEPT_REQUIRES((bool)SizedSentinel<S, I>() && (bool)SizedSentinel<I, I>())
-                friend iterator_difference_t<I>
-                operator-(common_iterator<I, S> const &end, common_iterator<I, S> const &begin)
+                iterator_difference_t<I>
+                distance_to(common_cursor const &that) const
                 {
-                    common_cursor const &this_ = get_cursor(begin), &that = get_cursor(end);
                     return that.is_sentinel() ?
-                        (this_.is_sentinel() ? 0 : that.se() - this_.it()) :
-                        (this_.is_sentinel() ?
-                             that.it() - this_.se() :
-                             that.it() - this_.it());
+                        (this->is_sentinel() ? 0 : that.se() - this->it()) :
+                        (this->is_sentinel() ?
+                             that.it() - this->se() :
+                             that.it() - this->it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())
                 iterator_rvalue_reference_t<I> move() const
