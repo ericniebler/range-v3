@@ -324,6 +324,10 @@ namespace ranges
 
             template<typename T>
             using remove_rvalue_reference_t = meta::_t<remove_rvalue_reference<T>>;
+
+            template<int I>
+            struct priority_tag : priority_tag<I - 1> {};
+            template<> struct priority_tag<0> {};
         }
         /// \endcond
 
