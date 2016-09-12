@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/data.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -141,6 +142,25 @@ namespace ranges
                     ));
             };
 
+            struct ContiguousRange
+              : refines<RandomAccessRange>
+            {
+                template<typename Rng>
+                using data_reference_t = decltype(*data(std::declval<Rng&>()));
+
+                template<typename Rng>
+                using datum_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
+
+                template<typename Rng>
+                auto requires_(Rng && rng) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Same, InputRange::value_t<Rng>,
+                            meta::_t<std::remove_cv<datum_t<Rng>>>>(),
+                        concepts::model_of<Same, data_reference_t<Rng>,
+                            concepts::InputRange::reference_t<Rng>>()
+                    ));
+            };
+
             struct BoundedRange
               : refines<Range>
             {
@@ -242,6 +262,9 @@ namespace ranges
 
         template<typename T>
         using RandomAccessRange = concepts::models<concepts::RandomAccessRange, T>;
+
+        template<typename Rng>
+        using ContiguousRange = concepts::models<concepts::ContiguousRange, Rng>;
 
         template<typename T>
         using BoundedRange = concepts::models<concepts::BoundedRange, T>;
