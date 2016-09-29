@@ -174,7 +174,7 @@ matrix:
     #   os: linux
     #   addons: *clang37
 
-    # Test clang-3.9: C++11/C++14, Build=Debug/Release, ASAN=On/Off
+    # Test clang-4.0: C++11/C++14/1z, LIBCXX=On/Off, Build=Debug/Release, ASAN=On/Off
     - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
       os: linux
       addons: &clang40
