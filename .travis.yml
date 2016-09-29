@@ -175,61 +175,61 @@ matrix:
     #   addons: *clang37
 
     # Test clang-3.9: C++11/C++14, Build=Debug/Release, ASAN=On/Off
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
       os: linux
-      addons: &clang39
+      addons: &clang40
         apt:
           packages:
             - util-linux
-            - clang-3.9
+            - clang-4.0
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
     # Release + ASAN + C++11/14/1z
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
     # Release + Valgrind + C++11/14/1z
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=1z ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
     # Debug + C++11/14/1z
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On
       os: linux
-      addons: *clang39
+      addons: *clang40
 
     # Debug + C++11 + libstdc++
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
       os: linux
-      addons: *clang39
+      addons: *clang40
 
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
@@ -337,7 +337,9 @@ before_install:
   - which $CC
   - which valgrind
   - $CXX --version
+  - if [ "$ASAN" == "On" ]; then export SANITIZER=Address; fi
   - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
+
 
 install:
   - cd $CHECKOUT_PATH
@@ -353,7 +355,6 @@ install:
   - if [ -n "$GCC_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined -fno-omit-frame-pointer"; fi
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
-  - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=1
   - make VERBOSE=1
 
