@@ -56,7 +56,7 @@ int main()
     auto tmp = rng | view::reverse;
     CHECK(&*begin(tmp) == &rgi[8]);
 
-    auto && rng2 = view::counted(rgi, 10) | view::remove_if(not_(is_odd()));
+    auto && rng2 = view::counted(rgi, 10) | view::remove_if(not_fn(is_odd()));
     has_type<int &>(*begin(rng2));
     models<concepts::BidirectionalView>(rng2);
     models_not<concepts::RandomAccessView>(rng2);

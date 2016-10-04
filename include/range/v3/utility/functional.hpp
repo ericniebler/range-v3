@@ -313,46 +313,99 @@ namespace ranges
         using CallableRelation = concepts::models<concepts::CallableRelation, Fun, T, U>;
         /// @}
 
-        template<typename Pred>
-        struct logical_negate
+        template<typename FD>
+        struct logical_negate_
         {
         private:
-            using fn_t = meta::_t<std::decay<function_type<Pred>>>;
-            fn_t pred_;
+            CONCEPT_ASSERT(Same<FD, detail::decay_t<FD>>() && MoveConstructible<FD>());
+            FD pred_;
         public:
-            logical_negate() = default;
-
-            explicit constexpr logical_negate(Pred pred)
-              : pred_(as_function((Pred &&) pred))
+            CONCEPT_REQUIRES(DefaultConstructible<FD>())
+            constexpr logical_negate_()
+                noexcept(std::is_nothrow_default_constructible<FD>::value)
+            {}
+            template<typename T,
+                CONCEPT_REQUIRES_(Constructible<FD, function_type<T>>())>
+            explicit constexpr logical_negate_(T && pred)
+              : pred_(as_function(static_cast<T &&>(pred)))
             {}
 
+// HACKHACKHACK GCC 4.8 is extremely confused about && and const&& qualifiers.
+// Luckily they are rare - we'll simply break them.
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
             template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<fn_t&, Args...>())>
-            bool operator()(Args &&...args)
+                CONCEPT_REQUIRES_(Predicate<FD &, Args &&...>())>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args)
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD &>()(static_cast<Args &&>(args)...))
             {
-                return !pred_(((Args &&) args)...);
+                return !pred_(static_cast<Args &&>(args)...);
             }
             /// \overload
             template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<fn_t const&, Args...>())>
-            constexpr bool operator()(Args &&...args) const
+                CONCEPT_REQUIRES_(Predicate<FD const &, Args &&...>())>
+            constexpr auto operator()(Args &&...args) const
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD const &>()(static_cast<Args &&>(args)...))
             {
-                return !pred_(((Args &&) args)...);
+                return !pred_(static_cast<Args &&>(args)...);
             }
-        };
+#else // ^^^ GCC <= 4.8 / GCC > 4.8 vvvv
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<FD &, Args &&...>())>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD &>()(static_cast<Args &&>(args)...))
+            {
+                return !pred_(static_cast<Args &&>(args)...);
+            }
+            /// \overload
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<FD const &, Args &&...>())>
+            constexpr auto operator()(Args &&...args) const &
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD const &>()(static_cast<Args &&>(args)...))
+            {
+                return !pred_(static_cast<Args &&>(args)...);
+            }
+            /// \overload
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<FD &&, Args &&...>())>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD>()(static_cast<Args &&>(args)...))
+            {
+                return !static_cast<FD &&>(pred_)(static_cast<Args &&>(args)...);
+            }
 
-        struct not_fn
+            /// \overload
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<FD const &&, Args &&...>())>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) const &&
+            RANGES_DECLTYPE_NOEXCEPT(!std::declval<FD const>()(static_cast<Args &&>(args)...))
+            {
+                return !static_cast<FD const &&>(pred_)(static_cast<Args &&>(args)...);
+            }
+#endif // GCC
+        };
+        template<typename Pred>
+        using logical_negate = logical_negate_<detail::decay_t<function_type<Pred>>>;
+
+        struct not_fn_fn
         {
-            template<typename Pred>
-            constexpr logical_negate<Pred> operator()(Pred pred) const
+            template<typename Pred, typename FD = detail::decay_t<function_type<Pred &&>>,
+                CONCEPT_REQUIRES_(MoveConstructible<FD>() && Constructible<FD, function_type<Pred &&>>())>
+            constexpr logical_negate<Pred> operator()(Pred && pred) const
             {
                 return logical_negate<Pred>{(Pred &&) pred};
             }
         };
 
         /// \ingroup group-utility
-        /// \sa `not_fn`
-        RANGES_INLINE_VARIABLE(not_fn, not_)
+        /// \sa `not_fn_fn`
+        RANGES_INLINE_VARIABLE(not_fn_fn, not_fn)
+
+        /// \cond
+        inline namespace {
+            RANGES_DEPRECATED("\"not_\" now uses the C++17 name \"not_fn\".")
+            constexpr const auto& not_ = not_fn;
+        }
+        /// \endcond
 
         template<typename Second, typename First>
         struct composed

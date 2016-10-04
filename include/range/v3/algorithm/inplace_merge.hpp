@@ -79,7 +79,7 @@ namespace ranges
                             make_move_sentinel(RBi{std::move(begin)}),
                             make_move_iterator(Rv{p.base().base()}),
                             make_move_iterator(Rv{buf}), RBi{std::move(end)},
-                            not_(std::ref(pred)), std::ref(proj), std::ref(proj));
+                            not_fn(std::ref(pred)), std::ref(proj), std::ref(proj));
                     }
                 }
 

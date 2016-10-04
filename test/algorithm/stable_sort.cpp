@@ -51,7 +51,7 @@ namespace
         auto stable_sort = make_testable_1<false>(ranges::stable_sort);
         if (f != l)
         {
-            long len = l - f;
+            auto len = l - f;
             value_type* save(new value_type[len]);
             do
             {
