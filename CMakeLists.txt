@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(Range-v3 CXX)
 
@@ -74,16 +75,11 @@ endmacro()
 
 # Test all headers
 if(NOT RANGE_V3_NO_HEADER_CHECK)
-  include(CheckIncludeFileCXX)
-  file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
-
-  foreach(_header IN LISTS RANGE_V3_PUBLIC_HEADERS)
-    file(RELATIVE_PATH _relative "${CMAKE_SOURCE_DIR}/include" "${_header}")
-    check_include_file_cxx("${_relative}" ${_relative}_FOUND "-I${CMAKE_SOURCE_DIR}/include")
-    if(NOT ${_relative}_FOUND)
-      message(FATAL_ERROR "Compilation of header ${_relative} failed")
-    endif()
-  endforeach()
+  file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
+                    RELATIVE "${CMAKE_SOURCE_DIR}/include"
+                    "${CMAKE_SOURCE_DIR}/include/*.hpp")
+  include(TestHeaders)
+  generate_standalone_header_tests(HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 endif()
 
 add_subdirectory(doc)
