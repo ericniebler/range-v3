@@ -599,24 +599,35 @@ namespace ranges
                     ));
             };
 
+#if defined(__clang__) && __clang_major__ >= 4
+// Workaround https://llvm.org/bugs/show_bug.cgi?id=30723
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
+#endif
+
             struct DefaultConstructible
               : refines<Constructible>
             {
-                template<typename T,
+                template<typename T, std::size_t N = 42,
                     meta::if_c<!detail::avoid_empty_braces<T>::value, int> = 0>
-                auto requires_(T &&, const std::size_t n = 42) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        new T[n]{}
+                        new T[N]{}
                     ));
 
                 // Workaround https://llvm.org/bugs/show_bug.cgi?id=24181
-                template<typename T,
+                template<typename T, std::size_t N = 42,
                     meta::if_<detail::avoid_empty_braces<T>, int> = 0>
-                auto requires_(T &&, const std::size_t n = 42) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        new T[n]()
+                        new T[N]()
                     ));
             };
+
+#if defined(__clang__) && __clang_major__ >= 4
+// Workaround https://llvm.org/bugs/show_bug.cgi?id=30723
+RANGES_DIAGNOSTIC_POP
+#endif
 
             struct MoveConstructible
             {
