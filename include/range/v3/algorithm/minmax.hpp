@@ -98,9 +98,9 @@ namespace ranges
             }
 
             template<typename T, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    IndirectCallableRelation<C, projected<const T *, P>>())>
-            constexpr const T& operator()(const T &a, const T &b, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(Relation<C, result_of_t<P &(T const &)>>())>
+            constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>
+            operator()(const T &a, const T &b, C pred = C{}, P proj = P{}) const
             {
                 return minmax2_impl(a, b, as_function(pred), as_function(proj));
             }

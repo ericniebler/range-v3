@@ -34,7 +34,7 @@ namespace ranges
         using RemoveCopyable = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectCallableRelation<equal_to, projected<I, P>, T const *>,
+            Relation<equal_to, indirect_result_of_t<P &(I)>, T const &>,
             IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
