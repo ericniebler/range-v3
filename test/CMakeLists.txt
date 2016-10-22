@@ -36,3 +36,6 @@ add_test(test.getlines, getlines)
 
 add_executable(istream_range istream_range.cpp)
 add_test(test.istream_range, istream_range)
+
+add_executable(bug474 bug474.cpp)
+add_test(test.bug474, bug474)

@@ -34,135 +34,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // iterators whose dereference operators reference the same value
-            // for all iterators into the same sequence (like many input
-            // iterators) need help with their postfix ++: the referenced
-            // value must be read and stored away before the increment occurs
-            // so that *a++ yields the originally referenced element and not
-            // the next one.
-            template<typename I>
-            struct postfix_increment_proxy
-            {
-                using value_type = iterator_value_t<I>;
-            private:
-                mutable semiregular_t<value_type> value_;
-            public:
-                postfix_increment_proxy() = default;
-                RANGES_CXX14_CONSTEXPR
-                explicit postfix_increment_proxy(I const& x)
-                  : value_(*x)
-                {}
-                // Returning a mutable reference allows nonsense like
-                // (*r++).mutate(), but it imposes fewer assumptions about the
-                // behavior of the value_type.  In particular, recall that
-                // (*r).mutate() is legal if operator* returns by value.
-                RANGES_CXX14_CONSTEXPR value_type& operator*() const
-                {
-                    return value_;
-                }
-            };
-
-            //
-            // In general, we can't determine that such an iterator isn't
-            // writable -- we also need to store a copy of the old iterator so
-            // that it can be written into.
-            template<typename I>
-            struct writable_postfix_increment_proxy
-            {
-                using value_type = iterator_value_t<I>;
-            private:
-                mutable semiregular_t<value_type> value_;
-                I it_;
-            public:
-                writable_postfix_increment_proxy() = default;
-                RANGES_CXX14_CONSTEXPR
-                explicit writable_postfix_increment_proxy(I x)
-                  : value_(*x)
-                  , it_(std::move(x))
-                {}
-                // Dereferencing must return a proxy so that both *r++ = o and
-                // value_type(*r++) can work.  In this case, *r is the same as
-                // *r++, and the conversion operator below is used to ensure
-                // readability.
-                RANGES_CXX14_CONSTEXPR
-                writable_postfix_increment_proxy const & operator*() const
-                {
-                    return *this;
-                }
-                // So that iter_move(r++) moves the cached value out
-                RANGES_CXX14_CONSTEXPR
-                friend value_type && indirect_move(writable_postfix_increment_proxy const &ref)
-                {
-                    return std::move(ref.value_);
-                }
-                // Provides readability of *r++
-                RANGES_CXX14_CONSTEXPR
-                operator value_type &() const
-                {
-                    return value_;
-                }
-                // Provides writability of *r++
-                template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, T const &>())>
-                RANGES_CXX14_CONSTEXPR
-                void operator=(T const &x) const
-                {
-                    *it_ = x;
-                }
-                // This overload just in case only non-const objects are writable
-                template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, T &>())>
-                RANGES_CXX14_CONSTEXPR
-                void operator=(T &x) const
-                {
-                    *it_ = x;
-                }
-                template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
-                RANGES_CXX14_CONSTEXPR
-                void operator=(T &&x) const
-                {
-                    *it_ = std::move(x);
-                }
-                // Provides X(r++)
-                RANGES_CXX14_CONSTEXPR
-                operator I const &() const
-                {
-                    return it_;
-                }
-            };
-
-            template<typename Ref, typename Val>
-            using is_non_proxy_reference =
-                std::is_convertible<
-                    meta::_t<std::remove_reference<Ref>> const volatile *,
-                    Val const volatile *>;
-
-            // A metafunction to choose the result type of postfix ++
-            //
-            // Because the C++98 input iterator requirements say that *r++ has
-            // type T (value_type), implementations of some standard
-            // algorithms like lexicographical_compare may use constructions
-            // like:
-            //
-            //          *r++ < *s++
-            //
-            // If *r++ returns a proxy (as required if r is writable but not
-            // multipass), this sort of expression will fail unless the proxy
-            // supports the operator<.  Since there are any number of such
-            // operations, we're not going to try to support them.  Therefore,
-            // even if r++ returns a proxy, *r++ will only return a proxy if
-            // *r also returns a proxy.
-            template<typename I, typename Val, typename Ref, typename Cat>
-            using postfix_increment_result =
-                meta::if_<
-                    DerivedFrom<Cat, ranges::forward_iterator_tag>,
-                    I,
-                    meta::if_<
-                        is_non_proxy_reference<Ref, Val>,
-                        postfix_increment_proxy<I>,
-                        writable_postfix_increment_proxy<I>>>;
-
             template<typename Cur>
             using cursor_reference_t =
                 decltype(range_access::get(std::declval<Cur const &>()));
@@ -373,7 +244,6 @@ namespace ranges
             {
             private:
                 friend basic_iterator<Cur, S>;
-                using postfix_increment_result_t = basic_iterator<Cur, S>;
                 using reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_concept_t = range_access::OutputCursor;
@@ -405,10 +275,6 @@ namespace ranges
                     decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
                 using pointer = meta::_t<std::add_pointer<reference>>;
                 using common_reference = common_reference_t<reference &&, value_type &>;
-            private:
-                using postfix_increment_result_t =
-                    postfix_increment_result<
-                        basic_iterator<Cur, S>, value_type, reference, iterator_category>;
             };
         }
         /// \endcond
@@ -480,7 +346,6 @@ namespace ranges
             friend range_access;
             CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur, S>;
-            using typename assoc_types_::postfix_increment_result_t;
             using typename assoc_types_::cursor_concept_t;
             using typename assoc_types_::reference_t;
             using typename assoc_types_::const_reference_t;
@@ -546,12 +411,6 @@ namespace ranges
             {
                 range_access::next(pos());
                 return *this;
-            }
-            RANGES_CXX14_CONSTEXPR postfix_increment_result_t operator++(int)
-            {
-                postfix_increment_result_t tmp(*this);
-                ++*this;
-                return tmp;
             }
             CONCEPT_REQUIRES(detail::HasEqualCursor<Cur>())
             friend constexpr bool operator==(basic_iterator const &left,
@@ -689,6 +548,23 @@ namespace ranges
             }
         };
 
+        template<typename Cur, typename Sent,
+            CONCEPT_REQUIRES_(!Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())>
+        RANGES_CXX14_CONSTEXPR
+        basic_iterator<Cur, Sent> operator++(basic_iterator<Cur, Sent> &it, int)
+        {
+            basic_iterator<Cur, Sent> tmp{it};
+            ++it;
+            return tmp;
+        }
+
+        template<typename Cur, typename Sent,
+            CONCEPT_REQUIRES_(Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())>
+        void operator++(basic_iterator<Cur, Sent> &it, int)
+        {
+            ++it;
+        }
+
         /// Get a cursor from a basic_iterator
         struct get_cursor_fn
         {
@@ -732,19 +608,6 @@ namespace ranges
                 range_access::move(get_cursor(it))
             )
         }
-        /// \endcond
-
-        /// \cond
-        // This is so that writable postfix proxy objects satisfy Readability
-        template<typename T, typename I, typename Qual1, typename Qual2>
-        struct basic_common_reference<T, detail::writable_postfix_increment_proxy<I>, Qual1, Qual2>
-          : basic_common_reference<T, iterator_value_t<I>, Qual1, meta::quote_trait<std::add_lvalue_reference>>
-        {};
-
-        template<typename I, typename T, typename Qual1, typename Qual2>
-        struct basic_common_reference<detail::writable_postfix_increment_proxy<I>, T, Qual1, Qual2>
-          : basic_common_reference<iterator_value_t<I>, T, meta::quote_trait<std::add_lvalue_reference>, Qual2>
-        {};
         /// \endcond
     }
 }

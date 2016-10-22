@@ -319,7 +319,7 @@ namespace ranges
                 auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>(),
-                        concepts::model_of<Readable>(i++)
+                        ((void)i++, 42)
                     ));
             };
 
@@ -327,7 +327,7 @@ namespace ranges
               : refines<InputIterator, Incrementable, Sentinel(_1, _1)>
             {
                 template<typename I>
-                auto requires_(I&&) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::forward_iterator_tag>()
                     ));
