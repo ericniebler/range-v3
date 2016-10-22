@@ -164,11 +164,11 @@ namespace ranges
                         // through the CommonReference concept.
                         concepts::model_of<CommonReference, reference_t<I> &&, value_t<I> &>(),
                         concepts::model_of<CommonReference, reference_t<I> &&, rvalue_reference_t<I> &&>(),
-                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>(),
-                        // Experimental additional tests. If nothing else, this is a good workout
-                        // for the common_reference code.
-                        concepts::model_of<Same, ranges::common_reference_t<reference_t<I>, value_t<I>>, value_t<I>>(),
-                        concepts::model_of<Same, ranges::common_reference_t<rvalue_reference_t<I>, value_t<I>>, value_t<I>>()
+                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>()
+                        // // Experimental additional tests. If nothing else, this is a good workout
+                        // // for the common_reference code.
+                        // concepts::model_of<Same, ranges::common_reference_t<reference_t<I>, value_t<I>>, value_t<I>>(),
+                        // concepts::model_of<Same, ranges::common_reference_t<rvalue_reference_t<I>, value_t<I>>, value_t<I>>()
                     ));
             };
 
@@ -537,24 +537,49 @@ namespace ranges
         using IndirectCallableRelation = IndirectRelation<function_type<C>, I0, I1>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
+        // indirect_result_of
+        /// \cond
+        namespace detail
+        {
+            template<typename Sig, typename = void>
+            struct indirect_result_of_
+            {
+            };
+
+            template<typename Fun, typename... Is>
+            struct indirect_result_of_<
+                Fun(Is...),
+                meta::if_c<meta::strict_and<Readable<Is>...>::value>>
+              : meta::if_<
+                    IndirectCallable<Fun, Is...>,
+                    std::result_of<Fun(concepts::Readable::reference_t<Is>...)>>
+            {
+            };
+        }
+
+        template<typename Sig>
+        using indirect_result_of = detail::indirect_result_of_<Sig>;
+
+        template<typename Sig>
+        using indirect_result_of_t = meta::_t<detail::indirect_result_of_<Sig>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         // Project struct, for "projecting" a Readable with a unary callable
         /// \cond
         namespace detail
         {
             template<typename I, typename Proj>
-            struct projected_readable
+            struct projected_
             {
-                using value_type =
-                    decay_t<concepts::Callable::result_t<Proj &, concepts::Readable::value_t<I>>>;
-                using reference =
-                    concepts::Callable::result_t<Proj &, concepts::Readable::reference_t<I>>;
+                using reference = indirect_result_of_t<Proj &(I)>;
+                using value_type = decay_t<reference>;
                 reference operator*() const;
             };
         }
         /// \endcond
 
         template<typename I, typename Proj>
-        using projected = meta::if_<IndirectCallable<Proj, I>, detail::projected_readable<I, Proj>>;
+        using projected = meta::if_c<IndirectCallable<Proj, I>::value, detail::projected_<I, Proj>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
@@ -593,7 +618,7 @@ namespace ranges
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>, V2 const *>>;
+            Relation<C, indirect_result_of_t<P &(I)>, V2 const &>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>

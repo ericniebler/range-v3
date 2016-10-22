@@ -33,7 +33,7 @@ namespace ranges
         {
             template<typename I, typename S, typename V, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectCallableRelation<equal_to, projected<I, P>, V const *>())>
+                    Relation<equal_to, indirect_result_of_t<P &(I)>, V const &>())>
             iterator_difference_t<I>
             operator()(I begin, S end, V const & val, P proj_ = P{}) const
             {
@@ -48,7 +48,7 @@ namespace ranges
             template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    IndirectCallableRelation<equal_to, projected<I, P>, V const *>())>
+                    Relation<equal_to, indirect_result_of_t<P &(I)>, V const &>())>
             iterator_difference_t<I>
             operator()(Rng &&rng, V const & val, P proj = P{}) const
             {

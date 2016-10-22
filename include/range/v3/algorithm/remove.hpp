@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename T, typename P = ident>
         using Removable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<equal_to, projected<I, P>, T const *>,
+            Relation<equal_to, indirect_result_of_t<P &(I)>, T const &>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms

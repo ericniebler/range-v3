@@ -19,6 +19,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/find.hpp>
 #include "../simple_test.hpp"
@@ -64,6 +65,11 @@ int main()
     CHECK(ps->i_ == 3);
     ps = find(sa, 10, &S::i_);
     CHECK(ps == end(sa));
+
+    // https://github.com/Microsoft/Range-V3-VS2015/issues/9
+    auto vec = std::vector<std::string>{{"a"}, {"b"}, {"c"}};
+    auto it = ranges::find(vec, "b");
+    CHECK(it == vec.begin() + 1);
 
     return ::test_result();
 }
