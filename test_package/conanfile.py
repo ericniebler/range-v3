@@ -10,13 +10,6 @@
 # Project home: https://github.com/ericniebler/range-v3
 #
 
-# This example shows how to define a range that is implemented
-# in terms of itself. The example is generating the Fibonacci
-# sequence using self-reference and zip_with.
-#
-# Note: don't use recursive_range_fn in performance sensitive
-# code. Self-reference comes with indirection and dynamic
-# allocation overhead.
 
 from conans import ConanFile, CMake
 import os
