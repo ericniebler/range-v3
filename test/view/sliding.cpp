@@ -42,7 +42,7 @@ int main()
         ::check_equal(*ranges::next(it, -3), {4,5,6});
         CHECK(size(rng), 7u);
         if (!ranges::v3::detail::broken_ebo)
-            CHECK(sizeof(rng.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
+            CHECK(sizeof(rng.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t));
     }
 
     {
