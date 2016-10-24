@@ -54,6 +54,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/sample.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/slice.hpp>
+#include <range/v3/view/sliding.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/tail.hpp>
