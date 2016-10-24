@@ -318,8 +318,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>(),
-                        ((void)i++, 42)
+                        concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>()
                     ));
             };
 
