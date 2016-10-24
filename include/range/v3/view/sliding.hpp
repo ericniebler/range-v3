@@ -44,11 +44,6 @@ namespace ranges
         {
         private:
             CONCEPT_ASSERT(ForwardRange<Rng>());
-            using offset_t =
-                meta::if_<
-                    BidirectionalRange<Rng>,
-                    range_difference_t<Rng>,
-                    constant<range_difference_t<Rng>, 0>>;
             range_difference_t<Rng> n_;
             friend range_access;
             struct adaptor;
@@ -73,53 +68,45 @@ namespace ranges
 
         template<typename Rng>
         struct sliding_view<Rng>::adaptor
-          : adaptor_base, private box<offset_t>
+          : adaptor_base
         {
         private:
             range_difference_t<Rng> n_;
             range_sentinel_t<Rng> end_;
-            offset_t & offset() {return this->box<offset_t>::get();}
-            offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;
             adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
-              : box<offset_t>{0}, n_(n), end_(end)
+              : n_(n), end_(end)
             {}
             auto get(range_iterator_t<Rng> it) const ->
                 decltype(view::take(make_iterator_range(std::move(it), end_), n_))
             {
                 RANGES_ASSERT(it != end_);
-                RANGES_ASSERT(0 == offset());
                 return view::take(make_iterator_range(std::move(it), end_), n_);
             }
             void next(range_iterator_t<Rng> &it)
             {
                 RANGES_ASSERT(it != end_);
-                RANGES_ASSERT(0 == offset());
-                offset() = ranges::advance(it, 1, end_);
+                ++it;
             }
             CONCEPT_REQUIRES(BidirectionalRange<Rng>())
             void prev(range_iterator_t<Rng> &it)
             {
-                ranges::advance(it, -1 + offset());
-                offset() = 0;
+                --it;
             }
             CONCEPT_REQUIRES(
                 SizedSentinel<range_iterator_t<Rng>, range_iterator_t<Rng>>())
             range_difference_t<Rng> distance_to(range_iterator_t<Rng> const &here,
-                range_iterator_t<Rng> const &there, adaptor const &that) const
+                range_iterator_t<Rng> const &there, adaptor const &/*that*/) const
             {
                 // This assertion is true for all range types except cyclic ranges:
-                //RANGES_ASSERT(0 == ((there - here) + that.offset());
-                return ((there - here) + that.offset() - offset());
+                return there - here;
             }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())
             void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
             {
-                if(0 < n)
-                    offset() = ranges::advance(it, n + offset(), end_);
-                else if(0 > n)
-                    offset() = (ranges::advance(it, n + offset()), 0);
+                //RANGES_ASSERT(end_ - it <= n);
+                it += n;
             }
         };
 
