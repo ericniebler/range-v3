@@ -298,15 +298,15 @@
 #endif  // RANGES_CXX_INLINE_VARIABLES
 
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_INLINE_VARIABLE(type, name)                  \
-    inline namespace                   \
-    {                                                       \
-        constexpr auto& name = static_const<type>::value;   \
+#define RANGES_INLINE_VARIABLE(type, name)                            \
+    inline namespace                                                  \
+    {                                                                 \
+        constexpr auto& name = ::ranges::static_const<type>::value;   \
     }
 
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_INLINE_VARIABLE(type, name) \
-    inline namespace function_objects             \
+    inline namespace function_objects      \
     {                                      \
         inline constexpr type name{};      \
     }
