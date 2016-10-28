@@ -35,7 +35,7 @@ namespace ranges
             InputIterator<I>,
             OutputIterator<O, T1 const &>,
             IndirectlyCopyable<I, O>,
-            Relation<equal_to, indirect_result_of_t<P &(I)>, T0 const &>>;
+            IndirectCallableRelation<equal_to, projected<I, P>, T0 const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
