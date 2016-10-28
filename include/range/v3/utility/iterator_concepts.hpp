@@ -471,7 +471,7 @@ namespace ranges
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
-                meta::list<concepts::Readable::value_t<I>, concepts::Readable::reference_t<I>>;
+                meta::list<concepts::Readable::value_t<I> &, concepts::Readable::reference_t<I> &&>;
 
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
