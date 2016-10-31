@@ -36,8 +36,8 @@ namespace ranges
         {
         private:
             template<typename T, typename C, typename P,
-                typename R = tagged_pair<tag::min(const T&), tag::max(const T&)>>
-            constexpr R minmax2_impl(const T &a, const T &b, C&& pred, P&& proj) const
+                typename R = tagged_pair<tag::min(T const &), tag::max(T const &)>>
+            constexpr R minmax2_impl(T const &a, T const &b, C&& pred, P&& proj) const
             {
                 return pred(proj(b), proj(a)) ? R{b, a} : R{a, b};
             }
@@ -48,8 +48,8 @@ namespace ranges
                 typename R = tagged_pair<tag::min(V), tag::max(V)>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
                     IndirectCallableRelation<C, projected<I, P>>())>
-            RANGES_CXX14_CONSTEXPR R
-            operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
+            RANGES_CXX14_CONSTEXPR
+            R operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
@@ -98,9 +98,10 @@ namespace ranges
             }
 
             template<typename T, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(Relation<C, result_of_t<P &(T const &)>>())>
+                CONCEPT_REQUIRES_(
+                    IndirectCallableRelation<C, projected<const T *, P>>())>
             constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>
-            operator()(const T &a, const T &b, C pred = C{}, P proj = P{}) const
+            operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
             {
                 return minmax2_impl(a, b, as_function(pred), as_function(proj));
             }

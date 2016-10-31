@@ -617,7 +617,7 @@ namespace ranges
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::strict_and<
             ForwardIterator<I>,
-            Relation<C, indirect_result_of_t<P &(I)>, V2 const &>>;
+            IndirectCallableRelation<C, projected<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
