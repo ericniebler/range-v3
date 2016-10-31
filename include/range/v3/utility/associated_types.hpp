@@ -29,24 +29,28 @@ namespace ranges
         /// @{
 
         ////////////////////////////////////////////////////////////////////////////////////////
+        /// \cond
+        namespace detail
+        {
+            template<typename T, typename Enable = void>
+            struct difference_type2
+            {};
+
+            template<typename T>
+            struct difference_type2<T, meta::void_<decltype(std::declval<const T>() - std::declval<const T>())>>
+              : std::make_signed<decltype(std::declval<const T>() - std::declval<const T>())>
+            {};
+        }
+        /// \endcond
+
         template<typename T, typename Enable /*= void*/>
         struct difference_type
+          : detail::difference_type2<T>
         {};
-
-        template<>
-        struct difference_type<std::nullptr_t>
-        {
-            using type = std::ptrdiff_t;
-        };
 
         template<typename T>
         struct difference_type<T *>
           : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
-        {};
-
-        template<typename T>
-        struct difference_type<T, meta::if_<std::is_array<T>>>
-          : difference_type<detail::decay_t<T>>
         {};
 
         template<typename T>
@@ -55,25 +59,10 @@ namespace ranges
         {};
 
         template<typename T>
-        struct difference_type<T volatile>
-          : difference_type<detail::decay_t<T>>
-        {};
-
-        template<typename T>
-        struct difference_type<T const volatile>
-          : difference_type<detail::decay_t<T>>
-        {};
-
-        template<typename T>
         struct difference_type<T, meta::void_<typename T::difference_type>>
         {
             using type = typename T::difference_type;
         };
-
-        template<typename T>
-        struct difference_type<T, meta::if_<std::is_integral<T>>>
-          : std::make_signed<decltype(std::declval<T>() - std::declval<T>())>
-        {};
 
         ////////////////////////////////////////////////////////////////////////////////////////
         template<typename T>
