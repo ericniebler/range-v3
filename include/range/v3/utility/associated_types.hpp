@@ -37,7 +37,9 @@ namespace ranges
             {};
 
             template<typename T>
-            struct difference_type2<T, meta::void_<decltype(std::declval<const T>() - std::declval<const T>())>>
+            struct difference_type2<T,
+                meta::if_<std::is_integral<
+                    decltype(std::declval<const T>() - std::declval<const T>())>>>
               : std::make_signed<decltype(std::declval<const T>() - std::declval<const T>())>
             {};
         }
