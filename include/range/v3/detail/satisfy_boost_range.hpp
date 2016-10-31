@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_DETAIL_BOOST_RANGE_HOOK_HPP
-#define RANGES_V3_DETAIL_BOOST_RANGE_HOOK_HPP
+#ifndef RANGES_V3_DETAIL_SATISFY_BOOST_RANGE_HPP
+#define RANGES_V3_DETAIL_SATISFY_BOOST_RANGE_HPP
 
 #include <range/v3/range_fwd.hpp>
 
@@ -28,8 +28,8 @@ namespace boost {
 	template<typename T            > struct range_value;
 }
 
-/// \brief Macro to specialises Boost Range metafunctions for the specified view
-#define BOOST_RANGE_HOOK(view_name) \
+/// \brief Macro to specialise Boost Range metafunctions for the specified view
+#define RANGES_SATISFY_BOOST_RANGE(view_name) \
 namespace boost {                                                          \
     template <typename... Ts>                                              \
     struct range_mutable_iterator< view_name< Ts... >, void> {             \
