@@ -17,6 +17,7 @@
 #include <memory>
 #include <utility>
 #include <type_traits>
+#include <range/v3/detail/boost_range_hook.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
@@ -402,5 +403,7 @@ namespace ranges
         using any_random_access_view = any_view<Ref, category::random_access>;
     }
 }
+
+BOOST_RANGE_HOOK(ranges::v3::any_view)
 
 #endif

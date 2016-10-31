@@ -14,6 +14,7 @@
 #define RANGES_V3_VIEW_BOUNDED_HPP
 
 #include <type_traits>
+#include <range/v3/detail/boost_range_hook.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -139,5 +140,7 @@ namespace ranges
         /// @}
     }
 }
+
+BOOST_RANGE_HOOK(ranges::v3::bounded_view)
 
 #endif

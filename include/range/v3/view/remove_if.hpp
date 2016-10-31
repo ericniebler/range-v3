@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <range/v3/detail/boost_range_hook.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
@@ -180,5 +181,7 @@ namespace ranges
 }
 
 RANGES_RE_ENABLE_WARNINGS
+
+BOOST_RANGE_HOOK(ranges::v3::remove_if_view)
 
 #endif

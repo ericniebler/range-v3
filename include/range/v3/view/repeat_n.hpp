@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_REPEAT_N_HPP
 
 #include <utility>
+#include <range/v3/detail/boost_range_hook.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
@@ -127,5 +128,7 @@ namespace ranges
         /// @}
     }
 }
+
+BOOST_RANGE_HOOK(ranges::v3::repeat_n_view)
 
 #endif

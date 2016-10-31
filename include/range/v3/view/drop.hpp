@@ -16,6 +16,7 @@
 
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <range/v3/detail/boost_range_hook.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -205,5 +206,7 @@ namespace ranges
         /// @}
     }
 }
+
+BOOST_RANGE_HOOK(ranges::v3::drop_view)
 
 #endif
