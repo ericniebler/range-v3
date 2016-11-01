@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_TAKE_HPP
 
 #include <type_traits>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -164,5 +165,7 @@ namespace ranges
         /// @}
     }
 }
+
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::take_view)
 
 #endif

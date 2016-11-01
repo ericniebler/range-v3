@@ -17,6 +17,7 @@
 #include <utility>
 #include <iterator>
 #include <meta/meta.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
@@ -231,5 +232,7 @@ namespace ranges
         /// @}
     }
 }
+
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::reverse_view)
 
 #endif

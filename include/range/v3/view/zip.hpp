@@ -17,6 +17,7 @@
 #include <tuple>
 #include <utility>
 #include <meta/meta.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -143,5 +144,7 @@ namespace ranges
 }
 
 RANGES_RE_ENABLE_WARNINGS
+
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::zip_view)
 
 #endif

@@ -18,6 +18,7 @@
 #include <functional>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_adaptor.hpp>
@@ -179,5 +180,8 @@ namespace ranges
         /// @}
     }
 }
+
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::iter_take_while_view)
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::take_while_view)
 
 #endif

@@ -14,6 +14,7 @@
 #define RANGES_V3_VIEW_COUNTED_HPP
 
 #include <utility>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/iterator_range.hpp>
@@ -83,5 +84,7 @@ namespace ranges
         /// @}
     }
 }
+
+RANGES_SATISFY_BOOST_RANGE(ranges::v3::counted_view)
 
 #endif
