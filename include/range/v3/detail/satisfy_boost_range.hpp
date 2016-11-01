@@ -28,7 +28,7 @@ namespace boost {
 	template<typename T            > struct range_value;
 }
 
-/// \brief Macro to specialise Boost Range metafunctions for the specified view
+/// \brief Macro specialising Boost Range metafunctions for the specified view
 #define RANGES_SATISFY_BOOST_RANGE(view_name) \
 namespace boost {                                                          \
     template <typename... Ts>                                              \
