@@ -188,7 +188,10 @@ namespace ranges
                     // a system library that hopefully isn't always in the same place
                     // (might not change until system is rebooted though).  Hopefully
                     // it's in a different library from time_func.
-                    *it++ = randutils::hash(&std::_Exit);
+                    {
+                        using namespace std;
+                        *it++ = randutils::hash(&_Exit);
+                    }
 
                     // The address of a local function.  That may be in a totally
                     // different part of memory.  On OS X it'll vary from run to run thanks
