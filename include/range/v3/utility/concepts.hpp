@@ -63,16 +63,16 @@ namespace ranges
 
             constexpr struct is_true_t
             {
-                template<typename Bool>
-                auto operator()(Bool) const ->
-                    meta::if_c<Bool::value, int>;
+                template<typename _Bool>
+                auto operator()(_Bool) const ->
+                    meta::if_c<_Bool::value, int>;
             } is_true {};
 
             constexpr struct is_false_t
             {
-                template<typename Bool>
-                auto operator()(Bool) const ->
-                    meta::if_c<!Bool::value, int>;
+                template<typename _Bool>
+                auto operator()(_Bool) const ->
+                    meta::if_c<!_Bool::value, int>;
             } is_false {};
 
             template<typename Concept>
