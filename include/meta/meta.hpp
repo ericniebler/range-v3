@@ -428,7 +428,7 @@ namespace meta
                                             "greater than the end";
             }
 
-            template <std::size_t End, typename State, indices_strategy_ Status>
+            template <std::size_t End, typename State, indices_strategy_ Status_>
             struct make_indices_
             {
                 using type = State;
@@ -1133,9 +1133,9 @@ namespace meta
             {
             };
 
-            template <typename Bool, typename... Bools>
-            struct _and_<Bool, Bools...>
-                : if_c<!Bool::type::value, std::false_type, _and_<Bools...>>
+            template <typename Bool_, typename... Bools>
+            struct _and_<Bool_, Bools...>
+                : if_c<!Bool_::type::value, std::false_type, _and_<Bools...>>
             {
             };
 
@@ -1147,8 +1147,8 @@ namespace meta
             {
             };
 
-            template <typename Bool, typename... Bools>
-            struct _or_<Bool, Bools...> : if_c<Bool::type::value, std::true_type, _or_<Bools...>>
+            template <typename Bool_, typename... Bools>
+            struct _or_<Bool_, Bools...> : if_c<Bool_::type::value, std::true_type, _or_<Bools...>>
             {
             };
         } // namespace detail
@@ -1156,13 +1156,13 @@ namespace meta
 
         /// Logically negate the Boolean parameter
         /// \ingroup logical
-        template <bool Bool>
-        using not_c = bool_<!Bool>;
+        template <bool Bool_>
+        using not_c = bool_<!Bool_>;
 
         /// Logically negate the integral constant-wrapped Boolean parameter.
         /// \ingroup logical
-        template <typename Bool>
-        using not_ = not_c<Bool::type::value>;
+        template <typename Bool_>
+        using not_ = not_c<Bool_::type::value>;
 
 /// Logically and together all the Boolean parameters
 /// \ingroup logical
@@ -1226,8 +1226,8 @@ namespace meta
 
             /// \sa 'meta::not_'
             /// \ingroup lazy_logical
-            template <typename Bool>
-            using not_ = defer<not_, Bool>;
+            template <typename Bool_>
+            using not_ = defer<not_, Bool_>;
 
             /// \sa 'meta::strict_and'
             /// \ingroup lazy_logical
@@ -2990,16 +2990,16 @@ namespace meta
                     : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
                 {
                 };
-                template <typename Bool, typename... Ts, typename Args>
-                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
-                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
+                template <typename Bool_, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool_, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool_, lazy::and_<Ts...>, protect_<std::false_type>>,
                                       Args>,
                            Args>
                 {
                 };
-                template <typename Bool, typename... Ts, typename Args>
-                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
-                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
+                template <typename Bool_, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool_, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool_, protect_<std::true_type>, lazy::or_<Ts...>>,
                                       Args>,
                            Args>
                 {
@@ -3087,16 +3087,16 @@ namespace meta
                     : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
                 {
                 };
-                template <typename Bool, typename... Ts, typename Args>
-                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
-                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
+                template <typename Bool_, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool_, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool_, lazy::and_<Ts...>, protect_<std::false_type>>,
                                       Args>,
                            Args>
                 {
                 };
-                template <typename Bool, typename... Ts, typename Args>
-                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
-                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
+                template <typename Bool_, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool_, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool_, protect_<std::true_type>, lazy::or_<Ts...>>,
                                       Args>,
                            Args>
                 {
