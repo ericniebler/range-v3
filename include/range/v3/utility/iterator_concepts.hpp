@@ -198,7 +198,6 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<IndirectlyMovable, I, O>(),
                         concepts::model_of<Movable, Readable::value_t<I>>(),
                         concepts::model_of<Constructible, Readable::value_t<I>,
                             Readable::rvalue_reference_t<I> &&>(),
@@ -209,17 +208,17 @@ namespace ranges
             };
 
             struct IndirectlyCopyable
-              : refines<IndirectlyMovable>
             {
                 template<typename I, typename O>
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Readable, I>(),
                         concepts::model_of<Writable, O, Readable::reference_t<I> &&>()
                     ));
             };
 
             struct IndirectlyCopyableStorable
-              : refines<IndirectlyMovableStorable, IndirectlyCopyable>
+              : refines<IndirectlyCopyable>
             {
                 template<typename I, typename O>
                 auto requires_(I&&, O&&) -> decltype(
