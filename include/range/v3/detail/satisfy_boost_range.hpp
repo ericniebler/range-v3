@@ -30,19 +30,41 @@ namespace boost {
 
 /// \brief Macro specialising Boost Range metafunctions for the specified view
 #define RANGES_SATISFY_BOOST_RANGE(view_name) \
-namespace boost {                                                          \
-    template <typename... Ts>                                              \
-    struct range_mutable_iterator< view_name< Ts... >, void> {             \
-    	using type = ranges::range_iterator_t<       view_name< Ts... > >; \
-    };                                                                     \
-    template <typename... Ts>                                              \
-    struct range_const_iterator  < view_name< Ts... >, void> {             \
-    	using type = ranges::range_iterator_t< const view_name< Ts... > >; \
-    };                                                                     \
-    template <typename... Ts>                                              \
-    struct range_value           < view_name< Ts... >      > {             \
-    	using type = ranges::range_value_t   <       view_name< Ts... > >; \
-    };                                                                     \
+namespace boost {                                                                               \
+                                                                                                \
+    /* Provide a specialisation of boost::range_mutable_iterator for the view that's       */   \
+    /* enabled when the view (with const both added and removed) is a ranges::BoundedRange */   \
+    template <typename... Ts>                                                                   \
+    struct range_mutable_iterator<                                                              \
+        view_name< Ts... >,                                                                     \
+        ::meta::if_c<                                                                           \
+            ::ranges::BoundedRange< typename std::add_const   < view_name< Ts... > >::type >()  \
+            &&                                                                                  \
+            ::ranges::BoundedRange< typename std::remove_const< view_name< Ts... > >::type >()  \
+        >                                                                                       \
+    > {                                                                                         \
+        using type = ::ranges::range_iterator_t< view_name< Ts... >       >;                    \
+    };                                                                                          \
+                                                                                                \
+    /* Provide a specialisation of boost::range_const_iterator for the view that's         */   \
+    /* enabled when the view (with const both added and removed) is a ranges::BoundedRange */   \
+    template <typename... Ts>                                                                   \
+    struct range_const_iterator<                                                                \
+        view_name< Ts... >,                                                                     \
+        ::meta::if_c<                                                                           \
+            ::ranges::BoundedRange< typename std::add_const   < view_name< Ts... > >::type >()  \
+            &&                                                                                  \
+            ::ranges::BoundedRange< typename std::remove_const< view_name< Ts... > >::type >()  \
+        >                                                                                       \
+    > {                                                                                         \
+        using type = ::ranges::range_iterator_t< view_name< Ts... > const >;                    \
+    };                                                                                          \
+                                                                                                \
+    /* Provide a specialisation of boost::range_value for the view */                           \
+    template <typename... Ts>                                                                   \
+    struct range_value< view_name< Ts... > > {                                                  \
+        using type = ranges::range_value_t< view_name< Ts... > >;                               \
+    };                                                                                          \
 }
 
 #endif
