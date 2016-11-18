@@ -20,6 +20,13 @@ else()
   set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
 endif()
 
+macro(range_v3_append_flag testname flag)
+  check_cxx_compiler_flag(${flag} ${testname})
+  if (${testname})
+    add_compile_options(${flag})
+  endif()
+endmacro()
+
 # Select C++ standard to be used for compiling the tests,
 # for example: 11, 14, 17, 1z, 1y, ...
 #
@@ -60,16 +67,8 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 #   message(FATAL_ERROR "Unknown compiler. Good luck!")
 endif()
 
-check_cxx_compiler_flag("-march=native" HAS_MARCHNATIVE)
-check_cxx_compiler_flag("-mtune=native" HAS_MTUNENATIVE)
-
-if(HAS_MARCHNATIVE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-endif()
-
-if(HAS_MTUNENATIVE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native")
-endif()
+range_v3_append_flag(RANGE_V3_HAS_MARCH_NATIVE "-march=native")
+range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 
 #   range_v3_list_remove_glob(<list> <GLOB|GLOB_RECURSE> [globbing expressions]...)
 #
