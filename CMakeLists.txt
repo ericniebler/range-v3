@@ -23,7 +23,7 @@ endif()
 macro(range_v3_append_flag testname flag)
   check_cxx_compiler_flag(${flag} ${testname})
   if (${testname})
-    add_compile_options(${flag})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
   endif()
 endmacro()
 
