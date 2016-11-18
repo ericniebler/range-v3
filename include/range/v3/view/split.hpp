@@ -279,6 +279,6 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::split_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::split_view)
 
 #endif

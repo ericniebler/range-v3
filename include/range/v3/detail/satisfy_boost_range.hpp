@@ -20,17 +20,22 @@
 
 namespace boost
 {
-	/// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
-	template<typename T, typename U> struct range_mutable_iterator;
+    /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
+    template<typename T, typename U> struct range_mutable_iterator;
 
-	/// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
-	template<typename T, typename U> struct range_const_iterator;
+    /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
+    template<typename T, typename U> struct range_const_iterator;
 
-	/// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
-	template<typename T> struct range_value;
+    /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
+    template<typename T> struct range_value;
 
-	/// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
-	template<typename T> struct range_size;
+    /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
+    template<typename T> struct range_size;
+
+    namespace detail
+    {
+        template<typename, bool> struct range_size;
+    }
 }
 
 /// \brief Macro specialising Boost Range metafunctions for the specified view
@@ -39,26 +44,28 @@ namespace boost                                                                 
 {                                                                               \
     template<typename... Ts>                                                    \
     struct range_mutable_iterator<                                              \
-        view_name< Ts... >,                                                     \
+        view_name<Ts...>,                                                       \
         ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...>>()>>         \
     {                                                                           \
-    	using type = ranges::range_iterator_t<view_name<Ts...>>;                \
+        using type = ::ranges::range_iterator_t<view_name<Ts...>>;              \
     };                                                                          \
     template<typename... Ts>                                                    \
     struct range_const_iterator<                                                \
         view_name<Ts...>,                                                       \
-        ::meta::if_c<(bool)::ranges::BoundedRange<const view_name<Ts...>>()>>   \
+        ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...> const>()>>   \
     {                                                                           \
-    	using type = ranges::range_iterator_t<const view_name<Ts...>>;          \
+        using type = ::ranges::range_iterator_t<view_name<Ts...> const>;        \
     };                                                                          \
     template<typename... Ts>                                                    \
     struct range_value<view_name<Ts...>>                                        \
     {                                                                           \
-    	using type = ranges::range_value_t<view_name<Ts...>>;                   \
+        using type = ::ranges::range_value_t<view_name<Ts...>>;                 \
     };                                                                          \
     template<typename... Ts>                                                    \
-    struct range_size<const view_name<Ts...>>                                   \
-      : detail::range_size<const view_name<Ts...>>                              \
+    struct range_size<view_name<Ts...> const>                                   \
+      : ::boost::detail::range_size<                                            \
+            view_name<Ts...> const,                                             \
+            (bool)::ranges::BoundedRange<view_name<Ts...> const>()>             \
     {                                                                           \
     };                                                                          \
 }

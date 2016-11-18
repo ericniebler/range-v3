@@ -517,7 +517,7 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::closed_iota_view)
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::iota_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::closed_iota_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::iota_view)
 
 #endif

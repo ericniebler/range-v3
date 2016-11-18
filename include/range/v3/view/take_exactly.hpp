@@ -210,6 +210,6 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::detail::take_exactly_view_)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::detail::take_exactly_view_)
 
 #endif

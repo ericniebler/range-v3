@@ -181,7 +181,7 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::iter_take_while_view)
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::take_while_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::iter_take_while_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::take_while_view)
 
 #endif

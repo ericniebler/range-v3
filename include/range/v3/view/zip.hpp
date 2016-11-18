@@ -145,6 +145,6 @@ namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::zip_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::zip_view)
 
 #endif

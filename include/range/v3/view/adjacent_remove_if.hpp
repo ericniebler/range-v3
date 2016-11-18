@@ -168,6 +168,6 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::adjacent_remove_if_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::adjacent_remove_if_view)
 
 #endif
