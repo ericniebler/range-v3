@@ -14,6 +14,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/indirect.hpp>
+#include <range/v3/view/c_str.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -37,15 +38,15 @@ void test_iota_minus() {
   using I = Integral;
   Integral max = std::numeric_limits<Integral>::max();
 
-  CHECK(detail::iota_minus(I(0), I(0)) == D(0));
-  CHECK(detail::iota_minus(I(0), I(1)) == D(-1));
-  CHECK(detail::iota_minus(I(1), I(0)) ==  D(1));
-  CHECK(detail::iota_minus(I(1), I(1)) == D(0));
+  CHECK(detail::iota_minus_(I(0), I(0)) == D(0));
+  CHECK(detail::iota_minus_(I(0), I(1)) == D(-1));
+  CHECK(detail::iota_minus_(I(1), I(0)) ==  D(1));
+  CHECK(detail::iota_minus_(I(1), I(1)) == D(0));
 
-  CHECK(detail::iota_minus(I(max - I(1)), I(max - I(1))) == D(0));
-  CHECK(detail::iota_minus(I(max - I(1)), I(max)) == D(-1));
-  CHECK(detail::iota_minus(I(max), I(max - I(1))) == D(1));
-  CHECK(detail::iota_minus(I(max), I(max)) == D(0));
+  CHECK(detail::iota_minus_(I(max - I(1)), I(max - I(1))) == D(0));
+  CHECK(detail::iota_minus_(I(max - I(1)), I(max)) == D(-1));
+  CHECK(detail::iota_minus_(I(max), I(max - I(1))) == D(1));
+  CHECK(detail::iota_minus_(I(max), I(max)) == D(0));
 }
 
 int main()
@@ -106,6 +107,31 @@ int main()
       test_iota_minus<uint32_t>();
       test_iota_minus<uint64_t>();
     }
+
+    {
+        // https://github.com/ericniebler/range-v3/issues/506
+        auto cstr = view::c_str((const char*)"hello world");
+        auto cstr2 = view::iota(cstr.begin(), cstr.end()) | view::indirect;
+        ::check_equal(cstr2, std::string("hello world"));
+        auto i = cstr2.begin();
+        i += 4;
+        CHECK(*i == 'o');
+        CHECK((i - cstr2.begin()) == 4);
+    }
+
+    // {
+    //     // https://github.com/ericniebler/range-v3/issues/470
+    //     auto rng = view::closed_ints((std::uint64_t)0, std::numeric_limits<std::uint64_t>::max());
+    //     // works (weirdly, because of overflow):
+    //     std::uint64_t last0 = *(ranges::end(rng) - 1);
+    //     CHECK(last0 == std::numeric_limits<std::uint64_t>::max());
+    //     // fails (remark: unsigned overflow is defined behavior)
+    //     CHECK(ranges::size(rng) != (unsigned long)0); // size == 0 because of overflow
+    //     // fails (as a consequence)
+    //     std::uint64_t last1 = 2;
+    //     for (auto i : rng) { last1 = i; }  // because size is zero, nothing happens here
+    //     CHECK(last1 == std::numeric_limits<std::uint64_t>::max());
+    // }
 
     return ::test_result();
 }
