@@ -222,7 +222,7 @@ namespace ranges
             CONCEPT_REQUIRES(Incrementable<From>())
             bool equal(closed_iota_view const &that) const
             {
-                return that.from_ == from_;
+                return that.from_ == from_ && that.done_ == done_;
             }
             CONCEPT_REQUIRES(BidirectionalIncrementable<From>())
             void prev()
