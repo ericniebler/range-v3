@@ -182,6 +182,6 @@ namespace ranges
 
 RANGES_RE_ENABLE_WARNINGS
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::remove_if_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::remove_if_view)
 
 #endif

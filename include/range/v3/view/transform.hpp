@@ -490,7 +490,7 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::iter_transform_view)
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::transform_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::iter_transform_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::transform_view)
 
 #endif

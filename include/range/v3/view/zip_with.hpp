@@ -397,7 +397,7 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::iter_zip_with_view)
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::zip_with_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::iter_zip_with_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::zip_with_view)
 
 #endif

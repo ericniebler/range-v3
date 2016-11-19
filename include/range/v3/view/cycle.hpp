@@ -236,6 +236,6 @@ namespace ranges
     } // namespace v3
 } // namespace ranges
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::cycled_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::cycled_view)
 
 #endif

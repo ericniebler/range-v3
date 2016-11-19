@@ -338,6 +338,6 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::concat_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::concat_view)
 
 #endif

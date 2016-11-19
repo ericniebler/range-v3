@@ -129,6 +129,6 @@ namespace ranges
     }
 }
 
-RANGES_SATISFY_BOOST_RANGE(ranges::v3::repeat_n_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::v3::repeat_n_view)
 
 #endif
