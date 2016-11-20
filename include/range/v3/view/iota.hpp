@@ -275,6 +275,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIncrementableSentinel<To, From>())
             void check_advance_(difference_type_ n)
             {
+                detail::ignore_unused(n);
                 RANGES_ASSERT(detail::iota_minus_(to_, from_) >= n);
             }
             template<typename = void>
