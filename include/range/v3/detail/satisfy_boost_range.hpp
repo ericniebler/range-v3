@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <meta/meta.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 
 namespace boost
 {
@@ -31,11 +32,6 @@ namespace boost
 
     /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
     template<typename T> struct range_size;
-
-    namespace detail
-    {
-        template<typename, bool> struct range_size;
-    }
 }
 
 /// \brief Macro specialising Boost Range metafunctions for the specified view
@@ -62,10 +58,19 @@ namespace boost                                                                 
         using type = ::ranges::range_value_t<view_name<Ts...>>;                 \
     };                                                                          \
     template<typename... Ts>                                                    \
+    struct range_size<view_name<Ts...>>                                         \
+      : ::meta::if_c<                                                           \
+            (bool)::ranges::BoundedRange<view_name<Ts...>>(),                   \
+            ::meta::defer<::ranges::range_size_t, view_name<Ts...>>,            \
+            ::meta::nil_>                                                       \
+    {                                                                           \
+    };                                                                          \
+    template<typename... Ts>                                                    \
     struct range_size<view_name<Ts...> const>                                   \
-      : ::boost::detail::range_size<                                            \
-            view_name<Ts...> const,                                             \
-            (bool)::ranges::BoundedRange<view_name<Ts...> const>()>             \
+      : ::meta::if_c<                                                           \
+            (bool)::ranges::BoundedRange<view_name<Ts...> const>(),             \
+            ::meta::defer<::ranges::range_size_t, view_name<Ts...> const>,      \
+            ::meta::nil_>                                                       \
     {                                                                           \
     };                                                                          \
 }
