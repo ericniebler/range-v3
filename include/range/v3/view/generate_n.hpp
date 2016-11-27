@@ -53,7 +53,7 @@ namespace ranges
                 cursor(generate_n_view &rng, std::size_t n)
                   : rng_(&rng), n_(n)
                 {}
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return 0 == n_;
                 }

@@ -52,7 +52,7 @@ namespace ranges
                 cursor(generate_view &view)
                   : view_(&view)
                 {}
-                constexpr bool done() const
+                constexpr bool equal(default_sentinel) const
                 {
                     return false;
                 }

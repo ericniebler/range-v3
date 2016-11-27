@@ -21,7 +21,7 @@ class c_string_range
     friend range_access;
     char const * sz_;
     char const & get() const { return *sz_; }
-    bool done() const { return *sz_ == '\0'; }
+    bool equal(default_sentinel) const { return *sz_ == '\0'; }
     void next() { ++sz_; }
 public:
     c_string_range() = default;

@@ -81,14 +81,29 @@ namespace ranges
             std::tuple<Rngs...> rngs_;
 
             template<bool IsConst>
-            struct sentinel;
+            struct cursor;
+
+            template<bool IsConst>
+            struct sentinel
+            {
+            private:
+                friend struct cursor<IsConst>;
+                template<typename T>
+                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using concat_view_t = constify_if<concat_view>;
+                range_sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
+            public:
+                sentinel() = default;
+                sentinel(concat_view_t &rng, end_tag)
+                  : end_(end(std::get<cranges - 1>(rng.rngs_)))
+                {}
+            };
 
             template<bool IsConst>
             struct cursor
             {
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
             private:
-                friend struct sentinel<IsConst>;
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
@@ -242,6 +257,11 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
+                bool equal(sentinel<IsConst> const &pos) const
+                {
+                    return its_.index() == cranges - 1 &&
+                        ranges::get<cranges - 1>(its_) == pos.end_;
+                }
                 CONCEPT_REQUIRES(meta::and_c<(bool)BidirectionalRange<Rngs>()...>::value)
                 void prev()
                 {
@@ -262,25 +282,6 @@ namespace ranges
                     if(its_.index() <= that.its_.index())
                         return cursor::distance_to_(meta::size_t<0>{}, *this, that);
                     return -cursor::distance_to_(meta::size_t<0>{}, that, *this);
-                }
-            };
-            template<bool IsConst>
-            struct sentinel
-            {
-            private:
-                template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
-                using concat_view_t = constify_if<concat_view>;
-                range_sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
-            public:
-                sentinel() = default;
-                sentinel(concat_view_t &rng, end_tag)
-                  : end_(end(std::get<cranges - 1>(rng.rngs_)))
-                {}
-                bool equal(cursor<IsConst> const &pos) const
-                {
-                    return pos.its_.index() == cranges - 1 &&
-                        ranges::get<cranges - 1>(pos.its_) == end_;
                 }
             };
             cursor<false> begin_cursor()

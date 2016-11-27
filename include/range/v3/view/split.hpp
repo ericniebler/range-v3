@@ -99,7 +99,7 @@ namespace ranges
                         }
                     }
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return cur_ == last_;
                 }

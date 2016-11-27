@@ -51,7 +51,7 @@ namespace ranges
                 {
                     return rng_->cached();
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return !*rng_->sin_;
                 }

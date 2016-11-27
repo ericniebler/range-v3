@@ -377,11 +377,8 @@ namespace ranges
         template<typename Cur>
         struct basic_mixin;
 
-        template<typename Cur, typename S = Cur>
+        template<typename Cur>
         struct basic_iterator;
-
-        template<typename S>
-        struct basic_sentinel;
 
         template<cardinality>
         struct basic_view : view_base
@@ -480,20 +477,19 @@ namespace ranges
             struct counted_fn;
         }
 
-        struct default_end_cursor;
-        using default_sentinel = basic_sentinel<default_end_cursor>;
+        struct default_sentinel { };
 
         template<typename I, typename D = meta::_t<difference_type<I>>>
         using counted_iterator =
-            basic_iterator<detail::counted_cursor<I, D>, default_end_cursor>;
+            basic_iterator<detail::counted_cursor<I, D>>;
 
         template<typename I>
         using move_iterator =
-            basic_iterator<detail::move_cursor<I>, default_end_cursor>;
+            basic_iterator<detail::move_cursor<I>>;
 
         template<typename I>
         using move_into_iterator =
-            basic_iterator<detail::move_into_cursor<I>, default_end_cursor>;
+            basic_iterator<detail::move_into_cursor<I>>;
 
         template<typename Rng>
         struct cycled_view;
@@ -511,8 +507,7 @@ namespace ranges
         /// \endcond
 
         template<typename I>
-        using reverse_iterator = basic_iterator<detail::reverse_cursor<I>,
-                                                detail::reverse_cursor<I>>;
+        using reverse_iterator = basic_iterator<detail::reverse_cursor<I>>;
 
         template<typename T>
         struct empty_view;

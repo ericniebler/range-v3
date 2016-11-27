@@ -138,11 +138,23 @@ namespace ranges
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
-            struct sentinel;
+            struct cursor;
+
+            struct sentinel
+            {
+            private:
+                friend struct cursor;
+                std::tuple<range_sentinel_t<Rngs>...> ends_;
+            public:
+                sentinel() = default;
+                sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
+                  : ends_(std::move(ends))
+                {}
+            };
+
             struct cursor
             {
             private:
-                friend sentinel;
                 using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, true>;
                 fun_ref_ fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
@@ -176,6 +188,16 @@ namespace ranges
                     // one reaches the end.
                     return tuple_foldl(
                         tuple_transform(its_, that.its_, detail::equal_to),
+                        false,
+                        [](bool a, bool b) { return a || b; });
+                }
+                bool equal(sentinel const &s) const
+                {
+                    // By returning true if *any* of the iterators are equal, we allow
+                    // zipped ranges to be of different lengths, stopping when the first
+                    // one reaches the end.
+                    return tuple_foldl(
+                        tuple_transform(its_, s.ends_, detail::equal_to),
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
@@ -220,27 +242,6 @@ namespace ranges
                         meta::make_index_sequence<sizeof...(Rngs)>{}))
                 {
                     return move_(meta::make_index_sequence<sizeof...(Rngs)>{});
-                }
-            };
-
-            struct sentinel
-            {
-            private:
-                std::tuple<range_sentinel_t<Rngs>...> ends_;
-            public:
-                sentinel() = default;
-                sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
-                  : ends_(std::move(ends))
-                {}
-                bool equal(cursor const &pos) const
-                {
-                    // By returning true if *any* of the iterators are equal, we allow
-                    // zipped ranges to be of different lengths, stopping when the first
-                    // one reaches the end.
-                    return tuple_foldl(
-                        tuple_transform(pos.its_, ends_, detail::equal_to),
-                        false,
-                        [](bool a, bool b) { return a || b; });
                 }
             };
 

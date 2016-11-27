@@ -127,7 +127,7 @@ namespace ranges
                 {
                     *it_ = (T &&) t;
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return 0 == n_;
                 }
@@ -157,7 +157,7 @@ namespace ranges
                 {
                     return n_ - that.n_;
                 }
-                D distance_remaining() const
+                D distance_to(default_sentinel) const
                 {
                     return n_;
                 }

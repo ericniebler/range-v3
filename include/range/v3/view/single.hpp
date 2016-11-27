@@ -53,7 +53,7 @@ namespace ranges
                 {
                     return value_;
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return done_;
                 }

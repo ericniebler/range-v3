@@ -65,11 +65,11 @@ namespace ranges
             // Handle range-v3 iterators specially, since many range-v3 iterators will want to
             // decrement an iterator that is bidirectional from the perspective of range-v3,
             // but only input from the perspective of std::advance.
-            template<typename Cur, typename Sent>
+            template<typename Cur>
             RANGES_CXX14_CONSTEXPR
-            void advance(basic_iterator<Cur, Sent> &i, iterator_difference_t<basic_iterator<Cur, Sent>> n)
+            void advance(basic_iterator<Cur> &i, iterator_difference_t<basic_iterator<Cur>> n)
             {
-                adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur, Sent>>{});
+                adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur>>{});
             }
             // Hijack std::advance for raw pointers, since std::advance is not constexpr
             template<typename T>

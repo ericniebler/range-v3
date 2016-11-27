@@ -75,12 +75,13 @@ namespace ranges
                         (t.next(), concepts::void_)
                     ));
             };
-            struct HasEqualCursor
+            struct CursorSentinel
+              : concepts::refines<concepts::SemiRegular(concepts::_1), Cursor(concepts::_2)>
             {
-                template<typename T>
-                auto requires_(T&& t) -> decltype(
+                template<typename S, typename C>
+                auto requires_(S && s, C && c) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<bool>(t.equal(t))
+                        concepts::convertible_to<bool>(c.equal(s))
                     ));
             };
             struct ReadableCursor
@@ -99,20 +100,13 @@ namespace ranges
                         (t.set((U &&) u), 42)
                     ));
             };
-            struct SizedCursor
+            struct SizedCursorSentinel
+              : concepts::refines<CursorSentinel>
             {
-                template<typename T>
-                auto requires_(T&& t) -> decltype(
+                template<typename S, typename C>
+                auto requires_(S && s, C && c) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<concepts::SignedIntegral>(t.distance_to(t))
-                    ));
-            };
-            struct SizedCursorRange
-            {
-                template<typename C, typename S>
-                auto requires_(C&& c, S&& s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<concepts::SignedIntegral>(s.distance_from(c))
+                        concepts::model_of<concepts::SignedIntegral>(c.distance_to(s))
                     ));
             };
             struct OutputCursor
@@ -122,7 +116,7 @@ namespace ranges
               : concepts::refines<ReadableCursor, Cursor>
             {};
             struct ForwardCursor
-              : concepts::refines<InputCursor, HasEqualCursor>
+              : concepts::refines<InputCursor, CursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -140,7 +134,7 @@ namespace ranges
                     ));
             };
             struct RandomAccessCursor
-              : concepts::refines<BidirectionalCursor, SizedCursor>
+              : concepts::refines<BidirectionalCursor, SizedCursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -231,23 +225,11 @@ namespace ranges
             (
                 pos.next()
             )
-            template<typename Cur>
-            static constexpr auto done(Cur const & pos)
+            template<typename Cur, typename O>
+            static RANGES_CXX14_CONSTEXPR auto equal(Cur const &pos, O const &other)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                pos.done()
-            )
-            template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto equal(Cur const &pos0, Cur const &pos1)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                pos0.equal(pos1)
-            )
-            template<typename Cur, typename S>
-            static constexpr auto empty(Cur const &pos, S const &end)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                end.equal(pos)
+                pos.equal(other)
             )
             template<typename Cur>
             static RANGES_CXX14_CONSTEXPR auto prev(Cur & pos)
@@ -261,26 +243,11 @@ namespace ranges
             (
                 pos.advance(n)
             )
-            template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto distance_to(
-                Cur const &pos0, Cur const &pos1)
+            template<typename Cur, typename O>
+            static RANGES_CXX14_CONSTEXPR auto distance_to(Cur const &pos, O const &other)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                pos0.distance_to(pos1)
-            )
-            template<typename Cur, typename S>
-            static RANGES_CXX14_CONSTEXPR auto distance_to(
-                Cur const &pos, S const &end)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                end.distance_from(pos)
-            )
-            template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto distance_remaining(
-                Cur const &pos)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                pos.distance_remaining()
+                pos.distance_to(other)
             )
 
         private:
@@ -327,22 +294,11 @@ namespace ranges
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
                 std::forward<BI>(it).pos()
             )
-            template<typename BS,
-                CONCEPT_REQUIRES_(meta::is<meta::_t<std::decay<BS>>, basic_sentinel>())>
-            static RANGES_CXX14_CONSTEXPR auto end(BS&& s)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
-                std::forward<BS>(s).end()
-            )
 
-            template<typename Cur, typename S>
-            static RANGES_CXX14_CONSTEXPR Cur cursor(basic_iterator<Cur, S> it)
+            template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR Cur cursor(basic_iterator<Cur> it)
             {
                 return std::move(it.pos());
-            }
-            template<typename S>
-            static RANGES_CXX14_CONSTEXPR S sentinel(basic_sentinel<S> s)
-            {
-                return std::move(s.end());
             }
 
         private:
@@ -374,9 +330,9 @@ namespace ranges
             using Cursor =
                 concepts::models<range_access::Cursor, T>;
 
-            template<typename T>
-            using HasEqualCursor =
-                concepts::models<range_access::HasEqualCursor, T>;
+            template<typename S, typename C>
+            using CursorSentinel =
+                concepts::models<range_access::CursorSentinel, S, C>;
 
             template<typename T>
             using ReadableCursor =
@@ -386,13 +342,9 @@ namespace ranges
             using WritableCursor =
                 concepts::models<range_access::WritableCursor, T, U>;
 
-            template<typename T>
-            using SizedCursor =
-                concepts::models<range_access::SizedCursor, T>;
-
-            template<typename T, typename U>
-            using SizedCursorRange =
-              concepts::models<range_access::SizedCursorRange, T, U>;
+            template<typename S, typename C>
+            using SizedCursorSentinel =
+                concepts::models<range_access::SizedCursorSentinel, S, C>;
 
             template<typename T, typename U>
             using OutputCursor =

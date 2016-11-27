@@ -34,7 +34,7 @@ namespace ranges
                 {
                     RANGES_ENSURE(false);
                 }
-                constexpr bool done() const
+                constexpr bool equal(default_sentinel) const
                 {
                     return true;
                 }
