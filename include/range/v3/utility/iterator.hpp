@@ -434,8 +434,6 @@ namespace ranges
             template<typename Cont>
             struct back_insert_cursor
             {
-            private:
-                friend range_access;
                 struct mixin : basic_mixin<back_insert_cursor>
                 {
                     mixin() = default;
@@ -444,11 +442,10 @@ namespace ranges
                       : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
                     {}
                 };
-                Cont *cont_;
-                explicit back_insert_cursor(Cont &cont) noexcept
-                  : cont_(&cont)
-                {}
-                void next() const
+                Cont *cont_ = nullptr;
+                back_insert_cursor() = default;
+                back_insert_cursor(Cont &cont) noexcept
+                  : cont_(std::addressof(cont))
                 {}
                 void set(typename Cont::value_type const &v) const
                 {
@@ -458,10 +455,6 @@ namespace ranges
                 {
                     cont_->push_back(std::move(v));
                 }
-            public:
-                constexpr back_insert_cursor()
-                  : cont_{}
-                {}
             };
         }
         /// \endcond
@@ -472,7 +465,7 @@ namespace ranges
         struct back_inserter_fn
         {
             template<typename Cont>
-            back_insert_iterator<Cont> operator()(Cont &cont) const
+            constexpr back_insert_iterator<Cont> operator()(Cont &cont) const
             {
                 return back_insert_iterator<Cont>{cont};
             }
@@ -488,8 +481,6 @@ namespace ranges
             template<typename Cont>
             struct front_insert_cursor
             {
-            private:
-                friend range_access;
                 struct mixin : basic_mixin<front_insert_cursor>
                 {
                     mixin() = default;
@@ -498,11 +489,10 @@ namespace ranges
                       : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
                     {}
                 };
-                Cont *cont_;
+                Cont *cont_ = nullptr;
+                front_insert_cursor() = default;
                 explicit front_insert_cursor(Cont &cont) noexcept
-                  : cont_(&cont)
-                {}
-                void next() const
+                  : cont_(std::addressof(cont))
                 {}
                 void set(typename Cont::value_type const &v) const
                 {
@@ -512,10 +502,6 @@ namespace ranges
                 {
                     cont_->push_front(std::move(v));
                 }
-            public:
-                constexpr front_insert_cursor()
-                  : cont_{}
-                {}
             };
         }
         /// \endcond
@@ -542,10 +528,8 @@ namespace ranges
             template<typename Cont>
             struct insert_cursor
             {
-            private:
-                friend range_access;
-                Cont *cont_;
-                typename Cont::iterator where_;
+                Cont *cont_ = nullptr;
+                typename Cont::iterator where_ = {};
                 struct mixin : basic_mixin<insert_cursor>
                 {
                     mixin() = default;
@@ -554,10 +538,9 @@ namespace ranges
                       : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
                     {}
                 };
+                insert_cursor() = default;
                 explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
                   : cont_(&cont), where_(where)
-                {}
-                void next() const
                 {}
                 void set(typename Cont::value_type const &v)
                 {
@@ -567,10 +550,6 @@ namespace ranges
                 {
                     where_ = ranges::next(cont_->insert(where_, std::move(v)));
                 }
-            public:
-                constexpr insert_cursor()
-                  : cont_{}, where_{}
-                {}
             };
         }
         /// \cond
@@ -591,49 +570,51 @@ namespace ranges
         /// \sa `inserter_fn`
         RANGES_INLINE_VARIABLE(inserter_fn, inserter)
 
-        template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
-        struct ostream_iterator
-        {
-        private:
-            std::basic_ostream<Char, Traits> *sout_;
-            Char const *delim_;
-            struct proxy
+        /// \cond
+        namespace detail {
+            template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
+            struct ostream_cursor
             {
-                std::basic_ostream<Char, Traits> *sout_;
-                Char const *delim_;
-                template<typename U,
-                    typename V = meta::if_<std::is_void<T>, U, T>,
-                    meta::if_<std::is_convertible<U, V const &>, int> = 0>
-                proxy &operator=(U &&t)
+                using ostream_type = std::basic_ostream<Char, Traits>;
+
+                ostream_type *sout_ = nullptr;
+                Char const *delim_ = nullptr;
+
+                struct mixin : protected basic_mixin<ostream_cursor>
+                {
+                    // difference_type is exported by basic_iterator
+                    using char_type = Char;
+                    using traits_type = Traits;
+                    using ostream_type = ostream_cursor::ostream_type;
+
+                    mixin() = default;
+                    using basic_mixin<ostream_cursor>::basic_mixin;
+                    constexpr mixin(ostream_type &sout,
+                        Char const *delim = nullptr) noexcept
+                    : basic_mixin<ostream_cursor>(ostream_cursor{sout, delim})
+                    {}
+                };
+
+                ostream_cursor() = default;
+                constexpr ostream_cursor(ostream_type &sout,
+                    Char const *delim = nullptr) noexcept
+                  : sout_(std::addressof(sout)), delim_(delim)
+                {}
+                template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
+                    CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
+                void set(U && u)
                 {
                     RANGES_ASSERT(sout_);
-                    *sout_ << static_cast<V const &>(t);
+                    *sout_ << u;
                     if(delim_)
                         *sout_ << delim_;
-                    return *this;
                 }
             };
-        public:
-            using difference_type = std::ptrdiff_t;
-            using char_type = Char;
-            using traits_type = Traits;
-            ostream_iterator() = default;
-            ostream_iterator(std::basic_ostream<Char, Traits> &sout, Char const *delim = nullptr) noexcept
-              : sout_(&sout), delim_(delim)
-            {}
-            proxy operator*() const noexcept
-            {
-                return {sout_, delim_};
-            }
-            ostream_iterator &operator++()
-            {
-                return *this;
-            }
-            ostream_iterator operator++(int)
-            {
-                return *this;
-            }
-        };
+        }
+        /// \endcond
+
+        template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
+        using ostream_iterator = basic_iterator<detail::ostream_cursor<T, Char, Traits>>;
 
         /// \cond
         namespace detail
@@ -949,11 +930,11 @@ namespace ranges
                     *it_ = std::move(t);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                auto get() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    *it_
-                )
+                iterator_reference_t<I> get() const
+                    noexcept(noexcept(*std::declval<I const&>()))
+                {
+                    return *it_;
+                }
                 CONCEPT_REQUIRES(InputIterator<I>())
                 bool equal(move_into_cursor const &that) const
                 {
@@ -974,10 +955,11 @@ namespace ranges
                 {
                     return that.it_ - it_;
                 }
-                CONCEPT_REQUIRES(Readable<I>())
+                template<typename II = I,
+                    CONCEPT_REQUIRES_(Same<I, II>() && Readable<II>())>
                 RANGES_CXX14_CONSTEXPR
-                iterator_rvalue_reference_t<I> move() const
-                    noexcept(noexcept(iter_move(it_)))
+                iterator_rvalue_reference_t<II const> move() const
+                    noexcept(noexcept(iter_move(std::declval<II const&>())))
                 {
                     return iter_move(it_);
                 }

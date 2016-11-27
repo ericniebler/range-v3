@@ -110,20 +110,27 @@ namespace ranges
                     RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
                     return {i, j.count() - n};
                 }
-                CONCEPT_REQUIRES(Readable<I>())
-                iterator_rvalue_reference_t<I> move() const
-                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                template<typename II = I,
+                    CONCEPT_REQUIRES_(Readable<II>())>
+                iterator_rvalue_reference_t<II> move() const
+                    noexcept(noexcept(iter_move(std::declval<II const &>())))
                 {
                     return iter_move(it_);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                auto get() const -> decltype(*it_)
+                iterator_reference_t<I> get() const
                 {
                     return *it_;
                 }
                 template<typename T,
+                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I const, T &&>())>
+                void set(T && t) const
+                {
+                    *it_ = (T &&) t;
+                }
+                template<typename T,
                     CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
-                void set(T &&t) const
+                void set(T && t)
                 {
                     *it_ = (T &&) t;
                 }
