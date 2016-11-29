@@ -52,24 +52,26 @@ namespace ranges
                     range_difference_t<Rng>,
                     constant<range_difference_t<Rng>, 0>>;
             range_difference_t<Rng> n_;
+            range_difference_t<Rng> s_;
             friend range_access;
             struct adaptor;
             adaptor begin_adaptor() const
             {
-                return adaptor{n_, ranges::end(this->base())};
+                return adaptor{n_, s_, ranges::end(this->base())};
             }
         public:
             chunk_view() = default;
-            chunk_view(Rng rng, range_difference_t<Rng> n)
-              : chunk_view::view_adaptor(std::move(rng)), n_(n)
+            chunk_view(Rng rng, range_difference_t<Rng> n, range_difference_t<Rng> s)
+              : chunk_view::view_adaptor(std::move(rng)), n_(n), s_(s)
             {
                 RANGES_ASSERT(0 < n_);
+                RANGES_ASSERT(0 < s_);
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 auto sz = ranges::distance(this->base());
-                return static_cast<range_size_t<Rng>>(sz / n_ + (0 != (sz % n_)));
+                return static_cast<range_size_t<Rng>>(sz / s_ + (0 != (sz % s_)));
             }
         };
 
@@ -79,13 +81,14 @@ namespace ranges
         {
         private:
             range_difference_t<Rng> n_;
+            range_difference_t<Rng> s_;
             range_sentinel_t<Rng> end_;
             offset_t & offset() {return this->box<offset_t>::get();}
             offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;
-            adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
-              : box<offset_t>{0}, n_(n), end_(end)
+            adaptor(range_difference_t<Rng> n, range_difference_t<Rng> s, range_sentinel_t<Rng> end)
+              : box<offset_t>{0}, n_(n), s_(s), end_(end)
             {}
             auto get(range_iterator_t<Rng> it) const ->
                 decltype(view::take(make_iterator_range(std::move(it), end_), n_))
@@ -98,12 +101,12 @@ namespace ranges
             {
                 RANGES_ASSERT(it != end_);
                 RANGES_ASSERT(0 == offset());
-                offset() = ranges::advance(it, n_, end_);
+                offset() = ranges::advance(it, s_, end_);
             }
             CONCEPT_REQUIRES(BidirectionalRange<Rng>())
             void prev(range_iterator_t<Rng> &it)
             {
-                ranges::advance(it, -n_ + offset());
+                ranges::advance(it, -s_ + offset());
                 offset() = 0;
             }
             CONCEPT_REQUIRES(
@@ -112,16 +115,16 @@ namespace ranges
                 range_iterator_t<Rng> const &there, adaptor const &that) const
             {
                 // This assertion is true for all range types except cyclic ranges:
-                //RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % n_);
-                return ((there - here) + that.offset() - offset()) / n_;
+                //RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % s_);
+                return ((there - here) + that.offset() - offset()) / s_;
             }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())
             void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
             {
                 if(0 < n)
-                    offset() = ranges::advance(it, n * n_ + offset(), end_);
+                    offset() = ranges::advance(it, n * s_ + offset(), end_);
                 else if(0 > n)
-                    offset() = (ranges::advance(it, n * n_ + offset()), 0);
+                    offset() = (ranges::advance(it, n * s_ + offset()), 0);
             }
         };
 
@@ -129,7 +132,7 @@ namespace ranges
         {
             // In:  Range<T>
             // Out: Range<Range<T>>, where each inner range has $n$ elements.
-            //                       The last range may have fewer.
+            //                       The last $n$/$s$ ranges may have fewer.
             struct chunk_fn
             {
             private:
@@ -141,12 +144,25 @@ namespace ranges
                 (
                     make_pipeable(std::bind(chunk, std::placeholders::_1, n))
                 )
+                template<typename Int,
+                    CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(chunk_fn chunk, Int n, Int s)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(chunk, std::placeholders::_1, n, s))
+                )
             public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(std::forward<Rng>(rng)), n, n};
+                }
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+                chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n, range_difference_t<Rng> s) const
+                {
+                    return {all(std::forward<Rng>(rng)), n, s};
                 }
 
                 // For the sake of better error messages:
@@ -169,6 +185,15 @@ namespace ranges
                         "The first argument to view::chunk must be a model of the ForwardRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::chunk must be a model of the Integral concept");
+                }
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!(ForwardRange<Rng>() && Integral<T>()))>
+                void operator()(Rng &&, T, T) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                        "The first argument to view::chunk must be a model of the ForwardRange concept");
+                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                        "The second and third argument to view::chunk must be a model of the Integral concept");
                 }
             #endif
             };
