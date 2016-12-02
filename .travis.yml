@@ -174,8 +174,8 @@ matrix:
     #   os: linux
     #   addons: *clang37
 
-    # Test clang-4.0: C++11/C++14/1z, LIBCXX=On/Off, Build=Debug/Release, ASAN=On/Off
-    - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
+    # Debug + C++11 + libstdc++
+    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
       os: linux
       addons: &clang40
         apt:
@@ -226,10 +226,10 @@ matrix:
     #   os: linux
     #   addons: *clang40
 
-    # Debug + C++11 + libstdc++
-    - env: CLANG_VERSION=4.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
-      os: linux
-      addons: *clang40
+    # Test clang-4.0: C++11/C++14/1z, LIBCXX=On/Off, Build=Debug/Release, ASAN=On/Off
+    # - env: CLANG_VERSION=4.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
+    #   os: linux
+    #   addons: *clang40
 
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
