@@ -9,8 +9,10 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <vector>
+#include <ostream>
 #include <string>
+#include <vector>
+#include <meta/meta.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include "../simple_test.hpp"
@@ -64,6 +66,78 @@ void issue_420_regression()
     using BI = bidirectional_iterator<int*>;
     CONCEPT_ASSERT(!SizedSentinel<RI<BI>, RI<BI>>());
 }
+
+struct value_type_tester_thingy {};
+
+namespace ranges {
+    template<>
+    struct value_type<::value_type_tester_thingy> {
+        using type = int;
+    };
+}
+
+template<typename T>
+struct with_value_type { using value_type = T; };
+template<typename T>
+struct with_element_type { using element_type = T; };
+
+// arrays of known bound
+CONCEPT_ASSERT(Same<int, ranges::value_type<int[4]>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<const int[4]>::type>());
+CONCEPT_ASSERT(Same<int*, ranges::value_type<int*[4]>::type>());
+CONCEPT_ASSERT(Same<with_value_type<int>, ranges::value_type<with_value_type<int>[4]>::type>());
+
+#if !defined(__GNUC__) || defined(__clang__)
+// arrays of unknown bound
+CONCEPT_ASSERT(Same<int, ranges::value_type<int[]>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<const int[]>::type>());
+#endif
+
+// object pointer types
+CONCEPT_ASSERT(Same<int, ranges::value_type<int*>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<int*const>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<int const*>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<int const*const>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<int(*)[4]>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<const int(*)[4]>::type>());
+struct incomplete;
+CONCEPT_ASSERT(Same<incomplete, ranges::value_type<incomplete*>::type>());
+static_assert(!meta::is_trait<ranges::value_type<void*>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<void const*>>::value, "");
+
+// class types with member value_type
+CONCEPT_ASSERT(Same<int, ranges::value_type<with_value_type<int>>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<with_value_type<int> const>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<value_type_tester_thingy>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<value_type_tester_thingy const>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_value_type<int[4]>>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_value_type<int[4]> const>::type>());
+static_assert(!meta::is_trait<ranges::value_type<with_value_type<void>>>::value, "");
+
+// class types with member element_type
+CONCEPT_ASSERT(Same<int, ranges::value_type<with_element_type<int>>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<with_element_type<int> const>::type>());
+CONCEPT_ASSERT(Same<int, ranges::value_type<with_element_type<int const>>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_element_type<int[4]>>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_element_type<int[4]> const>::type>());
+CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_element_type<int const[4]>>::type>());
+static_assert(!meta::is_trait<ranges::value_type<with_element_type<void>>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_element_type<void const>>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_element_type<void> const>>::value, "");
+
+// classes derived from std::ios_base
+CONCEPT_ASSERT(Same<char, ranges::value_type<std::ostream>::type>());
+
+// cv-void
+static_assert(!meta::is_trait<ranges::value_type<void>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<void const>>::value, "");
+// reference types
+static_assert(!meta::is_trait<ranges::value_type<int&>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<int&&>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<int*&>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<int*&&>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<int(&)(int)>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<std::ostream&>>::value, "");
 
 int main()
 {
