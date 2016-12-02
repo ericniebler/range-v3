@@ -155,6 +155,29 @@ namespace ranges
             }
         };
 
+        // Build a sentinel out of a sentinel into the adapted range, and an
+        // adaptor that customizes behavior.
+        template<typename BaseSent, typename Adapt>
+        struct adaptor_sentinel
+          : private compressed_pair<BaseSent, Adapt>
+        {
+        private:
+            template<typename, typename>
+            friend struct adaptor_cursor;
+
+            using compressed_pair<BaseSent, Adapt>::first;
+            using compressed_pair<BaseSent, Adapt>::second;
+        public:
+            using compressed_pair<BaseSent, Adapt>::compressed_pair;
+
+            // All sentinels into adapted ranges have a base() member for fetching
+            // the underlying sentinel.
+            BaseSent base() const
+            {
+                return first();
+            }
+        };
+
         // Build a cursor out of an iterator into the adapted range, and an
         // adaptor that customizes behavior.
         template<typename BaseIter, typename Adapt>
@@ -162,8 +185,6 @@ namespace ranges
           : private detail::adaptor_value_type_<BaseIter, Adapt>
         {
         private:
-            template<typename BaseSent, typename SentAdapt>
-            friend struct adaptor_sentinel;
             friend range_access;
             using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
             using single_pass = meta::or_<
@@ -224,6 +245,29 @@ namespace ranges
             template<typename C = adaptor_cursor>
             auto equal(adaptor_cursor const &that) const ->
                 decltype(std::declval<C const &>().equal_(that, 42))
+            {
+                return this->equal_(that, 42);
+            }
+            template<typename S, typename A, typename = decltype(
+                std::declval<A const &>().empty(
+                    std::declval<BaseIter const &>(),
+                    std::declval<Adapt const &>(),
+                    std::declval<S const &>()))>
+            constexpr bool equal_(adaptor_sentinel<S, A> const &that, int) const
+            {
+                return that.second().empty(first(), second(), that.first());
+            }
+            template<typename S, typename A, typename = decltype(
+                std::declval<A const &>().empty(
+                    std::declval<BaseIter const &>(),
+                    std::declval<S const &>()))>
+            constexpr bool equal_(adaptor_sentinel<S, A> const &that, long) const
+            {
+                return that.second().empty(first(), that.first());
+            }
+            template<typename S, typename A>
+            constexpr auto equal(adaptor_sentinel<S, A> const &that) const ->
+                decltype(std::declval<adaptor_cursor const &>().equal_(that, 42))
             {
                 return this->equal_(that, 42);
             }
@@ -322,58 +366,6 @@ namespace ranges
             using base_t::base_t;
         };
 
-        // Build a sentinel out of a sentinel into the adapted range, and an
-        // adaptor that customizes behavior.
-        template<typename BaseSent, typename Adapt>
-        struct adaptor_sentinel
-          : private compressed_pair<BaseSent, Adapt>
-        {
-        private:
-            friend range_access;
-            using single_pass = range_access::single_pass_t<Adapt>;
-            struct mixin
-              : basic_mixin<adaptor_sentinel>
-            {
-                mixin() = default;
-                using basic_mixin<adaptor_sentinel>::basic_mixin;
-                // All iterators into adapted ranges have a base() member for fetching
-                // the underlying iterator.
-                BaseSent base() const
-                {
-                    return this->get().first();
-                }
-            };
-
-            using compressed_pair<BaseSent, Adapt>::first;
-            using compressed_pair<BaseSent, Adapt>::second;
-
-            template<typename I, typename IA, typename A = Adapt, typename = decltype(
-                std::declval<A const &>().empty(
-                    std::declval<I const &>(),
-                    std::declval<IA const &>(),
-                    std::declval<BaseSent const &>()))>
-            constexpr bool equal_(adaptor_cursor<I, IA> const &that, int) const
-            {
-                return second().empty(that.first(), that.second(), first());
-            }
-            template<typename I, typename IA, typename A = Adapt, typename = decltype(
-                std::declval<A const &>().empty(
-                    std::declval<I const &>(),
-                    std::declval<BaseSent const &>()))>
-            constexpr bool equal_(adaptor_cursor<I, IA> const &that, long) const
-            {
-                return second().empty(that.first(), first());
-            }
-            template<typename I, typename IA, typename S = adaptor_sentinel>
-            constexpr auto equal(adaptor_cursor<I, IA> const &that) const ->
-                decltype(std::declval<S const &>().equal_(that, 42))
-            {
-                return this->equal_(that, 42);
-            }
-        public:
-            using compressed_pair<BaseSent, Adapt>::compressed_pair;
-        };
-
         template<typename D>
         using adaptor_cursor_t =
             adaptor_cursor<detail::adapted_iterator_t<D>, detail::begin_adaptor_t<D>>;
@@ -384,7 +376,7 @@ namespace ranges
                 meta::and_<
                     Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>>,
                     Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>>,
-                adaptor_cursor<detail::adapted_iterator_t<D>, detail::begin_adaptor_t<D>>,
+                adaptor_cursor_t<D>,
                 adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 
         template<typename Derived, typename BaseRng, cardinality Cardinality /*= range_cardinality<BaseRng>::value*/>

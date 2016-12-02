@@ -58,7 +58,7 @@ namespace ranges
                 {
                     return *value_;
                 }
-                constexpr bool done() const
+                constexpr bool equal(default_sentinel) const
                 {
                     return 0 == n_;
                 }

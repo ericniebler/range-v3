@@ -157,11 +157,24 @@ namespace ranges
                 range_cardinality<Rng1>::value,
                 range_cardinality<Rng2>::value);
 
-            struct sentinel;
+            struct cursor;
+
+            struct sentinel
+            {
+            private:
+                friend struct cursor;
+                range_sentinel_t<Rng1> end1_;
+                range_sentinel_t<Rng2> end2_;
+            public:
+                sentinel() = default;
+                sentinel(detail::any, range_sentinel_t<Rng1> end1, range_sentinel_t<Rng1> end2)
+                  : end1_(std::move(end1)), end2_(std::move(end2))
+                {}
+            };
+
             struct cursor
             {
             private:
-                friend sentinel;
                 using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, true>;
                 fun_ref_ fun_;
                 range_iterator_t<Rng1> it1_;
@@ -197,6 +210,13 @@ namespace ranges
                     // one reaches the end.
                     return it1_ == that.it1_ || it2_ == that.it2_;
                 }
+                bool equal(sentinel const &s) const
+                {
+                    // By returning true if *any* of the iterators are equal, we allow
+                    // transformed ranges to be of different lengths, stopping when the first
+                    // one reaches the end.
+                    return it1_ == s.end1_ || it2_ == s.end2_;
+                }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng1>() && BidirectionalRange<Rng2>())
                 void prev()
                 {
@@ -224,25 +244,6 @@ namespace ranges
                 (
                     fun_(move_tag{}, it1_, it2_)
                 )
-            };
-
-            struct sentinel
-            {
-            private:
-                range_sentinel_t<Rng1> end1_;
-                range_sentinel_t<Rng2> end2_;
-            public:
-                sentinel() = default;
-                sentinel(detail::any, range_sentinel_t<Rng1> end1, range_sentinel_t<Rng1> end2)
-                  : end1_(std::move(end1)), end2_(std::move(end2))
-                {}
-                bool equal(cursor const &pos) const
-                {
-                    // By returning true if *any* of the iterators are equal, we allow
-                    // transformed ranges to be of different lengths, stopping when the first
-                    // one reaches the end.
-                    return pos.it1_ == end1_ || pos.it2_ == end2_;
-                }
             };
 
             using end_cursor_t =

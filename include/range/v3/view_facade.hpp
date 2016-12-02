@@ -39,15 +39,14 @@ namespace ranges
                 decltype(range_access::end_cursor(std::declval<Derived &>(), 42));
 
             template<typename Derived>
-            using facade_iterator_t =
-                basic_iterator<begin_cursor_t<Derived>, end_cursor_t<Derived>>;
+            using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
 
             template<typename Derived>
             using facade_sentinel_t =
                 meta::if_<
                     Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
-                    basic_iterator<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
-                    basic_sentinel<end_cursor_t<Derived>>>;
+                    facade_iterator_t<Derived>,
+                    end_cursor_t<Derived>>;
         }
         /// \endcond
 
@@ -66,7 +65,7 @@ namespace ranges
             {
                 return derived();
             }
-            default_end_cursor end_cursor() const
+            constexpr default_sentinel end_cursor() const
             {
                 return {};
             }
@@ -85,13 +84,15 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_sentinel_t<D> end()
             {
-                return {range_access::end_cursor(derived(), 42)};
+                return static_cast<detail::facade_sentinel_t<D>>(
+                    range_access::end_cursor(derived(), 42));
             }
             /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_sentinel_t<D const> end() const
             {
-                return {range_access::end_cursor(derived(), 42)};
+                return static_cast<detail::facade_sentinel_t<D const>>(
+                    range_access::end_cursor(derived(), 42));
             }
         };
 

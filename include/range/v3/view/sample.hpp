@@ -147,7 +147,7 @@ namespace ranges
                 {
                     return *current();
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     RANGES_ASSERT(range());
                     return range()->size() <= 0;

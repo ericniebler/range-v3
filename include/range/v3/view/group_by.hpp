@@ -79,7 +79,7 @@ namespace ranges
                 {
                     cur_ = ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return cur_ == last_;
                 }

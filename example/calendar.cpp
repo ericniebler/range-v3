@@ -232,7 +232,7 @@ struct interleave_view<Rngs>::cursor  {
         if(0 == ((++n_) %= its_.size()))
             for_each(its_, [](auto& it){ ++it; });
     }
-    bool done() const {
+    bool equal(default_sentinel) const {
         return n_ == 0 && its_.end() != mismatch(its_, *rngs_,
             std::not_equal_to<>(), ident(), ranges::end).in1();
     }

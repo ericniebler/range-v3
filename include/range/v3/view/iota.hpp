@@ -215,7 +215,7 @@ namespace ranges
                 else
                     ++from_;
             }
-            bool done() const
+            bool equal(default_sentinel) const
             {
                 return done_;
             }
@@ -258,7 +258,7 @@ namespace ranges
             {
                 ++from_;
             }
-            bool done() const
+            bool equal(default_sentinel) const
             {
                 return from_ == to_;
             }
@@ -319,7 +319,7 @@ namespace ranges
             {
                 ++value_;
             }
-            constexpr bool done() const
+            constexpr bool equal(default_sentinel) const
             {
                 return false;
             }

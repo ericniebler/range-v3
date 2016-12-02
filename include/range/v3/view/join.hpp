@@ -126,7 +126,7 @@ namespace ranges
                         satisfy();
                     }
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return outer_it_ == ranges::end(rng_->outer_);
                 }
@@ -244,7 +244,7 @@ namespace ranges
                         satisfy();
                     }
                 }
-                bool done() const
+                bool equal(default_sentinel) const
                 {
                     return outer_it_ == ranges::end(rng_->outer_);
                 }

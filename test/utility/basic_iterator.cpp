@@ -38,7 +38,7 @@ namespace test_weak_input
     };
 
     CONCEPT_ASSERT(ranges::detail::InputCursor<cursor<char*>>());
-    CONCEPT_ASSERT(!ranges::detail::HasEqualCursor<cursor<char*>>());
+    CONCEPT_ASSERT(!ranges::detail::CursorSentinel<cursor<char*>, cursor<char*>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -152,7 +152,7 @@ namespace test_weak_output
     };
 
     CONCEPT_ASSERT(ranges::detail::OutputCursor<cursor<char*>, char>());
-    CONCEPT_ASSERT(!ranges::detail::HasEqualCursor<cursor<char*>>());
+    CONCEPT_ASSERT(!ranges::detail::CursorSentinel<cursor<char*>, cursor<char*>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -320,7 +320,7 @@ namespace test_forward_sized
         }
     };
 
-    CONCEPT_ASSERT(ranges::detail::SizedCursor<cursor<char*>>());
+    CONCEPT_ASSERT(ranges::detail::SizedCursorSentinel<cursor<char*>, cursor<char*>>());
     CONCEPT_ASSERT(ranges::detail::ForwardCursor<cursor<char*>>());
 
     template<class I>

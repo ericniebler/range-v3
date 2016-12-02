@@ -50,14 +50,14 @@ namespace ranges
                 Val const *value_;
             public:
                 cursor() = default;
-                cursor(Val const &value)
+                explicit cursor(Val const &value)
                   : value_(std::addressof(value))
                 {}
                 Val const &get() const
                 {
                     return *value_;
                 }
-                constexpr bool done() const
+                constexpr bool equal(default_sentinel) const
                 {
                     return false;
                 }
@@ -78,7 +78,7 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return {value_};
+                return cursor{value_};
             }
         public:
             repeat_view() = default;

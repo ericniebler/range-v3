@@ -111,7 +111,7 @@ namespace ranges
                 explicit cursor(cycled_view_t &rng)
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
-                constexpr bool done() const
+                constexpr bool equal(default_sentinel) const
                 {
                     return false;
                 }

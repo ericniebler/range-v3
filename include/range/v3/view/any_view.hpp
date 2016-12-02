@@ -204,7 +204,35 @@ namespace ranges
                 }
             };
 
-            struct any_sentinel;
+            template<typename Ref, category Cat>
+            struct any_cursor;
+
+            struct any_sentinel
+            {
+            private:
+                template<typename, category>
+                friend struct any_cursor;
+                std::unique_ptr<any_sentinel_interface> ptr_;
+            public:
+                any_sentinel() = default;
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_sentinel>()),
+                    CONCEPT_REQUIRES_(InputRange<Rng>())>
+                any_sentinel(Rng &&rng, end_tag)
+                  : ptr_{new any_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{
+                        end(rng)}}
+                {}
+                any_sentinel(any_sentinel &&) = default;
+                any_sentinel(any_sentinel const &that)
+                  : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
+                {}
+                any_sentinel &operator=(any_sentinel &&) = default;
+                any_sentinel &operator=(any_sentinel const &that)
+                {
+                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
+                    return *this;
+                }
+            };
 
             template<typename Ref, category Cat>
             struct any_cursor
@@ -242,6 +270,11 @@ namespace ranges
                     RANGES_ASSERT(!ptr_ == !that.ptr_);
                     return (!ptr_ && !that.ptr_) || ptr_->equal(*that.ptr_);
                 }
+                bool equal(any_sentinel const &that) const
+                {
+                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    return (!ptr_ && !that.ptr_) || that.ptr_->equal(ptr_->iter());
+                }
                 void next()
                 {
                     RANGES_ASSERT(ptr_);
@@ -264,37 +297,6 @@ namespace ranges
                 {
                     RANGES_ASSERT(!ptr_ == !that.ptr_);
                     return !ptr_ ? 0 : ptr_->distance_to(*that.ptr_);
-                }
-            };
-
-            struct any_sentinel
-            {
-            private:
-                std::unique_ptr<any_sentinel_interface> ptr_;
-            public:
-                any_sentinel() = default;
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_sentinel>()),
-                    CONCEPT_REQUIRES_(InputRange<Rng>())>
-                any_sentinel(Rng &&rng, end_tag)
-                  : ptr_{new any_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{
-                        end(rng)}}
-                {}
-                any_sentinel(any_sentinel &&) = default;
-                any_sentinel(any_sentinel const &that)
-                  : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
-                {}
-                any_sentinel &operator=(any_sentinel &&) = default;
-                any_sentinel &operator=(any_sentinel const &that)
-                {
-                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
-                    return *this;
-                }
-                template<typename Ref, category Cat>
-                bool equal(any_cursor<Ref, Cat> const &that) const
-                {
-                    RANGES_ASSERT(!ptr_ == !that.ptr_);
-                    return (!ptr_ && !that.ptr_) || ptr_->equal(that.ptr_->iter());
                 }
             };
 
