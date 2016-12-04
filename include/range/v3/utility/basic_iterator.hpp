@@ -426,9 +426,29 @@ namespace ranges
                 return *this;
             }
 
+        private:
+            template<class C = Cur,
+                class R = decltype(std::declval<C&>().post_increment()),
+                CONCEPT_REQUIRES_(Same<C, R>())>
+            basic_iterator post_increment(std::true_type)
+                noexcept(noexcept(
+                    std::is_nothrow_constructible<basic_iterator, C>::value))
+            {
+                return basic_iterator(range_access::post_increment(pos()));
+            }
+            template<class C = Cur,
+                class R = decltype(std::declval<C&>().post_increment()),
+                CONCEPT_REQUIRES_(!Same<C, R>())>
+            auto post_increment(std::true_type)
+                noexcept(noexcept(
+                    range_access::post_increment(std::declval<C&>()))) ->
+                decltype(range_access::post_increment(std::declval<C&>()))
+            {
+                return range_access::post_increment(pos());
+            }
             CONCEPT_REQUIRES(!Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
             RANGES_CXX14_CONSTEXPR
-            basic_iterator operator++(int)
+            basic_iterator post_increment(std::false_type)
             {
                 basic_iterator tmp{*this};
                 ++*this;
@@ -436,9 +456,20 @@ namespace ranges
             }
             CONCEPT_REQUIRES(Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
             RANGES_CXX14_CONSTEXPR
-            void operator++(int)
+            void post_increment(std::false_type)
             {
                 ++*this;
+            }
+        public:
+            template<class C = Cur>
+            RANGES_CXX14_CONSTEXPR
+            auto operator++(int)
+                noexcept(noexcept(std::declval<basic_iterator&>().
+                    post_increment(detail::HasCursorPostincrement<C>{}))) ->
+                decltype(std::declval<basic_iterator&>().
+                    post_increment(detail::HasCursorPostincrement<C>{}))
+            {
+                return this->post_increment(detail::HasCursorPostincrement<C>{});
             }
 
             template <class Cur2, CONCEPT_REQUIRES_(detail::CursorSentinel<Cur2, Cur>())>

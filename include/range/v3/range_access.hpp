@@ -125,6 +125,14 @@ namespace ranges
                         concepts::model_of<concepts::SignedIntegral>(c.distance_to(s))
                     ));
             };
+            struct HasCursorPostincrement
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        (t.post_increment(), concepts::void_)
+                    ));
+            };
             struct OutputCursor
               : concepts::refines<WritableCursor, Cursor(concepts::_1)>
             {};
@@ -247,6 +255,12 @@ namespace ranges
             (
                 pos.next()
             )
+            template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR auto post_increment(Cur & pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.post_increment()
+            )
             template<typename Cur, typename O>
             static RANGES_CXX14_CONSTEXPR auto equal(Cur const &pos, O const &other)
             RANGES_DECLTYPE_AUTO_RETURN
@@ -367,6 +381,10 @@ namespace ranges
             template<typename T>
             using HasCursorNext =
                 concepts::models<range_access::HasCursorNext, T>;
+
+            template<typename T>
+            using HasCursorPostincrement =
+                concepts::models<range_access::HasCursorPostincrement, T>;
 
             template<typename T>
             using HasCursorArrow =
