@@ -49,7 +49,7 @@ namespace ranges
                 explicit cursor(Val value)
                   : value_(std::move(value)), done_(false)
                 {}
-                Val get() const
+                Val read() const
                 {
                     return value_;
                 }

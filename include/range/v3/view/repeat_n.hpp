@@ -54,7 +54,7 @@ namespace ranges
                 cursor(Val const &value, std::ptrdiff_t n)
                   : value_(std::addressof(value)), n_(n)
                 {}
-                Val const &get() const
+                Val const &read() const
                 {
                     return *value_;
                 }

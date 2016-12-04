@@ -33,7 +33,7 @@ namespace test_weak_input
         template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
-        auto get() const -> decltype(*it_) { return *it_; }
+        auto read() const -> decltype(*it_) { return *it_; }
         void next() { ++it_; }
     };
 
@@ -85,7 +85,7 @@ namespace test_random_access
         template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
-        auto get() const -> decltype(*it_) { return *it_; }
+        auto read() const -> decltype(*it_) { return *it_; }
         bool equal(cursor<I> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         void prev() { --it_; }
@@ -143,7 +143,7 @@ namespace test_weak_output
     private:
         friend ranges::range_access;
         I it_;
-        void set(ranges::iterator_value_t<I> v) const { *it_ = v; }
+        void write(ranges::iterator_value_t<I> v) const { *it_ = v; }
         void next() { ++it_; }
     public:
         struct mixin : ranges::basic_mixin<cursor>
@@ -202,8 +202,8 @@ namespace test_output
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         using value_type = ranges::iterator_value_t<I>;
-        value_type get() const { return *it_; }
-        void set(value_type v) const { *it_ = v; }
+        value_type read() const { return *it_; }
+        void write(value_type v) const { *it_ = v; }
         I arrow() const { return it_; }
         void next() { ++it_; }
         bool equal(cursor const &that) const { return it_ == that.it_; }
@@ -275,10 +275,10 @@ namespace test_move_only
         using value_type = std::tuple<ranges::iterator_value_t<I>>;
         using reference = ranges::common_tuple<ranges::iterator_reference_t<I>>;
         using rvalue_reference = ranges::common_tuple<ranges::iterator_rvalue_reference_t<I>>;
-        reference get() const { return reference{*it_}; }
+        reference read() const { return reference{*it_}; }
         rvalue_reference move() const { return rvalue_reference{ranges::iter_move(it_)}; }
-        void set(reference const &v) const { reference{*it_} = v; }
-        void set(value_type && v) const { reference{*it_} = std::move(v); }
+        void write(reference const &v) const { reference{*it_} = v; }
+        void write(value_type && v) const { reference{*it_} = std::move(v); }
         void next() { ++it_; }
         bool equal(zip1_cursor const &that) const { return it_ == that.it_; }
     };
@@ -320,7 +320,7 @@ namespace test_forward_sized
         template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
-        auto get() const -> decltype(*it_) { return *it_; }
+        auto read() const -> decltype(*it_) { return *it_; }
         bool equal(cursor<I> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         ranges::iterator_difference_t<I> distance_to(cursor<I> const &that) const {

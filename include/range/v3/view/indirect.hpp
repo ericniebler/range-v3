@@ -43,7 +43,7 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                auto get(range_iterator_t<Rng> const &it) const ->
+                auto read(range_iterator_t<Rng> const &it) const ->
                     decltype(**it)
                 {
                     return **it;

@@ -87,7 +87,7 @@ namespace ranges
             adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
               : box<offset_t>{0}, n_(n), end_(end)
             {}
-            auto get(range_iterator_t<Rng> it) const ->
+            auto read(range_iterator_t<Rng> it) const ->
                 decltype(view::take(make_iterator_range(std::move(it), end_), n_))
             {
                 RANGES_EXPECT(it != end_);

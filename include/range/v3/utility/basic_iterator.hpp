@@ -37,7 +37,7 @@ namespace ranges
         {
             template<typename Cur>
             using cursor_reference_t =
-                decltype(range_access::get(std::declval<Cur const &>()));
+                decltype(range_access::read(std::declval<Cur const &>()));
 
             // Compute the rvalue reference type of a cursor
             template<typename Cur>
@@ -58,9 +58,9 @@ namespace ranges
             struct proxy_reference_conversion
             {
                 operator Head() const
-                    noexcept(noexcept(Head(Head(std::declval<Derived const &>().get_()))))
+                    noexcept(noexcept(Head(Head(std::declval<Derived const &>().read_()))))
                 {
-                    return Head(static_cast<Derived const *>(this)->get_());
+                    return Head(static_cast<Derived const *>(this)->read_());
                 }
             };
 
@@ -125,16 +125,16 @@ namespace ranges
                     "type that share a common reference type. See the ranges::common_reference "
                     "type trait.");
                 RANGES_CXX14_CONSTEXPR
-                reference_t_ get_() const
-                    noexcept(noexcept(reference_t_(range_access::get(std::declval<Cur const &>()))))
+                reference_t_ read_() const
+                    noexcept(noexcept(reference_t_(range_access::read(std::declval<Cur const &>()))))
                 {
-                    return range_access::get(*cur_);
+                    return range_access::read(*cur_);
                 }
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
-                void set_(T && t)
+                void write_(T && t)
                 {
-                    range_access::set(*cur_, (T &&) t);
+                    range_access::write(*cur_, (T &&) t);
                 }
             public:
                 basic_proxy_reference() = default;
@@ -159,7 +159,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(basic_proxy_reference const &that)
                 {
-                    this->set_(that.get_());
+                    this->write_(that.read_());
                     return *this;
                 }
                 template<typename OtherCur,
@@ -176,7 +176,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(basic_proxy_reference<OtherCur> const &that)
                 {
-                    this->set_(that.get_());
+                    this->write_(that.read_());
                     return *this;
                 }
                 template<typename T,
@@ -184,7 +184,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(T && t)
                 {
-                    this->set_((T &&) t);
+                    this->write_((T &&) t);
                     return *this;
                 }
                 template<typename V = value_t_,
@@ -192,7 +192,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(basic_proxy_reference const &x, value_t_ const &y)
                 {
-                    return x.get_() == y;
+                    return x.read_() == y;
                 }
                 template<typename V = value_t_,
                     CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
@@ -206,7 +206,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(value_t_ const &x, basic_proxy_reference const &y)
                 {
-                    return x == y.get_();
+                    return x == y.read_();
                 }
                 template<typename V = value_t_,
                     CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
@@ -220,7 +220,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(basic_proxy_reference const &x, basic_proxy_reference const &y)
                 {
-                    return x.get_() == y.get_();
+                    return x.read_() == y.read_();
                 }
                 template<typename V = value_t_,
                     CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
@@ -354,18 +354,18 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator=(T && t)
             noexcept(noexcept(
-                std::declval<Cur &>().set(static_cast<T &&>(t))))
+                std::declval<Cur &>().write(static_cast<T &&>(t))))
             {
-                pos().set(static_cast<T &&>(t));
+                pos().write(static_cast<T &&>(t));
                 return *this;
             }
 
             CONCEPT_REQUIRES(detail::ReadableCursor<Cur>() &&
                 !detail::is_writable_cursor<Cur>())
             constexpr const_reference_t operator*() const
-            noexcept(noexcept(range_access::get(std::declval<Cur const &>())))
+            noexcept(noexcept(range_access::read(std::declval<Cur const &>())))
             {
-                return range_access::get(pos());
+                return range_access::read(pos());
             }
             CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
                 detail::is_writable_cursor<Cur>())

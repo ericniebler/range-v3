@@ -50,7 +50,7 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                reference_ get(range_iterator_t<Rng> const &it) const
+                reference_ read(range_iterator_t<Rng> const &it) const
                 {
                     return *it;
                 }

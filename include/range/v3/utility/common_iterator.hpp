@@ -212,13 +212,13 @@ namespace ranges
                     return iter_move(it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> get() const
+                iterator_reference_t<I> read() const
                 {
                     return *it();
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
-                void set(T && t) const
+                void write(T && t) const
                 {
                     *it() = (T &&) t;
                 }

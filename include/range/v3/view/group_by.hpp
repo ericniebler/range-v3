@@ -71,7 +71,7 @@ namespace ranges
                     }
                 };
                 take_while_view<iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
-                get() const
+                read() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }

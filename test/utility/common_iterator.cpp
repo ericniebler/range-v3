@@ -21,7 +21,7 @@ RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
 
 namespace {
     struct silly_arrow_cursor {
-        int get() const { return 0; }
+        int read() const { return 0; }
         void next() {}
         int arrow() const { return 42; }
     };
@@ -42,7 +42,7 @@ namespace {
     };
 
     struct proxy_cursor {
-        int get() const { return 42; }
+        int read() const { return 42; }
         void next() {}
     };
 

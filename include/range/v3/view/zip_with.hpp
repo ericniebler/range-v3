@@ -171,7 +171,7 @@ namespace ranges
                 cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     tuple_apply(fun_, its_)

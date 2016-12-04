@@ -47,7 +47,7 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                std::string &get() const noexcept
+                std::string &read() const noexcept
                 {
                     return rng_->str_;
                 }

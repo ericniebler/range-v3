@@ -30,7 +30,7 @@ namespace ranges
             friend range_access;
             struct cursor
             {
-                [[noreturn]] T const & get() const
+                [[noreturn]] T const & read() const
                 {
                     RANGES_ENSURE(false);
                 }

@@ -78,7 +78,7 @@ namespace ranges
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
                 {}
-                auto get(range_iterator_t<Rng> it) const
+                auto read(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     invoke(fun_, it)
@@ -193,7 +193,7 @@ namespace ranges
                 cursor(fun_ref_ fun, range_iterator_t<Rng1> it1, range_iterator_t<Rng2> it2)
                   : fun_(std::move(fun)), it1_(std::move(it1)), it2_(std::move(it2))
                 {}
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     invoke(fun_, it1_, it2_)

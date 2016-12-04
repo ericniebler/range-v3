@@ -118,19 +118,19 @@ namespace ranges
                     return iter_move(it_);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> get() const
+                iterator_reference_t<I> read() const
                 {
                     return *it_;
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(ExclusivelyWritable_<I const, T &&>())>
-                void set(T && t) const
+                void write(T && t) const
                 {
                     *it_ = (T &&) t;
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
-                void set(T && t)
+                void write(T && t)
                 {
                     *it_ = (T &&) t;
                 }

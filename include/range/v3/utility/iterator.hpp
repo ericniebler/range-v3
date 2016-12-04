@@ -455,11 +455,11 @@ namespace ranges
                 back_insert_cursor(Cont &cont) noexcept
                   : cont_(std::addressof(cont))
                 {}
-                void set(typename Cont::value_type const &v) const
+                void write(typename Cont::value_type const &v) const
                 {
                     cont_->push_back(v);
                 }
-                void set(typename Cont::value_type &&v) const
+                void write(typename Cont::value_type &&v) const
                 {
                     cont_->push_back(std::move(v));
                 }
@@ -502,11 +502,11 @@ namespace ranges
                 explicit front_insert_cursor(Cont &cont) noexcept
                   : cont_(std::addressof(cont))
                 {}
-                void set(typename Cont::value_type const &v) const
+                void write(typename Cont::value_type const &v) const
                 {
                     cont_->push_front(v);
                 }
-                void set(typename Cont::value_type &&v) const
+                void write(typename Cont::value_type &&v) const
                 {
                     cont_->push_front(std::move(v));
                 }
@@ -550,11 +550,11 @@ namespace ranges
                 explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
                   : cont_(&cont), where_(where)
                 {}
-                void set(typename Cont::value_type const &v)
+                void write(typename Cont::value_type const &v)
                 {
                     where_ = ranges::next(cont_->insert(where_, v));
                 }
-                void set(typename Cont::value_type &&v)
+                void write(typename Cont::value_type &&v)
                 {
                     where_ = ranges::next(cont_->insert(where_, std::move(v)));
                 }
@@ -610,7 +610,7 @@ namespace ranges
                 {}
                 template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
                     CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
-                void set(U && u)
+                void write(U && u)
                 {
                     RANGES_EXPECT(sout_);
                     *sout_ << u;
@@ -657,7 +657,7 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto get() const -> iterator_reference_t<I>
+                auto read() const -> iterator_reference_t<I>
                 {
                     return *arrow();
                 }
@@ -759,7 +759,7 @@ namespace ranges
                 constexpr move_cursor(I it)
                   : it_(it)
                 {}
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     iter_move(it_)
@@ -916,8 +916,7 @@ namespace ranges
                     {}
                     I base() const
                     {
-                        move_into_cursor const &this_ = this->basic_mixin<move_into_cursor>::get();
-                        return this_.it_;
+                        return this->get().it_;
                     }
                 };
 
@@ -932,18 +931,18 @@ namespace ranges
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
-                void set(T &&t) noexcept(noexcept(*it_ = std::move(t)))
+                void write(T &&t) noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
-                void set(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
+                void write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> get() const
+                iterator_reference_t<I> read() const
                     noexcept(noexcept(*std::declval<I const&>()))
                 {
                     return *it_;

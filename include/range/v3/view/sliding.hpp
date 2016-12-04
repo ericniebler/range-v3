@@ -187,7 +187,7 @@ namespace ranges
                 {
                     return v.get_first();
                 }
-                auto get(range_iterator_t<Rng> const &it) const ->
+                auto read(range_iterator_t<Rng> const &it) const ->
                     decltype(view::counted(uncounted(it), n_))
                 {
                     return view::counted(base_t::get(it, n_), n_);
@@ -255,7 +255,7 @@ namespace ranges
                 {
                     return v.get_last();
                 }
-                auto get(range_iterator_t<Rng> const &it) const ->
+                auto read(range_iterator_t<Rng> const &it) const ->
                     decltype(view::counted(uncounted(it), n_))
                 {
                     return view::counted(uncounted(it), n_);
@@ -302,7 +302,7 @@ namespace ranges
                 {
                     return v.get_last();
                 }
-                auto get(range_iterator_t<Rng> const &it) const ->
+                auto read(range_iterator_t<Rng> const &it) const ->
                     decltype(view::counted(uncounted(it), n_))
                 {
                     return view::counted(uncounted(it), n_);
