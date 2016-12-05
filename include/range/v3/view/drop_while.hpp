@@ -22,7 +22,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/utility/optional.hpp>
+#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -44,7 +44,7 @@ namespace ranges
             friend range_access;
             Rng rng_;
             semiregular_t<function_type<Pred>> pred_;
-            optional<range_iterator_t<Rng>> begin_;
+            detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
 
             range_iterator_t<Rng> get_begin_()
             {
@@ -54,31 +54,9 @@ namespace ranges
             }
         public:
             drop_while_view() = default;
-            drop_while_view(drop_while_view &&that)
-              : drop_while_view::view_interface(std::move(that))
-              , rng_(std::move(that).rng_), pred_(std::move(that).pred_), begin_{}
-            {}
-            drop_while_view(drop_while_view const &that)
-              : drop_while_view::view_interface(that)
-              , rng_(that.rng_), pred_(that.pred_), begin_{}
-            {}
             drop_while_view(Rng rng, Pred pred)
-              : rng_(std::move(rng)), pred_(as_function(std::move(pred))), begin_{}
+              : rng_(std::move(rng)), pred_(as_function(std::move(pred)))
             {}
-            drop_while_view& operator=(drop_while_view &&that)
-            {
-                rng_ = std::move(that).rng_;
-                pred_ = std::move(that).pred_;
-                begin_.reset();
-                return *this;
-            }
-            drop_while_view& operator=(drop_while_view const &that)
-            {
-                rng_ = that.rng_;
-                pred_ = that.pred_;
-                begin_.reset();
-                return *this;
-            }
             range_iterator_t<Rng> begin()
             {
                 return get_begin_();

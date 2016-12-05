@@ -20,9 +20,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/view_adaptor.hpp>
+#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
@@ -43,7 +43,7 @@ namespace ranges
         private:
             friend range_access;
             semiregular_t<function_type<Pred>> pred_;
-            optional<range_iterator_t<Rng>> begin_;
+            detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
 
             struct adaptor : adaptor_base
             {
@@ -93,30 +93,10 @@ namespace ranges
             }
         public:
             adjacent_remove_if_view() = default;
-            adjacent_remove_if_view(adjacent_remove_if_view const &that)
-              : adjacent_remove_if_view::view_adaptor(that)
-              , pred_(that.pred_)
-              , begin_{}
-            {}
             adjacent_remove_if_view(Rng rng, Pred pred)
               : adjacent_remove_if_view::view_adaptor{std::move(rng)}
               , pred_(as_function(std::move(pred)))
-              , begin_{}
             {}
-            adjacent_remove_if_view& operator=(adjacent_remove_if_view &&that)
-            {
-                this->adjacent_remove_if_view::view_adaptor::operator=(std::move(that));
-                pred_ = std::move(that).pred_;
-                begin_.reset();
-                return *this;
-            }
-            adjacent_remove_if_view& operator=(adjacent_remove_if_view const &that)
-            {
-                this->adjacent_remove_if_view::view_adaptor::operator=(that);
-                pred_ = that.pred_;
-                begin_.reset();
-                return *this;
-            }
        };
 
         namespace view
