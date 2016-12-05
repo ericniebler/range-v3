@@ -2,6 +2,8 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
+//  Copyright Tobias Mayer 2016
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -19,14 +21,13 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/detail/optional.hpp>
 #include <range/v3/view_adaptor.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/view/take.hpp>
-#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -41,15 +42,62 @@ namespace ranges
                 sliding_view<Rng>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+          , private detail::non_propagating_cache<
+                range_iterator_t<Rng>,
+                sliding_view<Rng>,
+                !(RandomAccessRange<Rng>() && SizedRange<Rng>())>
         {
         private:
             CONCEPT_ASSERT(ForwardRange<Rng>());
-            range_difference_t<Rng> n_;
             friend range_access;
             struct adaptor;
+
+            static constexpr bool cache_enabled =
+                !(RandomAccessRange<Rng>() && SizedRange<Rng>());
+
+            range_difference_t<Rng> n_;
+
+            CONCEPT_REQUIRES(!cache_enabled)
+            range_iterator_t<Rng> get_first() const
+            {
+                auto const sz = ranges::size(this->base());
+                auto const n = static_cast<range_size_t<Rng>>(n_ - 1) < sz ?
+                    n_ - 1 : static_cast<range_difference_t<Rng>>(sz);
+                return ranges::begin(this->base()) + n;
+            }
+            CONCEPT_REQUIRES(cache_enabled)
+            range_iterator_t<Rng> get_first()
+            {
+                using cache_t = detail::non_propagating_cache<
+                    range_iterator_t<Rng>, sliding_view<Rng>>;
+                auto &first = static_cast<cache_t&>(*this);
+                if (!first)
+                {
+                    first = ranges::next(
+                                ranges::begin(this->base()), n_ - 1,
+                                ranges::end(this->base()));
+                }
+                return *first;
+            }
+
+            CONCEPT_REQUIRES(!cache_enabled)
             adaptor begin_adaptor() const
             {
-                return adaptor{n_, ranges::end(this->base())};
+                return {*this};
+            }
+            CONCEPT_REQUIRES(cache_enabled)
+            adaptor begin_adaptor()
+            {
+                return {*this};
+            }
+            meta::if_<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor() const
+            {
+                return {*this};
+            }
+            range_size_t<Rng> size_(range_size_t<Rng> count) const
+            {
+                auto const n = static_cast<range_size_t<Rng>>(n_);
+                return count < n ? 0 : count - n + 1;
             }
         public:
             sliding_view() = default;
@@ -58,63 +106,115 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < n_);
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             range_size_t<Rng> size() const
             {
-                auto sz = ranges::distance(this->base());
-                return static_cast<range_size_t<Rng>>(sz);
+                return size_(ranges::size(this->base()));
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<Rng const>())
+            range_size_t<Rng> size()
+            {
+                return size_(ranges::size(this->base()));
             }
         };
+
+        /// \cond
+        namespace sliding_view_detail
+        {
+            template<typename Rng>
+            using uncounted_t = decltype(
+                ranges::uncounted(std::declval<range_iterator_t<Rng>&>()));
+
+            template<typename Rng, bool = (bool) RandomAccessRange<Rng>()>
+            struct trailing
+            {
+                trailing() = default;
+                constexpr trailing(Rng const &rng)
+                  : it_{uncounted(ranges::begin(rng))}
+                {}
+                constexpr uncounted_t<Rng>
+                get(range_iterator_t<Rng> const &, range_difference_t<Rng>) const
+                {
+                    return it_;
+                }
+                void next()
+                {
+                    ++it_;
+                }
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                void prev()
+                {
+                    --it_;
+                }
+            private:
+                uncounted_t<Rng> it_;
+            };
+
+            template<typename Rng>
+            struct trailing<Rng, true>
+            {
+                trailing() = default;
+                constexpr trailing(Rng const &) noexcept
+                {}
+                constexpr uncounted_t<Rng>
+                get(range_iterator_t<Rng> const &it, range_difference_t<Rng> n) const
+                {
+                    return uncounted(it - (n - 1));
+                }
+                void next()
+                {}
+                void prev()
+                {}
+            };
+        }
 
         template<typename Rng>
         struct sliding_view<Rng>::adaptor
           : adaptor_base
+          , private sliding_view_detail::trailing<Rng>
         {
         private:
-            range_difference_t<Rng> n_;
-            range_sentinel_t<Rng> end_;
+            using base_t = sliding_view_detail::trailing<Rng>;
+            range_difference_t<Rng> n_ = {};
         public:
             adaptor() = default;
-            adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
-              : n_(n), end_(end)
+            adaptor(sliding_view<Rng> const &v)
+              : base_t{v.base()}
+              , n_{v.n_}
             {}
-            auto get(range_iterator_t<Rng> it) const ->
-                decltype(view::take(make_iterator_range(std::move(it), end_), n_))
+            template<typename View>
+            range_iterator_t<Rng> begin(View &v) const
             {
-                RANGES_ASSERT(it != end_);
-                return view::take(make_iterator_range(std::move(it), end_), n_);
+                return v.get_first();
             }
-            void next(range_iterator_t<Rng> &it)
+            auto get(range_iterator_t<Rng> const &it) const ->
+                decltype(view::counted(uncounted(it), n_))
             {
-                RANGES_ASSERT(it != end_);
+                return view::counted(base_t::get(it, n_), n_);
+            }
+            void next(range_iterator_t<Rng>& it)
+            {
                 ++it;
+                base_t::next();
             }
             CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-            void prev(range_iterator_t<Rng> &it)
+            void prev(range_iterator_t<Rng>& it)
             {
+                base_t::prev();
                 --it;
             }
-            CONCEPT_REQUIRES(
-                SizedSentinel<range_iterator_t<Rng>, range_iterator_t<Rng>>())
-            range_difference_t<Rng> distance_to(range_iterator_t<Rng> const &here,
-                range_iterator_t<Rng> const &there, adaptor const &/*that*/) const
-            {
-                // This assertion is true for all range types except cyclic ranges:
-                return there - here;
-            }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-            void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
+            void advance(range_iterator_t<Rng>& it, range_difference_t<Rng> n)
             {
-                //RANGES_ASSERT(end_ - it <= n);
                 it += n;
             }
         };
+        /// \endcond
 
         namespace view
         {
             // In:  Range<T>
             // Out: Range<Range<T>>, where each inner range has $n$ elements.
-            //                       The last $n$/$s$ ranges may have fewer.
             struct sliding_fn
             {
             private:
