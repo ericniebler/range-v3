@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014, 2016
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -78,26 +79,29 @@ namespace ranges
 #if !defined(__GNUC__) || defined(__clang__)
             // GCC does not implement CWG393
             // per https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69316
-            template <typename T>
+            template<typename T>
             std::remove_cv<T> value_type_helper(T (*)[]);
 #endif
-            template <typename T, std::size_t N>
+            template<typename T, std::size_t N>
             std::remove_cv<T> value_type_helper(T (*)[N]);
 
-            template <typename T>
-            meta::if_<std::is_object<T>, std::remove_cv<T>> value_type_helper(T **);
+            template<typename T>
+            using object_remove_cv = meta::if_<std::is_object<T>, std::remove_cv<T>>;
 
-            template <typename T>
-            std::remove_reference<typename T::value_type &> value_type_helper(T *);
+            template<typename T>
+            object_remove_cv<T> value_type_helper(T **);
 
-            template <typename T>
-            meta::defer<uncvref_t, typename T::element_type &> value_type_helper(T *);
+            template<typename T>
+            object_remove_cv<typename T::value_type> value_type_helper(T *);
 
-            template <typename T>
-            meta::if_<std::is_base_of<std::ios_base, T>, meta::id<typename T::char_type>>
+            template<typename T>
+            object_remove_cv<typename T::element_type> value_type_helper(T *);
+
+            template<typename T>
+            meta::if_<std::is_base_of<std::ios_base, T>, std::remove_cv<typename T::char_type>>
             value_type_helper(T *);
 
-            template <typename T>
+            template<typename T>
             using value_type_ = meta::_t<decltype(detail::value_type_helper((T *)nullptr))>;
         }
         /// \endcond

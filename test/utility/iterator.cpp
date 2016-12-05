@@ -1,6 +1,7 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2014
+//  Copyright Eric Niebler 2014, 2016
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -113,6 +114,8 @@ CONCEPT_ASSERT(Same<int, ranges::value_type<value_type_tester_thingy const>::typ
 CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_value_type<int[4]>>::type>());
 CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_value_type<int[4]> const>::type>());
 static_assert(!meta::is_trait<ranges::value_type<with_value_type<void>>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_value_type<int(int)>>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_value_type<int&>>>::value, "");
 
 // class types with member element_type
 CONCEPT_ASSERT(Same<int, ranges::value_type<with_element_type<int>>::type>());
@@ -124,6 +127,8 @@ CONCEPT_ASSERT(Same<int[4], ranges::value_type<with_element_type<int const[4]>>:
 static_assert(!meta::is_trait<ranges::value_type<with_element_type<void>>>::value, "");
 static_assert(!meta::is_trait<ranges::value_type<with_element_type<void const>>>::value, "");
 static_assert(!meta::is_trait<ranges::value_type<with_element_type<void> const>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_element_type<int(int)>>>::value, "");
+static_assert(!meta::is_trait<ranges::value_type<with_element_type<int&>>>::value, "");
 
 // classes derived from std::ios_base
 CONCEPT_ASSERT(Same<char, ranges::value_type<std::ostream>::type>());
