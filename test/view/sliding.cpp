@@ -41,14 +41,13 @@ namespace
     void test_size(Adapted&, std::false_type)
     {}
 
-    template<typename Base, typename Adapted>
-    void test_bounded(Base const& b, Adapted& a, std::true_type)
+    template<typename Adapted>
+    void test_bounded(Adapted& a, std::true_type)
     {
         ::models<concepts::BoundedRange>(a);
-        CHECK(ranges::end(a).base() == ranges::end(b));
     }
-    template<typename Base, typename Adapted>
-    void test_bounded(Base const&, Adapted&, std::false_type)
+    template<typename Adapted>
+    void test_bounded(Adapted&, std::false_type)
     {}
 
     template<typename Adapted>
@@ -61,18 +60,19 @@ namespace
     void test_prev(Adapted&, range_iterator_t<Adapted> const&, std::false_type)
     {}
 
-    template<typename I, typename D, bool = (bool) RandomAccessIterator<I>()>
+    template<typename Rng,
+        bool = RandomAccessRange<Rng>() || (BidirectionalRange<Rng>() && BoundedRange<Rng>())>
     struct size_compare
     {
-        I iter1_;
-        I iter2_;
-        D dist_;
+        range_iterator_t<Rng> iter1_;
+        range_iterator_t<Rng> iter2_;
+        range_difference_t<Rng> dist_;
     };
-    template<typename I, typename D>
-    struct size_compare<I, D, true>
+    template<typename Rng>
+    struct size_compare<Rng, true>
     {
-        I iter1_;
-        D dist_;
+        range_iterator_t<Rng> iter1_;
+        range_difference_t<Rng> dist_;
     };
 
     template<typename Base>
@@ -88,21 +88,19 @@ namespace
             meta::_t<iterator_concept<range_iterator_t<Adapted>>>>());
 
         auto it = ranges::begin(rng);
-        CHECK(it.base() == ranges::next(v.begin(), K - 1));
-        test_bounded(v, rng, BoundedRange<Base>());
+        test_bounded(rng, BoundedRange<Base>());
 
-        for (auto i = 0; i <= N - K; ++i) {
+        for (auto i = 0; i <= N - K; ++i)
+        {
             ::check_equal(*it++, view::iota(i, i + K));
         }
-        CHECK(it.base() == v.end());
         CHECK(it == ranges::end(rng));
 
         test_prev(rng, it, BidirectionalRange<Base>());
 
-        if (!ranges::v3::detail::broken_ebo) {
-            using SC = size_compare<
-                range_iterator_t<Base>, range_difference_t<Base>>;
-            CHECK(sizeof(it) == sizeof(SC));
+        if (!ranges::v3::detail::broken_ebo)
+        {
+            CHECK(sizeof(it) == sizeof(size_compare<Base>));
         }
     }
 }
@@ -116,26 +114,51 @@ int main()
 
     {
         // An infinite, cyclic range with cycle length == 1
-        auto fives = view::repeat(5);
-        ::models<concepts::RandomAccessRange>(fives);
-        auto rng = fives | view::sliding(3);
+        auto rng = view::repeat(5) | view::sliding(K);
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
-        ::check_equal(*it, view::repeat_n(5, K));
         CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+#if defined(__GNUC__) && __GNUC__ == 6 && !defined(__clang__)
+        // Avoid triggering as-yet-unreported GCC6 bug
+        // that appears to have been fixed in GCC7.
+        {
+            auto deref = *it;
+            auto i = deref.begin();
+            for (auto n = 0; n < K; ++n) {
+                RANGES_ENSURE(i != deref.end());
+                CHECK(*i == 5);
+                ++i;
+            }
+            CHECK(i == deref.end());
+        }
+        auto it2 = next(it, 42);
+        CHECK(it == it2);
+        {
+            auto deref = *it;
+            auto i = deref.begin();
+            for (auto n = 0; n < K; ++n) {
+                RANGES_ENSURE(i != deref.end());
+                CHECK(*i == 5);
+                ++i;
+            }
+            CHECK(i == deref.end());
+        }
+#else
+        ::check_equal(*it, view::repeat_n(5, K));
         auto it2 = next(it, 42);
         CHECK(it == it2);
         ::check_equal(*it2, view::repeat_n(5, K));
+#endif
     }
 
     {
         // An infinite, cyclic range with cycle length == K
-        auto cyc = view::iota(0, K) | view::cycle;
-        auto rng = cyc | view::sliding(K);
+        auto rng = view::iota(0, K) | view::cycle | view::sliding(K);
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
         CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
-        for (auto i = 0; i < 42; ++i) {
+        for (auto i = 0; i < 42; ++i)
+        {
             ::check_equal(*it++, {0,1,2});
             ::check_equal(*it++, {1,2,0});
             ::check_equal(*it++, {2,0,1});
@@ -146,8 +169,7 @@ int main()
 
     {
         // An infinite, cyclic range with cycle length > K
-        auto cyc = view::iota(0,7) | view::cycle;
-        auto rng = cyc | view::sliding(K);
+        auto rng = view::iota(0,7) | view::cycle | view::sliding(K);
         //[0,1,2],[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,0],[6,0,1],...
         auto it = rng.begin();
         CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
