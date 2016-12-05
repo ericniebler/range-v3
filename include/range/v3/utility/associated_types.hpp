@@ -1,7 +1,8 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-2014
+//  Copyright Eric Niebler 2013-2014, 2016
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -72,60 +73,56 @@ namespace ranges
           : meta::lazy::let<std::make_unsigned<meta::lazy::_t<difference_type<T>>>>
         {};
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        template<typename T, typename Enable /*= void*/>
-        struct value_type
-        {};
-
-        template<typename T>
-        struct value_type<T *>
-          : meta::lazy::if_<std::is_object<T>, meta::_t<std::remove_cv<T>>>
+        /// \cond
+        namespace detail
         {
-            // The meta::lazy::if_ is because void* and void(*)() are not Readable.
-        };
+#if !defined(__GNUC__) || defined(__clang__)
+            // GCC does not implement CWG393
+            // per https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69316
+            template<typename T>
+            std::remove_cv<T> value_type_helper(T (*)[]);
+#endif
+            template<typename T, std::size_t N>
+            std::remove_cv<T> value_type_helper(T (*)[N]);
 
+            template<typename T>
+            using object_remove_cv = meta::if_<std::is_object<T>, std::remove_cv<T>>;
+
+            template<typename T>
+            object_remove_cv<T> value_type_helper(T **);
+
+            template<typename T>
+            object_remove_cv<typename T::value_type> value_type_helper(T *);
+
+            template<typename T>
+            object_remove_cv<typename T::element_type> value_type_helper(T *);
+
+            template<typename T>
+            meta::if_<std::is_base_of<std::ios_base, T>, std::remove_cv<typename T::char_type>>
+            value_type_helper(T *);
+
+            template<typename T>
+            using value_type_ = meta::_t<decltype(detail::value_type_helper((T *)nullptr))>;
+        }
+        /// \endcond
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+        // Not to spec:
+        // * arrays of unknown bound have no value type on compilers that do not implement
+        //   CWG 393 (http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#393).
+        // * For class types with member type element_type, value type is element_type with any
+        //   cv-qualifiers stripped (See ericniebler/stl2#299).
+        // * using member "char_type" as the value type of class types derived from
+        //   std::ios_base is an extension.
         template<typename T>
-        struct value_type<T, meta::if_<std::is_array<T>>>
-          : value_type<detail::decay_t<T>>
+        struct value_type
+          : meta::defer<detail::value_type_, T>
         {};
 
         template<typename T>
         struct value_type<T const>
-          : value_type<detail::decay_t<T>>
+          : value_type<T>
         {};
-
-        template<typename T>
-        struct value_type<T volatile>
-          : value_type<detail::decay_t<T>>
-        {};
-
-        template<typename T>
-        struct value_type<T const volatile>
-          : value_type<detail::decay_t<T>>
-        {};
-
-        template<typename T>
-        struct value_type<T, meta::void_<typename T::value_type>>
-          : meta::lazy::if_<std::is_object<typename T::value_type>, typename T::value_type>
-        {
-            // The meta::lazy::if_ is to accommodate output iterators that are
-            // allowed to use void as their value type. We want treat output
-            // iterators as non-Readable. value_type<OutIt> should be
-            // SFINAE-friendly.
-        };
-
-        template<typename T>
-        struct value_type<T, meta::void_<typename T::element_type>> // smart pointers
-          : meta::lazy::if_<std::is_object<typename T::element_type>, typename T::element_type>
-        {
-            // The meta::lazy::if_ is because shared_ptr<void> is not Readable.
-        };
-
-        template<typename T>
-        struct value_type<T, meta::if_<std::is_base_of<std::ios_base, T>>>
-        {
-            using type = typename T::char_type;
-        };
 
         template<typename S, typename I>
         struct disable_sized_sentinel : std::false_type {};

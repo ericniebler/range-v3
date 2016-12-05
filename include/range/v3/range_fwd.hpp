@@ -162,7 +162,7 @@ namespace ranges
         template<typename T, typename = void>
         struct difference_type;
 
-        template<typename T, typename = void>
+        template<typename T>
         struct value_type;
 
         template<typename T, typename = void>
