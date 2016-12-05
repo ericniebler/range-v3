@@ -22,8 +22,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/iterator_range.hpp>
+#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -39,10 +39,10 @@ namespace ranges
         template<typename Rng>
         struct drop_view
           : view_interface<drop_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
-          , private meta::if_<
-                RandomAccessRange<Rng>,
-                meta::nil_,
-                box<optional<range_iterator_t<Rng>>, begin_tag>>
+          , private detail::non_propagating_cache<
+                range_iterator_t<Rng>,
+                drop_view<Rng>,
+                !RandomAccessRange<Rng>()>
         {
         private:
             friend range_access;
@@ -58,46 +58,19 @@ namespace ranges
             // RandomAccessRange == false
             range_iterator_t<Rng> get_begin_(std::false_type)
             {
-                auto &begin_ = ranges::get<begin_tag>(*this);
+                using cache_t = detail::non_propagating_cache<
+                    range_iterator_t<Rng>, drop_view<Rng>>;
+                auto &begin_ = static_cast<cache_t&>(*this);
                 if(!begin_)
                     begin_ = next(ranges::begin(rng_), n_, ranges::end(rng_));
                 return *begin_;
             }
-            // RandomAccessRange == true
-            void dirty_(std::true_type) const
-            {}
-            // RandomAccessRange == false
-            void dirty_(std::false_type)
-            {
-                auto &begin_ = ranges::get<begin_tag>(*this);
-                begin_.reset();
-            }
         public:
             drop_view() = default;
-            drop_view(drop_view &&that)
-              : rng_(std::move(that).rng_), n_(that.n_)
-            {}
-            drop_view(drop_view const &that)
-              : rng_(that.rng_), n_(that.n_)
-            {}
             drop_view(Rng rng, difference_type_ n)
               : rng_(std::move(rng)), n_(n)
             {
                 RANGES_ASSERT(n >= 0);
-            }
-            drop_view& operator=(drop_view &&that)
-            {
-                rng_ = std::move(that).rng_;
-                n_ = that.n_;
-                this->dirty_(RandomAccessRange<Rng>{});
-                return *this;
-            }
-            drop_view& operator=(drop_view const &that)
-            {
-                rng_ = that.rng_;
-                n_ = that.n_;
-                this->dirty_(RandomAccessRange<Rng>{});
-                return *this;
             }
             range_iterator_t<Rng> begin()
             {
