@@ -249,6 +249,14 @@ namespace ranges
                 advance(it, -n);
                 return it;
             }
+            template<typename I,
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
+            RANGES_CXX14_CONSTEXPR
+            I operator()(I it, iterator_difference_t<I> n, I bound) const
+            {
+                advance(it, -n, std::move(bound));
+                return it;
+            }
         };
 
         /// \ingroup group-utility
