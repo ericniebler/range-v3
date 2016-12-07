@@ -105,6 +105,9 @@
     <ClCompile Include="test\multiple2.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
+    <ClCompile Include="test\span.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
     <ClCompile Include="test\to_container.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
