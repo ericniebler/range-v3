@@ -150,5 +150,10 @@ int main()
     test_move_iterator();
     issue_420_regression();
 
+    {
+        struct S { using value_type = int; };
+        CONCEPT_ASSERT(Same<int, ranges::value_type<S const>::type>());
+    }
+
     return ::test_result();
 }

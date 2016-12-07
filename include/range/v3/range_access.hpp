@@ -71,7 +71,14 @@ namespace ranges
                         concepts::model_of<concepts::SemiRegular, T>(),
                         concepts::model_of<concepts::SemiRegular, mixin_base_t<T>>(),
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T &&>(),
-                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>(),
+                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>()
+                    ));
+            };
+            struct HasCursorNext
+            {
+                template<typename T>
+                auto requires_(T&& t) -> decltype(
+                    concepts::valid_expr(
                         (t.next(), concepts::void_)
                     ));
             };
@@ -113,7 +120,7 @@ namespace ranges
               : concepts::refines<WritableCursor, Cursor(concepts::_1)>
             {};
             struct InputCursor
-              : concepts::refines<ReadableCursor, Cursor>
+              : concepts::refines<ReadableCursor, Cursor, HasCursorNext>
             {};
             struct ForwardCursor
               : concepts::refines<InputCursor, CursorSentinel(concepts::_1, concepts::_1)>
@@ -341,6 +348,10 @@ namespace ranges
             template<typename T, typename U>
             using WritableCursor =
                 concepts::models<range_access::WritableCursor, T, U>;
+
+            template<typename T>
+            using HasCursorNext =
+                concepts::models<range_access::HasCursorNext, T>;
 
             template<typename S, typename C>
             using SizedCursorSentinel =
