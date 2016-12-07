@@ -123,7 +123,7 @@ namespace ranges
                         {
                             RANGES_ASSERT(current() != ranges::end(range()->range()));
                             auto n = pop_size();
-                            RANGES_ENSURE(n > 0);
+                            RANGES_EXPECT(n > 0);
                             const Param_t interval{ 0, n - 1 };
                             if (dist(engine, interval) < range()->size())
                                 break;
@@ -175,7 +175,7 @@ namespace ranges
             explicit sample_view(Rng rng, D sample_size, URNG& generator)
             : base_t{std::move(rng), sample_size, generator}
             {
-                RANGES_ENSURE(sample_size >= 0);
+                RANGES_EXPECT(sample_size >= 0);
             }
         };
 
