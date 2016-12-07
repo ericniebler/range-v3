@@ -15,15 +15,10 @@
 language: cpp
 script: cmake
 
-# Test matrix:
-# - Build matrix per compiler: C++11/C++14 + Debug/Release
-# - Optionally: AddressSanitizer (ASAN)
-# - Valgrind: all release builds are also tested with valgrind
-# - clang 3.5, 3.6, trunk
-#   - Note: trunk is tested with/without ASAN,
-#     the rest are only tested with ASAN=On.
-# - gcc 4.9, 5
-#
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/deps/cmake
+
 matrix:
   include:
     - env: BUILD_TYPE=Release CPP=11 ASAN=Off SYSTEM_LIBCXX=On
@@ -326,10 +321,23 @@ matrix:
 # Install dependencies
 before_install:
   - export CHECKOUT_PATH=`pwd`;
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install valgrind; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install gnu-sed --with-default-names; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install gnu-which --with-default-names; fi
+  - |
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      brew update
+      brew install valgrind
+      brew install gnu-sed --with-default-names
+      brew install gnu-which --with-default-names
+    fi
+  - |
+    if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+      if [ -z "$(ls -A ${TRAVIS_BUILD_DIR}/deps/cmake/bin)" ]; then
+        CMAKE_URL="https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz"
+        mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake && travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar --strip-components=1 -xz -C ${TRAVIS_BUILD_DIR}/deps/cmake
+      fi
+      export PATH="${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}"
+    else
+      if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
+    fi
   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
   - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
@@ -338,7 +346,7 @@ before_install:
   - which valgrind
   - $CXX --version
   - if [ "$ASAN" == "On" ]; then export SANITIZER=Address; fi
-  - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
+  - if [ -n "$CLANG_VERSION" ]; then sudo PATH="${PATH}" CXX="$CXX" CC="$CC" ./install_libcxx.sh; fi
 
 
 install:
@@ -356,12 +364,12 @@ install:
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"; fi
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=1
-  - make VERBOSE=1
+  - make -j2 VERBOSE=1
 
 script:
   # Only enable valgrind for non-ASAN Release builds (keep this in sync with line 309)
   - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then CTEST_FLAGS="-D ExperimentalMemCheck"; fi
-  - ctest -VV ${CTEST_FLAGS}
+  - ctest -j2 -VV ${CTEST_FLAGS}
 
 notifications:
   email: false

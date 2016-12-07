@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
-set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+cmake_minimum_required(VERSION 3.0)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(Range-v3 CXX)
@@ -35,11 +35,10 @@ if(NOT RANGES_CXX_STD)
   set(RANGES_CXX_STD 11)
 endif()
 
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
+if("x${CMAKE_CXX_COMPILER_ID}" MATCHES "x.*Clang")
   # Clang/C2 will blow up with various parts of the standard library
   # if compiling with -std less than c++14.
-  if(("x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") AND
-     ("${RANGES_CXX_STD}" STREQUAL "11"))
+  if(("x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") AND (RANGES_CXX_STD EQUAL 11))
     set(CMAKE_CXX_STANDARD 14)
     set(RANGES_CXX_STD 14)
   endif()
@@ -50,7 +49,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-prototypes -Wno-missing-variable-declarations")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow -Wno-old-style-cast")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-documentation -Wno-documentation-unknown-command")
-  if("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+  if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-global-constructors -Wno-exit-time-destructors")
   endif()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
@@ -58,7 +57,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror -pedantic-errors")
-  if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "5.0")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers")
   endif()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
@@ -70,26 +69,17 @@ endif()
 range_v3_append_flag(RANGE_V3_HAS_MARCH_NATIVE "-march=native")
 range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 
-#   range_v3_list_remove_glob(<list> <GLOB|GLOB_RECURSE> [globbing expressions]...)
-#
-# Generates a list of files matching the given glob expressions, and remove
-# the matched elements from the given <list>.
-#
-# Adapted from Boost.Hana: https://github.com/ldionne/hana/
-#
-macro(range_v3_list_remove_glob list glob)
-    file(${glob} _bhlrg10321023_avoid_macro_clash_matches ${ARGN})
-    list(REMOVE_ITEM ${list} ${_bhlrg10321023_avoid_macro_clash_matches})
-endmacro()
-
 # Test all headers
-if(NOT RANGE_V3_NO_HEADER_CHECK)
-  file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
-                    RELATIVE "${CMAKE_SOURCE_DIR}/include"
-                    "${CMAKE_SOURCE_DIR}/include/*.hpp")
-  include(TestHeaders)
-  generate_standalone_header_tests(HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
+                  RELATIVE "${CMAKE_SOURCE_DIR}/include"
+                  "${CMAKE_SOURCE_DIR}/include/*.hpp")
+include(TestHeaders)
+if(RANGE_V3_NO_HEADER_CHECK)
+  add_custom_target(headers)
+else()
+  add_custom_target(headers ALL)
 endif()
+generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 
 add_subdirectory(doc)
 add_subdirectory(test)
