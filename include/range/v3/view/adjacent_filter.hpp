@@ -58,7 +58,7 @@ namespace ranges
                 {
                     auto const end = ranges::end(rng_->mutable_base());
                     auto &&pred = rng_->pred_;
-                    RANGES_ASSERT(it != end);
+                    RANGES_EXPECT(it != end);
                     for(auto prev = it; ++it != end; prev = it)
                         if(pred(*prev, *it))
                             break;

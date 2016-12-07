@@ -63,7 +63,7 @@ namespace ranges
             chunk_view(Rng rng, range_difference_t<Rng> n)
               : chunk_view::view_adaptor(std::move(rng)), n_(n)
             {
-                RANGES_ASSERT(0 < n_);
+                RANGES_EXPECT(0 < n_);
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
@@ -90,14 +90,14 @@ namespace ranges
             auto get(range_iterator_t<Rng> it) const ->
                 decltype(view::take(make_iterator_range(std::move(it), end_), n_))
             {
-                RANGES_ASSERT(it != end_);
-                RANGES_ASSERT(0 == offset());
+                RANGES_EXPECT(it != end_);
+                RANGES_EXPECT(0 == offset());
                 return view::take(make_iterator_range(std::move(it), end_), n_);
             }
             void next(range_iterator_t<Rng> &it)
             {
-                RANGES_ASSERT(it != end_);
-                RANGES_ASSERT(0 == offset());
+                RANGES_EXPECT(it != end_);
+                RANGES_EXPECT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
             CONCEPT_REQUIRES(BidirectionalRange<Rng>())
@@ -112,7 +112,7 @@ namespace ranges
                 range_iterator_t<Rng> const &there, adaptor const &that) const
             {
                 // This assertion is true for all range types except cyclic ranges:
-                //RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % n_);
+                //RANGES_EXPECT(0 == ((there - here) + that.offset() - offset()) % n_);
                 return ((there - here) + that.offset() - offset()) / n_;
             }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())

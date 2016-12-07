@@ -70,22 +70,22 @@ namespace ranges
                 {}
                 bool is_sentinel() const
                 {
-                    RANGES_ASSERT(data_.valid());
+                    RANGES_EXPECT(data_.valid());
                     return data_.index() == 1u;
                 }
                 I & it()
                 {
-                    RANGES_ASSERT(!is_sentinel());
+                    RANGES_EXPECT(!is_sentinel());
                     return ranges::get<0>(data_);
                 }
                 I const & it() const
                 {
-                    RANGES_ASSERT(!is_sentinel());
+                    RANGES_EXPECT(!is_sentinel());
                     return ranges::get<0>(data_);
                 }
                 S const & se() const
                 {
-                    RANGES_ASSERT(is_sentinel());
+                    RANGES_EXPECT(is_sentinel());
                     return ranges::get<1>(data_);
                 }
                 CONCEPT_REQUIRES((bool)SizedSentinel<S, I>() && (bool)SizedSentinel<I, I>())
@@ -102,7 +102,7 @@ namespace ranges
                 iterator_rvalue_reference_t<I> move() const
                     noexcept(noexcept(iter_move(std::declval<I const &>())))
                 {
-                    RANGES_ASSERT(!is_sentinel());
+                    RANGES_EXPECT(!is_sentinel());
                     return iter_move(it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())

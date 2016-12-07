@@ -76,7 +76,7 @@ namespace ranges
                 iterator get_end_(std::false_type, meta::bool_<CanBeEmpty> = {}) const
                 {
                     auto &end_ = static_cast<cache_t&>(*rng_);
-                    RANGES_ASSERT(CanBeEmpty || end_);
+                    RANGES_EXPECT(CanBeEmpty || end_);
                     if(CanBeEmpty && !end_)
                         end_ = ranges::next(it_, ranges::end(rng_->rng_));
                     return *end_;
@@ -107,13 +107,13 @@ namespace ranges
                 )
                 bool equal(cursor const &pos) const
                 {
-                    RANGES_ASSERT(rng_ == pos.rng_);
+                    RANGES_EXPECT(rng_ == pos.rng_);
                     return it_ == pos.it_;
                 }
                 void next()
                 {
                     auto const end = ranges::end(rng_->rng_);
-                    RANGES_ASSERT(it_ != end);
+                    RANGES_EXPECT(it_ != end);
                     if(++it_ == end)
                     {
                         this->set_end_(BoundedRange<Rng>());
@@ -139,7 +139,7 @@ namespace ranges
                 CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(cursor const &that) const
                 {
-                    RANGES_ASSERT(that.rng_ == rng_);
+                    RANGES_EXPECT(that.rng_ == rng_);
                     return that.it_ - it_;
                 }
             };
@@ -160,7 +160,7 @@ namespace ranges
             explicit cycled_view(Rng rng)
               : rng_(std::move(rng))
             {
-                RANGES_ASSERT(!ranges::empty(rng));
+                RANGES_EXPECT(!ranges::empty(rng));
             }
         };
 

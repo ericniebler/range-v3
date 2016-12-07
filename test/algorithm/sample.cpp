@@ -39,7 +39,7 @@ namespace
     bool in_sequence(I first, I mid, S last)
     {
         for (; first != mid; ++first)
-            RANGES_ASSERT(first != last);
+            RANGES_ENSURE(first != last);
         for (; first != last; ++first)
             ;
         return true;

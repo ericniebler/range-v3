@@ -50,7 +50,7 @@ namespace ranges
                 auto && proj = as_function(proj_);
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
-                RANGES_ASSERT(begin != end);
+                RANGES_EXPECT(begin != end);
                 V result = *begin;
                 while(++begin != end)
                 {

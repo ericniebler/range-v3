@@ -41,7 +41,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             void advance_impl(I &i, iterator_difference_t<I> n, concepts::InputIterator *)
             {
-                RANGES_ASSERT(n >= 0);
+                RANGES_EXPECT(n >= 0);
                 for(; n > 0; --n)
                     ++i;
             }
@@ -156,7 +156,7 @@ namespace ranges
             void advance_fn::to_(I &i, S s, concepts::SizedSentinel*)
             {
                 iterator_difference_t<I> d = s - i;
-                RANGES_ASSERT(0 <= d);
+                RANGES_EXPECT(0 <= d);
                 ranges::advance(i, d);
             }
             template<typename I, typename D, typename S>
@@ -164,7 +164,7 @@ namespace ranges
             D advance_fn::bounded_(I &it, D n, S bound, concepts::Sentinel*,
                 concepts::InputIterator*)
             {
-                RANGES_ASSERT(0 <= n);
+                RANGES_EXPECT(0 <= n);
                 for(; 0 != n && it != bound; --n)
                     ++it;
                 return n;
@@ -187,9 +187,9 @@ namespace ranges
             D advance_fn::bounded_(I &it, D n, S bound, concepts::SizedSentinel*,
                 Concept)
             {
-                RANGES_ASSERT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT((Same<I, S>() || 0 <= n));
                 D d = bound - it;
-                RANGES_ASSERT(0 <= n ? 0 <= d : 0 >= d);
+                RANGES_EXPECT(0 <= n ? 0 <= d : 0 >= d);
                 if(0 <= n ? n >= d : n <= d)
                 {
                     ranges::advance(it, std::move(bound));
@@ -274,7 +274,7 @@ namespace ranges
             {
                 I end = ranges::next(begin, end_);
                 auto n = static_cast<D>(end - begin);
-                RANGES_ASSERT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT((Same<I, S>() || 0 <= n));
                 return {n + d, end};
             }
             template<typename I, typename S, typename D>
@@ -282,7 +282,7 @@ namespace ranges
             std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedSentinel*) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_ASSERT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT((Same<I, S>() || 0 <= n));
                 return {n + d, ranges::next(begin, end)};
             }
         public:
@@ -314,7 +314,7 @@ namespace ranges
             D impl_i(I begin, S end, D d, concepts::SizedSentinel*) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_ASSERT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT((Same<I, S>() || 0 <= n));
                 return n + d;
             }
         public:
@@ -387,7 +387,7 @@ namespace ranges
             iterator_size_t<I> operator()(I begin, S end) const
             {
                 iterator_difference_t<I> n = end - begin;
-                RANGES_ASSERT(0 <= n);
+                RANGES_EXPECT(0 <= n);
                 return static_cast<iterator_size_t<I>>(n);
             }
         };
@@ -604,7 +604,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
                 void set(U && u)
                 {
-                    RANGES_ASSERT(sout_);
+                    RANGES_EXPECT(sout_);
                     *sout_ << u;
                     if(delim_)
                         *sout_ << delim_;

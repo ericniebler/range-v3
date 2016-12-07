@@ -43,7 +43,7 @@ namespace ranges
             range_iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputRange *,
                 std::true_type)
             {
-                RANGES_ASSERT(0 <= i);
+                RANGES_EXPECT(0 <= i);
                 return next(ranges::begin(rng), i);
             }
 
@@ -66,7 +66,7 @@ namespace ranges
             range_iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputRange *,
                 std::false_type)
             {
-                RANGES_ASSERT(i >= 0 || SizedRange<Rng>() || ForwardRange<Rng>());
+                RANGES_EXPECT(i >= 0 || SizedRange<Rng>() || ForwardRange<Rng>());
                 if(0 > i)
                     return next(ranges::begin(rng), distance(rng) + i);
                 return next(ranges::begin(rng), i);
@@ -126,7 +126,7 @@ namespace ranges
                 slice_view_(Rng rng, difference_type_ from, difference_type_ count)
                   : rng_(std::move(rng)), from_(from), count_(count)
                 {
-                    RANGES_ASSERT(0 <= count_);
+                    RANGES_EXPECT(0 <= count_);
                 }
                 range_iterator_t<Rng> begin()
                 {
@@ -174,7 +174,7 @@ namespace ranges
             template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
             detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist)
             {
-                RANGES_ASSERT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
+                RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
                 return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
             }
         }
@@ -254,7 +254,7 @@ namespace ranges
                     decltype(slice_fn::invoke_(std::forward<Rng>(rng), from, to - from,
                         range_concept<Rng>{}))
                 {
-                    RANGES_ASSERT(0 <= from && from <= to);
+                    RANGES_EXPECT(0 <= from && from <= to);
                     return slice_fn::invoke_(std::forward<Rng>(rng), from, to - from,
                         range_concept<Rng>{});
                 }
@@ -270,7 +270,7 @@ namespace ranges
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
-                    RANGES_ASSERT(0 <= from);
+                    RANGES_EXPECT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
                     return slice_fn::invoke_(std::forward<Rng>(rng), from,
                         distance(rng) + to.dist_ - from, range_concept<Rng>{});
@@ -287,7 +287,7 @@ namespace ranges
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
-                    RANGES_ASSERT(from.dist_ <= to.dist_);
+                    RANGES_EXPECT(from.dist_ <= to.dist_);
                     return slice_fn::invoke_(std::forward<Rng>(rng), from.dist_,
                         to.dist_ - from.dist_, range_concept<Rng>{},
                         bounded_range_concept<Rng>{}());
@@ -298,7 +298,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_t<Rng> from, end_fn) const ->
                     decltype(ranges::view::drop_exactly(std::forward<Rng>(rng), from))
                 {
-                    RANGES_ASSERT(0 <= from);
+                    RANGES_EXPECT(0 <= from);
                     return ranges::view::drop_exactly(std::forward<Rng>(rng), from);
                 }
                 // slice(rng, end-4, end)

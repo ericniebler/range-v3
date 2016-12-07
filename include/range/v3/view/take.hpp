@@ -89,7 +89,7 @@ namespace ranges
             take_view(Rng rng, range_difference_t<Rng> n)
               : view_adaptor<take_view<Rng>, Rng, finite>(std::move(rng)), n_{n}
             {
-                RANGES_ASSERT(n >= 0);
+                RANGES_EXPECT(n >= 0);
             }
         };
 

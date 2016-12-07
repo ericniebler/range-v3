@@ -42,12 +42,12 @@ namespace ranges
             {}
             T & get()
             {
-                RANGES_ASSERT(!!t_);
+                RANGES_EXPECT(t_);
                 return *t_;
             }
             T const & get() const
             {
-                RANGES_ASSERT(!!t_);
+                RANGES_EXPECT(t_);
                 return *t_;
             }
             semiregular &operator=(T const &t)

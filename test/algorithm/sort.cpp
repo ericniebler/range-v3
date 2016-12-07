@@ -18,7 +18,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cassert>
 #include <memory>
 #include <random>
 #include <vector>
@@ -138,8 +137,8 @@ namespace
     void
     test_larger_sorts(int N, int M)
     {
-        assert(N > 0);
-        assert(M > 0);
+        RANGES_ENSURE(N > 0);
+        RANGES_ENSURE(M > 0);
         // create array length N filled with M different numbers
         int* array = new int[N];
         int x = 0;

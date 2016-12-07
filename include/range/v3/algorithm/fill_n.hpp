@@ -34,7 +34,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(OutputIterator<O, V const &>())>
             O operator()(O begin, iterator_difference_t<O> n, V const & val) const
             {
-                RANGES_ASSERT(n >= 0);
+                RANGES_EXPECT(n >= 0);
                 auto norig = n;
                 auto b = uncounted(begin);
                 for(; n != 0; ++b, --n)

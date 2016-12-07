@@ -111,8 +111,7 @@ namespace ranges
                 distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                 {
-                    (void)rng_; (void)other_adapt;
-                    RANGES_ASSERT(rng_ == other_adapt.rng_);
+                    RANGES_EXPECT(rng_ == other_adapt.rng_);
                     if(there == ranges::end(rng_->mutable_base()))
                         return here == ranges::end(rng_->mutable_base())
                             ? 0 : (here - ranges::begin(rng_->mutable_base())) + 1;

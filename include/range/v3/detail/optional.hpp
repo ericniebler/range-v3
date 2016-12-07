@@ -47,12 +47,12 @@ namespace ranges
             }
             T & operator*()
             {
-                RANGES_ASSERT(*this);
+                RANGES_EXPECT(*this);
                 return ranges::get<1>(data_);
             }
             T const & operator*() const
             {
-                RANGES_ASSERT(*this);
+                RANGES_EXPECT(*this);
                 return ranges::get<1>(data_);
             }
             optional &operator=(T const &t)
