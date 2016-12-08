@@ -31,21 +31,25 @@ namespace ranges
         {
             struct get_first
             {
-                template<typename Pair>
-                auto operator()(Pair && p) const ->
-                    decltype((std::forward<Pair>(p).first))
+                template<typename Pair,
+                    typename M = decltype((std::declval<Pair>().first)),
+                    typename R = meta::if_<std::is_lvalue_reference<M>, M, detail::decay_t<M>>,
+                    CONCEPT_REQUIRES_(std::is_lvalue_reference<M>::value || Constructible<R, M&&>())>
+                R operator()(Pair && p) const
                 {
-                    return std::forward<Pair>(p).first;
+                    return static_cast<R>(std::forward<Pair>(p).first);
                 }
             };
 
             struct get_second
             {
-                template<typename Pair>
-                auto operator()(Pair && p) const ->
-                    decltype((std::forward<Pair>(p).second))
+                template<typename Pair,
+                    typename M = decltype((std::declval<Pair>().second)),
+                    typename R = meta::if_<std::is_lvalue_reference<M>, M, detail::decay_t<M>>,
+                    CONCEPT_REQUIRES_(std::is_lvalue_reference<M>::value || Constructible<R, M&&>())>
+                R operator()(Pair && p) const
                 {
-                    return std::forward<Pair>(p).second;
+                    return static_cast<R>(std::forward<Pair>(p).second);
                 }
             };
 

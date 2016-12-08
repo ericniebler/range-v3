@@ -11,8 +11,11 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <range/v3/core.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/map.hpp>
+#include <range/v3/view/zip.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -38,6 +41,13 @@ int main()
     models<concepts::BidirectionalIterator>(begin(values));
     CHECK(&*begin(values) == &m.begin()->second);
     ::check_equal(values, {2, 1, 0});
+
+    {
+        // regression test for #526
+        std::vector<int> xs = {42, 100, -1234};
+        auto exs = view::zip(view::ints, xs);
+        ::check_equal(view::keys(exs), {0, 1, 2});
+    }
 
     return test_result();
 }
