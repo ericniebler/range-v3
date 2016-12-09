@@ -205,7 +205,7 @@ namespace ranges
 
             From get() const
             {
-                RANGES_ASSERT(!done_);
+                RANGES_EXPECT(!done_);
                 return from_;
             }
             void next()
@@ -276,7 +276,7 @@ namespace ranges
             void check_advance_(difference_type_ n)
             {
                 detail::ignore_unused(n);
-                RANGES_ASSERT(detail::iota_minus_(to_, from_) >= n);
+                RANGES_EXPECT(detail::iota_minus_(to_, from_) >= n);
             }
             template<typename = void>
             void check_advance_(difference_type_) const

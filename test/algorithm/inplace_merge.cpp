@@ -18,7 +18,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cassert>
 #include <algorithm>
 #include <random>
 #include <range/v3/core.hpp>
@@ -38,7 +37,7 @@ namespace
     void
     test_one_iter(unsigned N, unsigned M)
     {
-        assert(M <= N);
+        RANGES_ENSURE(M <= N);
         int* ia = new int[N];
         for (unsigned i = 0; i < N; ++i)
             ia[i] = i;
@@ -60,7 +59,7 @@ namespace
     void
     test_one_rng(unsigned N, unsigned M)
     {
-        assert(M <= N);
+        RANGES_ENSURE(M <= N);
         int* ia = new int[N];
         for (unsigned i = 0; i < N; ++i)
             ia[i] = i;

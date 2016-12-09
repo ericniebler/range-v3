@@ -20,7 +20,6 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/algorithm/max.hpp>
-#include <cassert>
 #include <memory>
 #include <numeric>
 #include <random>
@@ -39,7 +38,7 @@ namespace
     void
     test_iter(Iter first, Sent last)
     {
-        assert(first != last);
+        RANGES_ENSURE(first != last);
         auto rng = ranges::make_iterator_range(first, last);
         auto v = ranges::max(rng);
         for (Iter i = first; i != last; ++i)
@@ -50,7 +49,7 @@ namespace
     void
     test_iter(unsigned N)
     {
-        assert(N > 0);
+        RANGES_ENSURE(N > 0);
         std::unique_ptr<int[]> a{new int[N]};
         std::iota(a.get(), a.get()+N, 0);
         std::shuffle(a.get(), a.get()+N, gen);
@@ -72,7 +71,7 @@ namespace
     void
     test_iter_comp(Iter first, Sent last)
     {
-        assert(first != last);
+        RANGES_ENSURE(first != last);
         auto rng = ranges::make_iterator_range(first, last);
         auto comp = std::greater<int>();
         auto v = ranges::max(rng, comp);
@@ -84,7 +83,7 @@ namespace
     void
     test_iter_comp(unsigned N)
     {
-        assert(N > 0);
+        RANGES_ENSURE(N > 0);
         std::unique_ptr<int[]> a{new int[N]};
         std::iota(a.get(), a.get()+N, 0);
         std::shuffle(a.get(), a.get()+N, gen);

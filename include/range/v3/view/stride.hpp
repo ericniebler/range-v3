@@ -107,7 +107,7 @@ namespace ranges
                 void next(iterator &it)
                 {
                     difference_type_ off = offset();
-                    RANGES_ASSERT(0 == off);
+                    RANGES_EXPECT(0 == off);
                     RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
                     offset() = ranges::advance(it, rng_->stride_ + off,
                         ranges::end(rng_->mutable_base()));
@@ -118,16 +118,16 @@ namespace ranges
                     difference_type_ off = clean();
                     offset() = off = ranges::advance(it, -rng_->stride_ + off,
                         ranges::begin(rng_->mutable_base()));
-                    RANGES_ASSERT(0 == off);
+                    RANGES_EXPECT(0 == off);
                 }
                 CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
-                    RANGES_ASSERT(rng_ == that.rng_);
+                    RANGES_EXPECT(rng_ == that.rng_);
                     difference_type_ delta = (there - here) + (that.clean() - clean());
                     if(BidirectionalIterator<iterator>())
                     {
-                        RANGES_ASSERT(0 == delta % rng_->stride_);
+                        RANGES_EXPECT(0 == delta % rng_->stride_);
                     }
                     else
                     {
@@ -174,7 +174,7 @@ namespace ranges
               : stride_view::view_adaptor{std::move(rng)}
               , stride_(stride)
             {
-                RANGES_ASSERT(0 < stride_);
+                RANGES_EXPECT(0 < stride_);
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             size_type_ size() const

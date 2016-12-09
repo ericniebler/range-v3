@@ -84,7 +84,7 @@ namespace ranges
                 }
                 void next()
                 {
-                    RANGES_ASSERT(cur_ != last_);
+                    RANGES_EXPECT(cur_ != last_);
                     // If the last match consumed zero elements, bump the position.
                     advance(cur_, (int)zero_, last_);
                     zero_ = false;
@@ -166,8 +166,7 @@ namespace ranges
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
                         using P = std::pair<bool, range_iterator_t<Rng>>;
-                        RANGES_ASSERT(cur != end);
-                        (void)end;
+                        RANGES_EXPECT(cur != end);
                         return *cur == val_ ? P{true, ranges::next(cur)} : P{false, cur};
                     }
                 };
@@ -183,7 +182,7 @@ namespace ranges
                     std::pair<bool, range_iterator_t<Rng>>
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
-                        RANGES_ASSERT(cur != end);
+                        RANGES_EXPECT(cur != end);
                         if(SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>() &&
                             distance(cur, end) < len_)
                             return {false, cur};

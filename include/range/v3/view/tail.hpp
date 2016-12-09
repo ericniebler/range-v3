@@ -54,7 +54,7 @@ namespace ranges
               : rng_(std::forward<Rng>(rng))
             {
                 CONCEPT_ASSERT(InputRange<Rng>());
-                RANGES_ASSERT(!ForwardRange<Rng>() || !empty(rng_));
+                RANGES_EXPECT(!ForwardRange<Rng>() || !empty(rng_));
             }
             iterator begin()
             {

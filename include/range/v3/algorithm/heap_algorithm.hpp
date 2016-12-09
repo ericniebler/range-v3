@@ -53,7 +53,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
                 I operator()(I const begin_, iterator_difference_t<I> const n_, C pred_ = C{}, P proj_ = P{}) const
                 {
-                    RANGES_ASSERT(0 <= n_);
+                    RANGES_EXPECT(0 <= n_);
                     auto &&pred = as_function(pred_);
                     auto &&proj = as_function(proj_);
                     iterator_difference_t<I> p = 0, c = 1;

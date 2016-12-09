@@ -72,7 +72,7 @@ namespace ranges
                 void advance(std::ptrdiff_t n)
                 {
                     n += done_;
-                    RANGES_ASSERT(n == 0 || n == 1);
+                    RANGES_EXPECT(n == 0 || n == 1);
                     done_ = n != 0;
                 }
                 std::ptrdiff_t distance_to(cursor const &that) const

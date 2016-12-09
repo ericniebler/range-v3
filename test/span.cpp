@@ -352,7 +352,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_an_array = []() { return std::array<int, 4>{{1, 2, 3, 4}}; };
-            auto take_a_span = [](span<int> s) { (void) s; };
+            auto take_a_span = [](span<int>) {};
             // try to take a temporary std::array
             take_a_span(get_an_array());
 #endif
@@ -384,7 +384,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_an_array = []() -> const std::array<int, 4> { return {{1, 2, 3, 4}}; };
-            auto take_a_span = [](span<const int> s) { (void) s; };
+            auto take_a_span = [](span<const int>) {};
             // try to take a temporary std::array
             take_a_span(get_an_array());
 #endif
@@ -432,7 +432,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_temp_vector = []() -> std::vector<int> { return {}; };
-            auto use_span = [](span<int> s) { (void) s; };
+            auto use_span = [](span<int>) {};
             use_span(get_temp_vector());
 #endif
         }
@@ -440,7 +440,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_temp_string = []() -> std::string { return {}; };
-            auto use_span = [](span<char> s) { (void) s; };
+            auto use_span = [](span<char>) {};
             use_span(get_temp_string());
 #endif
         }
@@ -448,7 +448,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_temp_vector = []() -> const std::vector<int> { return {}; };
-            auto use_span = [](span<const char> s) { (void) s; };
+            auto use_span = [](span<const char>) {};
             use_span(get_temp_vector());
 #endif
         }
@@ -456,7 +456,7 @@ namespace
         {
 #ifdef CONFIRM_COMPILATION_ERRORS
             auto get_temp_string = []() -> const std::string { return {}; };
-            auto use_span = [](span<const char> s) { (void) s; };
+            auto use_span = [](span<const char>) {};
             use_span(get_temp_string());
 #endif
         }

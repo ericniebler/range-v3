@@ -10,7 +10,6 @@
 #ifndef RANGES_TEST_ITERATORS_HPP
 #define RANGES_TEST_ITERATORS_HPP
 
-#include <cassert>
 #include <iterator>
 
 template <class It, bool Sized = false>
@@ -64,14 +63,12 @@ public:
     RANGES_CXX14_CONSTEXPR It base() const { return it_; }
     RANGES_CXX14_CONSTEXPR friend bool operator==(const sentinel& x, const sentinel& y)
     {
-        (void)x; (void)y;
-        assert(x.it_ == y.it_);
+        RANGES_ENSURE(x.it_ == y.it_);
         return true;
     }
     RANGES_CXX14_CONSTEXPR friend bool operator!=(const sentinel& x, const sentinel& y)
     {
-        (void)x; (void)y;
-        assert(x.it_ == y.it_);
+        RANGES_ENSURE(x.it_ == y.it_);
         return false;
     }
     template<typename I>

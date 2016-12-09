@@ -262,40 +262,40 @@ namespace ranges
                 }
                 Ref get() const
                 {
-                    RANGES_ASSERT(ptr_);
+                    RANGES_EXPECT(ptr_);
                     return ptr_->get();
                 }
                 bool equal(any_cursor const &that) const
                 {
-                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    RANGES_EXPECT(!ptr_ == !that.ptr_);
                     return (!ptr_ && !that.ptr_) || ptr_->equal(*that.ptr_);
                 }
                 bool equal(any_sentinel const &that) const
                 {
-                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    RANGES_EXPECT(!ptr_ == !that.ptr_);
                     return (!ptr_ && !that.ptr_) || that.ptr_->equal(ptr_->iter());
                 }
                 void next()
                 {
-                    RANGES_ASSERT(ptr_);
+                    RANGES_EXPECT(ptr_);
                     ptr_->next();
                 }
                 CONCEPT_REQUIRES(Cat >= category::bidirectional)
                 void prev()
                 {
-                    RANGES_ASSERT(ptr_);
+                    RANGES_EXPECT(ptr_);
                     ptr_->prev();
                 }
                 CONCEPT_REQUIRES(Cat >= category::random_access)
                 void advance(std::ptrdiff_t n)
                 {
-                    RANGES_ASSERT(ptr_);
+                    RANGES_EXPECT(ptr_);
                     ptr_->advance(n);
                 }
                 CONCEPT_REQUIRES(Cat >= category::random_access)
                 std::ptrdiff_t distance_to(any_cursor const &that) const
                 {
-                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    RANGES_EXPECT(!ptr_ == !that.ptr_);
                     return !ptr_ ? 0 : ptr_->distance_to(*that.ptr_);
                 }
             };

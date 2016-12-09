@@ -45,7 +45,7 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, iterator_difference_t<I> n, O out) const
             {
-                RANGES_ASSERT(0 <= n);
+                RANGES_EXPECT(0 <= n);
                 auto norig = n;
                 auto b = uncounted(begin);
                 for(; n != 0; ++b, ++out, --n)

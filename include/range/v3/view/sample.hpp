@@ -106,12 +106,12 @@ namespace ranges
 
                 D pop_size()
                 {
-                    RANGES_ASSERT(range());
+                    RANGES_EXPECT(range());
                     return size().get(range()->range(), current());
                 }
                 void advance()
                 {
-                    RANGES_ASSERT(range());
+                    RANGES_EXPECT(range());
                     if (range()->size() > 0)
                     {
                         using Dist = std::uniform_int_distribution<D>;
@@ -149,13 +149,13 @@ namespace ranges
                 }
                 bool equal(default_sentinel) const
                 {
-                    RANGES_ASSERT(range());
+                    RANGES_EXPECT(range());
                     return range()->size() <= 0;
                 }
                 void next()
                 {
-                    RANGES_ASSERT(range());
-                    RANGES_ASSERT(range()->size() > 0);
+                    RANGES_EXPECT(range());
+                    RANGES_EXPECT(range()->size() > 0);
                     --range()->size();
                     RANGES_ASSERT(current() != ranges::end(range()->range()));
                     ++current();

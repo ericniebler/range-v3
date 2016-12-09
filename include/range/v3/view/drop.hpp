@@ -70,7 +70,7 @@ namespace ranges
             drop_view(Rng rng, difference_type_ n)
               : rng_(std::move(rng)), n_(n)
             {
-                RANGES_ASSERT(n >= 0);
+                RANGES_EXPECT(n >= 0);
             }
             range_iterator_t<Rng> begin()
             {

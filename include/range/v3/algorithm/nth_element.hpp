@@ -89,7 +89,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Function<P, V>() && Relation<C, X>())>
             void selection_sort(I begin, I end, C &pred, P &proj)
             {
-                RANGES_ASSERT(begin != end);
+                RANGES_EXPECT(begin != end);
                 for(I lm1 = ranges::prev(end); begin != lm1; ++begin)
                 {
                     I i = ranges::min_element(begin, end, std::ref(pred), std::ref(proj));

@@ -53,7 +53,7 @@ namespace ranges
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
-                RANGES_ASSERT(begin != end);
+                RANGES_EXPECT(begin != end);
                 auto result = R{*begin, *begin};
                 if(++begin != end) {
                     auto && pred = as_function(pred_);

@@ -18,7 +18,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cassert>
 #include <memory>
 #include <random>
 #include <vector>

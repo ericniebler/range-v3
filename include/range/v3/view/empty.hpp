@@ -52,8 +52,7 @@ namespace ranges
                 }
                 void advance(std::ptrdiff_t n)
                 {
-                    (void)n;
-                    RANGES_ASSERT(n == 0);
+                    RANGES_EXPECT(n == 0);
                 }
                 std::ptrdiff_t distance_to(cursor const &) const
                 {

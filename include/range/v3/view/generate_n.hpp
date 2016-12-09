@@ -63,7 +63,7 @@ namespace ranges
                 }
                 void next()
                 {
-                    RANGES_ASSERT(0 != n_);
+                    RANGES_EXPECT(0 != n_);
                     if(0 != --n_)
                         rng_->next();
                 }

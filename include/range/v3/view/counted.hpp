@@ -49,7 +49,7 @@ namespace ranges
             counted_view(I it, D n)
               : it_(it), n_(n)
             {
-                RANGES_ASSERT(0 <= n_);
+                RANGES_EXPECT(0 <= n_);
             }
             size_type_ size() const
             {

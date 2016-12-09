@@ -26,7 +26,7 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-template <class It> void test() { ranges::reverse_iterator<It> r; (void)r; }
+template <class It> void test() { ranges::reverse_iterator<It>{}; }
 
 template <class It> void test2(It i) {
   ranges::reverse_iterator<It> r(i);

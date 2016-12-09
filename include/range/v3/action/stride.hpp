@@ -66,7 +66,7 @@ namespace ranges
                 {
                     using I = range_iterator_t<Rng>;
                     using S = range_sentinel_t<Rng>;
-                    RANGES_ASSERT(0 < step);
+                    RANGES_EXPECT(0 < step);
                     if(1 < step)
                     {
                         I begin = ranges::begin(rng);

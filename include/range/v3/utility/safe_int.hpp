@@ -120,7 +120,7 @@ namespace ranges
             }
             SignedInteger get() const noexcept
             {
-                RANGES_ASSERT(is_finite());
+                RANGES_EXPECT(is_finite());
                 return i_;
             }
             explicit operator SignedInteger() const noexcept

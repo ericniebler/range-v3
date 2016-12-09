@@ -54,7 +54,7 @@ namespace ranges
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
-                RANGES_ASSERT(!is_infinite<Rng>::value);
+                RANGES_EXPECT(!is_infinite<Rng>::value);
                 return this->impl_r(rng, d, bounded_range_concept<Rng>(),
                     sized_range_concept<Rng>());
             }
@@ -85,7 +85,7 @@ namespace ranges
             D operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
-                RANGES_ASSERT(!is_infinite<Rng>::value);
+                RANGES_EXPECT(!is_infinite<Rng>::value);
                 return this->impl_r(rng, d, sized_range_concept<Rng>());
             }
         };

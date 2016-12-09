@@ -113,7 +113,7 @@ namespace ranges
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
                 {
-                    RANGES_ASSERT(its_.index() == N);
+                    RANGES_EXPECT(its_.index() == N);
                     if(ranges::get<N>(its_) == end(std::get<N>(rng_->rngs_)))
                     {
                         ranges::emplace<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
@@ -122,7 +122,7 @@ namespace ranges
                 }
                 void satisfy(meta::size_t<cranges - 1>)
                 {
-                    RANGES_ASSERT(its_.index() == cranges - 1);
+                    RANGES_EXPECT(its_.index() == cranges - 1);
                 }
                 struct next_fun
                 {
@@ -227,7 +227,7 @@ namespace ranges
                     if(from.its_.index() < N && to.its_.index() > N)
                         return distance(std::get<N>(from.rng_->rngs_)) +
                             cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
-                    RANGES_ASSERT(to.its_.index() == N);
+                    RANGES_EXPECT(to.its_.index() == N);
                     return distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:

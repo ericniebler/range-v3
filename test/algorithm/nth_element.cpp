@@ -18,7 +18,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cassert>
 #include <memory>
 #include <random>
 #include <algorithm>
@@ -38,8 +37,8 @@ namespace
     void
     test_one(unsigned N, unsigned M)
     {
-        assert(N != 0);
-        assert(M < N);
+        RANGES_ENSURE(N != 0);
+        RANGES_ENSURE(M < N);
         std::unique_ptr<int[]> array{new int[N]};
         for (int i = 0; (unsigned)i < N; ++i)
             array[i] = i;

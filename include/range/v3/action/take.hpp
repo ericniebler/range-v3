@@ -64,7 +64,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, D>())>
                 Rng operator()(Rng && rng, range_difference_t<Rng> n) const
                 {
-                    RANGES_ASSERT(n >= 0);
+                    RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
                     return std::forward<Rng>(rng);
                 }
