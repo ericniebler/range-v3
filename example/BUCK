@@ -1,0 +1,25 @@
+cxx_binary(
+  name = 'comprehensions', 
+  srcs = [
+    'comprehensions.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)
+
+cxx_binary(
+  name = 'fibonacci', 
+  srcs = [
+    'fibonacci.cpp',
+  ],
+  deps = [
+    '//:range-v3',
+  ],
+  compiler_flags = [
+    '-std=c++14',
+  ],
+)
