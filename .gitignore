@@ -169,6 +169,10 @@ csx/
 # Windows Store app package directory
 AppPackages/
 
+# Buck build artefacts
+.buckd/
+buck-out/
+
 # Others
 sql/
 *.Cache
