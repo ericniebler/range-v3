@@ -14,6 +14,12 @@
 #ifndef RANGES_V3_CORE_HPP
 #define RANGES_V3_CORE_HPP
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+
 #include <range/v3/begin_end.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/empty.hpp>
@@ -33,5 +39,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/to_container.hpp>
 #include <range/v3/utility/common_iterator.hpp>
+
+#pragma clang diagnostic pop
 
 #endif

@@ -14,10 +14,18 @@
 #ifndef RANGES_V3_ALL_HPP
 #define RANGES_V3_ALL_HPP
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm.hpp>
 #include <range/v3/action.hpp>
 #include <range/v3/numeric.hpp>
 #include <range/v3/view.hpp>
 
+#pragma clang diagnostic pop
 #endif
