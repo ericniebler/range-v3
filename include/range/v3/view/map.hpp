@@ -17,6 +17,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
@@ -29,24 +30,47 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename T>
+            RANGES_CXX14_CONSTEXPR T&
+            get_first_second_helper(T& t, std::true_type) noexcept
+            {
+                return t;
+            }
+
+            template<typename T,
+                CONCEPT_REQUIRES_(MoveConstructible<T>())>
+            RANGES_CXX14_CONSTEXPR T
+            get_first_second_helper(T& t, std::false_type)
+                noexcept(std::is_nothrow_move_constructible<T>::value)
+            {
+                return std::move(t);
+            }
+
+            template<typename P, typename E>
+            using get_first_second_tag = meta::bool_<
+                std::is_lvalue_reference<P>::value ||
+                std::is_lvalue_reference<E>::value>;
+
             struct get_first
             {
                 template<typename Pair>
-                auto operator()(Pair && p) const ->
-                    decltype((std::forward<Pair>(p).first))
-                {
-                    return std::forward<Pair>(p).first;
-                }
+                RANGES_CXX14_CONSTEXPR auto operator()(Pair && p) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    get_first_second_helper(p.first,
+                        get_first_second_tag<Pair, decltype(p.first)>{})
+                )
             };
 
             struct get_second
             {
                 template<typename Pair>
-                auto operator()(Pair && p) const ->
-                    decltype((std::forward<Pair>(p).second))
-                {
-                    return std::forward<Pair>(p).second;
-                }
+                RANGES_CXX14_CONSTEXPR auto operator()(Pair && p) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    get_first_second_helper(p.second,
+                        get_first_second_tag<Pair, decltype(p.second)>{})
+                )
             };
 
             template<typename T>
