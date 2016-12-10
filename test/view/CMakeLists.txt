@@ -100,6 +100,9 @@ add_test(test.view.set_union, view.set_union)
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 
+add_executable(view.sliding sliding.cpp)
+add_test(test.view.sliding, view.sliding)
+
 add_executable(view.split split.cpp)
 add_test(test.view.split, view.split)
 
