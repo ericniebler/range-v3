@@ -119,8 +119,7 @@ int main()
         auto it = rng.begin();
         CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
 #if defined(__GNUC__) && __GNUC__ == 6 && !defined(__clang__)
-        // Avoid triggering as-yet-unreported GCC6 bug
-        // that appears to have been fixed in GCC7.
+        // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78841
         {
             auto deref = *it;
             auto i = deref.begin();
