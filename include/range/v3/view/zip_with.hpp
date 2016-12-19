@@ -70,10 +70,10 @@ namespace ranges
 
             constexpr struct
             {
-                template<typename T, typename D>
-                void operator()(T & t, D d) const
+                template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
+                void operator()(I & i, iterator_difference_t<I> n) const
                 {
-                    advance(t, d);
+                    advance(i, n);
                 }
             } advance_ {};
 
