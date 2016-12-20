@@ -133,5 +133,16 @@ int main()
         CHECK(last_call == k);
     }
 
+#ifdef _WIN32
+    {
+        // Ensure that Callable accepts pointers to functions with non-default calling conventions.
+        CONCEPT_ASSERT(ranges::Callable<void(__cdecl*)()>());
+        CONCEPT_ASSERT(ranges::Callable<void(__stdcall*)()>());
+        CONCEPT_ASSERT(ranges::Callable<void(__fastcall*)()>());
+        CONCEPT_ASSERT(ranges::Callable<void(__thiscall*)()>());
+        CONCEPT_ASSERT(ranges::Callable<void(__vectorcall*)()>());
+    }
+#endif // _WIN32
+
     return ::test_result();
 }

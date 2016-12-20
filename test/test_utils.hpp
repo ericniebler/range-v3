@@ -23,22 +23,11 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
-template<typename Val, typename Rng>
-void check_equal(Rng && actual, std::initializer_list<Val> expected)
-{
-    auto begin0 = ranges::begin(actual);
-    auto end0 = ranges::end(actual);
-    auto begin1 = ranges::begin(expected), end1 = ranges::end(expected);
-    for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
-        CHECK(*begin0 == *begin1);
-    CHECK(begin0 == end0);
-    CHECK(begin1 == end1);
-}
-
 template<typename Rng, typename Rng2>
-void check_equal(Rng && actual, Rng2&& expected)
+void check_equal(Rng && actual, Rng2 && expected)
 {
     auto begin0 = ranges::begin(actual);
     auto end0 = ranges::end(actual);
@@ -48,6 +37,12 @@ void check_equal(Rng && actual, Rng2&& expected)
         CHECK(*begin0 == *begin1);
     CHECK(begin0 == end0);
     CHECK(begin1 == end1);
+}
+
+template<typename Val, typename Rng>
+void check_equal(Rng && actual, std::initializer_list<Val> && expected)
+{
+    check_equal(std::forward<Rng>(actual), expected);
 }
 
 template<typename Expected, typename Actual>

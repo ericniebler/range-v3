@@ -13,7 +13,6 @@
 #include <cstdlib>
 #include <utility>
 #include <iostream>
-#include <typeinfo>
 
 namespace test_impl
 {
@@ -80,7 +79,7 @@ namespace test_impl
             dismissed_ = true;
         }
         template<typename V = T>
-        auto eval_(int) -> decltype(!std::declval<V>())
+        auto eval_(int) -> decltype(!std::declval<V&>())
         {
             return !t_;
         }
@@ -159,8 +158,8 @@ inline int test_result()
     return ::test_impl::test_failures() ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
-#define CHECK(...)                                                                                  \
-    (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__)                        \
+#define CHECK(...)                                                           \
+    (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__) \
     /**/
 
 #endif

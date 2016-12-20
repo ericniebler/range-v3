@@ -192,8 +192,8 @@ namespace ranges
 
         struct as_function_fn
         {
-        private:
         #if __apple_build_version__
+        private:
             // Work around a bug in earlier versions of libc++ that
             // shipped with Xcode
             template<typename MemFn>
@@ -202,62 +202,44 @@ namespace ranges
             private:
                 mutable MemFn fn_;
             public:
-                explicit _mem_fn_wrap(MemFn fn)
-                  : fn_(std::move(fn))
+                constexpr explicit _mem_fn_wrap(MemFn fn)
+                    noexcept(std::is_nothrow_move_constructible<MemFn>::value)
+                  : fn_(detail::move(fn))
                 {}
                 template<typename ...Ts>
-                auto operator()(Ts &&... ts) const ->
-                    decltype(fn_(std::forward<Ts>(ts)...))
-                {
-                    return fn_(std::forward<Ts>(ts)...);
-                }
+                RANGES_CXX14_CONSTEXPR auto operator()(Ts &&... ts) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fn_(detail::forward<Ts>(ts)...)
+                )
             };
-            template<typename MemFn>
-            _mem_fn_wrap<MemFn> _mem_fn_aux(MemFn fn) const
-            {
-                return _mem_fn_wrap<MemFn>(std::move(fn));
-            }
-            template<typename R, typename T>
-            auto _mem_fn(R T::* p) const -> decltype(_mem_fn_aux(std::mem_fn(p)))
-            {
-                return _mem_fn_aux(std::mem_fn(p));
-            }
-        #else
-            template<typename R, typename T>
-            auto _mem_fn(R T::* p) const -> decltype(std::mem_fn(p))
-            {
-                return std::mem_fn(p);
-            }
-        #endif
-            template<typename R, typename...Args>
-            struct ptr_fn_
-            {
-            private:
-                R (*pfn_)(Args...);
-            public:
-                ptr_fn_() = default;
-                constexpr explicit ptr_fn_(R (*pfn)(Args...))
-                  : pfn_(pfn)
-                {}
-                R operator()(Args...args) const
-                {
-                    return (*pfn_)(std::forward<Args>(args)...);
-                }
-            };
+            template<typename T, typename MemFn = decltype(std::mem_fn(std::declval<T>()))>
+            static constexpr auto _mem_fn(T t)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                _mem_fn_wrap<MemFn>{std::mem_fn(t)}
+            )
         public:
-            template<typename R, typename ...Args>
-            constexpr ptr_fn_<R, Args...> operator()(R (*p)(Args...)) const
-            {
-                return ptr_fn_<R, Args...>(p);
-            }
-            template<typename R, typename T>
-            auto operator()(R T::* p) const -> decltype(_mem_fn(p))
-            {
-                return _mem_fn(p);
-            }
-            template<typename T, typename U = detail::decay_t<T>>
-            constexpr auto operator()(T && t) const ->
-                meta::if_c<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
+            template<typename T,
+                meta::if_c<std::is_member_pointer<detail::decay_t<T>>::value, int> = 42>
+            constexpr auto operator()(T && t) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                _mem_fn(t)
+            )
+        #else
+            template<typename T,
+                meta::if_c<std::is_member_pointer<detail::decay_t<T>>::value, int> = 42>
+            constexpr auto operator()(T && t) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                std::mem_fn(t)
+            )
+        #endif
+            template<typename T,
+                meta::if_c<!std::is_member_pointer<detail::decay_t<T>>::value, int> = 42>
+            constexpr T operator()(T && t) const
+                noexcept(std::is_nothrow_constructible<T, T>::value)
             {
                 return detail::forward<T>(t);
             }
@@ -336,7 +318,8 @@ namespace ranges
                 noexcept(std::is_nothrow_default_constructible<FD>::value)
             {}
             template<typename T,
-                CONCEPT_REQUIRES_(Constructible<FD, function_type<T>>())>
+                typename U = function_type<meta::if_c<!Same<detail::decay_t<T>, logical_negate_>(), T>>,
+                CONCEPT_REQUIRES_(Constructible<FD, U>())>
             explicit constexpr logical_negate_(T && pred)
               : pred_(as_function(static_cast<T &&>(pred)))
             {}
