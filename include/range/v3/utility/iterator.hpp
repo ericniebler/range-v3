@@ -14,6 +14,17 @@
 #ifndef RANGES_V3_UTILITY_ITERATOR_HPP
 #define RANGES_V3_UTILITY_ITERATOR_HPP
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wundef"
+#endif
+
 #include <new>
 #include <utility>
 #include <iterator>
@@ -1033,5 +1044,9 @@ namespace ranges
         /// @}
     }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #endif
