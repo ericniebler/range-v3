@@ -50,9 +50,9 @@ namespace ranges
             {
             private:
                 friend range_access;
-                semiregular_t<function_type<C>> pred_;
-                semiregular_t<function_type<P1>> proj1_;
-                semiregular_t<function_type<P2>> proj2_;
+                semiregular_t<C> pred_;
+                semiregular_t<P1> proj1_;
+                semiregular_t<P2> proj2_;
                 Rng1 rng1_;
                 Rng2 rng2_;
 
@@ -76,9 +76,9 @@ namespace ranges
                 set_algorithm_view() = default;
                 set_algorithm_view(Rng1 rng1, Rng2 rng2,
                                    C pred, P1 proj1, P2 proj2)
-                : pred_(as_function(std::move(pred)))
-                , proj1_(as_function(std::move(proj1)))
-                , proj2_(as_function(std::move(proj2)))
+                : pred_(std::move(pred))
+                , proj1_(std::move(proj1))
+                , proj2_(std::move(proj2))
                 , rng1_(std::move(rng1))
                 , rng2_(std::move(rng2))
                 {}
@@ -91,9 +91,9 @@ namespace ranges
             struct set_difference_cursor
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
+                using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
@@ -117,10 +117,10 @@ namespace ranges
                         if(it2_ == end2_)
                             return;
 
-                        if(pred_(proj1_(*it1_), proj2_(*it2_)))
+                        if(invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
                             return;
 
-                        if(!pred_(proj2_(*it2_), proj1_(*it1_)))
+                        if(!invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
                             ++it1_;
 
                         ++it2_;
@@ -176,7 +176,6 @@ namespace ranges
         }
         /// \endcond
 
-
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -196,7 +195,7 @@ namespace ranges
                          typename I2 = range_iterator_t<Rng2>>
                 using Concept = meta::and_<
                     InputRange<Rng1>, InputRange<Rng2>,
-                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -229,16 +228,16 @@ namespace ranges
                         "The second parameter of view::set_difference "
                         "must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
+                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P1, range_value_t<Rng1>>(),
+                        Invocable<P1&, range_value_t<Rng1>>(),
                         "The first projection function passed to view::set_difference "
                         "must be callable with an argument of the first range's value type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P2, range_value_t<Rng2>>(),
+                        Invocable<P2&, range_value_t<Rng2>>(),
                         "The second projection function passed to view::set_difference "
                         "must be callable with an argument of the second range's value type.");
                 }
@@ -253,8 +252,6 @@ namespace ranges
         /// @}
 
 
-
-
         namespace detail
         {
             template<bool IsConst,
@@ -263,9 +260,9 @@ namespace ranges
             struct set_intersection_cursor
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
+                using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
@@ -286,11 +283,11 @@ namespace ranges
                 {
                     while(it1_ != end1_ && it2_ != end2_)
                     {
-                        if(pred_(proj1_(*it1_), proj2_(*it2_)))
+                        if(invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
                             ++it1_;
                         else
                         {
-                            if(!pred_(proj2_(*it2_), proj1_(*it1_)))
+                            if(!invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
                                 return;
 
                             ++it2_;
@@ -347,7 +344,6 @@ namespace ranges
         }
         /// \endcond
 
-
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_intersection_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -367,7 +363,7 @@ namespace ranges
                          typename I2 = range_iterator_t<Rng2>>
                 using Concept = meta::and_<
                     InputRange<Rng1>, InputRange<Rng2>,
-                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -400,16 +396,16 @@ namespace ranges
                         "The second parameter of view::set_intersection "
                         "must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
+                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_intersection "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P1, range_value_t<Rng1>>(),
+                        Invocable<P1&, range_value_t<Rng1>>(),
                         "The first projection function passed to view::set_intersection "
                         "must be callable with an argument of the first range's value type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P2, range_value_t<Rng2>>(),
+                        Invocable<P2&, range_value_t<Rng2>>(),
                         "The second projection function passed to view::set_intersection "
                         "must be callable with an argument of the second range's value type.");
                 }
@@ -424,7 +420,6 @@ namespace ranges
         /// @}
 
 
-
         namespace detail
         {
             template<bool IsConst,
@@ -433,9 +428,9 @@ namespace ranges
             struct set_union_cursor
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
+                using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
@@ -464,12 +459,12 @@ namespace ranges
                         if(it2_ == end2_)
                             return state_t::ONLY_FIRST;
 
-                        if(pred_(proj2_(*it2_), proj1_(*it1_)))
+                        if(invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
                             return state_t::SECOND;
 
                         // take care of the case when iter_move is made from it1_
                         // so we need to test in advance when we still have access to unmoved-from *it1_
-                        if(!pred_(proj1_(*it1_), proj2_(*it2_)))
+                        if(!invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
                              return state_t::FIRST_INC_SECOND;
 
                         return state_t::FIRST;
@@ -558,7 +553,6 @@ namespace ranges
         }
         /// \endcond
 
-
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_union_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -581,7 +575,7 @@ namespace ranges
                     Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -596,7 +590,6 @@ namespace ranges
                             std::move(proj1),
                             std::move(proj2)};
                 }
-
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng1, typename Rng2,
@@ -620,20 +613,19 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
+                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_union "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P1, range_value_t<Rng1>>(),
+                        Invocable<P1&, range_value_t<Rng1>>(),
                         "The first projection function passed to view::set_union "
                         "must be callable with an argument of the first range's value type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P2, range_value_t<Rng2>>(),
+                        Invocable<P2&, range_value_t<Rng2>>(),
                         "The second projection function passed to view::set_union "
                         "must be callable with an argument of the second range's value type.");
                 }
-
             #endif
             };
 
@@ -644,7 +636,6 @@ namespace ranges
         /// @}
 
 
-
         namespace detail
         {
             template<bool IsConst,
@@ -653,9 +644,9 @@ namespace ranges
             struct set_symmetric_difference_cursor
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
+                using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
@@ -688,14 +679,14 @@ namespace ranges
                             return;
                         }
 
-                        if(pred_(proj1_(*it1_), proj2_(*it2_)))
+                        if(invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
                         {
                             state = state_t::FIRST;
                             return;
                         }
                         else
                         {
-                            if(pred_(proj2_(*it2_), proj1_(*it1_)))
+                            if(invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
                             {
                                 state = state_t::SECOND;
                                 return;
@@ -784,7 +775,6 @@ namespace ranges
         }
         /// \endcond
 
-
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_symmetric_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -807,7 +797,7 @@ namespace ranges
                     Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -822,7 +812,6 @@ namespace ranges
                             std::move(proj1),
                             std::move(proj2)};
                 }
-
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng1, typename Rng2,
@@ -846,20 +835,19 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
+                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_symmetric_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P1, range_value_t<Rng1>>(),
+                        Invocable<P1&, range_value_t<Rng1>>(),
                         "The first projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the first range's value type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<P2, range_value_t<Rng2>>(),
+                        Invocable<P2&, range_value_t<Rng2>>(),
                         "The second projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the second range's value type.");
                 }
-
             #endif
             };
 

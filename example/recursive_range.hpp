@@ -92,10 +92,10 @@ namespace ranges
             };
         public:
             template<typename Fun,
-                CONCEPT_REQUIRES_(Function<Fun>() &&
-                    ConvertibleTo<concepts::Function::result_t<Fun>, any_input_view<Ref>>())>
+                CONCEPT_REQUIRES_(CopyConstructible<Fun>() && Invocable<Fun&>() &&
+                    ConvertibleTo<result_of_t<Fun&()>, any_input_view<Ref>>())>
             explicit recursive_range_fn(Fun fun)
-              : fun_{[=](){return view::concat(fun(), view::empty<value_type>());}}
+              : fun_{[=]{return view::concat(invoke(fun), view::empty<value_type>());}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

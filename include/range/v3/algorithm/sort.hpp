@@ -61,22 +61,22 @@ namespace ranges
             {
                 I mid = begin + (end - begin) / 2, last = ranges::prev(end);
                 auto &&x = *begin, &&y = *mid, &&z = *last;
-                auto &&a = proj((decltype(x) &&)x), &&b = proj((decltype(y) &&)y), &&c = proj((decltype(z) &&)z);
+                auto &&a = invoke(proj, (decltype(x) &&)x), &&b = invoke(proj, (decltype(y) &&)y), &&c = invoke(proj, (decltype(z) &&)z);
 
                 // Find the median:
-                I pivot_pnt = pred(a, b)
-                  ? (pred(b, c) ? mid   : (pred(a, c) ? last : begin))
-                  : (pred(a, c) ? begin : (pred(b, c) ? last : mid  ));
+                I pivot_pnt = invoke(pred, a, b)
+                  ? (invoke(pred, b, c) ? mid   : (invoke(pred, a, c) ? last : begin))
+                  : (invoke(pred, a, c) ? begin : (invoke(pred, b, c) ? last : mid  ));
 
                 // Do the partition:
                 while(true)
                 {
                     auto &&v = *pivot_pnt;
-                    auto &&pivot = proj((decltype(v) &&)v);
-                    while(pred(proj(*begin), pivot))
+                    auto &&pivot = invoke(proj, (decltype(v) &&)v);
+                    while(invoke(pred, invoke(proj, *begin), pivot))
                         ++begin;
                     --end;
-                    while(pred(pivot, proj(*end)))
+                    while(invoke(pred, pivot, invoke(proj, *end)))
                         --end;
                     if(!(begin < end))
                         return begin;
@@ -90,7 +90,7 @@ namespace ranges
             inline void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
             {
                 I next = prev(end);
-                while(pred(proj(val), proj(*next)))
+                while(invoke(pred, invoke(proj, val), invoke(proj, *next)))
                 {
                     *end = iter_move(next);
                     end = next;
@@ -103,7 +103,7 @@ namespace ranges
             inline void linear_insert(I begin, I end, C &pred, P &proj)
             {
                 iterator_value_t<I> val = iter_move(end);
-                if(pred(proj(val), proj(*begin)))
+                if(invoke(pred, invoke(proj, val), invoke(proj, *begin)))
                 {
                     move_backward(begin, end, end + 1);
                     *begin = std::move(val);
@@ -179,15 +179,14 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
                     Sentinel<S, I>())>
-            I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
-                if(begin == end_)
-                    return begin;
-                I end = ranges::next(begin, end_);
-                sort_fn::introsort_loop(begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
-                sort_fn::final_insertion_sort(begin, end, pred, proj);
+                I end = ranges::next(begin, std::move(end_));
+                if (begin != end)
+                {
+                    sort_fn::introsort_loop(begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
+                    sort_fn::final_insertion_sort(begin, end, pred, proj);
+                }
                 return end;
             }
 

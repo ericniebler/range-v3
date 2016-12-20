@@ -74,16 +74,16 @@ namespace ranges
                         "The object on which action::transform operates must be a model of the "
                         "InputRange concept.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(IndirectCallable<P, I>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectCallable<F, projected<I, P>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, projected<I, P>>(),
                         "The function argument to action::transform must be callable with "
                         "the result of the projection argument, or with objects of the range's "
                         "common reference type if no projection is specified.");
                     CONCEPT_ASSERT_MSG(Writable<range_iterator_t<Rng>,
-                            concepts::Callable::result_t<F,
-                                concepts::Callable::result_t<P, range_common_reference_t<Rng>>> &&>(),
+                            concepts::Invocable::result_t<F&,
+                                concepts::Invocable::result_t<P&, range_common_reference_t<Rng>>> &&>(),
                         "The result type of the function passed to action::transform must "
                         "be writable back into the source range.");
                 }

@@ -33,22 +33,20 @@ namespace ranges
         {
             template<typename I, typename S, typename R, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectCallablePredicate<R, projected<I, P> >())>
+                    IndirectPredicate<R, projected<I, P> >())>
             iterator_difference_t<I>
-            operator()(I begin, S end, R pred_, P proj_ = P{}) const
+            operator()(I begin, S end, R pred, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 iterator_difference_t<I> n = 0;
                 for(; begin != end; ++begin)
-                    if(pred(proj(*begin)))
+                    if(invoke(pred, invoke(proj, *begin)))
                         ++n;
                 return n;
             }
 
             template<typename Rng, typename R, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallablePredicate<R, projected<I, P> >())>
+                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<R, projected<I, P> >())>
             iterator_difference_t<I>
             operator()(Rng &&rng, R pred, P proj = P{}) const
             {

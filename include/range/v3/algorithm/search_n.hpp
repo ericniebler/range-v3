@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident>
         using Searchnable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>, V const *>>;
+            IndirectRelation<C, projected<I, P>, V const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -62,7 +62,7 @@ namespace ranges
                     {
                         if(d < count)  // return the end if we've run out of room
                             return ranges::next(recounted(begin_, std::move(begin), d_ - d), std::move(end));
-                        if(pred(proj(*begin), val))
+                        if(invoke(pred, invoke(proj, *begin), val))
                             break;
                         ++begin;
                         --d;
@@ -75,7 +75,7 @@ namespace ranges
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
                             return recounted(begin_, std::move(begin), d_ - d);
                         ++m;  // No need to check, we know we have room to match successfully
-                        if(!pred(proj(*m), val))  // if there is a mismatch, restart with a new begin
+                        if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
                         {
                             begin = next(std::move(m));
                             d -= (c+1);
@@ -95,7 +95,7 @@ namespace ranges
                     {
                         if(begin == end)  // return end if no element matches val
                             return begin;
-                        if(pred(proj(*begin), val))
+                        if(invoke(pred, invoke(proj, *begin), val))
                             break;
                         ++begin;
                     }
@@ -108,7 +108,7 @@ namespace ranges
                             return begin;
                         if(++m == end)  // Otherwise if source exhausted, pattern not found
                             return m;
-                        if(!pred(proj(*m), val))  // if there is a mismatch, restart with a new begin
+                        if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
                         {
                             begin = next(std::move(m));
                             break;
@@ -120,12 +120,10 @@ namespace ranges
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, iterator_difference_t<I> count, V const &val,
-                C pred_ = C{}, P proj_ = P{}) const
+                C pred = C{}, P proj = P{}) const
             {
                 if(count <= 0)
                     return begin;
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 if(SizedSentinel<S, I>())
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
@@ -138,13 +136,11 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Range<Rng>())>
             range_safe_iterator_t<Rng>
-            operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred_ = C{},
-                P proj_ = P{}) const
+            operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred = C{},
+                P proj = P{}) const
             {
                 if(count <= 0)
                     return begin(rng);
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 if(SizedRange<Rng>())
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);

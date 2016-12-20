@@ -33,9 +33,8 @@ namespace ranges
         {
             template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V2, C, P>())>
-            I operator()(I begin, S end, V2 const &val, C pred_ = C{}, P proj = P{}) const
+            I operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {
-                auto&& pred = as_function(pred_);
                 return partition_point(std::move(begin), std::move(end),
                     detail::make_upper_bound_predicate(pred, val), std::move(proj));
             }
@@ -45,9 +44,8 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && BinarySearchable<I, V2, C, P>())>
             range_safe_iterator_t<Rng>
-            operator()(Rng &&rng, V2 const &val, C pred_ = C{}, P proj = P{}) const
+            operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
             {
-                auto&& pred = as_function(pred_);
                 return partition_point(rng,
                     detail::make_upper_bound_predicate(pred, val), std::move(proj));
             }

@@ -133,7 +133,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<function_type<Fun>> fun_;
+            semiregular_t<Fun> fun_;
             std::tuple<Rngs...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
@@ -155,7 +155,7 @@ namespace ranges
             struct cursor
             {
             private:
-                using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, true>;
+                using fun_ref_ = semiregular_ref_or_val_t<Fun, true>;
                 fun_ref_ fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
@@ -165,7 +165,7 @@ namespace ranges
                 using single_pass =
                     meta::or_c<(bool) SinglePass<range_iterator_t<Rngs>>()...>;
                 using value_type =
-                    detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rngs>{}...))>;
+                    detail::decay_t<decltype(invoke(fun_, copy_tag{}, range_iterator_t<Rngs>{}...))>;
 
                 cursor() = default;
                 cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
@@ -233,7 +233,7 @@ namespace ranges
                 auto move_(meta::index_sequence<Is...>) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    fun_(move_tag{}, std::get<Is>(its_)...)
+                    invoke(fun_, move_tag{}, std::get<Is>(its_)...)
                 )
                 auto move() const
                     noexcept(noexcept(std::declval<cursor const&>().move_(
@@ -274,11 +274,11 @@ namespace ranges
         public:
             iter_zip_with_view() = default;
             explicit iter_zip_with_view(Rngs ...rngs)
-              : fun_(as_function(Fun{}))
+              : fun_(Fun{})
               , rngs_{std::move(rngs)...}
             {}
             explicit iter_zip_with_view(Fun fun, Rngs ...rngs)
-              : fun_(as_function(std::move(fun)))
+              : fun_(std::move(fun))
               , rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedRange<Rngs>()...>::value)
@@ -315,9 +315,10 @@ namespace ranges
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
                     meta::and_<InputRange<Rngs>...>,
-                    Callable<Fun, range_iterator_t<Rngs>...>,
-                    Callable<Fun, copy_tag, range_iterator_t<Rngs>...>,
-                    Callable<Fun, move_tag, range_iterator_t<Rngs>...>>;
+                    CopyConstructible<Fun>(),
+                    Invocable<Fun&, range_iterator_t<Rngs>...>,
+                    Invocable<Fun&, copy_tag, range_iterator_t<Rngs>...>,
+                    Invocable<Fun&, move_tag, range_iterator_t<Rngs>...>>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
@@ -338,15 +339,18 @@ namespace ranges
                         "All of the objects passed to view::iter_zip_with must model the InputRange "
                         "concept");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_iterator_t<Rngs>...>(),
+                        CopyConstructible<Fun>(),
+                        "The function object passed to view::iter_zip_with must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with arguments "
                         "of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, copy_tag, range_iterator_t<Rngs>...>(),
+                        Invocable<Fun&, copy_tag, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, move_tag, range_iterator_t<Rngs>...>(),
+                        Invocable<Fun&, move_tag, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "move_tag and arguments of the ranges' iterator types.");
                 }
@@ -362,7 +366,8 @@ namespace ranges
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
                     meta::and_<InputRange<Rngs>...>,
-                    Callable<Fun, range_reference_t<Rngs> &&...>>;
+                    CopyConstructible<Fun>,
+                    Invocable<Fun&, range_reference_t<Rngs> &&...>>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
@@ -383,7 +388,10 @@ namespace ranges
                         "All of the objects passed to view::zip_with must model the InputRange "
                         "concept");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_reference_t<Rngs> &&...>(),
+                        CopyConstructible<Fun>(),
+                        "The function object passed to view::zip_with must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_reference_t<Rngs> &&...>(),
                         "The function passed to view::zip_with must be callable with arguments "
                         "of the ranges' reference types.");
                 }

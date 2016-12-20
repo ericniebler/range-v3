@@ -43,7 +43,7 @@ namespace ranges
         private:
             friend range_access;
             Rng rng_;
-            semiregular_t<function_type<Pred>> pred_;
+            semiregular_t<Pred> pred_;
             detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
 
             range_iterator_t<Rng> get_begin_()
@@ -55,7 +55,7 @@ namespace ranges
         public:
             drop_while_view() = default;
             drop_while_view(Rng rng, Pred pred)
-              : rng_(std::move(rng)), pred_(as_function(std::move(pred)))
+              : rng_(std::move(rng)), pred_(std::move(pred))
             {}
             range_iterator_t<Rng> begin()
             {
@@ -91,7 +91,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    IndirectCallablePredicate<Pred, range_iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -108,7 +108,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::drop_while must be a model of the "
                         "InputRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>>(),
                         "The second argument to view::drop_while must be callable with "
                         "an argument of the range's common reference type, and its return value "
                         "must be convertible to bool");

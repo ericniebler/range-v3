@@ -49,7 +49,6 @@
 #include <array>
 #include <atomic>
 #include <chrono>
-#include <functional>  // for std::hash
 #include <initializer_list>
 #include <mutex>
 #include <new>
@@ -62,6 +61,7 @@
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/generate.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 // Ugly platform-specific code for auto_seeded
@@ -99,7 +99,7 @@ namespace ranges
             struct UniformRandomNumberGenerator
             {
                 template<typename Gen>
-                using result_t = concepts::Function::result_t<Gen>;
+                using result_t = result_of_t<Gen&()>;
 
                 template<typename Gen, typename Result = result_t<Gen>>
                 auto requires_(Gen && gen) -> decltype(
@@ -149,11 +149,16 @@ namespace ranges
                         (hash * 16777619U) ^ static_cast<unsigned char>(*pos), pos+1);
                 }
 
-                static constexpr std::size_t seed_count = 19;
+                constexpr std::size_t weird_seed_sources = 11;
+                constexpr std::size_t seed_count = weird_seed_sources + 8;
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 6
+                inline
+#else
                 template<class = void>
+#endif
                 std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
                 {
-                    CONCEPT_ASSERT(seed_count >= 11);
+                    CONCEPT_ASSERT(seed_count >= weird_seed_sources);
                     std::array<std::uint32_t, seed_count> seeds;
                     auto it = seeds.begin();
 
@@ -212,11 +217,11 @@ namespace ranges
                     // Platform-specific entropy
                     *it++ = randutils::crushto32(RANGES_CPU_ENTROPY);
 
+                    RANGES_ASSERT(static_cast<std::size_t>(it - seeds.begin()) == weird_seed_sources);
+
                     // Hopefully high-quality entropy from random_device.
                     std::random_device rd{};
                     ranges::generate(it, seeds.end(), ranges::ref(rd));
-
-                    RANGES_ASSERT(it <= seeds.end());
 
                     return seeds;
                 }

@@ -157,10 +157,8 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
                     Sentinel<S, I>())>
-            I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
-                auto && pred = as_function(pred_);
-                auto && proj = as_function(proj_);
                 I end = ranges::next(begin, end_);
                 using D = iterator_difference_t<I>;
                 using V = iterator_value_t<I>;

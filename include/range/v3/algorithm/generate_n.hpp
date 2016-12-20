@@ -34,8 +34,8 @@ namespace ranges
         struct generate_n_fn
         {
             template<typename O, typename F,
-                CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputIterator<O, concepts::Function::result_t<F> &&>())>
+                CONCEPT_REQUIRES_(Invocable<F&>() &&
+                    OutputIterator<O, result_of_t<F&()> &&>())>
             tagged_pair<tag::out(O), tag::fun(F)>
             operator()(O begin, iterator_difference_t<O> n, F fun) const
             {
@@ -43,8 +43,8 @@ namespace ranges
                 auto norig = n;
                 auto b = uncounted(begin);
                 for(; 0 != n; ++b, --n)
-                    *b = fun();
-                return {recounted(begin, b, norig), fun};
+                    *b = invoke(fun);
+                return {recounted(begin, b, norig), detail::move(fun)};
             }
         };
 

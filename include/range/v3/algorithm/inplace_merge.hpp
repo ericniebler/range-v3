@@ -88,11 +88,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sortable<I, C, P>())>
                 void operator()(I begin, I middle, I end, iterator_difference_t<I> len1,
                     iterator_difference_t<I> len2, iterator_value_t<I> *buf,
-                    std::ptrdiff_t buf_size, C pred_ = C{}, P proj_ = P{}) const
+                    std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
                 {
                     using D = iterator_difference_t<I>;
-                    auto &&pred = as_function(pred_);
-                    auto &&proj = as_function(proj_);
                     while(true)
                     {
                         // if middle == end, we're done
@@ -103,7 +101,7 @@ namespace ranges
                         {
                             if(len1 == 0)
                                 return;
-                            if(pred(proj(*middle), proj(*begin)))
+                            if(invoke(pred, invoke(proj, *middle), invoke(proj, *begin)))
                                 break;
                         }
                         if(len1 <= buf_size || len2 <= buf_size)
@@ -129,7 +127,7 @@ namespace ranges
                         {   // len >= 1, len2 >= 2
                             len21 = len2 / 2;
                             m2 = next(middle, len21);
-                            m1 = upper_bound(begin, middle, proj(*m2), std::ref(pred), std::ref(proj));
+                            m1 = upper_bound(begin, middle, invoke(proj, *m2), std::ref(pred), std::ref(proj));
                             len11 = distance(begin, m1);
                         }
                         else
@@ -143,7 +141,7 @@ namespace ranges
                             // len1 >= 2, len2 >= 1
                             len11 = len1 / 2;
                             m1 = next(begin, len11);
-                            m2 = lower_bound(middle, end, proj(*m1), std::ref(pred), std::ref(proj));
+                            m2 = lower_bound(middle, end, invoke(proj, *m1), std::ref(pred), std::ref(proj));
                             len21 = distance(middle, m2);
                         }
                         D len12 = len1 - len11;  // distance(m1, middle)

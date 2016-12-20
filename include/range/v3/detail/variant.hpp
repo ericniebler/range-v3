@@ -72,9 +72,6 @@ namespace ranges
     #endif
         /// \endcond
 
-        template<std::size_t N, typename...Ts, typename...Args>
-        void emplace(variant<Ts...> &var, Args &&...args);
-
         struct bad_variant_access
           : std::logic_error
         {
@@ -207,6 +204,17 @@ namespace ranges
                 }
             };
 
+            template<std::size_t Index, typename... Ts>
+            using variant_datum_t =
+                detail::indexed_datum<meta::at_c<meta::list<Ts...>, Index>, meta::size_t<Index>>;
+        } // namespace detail
+
+        template<std::size_t N, typename... Ts, typename... Args,
+            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args &&...>::value, int> = 42>
+        void emplace(variant<Ts...>&, Args &&...);
+
+        namespace detail
+        {
             using variant_nil = indexed_datum<void, meta::npos>;
 
             template<typename Ts, bool Trivial =
@@ -306,7 +314,7 @@ namespace ranges
             template<typename Data, typename Fun, typename Proj = indexed_element_fn>
             constexpr int variant_visit_(std::size_t n, Data &self, Fun fun, Proj proj = {})
             {
-                return 0 == n ? ((void) fun(proj(self.head)), 0) :
+                return 0 == n ? ((void) invoke(fun, invoke(proj, self.head)), 0) :
                     detail::variant_visit_(n - 1, self.tail, detail::move(fun), detail::move(proj));
             }
 
@@ -383,7 +391,7 @@ namespace ranges
                 template<typename U, std::size_t M>
                 [[noreturn]] meta::if_c<N != M> operator()(indexed_datum<U, meta::size_t<M>> &)
                 {
-                    RANGES_ENSURE(false);
+                    RANGES_EXPECT(false);
                 }
                 template<typename U>
                 meta::if_<std::is_object<U>>
@@ -423,10 +431,11 @@ namespace ranges
             {
                 Variant *var_;
                 template<typename...Ts>
-                void operator()(Ts &&...ts) const
-                {
-                    ranges::emplace<N>(*var_, detail::forward<Ts>(ts)...);
-                }
+                auto operator()(Ts &&...ts) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    ranges::emplace<N>(*var_, detail::forward<Ts>(ts)...)
+                )
             };
 
             template<typename Fun, typename Variant>
@@ -436,10 +445,11 @@ namespace ranges
                 Variant *var_;
 
                 template<typename U, std::size_t N>
-                void operator()(indexed_element<U, N> u)
-                {
-                    compose(emplace_fn<Variant, N>{var_}, fun_)(u);
-                }
+                auto operator()(indexed_element<U, N> u)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    compose(emplace_fn<Variant, N>{var_}, fun_)(u)
+                )
             };
 
             template<typename Variant, typename Fun>
@@ -488,6 +498,20 @@ namespace ranges
             template<typename ...Ts>
             struct variant_base<variant<Ts...>, true>
             {};
+
+            template<typename Fun, typename Types, typename Indices, typename = void>
+            struct variant_visit_results {};
+            template<typename Fun, typename... Ts, std::size_t... Is>
+            struct variant_visit_results<
+                Fun, meta::list<Ts...>, meta::index_sequence<Is...>,
+                meta::void_<result_of_t<Fun&(indexed_element<Ts, Is>)>...>>
+            {
+                using type = variant<result_of_t<Fun&(indexed_element<Ts, Is>)>...>;
+            };
+            template<typename Fun, typename... Ts>
+            using variant_visit_results_t = meta::_t<
+                variant_visit_results<
+                    Fun, meta::list<Ts...>, meta::make_index_sequence<sizeof...(Ts)>>>;
         }
         /// \endcond
 
@@ -505,13 +529,10 @@ namespace ranges
             friend struct detail::variant_base<variant, false>;
             template<std::size_t Index>
             using datum_t =
-                detail::indexed_datum<meta::at_c<meta::list<Ts...>, Index>, meta::size_t<Index>>;
+                detail::variant_datum_t<Index, Ts...>;
             template<typename T>
             using add_const_t =
                 meta::if_<std::is_void<T>, void, T const>;
-            template<typename Fun, typename T>
-            using alt_result_t =
-                concepts::Function::result_t<Fun, indexed_element<T, 0>>;
             using unbox_fn = detail::get_datum_fn;
 
             detail::variant_data<Ts...> &data_() &
@@ -613,35 +634,36 @@ namespace ranges
                 return index_;
             }
             template<typename Fun>
-            variant<alt_result_t<composed<Fun, unbox_fn>, Ts>...> visit(Fun fun)
+            detail::variant_visit_results_t<composed<Fun, unbox_fn>, Ts...> visit(Fun fun)
             {
-                variant<alt_result_t<composed<Fun, unbox_fn>, Ts>...> res{
+                detail::variant_visit_results_t<composed<Fun, unbox_fn>, Ts...> res{
                     detail::empty_variant_tag{}};
                 detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, compose(detail::move(fun), unbox_fn{})));
                 return res;
             }
             template<typename Fun>
-            variant<alt_result_t<composed<Fun, unbox_fn>, add_const_t<Ts>>...> visit(Fun fun) const
+            detail::variant_visit_results_t<composed<Fun, unbox_fn>, add_const_t<Ts>...>
+            visit(Fun fun) const
             {
-                variant<alt_result_t<composed<Fun, unbox_fn>, add_const_t<Ts>>...> res{
+                detail::variant_visit_results_t<composed<Fun, unbox_fn>, add_const_t<Ts>...> res{
                     detail::empty_variant_tag{}};
                 detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, compose(detail::move(fun), unbox_fn{})));
                 return res;
             }
             template<typename Fun>
-            variant<alt_result_t<Fun, Ts>...> visit_i(Fun fun)
+            detail::variant_visit_results_t<Fun, Ts...> visit_i(Fun fun)
             {
-                variant<alt_result_t<Fun, Ts>...> res{detail::empty_variant_tag{}};
+                detail::variant_visit_results_t<Fun, Ts...> res{detail::empty_variant_tag{}};
                 detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, detail::move(fun)));
                 return res;
             }
             template<typename Fun>
-            variant<alt_result_t<Fun, add_const_t<Ts>>...> visit_i(Fun fun) const
+            detail::variant_visit_results_t<Fun, add_const_t<Ts>...> visit_i(Fun fun) const
             {
-                variant<alt_result_t<Fun, add_const_t<Ts>>...> res{detail::empty_variant_tag{}};
+                detail::variant_visit_results_t<Fun, add_const_t<Ts>...> res{detail::empty_variant_tag{}};
                 detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, detail::move(fun)));
                 return res;
@@ -705,7 +727,8 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // emplace
-        template<std::size_t N, typename...Ts, typename...Args>
+        template<std::size_t N, typename... Ts, typename... Args,
+            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args &&...>::value, int>>
         void emplace(variant<Ts...> &var, Args &&...args)
         {
             var.template emplace<N>(detail::forward<Args>(args)...);

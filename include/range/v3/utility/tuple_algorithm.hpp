@@ -41,7 +41,7 @@ namespace ranges
             static auto impl(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::forward<Fun>(fun)(std::get<Is>(std::forward<Tup>(tup))...)
+                invoke(std::forward<Fun>(fun), std::get<Is>(std::forward<Tup>(tup))...)
             )
         public:
             template<typename Fun, typename Tup>

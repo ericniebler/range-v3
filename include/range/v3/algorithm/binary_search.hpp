@@ -44,10 +44,8 @@ namespace ranges
             bool
             operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {
-                begin = lower_bound(std::move(begin), end, val, pred, proj);
-                auto &&ipred = as_function(pred);
-                auto &&iproj = as_function(proj);
-                return begin != end && !ipred(val, iproj(*begin));
+                begin = lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
+                return begin != end && !invoke(pred, val, invoke(proj, *begin));
             }
 
             /// \overload

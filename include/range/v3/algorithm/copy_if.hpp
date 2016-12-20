@@ -36,17 +36,15 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    WeaklyIncrementable<O>() && IndirectCallablePredicate<F, projected<I, P> >() &&
+                    WeaklyIncrementable<O>() && IndirectPredicate<F, projected<I, P> >() &&
                     IndirectlyCopyable<I, O>())>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
+            operator()(I begin, S end, O out, F pred, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                 {
                     auto &&x = *begin;
-                    if(pred(proj(x)))
+                    if(invoke(pred, invoke(proj, x)))
                     {
                         *out = (decltype(x) &&) x;
                         ++out;
@@ -58,7 +56,7 @@ namespace ranges
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectCallablePredicate<F, projected<I, P> >() && IndirectlyCopyable<I, O>())>
+                    IndirectPredicate<F, projected<I, P> >() && IndirectlyCopyable<I, O>())>
             tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {

@@ -34,33 +34,23 @@ namespace ranges
         /// @{
         struct minmax_fn
         {
-        private:
-            template<typename T, typename C, typename P,
-                typename R = tagged_pair<tag::min(T const &), tag::max(T const &)>>
-            constexpr R minmax2_impl(T const &a, T const &b, C&& pred, P&& proj) const
-            {
-                return pred(proj(b), proj(a)) ? R{b, a} : R{a, b};
-            }
-
-        public:
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>, typename V = iterator_value_t<I>,
                 typename R = tagged_pair<tag::min(V), tag::max(V)>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
-                    IndirectCallableRelation<C, projected<I, P>>())>
+                    IndirectRelation<C, projected<I, P>>())>
             RANGES_CXX14_CONSTEXPR
-            R operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
+            R operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
                 auto result = R{*begin, *begin};
-                if(++begin != end) {
-                    auto && pred = as_function(pred_);
-                    auto && proj = as_function(proj_);
+                if(++begin != end)
+                {
                     {
                         auto && tmp = *begin;
-                        if(pred(proj(tmp), proj(result.first)))
+                        if(invoke(pred, invoke(proj, tmp), invoke(proj, result.first)))
                             result.first = (decltype(tmp) &&) tmp;
                         else
                             result.second = (decltype(tmp) &&) tmp;
@@ -70,26 +60,26 @@ namespace ranges
                         V tmp1 = *begin;
                         if(++begin == end)
                         {
-                            if(pred(proj(tmp1), proj(result.first)))
+                            if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.first)))
                                 result.first = std::move(tmp1);
-                            else if(!pred(proj(tmp1), proj(result.second)))
+                            else if(!invoke(pred, invoke(proj, tmp1), invoke(proj, result.second)))
                                 result.second = std::move(tmp1);
                             break;
                         }
 
                         auto && tmp2 = *begin;
-                        if(pred(proj(tmp2), proj(tmp1)))
+                        if(invoke(pred, invoke(proj, tmp2), invoke(proj, tmp1)))
                         {
-                            if(pred(proj(tmp2), proj(result.first)))
+                            if(invoke(pred, invoke(proj, tmp2), invoke(proj, result.first)))
                                 result.first = (decltype(tmp2) &&) tmp2;
-                            if(!pred(proj(tmp1), proj(result.second)))
+                            if(!invoke(pred, invoke(proj, tmp1), invoke(proj, result.second)))
                                 result.second = std::move(tmp1);
                         }
                         else
                         {
-                            if(pred(proj(tmp1), proj(result.first)))
+                            if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.first)))
                                 result.first = std::move(tmp1);
-                            if(!pred(proj(tmp2), proj(result.second)))
+                            if(!invoke(pred, invoke(proj, tmp2), invoke(proj, result.second)))
                                 result.second = (decltype(tmp2) &&) tmp2;
                         }
                     }
@@ -99,11 +89,12 @@ namespace ranges
 
             template<typename T, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    IndirectCallableRelation<C, projected<const T *, P>>())>
+                    IndirectRelation<C, projected<const T *, P>>())>
             constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>
             operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
             {
-                return minmax2_impl(a, b, as_function(pred), as_function(proj));
+                using R = tagged_pair<tag::min(T const &), tag::max(T const &)>;
+                return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};
             }
         };
 

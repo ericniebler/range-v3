@@ -34,17 +34,14 @@ namespace ranges
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Comparable<I0, I1, C, P0, P1>())>
-            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{}, P0 proj0_ = P0{},
-                P1 proj1_ = P1{}) const
+            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj0 = as_function(proj0_);
-                auto &&proj1 = as_function(proj1_);
                 for(; begin1 != end1; ++begin0, ++begin1)
                 {
-                    if(begin0 == end0 || pred(proj0(*begin0), proj1(*begin1)))
+                    if(begin0 == end0 || invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
                         return true;
-                    if(pred(proj1(*begin1), proj0(*begin0)))
+                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj0, *begin0)))
                         return false;
                 }
                 return false;

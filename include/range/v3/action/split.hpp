@@ -93,8 +93,8 @@ namespace ranges
                         "range's value type, "
                         "(3) A Predicate that is callable with one argument of the range's reference "
                         "type, or "
-                        "(4) A Function that is callable with two arguments: the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, I>, where I is the "
+                        "(4) A Callable that accepts two arguments, the range's iterator "
+                        "and sentinel, and that returns a std::pair<bool, I> where I is the "
                         "input range's difference_type.");
                 }
             #endif

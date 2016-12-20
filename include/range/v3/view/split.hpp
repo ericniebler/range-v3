@@ -51,7 +51,7 @@ namespace ranges
         private:
             friend range_access;
             Rng rng_;
-            semiregular_t<function_type<Fun>> fun_;
+            semiregular_t<Fun> fun_;
 
             template<bool IsConst>
             struct cursor
@@ -62,7 +62,7 @@ namespace ranges
                 bool zero_;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
-                using fun_ref_t = semiregular_ref_or_val_t<function_type<Fun>, IsConst>;
+                using fun_ref_t = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_t fun_;
 
                 struct search_pred
@@ -73,7 +73,7 @@ namespace ranges
                     fun_ref_t fun_;
                     bool operator()(range_iterator_t<Rng> cur) const
                     {
-                        return (zero_ && cur == first_) || (cur != last_ && !fun_(cur, last_).first);
+                        return (zero_ && cur == first_) || (cur != last_ && !invoke(fun_, cur, last_).first);
                     }
                 };
                 using reference_ =
@@ -90,7 +90,7 @@ namespace ranges
                     zero_ = false;
                     for(; cur_ != last_; ++cur_)
                     {
-                        auto p = fun_(cur_, last_);
+                        auto p = invoke(fun_, cur_, last_);
                         if(p.first)
                         {
                             zero_ = (cur_ == p.second);
@@ -111,7 +111,7 @@ namespace ranges
                   : cur_(first), last_(last), fun_(fun)
                 {
                     // For skipping an initial zero-length match
-                    auto p = fun(first, ranges::next(first));
+                    auto p = invoke(fun, first, ranges::next(first));
                     zero_ = p.first && first == p.second;
                 }
             public:
@@ -121,7 +121,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>,
+            CONCEPT_REQUIRES(Invocable<Fun const&, range_iterator_t<Rng>,
                 range_sentinel_t<Rng>>() && Range<Rng const>())
             cursor<true> begin_cursor() const
             {
@@ -150,7 +150,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 struct predicate_pred
                 {
-                    semiregular_t<function_type<Pred>> pred_;
+                    semiregular_t<Pred> pred_;
                     std::pair<bool, range_iterator_t<Rng>>
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
@@ -201,15 +201,17 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using FunctionConcept = meta::and_<
                     ForwardRange<Rng>,
-                    Function<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                    Invocable<Fun&, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                    CopyConstructible<Fun>,
                     ConvertibleTo<
-                        concepts::Function::result_t<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                        result_of_t<Fun&(range_iterator_t<Rng>, range_sentinel_t<Rng>)>,
                         std::pair<bool, range_iterator_t<Rng>>>>;
 
                 template<typename Rng, typename Fun>
                 using PredicateConcept = meta::and_<
                     ForwardRange<Rng>,
-                    Predicate<Fun, range_reference_t<Rng>>>;
+                    Predicate<Fun const&, range_reference_t<Rng>>,
+                    CopyConstructible<Fun>>;
 
                 template<typename Rng>
                 using ElementConcept = meta::and_<
@@ -232,7 +234,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(PredicateConcept<Rng, Fun>())>
                 split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), predicate_pred<Rng, Fun>{as_function(std::move(fun))}};
+                    return {all(std::forward<Rng>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ElementConcept<Rng>())>
@@ -263,8 +265,8 @@ namespace ranges
                         "range's value type, "
                         "(3) A Predicate that is callable with one argument of the range's reference "
                         "type, or "
-                        "(4) A Function that is callable with two arguments: the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, I>, where I is the "
+                        "(4) A Callable that accepts two arguments, the range's iterator "
+                        "and sentinel, and that returns a std::pair<bool, I> where I is the "
                         "input range's iterator type.");
                 }
             #endif

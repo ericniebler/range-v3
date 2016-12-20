@@ -26,26 +26,20 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I, typename T, typename Op = plus, typename P = ident,
-            typename V = iterator_value_t<I>,
-            typename X = concepts::Callable::result_t<P, V>,
-            typename Y = concepts::Callable::result_t<Op, T, X>>
+        template<typename I, typename T, typename Op = plus, typename P = ident>
         using Accumulateable = meta::strict_and<
             InputIterator<I>,
-            Callable<P, V>,
-            Callable<Op, T, X>,
-            Assignable<T&, Y>>;
+            IndirectInvocable<Op, T *, projected<I, P>>,
+            Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>>;
 
         struct accumulate_fn
         {
             template<typename I, typename S, typename T, typename Op = plus, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && Accumulateable<I, T, Op, P>())>
-            T operator()(I begin, S end, T init, Op op_ = Op{}, P proj_ = P{}) const
+            T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
             {
-                auto &&op = as_function(op_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
-                    init = op(init, proj(*begin));
+                    init = invoke(op, init, invoke(proj, *begin));
                 return init;
             }
 

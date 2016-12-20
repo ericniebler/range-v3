@@ -49,16 +49,13 @@ namespace ranges
                 CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 for(; begin2 != end2; ++begin1)
                 {
-                    if(begin1 == end1 || pred(proj2(*begin2), proj1(*begin1)))
+                    if(begin1 == end1 || invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                         return false;
-                    if(!pred(proj1(*begin1), proj2(*begin2)))
+                    if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                         ++begin2;
                 }
                 return true;
@@ -90,11 +87,8 @@ namespace ranges
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 for(; begin1 != end1; ++out)
                 {
                     if(begin2 == end2)
@@ -103,7 +97,7 @@ namespace ranges
                         return make_tagged_tuple<tag::in1, tag::in2, tag::out>(tmp.first, begin2,
                             tmp.second);
                     }
-                    if(pred(proj2(*begin2), proj1(*begin1)))
+                    if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                     {
                         *out = *begin2;
                         ++begin2;
@@ -111,7 +105,7 @@ namespace ranges
                     else
                     {
                         *out = *begin1;
-                        if(!pred(proj1(*begin1), proj2(*begin2)))
+                        if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                             ++begin2;
                         ++begin1;
                     }
@@ -147,18 +141,15 @@ namespace ranges
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1 && begin2 != end2)
                 {
-                    if(pred(proj1(*begin1), proj2(*begin2)))
+                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                         ++begin1;
                     else
                     {
-                        if(!pred(proj2(*begin2), proj1(*begin1)))
+                        if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                         {
                             *out = *begin1;
                             ++out;
@@ -196,16 +187,13 @@ namespace ranges
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1)
                 {
                     if(begin2 == end2)
                         return copy(begin1, end1, out);
-                    if(pred(proj1(*begin1), proj2(*begin2)))
+                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                     {
                         *out = *begin1;
                         ++out;
@@ -213,7 +201,7 @@ namespace ranges
                     }
                     else
                     {
-                        if(!pred(proj2(*begin2), proj1(*begin1)))
+                        if(!invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                             ++begin1;
                         ++begin2;
                     }
@@ -247,11 +235,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1)
                 {
                     if(begin2 == end2)
@@ -259,7 +244,7 @@ namespace ranges
                         auto tmp = copy(begin1, end1, out);
                         return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{tmp.first, begin2, tmp.second};
                     }
-                    if(pred(proj1(*begin1), proj2(*begin2)))
+                    if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                     {
                         *out = *begin1;
                         ++out;
@@ -267,7 +252,7 @@ namespace ranges
                     }
                     else
                     {
-                        if(pred(proj2(*begin2), proj1(*begin1)))
+                        if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
                         {
                             *out = *begin2;
                             ++out;
