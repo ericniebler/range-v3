@@ -58,8 +58,8 @@ namespace ranges
                     auto half = n / 2;
                     if(0 == half)
                         return next(begin, n);
-                    I m = (*this)(begin, half, buff, r);
-                          (*this)(m, n - half, buff, r);
+                    I m = (*this)(begin, half, buff, r, p);
+                          (*this)(m, n - half, buff, r, p);
                     return merge_n_with_buffer(begin, half, m, n - half, buff, r, p);
                 }
             };

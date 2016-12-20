@@ -312,3 +312,6 @@ add_test(test.alg.unique_copy, alg.unique_copy)
 
 add_executable(alg.upper_bound upper_bound.cpp)
 add_test(test.alg.upper_bound, alg.upper_bound)
+
+add_executable(alg.sort_n_with_buffer sort_n_with_buffer.cpp)
+add_test(test.alg.sort_n_with_buffer alg.sort_n_with_buffer)
