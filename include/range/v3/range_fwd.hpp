@@ -159,13 +159,13 @@ namespace ranges
 
         struct iter_size_fn;
 
-        template<typename T, typename = void>
+        template<typename T>
         struct difference_type;
 
         template<typename T>
         struct value_type;
 
-        template<typename T, typename = void>
+        template<typename T>
         struct iterator_category;
 
         template<typename T>

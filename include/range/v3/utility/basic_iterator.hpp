@@ -242,8 +242,7 @@ namespace ranges
             template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
             struct iterator_associated_types_base
             {
-            private:
-                friend struct basic_iterator<Cur>;
+            protected:
                 using reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_concept_t = range_access::OutputCursor;
@@ -254,10 +253,8 @@ namespace ranges
 
             template<typename Cur>
             struct iterator_associated_types_base<Cur, true>
-              : iterator_associated_types_base<Cur, false>
             {
-            private:
-                friend struct basic_iterator<Cur>;
+            protected:
                 using cursor_concept_t = detail::cursor_concept_t<Cur>;
                 using reference_t =
                     meta::if_<
@@ -269,6 +266,7 @@ namespace ranges
                             cursor_reference_t<Cur>>>;
                 using const_reference_t = reference_t;
             public:
+                using difference_type = range_access::cursor_difference_t<Cur>;
                 using value_type = range_access::cursor_value_t<Cur>;
                 using reference = reference_t;
                 using iterator_category =

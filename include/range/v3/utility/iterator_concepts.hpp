@@ -104,38 +104,31 @@ namespace ranges
               : decltype(detail::downgrade_iterator_category_(_nullptr_v<Tag>(), _nullptr_v<Tag>(),
                     std::integral_constant<bool, std::is_reference<Reference>::value>()))
             {};
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T>
+            meta::if_<std::is_object<T>, ranges::random_access_iterator_tag>
+            iterator_category_helper(T **);
+
+            template<typename T>
+            meta::_t<upgrade_iterator_category<typename T::iterator_category>>
+            iterator_category_helper(T *);
+
+            template<class T>
+            using iterator_category_ = decltype(detail::iterator_category_helper(_nullptr_v<T>()));
         }
         /// \endcond
 
         /// \addtogroup group-concepts
         /// @{
-        template<typename T, typename /*= void*/>
-        struct iterator_category
-        {};
-
         template<typename T>
-        struct iterator_category<T *>
-          : meta::lazy::if_<std::is_object<T>, ranges::random_access_iterator_tag>
+        struct iterator_category
+          : meta::defer<detail::iterator_category_, T>
         {};
 
         template<typename T>
         struct iterator_category<T const>
           : iterator_category<T>
-        {};
-
-        template<typename T>
-        struct iterator_category<T volatile>
-          : iterator_category<T>
-        {};
-
-        template<typename T>
-        struct iterator_category<T const volatile>
-          : iterator_category<T>
-        {};
-
-        template<typename T>
-        struct iterator_category<T, meta::void_<typename T::iterator_category>>
-          : detail::upgrade_iterator_category<typename T::iterator_category>
         {};
 
         namespace concepts
