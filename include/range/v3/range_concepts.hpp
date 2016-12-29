@@ -175,13 +175,13 @@ namespace ranges
               : refines<Range>
             {
                 template<typename T>
-                using size_t = decltype(size(val<T>()));
+                using size_t = decltype(size(std::declval<T&>()));
 
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(disable_sized_range<uncvref_t<T>>()),
-                        size(t)
+                        concepts::model_of<Integral>(size(t))
                     ));
             };
 

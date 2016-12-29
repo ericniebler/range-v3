@@ -82,13 +82,11 @@ namespace ranges
               : refines<Range(_1)>
             {
                 template<typename Rng, typename...Rest>
-                using result_t = decltype(ranges::erase(val<Rng>(), val<Rest>()...));
+                using result_t = decltype(ranges::erase(std::declval<Rng&>(), std::declval<Rest>()...));
 
                 template<typename Rng, typename...Rest>
-                auto requires_(Rng&&, Rest&&...) -> decltype(
-                    concepts::valid_expr(
-                        ((void)ranges::erase(val<Rng>(), val<Rest>()...), 42)
-                    ));
+                auto requires_(Rng &&, Rest &&...) ->
+                    meta::void_<result_t<Rng, Rest...>>;
             };
         }
 

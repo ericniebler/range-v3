@@ -59,13 +59,13 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename T>
-                    auto requires_(Rng&& rng, T&&) -> decltype(
+                    auto requires_(Rng && rng, T &&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::InputRange, Rng>(),
                             concepts::is_true(meta::or_<
-                                Constructible<range_value_t<Rng>, T &&>,
-                                Range<T &&>>()),
-                            ((void)push_back(rng, concepts::val<T>()), 42)
+                                Constructible<range_value_t<Rng>, T>,
+                                Range<T>>()),
+                            ((void)push_back(rng, std::declval<T>()), 42)
                         ));
                 };
 
@@ -89,8 +89,8 @@ namespace ranges
                         "The object on which action::push_back operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(meta::or_<
-                        Constructible<range_value_t<Rng>, T &&>,
-                        Range<T &&>>(),
+                        Constructible<range_value_t<Rng>, T>,
+                        Range<T>>(),
                         "The object to be inserted with action::push_back must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");

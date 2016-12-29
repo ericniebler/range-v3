@@ -169,9 +169,9 @@ namespace ranges
               : refines<Movable(_1), DefaultConstructible(_1)>
             {
                 template<typename Out, typename T>
-                auto requires_(Out&& o, T&&) -> decltype(
+                auto requires_(Out && o, T && t) -> decltype(
                     concepts::valid_expr(
-                        *o = val<T>()
+                        ((void)(*(Out &&)o = (T &&)t), 42)
                     ));
             };
 
@@ -233,10 +233,10 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
-                        (ranges::indirect_swap(i1, i2), 42),
-                        (ranges::indirect_swap(i1, i1), 42),
-                        (ranges::indirect_swap(i2, i2), 42),
-                        (ranges::indirect_swap(i2, i1), 42)
+                        ((void)ranges::indirect_swap(i1, i2), 42),
+                        ((void)ranges::indirect_swap(i1, i1), 42),
+                        ((void)ranges::indirect_swap(i2, i2), 42),
+                        ((void)ranges::indirect_swap(i2, i1), 42)
                     ));
             };
 
@@ -272,7 +272,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
-                        *i
+                        ((void)*i, 42)
                     ));
             };
 
