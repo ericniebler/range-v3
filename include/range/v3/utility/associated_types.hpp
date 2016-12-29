@@ -21,6 +21,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 
 namespace ranges
 {
@@ -43,29 +44,34 @@ namespace ranges
                     decltype(std::declval<const T>() - std::declval<const T>())>>>
               : std::make_signed<decltype(std::declval<const T>() - std::declval<const T>())>
             {};
+
+            template<typename T, typename Enable = void>
+            struct difference_type1
+            : detail::difference_type2<T>
+            {};
+
+            template<typename T>
+            struct difference_type1<T *>
+            : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
+            {};
+
+            template<typename T>
+            struct difference_type1<T, meta::void_<typename T::difference_type>>
+            {
+                using type = typename T::difference_type;
+            };
         }
         /// \endcond
 
-        template<typename T, typename Enable /*= void*/>
-        struct difference_type
-          : detail::difference_type2<T>
-        {};
-
         template<typename T>
-        struct difference_type<T *>
-          : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
+        struct difference_type
+        : detail::difference_type1<T>
         {};
 
         template<typename T>
         struct difference_type<T const>
-          : difference_type<detail::decay_t<T>>
+        : difference_type<T>
         {};
-
-        template<typename T>
-        struct difference_type<T, meta::void_<typename T::difference_type>>
-        {
-            using type = typename T::difference_type;
-        };
 
         ////////////////////////////////////////////////////////////////////////////////////////
         template<typename T>
@@ -102,7 +108,7 @@ namespace ranges
             value_type_helper(T *);
 
             template<typename T>
-            using value_type_ = meta::_t<decltype(detail::value_type_helper((T *)nullptr))>;
+            using value_type_ = meta::_t<decltype(detail::value_type_helper(_nullptr_v<T>()))>;
         }
         /// \endcond
 
