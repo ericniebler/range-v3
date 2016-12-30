@@ -18,6 +18,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <array>
 #include <memory>
 #include <algorithm>
 #include <range/v3/core.hpp>
@@ -227,6 +228,16 @@ int main()
     test_move_only<std::unique_ptr<int>*, bidirectional_iterator<std::unique_ptr<int>*> >();
     test_move_only<std::unique_ptr<int>*, random_access_iterator<std::unique_ptr<int>*> >();
     test_move_only<std::unique_ptr<int>*, std::unique_ptr<int>*>();
+
+    {
+        int a[4] = {1, 2, 3, 4};
+        int b[4] = {5, 6, 7, 8};
+        ranges::swap_ranges(a, a + 4, b);
+        ::check_equal(a, {5, 6, 7, 8});
+        ::check_equal(b, {1, 2, 3, 4});
+        ranges::swap_ranges(std::array<int, 2>{{3,4}}, a+2);
+        ::check_equal(a, {5, 6, 3, 4});
+    }
 
     return ::test_result();
 }
