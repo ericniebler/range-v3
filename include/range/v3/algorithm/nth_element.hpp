@@ -46,47 +46,44 @@ namespace ranges
             // stable, 2-3 compares, 0-2 swaps
 
             template<typename I, typename C, typename P,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Function::result_t<P, V>,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Function<P, V>() && Relation<C, X>())>
+                CONCEPT_REQUIRES_(ForwardIterator<I>() &&
+                    IndirectRelation<C, projected<I, P>>())>
             unsigned sort3(I x, I y, I z, C &pred, P &proj)
             {
                 unsigned r = 0;
-                if(!pred(proj(*y), proj(*x)))           // if x <= y
+                if(!invoke(pred, invoke(proj, *y), invoke(proj, *x)))     // if x <= y
                 {
-                    if(!pred(proj(*z), proj(*y)))       // if y <= z
-                        return r;                       // x <= y && y <= z
-                                                        // x <= y && y > z
-                    ranges::iter_swap(y, z);            // x <= z && y < z
+                    if(!invoke(pred, invoke(proj, *z), invoke(proj, *y))) // if y <= z
+                        return r;                                         // x <= y && y <= z
+                                                                          // x <= y && y > z
+                    ranges::iter_swap(y, z);                              // x <= z && y < z
                     r = 1;
-                    if(pred(proj(*y), proj(*x)))        // if x > y
+                    if(invoke(pred, invoke(proj, *y), invoke(proj, *x)))  // if x > y
                     {
-                        ranges::iter_swap(x, y);        // x < y && y <= z
+                        ranges::iter_swap(x, y);                          // x < y && y <= z
                         r = 2;
                     }
-                    return r;                           // x <= y && y < z
+                    return r;                                             // x <= y && y < z
                 }
-                if(pred(proj(*z), proj(*y)))            // x > y, if y > z
+                if(invoke(pred, invoke(proj, *z), invoke(proj, *y)))      // x > y, if y > z
                 {
-                    ranges::iter_swap(x, z);            // x < y && y < z
+                    ranges::iter_swap(x, z);                              // x < y && y < z
                     r = 1;
                     return r;
                 }
-                ranges::iter_swap(x, y);                // x > y && y <= z
-                r = 1;                                  // x < y && x <= z
-                if(pred(proj(*z), proj(*y)))            // if y > z
+                ranges::iter_swap(x, y);                                  // x > y && y <= z
+                r = 1;                                                    // x < y && x <= z
+                if(invoke(pred, invoke(proj, *z), invoke(proj, *y)))      // if y > z
                 {
-                    ranges::iter_swap(y, z);            // x <= y && y < z
+                    ranges::iter_swap(y, z);                              // x <= y && y < z
                     r = 2;
                 }
                 return r;
-            }                                           // x <= y && y <= z
+            }                                                             // x <= y && y <= z
 
-            // Assumes size > 0
             template<typename I, typename C, typename P,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Function::result_t<P, V>,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Function<P, V>() && Relation<C, X>())>
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>() &&
+                    IndirectRelation<C, projected<I, P>>())>
             void selection_sort(I begin, I end, C &pred, P &proj)
             {
                 RANGES_EXPECT(begin != end);
@@ -106,10 +103,8 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
-            I operator()(I begin, I nth, S end_, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 I end = ranges::next(nth, end_), end_orig = end;
                 // C is known to be a reference type
                 using difference_type = iterator_difference_t<I>;
@@ -126,7 +121,7 @@ namespace ranges
                     case 1:
                         return end_orig;
                     case 2:
-                        if(pred(proj(*--end), proj(*begin)))
+                        if(invoke(pred, invoke(proj, *--end), invoke(proj, *begin)))
                             ranges::iter_swap(begin, end);
                         return end_orig;
                     case 3:
@@ -153,7 +148,7 @@ namespace ranges
                     // j points beyond range to be tested, *lm1 is known to be <= *m
                     // The search going up is known to be guarded but the search coming down isn't.
                     // Prime the downward search with a guard.
-                    if(!pred(proj(*i), proj(*m)))  // if *begin == *m
+                    if(!invoke(pred, invoke(proj, *i), invoke(proj, *m)))  // if *begin == *m
                     {
                         // *begin == *m, *begin doesn't go in begin part
                         // manually guard downward moving j against i
@@ -165,13 +160,13 @@ namespace ranges
                                 // Parition instead into [begin, i) == *begin and *begin < [i, end)
                                 ++i;  // begin + 1
                                 j = end;
-                                if(!pred(proj(*begin), proj(*--j)))  // we need a guard if *begin == *(end-1)
+                                if(!invoke(pred, invoke(proj, *begin), invoke(proj, *--j)))  // we need a guard if *begin == *(end-1)
                                 {
                                     while(true)
                                     {
                                         if(i == j)
                                             return end_orig;  // [begin, end) all equivalent elements
-                                        if(pred(proj(*begin), proj(*i)))
+                                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *i)))
                                         {
                                             ranges::iter_swap(i, j);
                                             ++n_swaps;
@@ -186,9 +181,9 @@ namespace ranges
                                     return end_orig;
                                 while(true)
                                 {
-                                    while(!pred(proj(*begin), proj(*i)))
+                                    while(!invoke(pred, invoke(proj, *begin), invoke(proj, *i)))
                                         ++i;
-                                    while(pred(proj(*begin), proj(*--j)))
+                                    while(invoke(pred, invoke(proj, *begin), invoke(proj, *--j)))
                                         ;
                                     if(i >= j)
                                         break;
@@ -205,7 +200,7 @@ namespace ranges
                                 begin = i;
                                 goto restart;
                             }
-                            if(pred(proj(*j), proj(*m)))
+                            if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
                             {
                                 ranges::iter_swap(i, j);
                                 ++n_swaps;
@@ -222,10 +217,10 @@ namespace ranges
                         while(true)
                         {
                             // m still guards upward moving i
-                            while(pred(proj(*i), proj(*m)))
+                            while(invoke(pred, invoke(proj, *i), invoke(proj, *m)))
                                 ++i;
                             // It is now known that a guard exists for downward moving j
-                            while(!pred(proj(*--j), proj(*m)))
+                            while(!invoke(pred, invoke(proj, *--j), invoke(proj, *m)))
                                 ;
                             if(i >= j)
                                 break;
@@ -239,7 +234,7 @@ namespace ranges
                         }
                     }
                     // [begin, i) < *m and *m <= [i, end)
-                    if(i != m && pred(proj(*m), proj(*i)))
+                    if(i != m && invoke(pred, invoke(proj, *m), invoke(proj, *i)))
                     {
                         ranges::iter_swap(i, m);
                         ++n_swaps;
@@ -256,7 +251,7 @@ namespace ranges
                             j = m = begin;
                             while(++j != i)
                             {
-                                if(pred(proj(*j), proj(*m)))
+                                if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
                                     // not yet sorted, so sort
                                     goto not_sorted;
                                 m = j;
@@ -270,7 +265,7 @@ namespace ranges
                             j = m = i;
                             while(++j != end)
                             {
-                                if(pred(proj(*j), proj(*m)))
+                                if(invoke(pred, invoke(proj, *j), invoke(proj, *m)))
                                     // not yet sorted, so sort
                                     goto not_sorted;
                                 m = j;

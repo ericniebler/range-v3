@@ -47,19 +47,16 @@ namespace ranges
             template<typename I, typename S, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() &&
                     Sentinel<S, I>() && !SizedSentinel<S, I>())>
-            I operator()(I begin, S end, C pred_, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 // Probe exponentially for either end-of-range or an iterator
                 // that is past the partition point (i.e., does not satisfy pred).
-                auto && pred = as_function(pred_);
-                auto && proj = as_function(proj_);
-
                 auto len = iterator_difference_t<I>{1};
                 while(true)
                 {
                     auto mid = begin;
                     auto d = advance(mid, len, end);
-                    if(mid == end || !pred(proj(*mid)))
+                    if(mid == end || !invoke(pred, invoke(proj, *mid)))
                     {
                         len -= d;
                         return aux::partition_point_n(

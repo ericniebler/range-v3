@@ -56,26 +56,25 @@ test(Iter first, Sent last, const T& value, Proj proj = Proj{})
 {
     ranges::iterator_range<Iter, Iter> i =
         ranges::equal_range(first, last, value, ranges::ordered_less{}, proj);
-    auto p = ranges::as_function(proj);
     for (Iter j = first; j != i.begin(); ++j)
-        CHECK(p(*j) < value);
+        CHECK(ranges::invoke(proj, *j) < value);
     for (Iter j = i.begin(); j != last; ++j)
-        CHECK(!(p(*j) < value));
+        CHECK(!(ranges::invoke(proj, *j) < value));
     for (Iter j = first; j != i.end(); ++j)
-        CHECK(!(value < p(*j)));
+        CHECK(!(value < ranges::invoke(proj, *j)));
     for (Iter j = i.end(); j != last; ++j)
-        CHECK(value < p(*j));
+        CHECK(value < ranges::invoke(proj, *j));
 
     auto res = ranges::equal_range(
         ranges::make_iterator_range(first, last), value, ranges::ordered_less{}, proj);
     for (Iter j = first; j != res.get_unsafe().begin(); ++j)
-        CHECK(p(*j) < value);
+        CHECK(ranges::invoke(proj, *j) < value);
     for (Iter j = res.get_unsafe().begin(); j != last; ++j)
-        CHECK(!(p(*j) < value));
+        CHECK(!(ranges::invoke(proj, *j) < value));
     for (Iter j = first; j != res.get_unsafe().end(); ++j)
-        CHECK(!(value < p(*j)));
+        CHECK(!(value < ranges::invoke(proj, *j)));
     for (Iter j = res.get_unsafe().end(); j != last; ++j)
-        CHECK(value < p(*j));
+        CHECK(value < ranges::invoke(proj, *j));
 }
 
 template <class Iter, class Sent = Iter>

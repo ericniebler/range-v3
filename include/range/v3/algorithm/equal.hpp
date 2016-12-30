@@ -35,14 +35,11 @@ namespace ranges
         private:
             template<typename I0, typename S0, typename I1, typename S1,
                 typename C, typename P0, typename P1>
-            bool nocheck(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_,
-                P0 proj0_, P1 proj1_) const
+            bool nocheck(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred,
+                P0 proj0, P1 proj1) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj0 = as_function(proj0_);
-                auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
-                    if(!pred(proj0(*begin0), proj1(*begin1)))
+                    if(!invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
                         return false;
                 return begin0 == end0 && begin1 == end1;
             }
@@ -54,14 +51,11 @@ namespace ranges
                     Sentinel<S0, I0>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
-            bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
-                P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
+            bool operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{},
+                P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj0 = as_function(proj0_);
-                auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0; ++begin0, ++begin1)
-                    if(!pred(proj0(*begin0), proj1(*begin1)))
+                    if(!invoke(pred, invoke(proj0, *begin0), invoke(proj1, *begin1)))
                         return false;
                 return true;
             }
@@ -72,14 +66,14 @@ namespace ranges
                     Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
-            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},
-                P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
+            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
+                P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
                 if(SizedSentinel<S0, I0>() && SizedSentinel<S1, I1>())
                     if(distance(begin0, end0) != distance(begin1, end1))
                         return false;
                 return this->nocheck(std::move(begin0), std::move(end0), std::move(begin1),
-                    std::move(end1), std::move(pred_), std::move(proj0_), std::move(proj1_));
+                    std::move(end1), std::move(pred), std::move(proj0), std::move(proj1));
             }
 
             template<typename Rng0, typename I1Ref,
@@ -90,11 +84,11 @@ namespace ranges
                     Range<Rng0>() && Iterator<I1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
-            bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
-                P1 proj1_ = P1{}) const
+            bool operator()(Rng0 && rng0, I1Ref && begin1, C pred = C{}, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
-                return (*this)(begin(rng0), end(rng0), (I1Ref &&) begin1, std::move(pred_),
-                    std::move(proj0_), std::move(proj1_));
+                return (*this)(begin(rng0), end(rng0), (I1Ref &&) begin1, std::move(pred),
+                    std::move(proj0), std::move(proj1));
             }
 
             template<typename Rng0, typename Rng1,
@@ -105,14 +99,14 @@ namespace ranges
                     Range<Rng0>() && Range<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
-            bool operator()(Rng0 && rng0, Rng1 && rng1, C pred_ = C{}, P0 proj0_ = P0{},
-                P1 proj1_ = P1{}) const
+            bool operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
                 if(SizedRange<Rng0>() && SizedRange<Rng1>())
                     if(distance(rng0) != distance(rng1))
                         return false;
                 return this->nocheck(begin(rng0), end(rng0), begin(rng1), end(rng1),
-                    std::move(pred_), std::move(proj0_), std::move(proj1_));
+                    std::move(pred), std::move(proj0), std::move(proj1));
             }
         };
 

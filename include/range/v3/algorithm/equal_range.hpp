@@ -40,15 +40,12 @@ namespace ranges
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && !SizedSentinel<S, I>() &&
                     BinarySearchable<I, V, C, P>())>
             iterator_range<I>
-            operator()(I begin, S end, V const &val, C pred_ = C{}, P proj_ = P{}) const
+            operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
             {
                 // Probe exponentially for either end-of-range, an iterator that
                 // is past the equal range (i.e., denotes an element greater
                 // than val), or is in the equal range (denotes an element equal
                 // to val).
-                auto && pred = as_function(pred_);
-                auto && proj = as_function(proj_);
-
                 auto dist = iterator_difference_t<I>{1};
                 while(true)
                 {
@@ -63,13 +60,13 @@ namespace ranges
                     }
                     // if val < *mid, mid is after the target range.
                     auto && v = *mid;
-                    auto && pv = proj((decltype(v)&&) v);
-                    if(pred(val, pv))
+                    auto && pv = invoke(proj, (decltype(v)&&) v);
+                    if(invoke(pred, val, pv))
                     {
                         return aux::equal_range_n(
                             std::move(begin), dist, val, std::ref(pred), std::ref(proj));
                     }
-                    else if(!pred(pv, val))
+                    else if(!invoke(pred, pv, val))
                     {
                         // *mid == val: the lower bound is <= mid, and the upper bound is > mid.
                         return {

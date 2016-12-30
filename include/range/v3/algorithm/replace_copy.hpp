@@ -35,7 +35,7 @@ namespace ranges
             InputIterator<I>,
             OutputIterator<O, T1 const &>,
             IndirectlyCopyable<I, O>,
-            IndirectCallableRelation<equal_to, projected<I, P>, T0 const *>>;
+            IndirectRelation<equal_to, projected<I, P>, T0 const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -43,13 +43,12 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename T0, typename T1, typename P = ident,
                 CONCEPT_REQUIRES_(ReplaceCopyable<I, O, T0, T1, P>() && Sentinel<S, I>())>
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin, ++out)
                 {
                     auto &&x = *begin;
-                    if(proj(x) == old_value)
+                    if(invoke(proj, x) == old_value)
                         *out = new_value;
                     else
                         *out = (decltype(x) &&) x;

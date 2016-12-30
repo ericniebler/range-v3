@@ -115,8 +115,10 @@ namespace ranges
         template<typename ...Ts>
         using common_reference_t = meta::_t<common_reference<Ts...>>;
 
+        template<typename, typename = void>
+        struct result_of;
         template<typename Sig>
-        using result_of_t = meta::_t<std::result_of<Sig>>;
+        using result_of_t = meta::_t<result_of<Sig>>;
 
         struct make_pipeable_fn;
 
@@ -408,8 +410,6 @@ namespace ranges
 
         template<typename T>
         using bind_element_t = meta::_t<bind_element<T>>;
-
-        struct as_function_fn;
 
         template<typename Derived, cardinality = finite>
         struct view_interface;

@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident>
         using IsHeapable = meta::strict_and<
             RandomAccessIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>>>;
+            IndirectRelation<C, projected<I, P>>>;
 
         /// \cond
         namespace detail
@@ -51,21 +51,19 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
-                I operator()(I const begin_, iterator_difference_t<I> const n_, C pred_ = C{}, P proj_ = P{}) const
+                I operator()(I const begin_, iterator_difference_t<I> const n_, C pred = C{}, P proj = P{}) const
                 {
                     RANGES_EXPECT(0 <= n_);
-                    auto &&pred = as_function(pred_);
-                    auto &&proj = as_function(proj_);
                     iterator_difference_t<I> p = 0, c = 1;
                     I pp = begin_;
                     while(c < n_)
                     {
                         I cp = begin_ + c;
-                        if(pred(proj(*pp), proj(*cp)))
+                        if(invoke(pred, invoke(proj, *pp), invoke(proj, *cp)))
                             return cp;
                         ++c;
                         ++cp;
-                        if(c == n_ || pred(proj(*pp), proj(*cp)))
+                        if(c == n_ || invoke(pred, invoke(proj, *pp), invoke(proj, *cp)))
                             return cp;
                         ++p;
                         ++pp;
@@ -148,16 +146,14 @@ namespace ranges
             struct sift_up_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{}, P proj_ = P{}) const
+                void operator()(I begin, iterator_difference_t<I> len, C pred = C{}, P proj = P{}) const
                 {
                     if(len > 1)
                     {
-                        auto &&pred = as_function(pred_);
-                        auto &&proj = as_function(proj_);
                         I end = begin + len;
                         len = (len - 2) / 2;
                         I i = begin + len;
-                        if(pred(proj(*i), proj(*--end)))
+                        if(invoke(pred, invoke(proj, *i), invoke(proj, *--end)))
                         {
                             iterator_value_t<I> v = iter_move(end);
                             do
@@ -168,7 +164,7 @@ namespace ranges
                                     break;
                                 len = (len - 1) / 2;
                                 i = begin + len;
-                            } while(pred(proj(*i), proj(v)));
+                            } while(invoke(pred, invoke(proj, *i), invoke(proj, v)));
                             *end = std::move(v);
                         }
                     }
@@ -180,7 +176,7 @@ namespace ranges
             struct sift_down_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, iterator_difference_t<I> len, I start, C pred_ = C {}, P proj_ = P{}) const
+                void operator()(I begin, iterator_difference_t<I> len, I start, C pred = C {}, P proj = P{}) const
                 {
                     // left-child of start is at 2 * start + 1
                     // right-child of start is at 2 * start + 2
@@ -192,10 +188,7 @@ namespace ranges
                     child = 2 * child + 1;
                     I child_i = begin + child;
 
-                    auto &&pred = as_function(pred_);
-                    auto &&proj = as_function(proj_);
-
-                    if((child + 1) < len && pred(proj(*child_i), proj(*(child_i + 1))))
+                    if((child + 1) < len && invoke(pred, invoke(proj, *child_i), invoke(proj, *(child_i + 1))))
                     {
                         // right-child exists and is greater than left-child
                         ++child_i;
@@ -203,7 +196,7 @@ namespace ranges
                     }
 
                     // check if we are in heap-order
-                    if(pred(proj(*child_i), proj(*start)))
+                    if(invoke(pred, invoke(proj, *child_i), invoke(proj, *start)))
                         // we are, start is larger than it's largest child
                         return;
 
@@ -221,7 +214,7 @@ namespace ranges
                         child = 2 * child + 1;
                         child_i = begin + child;
 
-                        if((child + 1) < len && pred(proj(*child_i), proj(*(child_i + 1))))
+                        if((child + 1) < len && invoke(pred, invoke(proj, *child_i), invoke(proj, *(child_i + 1))))
                         {
                             // right-child exists and is greater than left-child
                             ++child_i;
@@ -229,7 +222,7 @@ namespace ranges
                         }
 
                         // check if we are in heap-order
-                    } while (!pred(proj(*child_i), proj(top)));
+                    } while (!invoke(pred, invoke(proj, *child_i), invoke(proj, top)));
                     *start = std::move(top);
                 }
             };
@@ -323,10 +316,8 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
-            I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 iterator_difference_t<I> const n = distance(begin, end);
                 if(n > 1)
                     // start from the first parent, there is no need to consider children
@@ -338,10 +329,8 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 I begin = ranges::begin(rng);
                 iterator_difference_t<I> const n = distance(rng);
                 if(n > 1)
@@ -360,10 +349,8 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
-            I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 iterator_difference_t<I> const n = distance(begin, end);
                 for(auto i = n; i > 1; --i)
                     detail::pop_heap_n(begin, i, std::ref(pred), std::ref(proj));
@@ -373,10 +360,8 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng &>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 I begin = ranges::begin(rng);
                 iterator_difference_t<I> const n = distance(rng);
                 for(auto i = n; i > 1; --i)

@@ -691,69 +691,6 @@ RANGES_DIAGNOSTIC_POP
             struct Regular
               : refines<SemiRegular, EqualityComparable>
             {};
-
-            ////////////////////////////////////////////////////////////////////////////////////////////
-            // Function concepts
-            ////////////////////////////////////////////////////////////////////////////////////////////
-
-            struct Function
-            {
-                template<typename Fun, typename ...Args>
-                using result_t = decltype(val<Fun>()(val<Args>()...));
-
-                template<typename Fun, typename ...Args>
-                auto requires_(Fun&& fun, Args&&... args) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<CopyConstructible, uncvref_t<Fun>>(),
-                        ((void)val<Fun>()(val<Args>()...), 42)
-                    ));
-            };
-
-            struct RegularFunction
-              : refines<Function>
-            {
-                // Axiom: equality_preserving(f(args...))
-            };
-
-            struct Predicate
-              : refines<RegularFunction>
-            {
-                template<typename Fun, typename ...Args>
-                auto requires_(Fun&& fun, Args&&... args) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(val<Fun>()(val<Args>()...))
-                    ));
-            };
-
-            struct Relation
-              : refines<RegularFunction>
-            {
-                template<typename Fun, typename T>
-                auto requires_(Fun&&, T &&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Predicate>(val<Fun>(), val<T>(), val<T>())
-                    ));
-
-                template<typename Fun, typename T, typename U,
-                    meta::if_<std::is_same<T, U>, int> = 0>
-                auto requires_(Fun&&, T &&, T &&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Predicate>(val<Fun>(), val<T>(), val<U>())
-                    ));
-
-                template<typename Fun, typename T, typename U,
-                    meta::if_c<!std::is_same<T, U>::value, int> = 0,
-                    typename C = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(Fun &&, T &&, U &&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Relation, Fun, T, T>(),
-                        concepts::model_of<Relation, Fun, U, U>(),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<Relation, Fun, C, C>(),
-                        concepts::model_of<Predicate, Fun, T, U>(),
-                        concepts::model_of<Predicate, Fun, U, T>()
-                    ));
-            };
         }
 
         template<typename ...Ts>
@@ -840,18 +777,6 @@ RANGES_DIAGNOSTIC_POP
 
         template<typename T, typename U = T>
         using Swappable = concepts::models<concepts::Swappable, T, U>;
-
-        template<typename Fun, typename ...Args>
-        using Function = concepts::models<concepts::Function, Fun, Args...>;
-
-        template<typename Fun, typename ...Args>
-        using RegularFunction = concepts::models<concepts::RegularFunction, Fun, Args...>;
-
-        template<typename Fun, typename ...Args>
-        using Predicate = concepts::models<concepts::Predicate, Fun, Args...>;
-
-        template<typename Fun, typename T, typename U = T>
-        using Relation = concepts::models<concepts::Relation, Fun, T, U>;
     }
 }
 

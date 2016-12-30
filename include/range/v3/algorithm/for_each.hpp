@@ -18,9 +18,11 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
 
 namespace ranges
 {
@@ -32,24 +34,25 @@ namespace ranges
         {
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectCallable<F, projected<I, P>>())>
-            I operator()(I begin, S end, F fun_, P proj_ = P{}) const
+                    IndirectInvocable<F, projected<I, P>>())>
+            tagged_pair<tag::in(I), tag::fun(F)>
+            operator()(I begin, S end, F fun, P proj = P{}) const
             {
-                auto &&fun = as_function(fun_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                 {
-                    fun(proj(*begin));
+                    invoke(fun, invoke(proj, *begin));
                 }
-                return begin;
+                return {detail::move(begin), detail::move(fun)};
             }
 
             template<typename Rng, typename F, typename P = ident,
-                typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallable<F, projected<I, P>>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, F fun, P proj = P{}) const
+                CONCEPT_REQUIRES_(InputRange<Rng>() &&
+                    IndirectInvocable<F, projected<range_iterator_t<Rng>, P>>())>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::fun(F)>
+            operator()(Rng &&rng, F fun, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
+                return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in(),
+                    detail::move(fun)};
             }
         };
 

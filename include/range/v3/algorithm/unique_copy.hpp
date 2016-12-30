@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident>
         using UniqueCopyable = meta::strict_and<
             InputIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>>,
+            IndirectRelation<C, projected<I, P>>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>,
             meta::strict_or<
@@ -47,11 +47,9 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
                 concepts::InputIterator*, std::false_type)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     // Must save a copy into a local because we will need this value
@@ -62,7 +60,7 @@ namespace ranges
                     while(++begin != end)
                     {
                         auto &&x = *begin;
-                        if(!pred(proj(value), proj(x)))
+                        if(!invoke(pred, invoke(proj, value), invoke(proj, x)))
                         {
                             value = (decltype(x) &&) x;
                             *out = value;
@@ -74,11 +72,9 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
                 concepts::ForwardIterator*, std::false_type)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     I tmp = begin;
@@ -87,7 +83,7 @@ namespace ranges
                     while(++begin != end)
                     {
                         auto &&x = *begin;
-                        if(!pred(proj(*tmp), proj(x)))
+                        if(!invoke(pred, invoke(proj, *tmp), invoke(proj, x)))
                         {
                             *out = (decltype(x) &&) x;
                             ++out;
@@ -99,18 +95,16 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
                 concepts::InputIterator*, std::true_type)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     *out = *begin;
                     while(++begin != end)
                     {
                         auto &&x = *begin;
-                        if(!pred(proj(*out), proj(x)))
+                        if(!invoke(pred, invoke(proj, *out), invoke(proj, x)))
                             *++out = (decltype(x) &&) x;
                     }
                     ++out;
@@ -125,7 +119,7 @@ namespace ranges
             ///
             /// \pre InputView is a model of the `InputView` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
-            /// \pre `C` is a model of the `CallableRelation` concept
+            /// \pre `C` is a model of the `Relation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Sentinel<S, I>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const

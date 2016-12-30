@@ -48,7 +48,7 @@ namespace ranges
         using StablePartitionable = meta::strict_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectCallablePredicate<C, projected<I, P>>>;
+            IndirectPredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -65,7 +65,7 @@ namespace ranges
                 if(len == 2)
                 {
                     I tmp = begin;
-                    if(pred(proj(*++tmp)))
+                    if(invoke(pred, invoke(proj, *++tmp)))
                     {
                         ranges::iter_swap(begin, tmp);
                         return tmp;
@@ -102,7 +102,7 @@ namespace ranges
                 // recurse on [middle, end], except increase middle until *(middle) is false, *end know to be true
                 I m1 = middle;
                 D len_half = len - half;
-                while(pred(proj(*m1)))
+                while(invoke(pred, invoke(proj, *m1)))
                 {
                     if(++m1 == end)
                         return ranges::rotate(begin_false, middle, end).begin();
@@ -128,7 +128,7 @@ namespace ranges
                 {
                     if(begin == end)
                         return begin;
-                    if(!pred(proj(*begin)))
+                    if(!invoke(pred, invoke(proj, *begin)))
                         break;
                     ++begin;
                 }
@@ -156,7 +156,7 @@ namespace ranges
                 if(len == 3)
                 {
                     I tmp = begin;
-                    if(pred(proj(*++tmp)))
+                    if(invoke(pred, invoke(proj, *++tmp)))
                     {
                         ranges::iter_swap(begin, tmp);
                         ranges::iter_swap(tmp, end);
@@ -198,7 +198,7 @@ namespace ranges
                 I m1 = middle;
                 I begin_false = begin;
                 D len_half = half;
-                while(!pred(proj(*--m1)))
+                while(!invoke(pred, invoke(proj, *--m1)))
                 {
                     if(m1 == begin)
                         goto first_half_done;
@@ -213,7 +213,7 @@ namespace ranges
                 // recurse on [middle, end], except increase middle until *(middle) is false, *end know to be true
                 m1 = middle;
                 len_half = len - half;
-                while(pred(proj(*m1)))
+                while(invoke(pred, invoke(proj, *m1)))
                 {
                     if(++m1 == end)
                         return ranges::rotate(begin_false, middle, ++end).begin();
@@ -240,7 +240,7 @@ namespace ranges
                 {
                     if(begin == end_)
                         return begin;
-                    if(!pred(proj(*begin)))
+                    if(!invoke(pred, invoke(proj, *begin)))
                         break;
                     ++begin;
                 }
@@ -251,7 +251,7 @@ namespace ranges
                 {
                     if(begin == --end)
                         return begin;
-                } while(!pred(proj(*end)));
+                } while(!invoke(pred, invoke(proj, *end)));
                 // We now have a reduced range [begin, end]
                 // *begin is known to be false
                 // *end is known to be true
@@ -266,10 +266,8 @@ namespace ranges
         public:
             template<typename I, typename S, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, C pred_, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
                     std::ref(proj), iterator_concept<I>());
             }

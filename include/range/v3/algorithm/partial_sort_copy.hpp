@@ -36,7 +36,7 @@ namespace ranges
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,
-            IndirectCallableRelation<C, projected<I, PI>, projected<O, PO>>,
+            IndirectRelation<C, projected<I, PI>, projected<O, PO>>,
             Sortable<O, C, PO>>;
 
         /// \addtogroup group-algorithms
@@ -47,12 +47,9 @@ namespace ranges
                 typename PI = ident, typename PO = ident,
                 CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     Sentinel<SI, I>() && Sentinel<SO, O>())>
-            O operator()(I begin, SI end, O out_begin, SO out_end, C pred_ = C{}, PI in_proj_ = PI{},
-                PO out_proj_ = PO{}) const
+            O operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{}, PI in_proj = PI{},
+                PO out_proj = PO{}) const
             {
-                auto && pred = as_function(pred_);
-                auto && in_proj = as_function(in_proj_);
-                auto && out_proj = as_function(out_proj_);
                 O r = out_begin;
                 if(r != out_end)
                 {
@@ -63,7 +60,7 @@ namespace ranges
                     for(; begin != end; ++begin)
                     {
                         auto &&x = *begin;
-                        if(pred(in_proj(x), out_proj(*out_begin)))
+                        if(invoke(pred, invoke(in_proj, x), invoke(out_proj, *out_begin)))
                         {
                             *out_begin = (decltype(x) &&) x;
                             detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));

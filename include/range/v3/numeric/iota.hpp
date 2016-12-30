@@ -35,11 +35,11 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, class T, typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputRange<Rng &, T const &>() && WeaklyIncrementable<T>())>
-            O operator()(Rng &rng, T val) const
+            template<typename Rng, class T,
+                CONCEPT_REQUIRES_(OutputRange<Rng, T const &>() && WeaklyIncrementable<T>())>
+            range_safe_iterator_t<Rng> operator()(Rng && rng, T val) const
             {
-                return (*this)(begin(rng), end(rng), std::move(val));
+                return (*this)(begin(rng), end(rng), detail::move(val));
             }
         };
 

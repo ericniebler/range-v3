@@ -39,8 +39,11 @@ namespace ranges
                 // tuple value
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
-                auto operator()(copy_tag, Its...) const ->
-                    std::tuple<iterator_value_t<Its>...>;
+                [[noreturn]] auto operator()(copy_tag, Its...) const ->
+                    std::tuple<iterator_value_t<Its>...>
+                {
+                    RANGES_EXPECT(false);
+                }
 
                 // tuple reference
                 template<typename ...Its,
@@ -66,8 +69,11 @@ namespace ranges
                 // pair value
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
-                auto operator()(copy_tag, It1, It2) const ->
-                    std::pair<iterator_value_t<It1>, iterator_value_t<It2>>;
+                [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
+                    std::pair<iterator_value_t<It1>, iterator_value_t<It2>>
+                {
+                    RANGES_EXPECT(false);
+                }
 
                 // pair reference
                 template<typename It1, typename It2,

@@ -27,7 +27,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // [&](auto&& i){ return !pred(val, i); }
+            // [&](auto&& i){ return !invoke(pred, val, i); }
             template<typename Pred, typename Val>
             struct upper_bound_predicate
             {
@@ -37,7 +37,7 @@ namespace ranges
                 template<typename T>
                 bool operator()(T&& t) const
                 {
-                    return !pred_(val_, std::forward<T>(t));
+                    return !invoke(pred_, val_, std::forward<T>(t));
                 }
             };
 
@@ -61,10 +61,9 @@ namespace ranges
                 /// \pre `Rng` is a model of the `Range` concept
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V2, C, P>())>
-                I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred_ = C{},
+                I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred = C{},
                     P proj = P{}) const
                 {
-                    auto&& pred = as_function(pred_);
                     return partition_point_n(std::move(begin), d,
                         detail::make_upper_bound_predicate(pred, val), std::move(proj));
                 }

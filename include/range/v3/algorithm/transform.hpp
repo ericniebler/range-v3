@@ -34,30 +34,22 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename F, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Callable::result_t<P, V>,
-            typename Y = concepts::Callable::result_t<F, X>>
+        template<typename I, typename O, typename F, typename P = ident>
         using Transformable1 = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectCallable<F, projected<I, P>>,
-            Writable<O, Y &&>>;
+            CopyConstructible<F>,
+            Writable<O, indirect_result_of_t<F&(projected<I, P>)>>>;
 
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
-            typename P0 = ident, typename P1 = ident,
-            typename V0 = iterator_common_reference_t<I0>,
-            typename X0 = concepts::Callable::result_t<P0, V0>,
-            typename V1 = iterator_common_reference_t<I1>,
-            typename X1 = concepts::Callable::result_t<P1, V1>,
-            typename Y = concepts::Callable::result_t<F, X0, X1>>
+            typename P0 = ident, typename P1 = ident>
         using Transformable2 = meta::strict_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<O>,
-            IndirectCallable<F, projected<I0, P0>, projected<I1, P1>>,
-            Writable<O, Y &&>>;
+            CopyConstructible<F>,
+            Writable<O, indirect_result_of_t<F&(projected<I0, P0>, projected<I1, P1>)>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -66,12 +58,11 @@ namespace ranges
             // Single-range variant
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && Transformable1<I, O, F, P>())>
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
+            tagged_pair<tag::in(I), tag::out(O)>
+            operator()(I begin, S end, O out, F fun, P proj = P{}) const
             {
-                auto &&fun = as_function(fun_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin, ++out)
-                    *out = fun(proj(*begin));
+                    *out = invoke(fun, invoke(proj, *begin));
                 return {begin, out};
             }
 
@@ -89,14 +80,12 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun_,
-                P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
+            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
+            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
+                P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
-                auto &&fun = as_function(fun_);
-                auto &&proj0 = as_function(proj0_);
-                auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
-                    *out = fun(proj0(*begin0), proj1(*begin1));
+                    *out = invoke(fun, invoke(proj0, *begin0), invoke(proj1, *begin1));
                 return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{begin0, begin1, out};
             }
 

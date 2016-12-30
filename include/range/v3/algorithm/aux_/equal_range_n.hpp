@@ -37,25 +37,23 @@ namespace ranges
                 template<typename I, typename V, typename R = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V, R, P>())>
                 iterator_range<I>
-                operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
-                    P proj_ = P{}) const
+                operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred = R{},
+                    P proj = P{}) const
                 {
                     if(0 < dist)
                     {
-                        auto && pred = as_function(pred_);
-                        auto && proj = as_function(proj_);
                         do
                         {
                             auto half = dist / 2;
                             auto middle = next(begin, half);
                             auto && v = *middle;
-                            auto && pv = proj((decltype(v) &&) v);
-                            if(pred(pv, val))
+                            auto && pv = invoke(proj, (decltype(v) &&) v);
+                            if(invoke(pred, pv, val))
                             {
                                 begin = std::move(++middle);
                                 dist -= half + 1;
                             }
-                            else if(pred(val, pv))
+                            else if(invoke(pred, val, pv))
                             {
                                 dist = half;
                             }

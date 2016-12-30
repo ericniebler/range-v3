@@ -26,6 +26,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
 {
@@ -39,7 +40,7 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            using result_t = concepts::Function::result_t<G>;
+            using result_t = result_of_t<G&()>;
             semiregular_t<G> gen_;
             semiregular_t<result_t> val_;
             struct cursor
@@ -52,10 +53,6 @@ namespace ranges
                 cursor(generate_view &view)
                   : view_(&view)
                 {}
-                constexpr bool equal(default_sentinel) const
-                {
-                    return false;
-                }
                 result_t get() const
                 {
                     return view_->val_;
@@ -67,11 +64,15 @@ namespace ranges
             };
             void next()
             {
-                val_ = gen_();
+                val_ = invoke(gen_);
             }
             cursor begin_cursor()
             {
                 return {*this};
+            }
+            unreachable end_cursor() const
+            {
+                return {};
             }
         public:
             generate_view() = default;
@@ -90,8 +91,11 @@ namespace ranges
             {
                 template<typename G>
                 using Concept = meta::and_<
-                    Function<G>,
-                    meta::not_<Same<void, concepts::Function::result_t<G>>>>;
+                    Invocable<G&>,
+                    CopyConstructible<G>,
+                    std::is_object<detail::decay_t<result_of_t<G&()>>>,
+                    Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>,
+                    Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>>;
 
                 template<typename G,
                     CONCEPT_REQUIRES_(Concept<G>())>
@@ -104,11 +108,25 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<G>())>
                 void operator()(G) const
                 {
-                    CONCEPT_ASSERT_MSG(Function<G>(),
-                        "The argument to view::generate must be a function that is callable with "
-                        "no arguments");
-                    CONCEPT_ASSERT_MSG(meta::not_<Same<void, concepts::Function::result_t<G>>>(),
-                        "The return type of the function G must not be void.");
+                    check<G>();
+                }
+                template<typename G>
+                static void check()
+                {
+                    CONCEPT_ASSERT_MSG(Invocable<G&>(),
+                        "The function object G must be callable with no arguments.");
+                    CONCEPT_ASSERT_MSG(CopyConstructible<G>(),
+                        "The function object G must be CopyConstructible.");
+                    using T = result_of_t<G&()>;
+                    using D = detail::decay_t<T>;
+                    CONCEPT_ASSERT_MSG(std::is_object<D>(),
+                        "The return type of the function object G must decay to an object type.");
+                    CONCEPT_ASSERT_MSG(Constructible<D, T>(),
+                        "The decayed return type of the function object G must be Constructible from the "
+                        "return type of G.");
+                    CONCEPT_ASSERT_MSG(Assignable<D&, T>(),
+                        "The decayed return type of the function object G must be Assignable from the "
+                        "return type of G.");
                 }
             #endif
             };

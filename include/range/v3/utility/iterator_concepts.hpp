@@ -483,12 +483,13 @@ namespace ranges
         }
 
         template<typename C, typename ...Is>
-        using IndirectFunction = meta::and_<
+        using IndirectInvocable = meta::and_<
             meta::strict_and<Readable<Is>...>,
+            CopyConstructible<C>,
             // C must be callable with the values and references read from the Is.
             meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Function>, C>,
+                    meta::bind_front<meta::quote<Invocable>, C&>,
                     meta::quote<meta::strict_and>>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
@@ -496,36 +497,32 @@ namespace ranges
             // evaluated unless C is truly callable as determined above.)
             meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
+                    meta::bind_front<meta::quote<concepts::Invocable::result_t>, C&>,
                     meta::quote<CommonReference>>,
                 Is...> >;
 
         template<typename C, typename ...Is>
+        using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
+
+        template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
             meta::strict_and<Readable<Is>...>,
+            CopyConstructible<C>,
             meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Predicate>, C>,
+                    meta::bind_front<meta::quote<Predicate>, C&>,
                     meta::quote<meta::strict_and>>,
                 Is...>>;
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
             meta::strict_and<Readable<I0>, Readable<I1>>,
+            CopyConstructible<C>,
             meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Relation>, C>,
+                    meta::bind_front<meta::quote<Relation>, C&>,
                     meta::quote<meta::strict_and>>,
                 I0, I1>>;
-
-        template<typename C, typename ...Is>
-        using IndirectCallable = IndirectFunction<function_type<C>, Is...>;
-
-        template<typename C, typename ...Is>
-        using IndirectCallablePredicate = IndirectPredicate<function_type<C>, Is...>;
-
-        template<typename C, typename I0, typename I1 = I0>
-        using IndirectCallableRelation = IndirectRelation<function_type<C>, I0, I1>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // indirect_result_of
@@ -540,11 +537,9 @@ namespace ranges
             template<typename Fun, typename... Is>
             struct indirect_result_of_<
                 Fun(Is...),
-                meta::if_c<meta::strict_and<Readable<Is>...>::value>>
-              : meta::if_<
-                    IndirectCallable<Fun, Is...>,
-                    std::result_of<Fun(concepts::Readable::reference_t<Is>...)>>
+                meta::if_<Invocable<Fun, concepts::Readable::reference_t<Is>...>>>
             {
+                using type = result_of_t<Fun(concepts::Readable::reference_t<Is>...)>;
             };
         }
 
@@ -570,7 +565,13 @@ namespace ranges
         /// \endcond
 
         template<typename I, typename Proj>
-        using projected = meta::if_c<IndirectCallable<Proj, I>::value, detail::projected_<I, Proj>>;
+        using projected = meta::if_c<IndirectInvocable<Proj, I>::value, detail::projected_<I, Proj>>;
+
+        template<typename I, typename Proj>
+        struct difference_type<detail::projected_<I, Proj>>
+        {
+            using type = meta::_t<difference_type<I>>;
+        };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
@@ -586,7 +587,7 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, projected<I0, P0>, projected<I1, P1>>,
+            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>,
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
@@ -596,33 +597,33 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, projected<I0, P0>, projected<I1, P1>>,
+            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>,
             IndirectlyMovable<I0, Out>,
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>, projected<I, P>>,
+            IndirectRelation<C, projected<I, P>, projected<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, projected<I, P>, V2 const *>>;
+            IndirectRelation<C, projected<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using AsymmetricallyComparable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
-            IndirectCallablePredicate<C, projected<I1, P1>, projected<I2, P2>>>;
+            IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using Comparable = meta::strict_and<
             AsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>>;
+            IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>>;
 
         template<typename S, typename I>
         using sized_sentinel_concept =

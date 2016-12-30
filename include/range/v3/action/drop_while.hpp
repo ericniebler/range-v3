@@ -51,7 +51,7 @@ namespace ranges
                     auto requires_(Rng&&, Fun&&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::is_true(IndirectCallablePredicate<Fun, range_iterator_t<Rng>>{}),
+                            concepts::is_true(IndirectPredicate<Fun, range_iterator_t<Rng>>{}),
                             concepts::model_of<concepts::ErasableRange, Rng, I, I>()
                         ));
                 };
@@ -77,7 +77,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::drop_while operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Fun, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Fun, range_iterator_t<Rng>>(),
                         "The function passed to action::drop_while must be callable with objects "
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");

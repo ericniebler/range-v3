@@ -20,6 +20,11 @@
 #define GCC_4_8_WORKAROUND 1
 #endif
 
+CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int>, int&>());
+CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>());
+CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int, true>, int&>());
+CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int, true>, int&&>());
+
 namespace
 {
     struct Integer
@@ -135,12 +140,12 @@ int main()
 
 #ifdef _WIN32
     {
-        // Ensure that Callable accepts pointers to functions with non-default calling conventions.
-        CONCEPT_ASSERT(ranges::Callable<void(__cdecl*)()>());
-        CONCEPT_ASSERT(ranges::Callable<void(__stdcall*)()>());
-        CONCEPT_ASSERT(ranges::Callable<void(__fastcall*)()>());
-        CONCEPT_ASSERT(ranges::Callable<void(__thiscall*)()>());
-        CONCEPT_ASSERT(ranges::Callable<void(__vectorcall*)()>());
+        // Ensure that Invocable accepts pointers to functions with non-default calling conventions.
+        CONCEPT_ASSERT(ranges::Invocable<void(__cdecl*)()>());
+        CONCEPT_ASSERT(ranges::Invocable<void(__stdcall*)()>());
+        CONCEPT_ASSERT(ranges::Invocable<void(__fastcall*)()>());
+        CONCEPT_ASSERT(ranges::Invocable<void(__thiscall*)()>());
+        CONCEPT_ASSERT(ranges::Invocable<void(__vectorcall*)()>());
     }
 #endif // _WIN32
 

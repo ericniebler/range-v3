@@ -35,7 +35,7 @@ namespace ranges
             InputIterator<I>,
             OutputIterator<O, T const &>,
             IndirectlyCopyable<I, O>,
-            IndirectCallablePredicate<C, projected<I, P>>>;
+            IndirectPredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -43,14 +43,12 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename C, typename T, typename P = ident,
                 CONCEPT_REQUIRES_(ReplaceCopyIfable<I, O, C, T, P>() && Sentinel<S, I>())>
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred_, T const & new_value, P proj_ = {}) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin, ++out)
                 {
                     auto &&x = *begin;
-                    if(pred(proj(x)))
+                    if(invoke(pred, invoke(proj, x)))
                         *out = new_value;
                     else
                         *out = (decltype(x) &&) x;

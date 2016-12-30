@@ -38,16 +38,14 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() &&
-                    IndirectCallableRelation<C, projected<I, P>>())>
+                    IndirectRelation<C, projected<I, P>>())>
             tagged_pair<tag::min(I), tag::max(I)>
-            operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
+            operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                auto && pred = as_function(pred_);
-                auto && proj = as_function(proj_);
                 tagged_pair<tag::min(I), tag::max(I)> result{begin, begin};
                 if(begin == end || ++begin == end)
                     return result;
-                if(pred(proj(*begin), proj(*result.first)))
+                if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.first)))
                     result.first = begin;
                 else
                     result.second = begin;
@@ -56,26 +54,26 @@ namespace ranges
                     I tmp = begin;
                     if(++begin == end)
                     {
-                        if(pred(proj(*tmp), proj(*result.first)))
+                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.first)))
                             result.first = tmp;
-                        else if(!pred(proj(*tmp), proj(*result.second)))
+                        else if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.second)))
                             result.second = tmp;
                         break;
                     }
                     else
                     {
-                        if(pred(proj(*begin), proj(*tmp)))
+                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
                         {
-                            if(pred(proj(*begin), proj(*result.first)))
+                            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.first)))
                                 result.first = begin;
-                            if(!pred(proj(*tmp), proj(*result.second)))
+                            if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.second)))
                                 result.second = tmp;
                         }
                         else
                         {
-                            if(pred(proj(*tmp), proj(*result.first)))
+                            if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.first)))
                                 result.first = tmp;
-                            if(!pred(proj(*begin), proj(*result.second)))
+                            if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.second)))
                                 result.second = begin;
                         }
                     }
@@ -86,7 +84,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                    IndirectCallableRelation<C, projected<I, P>>())>
+                    IndirectRelation<C, projected<I, P>>())>
             meta::if_<std::is_lvalue_reference<Rng>,
                 tagged_pair<tag::min(I), tag::max(I)>,
                 dangling<tagged_pair<tag::min(I), tag::max(I)>>>

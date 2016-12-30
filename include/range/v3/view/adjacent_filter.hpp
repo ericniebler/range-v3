@@ -43,7 +43,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<function_type<Pred>> pred_;
+            semiregular_t<Pred> pred_;
 
             struct adaptor : adaptor_base
             {
@@ -57,10 +57,10 @@ namespace ranges
                 void next(range_iterator_t<Rng> &it) const
                 {
                     auto const end = ranges::end(rng_->mutable_base());
-                    auto &&pred = rng_->pred_;
+                    auto &pred = rng_->pred_;
                     RANGES_EXPECT(it != end);
                     for(auto prev = it; ++it != end; prev = it)
-                        if(pred(*prev, *it))
+                        if(invoke(pred, *prev, *it))
                             break;
                 }
                 void prev() = delete;
@@ -78,7 +78,7 @@ namespace ranges
             adjacent_filter_view() = default;
             adjacent_filter_view(Rng rng, Pred pred)
               : adjacent_filter_view::view_adaptor{std::move(rng)}
-              , pred_(as_function(std::move(pred)))
+              , pred_(std::move(pred))
             {}
        };
 
@@ -99,7 +99,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectCallablePredicate<Pred, range_iterator_t<Rng>,
+                    IndirectPredicate<Pred, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
@@ -115,9 +115,9 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>,
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
-                        "Function Pred must be callable with two arguments of the range's common "
+                        "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }
             #endif

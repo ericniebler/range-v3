@@ -32,7 +32,7 @@ namespace ranges
                 operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(Range<Rng>());
-                    CONCEPT_ASSERT(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(IndirectPredicate<Pred, range_iterator_t<Rng>>());
                     return {all(std::forward<Rng>(rng)), not_fn(std::move(pred))};
                 }
                 template<typename Pred>

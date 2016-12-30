@@ -61,11 +61,9 @@ namespace ranges
         private:
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
             static I1
-            impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred_, P proj_,
+            impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
                  concepts::ForwardIterator*, concepts::ForwardIterator*)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 bool found = false;
                 I1 res;
                 if(begin2 == end2)
@@ -76,7 +74,7 @@ namespace ranges
                     {
                         if(begin1 == end1)
                             return found ? res : begin1;
-                        if(pred(proj(*begin1), *begin2))
+                        if(invoke(pred, invoke(proj, *begin1), *begin2))
                             break;
                         ++begin1;
                     }
@@ -92,7 +90,7 @@ namespace ranges
                         }
                         if(++tmp1 == end1)
                             return found ? res : tmp1;
-                        if(!pred(proj(*tmp1), *tmp2))
+                        if(!invoke(pred, invoke(proj, *tmp1), *tmp2))
                         {
                             ++begin1;
                             break;
@@ -103,11 +101,9 @@ namespace ranges
 
             template<typename I1, typename I2, typename R, typename P>
             static I1
-            impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
+            impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                  concepts::BidirectionalIterator*, concepts::BidirectionalIterator*)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 // modeled after search algorithm (in reverse)
                 if(begin2 == end2)
                     return end1;  // Everything matches an empty sequence
@@ -119,7 +115,7 @@ namespace ranges
                     // Find end element in sequence 1 that matches *(end2-1), with a mininum of loop checks
                         // return end1 if no element matches *begin2
                     do  if(begin1 == l1) return end1;
-                    while(!pred(proj(*--l1), *l2));
+                    while(!invoke(pred, invoke(proj, *--l1), *l2));
                     // *l1 matches *l2, now match elements before here
                     I1 m1 = l1;
                     I2 m2 = l2;
@@ -129,17 +125,15 @@ namespace ranges
                         else if(m1 == begin1) return end1;
                         // if there is a mismatch, restart with a new l1
                         // else there is a match, check next elements
-                    while(pred(proj(*--m1), *--m2));
+                    while(invoke(pred, invoke(proj, *--m1), *--m2));
                 }
             }
 
             template<typename I1, typename I2, typename R, typename P>
             static I1
-            impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
+            impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                  concepts::RandomAccessIterator*, concepts::RandomAccessIterator*)
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
                 auto len2 = end2 - begin2;
                 if(len2 == 0)
@@ -154,12 +148,12 @@ namespace ranges
                 while(true)
                 {
                     do if(s == l1) return end1;
-                    while(!pred(proj(*--l1), *l2));
+                    while(!invoke(pred, invoke(proj, *--l1), *l2));
                     I1 m1 = l1;
                     I2 m2 = l2;
                     do  if(m2 == begin2) return m1;
                     // no need to check range on m1 because s guarantees we have enough source
-                    while(pred(proj(*--m1), *--m2));
+                    while(invoke(pred, invoke(proj, *--m1), *--m2));
                 }
             }
 
@@ -168,7 +162,7 @@ namespace ranges
                 typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I1>() && Sentinel<S1, I1>() &&
                     ForwardIterator<I2>() && Sentinel<S2, I2>() &&
-                    IndirectCallableRelation<R, projected<I1, P>, I2>())>
+                    IndirectRelation<R, projected<I1, P>, I2>())>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
@@ -183,7 +177,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng1>() && ForwardRange<Rng2>() &&
-                    IndirectCallableRelation<R, projected<I1, P>, I2>())>
+                    IndirectRelation<R, projected<I1, P>, I2>())>
             range_safe_iterator_t<Rng1> operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using RemovableIf = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallablePredicate<C, projected<I, P>>,
+            IndirectPredicate<C, projected<I, P>>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms
@@ -42,16 +42,14 @@ namespace ranges
         {
             template<typename I, typename S, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(RemovableIf<I, C, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, C pred_, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
                 if(begin != end)
                 {
                     for(I i = next(begin); i != end; ++i)
                     {
-                        if(!(pred(proj(*i))))
+                        if(!(invoke(pred, invoke(proj, *i))))
                         {
                             *begin = iter_move(i);
                             ++begin;

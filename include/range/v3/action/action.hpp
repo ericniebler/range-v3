@@ -39,7 +39,7 @@ namespace ranges
                     static auto bind(Ts &&...ts)
                     RANGES_DECLTYPE_AUTO_RETURN
                     (
-                        A::bind(std::forward<Ts>(ts)...)
+                        A::bind(detail::forward<Ts>(ts)...)
                     )
                 };
             };
@@ -49,7 +49,7 @@ namespace ranges
                 template<typename Fun>
                 action<Fun> operator()(Fun fun) const
                 {
-                    return {std::move(fun)};
+                    return {detail::move(fun)};
                 }
             };
 
@@ -65,7 +65,7 @@ namespace ranges
                 friend pipeable_access;
                 template<typename Rng>
                 using ActionPipeConcept = meta::and_<
-                    Function<Action, Rng>,
+                    Invocable<Action&, Rng>,
                     Range<Rng>,
                     meta::not_<std::is_reference<Rng>>>;
                 // Pipeing requires things are passed by value.
@@ -74,7 +74,7 @@ namespace ranges
                 static auto pipe(Rng && rng, Act && act)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    act.action_(std::move(rng))
+                    invoke(act.action_, detail::move(rng))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
@@ -86,7 +86,7 @@ namespace ranges
                         "The type Rng must be a model of the Range concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
-                    CONCEPT_ASSERT_MSG(Function<Action, Rng>(),
+                    CONCEPT_ASSERT_MSG(Invocable<Action&, Rng>(),
                         "This action is not callable with this range type.");
                     static_assert(!std::is_reference<Rng>(),
                         "You can't pipe an lvalue into an action. Try using std::move on the argument, "
@@ -97,31 +97,31 @@ namespace ranges
             public:
                 action() = default;
                 action(Action a)
-                  : action_(std::move(a))
+                  : action_(detail::move(a))
                 {}
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(Range<Rng &>() && Function<Action, Rng &, Rest &&...>())>
+                    CONCEPT_REQUIRES_(Range<Rng &>() && Invocable<Action const&, Rng &, Rest &&...>())>
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    action_(rng, std::forward<Rest>(rest)...)
+                    invoke(action_, rng, detail::forward<Rest>(rest)...)
                 )
                 // Currying overload.
                 template<typename T, typename...Rest, typename A = Action>
                 auto operator()(T && t, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_action(action_access::impl<A>::bind(action_, std::forward<T>(t),
-                        std::forward<Rest>(rest)...))
+                    make_action(action_access::impl<A>::bind(action_, detail::forward<T>(t),
+                        detail::forward<Rest>(rest)...))
                 )
             };
 
             template<typename Rng, typename Action,
                 CONCEPT_REQUIRES_(is_pipeable<Action>() && Range<Rng &>() &&
-                    Function<bitwise_or, ref_t<Rng &> &&, Action>() &&
+                    Invocable<bitwise_or, ref_t<Rng &> &&, Action &>() &&
                     Same<ref_t<Rng &>,
-                        concepts::Function::result_t<bitwise_or, ref_t<Rng &> &&, Action>>())>
+                        result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())>
             Rng & operator|=(Rng & rng, Action && action)
             {
                 ref(rng) | action;

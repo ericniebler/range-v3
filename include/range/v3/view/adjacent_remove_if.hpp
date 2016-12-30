@@ -42,7 +42,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<function_type<Pred>> pred_;
+            semiregular_t<Pred> pred_;
             detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
 
             struct adaptor : adaptor_base
@@ -52,12 +52,12 @@ namespace ranges
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
                     auto const end = ranges::end(rng_->mutable_base());
-                    auto &&pred = rng_->pred_;
+                    auto &pred = rng_->pred_;
                     if(it == end)
                         return;
                     auto next = it;
                     for(; ++next != end; it = next)
-                        if(!pred(*it, *next))
+                        if(!invoke(pred, *it, *next))
                             return;
                 }
             public:
@@ -95,7 +95,7 @@ namespace ranges
             adjacent_remove_if_view() = default;
             adjacent_remove_if_view(Rng rng, Pred pred)
               : adjacent_remove_if_view::view_adaptor{std::move(rng)}
-              , pred_(as_function(std::move(pred)))
+              , pred_(std::move(pred))
             {}
        };
 
@@ -116,7 +116,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectCallablePredicate<Pred, range_iterator_t<Rng>,
+                    IndirectPredicate<Pred, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
@@ -132,9 +132,9 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>,
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
-                        "Function Pred must be callable with two arguments of the range's common "
+                        "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }
             #endif

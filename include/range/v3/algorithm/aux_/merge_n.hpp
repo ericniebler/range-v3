@@ -61,9 +61,6 @@ namespace ranges
                            O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
                 {
                     using T = tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>;
-                    auto &&ir = as_function(r);
-                    auto &&ip0 = as_function(p0);
-                    auto &&ip1 = as_function(p1);
                     auto n0orig = n0;
                     auto n1orig = n1;
                     auto b0 = uncounted(begin0);
@@ -84,7 +81,7 @@ namespace ranges
                             begin1 = recounted(begin1, b1, n1orig);
                             return T{begin0, begin1, res.second};
                         }
-                        if(ir(ip1(*b1), ip0(*b0)))
+                        if(invoke(r, invoke(p1, *b1), invoke(p0, *b0)))
                         {
                             *out = *b1;
                             ++b1; ++out; --n1;

@@ -34,21 +34,19 @@ namespace ranges
         {
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectCallablePredicate<F, projected<I, P> >())>
+                    IndirectPredicate<F, projected<I, P> >())>
             bool
             operator()(I first, S last, F pred, P proj = P{}) const
             {
-                auto &&ipred = as_function(pred);
-                auto &&iproj = as_function(proj);
                 for(; first != last; ++first)
-                    if(ipred(iproj(*first)))
+                    if(invoke(pred, invoke(proj, *first)))
                         return true;
                 return false;
             }
 
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallablePredicate<F, projected<I, P> >())>
+                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<F, projected<I, P> >())>
             bool
             operator()(Rng &&rng, F pred, P proj = P{}) const
             {

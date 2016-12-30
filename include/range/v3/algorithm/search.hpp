@@ -65,7 +65,7 @@ namespace ranges
                     {
                         if(d1 < d2)  // return the end if we've run out of room
                             return ranges::next(recounted(begin1_, std::move(begin1), d1_ - d1), std::move(end1));
-                        if(pred(proj1(*begin1), proj2(*begin2)))
+                        if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                             break;
                         ++begin1;
                         --d1;
@@ -78,7 +78,7 @@ namespace ranges
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
                             return recounted(begin1_, std::move(begin1), d1_ - d1);
                         ++m1;  // No need to check, we know we have room to match successfully
-                        if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
+                        if(!invoke(pred, invoke(proj1, *m1), invoke(proj2, *m2)))  // if there is a mismatch, restart with a new begin1
                         {
                             ++begin1;
                             --d1;
@@ -98,7 +98,7 @@ namespace ranges
                     {
                         if(begin1 == end1)  // return end1 if no element matches *begin2
                             return begin1;
-                        if(pred(proj1(*begin1), proj2(*begin2)))
+                        if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                             break;
                         ++begin1;
                     }
@@ -111,7 +111,7 @@ namespace ranges
                             return begin1;
                         if(++m1 == end1)  // Otherwise if source exhausted, pattern not found
                             return m1;
-                        if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
+                        if(!invoke(pred, invoke(proj1, *m1), invoke(proj2, *m2)))  // if there is a mismatch, restart with a new begin1
                         {
                             ++begin1;
                             break;
@@ -128,13 +128,10 @@ namespace ranges
                     Sentinel<S2, I2>()
                 )>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
-                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 if(begin2 == end2)
                     return begin1;
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 if(SizedSentinel<S1, I1>() && SizedSentinel<S2, I2>())
                     return search_fn::sized_impl(std::move(begin1), std::move(end1),
                         distance(begin1, end1), std::move(begin2), std::move(end2),
@@ -154,14 +151,11 @@ namespace ranges
                     Range<Rng2>()
                 )>
             range_safe_iterator_t<Rng1>
-            operator()(Rng1 &&rng1, Rng2 &&rng2, C pred_ = C{}, P1 proj1_ = P1{},
-                P2 proj2_ = P2{}) const
+            operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const
             {
                 if(empty(rng2))
                     return begin(rng1);
-                auto &&pred = as_function(pred_);
-                auto &&proj1 = as_function(proj1_);
-                auto &&proj2 = as_function(proj2_);
                 if(SizedRange<Rng1>() && SizedRange<Rng2>())
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);

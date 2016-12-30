@@ -39,21 +39,18 @@ namespace ranges
             /// \pre `Rng` is a model of the `ForwardView` concept
             /// \pre `I` is a model of the `ForwardIterator` concept
             /// \pre `S` is a model of the `Sentinel` concept
-            /// \pre `C` is a model of the `CallableRelation` concept
+            /// \pre `C` is a model of the `Relation` concept
             ///
             template<typename I, typename S, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
-
                 begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
 
                 if(begin != end)
                 {
                     for(I i = next(begin); ++i != end;)
-                        if(!pred(proj(*begin), proj(*i)))
+                        if(!invoke(pred, invoke(proj, *begin), invoke(proj, *i)))
                             *++begin = iter_move(i);
                     ++begin;
                 }

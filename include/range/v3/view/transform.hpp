@@ -61,7 +61,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<function_type<Fun>> fun_;
+            semiregular_t<Fun> fun_;
             using use_sentinel_t =
                 meta::or_<meta::not_<BoundedRange<Rng>>, SinglePass<range_iterator_t<Rng>>>;
 
@@ -69,11 +69,11 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, IsConst>;
+                using fun_ref_ = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_ fun_;
             public:
                 using value_type =
-                    detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rng>{}))>;
+                    detail::decay_t<result_of_t<Fun&(copy_tag, range_iterator_t<Rng> &&)>>;
                 adaptor() = default;
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
@@ -81,12 +81,12 @@ namespace ranges
                 auto get(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    fun_(it)
+                    invoke(fun_, it)
                 )
                 auto indirect_move(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    fun_(move_tag{}, it)
+                    invoke(fun_, move_tag{}, it)
                 )
             };
 
@@ -98,12 +98,12 @@ namespace ranges
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>>())
+            CONCEPT_REQUIRES(Invocable<Fun const&, range_iterator_t<Rng>>())
             adaptor<true> begin_adaptor() const
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>>())
+            CONCEPT_REQUIRES(Invocable<Fun const&, range_iterator_t<Rng>>())
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};
@@ -112,7 +112,7 @@ namespace ranges
             iter_transform_view() = default;
             iter_transform_view(Rng rng, Fun fun)
               : iter_transform_view::view_adaptor{std::move(rng)}
-              , fun_(as_function(std::move(fun)))
+              , fun_(std::move(fun))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr range_size_t<Rng> size() const
@@ -147,7 +147,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<function_type<Fun>> fun_;
+            semiregular_t<Fun> fun_;
             Rng1 rng1_;
             Rng2 rng2_;
             using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
@@ -175,7 +175,7 @@ namespace ranges
             struct cursor
             {
             private:
-                using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, true>;
+                using fun_ref_ = semiregular_ref_or_val_t<Fun, true>;
                 fun_ref_ fun_;
                 range_iterator_t<Rng1> it1_;
                 range_iterator_t<Rng2> it2_;
@@ -186,8 +186,8 @@ namespace ranges
                     (bool) SinglePass<range_iterator_t<Rng1>>(),
                     (bool) SinglePass<range_iterator_t<Rng2>>()>;
                 using value_type =
-                    detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rng1>{},
-                        range_iterator_t<Rng2>{}))>;
+                    detail::decay_t<result_of_t<Fun&(copy_tag, range_iterator_t<Rng1>,
+                        range_iterator_t<Rng2>)>>;
 
                 cursor() = default;
                 cursor(fun_ref_ fun, range_iterator_t<Rng1> it1, range_iterator_t<Rng2> it2)
@@ -196,7 +196,7 @@ namespace ranges
                 auto get() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    fun_(it1_, it2_)
+                    invoke(fun_, it1_, it2_)
                 )
                 void next()
                 {
@@ -242,7 +242,7 @@ namespace ranges
                 auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    fun_(move_tag{}, it1_, it2_)
+                    invoke(fun_, move_tag{}, it1_, it2_)
                 )
             };
 
@@ -282,7 +282,7 @@ namespace ranges
         public:
             iter_transform2_view() = default;
             iter_transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
-              : fun_(as_function(std::move(fun)))
+              : fun_(std::move(fun))
               , rng1_(std::move(rng1))
               , rng2_(std::move(rng2))
             {}
@@ -333,17 +333,19 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    Callable<Fun, range_iterator_t<Rng>>,
-                    Callable<Fun, copy_tag, range_iterator_t<Rng>>,
-                    Callable<Fun, move_tag, range_iterator_t<Rng>>>;
+                    CopyConstructible<Fun>,
+                    Invocable<Fun&, range_iterator_t<Rng>>,
+                    Invocable<Fun&, copy_tag, range_iterator_t<Rng>>,
+                    Invocable<Fun&, move_tag, range_iterator_t<Rng>>>;
 
                 template<typename Rng1, typename Rng2, typename Fun>
                 using Concept2 = meta::and_<
                     InputRange<Rng1>,
                     InputRange<Rng2>,
-                    Callable<Fun, range_iterator_t<Rng1>, range_iterator_t<Rng2>>,
-                    Callable<Fun, copy_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>,
-                    Callable<Fun, move_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>>;
+                    CopyConstructible<Fun>,
+                    Invocable<Fun&, range_iterator_t<Rng1>, range_iterator_t<Rng2>>,
+                    Invocable<Fun&, copy_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>,
+                    Invocable<Fun&, move_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -369,15 +371,18 @@ namespace ranges
                         "The object on which view::iter_transform operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_iterator_t<Rng>>(),
+                        CopyConstructible<Fun>(),
+                        "The function passed to view::iter_transform must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_iterator_t<Rng>>(),
                         "The function passed to view::iter_transform must be callable with an argument "
                         "of the range's iterator type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, copy_tag, range_iterator_t<Rng>>(),
+                        Invocable<Fun&, copy_tag, range_iterator_t<Rng>>(),
                         "The function passed to view::iter_transform must be callable with "
                         "copy_tag and an argument of the range's iterator type.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, move_tag, range_iterator_t<Rng>>(),
+                        Invocable<Fun&, move_tag, range_iterator_t<Rng>>(),
                         "The function passed to view::iter_transform must be callable with "
                         "move_tag and an argument of the range's iterator type.");
                 }
@@ -393,15 +398,18 @@ namespace ranges
                         "The second object on which view::iter_transform operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
+                        CopyConstructible<Fun>(),
+                        "The function passed to view::iter_transform must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
                         "The function passed to view::iter_transform must be callable with argument "
                         "of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, copy_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
+                        Invocable<Fun&, copy_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
                         "The function passed to view::iter_transform must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, move_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
+                        Invocable<Fun&, move_tag, range_iterator_t<Rng1>, range_iterator_t<Rng2>>(),
                         "The function passed to view::iter_transform must be callable with "
                         "move_tag and arguments of the rangess iterator types.");
                 }
@@ -427,13 +435,19 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    Callable<Fun, range_reference_t<Rng> &&>>;
+                    CopyConstructible<Fun>,
+                    Invocable<Fun&, range_reference_t<Rng> &&>,
+                    meta::not_<Same<void, concepts::Invocable::result_t<
+                        Fun&, range_reference_t<Rng> &&>>>>;
 
                 template<typename Rng1, typename Rng2, typename Fun>
                 using Concept2 = meta::and_<
                     InputRange<Rng1>,
                     InputRange<Rng2>,
-                    Callable<Fun, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>>;
+                    CopyConstructible<Fun>,
+                    Invocable<Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>,
+                    meta::not_<Same<void, concepts::Invocable::result_t<
+                        Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -460,9 +474,17 @@ namespace ranges
                         "The object on which view::transform operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_reference_t<Rng> &&>(),
+                        CopyConstructible<Fun>(),
+                        "The function passed to view::transform must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_reference_t<Rng> &&>(),
                         "The function passed to view::transform must be callable with an argument "
                         "of the range's reference type.");
+                    CONCEPT_ASSERT_MSG(
+                        meta::not_<Same<void, concepts::Invocable::result_t<
+                            Fun&, range_reference_t<Rng> &&>>>(),
+                        "The function passed to view::transform must return non-void when called "
+                        "with an argument of the range's reference type.");
                 }
 
                 template<typename Rng1, typename Rng2, typename Fun,
@@ -476,9 +498,17 @@ namespace ranges
                         "The second object on which view::transform operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        Callable<Fun, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>(),
+                        CopyConstructible<Fun>(),
+                        "The function passed to view::transform must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>(),
                         "The function passed to view::transform must be callable with arguments "
                         "of the ranges' reference types.");
+                    CONCEPT_ASSERT_MSG(
+                        meta::not_<Same<void, concepts::Invocable::result_t<
+                            Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>>>(),
+                        "The function passed to view::transform must return non-void when called "
+                        "with arguments of the ranges' reference types.");
                 }
             #endif
             };

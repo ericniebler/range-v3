@@ -26,24 +26,24 @@ int main()
     int sum = 0;
     auto fun = [&](int i){sum += i; };
     std::vector<int> v1 { 0, 2, 4, 6 };
-    CHECK(ranges::for_each(v1.begin(), v1.end(), fun) == v1.end());
-    CHECK(ranges::for_each(v1, fun) == v1.end());
+    CHECK(ranges::for_each(v1.begin(), v1.end(), fun).in() == v1.end());
+    CHECK(ranges::for_each(v1, fun).in() == v1.end());
     CHECK(sum == 24);
 
     sum = 0;
     auto rfun = [&](int & i){sum += i; };
-    CHECK(ranges::for_each(v1.begin(), v1.end(), rfun) == v1.end());
-    CHECK(ranges::for_each(v1, rfun) == v1.end());
+    CHECK(ranges::for_each(v1.begin(), v1.end(), rfun).in() == v1.end());
+    CHECK(ranges::for_each(v1, rfun).in() == v1.end());
     CHECK(sum == 24);
 
     sum = 0;
     std::vector<S> v2{{&sum, 0}, {&sum, 2}, {&sum, 4}, {&sum, 6}};
-    CHECK(ranges::for_each(v2.begin(), v2.end(), &S::p) == v2.end());
-    CHECK(ranges::for_each(v2, &S::p) == v2.end());
+    CHECK(ranges::for_each(v2.begin(), v2.end(), &S::p).in() == v2.end());
+    CHECK(ranges::for_each(v2, &S::p).in() == v2.end());
     CHECK(sum == 24);
 
     sum = 0;
-    CHECK(ranges::for_each(ranges::make_iterator_range(v1.begin(), v1.end()), fun).get_unsafe() == v1.end());
+    CHECK(ranges::for_each(ranges::make_iterator_range(v1.begin(), v1.end()), fun).in().get_unsafe() == v1.end());
     CHECK(sum == 12);
 
     return ::test_result();

@@ -34,7 +34,7 @@ namespace ranges
         using RemoveCopyableIf = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectCallablePredicate<C, projected<I, P>>,
+            IndirectPredicate<C, projected<I, P>>,
             IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
@@ -43,14 +43,12 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && Sentinel<S, I>())>
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred_, P proj_ = P{}) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred, P proj = P{}) const
             {
-                auto &&pred = as_function(pred_);
-                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                 {
                     auto &&x = *begin;
-                    if(!(pred(proj(x))))
+                    if(!(invoke(pred, invoke(proj, x))))
                     {
                         *out = (decltype(x) &&) x;
                         ++out;

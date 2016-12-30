@@ -35,17 +35,14 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() && Sentinel<S, I>())>
-            I operator()(I begin, I middle, S end, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
-                auto && pred = as_function(pred_);
-                auto && proj = as_function(proj_);
-
                 make_heap(begin, middle, std::ref(pred), std::ref(proj));
                 auto const len = middle - begin;
                 I i = middle;
                 for(; i != end; ++i)
                 {
-                    if(pred(proj(*i), proj(*begin)))
+                    if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
                     {
                         iter_swap(i, begin);
                         detail::sift_down_n(begin, len, begin, std::ref(pred), std::ref(proj));
