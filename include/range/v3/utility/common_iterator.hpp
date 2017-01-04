@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -17,7 +18,10 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/basic_iterator.hpp>
+#include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/detail/variant.hpp>
 
 namespace ranges
@@ -27,6 +31,105 @@ namespace ranges
         /// \cond
         namespace detail
         {
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ == 2
+            // Semi-workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=77537
+            template<typename T, typename... Args>
+            struct pair_construct_hack
+              : Constructible<T, Args...>
+            {};
+
+            template<typename First, typename Second, typename Arg1, typename Arg2>
+            struct pair_construct_hack<std::pair<First, Second>, std::pair<Arg1, Arg2>>
+              : meta::and_<
+                    std::is_constructible<First, Arg1>,
+                    std::is_constructible<Second, Arg2>,
+                    meta::defer<Constructible, std::pair<First, Second>, std::pair<Arg1, Arg2>>>
+            {};
+
+            template<typename First, typename Second, typename Arg1, typename Arg2>
+            struct pair_construct_hack<std::pair<First, Second>, common_pair<Arg1, Arg2>>
+              : meta::and_<
+                    std::is_constructible<First, Arg1>,
+                    std::is_constructible<Second, Arg2>,
+                    meta::defer<Constructible, std::pair<First, Second>, std::pair<Arg1, Arg2>>>
+            {};
+
+            template<typename T, typename... Args>
+            using is_nothrow_constructible_hack = meta::and_<
+                pair_construct_hack<T, Args...>,
+                meta::defer<std::is_nothrow_constructible, T, Args...>>;
+#else
+            template<typename T, typename... Args>
+            using pair_construct_hack = Constructible<T, Args &&...>;
+
+            template<typename T, typename... Args>
+            using is_nothrow_constructible_hack = std::is_nothrow_constructible<T, Args...>;
+#endif
+
+            template<typename T>
+            class operator_arrow_proxy
+            {
+                T value_;
+            public:
+                template<typename U, CONCEPT_REQUIRES_(pair_construct_hack<T, U>())>
+                constexpr explicit operator_arrow_proxy(U && u)
+                    noexcept(is_nothrow_constructible_hack<T, U>::value)
+                  : value_(std::forward<U>(u))
+                {}
+                T const *operator->() const noexcept
+                {
+                    return std::addressof(value_);
+                }
+            };
+
+            template <class, class = void>
+            struct HasMemberOperatorArrow : std::false_type {};
+            template <class T>
+            struct HasMemberOperatorArrow<T, meta::void_<
+                decltype(std::declval<T>().operator->())>>
+              : std::true_type
+            {};
+
+            template<typename I,
+                CONCEPT_REQUIRES_(std::is_pointer<I>::value ||
+                    HasMemberOperatorArrow<I>())>
+            constexpr I operator_arrow_(I const &i, int)
+            noexcept(std::is_nothrow_copy_constructible<I>::value)
+            {
+                return i;
+            }
+
+            template<typename I,
+                CONCEPT_REQUIRES_(std::is_reference<iterator_reference_t<I>>())>
+            auto operator_arrow_(I const &i, long)
+                noexcept(noexcept(*i)) ->
+                decltype(std::addressof(std::declval<iterator_reference_t<I> &>()))
+            {
+                auto && tmp = *i;
+                return std::addressof(tmp);
+            }
+
+            template<typename I, typename R = iterator_reference_t<I>,
+                typename V = iterator_value_t<I>,
+                CONCEPT_REQUIRES_(!std::is_reference<R>::value &&
+                    Constructible<V, R>())>
+            operator_arrow_proxy<V> operator_arrow_(I const &i, ...)
+                noexcept(
+                    std::is_nothrow_move_constructible<
+                        operator_arrow_proxy<V>>::value &&
+                    std::is_nothrow_constructible<
+                        operator_arrow_proxy<V>, R>::value)
+            {
+                return operator_arrow_proxy<V>{*i};
+            }
+
+            template<typename I, CONCEPT_REQUIRES_(InputIterator<I>())>
+            auto operator_arrow(I const &i)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::operator_arrow_(i, 42)
+            )
+
             template<typename I, bool IsReadable = (bool) Readable<I>()>
             struct common_cursor_types
             {};
@@ -88,9 +191,13 @@ namespace ranges
                     RANGES_EXPECT(is_sentinel());
                     return ranges::get<1>(data_);
                 }
-                CONCEPT_REQUIRES((bool)SizedSentinel<S, I>() && (bool)SizedSentinel<I, I>())
+                template<typename OI, typename OS,
+                    CONCEPT_REQUIRES_(
+                        (bool)SizedSentinel<OS, I>() &&
+                        (bool)SizedSentinel<OI, I>() &&
+                        (bool)SizedSentinel<S, OI>())>
                 iterator_difference_t<I>
-                distance_to(common_cursor const &that) const
+                distance_to(common_cursor<OI, OS> const &that) const
                 {
                     return that.is_sentinel() ?
                         (this->is_sentinel() ? 0 : that.se() - this->it()) :
@@ -102,7 +209,6 @@ namespace ranges
                 iterator_rvalue_reference_t<I> move() const
                     noexcept(noexcept(iter_move(std::declval<I const &>())))
                 {
-                    RANGES_EXPECT(!is_sentinel());
                     return iter_move(it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())
@@ -112,9 +218,17 @@ namespace ranges
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
-                void set(T &&t) const
+                void set(T && t) const
                 {
                     *it() = (T &&) t;
+                }
+                template<typename II = I, CONCEPT_REQUIRES_(Readable<II>())>
+                auto arrow() const
+                    noexcept(noexcept(
+                        detail::operator_arrow(std::declval<II const &>()))) ->
+                    decltype(detail::operator_arrow(std::declval<II const &>()))
+                {
+                    return detail::operator_arrow(it());
                 }
                 template<typename I2, typename S2,
                     CONCEPT_REQUIRES_(Sentinel<S2, I>() && Sentinel<S, I2>() &&

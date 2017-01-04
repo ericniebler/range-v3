@@ -657,11 +657,16 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto get() const ->
-                    decltype(*it_)
+                auto get() const -> iterator_reference_t<I>
+                {
+                    return *arrow();
+                }
+                RANGES_CXX14_CONSTEXPR
+                I arrow() const
                 {
                     I tmp(it_);
-                    return *(--tmp);
+                    --tmp;
+                    return tmp;
                 }
                 RANGES_CXX14_CONSTEXPR
                 I base() const

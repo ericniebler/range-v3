@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -66,7 +67,7 @@ namespace ranges
             struct Cursor
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<concepts::SemiRegular, T>(),
                         concepts::model_of<concepts::SemiRegular, mixin_base_t<T>>(),
@@ -77,7 +78,7 @@ namespace ranges
             struct HasCursorNext
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         (t.next(), concepts::void_)
                     ));
@@ -94,15 +95,23 @@ namespace ranges
             struct ReadableCursor
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         t.get()
+                    ));
+            };
+            struct HasCursorArrow
+            {
+                template<typename C>
+                auto requires_(C const &c) -> decltype(
+                    concepts::valid_expr(
+                        c.arrow()
                     ));
             };
             struct WritableCursor
             {
                 template<typename T, typename U>
-                auto requires_(T&& t, U&& u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         (t.set((U &&) u), 42)
                     ));
@@ -126,7 +135,7 @@ namespace ranges
               : concepts::refines<InputCursor, CursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(single_pass_t<uncvref_t<T>>())
                     ));
@@ -135,7 +144,7 @@ namespace ranges
               : concepts::refines<ForwardCursor>
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         (t.prev(), concepts::void_)
                     ));
@@ -144,7 +153,7 @@ namespace ranges
               : concepts::refines<BidirectionalCursor, SizedCursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
@@ -152,7 +161,7 @@ namespace ranges
             struct InfiniteCursor
             {
                 template<typename T>
-                auto requires_(T&&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(typename T::is_infinite{})
                     ));
@@ -215,13 +224,19 @@ namespace ranges
                 pos.get()
             )
             template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR auto arrow(Cur const &pos)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                pos.arrow()
+            )
+            template<typename Cur>
             static RANGES_CXX14_CONSTEXPR auto move(Cur const &pos)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto set(Cur &pos, T &&t)
+            static RANGES_CXX14_CONSTEXPR auto set(Cur &pos, T && t)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 pos.set((T &&) t)
@@ -297,7 +312,7 @@ namespace ranges
 
             template<typename BI,
                 CONCEPT_REQUIRES_(meta::is<meta::_t<std::decay<BI>>, basic_iterator>())>
-            static RANGES_CXX14_CONSTEXPR auto pos(BI&& it)
+            static RANGES_CXX14_CONSTEXPR auto pos(BI && it)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
                 std::forward<BI>(it).pos()
             )
@@ -352,6 +367,10 @@ namespace ranges
             template<typename T>
             using HasCursorNext =
                 concepts::models<range_access::HasCursorNext, T>;
+
+            template<typename T>
+            using HasCursorArrow =
+                concepts::models<range_access::HasCursorArrow, T>;
 
             template<typename S, typename C>
             using SizedCursorSentinel =

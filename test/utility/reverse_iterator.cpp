@@ -456,9 +456,18 @@ int main() {
       C l[3] = {C(0), C(1), C(2)};
 
       auto ri = ranges::rbegin(l);
-      CHECK ( (*ri).get() == 2 );  ++ri;
-      CHECK ( (*ri).get() == 1 );  ++ri;
-      CHECK ( (*ri).get() == 0 );  ++ri;
+      CHECK ( ri->get() == 2 );
+      CHECK ( (*ri).get() == 2 );
+      CHECK ( ri.operator->() == ranges::prev(ri.base()) );
+      ++ri;
+      CHECK ( ri->get() == 1 );
+      CHECK ( (*ri).get() == 1 );
+      CHECK ( ri.operator->() == ranges::prev(ri.base()) );
+      ++ri;
+      CHECK ( ri->get() == 0 );
+      CHECK ( (*ri).get() == 0 );
+      CHECK ( ri.operator->() == ranges::prev(ri.base()) );
+      ++ri;
       CHECK ( ri == ranges::rend(l));
   }
   {
