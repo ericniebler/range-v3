@@ -47,11 +47,6 @@ namespace ranges
             {
                 template<typename ...T>
                 void operator()(T &&...) const;
-
-            #if defined(__GNUC__) && !defined(__clang__)
-                template<typename ...T>
-                void operator()(T const &...) const;
-            #endif
             } valid_expr {};
 
             constexpr struct same_type_t
@@ -171,12 +166,6 @@ namespace ranges
             using _7 = std::integral_constant<int, 6>;
             using _8 = std::integral_constant<int, 7>;
             using _9 = std::integral_constant<int, 8>;
-
-            template<typename T>
-            using val_t = meta::if_<std::is_rvalue_reference<T>, T, T &>;
-
-            template<typename T>
-            val_t<T> val();
 
             template<typename Ret, typename T>
             Ret returns_(T const &);
@@ -304,8 +293,8 @@ namespace ranges
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Same, C, reference_t<U, T>>(),
-                        C(val<T>()),
-                        C(val<U>())
+                        ((void)C(std::declval<T>()), 42),
+                        ((void)C(std::declval<U>()), 42)
                     ));
 
                 template<typename T, typename U, typename...Rest,
@@ -335,8 +324,8 @@ namespace ranges
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Same, C, value_t<U, T>>(),
-                        C(val<T &&>()),
-                        C(val<U &&>()),
+                        ((void)C(std::declval<T>()), 42),
+                        ((void)C(std::declval<U>()), 42),
                         concepts::model_of<CommonReference, T const &, U const &>(),
                         concepts::model_of<CommonReference, C &, R &&>()
                     ));
@@ -490,8 +479,8 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<TotallyOrdered>(val<T>()),
-                        concepts::model_of<TotallyOrdered>(val<U>())
+                        concepts::model_of<TotallyOrdered, T>(),
+                        concepts::model_of<TotallyOrdered, U>()
                     ));
             };
 
@@ -522,7 +511,7 @@ namespace ranges
                     meta::if_<detail::avoid_empty_braces<T>, int> = 0>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        T(),
+                        ((void)T(), 42),
                         new T()
                     ));
 
@@ -530,7 +519,7 @@ namespace ranges
                     meta::if_c<!detail::avoid_empty_braces<T>::value, int> = 0>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        T{},
+                        ((void)T{}, 42),
                         new T{}
                     ));
 
@@ -551,7 +540,7 @@ namespace ranges
                     meta::if_<DR1467<T, U>, int> = 0>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        T(std::declval<U>()),
+                        ((void)T(std::declval<U>()), 42),
                         new T(std::declval<U>())
                     ));
 
@@ -559,14 +548,14 @@ namespace ranges
                     meta::if_c<!DR1467<T, U>::value, int> = 0>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        T{std::declval<U>()},
+                        ((void)T{std::declval<U>()}, 42),
                         new T{std::declval<U>()}
                     ));
 
                 template<typename T, typename U, typename V, typename... Args>
                 auto requires_(T &&, U &&, V &&, meta::id_t<Args> &&...) -> decltype(
                     concepts::valid_expr(
-                        T{std::declval<U>(), std::declval<V>(), std::declval<Args>()...},
+                        ((void)T{std::declval<U>(), std::declval<V>(), std::declval<Args>()...}, 42),
                         new T{std::declval<U>(), std::declval<V>(), std::declval<Args>()...}
                     ));
             };
