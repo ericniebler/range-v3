@@ -20,6 +20,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DISABLE_WARNINGS
