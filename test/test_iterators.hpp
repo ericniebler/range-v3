@@ -103,6 +103,13 @@ RANGES_DECLTYPE_AUTO_RETURN
 (
     base(end) - base(begin)
 )
+template<template<typename> class I, typename It>
+RANGES_CXX14_CONSTEXPR
+auto operator-(I<It> begin, sentinel<It, true> end)
+RANGES_DECLTYPE_AUTO_RETURN
+(
+    base(begin) - base(end)
+)
 
 template <class It>
 class output_iterator
