@@ -52,6 +52,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/replace_if.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/sample.hpp>
+#include <range/v3/view/set_algorithm.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/slice.hpp>
 #include <range/v3/view/sliding.hpp>
