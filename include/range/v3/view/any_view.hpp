@@ -370,12 +370,15 @@ namespace ranges
                 static_assert(detail::to_cat_(range_concept<Rng>{}) >= Cat,
                     "The range passed to any_view() does not model the requested category");
             }
+            template<typename Rng>
+            using CompatibleRange = ConvertibleTo<range_reference_t<Rng>, Ref>;
         public:
             any_view() = default;
             template<typename Rng,
-                CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_view>()),
-                CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                                  ConvertibleTo<range_reference_t<Rng>, Ref>())>
+                CONCEPT_REQUIRES_(meta::and_<
+                    meta::not_<Same<detail::decay_t<Rng>, any_view>>,
+                    InputRange<Rng>,
+                    meta::defer<CompatibleRange, Rng>>::value)>
             any_view(Rng && rng)
               : any_view(std::forward<Rng>(rng),
                   meta::bool_<detail::to_cat_(range_concept<Rng>{}) >= Cat>{})
