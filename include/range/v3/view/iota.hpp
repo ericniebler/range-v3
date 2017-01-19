@@ -203,7 +203,7 @@ namespace ranges
             To to_;
             bool done_ = false;
 
-            From get() const
+            From read() const
             {
                 RANGES_EXPECT(!done_);
                 return from_;
@@ -250,7 +250,7 @@ namespace ranges
             From from_;
             To to_;
 
-            From get() const
+            From read() const
             {
                 return from_;
             }
@@ -311,7 +311,7 @@ namespace ranges
 
             From value_;
 
-            From get() const
+            From read() const
             {
                 return value_;
             }

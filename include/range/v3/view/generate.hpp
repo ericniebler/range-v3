@@ -53,7 +53,7 @@ namespace ranges
                 cursor(generate_view &view)
                   : view_(&view)
                 {}
-                result_t get() const
+                result_t read() const
                 {
                     return view_->val_;
                 }

@@ -141,7 +141,7 @@ namespace ranges
                 {
                     satisfy();
                 }
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     *it1_
@@ -309,7 +309,7 @@ namespace ranges
                 {
                     satisfy();
                 }
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     *it1_
@@ -489,7 +489,7 @@ namespace ranges
                     it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2)),
                     state(which_set())
                 {}
-                reference_type get() const
+                reference_type read() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
                     if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
@@ -719,7 +719,7 @@ namespace ranges
                 {
                     satisfy();
                 }
-                reference_type get() const
+                reference_type read() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
                     if(state == state_t::SECOND || state == state_t::ONLY_SECOND)

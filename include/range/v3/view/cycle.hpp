@@ -100,7 +100,7 @@ namespace ranges
                 {
                     return false;
                 }
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     *it_

@@ -143,7 +143,7 @@ namespace ranges
                         rng.size() = n;
                     advance();
                 }
-                range_reference_t<Rng> get() const
+                range_reference_t<Rng> read() const
                 {
                     return *current();
                 }

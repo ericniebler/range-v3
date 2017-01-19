@@ -61,7 +61,7 @@ namespace ranges
             struct adaptor_value_type_2_<
                 BaseIter,
                 Adapt,
-                meta::void_<decltype(Adapt::get(BaseIter{}, adaptor_base_current_mem_fn{}))>>
+                meta::void_<decltype(Adapt::read(BaseIter{}, adaptor_base_current_mem_fn{}))>>
               : compressed_pair<BaseIter, Adapt>
             {
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
@@ -122,7 +122,7 @@ namespace ranges
                 return it0 == it1;
             }
             template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
-            static iterator_reference_t<I> get(I const &it,
+            static iterator_reference_t<I> read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
                 noexcept(noexcept(iterator_reference_t<I>(*it)))
             {
@@ -207,17 +207,17 @@ namespace ranges
             using base_t::second;
 
             template<typename A = Adapt, typename R = decltype(
-                std::declval<A const &>().get(std::declval<BaseIter const &>()))>
-            R get() const
+                std::declval<A const &>().read(std::declval<BaseIter const &>()))>
+            R read() const
                 noexcept(noexcept(
-                    std::declval<A const &>().get(std::declval<BaseIter const &>())))
+                    std::declval<A const &>().read(std::declval<BaseIter const &>())))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 static_assert(
                     CommonReference<R &&, V &>(),
                     "In your adaptor, you've specified a value type that does not "
-                    "share a common reference type with the return type of current.");
-                return second().get(first());
+                    "share a common reference type with the return type of read.");
+                return second().read(first());
             }
             template<typename A = Adapt,
                 typename = decltype(std::declval<A &>().next(std::declval<BaseIter &>()))>
@@ -315,7 +315,7 @@ namespace ranges
                     std::declval<BaseIter const &>())))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
-                using R = decltype(second().get(first()));
+                using R = decltype(second().read(first()));
                 static_assert(
                     CommonReference<X &&, V const &>(),
                     "In your adaptor, the result of your indirect_move member function does "
@@ -323,14 +323,14 @@ namespace ranges
                 static_assert(
                     CommonReference<R &&, X &&>(),
                     "In your adaptor, the result of your indirect_move member function does "
-                    "not share a common reference with the result of your current member "
+                    "not share a common reference with the result of your read member "
                     "function.");
                 return second().indirect_move(first());
             }
-            // If there is no indirect_move member and the adaptor has not overridden the get
+            // If there is no indirect_move member and the adaptor has not overridden the read
             // member function, then dispatch to the base iterator's indirect_move function.
             template<typename A = Adapt,
-                typename R = decltype(std::declval<A const &>().get(
+                typename R = decltype(std::declval<A const &>().read(
                     std::declval<BaseIter const &>(), detail::adaptor_base_current_mem_fn{})),
                 typename X = iterator_rvalue_reference_t<BaseIter>>
             X indirect_move_(long) const
@@ -338,22 +338,22 @@ namespace ranges
             {
                 return ranges::indirect_move(first());
             }
-            // If the adaptor does not have an indirect_move function but overrides the get
+            // If the adaptor does not have an indirect_move function but overrides the read
             // member function, apply std::move to the result of calling current.
             template<typename A = Adapt,
-                typename R = decltype(std::declval<A const &>().get(std::declval<BaseIter const &>())),
+                typename R = decltype(std::declval<A const &>().read(std::declval<BaseIter const &>())),
                 typename X = aux::move_t<R>>
             X indirect_move_(detail::any) const
                 noexcept(noexcept(X(static_cast<X &&>(
-                    std::declval<A const &>().get(std::declval<BaseIter const &>())))))
+                    std::declval<A const &>().read(std::declval<BaseIter const &>())))))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 static_assert(
                     CommonReference<X &&, V const &>(),
                     "In your adaptor, you've specified a value type that does not share a common "
-                    "reference type with the result of moving the result of the get member "
+                    "reference type with the result of moving the result of the read member "
                     "function. Consider defining an indirect_move function in your adaptor.");
-                return static_cast<X &&>(second().get(first()));
+                return static_cast<X &&>(second().read(first()));
             }
             // Gives users a way to override the default indirect_move function in their adaptors.
             auto move() const

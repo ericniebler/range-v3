@@ -97,7 +97,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        t.get()
+                        t.read()
                     ));
             };
             struct HasCursorArrow
@@ -113,7 +113,7 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        (t.set((U &&) u), 42)
+                        (t.write((U &&) u), 42)
                     ));
             };
             struct SizedCursorSentinel
@@ -218,10 +218,10 @@ namespace ranges
             )
 
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto get(Cur const &pos)
+            static RANGES_CXX14_CONSTEXPR auto read(Cur const &pos)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                pos.get()
+                pos.read()
             )
             template<typename Cur>
             static RANGES_CXX14_CONSTEXPR auto arrow(Cur const &pos)
@@ -236,10 +236,10 @@ namespace ranges
                 pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto set(Cur &pos, T && t)
+            static RANGES_CXX14_CONSTEXPR auto write(Cur &pos, T && t)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                pos.set((T &&) t)
+                pos.write((T &&) t)
             )
             template<typename Cur>
             static RANGES_CXX14_CONSTEXPR auto next(Cur & pos)
@@ -291,7 +291,7 @@ namespace ranges
             };
 
             template<typename T>
-            using cursor_reference_t = decltype(std::declval<T const &>().get());
+            using cursor_reference_t = decltype(std::declval<T const &>().read());
 
             template<typename T>
             static meta::id<uncvref_t<cursor_reference_t<T>>> cursor_value_2_(long);

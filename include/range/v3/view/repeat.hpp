@@ -53,7 +53,7 @@ namespace ranges
                 explicit cursor(Val const &value)
                   : value_(std::addressof(value))
                 {}
-                Val const &get() const
+                Val const &read() const
                 {
                     return *value_;
                 }

@@ -136,7 +136,7 @@ namespace ranges
                     ++inner_it_;
                     satisfy();
                 }
-                auto get() const
+                auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     *inner_it_
@@ -265,7 +265,7 @@ namespace ranges
                     }
                     satisfy();
                 }
-                reference get() const
+                reference read() const
                 {
                     // return visit(cur_, [](auto& it) -> reference { return *it; });
                     if (cur_.index() == 0)
