@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <range/v3/detail/optional.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -38,20 +39,20 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            Val value_;
+            optional<Val> value_opt_;
             struct cursor
             {
             private:
-                Val value_;
+                optional<Val> value_opt_;
                 bool done_;
             public:
                 cursor() = default;
-                explicit cursor(Val value)
-                  : value_(std::move(value)), done_(false)
+                explicit cursor(optional<Val> value_opt)
+                  : value_opt_{std::move(value_opt)}, done_{false}
                 {}
                 Val read() const
                 {
-                    return value_;
+                    return *value_opt_;
                 }
                 bool equal(default_sentinel) const
                 {
@@ -82,12 +83,12 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return cursor{value_};
+                return cursor{value_opt_};
             }
         public:
             single_view() = default;
             constexpr explicit single_view(Val value)
-              : value_(detail::move(value))
+              : value_opt_{std::move(value)}
             {}
             constexpr std::size_t size() const
             {
@@ -99,7 +100,7 @@ namespace ranges
         {
             struct single_fn
             {
-                template<typename Val, CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                template<typename Val, CONCEPT_REQUIRES_(CopyConstructible<Val>())>
                 single_view<Val> operator()(Val value) const
                 {
                     return single_view<Val>{std::move(value)};
@@ -107,14 +108,13 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Arg, typename Val = detail::decay_t<Arg>,
-                    CONCEPT_REQUIRES_(!(SemiRegular<Val>() && Constructible<Val, Arg &&>()))>
+                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg &&>()))>
                 void operator()(Arg &&) const
                 {
-                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
-                        "The object passed to view::single must be a model of the SemiRegular "
-                        "concept; that is, it needs to be default constructible, copy and move "
-                        "constructible, and destructible.");
-                    CONCEPT_ASSERT_MSG(!SemiRegular<Val>() || Constructible<Val, Arg &&>(),
+                    CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
+                        "The object passed to view::single must be a model of the CopyConstructible "
+                        "concept; that is, it needs to be copy and move constructible, and destructible.");
+                    CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg &&>(),
                         "The object type passed to view::single must be initializable from the "
                         "actual argument expression.");
                 }
