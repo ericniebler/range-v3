@@ -340,7 +340,7 @@ namespace ranges
 #ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
 #define RANGES_CXX_INLINE_VARIABLES __cpp_inline_variables
 #elif defined(__clang__) && \
-    (__clang__major__ > 3 || __clang_major__ == 3 && __clang_minor__ == 9) && \
+    (__clang_major__ > 3 || __clang_major__ == 3 && __clang_minor__ == 9) && \
     __cplusplus > 201402L
 // TODO: remove once clang defines __cpp_inline_variables (or equivalent)
 #define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_INLINE_VARIABLES_17

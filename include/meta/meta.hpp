@@ -848,7 +848,7 @@ namespace meta
             using invoke = _t<detail::defer_i_<T, C, Ts::type::value...>>;
         };
 
-#if __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(__clang__) && !defined(META_DOXYGEN_INVOKED)
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(META_DOXYGEN_INVOKED)
         template <template <typename...> class C>
         struct quote_trait
         {
@@ -1166,7 +1166,7 @@ namespace meta
 
 /// Logically and together all the Boolean parameters
 /// \ingroup logical
-#if(__GNUC__ == 5) && (__GNUC_MINOR__ == 1) && !defined(__clang__)
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 5 && __GNUC_MINOR__ == 1
         // Alternative formulation of and_c to workaround
         // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66405
         template <bool... Bools>

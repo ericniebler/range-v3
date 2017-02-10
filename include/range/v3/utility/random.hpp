@@ -69,15 +69,15 @@
 // Clang/C2 bug: __has_builtin(__builtin_readcyclecounter) reports true, but
 // there is no corresponding builtin in C2.
 #if !(defined(__clang__) && defined(__c2__))
-#if defined(__has_builtin)
+#ifdef __has_builtin
     #if __has_builtin(__builtin_readcyclecounter)
         #define RANGES_CPU_ENTROPY __builtin_readcyclecounter()
     #endif
 #endif
 #endif
-#if !defined(RANGES_CPU_ENTROPY)
-    #if __i386__
-        #if __GNUC__
+#ifndef RANGES_CPU_ENTROPY
+    #ifdef __i386__
+        #ifdef __GNUC__
             #define RANGES_CPU_ENTROPY __builtin_ia32_rdtsc()
         #else
             #include <immintrin.h>

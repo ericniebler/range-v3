@@ -91,7 +91,7 @@ int main()
     >::value, "");
 
     // BUGBUG TODO Is a workaround possible?
-#if __GNUC__ != 4 || __GNUC_MINOR__ > 8
+#if !defined(__GNUC__) || __GNUC__ != 4 || __GNUC_MINOR__ > 8
     static_assert(std::is_same<
         common_reference_t<common_pair<int const &, int const &>, std::pair<int, int>>,
         std::pair<int, int>
