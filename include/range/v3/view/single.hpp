@@ -25,6 +25,7 @@
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -39,20 +40,20 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            optional<Val> value_opt_;
+            semiregular_t<Val> value_opt_;
             struct cursor
             {
             private:
-                optional<Val> value_opt_;
+                semiregular_t<Val> value_opt_;
                 bool done_;
             public:
                 cursor() = default;
-                explicit cursor(optional<Val> value_opt)
-                  : value_opt_{std::move(value_opt)}, done_{false}
+                explicit cursor(semiregular_t<Val> value_opt)
+                  : value_opt_{detail::move(value_opt)}, done_{false}
                 {}
                 Val read() const
                 {
-                    return *value_opt_;
+                    return value_opt_;
                 }
                 bool equal(default_sentinel) const
                 {
@@ -88,7 +89,7 @@ namespace ranges
         public:
             single_view() = default;
             constexpr explicit single_view(Val value)
-              : value_opt_{std::move(value)}
+              : value_opt_{detail::move(value)}
             {}
             constexpr std::size_t size() const
             {
@@ -103,7 +104,7 @@ namespace ranges
                 template<typename Val, CONCEPT_REQUIRES_(CopyConstructible<Val>())>
                 single_view<Val> operator()(Val value) const
                 {
-                    return single_view<Val>{std::move(value)};
+                    return single_view<Val>{detail::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
