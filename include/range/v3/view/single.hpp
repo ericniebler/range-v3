@@ -16,7 +16,6 @@
 
 #include <utility>
 #include <type_traits>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -48,8 +47,8 @@ namespace ranges
                 bool done_;
             public:
                 cursor() = default;
-                explicit cursor(semiregular_t<Val> value_opt)
-                  : value_{detail::move(value_opt)}, done_{false}
+                explicit cursor(Val value)
+                  : value_(std::move(value)), done_(false)
                 {}
                 Val read() const
                 {
@@ -89,7 +88,7 @@ namespace ranges
         public:
             single_view() = default;
             constexpr explicit single_view(Val value)
-              : value_{detail::move(value)}
+              : value_(detail::move(value))
             {}
             constexpr std::size_t size() const
             {
@@ -104,7 +103,7 @@ namespace ranges
                 template<typename Val, CONCEPT_REQUIRES_(CopyConstructible<Val>())>
                 single_view<Val> operator()(Val value) const
                 {
-                    return single_view<Val>{detail::move(value)};
+                    return single_view<Val>{std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
