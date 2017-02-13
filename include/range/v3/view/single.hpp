@@ -40,20 +40,20 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            semiregular_t<Val> value_opt_;
+            semiregular_t<Val> value_;
             struct cursor
             {
             private:
-                semiregular_t<Val> value_opt_;
+                semiregular_t<Val> value_;
                 bool done_;
             public:
                 cursor() = default;
                 explicit cursor(semiregular_t<Val> value_opt)
-                  : value_opt_{detail::move(value_opt)}, done_{false}
+                  : value_{detail::move(value_opt)}, done_{false}
                 {}
                 Val read() const
                 {
-                    return value_opt_;
+                    return value_;
                 }
                 bool equal(default_sentinel) const
                 {
@@ -84,12 +84,12 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return cursor{value_opt_};
+                return cursor{value_};
             }
         public:
             single_view() = default;
             constexpr explicit single_view(Val value)
-              : value_opt_{detail::move(value)}
+              : value_{detail::move(value)}
             {}
             constexpr std::size_t size() const
             {
