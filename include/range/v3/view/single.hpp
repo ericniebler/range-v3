@@ -24,6 +24,7 @@
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -38,11 +39,11 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            Val value_;
+            semiregular_t<Val> value_;
             struct cursor
             {
             private:
-                Val value_;
+                semiregular_t<Val> value_;
                 bool done_;
             public:
                 cursor() = default;
@@ -99,7 +100,7 @@ namespace ranges
         {
             struct single_fn
             {
-                template<typename Val, CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                template<typename Val, CONCEPT_REQUIRES_(CopyConstructible<Val>())>
                 single_view<Val> operator()(Val value) const
                 {
                     return single_view<Val>{std::move(value)};
@@ -107,14 +108,13 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Arg, typename Val = detail::decay_t<Arg>,
-                    CONCEPT_REQUIRES_(!(SemiRegular<Val>() && Constructible<Val, Arg &&>()))>
+                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg &&>()))>
                 void operator()(Arg &&) const
                 {
-                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
-                        "The object passed to view::single must be a model of the SemiRegular "
-                        "concept; that is, it needs to be default constructible, copy and move "
-                        "constructible, and destructible.");
-                    CONCEPT_ASSERT_MSG(!SemiRegular<Val>() || Constructible<Val, Arg &&>(),
+                    CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
+                        "The object passed to view::single must be a model of the CopyConstructible "
+                        "concept; that is, it needs to be copy and move constructible, and destructible.");
+                    CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg &&>(),
                         "The object type passed to view::single must be initializable from the "
                         "actual argument expression.");
                 }
