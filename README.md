@@ -60,7 +60,7 @@ The code is known to work on the following compilers:
 
 **Build status**
 - on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
-- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/yh3fufmhm53rkf3d/branch/master?svg=true)](https://ci.appveyor.com/project/devdiv/range-v3)
+- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/9mekkhw1wm22rum9/branch/master?svg=true)](https://ci.appveyor.com/project/CaseyCarter/range-v3)
 
 Say Thanks!
 -----------
