@@ -32,18 +32,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng, typename F>
-        struct for_each_view
-          : join_view<transform_view<Rng, F>>
-        {
-            for_each_view() = default;
-            for_each_view(Rng rng, F f)
-              : for_each_view::join_view{{std::move(rng), std::move(f)}}
-            {}
-        };
-
         namespace view
         {
             struct for_each_fn
@@ -58,35 +46,11 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename F>
-                using Concept = meta::and_<
-                    Range<Rng>,
-                    IndirectInvocable<F, iterator_t<Rng>>,
-                    Range<concepts::Invocable::result_t<F&, range_common_reference_t<Rng>>>>;
-
-                template<typename Rng, typename F,
-                    CONCEPT_REQUIRES_(Concept<Rng, F>())>
-                for_each_view<all_t<Rng>, F> operator()(Rng && rng, F f) const
-                {
-                    return {all(std::forward<Rng>(rng)), std::move(f)};
-                }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error reporting
-                template<typename Rng, typename F,
-                    CONCEPT_REQUIRES_(!Concept<Rng, F>())>
-                void operator()(Rng &&, F) const
-                {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "Rng is not a model of the Range concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, iterator_t<Rng>>(),
-                        "The function F is not callable with arguments of the type of the range's "
-                        "common reference type.");
-                    CONCEPT_ASSERT_MSG(Range<concepts::Invocable::result_t<F&,
-                        range_common_reference_t<Rng>>>(),
-                        "To use view::for_each, the function F must return a model of the Range "
-                        "concept.");
-                }
-            #endif
+                auto operator()(Rng && rng, F f) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    join(transform(std::forward<Rng>(rng), std::move(f)))
+                )
             };
 
             /// \relates for_each_fn
@@ -176,7 +140,5 @@ namespace ranges
         /// \endcond
     }
 }
-
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::for_each_view)
 
 #endif
