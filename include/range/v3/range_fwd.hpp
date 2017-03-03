@@ -263,9 +263,6 @@ namespace ranges
             template<typename Pred, typename Val>
             struct replacer_if_fn;
 
-            template<typename...Ts>
-            void valid_exprs(Ts &&...);
-
             template<typename I, typename D = meta::_t<difference_type<I>>>
             struct counted_cursor;
 

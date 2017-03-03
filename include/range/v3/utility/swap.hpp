@@ -78,7 +78,7 @@ namespace ranges
         /// \cond
         namespace adl_swap_detail
         {
-            template<typename T, typename U>
+            template<typename T, typename U = T>
             struct is_adl_swappable_;
 
             template<typename T,
@@ -88,25 +88,49 @@ namespace ranges
             template<typename T>
             std::false_type try_std_swap_(long);
 
+            // Returns true if a type is swappable with a qualified call to
+            // std::swap. (Used to determine whether std::swap is constrained or
+            // not.)
             template<typename T>
             struct is_std_swappable_
               : meta::id_t<decltype(adl_swap_detail::try_std_swap_<T>(42))>
             {};
 
-            // Intentionally create an ambiguity with std::swap, which is
-            // (possibly) unconstrained.
             template<typename T>
             meta::if_c<
+                // *If* std::swap is unconstrained ...
                 is_std_swappable_<int const &>::value &&
+                // ... *and* the type is not movable, ...
                 !detail::is_movable_<T>::value>
+                // ... then:
+                // this signature is well-formed but deleted, intentionally
+                // creating an ambiguity with std::swap if it would be found
+                // by ADL. If std::swap would *not* be found by ADL, then the
+                // overload set for unqualified swap is empty and the type is
+                // not swappable.
             swap(T &, T &) = delete;
 
             template<typename T, std::size_t N,
                 typename U = meta::_t<std::remove_all_extents<T>>>
             meta::if_c<
+                // *If* std::swap is unconstrained ...
                 is_std_swappable_<int const (&)[1]>::value &&
-                !is_adl_swappable_<T &, T &>::value &&
+                // ... *and* we can't find a matching overload by ADL [^1] ...
+                !is_adl_swappable_<T &>::value &&
+                // ... *and* the element type is not movable, ...
                 !detail::is_movable_<U>::value>
+                // ... then:
+                // this signature is well-formed but deleted, intentionally
+                // creating an ambiguity with std::swap if it would be found
+                // by ADL. If std::swap would *not* be found by ADL, then this
+                // overload is the only overload in the set and T (&)[N] is
+                // deemed not swappable.
+                //
+                // [^1]: Why do we test that 'T &' if ADL swappable instead of
+                //       'T (&)[N]'? Because the array std::swap overload calls
+                //       unqualified swap on the elements of the array. Anything
+                //       else causes recursion both in the type system and at
+                //       runtime.
             swap(T (&)[N], T (&)[N]) = delete;
 
             template<typename T, typename U,
@@ -116,6 +140,10 @@ namespace ranges
             template<typename T, typename U>
             std::false_type try_adl_swap_(long);
 
+            // Test whether an overload of swap for a T and a U can be found via
+            // ADL with the 2 swap overloads above participating in the overload
+            // set. This depends on user-defined swaps being a better match than
+            // the overloads in namespace std.
             template<typename T, typename U>
             struct is_adl_swappable_
               : meta::id_t<decltype(adl_swap_detail::try_adl_swap_<T, U>(42))>
@@ -123,7 +151,7 @@ namespace ranges
 
             struct swap_fn
             {
-                // Dispatch to customization point:
+                // Dispatch to user-defined swap found via ADL:
                 template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_swappable_<T, U>::value>
@@ -133,11 +161,12 @@ namespace ranges
                     (void) swap((T &&) t, (U &&) u)
                 )
 
-                // Handle swappable types
+                // For instrinsicly swappable (i.e., movable) types for which
+                // a swap overload cannot be found via ADL, swap by moving.
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
-                    !is_adl_swappable_<T &, T &>::value &&
+                    !is_adl_swappable_<T &>::value &&
                     std::is_move_constructible<T>::value &&
                     std::is_move_assignable<T>::value>
                 operator()(T &a, T &b) const
@@ -146,7 +175,9 @@ namespace ranges
                     (void)(b = ranges::exchange(a, (T &&) b))
                 )
 
-                // Handle arrays
+                // For arrays of instrinsicly swappable (i.e., movable) types
+                // for which a swap overload cannot be found via ADL, swap array
+                // elements by moving.
                 template<typename T, typename U, std::size_t N>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -159,6 +190,9 @@ namespace ranges
                         (*this)(t[i], u[i]);
                 }
 
+                // For rvalue pairs and tuples of swappable types, swap the
+                // members. This permits code like:
+                //   ranges::swap(std::tie(a,b,c), std::tie(d,e,f));
                 template<typename F0, typename S0, typename F1, typename S1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_swappable_with<F0, F1>::value && is_swappable_with<S0, S1>::value>
@@ -167,8 +201,8 @@ namespace ranges
                         is_nothrow_swappable_with<F0, F1>::value &&
                         is_nothrow_swappable_with<S0, S1>::value)
                 {
-                    swap_fn{}(std::move(left).first, std::move(right).first);
-                    swap_fn{}(std::move(left).second, std::move(right).second);
+                    swap_fn{}(detail::move(left).first, detail::move(right).first);
+                    swap_fn{}(detail::move(left).second, detail::move(right).second);
                 }
 
                 template<typename ...Ts, typename ...Us>
@@ -192,7 +226,6 @@ namespace ranges
                 }
             };
 
-            // Now implementations
             template<typename T, typename U, typename = void>
             struct is_swappable_with_
               : std::false_type
@@ -239,6 +272,9 @@ namespace ranges
             template<typename T>
             std::false_type try_std_iter_swap_(long);
 
+            // Returns true if a type is indirectly swappable with a qualified
+            // call to std::iter_swap. (Used to determine whether std::iter_swap
+            // is constrained or not.)
             template<typename T>
             struct is_std_indirectly_swappable_
               : meta::id_t<decltype(adl_swap_detail::try_std_iter_swap_<T>(42))>
@@ -250,24 +286,28 @@ namespace ranges
             template<typename T>
             meta::id<not_swappable_ &> try_reference_t_(long);
 
+            // If T is Readable, return its associated reference type; otherwise,
+            // return a type that is not swappable.
             template<typename T>
             struct reference_t_
               : meta::id_t<decltype(adl_swap_detail::try_reference_t_<T>(42))>
             {};
 
-            // Intentionally create an ambiguity with std::swap, which is
-            // (possibly) unconstrained.
             template<typename T, typename R = meta::_t<reference_t_<T>>>
             meta::if_<
                 meta::and_<
-                    // We want this overload of iter_swap to be well-formed (but
-                    // deleted) if std::swap and std::iter_swap are unconstrained.
+                    // *If* std::swap and std::iter_swap are unconstrained...
                     is_std_swappable_<int const &>,
                     is_std_indirectly_swappable_<int const *>,
-                    // If T is not dereferencable, or if there is no swap overload
-                    // findable via ADL, we want this iter_swap to be well-formed,
-                    // thereby causing ambiguity with (unconstrained) std::iter_swap.
-                    meta::not_<is_adl_swappable_<R, R>>>>
+                    // ... *and* T is not Readable *or* there is no swap overload
+                    // for T's reference type that can be found by ADL ...
+                    meta::not_<is_adl_swappable_<R>>>>
+                    // ...then:
+                    // this signature is well-formed but deleted, intentionally
+                    // creating an ambiguity with std::iter_swap if it would be
+                    // found by ADL. If std::iter_swap would *not* be found by
+                    // ADL, then this overload is the only overload in the set
+                    // and T is deemed not indirectly swappable.
             iter_swap(T, T) = delete;
 
             template<typename T, typename U,
@@ -277,6 +317,10 @@ namespace ranges
             template<typename T, typename U>
             std::false_type try_adl_iter_swap_(long);
 
+            // Test whether an overload of iter_swap for a T and a U can be found
+            // via ADL with the iter_swap overload above participating in the
+            // overload set. This depends on user-defined iter_swap overloads
+            // being a better match than the overload in namespace std.
             template<typename T, typename U>
             struct is_adl_indirectly_swappable_
               : meta::id_t<decltype(adl_swap_detail::try_adl_iter_swap_<T, U>(42))>
@@ -284,7 +328,7 @@ namespace ranges
 
             struct iter_swap_fn
             {
-                // Dispatch to customization point:
+                // *If* a user-defined iter_swap is found via ADL, call that:
                 template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
@@ -294,7 +338,8 @@ namespace ranges
                     (void) iter_swap((T &&) t, (U &&) u)
                 )
 
-                // Handle readables of swappable types
+                // *Otherwise*, for Readable types with swappable reference
+                // types, call ranges::swap(*a, *b)
                 template<typename I0, typename I1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -307,7 +352,11 @@ namespace ranges
                     swap_fn{}(*a, *b)
                 )
 
-                // Handle indirectly movable types
+                // *Otherwise*, for Readable types that are mutually
+                // IndirectlyMovableStorable, implement as:
+                //      value_type_t<T0> tmp = iter_move(a);
+                //      *a = iter_move(b);
+                //      *b = std::move(tmp);
                 template<typename I0, typename I1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -328,7 +377,6 @@ namespace ranges
                 }
             };
 
-            // Now implementations
             template<typename T, typename U, typename Enable = void>
             struct is_indirectly_swappable_
               : std::false_type
