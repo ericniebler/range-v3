@@ -29,7 +29,7 @@
 #include "../test_iterators.hpp"
 #include "../test_utils.hpp"
 
-template <class InIter, class OutIter, typename Sent = InIter>
+template<class InIter, class OutIter, typename Sent = InIter>
 void test_iter()
 {
     int ia[] = {0, 1, 2, 3};
@@ -137,7 +137,7 @@ void test_iter()
     CHECK(ib[3] == 3);
 }
 
-template <class InIter, class OutIter, typename Sent = InIter>
+template<class InIter, class OutIter, typename Sent = InIter>
 void test_rng()
 {
     int ia[] = {0, 1, 2, 3};
@@ -245,7 +245,7 @@ void test_rng()
     CHECK(ib[3] == 3);
 }
 
-template <class InIter, class OutIter, typename Sent = InIter>
+template<class InIter, class OutIter, typename Sent = InIter>
 void test()
 {
     test_iter<InIter, OutIter, Sent>();

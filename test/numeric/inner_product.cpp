@@ -37,7 +37,7 @@ namespace
       int i;
   };
 
-  template <class Iter1, class Iter2, class Sent1 = Iter1>
+  template<class Iter1, class Iter2, class Sent1 = Iter1>
   void test()
   {
       int a[] = {1, 2, 3, 4, 5, 6};

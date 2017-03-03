@@ -30,7 +30,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter, class OutIter, class Sent = Iter>
+template<class Iter, class OutIter, class Sent = Iter>
 void test()
 {
     using P = std::pair<Iter, OutIter>;

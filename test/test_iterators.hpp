@@ -12,48 +12,48 @@
 
 #include <iterator>
 
-template <class It, bool Sized = false>
+template<class It, bool Sized = false>
 class sentinel;
 
-template <class It>
+template<class It>
 class output_iterator;
 
-template <class It>
+template<class It>
 class input_iterator;
 
-template <class It>
+template<class It>
 class forward_iterator;
 
-template <class It>
+template<class It>
 class bidirectional_iterator;
 
-template <class It>
+template<class It>
 class random_access_iterator;
 
 
-template <class Iter, bool Sized>
+template<class Iter, bool Sized>
 RANGES_CXX14_CONSTEXPR Iter base(sentinel<Iter, Sized> i) { return i.base(); }
 
-template <class Iter>
+template<class Iter>
 RANGES_CXX14_CONSTEXPR Iter base(output_iterator<Iter> i) { return i.base(); }
 
-template <class Iter>
+template<class Iter>
 RANGES_CXX14_CONSTEXPR Iter base(input_iterator<Iter> i) { return i.base(); }
 
-template <class Iter>
+template<class Iter>
 RANGES_CXX14_CONSTEXPR Iter base(forward_iterator<Iter> i) { return i.base(); }
 
-template <class Iter>
+template<class Iter>
 RANGES_CXX14_CONSTEXPR Iter base(bidirectional_iterator<Iter> i) { return i.base(); }
 
-template <class Iter>
+template<class Iter>
 RANGES_CXX14_CONSTEXPR Iter base(random_access_iterator<Iter> i) { return i.base(); }
 
-template <class Iter>    // everything else
+template<class Iter>    // everything else
 RANGES_CXX14_CONSTEXPR Iter base(Iter i) { return i; }
 
 
-template <class It, bool Sized>
+template<class It, bool Sized>
 class sentinel
 {
     It it_;
@@ -111,12 +111,12 @@ RANGES_DECLTYPE_AUTO_RETURN
     base(begin) - base(end)
 )
 
-template <class It>
+template<class It>
 class output_iterator
 {
     It it_;
 
-    template <class U> friend class output_iterator;
+    template<class U> friend class output_iterator;
 public:
     typedef          std::output_iterator_tag                  iterator_category;
     typedef void                                               value_type;
@@ -128,7 +128,7 @@ public:
 
     RANGES_CXX14_CONSTEXPR output_iterator () {}
     RANGES_CXX14_CONSTEXPR explicit output_iterator(It it) : it_(it) {}
-    template <class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
+    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
     RANGES_CXX14_CONSTEXPR
     output_iterator(const output_iterator<U>& u) :it_(u.it_) {}
 
@@ -139,12 +139,12 @@ public:
     {output_iterator tmp(*this); ++(*this); return tmp;}
 };
 
-template <class It>
+template<class It>
 class input_iterator
 {
     It it_;
 
-    template <class U> friend class input_iterator;
+    template<class U> friend class input_iterator;
 public:
     typedef          std::input_iterator_tag                   iterator_category;
     typedef typename std::iterator_traits<It>::value_type      value_type;
@@ -156,7 +156,7 @@ public:
 
     RANGES_CXX14_CONSTEXPR input_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit input_iterator(It it) : it_(it) {}
-    template <class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
+    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
     RANGES_CXX14_CONSTEXPR input_iterator(const input_iterator<U>& u) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
@@ -174,7 +174,7 @@ public:
         {return !(x == y);}
 };
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator==(const input_iterator<T>& x, const input_iterator<U>& y)
@@ -182,7 +182,7 @@ operator==(const input_iterator<T>& x, const input_iterator<U>& y)
     return x.base() == y.base();
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator!=(const input_iterator<T>& x, const input_iterator<U>& y)
@@ -190,12 +190,12 @@ operator!=(const input_iterator<T>& x, const input_iterator<U>& y)
     return !(x == y);
 }
 
-template <class It>
+template<class It>
 class forward_iterator
 {
     It it_;
 
-    template <class U> friend class forward_iterator;
+    template<class U> friend class forward_iterator;
 public:
     typedef          std::forward_iterator_tag                 iterator_category;
     typedef typename std::iterator_traits<It>::value_type      value_type;
@@ -207,7 +207,7 @@ public:
 
     RANGES_CXX14_CONSTEXPR forward_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit forward_iterator(It it) : it_(it) {}
-    template <class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
+    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
     RANGES_CXX14_CONSTEXPR forward_iterator(const forward_iterator<U>& u) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
@@ -225,7 +225,7 @@ public:
     {return !(x == y);}
 };
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator==(const forward_iterator<T>& x, const forward_iterator<U>& y)
@@ -233,7 +233,7 @@ operator==(const forward_iterator<T>& x, const forward_iterator<U>& y)
     return x.base() == y.base();
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator!=(const forward_iterator<T>& x, const forward_iterator<U>& y)
@@ -241,12 +241,12 @@ operator!=(const forward_iterator<T>& x, const forward_iterator<U>& y)
     return !(x == y);
 }
 
-template <class It>
+template<class It>
 class bidirectional_iterator
 {
     It it_;
 
-    template <class U> friend class bidirectional_iterator;
+    template<class U> friend class bidirectional_iterator;
 public:
     typedef          std::bidirectional_iterator_tag           iterator_category;
     typedef typename std::iterator_traits<It>::value_type      value_type;
@@ -258,7 +258,7 @@ public:
 
     RANGES_CXX14_CONSTEXPR bidirectional_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit bidirectional_iterator(It it) : it_(it) {}
-    template <class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
+    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
     RANGES_CXX14_CONSTEXPR bidirectional_iterator(const bidirectional_iterator<U>& u) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
@@ -273,7 +273,7 @@ public:
     {bidirectional_iterator tmp(*this); --(*this); return tmp;}
 };
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator==(const bidirectional_iterator<T>& x, const bidirectional_iterator<U>& y)
@@ -281,7 +281,7 @@ operator==(const bidirectional_iterator<T>& x, const bidirectional_iterator<U>& 
     return x.base() == y.base();
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator!=(const bidirectional_iterator<T>& x, const bidirectional_iterator<U>& y)
@@ -289,12 +289,12 @@ operator!=(const bidirectional_iterator<T>& x, const bidirectional_iterator<U>& 
     return !(x == y);
 }
 
-template <class It>
+template<class It>
 class random_access_iterator
 {
     It it_;
 
-    template <class U> friend class random_access_iterator;
+    template<class U> friend class random_access_iterator;
 public:
     typedef          std::random_access_iterator_tag           iterator_category;
     typedef typename std::iterator_traits<It>::value_type      value_type;
@@ -306,7 +306,7 @@ public:
 
     RANGES_CXX14_CONSTEXPR random_access_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit random_access_iterator(It it) : it_(it) {}
-    template <class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
+    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
     RANGES_CXX14_CONSTEXPR random_access_iterator(const random_access_iterator<U>& u) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
@@ -338,7 +338,7 @@ public:
     reference operator[](difference_type n) const {return it_[n];}
 };
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator==(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -346,7 +346,7 @@ operator==(const random_access_iterator<T>& x, const random_access_iterator<U>& 
     return x.base() == y.base();
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator!=(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -354,7 +354,7 @@ operator!=(const random_access_iterator<T>& x, const random_access_iterator<U>& 
     return !(x == y);
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator<(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -362,7 +362,7 @@ operator<(const random_access_iterator<T>& x, const random_access_iterator<U>& y
     return x.base() < y.base();
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator<=(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -370,7 +370,7 @@ operator<=(const random_access_iterator<T>& x, const random_access_iterator<U>& 
     return !(y < x);
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator>(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -378,7 +378,7 @@ operator>(const random_access_iterator<T>& x, const random_access_iterator<U>& y
     return y < x;
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 bool
 operator>=(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
@@ -386,7 +386,7 @@ operator>=(const random_access_iterator<T>& x, const random_access_iterator<U>& 
     return !(x < y);
 }
 
-template <class T, class U>
+template<class T, class U>
 RANGES_CXX14_CONSTEXPR
 auto
 operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y)

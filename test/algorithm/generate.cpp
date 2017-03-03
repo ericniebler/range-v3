@@ -34,7 +34,7 @@ struct gen_test
     int operator()() {return i_++;}
 };
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test()
 {
