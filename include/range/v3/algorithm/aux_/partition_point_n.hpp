@@ -35,7 +35,7 @@ namespace ranges
             {
                 template<typename I, typename C, typename P = ident,
                     CONCEPT_REQUIRES_(PartitionPointable<I, C, P>())>
-                I operator()(I begin, iterator_difference_t<I> d, C pred, P proj = P{}) const
+                I operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const
                 {
                     if(0 < d)
                     {

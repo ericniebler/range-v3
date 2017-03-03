@@ -40,14 +40,14 @@ namespace ranges
                 template<typename Rng>
                 using join_value_t =
                     meta::if_c<
-                        (bool) ranges::Container<range_value_t<Rng>>(),
-                        range_value_t<Rng>,
-                        std::vector<range_value_t<range_value_t<Rng>>>>;
+                        (bool) ranges::Container<range_value_type_t<Rng>>(),
+                        range_value_type_t<Rng>,
+                        std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
             public:
                 template<typename Rng>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    InputRange<range_value_t<Rng>>,
+                    InputRange<range_value_type_t<Rng>>,
                     SemiRegular<join_value_t<Rng>>>;
 
                 template<typename Rng,
@@ -69,7 +69,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::join operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(InputRange<range_value_type_t<Rng>>(),
                         "The Range on which action::join operates must have a value type that "
                         "models the InputRange concept.");
                 }

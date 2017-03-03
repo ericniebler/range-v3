@@ -58,9 +58,9 @@ namespace ranges
             }
 
             template<typename Rng, typename O, typename T, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && InputRange<Rng>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out, T const &val, P proj = P{}) const
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
             }

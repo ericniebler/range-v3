@@ -52,8 +52,8 @@ int main()
         CHECK(e.begin() == e.end());
     }
     {
-        range_iterator_t<any_random_access_view<int&>> i{},j{};
-        range_sentinel_t<any_random_access_view<int&>> k{};
+        iterator_t<any_random_access_view<int&>> i{},j{};
+        sentinel_t<any_random_access_view<int&>> k{};
         CHECK(i == j);
         CHECK(i == k);
         CHECK((i - j) == 0);

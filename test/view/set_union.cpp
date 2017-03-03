@@ -63,7 +63,7 @@ int main()
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, int&>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), int&&>());
 
@@ -93,9 +93,9 @@ int main()
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>,
-                            common_type_t<range_value_t<decltype(i1_infinite)>,
-                                          range_value_t<decltype(i2_infinite)>>>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>,
+                            common_type_t<range_value_type_t<decltype(i1_infinite)>,
+                                          range_value_type_t<decltype(i2_infinite)>>>());
         CONCEPT_ASSERT(Same<range_reference_t<R>,
                             common_reference_t<range_reference_t<decltype(i1_infinite)>,
                                                range_reference_t<decltype(i2_infinite)>>
@@ -126,7 +126,7 @@ int main()
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, int>()); // our infinite range does not give out references
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, int>());
 
@@ -145,7 +145,7 @@ int main()
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, int>()); // our infinite range does not give out references
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, int>());
 
@@ -185,13 +185,13 @@ int main()
     {
         auto res1 = view::set_union(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_ASSERT(Same<range_value_t<R1>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R1>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R1>, const int&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, const int&&>());
         
         auto res2 = view::set_union(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, const int&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, const int&&>());
     }
@@ -230,7 +230,7 @@ int main()
     {        
         auto res = view::set_union(b_finite, d_finite, [](const B& a, const D& b){ return a.val < b.val; });
         using R = decltype(res);
-        CONCEPT_ASSERT(Same<range_value_t<R>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, B&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, B&&>());
         ::check_equal(res, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
@@ -248,7 +248,7 @@ int main()
                                     &D::val
                                    );
         using R1 = decltype(res1);
-        CONCEPT_ASSERT(Same<range_value_t<R1>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R1>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<R1>, B&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, B&&>());
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
@@ -260,7 +260,7 @@ int main()
                                     [](const B& x){ return x.val; }
                                    );
         using R2 = decltype(res2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, B>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, B>());
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{5}, B{6}, B{7}, B{8}, B{9}, B{20}});
@@ -282,7 +282,7 @@ int main()
  
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, MoveOnlyString>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
     }

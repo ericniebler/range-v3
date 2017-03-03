@@ -35,7 +35,7 @@ namespace ranges
         struct minmax_fn
         {
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>, typename V = iterator_value_t<I>,
+                typename I = iterator_t<Rng>, typename V = value_type_t<I>,
                 typename R = tagged_pair<tag::min(V), tag::max(V)>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
                     IndirectRelation<C, projected<I, P>>())>

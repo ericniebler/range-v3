@@ -38,14 +38,14 @@ namespace ranges
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        iterator_difference_t<I>>())>
+                        difference_type_t<I>>())>
             I operator()(I const begin, S const end,
                 Gen && gen = detail::get_random_engine()) const
             {
                 auto mid = begin;
                 if(mid == end)
                     return mid;
-                std::uniform_int_distribution<iterator_difference_t<I>> uid{};
+                std::uniform_int_distribution<difference_type_t<I>> uid{};
                 using param_t = typename decltype(uid)::param_type;
                 while(++mid != end)
                 {
@@ -56,12 +56,12 @@ namespace ranges
             }
 
             template<typename Rng, typename Gen = detail::default_random_engine&,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
                     UniformRandomNumberGenerator<Gen>() && ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        iterator_difference_t<I>>())>
-            range_safe_iterator_t<Rng>
+                        difference_type_t<I>>())>
+            safe_iterator_t<Rng>
             operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));

@@ -79,14 +79,14 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        iterator_difference_t<I2> c2 = 0;
+                        difference_type_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj2, *j)))
                                 ++c2;
                         if(c2 == 0)
                             return false;
                         // Count number of *i in [i, l1) (we can start with 1)
-                        iterator_difference_t<I1> c1 = 1;
+                        difference_type_t<I1> c1 = 1;
                         for(I1 j = next(i); j != end1; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj1, *j)))
                                 ++c1;
@@ -126,14 +126,14 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        iterator_difference_t<I2> c2 = 0;
+                        difference_type_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj2, *j)))
                                 ++c2;
                         if(c2 == 0)
                             return false;
                         // Count number of *i in [i, l1) (we can start with 1)
-                        iterator_difference_t<I1> c1 = 1;
+                        difference_type_t<I1> c1 = 1;
                         for(I1 j = next(i); j != end1; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj1, *j)))
                                 ++c1;
@@ -162,7 +162,7 @@ namespace ranges
             }
 
             template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident, typename I1 = range_iterator_t<Rng1>,
+                typename P2 = ident, typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng1>() && Iterator<I2>() &&
                     IsPermutationable<I1, I2, C, P1, P2>())>
@@ -174,8 +174,8 @@ namespace ranges
             }
 
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident, typename I1 = range_iterator_t<Rng1>,
-                typename I2 = range_iterator_t<Rng2>,
+                typename P2 = ident, typename I1 = iterator_t<Rng1>,
+                typename I2 = iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng1>() && ForwardRange<Rng2>() &&
                     IsPermutationable<I1, I2, C, P1, P2>())>
             bool operator()(Rng1 &&rng1, Rng2 &&rng2,
@@ -227,7 +227,7 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Sortable<I, C, P>())>
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
@@ -272,7 +272,7 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Sortable<I, C, P>())>
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {

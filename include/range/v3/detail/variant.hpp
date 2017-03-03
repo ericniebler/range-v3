@@ -118,7 +118,7 @@ namespace ranges
             O uninitialized_copy(I first, S last, O out)
             {
                 for(; first != last; ++first, ++out)
-                    ::new((void *) std::addressof(*out)) iterator_value_t<O>(*first);
+                    ::new((void *) std::addressof(*out)) value_type_t<O>(*first);
                 return out;
             }
 

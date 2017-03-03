@@ -47,7 +47,7 @@ namespace ranges
             std::regex_constants::match_flag_type flags_;
         public:
             using iterator =
-                std::regex_token_iterator<range_iterator_t<Rng>>;
+                std::regex_token_iterator<iterator_t<Rng>>;
 
             tokenize_view() = default;
             tokenize_view(Rng rng, Regex && rex, SubMatchRange subs,
@@ -92,7 +92,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
-                    static_assert(std::is_same<range_value_t<Rng>,
+                    static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(std::forward<Rng>(rng)), std::forward<Regex>(rex), sub,
@@ -107,7 +107,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
-                    static_assert(std::is_same<range_value_t<Rng>,
+                    static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(std::forward<Rng>(rng)), std::forward<Regex>(rex),
@@ -122,7 +122,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
-                    static_assert(std::is_same<range_value_t<Rng>,
+                    static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(std::forward<Rng>(rng)), std::forward<Regex>(rex),

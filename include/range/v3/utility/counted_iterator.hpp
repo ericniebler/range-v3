@@ -56,10 +56,10 @@ namespace ranges
             struct counted_cursor_types<I, true>
             {
                 using single_pass = SinglePass<I>;
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
             };
 
-            template<typename I, typename D /* = iterator_difference_t<I>*/>
+            template<typename I, typename D /* = difference_type_t<I>*/>
             struct counted_cursor
               : private counted_cursor_types<I>
             {
@@ -67,7 +67,7 @@ namespace ranges
                 friend range_access;
                 template<typename OtherI, typename OtherD>
                 friend struct counted_cursor;
-                using difference_type = iterator_difference_t<I>;
+                using difference_type = difference_type_t<I>;
                 struct mixin
                   : basic_mixin<counted_cursor>
                 {
@@ -92,7 +92,7 @@ namespace ranges
                 // Overload the advance algorithm for counted_iterators.
                 // This is much faster. This gets found by ADL because
                 // counted_cursor is an associated type of counted_iterator.
-                friend void advance(counted_iterator<I, D> &it, iterator_difference_t<I> n)
+                friend void advance(counted_iterator<I, D> &it, difference_type_t<I> n)
                 {
                     counted_cursor &cur = get_cursor(it);
                     cur.n_ -= n;
@@ -105,20 +105,20 @@ namespace ranges
                     return i.base();
                 }
                 friend counted_iterator<I, D>
-                recounted(counted_iterator<I, D> const &j, I i, iterator_difference_t<I> n)
+                recounted(counted_iterator<I, D> const &j, I i, difference_type_t<I> n)
                 {
                     RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
                     return {i, j.count() - n};
                 }
                 template<typename II = I,
                     CONCEPT_REQUIRES_(Readable<II>())>
-                iterator_rvalue_reference_t<II> move() const
+                rvalue_reference_t<II> move() const
                     noexcept(noexcept(ranges::iter_move(std::declval<II const &>())))
                 {
                     return ranges::iter_move(it_);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> read() const
+                reference_t<I> read() const
                 {
                     return *it_;
                 }
@@ -155,7 +155,7 @@ namespace ranges
                     ++n_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                void advance(iterator_difference_t<I> n)
+                void advance(difference_type_t<I> n)
                 {
                     it_ += n;
                     n_ -= n;
@@ -196,7 +196,7 @@ namespace ranges
         /// @{
 
         template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
-        counted_iterator<I> make_counted_iterator(I i, iterator_difference_t<I> n)
+        counted_iterator<I> make_counted_iterator(I i, difference_type_t<I> n)
         {
             return counted_iterator<I>{std::move(i), n};
         }

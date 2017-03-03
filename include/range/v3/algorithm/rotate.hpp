@@ -49,7 +49,7 @@ namespace ranges
             template<typename I> // Forward
             static iterator_range<I> rotate_left(I begin, I end)
             {
-                iterator_value_t<I> tmp = iter_move(begin);
+                value_type_t<I> tmp = iter_move(begin);
                 I lm1 = move(next(begin), end, begin).second;
                 *lm1 = std::move(tmp);
                 return {lm1, end};
@@ -59,7 +59,7 @@ namespace ranges
             static iterator_range<I> rotate_right(I begin, I end)
             {
                 I lm1 = prev(end);
-                iterator_value_t<I> tmp = iter_move(lm1);
+                value_type_t<I> tmp = iter_move(lm1);
                 I fp1 = move_backward(begin, lm1, end).second;
                 *begin = std::move(tmp);
                 return {fp1, end};
@@ -124,7 +124,7 @@ namespace ranges
                 auto const g = rotate_fn::gcd(m1, m2);
                 for (I p = begin + g; p != begin;)
                 {
-                    iterator_value_t<I> t = iter_move(--p);
+                    value_type_t<I> t = iter_move(--p);
                     I p1 = p;
                     I p2 = p1 + m1;
                     do
@@ -151,7 +151,7 @@ namespace ranges
             template<typename I>
             static iterator_range<I> rotate_(I begin, I middle, I end, concepts::ForwardIterator*)
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
                 {
                     if(next(begin) == middle)
@@ -163,7 +163,7 @@ namespace ranges
             template<typename I>
             static iterator_range<I> rotate_(I begin, I middle, I end, concepts::BidirectionalIterator*)
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
                 {
                     if(next(begin) == middle)
@@ -177,7 +177,7 @@ namespace ranges
             template<typename I>
             static iterator_range<I> rotate_(I begin, I middle, I end, concepts::RandomAccessIterator*)
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
                 {
                     if(next(begin) == middle)
@@ -206,7 +206,7 @@ namespace ranges
                 return rotate_fn::rotate_(begin, middle, end, iterator_concept<I>{});
             }
 
-            template<typename Rng, typename I = range_iterator_t<Rng>,
+            template<typename Rng, typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Permutable<I>())>
             meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
             operator()(Rng &&rng, I middle) const

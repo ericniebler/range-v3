@@ -32,7 +32,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename O, typename BOp = minus, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = value_type_t<I>,
             typename X = concepts::Invocable::result_t<P&, V>,
             typename Y = concepts::Invocable::result_t<BOp&, X, X>>
         using AdjacentDifferentiable = meta::strict_and<
@@ -54,7 +54,7 @@ namespace ranges
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
                 // BUGBUG think about the use of coerce here.
-                using V = iterator_value_t<I>;
+                using V = value_type_t<I>;
                 using X = concepts::Invocable::result_t<P, V>;
                 coerce<V> v;
                 coerce<X> x;
@@ -81,7 +81,7 @@ namespace ranges
             operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                        P proj = P{}) const
             {
-                using V = iterator_value_t<I>;
+                using V = value_type_t<I>;
                 using X = concepts::Invocable::result_t<P, V>;
                 coerce<V> v;
                 coerce<X> x;
@@ -102,10 +102,10 @@ namespace ranges
             }
 
             template<typename Rng, typename ORef, typename BOp = minus, typename P = ident,
-                typename I = range_iterator_t<Rng>, typename O = uncvref_t<ORef>,
+                typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>,
                 CONCEPT_REQUIRES_(Range<Rng>() &&
                     AdjacentDifferentiable<I, O, BOp, P>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng && rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<ORef>(result), std::move(bop),
@@ -113,12 +113,12 @@ namespace ranges
             }
 
             template<typename Rng, typename ORng, typename BOp = minus,
-                typename P = ident, typename I = range_iterator_t<Rng>,
-                typename O = range_iterator_t<ORng>,
+                typename P = ident, typename I = iterator_t<Rng>,
+                typename O = iterator_t<ORng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Range<ORng>() &&
                     AdjacentDifferentiable<I, O, BOp, P>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>),
-                tag::out(range_safe_iterator_t<ORng>)>
+            tagged_pair<tag::in(safe_iterator_t<Rng>),
+                tag::out(safe_iterator_t<ORng>)>
             operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), begin(result), end(result),

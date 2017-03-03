@@ -40,22 +40,22 @@ namespace ranges
         struct reverse_view
           : view_adaptor<reverse_view<Rng>, Rng>
           , private detail::non_propagating_cache<
-                range_iterator_t<Rng>, reverse_view<Rng>, !BoundedRange<Rng>()>
+                iterator_t<Rng>, reverse_view<Rng>, !BoundedRange<Rng>()>
         {
         private:
             CONCEPT_ASSERT(BidirectionalRange<Rng>());
             friend range_access;
 
             // BoundedRange == true
-            range_iterator_t<Rng> get_end_(std::true_type) const
+            iterator_t<Rng> get_end_(std::true_type) const
             {
                 return ranges::end(this->mutable_base());
             }
             // BoundedRange == false
-            range_iterator_t<Rng> get_end_(std::false_type)
+            iterator_t<Rng> get_end_(std::false_type)
             {
                 using cache_t = detail::non_propagating_cache<
-                    range_iterator_t<Rng>, reverse_view<Rng>>;
+                    iterator_t<Rng>, reverse_view<Rng>>;
                 auto &end_ = static_cast<cache_t&>(*this);
                 if(!end_)
                     end_ = ranges::next(
@@ -77,28 +77,28 @@ namespace ranges
                 adaptor(reverse_view_t &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(reverse_view_t &rng) const
+                iterator_t<Rng> begin(reverse_view_t &rng) const
                 {
                     auto it = rng.get_end_(BoundedRange<Rng>());
                     ranges::advance(it, -1, ranges::begin(rng.mutable_base()));
                     return it;
                 }
-                range_iterator_t<Rng> end(reverse_view_t &rng) const
+                iterator_t<Rng> end(reverse_view_t &rng) const
                 {
                     return rng.get_end_(BoundedRange<Rng>());
                 }
-                void next(range_iterator_t<Rng> &it) const
+                void next(iterator_t<Rng> &it) const
                 {
                     if(0 != ranges::advance(it, -1, ranges::begin(rng_->mutable_base())))
                         it = rng_->get_end_(BoundedRange<Rng>());
                 }
-                void prev(range_iterator_t<Rng> &it) const
+                void prev(iterator_t<Rng> &it) const
                 {
                     if(0 != ranges::advance(it, 1, ranges::end(rng_->mutable_base())))
                         it = ranges::begin(rng_->mutable_base());
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-                void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
+                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
                 {
                     if(n > 0)
                         ranges::advance(it, -n + 1), this->next(it);
@@ -106,9 +106,9 @@ namespace ranges
                         this->prev(it), ranges::advance(it, -n - 1);
                 }
                 CONCEPT_REQUIRES(
-                    SizedSentinel<range_iterator_t<Rng>, range_iterator_t<Rng>>())
-                range_difference_t<Rng>
-                distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
+                    SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                range_difference_type_t<Rng>
+                distance_to(iterator_t<Rng> const &here, iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                 {
                     RANGES_EXPECT(rng_ == other_adapt.rng_);
@@ -139,12 +139,12 @@ namespace ranges
                 return {*this};
             }
             // SizedRange == true
-            range_size_t<Rng> size_(std::true_type)
+            range_size_type_t<Rng> size_(std::true_type)
             {
                 return ranges::size(this->base());
             }
             // SizedRange == false, RandomAccessRange == true
-            range_size_t<Rng> size_(std::false_type)
+            range_size_type_t<Rng> size_(std::false_type)
             {
                 return ranges::iter_size(this->begin(), this->end());
             }
@@ -154,12 +154,12 @@ namespace ranges
               : reverse_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>() || RandomAccessRange<Rng>())
-            range_size_t<Rng> size()
+            range_size_type_t<Rng> size()
             {
                 return this->size_(SizedRange<Rng>());
             }
             CONCEPT_REQUIRES(SizedRange<Rng const>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }

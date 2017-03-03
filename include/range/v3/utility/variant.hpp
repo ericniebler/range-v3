@@ -66,7 +66,7 @@ namespace ranges
                 // \pre Requires DefaultConstructible<T>() || distance(first, last) == N
                 template<typename I, typename S,
                     CONCEPT_REQUIRES_(Sentinel<S, I>() && InputIterator<I>() &&
-                        Constructible<T, iterator_reference_t<I>>())>
+                        Constructible<T, reference_t<I>>())>
                 indexed_datum(I first, S last)
                 {
                     T *p = detail::uninitialized_copy(first, last, data_);

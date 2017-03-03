@@ -113,7 +113,7 @@ namespace ranges
         private:
             O out_;
         public:
-            using difference_type = iterator_difference_t<O>;
+            using difference_type = difference_type_t<O>;
             raw_storage_iterator() = default;
             explicit raw_storage_iterator(O out)
               : out_(std::move(out))
@@ -161,7 +161,7 @@ namespace ranges
                 raw_storage_iterator<I, V>{std::move(i)}, d};
         }
 
-        template<typename I, typename D, typename V = iterator_value_t<I>>
+        template<typename I, typename D, typename V = value_type_t<I>>
         counted_iterator<raw_storage_iterator<I, V>, detail::external_count<D>>
         make_counted_raw_storage_iterator(I i, D &d)
         {

@@ -30,8 +30,8 @@ namespace ranges
        template<typename I1, typename I2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident,
-                typename V1 = iterator_value_t<I1>,
-                typename V2 = iterator_value_t<I2>,
+                typename V1 = value_type_t<I1>,
+                typename V2 = value_type_t<I2>,
                 typename X1 = concepts::Invocable::result_t<P1&, V1>,
                 typename X2 = concepts::Invocable::result_t<P2&, V2>,
                 typename Y2 = concepts::Invocable::result_t<BOp2&, X1, X2>,
@@ -80,7 +80,7 @@ namespace ranges
 
             template<typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
-                typename I1 = range_iterator_t<Rng1>,
+                typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>,
                 CONCEPT_REQUIRES_(
                     Range<Rng1>() && Iterator<I2>() &&
@@ -95,8 +95,8 @@ namespace ranges
 
             template<typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
-                typename I1 = range_iterator_t<Rng1>,
-                typename I2 = range_iterator_t<Rng2>,
+                typename I1 = iterator_t<Rng1>,
+                typename I2 = iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Range<Rng1>() &&
                     Range<Rng2>() &&

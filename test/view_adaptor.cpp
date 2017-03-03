@@ -26,7 +26,7 @@ private:
     CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
     CONCEPT_ASSERT(ranges::BoundedRange<BidiRange>());
     friend ranges::range_access;
-    using base_iterator_t = ranges::range_iterator_t<BidiRange>;
+    using base_iterator_t = ranges::iterator_t<BidiRange>;
 
     struct adaptor : ranges::adaptor_base
     {
@@ -52,12 +52,12 @@ private:
             return *ranges::prev(it);
         }
         CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
-        void advance(base_iterator_t &it, ranges::range_difference_t<BidiRange> n) const
+        void advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
         {
             it -= n;
         }
         CONCEPT_REQUIRES(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
-        ranges::range_difference_t<BidiRange>
+        ranges::range_difference_type_t<BidiRange>
         distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {
             return here - there;

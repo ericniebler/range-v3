@@ -43,12 +43,12 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                auto read(range_iterator_t<Rng> const &it) const ->
+                auto read(iterator_t<Rng> const &it) const ->
                     decltype(**it)
                 {
                     return **it;
                 }
-                auto iter_move(range_iterator_t<Rng> const &it) const ->
+                auto iter_move(iterator_t<Rng> const &it) const ->
                     decltype(ranges::iter_move(*it))
                 {
                     return ranges::iter_move(*it);
@@ -68,7 +68,7 @@ namespace ranges
               : indirect_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
@@ -83,7 +83,7 @@ namespace ranges
                     InputRange<Rng>,
                     // Stricter than necessary because of the SemiRegular requirement,
                     // but maybe that's ok?
-                    Readable<range_value_t<Rng>>>;
+                    Readable<range_value_type_t<Rng>>>;
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
@@ -100,7 +100,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The argument to view::indirect must be a model of the InputRange "
                         "concept");
-                    CONCEPT_ASSERT_MSG(Readable<range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(Readable<range_value_type_t<Rng>>(),
                         "The value type of the range passed to view::indirect must be a model "
                         "of the Readable concept.");
                 }

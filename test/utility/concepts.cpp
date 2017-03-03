@@ -212,13 +212,13 @@ static_assert(ranges::RandomAccessIterator<int*>(), "");
 static_assert(!ranges::RandomAccessIterator<int>(), "");
 
 static_assert(ranges::View<ranges::istream_range<int>>(), "");
-static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_range<int>>>(), "");
+static_assert(ranges::InputIterator<ranges::iterator_t<ranges::istream_range<int>>>(), "");
 static_assert(!ranges::View<int>(), "");
 
 static_assert(ranges::BoundedRange<std::vector<int> >(), "");
 static_assert(!ranges::BoundedView<std::vector<int>>(), "");
 static_assert(!ranges::BoundedView<std::vector<int> &>(), "");
-static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
+static_assert(ranges::RandomAccessIterator<ranges::iterator_t<std::vector<int> const &>>(), "");
 static_assert(!ranges::BoundedView<ranges::istream_range<int>>(), "");
 
 static_assert(ranges::Predicate<std::less<int>, int, int>(), "");

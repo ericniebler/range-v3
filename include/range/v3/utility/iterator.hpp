@@ -39,7 +39,7 @@ namespace ranges
 
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::InputIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::InputIterator *)
             {
                 RANGES_EXPECT(n >= 0);
                 for(; n > 0; --n)
@@ -47,7 +47,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::BidirectionalIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::BidirectionalIterator *)
             {
                 if(n > 0)
                     for(; n > 0; --n)
@@ -58,7 +58,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::RandomAccessIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::RandomAccessIterator *)
             {
                 i += n;
             }
@@ -67,14 +67,14 @@ namespace ranges
             // but only input from the perspective of std::advance.
             template<typename Cur>
             RANGES_CXX14_CONSTEXPR
-            void advance(basic_iterator<Cur> &i, iterator_difference_t<basic_iterator<Cur>> n)
+            void advance(basic_iterator<Cur> &i, difference_type_t<basic_iterator<Cur>> n)
             {
                 adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur>>{});
             }
             // Hijack std::advance for raw pointers, since std::advance is not constexpr
             template<typename T>
             RANGES_CXX14_CONSTEXPR
-            void advance(T*& i, iterator_difference_t<T*> n)
+            void advance(T*& i, difference_type_t<T*> n)
             {
                 adl_advance_detail::advance_impl(i, n, iterator_concept<T*>{});
             }
@@ -105,7 +105,7 @@ namespace ranges
                 template<typename I,
                     CONCEPT_REQUIRES_(Iterator<I>())>
                 RANGES_CXX14_CONSTEXPR
-                void operator()(I &i, iterator_difference_t<I> n) const
+                void operator()(I &i, difference_type_t<I> n) const
                 {
                     // Use ADL here to give custom iterator types (like counted_iterator)
                     // a chance to optimize it (see view/counted.hpp)
@@ -130,7 +130,7 @@ namespace ranges
                 template<typename I, typename S,
                     CONCEPT_REQUIRES_(Sentinel<S, I>())>
                 RANGES_CXX14_CONSTEXPR
-                iterator_difference_t<I> operator()(I &it, iterator_difference_t<I> n, S bound) const
+                difference_type_t<I> operator()(I &it, difference_type_t<I> n, S bound) const
                 {
                     return advance_fn::bounded_(it, n, std::move(bound),
                         sized_sentinel_concept<S, I>(), iterator_concept<I>());
@@ -155,7 +155,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             void advance_fn::to_(I &i, S s, concepts::SizedSentinel*)
             {
-                iterator_difference_t<I> d = s - i;
+                difference_type_t<I> d = s - i;
                 RANGES_EXPECT(0 <= d);
                 ranges::advance(i, d);
             }
@@ -212,7 +212,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(Iterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n) const
+            I operator()(I it, difference_type_t<I> n) const
             {
                 advance(it, n);
                 return it;
@@ -228,7 +228,7 @@ namespace ranges
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(Sentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n, S bound) const
+            I operator()(I it, difference_type_t<I> n, S bound) const
             {
                 advance(it, n, std::move(bound));
                 return it;
@@ -244,7 +244,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n = 1) const
+            I operator()(I it, difference_type_t<I> n = 1) const
             {
                 advance(it, -n);
                 return it;
@@ -252,7 +252,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n, I bound) const
+            I operator()(I it, difference_type_t<I> n, I bound) const
             {
                 advance(it, -n, std::move(bound));
                 return it;
@@ -294,7 +294,7 @@ namespace ranges
                 return {n + d, ranges::next(begin, end)};
             }
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
+            template<typename I, typename S, typename D = difference_type_t<I>,
                 CONCEPT_REQUIRES_(Iterator<I>() && Sentinel<S, I>() && Integral<D>())>
             RANGES_CXX14_CONSTEXPR
             std::pair<D, I> operator()(I begin, S end, D d = 0) const
@@ -326,7 +326,7 @@ namespace ranges
                 return n + d;
             }
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
+            template<typename I, typename S, typename D = difference_type_t<I>,
                 CONCEPT_REQUIRES_(Iterator<I>() && Sentinel<S, I>() && Integral<D>())>
             RANGES_CXX14_CONSTEXPR
             D operator()(I begin, S end, D d = 0) const
@@ -345,7 +345,7 @@ namespace ranges
         private:
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::Sentinel*) const
+            int impl_i(I begin, S end, difference_type_t<I> n, concepts::Sentinel*) const
             {
                 if (n >= 0) {
                     for (; n > 0; --n) {
@@ -362,9 +362,9 @@ namespace ranges
             }
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::SizedSentinel*) const
+            int impl_i(I begin, S end, difference_type_t<I> n, concepts::SizedSentinel*) const
             {
-                iterator_difference_t<I> dist = end - begin;
+                difference_type_t<I> dist = end - begin;
                 if (dist > n)
                     return  1;
                 else if (dist < n)
@@ -376,7 +376,7 @@ namespace ranges
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            int operator()(I begin, S end, iterator_difference_t<I> n) const
+            int operator()(I begin, S end, difference_type_t<I> n) const
             {
                 return this->impl_i(std::move(begin), std::move(end), n,
                     sized_sentinel_concept<S, I>());
@@ -392,11 +392,11 @@ namespace ranges
         {
             template<typename I, typename S, CONCEPT_REQUIRES_(SizedSentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            iterator_size_t<I> operator()(I begin, S end) const
+            size_type_t<I> operator()(I begin, S end) const
             {
-                iterator_difference_t<I> n = end - begin;
+                difference_type_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
-                return static_cast<iterator_size_t<I>>(n);
+                return static_cast<size_type_t<I>>(n);
             }
         };
 
@@ -672,7 +672,7 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto read() const -> iterator_reference_t<I>
+                auto read() const -> reference_t<I>
                 {
                     return *arrow();
                 }
@@ -705,13 +705,13 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
                 RANGES_CXX14_CONSTEXPR
-                void advance(iterator_difference_t<I> n)
+                void advance(difference_type_t<I> n)
                 {
                     it_ -= n;
                 }
                 CONCEPT_REQUIRES(SizedSentinel<I, I>())
                 RANGES_CXX14_CONSTEXPR
-                iterator_difference_t<I>
+                difference_type_t<I>
                 distance_to(reverse_cursor const &that) const
                 {
                     return it_ - that.base();
@@ -749,10 +749,10 @@ namespace ranges
             I current_ = detail::value_init{};
         public:
             using iterator_type = I;
-            using difference_type = iterator_difference_t<I>;
-            using value_type = iterator_value_t<I>;
+            using difference_type = difference_type_t<I>;
+            using value_type = value_type_t<I>;
             using iterator_category = input_iterator_tag;
-            using reference = iterator_rvalue_reference_t<I>;
+            using reference = rvalue_reference_t<I>;
 
             constexpr move_iterator() = default;
             explicit move_iterator(I i)
@@ -873,13 +873,13 @@ namespace ranges
 
         template<typename I1, typename I2,
             CONCEPT_REQUIRES_(SizedSentinel<I1, I2>())>
-        iterator_difference_t<I2> operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        difference_type_t<I2> operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() - y.base();
         }
         template <typename I,
             CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-        move_iterator<I> operator+(iterator_difference_t<I> n, move_iterator<I> const &x)
+        move_iterator<I> operator+(difference_type_t<I> n, move_iterator<I> const &x)
         {
             return x + n;
         }
@@ -982,7 +982,7 @@ namespace ranges
             template<typename I>
             struct move_into_cursor_types<I, true>
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 using single_pass = SinglePass<I>;
             };
 
@@ -1027,7 +1027,7 @@ namespace ranges
                     *it_ = std::move(t);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> read() const
+                reference_t<I> read() const
                     noexcept(noexcept(*std::declval<I const&>()))
                 {
                     return *it_;
@@ -1043,19 +1043,19 @@ namespace ranges
                     --it_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                void advance(iterator_difference_t<I> n)
+                void advance(difference_type_t<I> n)
                 {
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(SizedSentinel<I, I>())
-                iterator_difference_t<I> distance_to(move_into_cursor const &that) const
+                difference_type_t<I> distance_to(move_into_cursor const &that) const
                 {
                     return that.it_ - it_;
                 }
                 template<typename II = I,
                     CONCEPT_REQUIRES_(Same<I, II>() && Readable<II>())>
                 RANGES_CXX14_CONSTEXPR
-                iterator_rvalue_reference_t<II const> move() const
+                rvalue_reference_t<II const> move() const
                     noexcept(noexcept(iter_move(std::declval<II const&>())))
                 {
                     return iter_move(it_);
@@ -1092,7 +1092,7 @@ namespace ranges
             }
 
             template<typename I>
-            constexpr I recounted(I const &, I i, iterator_difference_t<I>)
+            constexpr I recounted(I const &, I i, difference_type_t<I>)
             {
                 return i;
             }
@@ -1112,7 +1112,7 @@ namespace ranges
             {
                 template<typename I, typename J>
                 constexpr
-                auto operator()(I i, J j, iterator_difference_t<J> n) const ->
+                auto operator()(I i, J j, difference_type_t<J> n) const ->
                     decltype(recounted((I&&)i, (J&&)j, n))
                 {
                     return recounted((I&&)i, (J&&)j, n);

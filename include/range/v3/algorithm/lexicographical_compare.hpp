@@ -49,8 +49,8 @@ namespace ranges
 
             template<typename Rng0, typename Rng1, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident,
-                typename I0 = range_iterator_t<Rng0>,
-                typename I1 = range_iterator_t<Rng1>,
+                typename I0 = iterator_t<Rng0>,
+                typename I1 = iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(InputRange<Rng0>() && InputRange<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>())>
             bool operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},

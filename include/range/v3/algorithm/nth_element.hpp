@@ -107,7 +107,7 @@ namespace ranges
             {
                 I end = ranges::next(nth, end_), end_orig = end;
                 // C is known to be a reference type
-                using difference_type = iterator_difference_t<I>;
+                using difference_type = difference_type_t<I>;
                 difference_type const limit = 7;
                 while(true)
                 {
@@ -291,12 +291,12 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
                     RandomAccessRange<Rng>() &&
                     Sortable<I, C, P>()
                 )>
-            range_safe_iterator_t<Rng>
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, I nth, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(nth), end(rng), std::move(pred),
