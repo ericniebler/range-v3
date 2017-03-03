@@ -33,13 +33,13 @@
 #include "../test_iterators.hpp"
 
 /// Calls the iterator interface of the algorithm
-template <class Iter>
+template<class Iter>
 struct iter_call
 {
     using begin_t = Iter;
     using sentinel_t = typename sentinel_type<Iter>::type;
 
-    template <class B, class E, class... Args>
+    template<class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args)
      -> decltype(ranges::is_sorted(begin_t{b}, sentinel_t{e},
                                    std::forward<Args>(args)...))
@@ -49,13 +49,13 @@ struct iter_call
 };
 
 /// Calls the range interface of the algorithm
-template <class Iter>
+template<class Iter>
 struct range_call
 {
     using begin_t = Iter;
     using sentinel_t = typename sentinel_type<Iter>::type;
 
-    template <class B, class E, class... Args>
+    template<class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args)
      -> decltype(ranges::is_sorted(ranges::make_iterator_range(begin_t{b}, sentinel_t{e}),
                                    std::forward<Args>(args)...))
@@ -65,7 +65,7 @@ struct range_call
     }
 };
 
-template <class Fun>
+template<class Fun>
 void test()
 {
     {

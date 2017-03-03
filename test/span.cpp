@@ -503,7 +503,7 @@ namespace
         CHECK(s1.data() == &arr[1]);
     }
 
-    template <class Bounds>
+    template<class Bounds>
     void fn(const Bounds&)
     {
         static_assert(Bounds::static_size == 60, "static bounds is wrong size");

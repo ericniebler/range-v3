@@ -29,7 +29,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void test()
 {
     // iterators

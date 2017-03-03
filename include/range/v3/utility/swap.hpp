@@ -60,7 +60,7 @@ namespace ranges
         template<typename T, typename U = T>
         struct is_nothrow_indirectly_swappable;
 
-        template <class T, class U = T>
+        template<typename T, typename U = T>
         RANGES_CXX14_CONSTEXPR
         meta::if_c<
             std::is_move_constructible<T>::value &&
@@ -124,7 +124,7 @@ namespace ranges
             struct swap_fn
             {
                 // Dispatch to customization point:
-                template <class T, class U>
+                template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_swappable_<T, U>::value>
                 operator()(T &&t, U &&u) const
@@ -134,7 +134,7 @@ namespace ranges
                 )
 
                 // Handle swappable types
-                template <class T>
+                template<typename T>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
                     !is_adl_swappable_<T &, T &>::value &&
@@ -147,7 +147,7 @@ namespace ranges
                 )
 
                 // Handle arrays
-                template <class T, class U, std::size_t N>
+                template<typename T, typename U, std::size_t N>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
                     !is_adl_swappable_<T (&)[N], U (&)[N]>::value &&
@@ -285,7 +285,7 @@ namespace ranges
             struct iter_swap_fn
             {
                 // Dispatch to customization point:
-                template <class T, class U>
+                template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
                 operator()(T &&t, U &&u) const
