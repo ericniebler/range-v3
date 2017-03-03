@@ -47,7 +47,7 @@ int main()
         ::models_not<concepts::BoundedView>(aux::copy(rng));
         ::models_not<concepts::SizedView>(aux::copy(rng));
         CONCEPT_ASSERT(Same<
-            range_value_t<Rng>,
+            range_value_type_t<Rng>,
             std::tuple<int, std::string, std::string>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
@@ -55,7 +55,7 @@ int main()
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
             common_tuple<int &&, std::string const &&, std::string &&>>());
-        CONCEPT_ASSERT(ConvertibleTo<range_value_t<Rng> &&,
+        CONCEPT_ASSERT(ConvertibleTo<range_value_type_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
@@ -150,7 +150,7 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, MoveOnlyString>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, MoveOnlyString &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
     }
@@ -159,10 +159,10 @@ int main()
         auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
         auto rng = view::zip(v, v);
         using Rng = decltype(rng);
-        using I = range_iterator_t<Rng>;
+        using I = iterator_t<Rng>;
         CONCEPT_ASSERT(Readable<I>());
         CONCEPT_ASSERT(Same<
-            range_value_t<Rng>,
+            range_value_type_t<Rng>,
             std::pair<MoveOnlyString, MoveOnlyString>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
@@ -192,7 +192,7 @@ int main()
         auto rng0 = view::zip(vi, vs);
         auto rng1 = view::stride(rng0, 2);
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
-        CONCEPT_ASSERT(Same<range_value_t<decltype(rng1)>, range_value_t<decltype(rng0)>>());
+        CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng1)>, range_value_type_t<decltype(rng0)>>());
     }
 
     // Test for noexcept iter_move

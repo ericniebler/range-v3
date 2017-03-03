@@ -38,7 +38,7 @@ namespace ranges
             /// \pre `Rng` is a model of the `Range` concept
             /// \pre `I` is a model of the `InputIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
-            /// \pre `P` is a model of the `Invocable<iterator_common_reference_t<I>>` concept
+            /// \pre `P` is a model of the `Invocable<iter_common_reference_t<I>>` concept
             /// \pre The ResultType of `P` is EqualityComparable with V
             template<typename I, typename S, typename V, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
@@ -53,10 +53,10 @@ namespace ranges
 
             /// \overload
             template<typename Rng, typename V, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
                     IndirectRelation<equal_to, projected<I, P>, V const *>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }

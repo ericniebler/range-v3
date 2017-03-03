@@ -42,7 +42,7 @@ namespace ranges
         private:
             friend range_access;
             using value_ =
-                range_value_t<Rng>;
+                range_value_type_t<Rng>;
             using reference_ =
                 common_reference_t<value_ const &&, range_reference_t<Rng>>;
             using rvalue_reference_ =
@@ -50,11 +50,11 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                reference_ read(range_iterator_t<Rng> const &it) const
+                reference_ read(iterator_t<Rng> const &it) const
                 {
                     return *it;
                 }
-                rvalue_reference_ iter_move(range_iterator_t<Rng> const &it) const
+                rvalue_reference_ iter_move(iterator_t<Rng> const &it) const
                     noexcept(noexcept(ranges::iter_move(it)))
                 {
                     return ranges::iter_move(it);
@@ -74,12 +74,12 @@ namespace ranges
               : const_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng const>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size()
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }

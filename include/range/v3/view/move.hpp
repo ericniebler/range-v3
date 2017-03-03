@@ -42,12 +42,12 @@ namespace ranges
             friend range_access;
             struct adaptor : adaptor_base
             {
-                using value_type = range_value_t<Rng>;
-                range_rvalue_reference_t<Rng> read(range_iterator_t<Rng> const &it) const
+                using value_type = range_value_type_t<Rng>;
+                range_rvalue_reference_t<Rng> read(iterator_t<Rng> const &it) const
                 {
                     return ranges::iter_move(it);
                 }
-                range_rvalue_reference_t<Rng> iter_move(range_iterator_t<Rng> const &it) const
+                range_rvalue_reference_t<Rng> iter_move(iterator_t<Rng> const &it) const
                 {
                     return ranges::iter_move(it);
                 }
@@ -66,12 +66,12 @@ namespace ranges
               : move_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng const>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size()
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }

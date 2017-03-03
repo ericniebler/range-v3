@@ -71,7 +71,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
-                void operator()(I & i, iterator_difference_t<I> n) const
+                void operator()(I & i, difference_type_t<I> n) const
                 {
                     advance(i, n);
                 }
@@ -135,7 +135,7 @@ namespace ranges
             friend range_access;
             semiregular_t<Fun> fun_;
             std::tuple<Rngs...> rngs_;
-            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
+            using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
             struct cursor;
@@ -144,10 +144,10 @@ namespace ranges
             {
             private:
                 friend struct cursor;
-                std::tuple<range_sentinel_t<Rngs>...> ends_;
+                std::tuple<sentinel_t<Rngs>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
+                sentinel(detail::any, std::tuple<sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
             };
@@ -157,18 +157,18 @@ namespace ranges
             private:
                 using fun_ref_ = semiregular_ref_or_val_t<Fun, true>;
                 fun_ref_ fun_;
-                std::tuple<range_iterator_t<Rngs>...> its_;
+                std::tuple<iterator_t<Rngs>...> its_;
 
             public:
                 using difference_type =
-                    common_type_t<range_difference_t<Rngs>...>;
+                    common_type_t<range_difference_type_t<Rngs>...>;
                 using single_pass =
-                    meta::or_c<(bool) SinglePass<range_iterator_t<Rngs>>()...>;
+                    meta::or_c<(bool) SinglePass<iterator_t<Rngs>>()...>;
                 using value_type =
-                    detail::decay_t<decltype(invoke(fun_, copy_tag{}, range_iterator_t<Rngs>{}...))>;
+                    detail::decay_t<decltype(invoke(fun_, copy_tag{}, iterator_t<Rngs>{}...))>;
 
                 cursor() = default;
-                cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
+                cursor(fun_ref_ fun, std::tuple<iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
                 auto read() const
@@ -180,7 +180,7 @@ namespace ranges
                 {
                     tuple_for_each(its_, detail::inc);
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) Sentinel<range_iterator_t<Rngs>, range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool) Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
                 bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
@@ -213,7 +213,7 @@ namespace ranges
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)
-                    SizedSentinel<range_iterator_t<Rngs>, range_iterator_t<Rngs>>()...>::value)
+                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -249,7 +249,7 @@ namespace ranges
                 meta::if_<
                     meta::and_c<
                         meta::and_c<(bool) BoundedRange<Rngs>()...>::value,
-                        !SinglePass<range_iterator_t<Rngs>>()...>,
+                        !SinglePass<iterator_t<Rngs>>()...>,
                     cursor,
                     sentinel>;
 
@@ -316,9 +316,9 @@ namespace ranges
                 using Concept = meta::and_<
                     meta::and_<InputRange<Rngs>...>,
                     CopyConstructible<Fun>(),
-                    Invocable<Fun&, range_iterator_t<Rngs>...>,
-                    Invocable<Fun&, copy_tag, range_iterator_t<Rngs>...>,
-                    Invocable<Fun&, move_tag, range_iterator_t<Rngs>...>>;
+                    Invocable<Fun&, iterator_t<Rngs>...>,
+                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
+                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
@@ -342,15 +342,15 @@ namespace ranges
                         CopyConstructible<Fun>(),
                         "The function object passed to view::iter_zip_with must be CopyConstructible.");
                     CONCEPT_ASSERT_MSG(
-                        Invocable<Fun&, range_iterator_t<Rngs>...>(),
+                        Invocable<Fun&, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with arguments "
                         "of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Invocable<Fun&, copy_tag, range_iterator_t<Rngs>...>(),
+                        Invocable<Fun&, copy_tag, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Invocable<Fun&, move_tag, range_iterator_t<Rngs>...>(),
+                        Invocable<Fun&, move_tag, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "move_tag and arguments of the ranges' iterator types.");
                 }

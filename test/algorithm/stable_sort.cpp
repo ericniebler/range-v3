@@ -46,7 +46,7 @@ namespace
     void
     test_sort_helper(RI f, RI l)
     {
-        using value_type = ranges::iterator_value_t<RI>;
+        using value_type = ranges::value_type_t<RI>;
         auto stable_sort = make_testable_1<false>(ranges::stable_sort);
         if (f != l)
         {

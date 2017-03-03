@@ -75,7 +75,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
+            using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
             std::tuple<Rngs...> rngs_;
@@ -91,7 +91,7 @@ namespace ranges
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
-                range_sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
+                sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
             public:
                 sentinel() = default;
                 sentinel(concat_view_t &rng, end_tag)
@@ -102,13 +102,13 @@ namespace ranges
             template<bool IsConst>
             struct cursor
             {
-                using difference_type = common_type_t<range_difference_t<Rngs>...>;
+                using difference_type = common_type_t<range_difference_type_t<Rngs>...>;
             private:
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
                 concat_view_t *rng_;
-                variant<range_iterator_t<constify_if<Rngs>>...> its_;
+                variant<iterator_t<constify_if<Rngs>>...> its_;
 
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
@@ -241,7 +241,7 @@ namespace ranges
             public:
                 // BUGBUG what about rvalue_reference and common_reference?
                 using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
-                using single_pass = meta::strict_or<SinglePass<range_iterator_t<Rngs>>...>;
+                using single_pass = meta::strict_or<SinglePass<iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view_t &rng, begin_tag)
                   : rng_(&rng), its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
@@ -284,7 +284,7 @@ namespace ranges
                         its_.visit_i(advance_rev_fun{this, n});
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)
-                    SizedSentinel<range_iterator_t<Rngs>, range_iterator_t<Rngs>>()...>::value)
+                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.index() <= that.its_.index())

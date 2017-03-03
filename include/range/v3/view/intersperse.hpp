@@ -49,44 +49,44 @@ namespace ranges
         private:
             friend range_access;
             struct sentinel_adaptor;
-            range_value_t<Rng> val_;
+            range_value_type_t<Rng> val_;
             struct cursor_adaptor : adaptor_base
             {
             private:
                 friend sentinel_adaptor;
                 bool toggl_;
-                range_value_t<Rng> val_;
+                range_value_type_t<Rng> val_;
             public:
                 cursor_adaptor() = default;
-                cursor_adaptor(range_value_t<Rng> val, bool at_end)
+                cursor_adaptor(range_value_type_t<Rng> val, bool at_end)
                   : toggl_(!at_end), val_(std::move(val))
                 {}
-                range_value_t<Rng> read(range_iterator_t<Rng> it) const
+                range_value_type_t<Rng> read(iterator_t<Rng> it) const
                 {
                     return toggl_ ? *it : val_;
                 }
-                bool equal(range_iterator_t<Rng> it0, range_iterator_t<Rng> it1,
+                bool equal(iterator_t<Rng> it0, iterator_t<Rng> it1,
                     cursor_adaptor const & other) const
                 {
                     return it0 == it1 && toggl_ == other.toggl_;
                 }
-                void next(range_iterator_t<Rng> & it)
+                void next(iterator_t<Rng> & it)
                 {
                     if(toggl_)
                         ++it;
                     toggl_ = !toggl_;
                 }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-                void prev(range_iterator_t<Rng> & it)
+                void prev(iterator_t<Rng> & it)
                 {
                     toggl_ = !toggl_;
                     if(toggl_)
                         --it;
                 }
                 CONCEPT_REQUIRES(
-                    SizedSentinel<range_iterator_t<Rng>, range_iterator_t<Rng>>())
-                range_difference_t<Rng> distance_to(range_iterator_t<Rng> it,
-                    range_iterator_t<Rng> other_it, cursor_adaptor const &other) const
+                    SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                range_difference_type_t<Rng> distance_to(iterator_t<Rng> it,
+                    iterator_t<Rng> other_it, cursor_adaptor const &other) const
                 {
                     auto d = other_it - it;
                     if(d > 0)
@@ -96,7 +96,7 @@ namespace ranges
                     return other.toggl_ - toggl_;
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-                void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
+                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                 {
                     ranges::advance(it, n >= 0 ? (n + toggl_) / 2 : (n - !toggl_) / 2);
                     if(n % 2 != 0)
@@ -105,8 +105,8 @@ namespace ranges
             };
             struct sentinel_adaptor : adaptor_base
             {
-                bool empty(range_iterator_t<Rng> it, cursor_adaptor const &,
-                    range_sentinel_t<Rng> sent) const
+                bool empty(iterator_t<Rng> it, cursor_adaptor const &,
+                    sentinel_t<Rng> sent) const
                 {
                     return it == sent;
                 }
@@ -115,23 +115,23 @@ namespace ranges
             {
                 return {val_, ranges::empty(this->mutable_base())};
             }
-            CONCEPT_REQUIRES(BoundedRange<Rng>() && !SinglePass<range_iterator_t<Rng>>())
+            CONCEPT_REQUIRES(BoundedRange<Rng>() && !SinglePass<iterator_t<Rng>>())
             cursor_adaptor end_adaptor() const
             {
                 return {val_, true};
             }
-            CONCEPT_REQUIRES(!BoundedRange<Rng>() || SinglePass<range_iterator_t<Rng>>())
+            CONCEPT_REQUIRES(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
             sentinel_adaptor end_adaptor() const
             {
                 return {};
             }
         public:
             intersperse_view() = default;
-            intersperse_view(Rng rng, range_value_t<Rng> val)
+            intersperse_view(Rng rng, range_value_type_t<Rng> val)
               : intersperse_view::view_adaptor{std::move(rng)}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 auto tmp = ranges::size(this->mutable_base());
                 return tmp ? tmp * 2 - 1 : 0;
@@ -151,16 +151,16 @@ namespace ranges
                     make_pipeable(std::bind(intersperse, std::placeholders::_1, std::move(t)))
                 )
             public:
-                template<typename Rng, typename T = range_value_t<Rng>>
+                template<typename Rng, typename T = range_value_type_t<Rng>>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    ConvertibleTo<T, range_value_t<Rng>>,
-                    ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>>,
-                    SemiRegular<range_value_t<Rng>>>;
+                    ConvertibleTo<T, range_value_type_t<Rng>>,
+                    ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>,
+                    SemiRegular<range_value_type_t<Rng>>>;
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
-                intersperse_view<all_t<Rng>> operator()(Rng && rng, range_value_t<Rng> val) const
+                intersperse_view<all_t<Rng>> operator()(Rng && rng, range_value_type_t<Rng> val) const
                 {
                     return {all(std::forward<Rng>(rng)), {std::move(val)}};
                 }
@@ -173,13 +173,13 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::intersperse operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_type_t<Rng>>(),
                         "The value to intersperse in the range must be convertible to the range's "
                         "value type.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>(),
                         "The range's reference type must be convertible to the range's "
                         "value type.");
-                    CONCEPT_ASSERT_MSG(SemiRegular<range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(SemiRegular<range_value_type_t<Rng>>(),
                         "The range on which view::intersperse operates must have a value type that "
                         "models the SemiRegular concept; that is, it must be default constructible, "
                         "copy and move constructible, and destructible.");

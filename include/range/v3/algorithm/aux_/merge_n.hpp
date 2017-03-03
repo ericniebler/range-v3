@@ -56,8 +56,8 @@ namespace ranges
                         Mergeable<I0, I1, O, C, P0, P1>()
                     )>
                 tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
-                operator()(I0 begin0, iterator_difference_t<I0> n0,
-                           I1 begin1, iterator_difference_t<I1> n1,
+                operator()(I0 begin0, difference_type_t<I0> n0,
+                           I1 begin1, difference_type_t<I1> n1,
                            O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
                 {
                     using T = tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>;

@@ -65,7 +65,7 @@ namespace ranges
               : compressed_pair<BaseIter, Adapt>
             {
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
-                using value_type = iterator_value_t<BaseIter>;
+                using value_type = value_type_t<BaseIter>;
             };
 
             template<typename BaseIter, typename Adapt, typename Enable = void>
@@ -107,12 +107,12 @@ namespace ranges
             adaptor_base(detail::any, detail::any = {}, detail::any = {})
             {}
             template<typename Rng>
-            range_iterator_t<base_range_t<Rng>> begin(Rng &rng) const
+            iterator_t<base_range_t<Rng>> begin(Rng &rng) const
             {
                 return ranges::begin(rng.base());
             }
             template<typename Rng>
-            range_sentinel_t<base_range_t<Rng>> end(Rng &rng) const
+            sentinel_t<base_range_t<Rng>> end(Rng &rng) const
             {
                 return ranges::end(rng.base());
             }
@@ -122,9 +122,9 @@ namespace ranges
                 return it0 == it1;
             }
             template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
-            static iterator_reference_t<I> read(I const &it,
+            static reference_t<I> read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
-                noexcept(noexcept(iterator_reference_t<I>(*it)))
+                noexcept(noexcept(reference_t<I>(*it)))
             {
                 return *it;
             }
@@ -139,12 +139,12 @@ namespace ranges
                 --it;
             }
             template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            static void advance(I &it, iterator_difference_t<I> n)
+            static void advance(I &it, difference_type_t<I> n)
             {
                 it += n;
             }
             template<typename I, CONCEPT_REQUIRES_(SizedSentinel<I, I>())>
-            static iterator_difference_t<I> distance_to(I const &it0, I const &it1)
+            static difference_type_t<I> distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
@@ -279,7 +279,7 @@ namespace ranges
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A &>().advance(std::declval<BaseIter &>(), 0))>
-            void advance(iterator_difference_t<BaseIter> n)
+            void advance(difference_type_t<BaseIter> n)
             {
                 second().advance(first(), n);
             }
@@ -332,7 +332,7 @@ namespace ranges
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A const &>().read(
                     std::declval<BaseIter const &>(), detail::adaptor_base_current_mem_fn{})),
-                typename X = iterator_rvalue_reference_t<BaseIter>>
+                typename X = rvalue_reference_t<BaseIter>>
             X iter_move_(long) const
                 noexcept(noexcept(X(ranges::iter_move(std::declval<BaseIter const &>()))))
             {

@@ -77,11 +77,11 @@ namespace ranges
                     rng_.reset();
                     return *this;
                 }
-                range_iterator_t<any_input_view<int>> begin()
+                iterator_t<any_input_view<int>> begin()
                 {
                     return ranges::begin(rng());
                 }
-                range_sentinel_t<any_input_view<int>> end()
+                sentinel_t<any_input_view<int>> end()
                 {
                     return ranges::end(rng());
                 }

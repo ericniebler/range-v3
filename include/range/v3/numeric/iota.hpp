@@ -37,7 +37,7 @@ namespace ranges
 
             template<typename Rng, class T,
                 CONCEPT_REQUIRES_(OutputRange<Rng, T const &>() && WeaklyIncrementable<T>())>
-            range_safe_iterator_t<Rng> operator()(Rng && rng, T val) const
+            safe_iterator_t<Rng> operator()(Rng && rng, T val) const
             {
                 return (*this)(begin(rng), end(rng), detail::move(val));
             }

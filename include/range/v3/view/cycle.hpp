@@ -45,7 +45,7 @@ namespace ranges
         struct cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
-                range_iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>
+                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>
         {
         private:
             CONCEPT_ASSERT(ForwardRange<Rng>());
@@ -53,7 +53,7 @@ namespace ranges
             Rng rng_;
 
             using cache_t = detail::non_propagating_cache<
-                range_iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>;
+                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>;
 
             template<bool IsConst>
             struct cursor
@@ -62,8 +62,8 @@ namespace ranges
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using cycled_view_t = constify_if<cycled_view>;
-                using difference_type_ = range_difference_t<Rng>;
-                using iterator = range_iterator_t<constify_if<Rng>>;
+                using difference_type_ = range_difference_type_t<Rng>;
+                using iterator = iterator_t<constify_if<Rng>>;
 
                 cycled_view_t *rng_;
                 iterator it_;

@@ -43,7 +43,7 @@ namespace ranges
                 Range<Cont>,
                 meta::not_<View<Cont>>,
                 Movable<Cont>,
-                ConvertibleTo<range_value_t<Rng>, range_value_t<Cont>>,
+                ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>,
                 Constructible<Cont, I, I>>;
 
             template<typename ContainerMetafunctionClass>
@@ -58,7 +58,7 @@ namespace ranges
                         SizedRange<R>>;
 
                 template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont impl(Rng && rng, std::false_type) const
                 {
@@ -67,7 +67,7 @@ namespace ranges
                 }
 
                 template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
                                       ReserveConcept<Cont, Rng>())>
                 Cont impl(Rng && rng, std::true_type) const
@@ -82,7 +82,7 @@ namespace ranges
 
             public:
                 template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont operator()(Rng && rng) const
                 {
@@ -111,7 +111,7 @@ namespace ranges
 
         /// \overload
         template<template<typename...> class ContT, typename Rng,
-            typename Cont = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>,
+            typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>,
             CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {

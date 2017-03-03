@@ -55,7 +55,7 @@ namespace ranges
             }
 
             template<typename Rng1, typename I2_,
-                typename I1 = range_iterator_t<Rng1>,
+                typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2_>,
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && InputIterator<I2>() &&
                     IndirectlySwappable<I1, I2>())>
@@ -66,13 +66,13 @@ namespace ranges
             }
 
             template<typename Rng1, typename Rng2,
-                typename I1 = range_iterator_t<Rng1>,
-                typename I2 = range_iterator_t<Rng2>,
+                typename I1 = iterator_t<Rng1>,
+                typename I2 = iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && InputRange<Rng2>() &&
                     IndirectlySwappable<I1, I2>())>
             tagged_pair<
-                tag::in1(range_safe_iterator_t<Rng1>),
-                tag::in2(range_safe_iterator_t<Rng2>)>
+                tag::in1(safe_iterator_t<Rng1>),
+                tag::in2(safe_iterator_t<Rng2>)>
             operator()(Rng1 && rng1, Rng2 && rng2) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));

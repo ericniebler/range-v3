@@ -57,9 +57,9 @@ namespace ranges
             }
 
             template<typename Rng, typename O, typename T0, typename T1, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ReplaceCopyable<I, O, T0, T1, P>() && Range<Rng>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
                 P proj = {}) const
             {

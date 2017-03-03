@@ -87,7 +87,7 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
+            inline void unguarded_linear_insert(I end, value_type_t<I> val, C &pred, P &proj)
             {
                 I next = prev(end);
                 while(invoke(pred, invoke(proj, val), invoke(proj, *next)))
@@ -102,7 +102,7 @@ namespace ranges
             template<typename I, typename C, typename P>
             inline void linear_insert(I begin, I end, C &pred, P &proj)
             {
-                iterator_value_t<I> val = iter_move(end);
+                value_type_t<I> val = iter_move(end);
                 if(invoke(pred, invoke(proj, val), invoke(proj, *begin)))
                 {
                     move_backward(begin, end, end + 1);
@@ -191,9 +191,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessRange<Rng>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

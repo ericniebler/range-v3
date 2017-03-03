@@ -116,7 +116,7 @@ namespace ranges
             private:
                 template<typename S, typename II>
                 friend struct any_sentinel_impl;
-                CONCEPT_ASSERT(ConvertibleTo<iterator_reference_t<I>, Ref>());
+                CONCEPT_ASSERT(ConvertibleTo<reference_t<I>, Ref>());
                 using Input = any_cursor_interface<Ref, category::input>;
                 object<I> it_;
 
@@ -219,7 +219,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_sentinel>()),
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 any_sentinel(Rng &&rng, end_tag)
-                  : ptr_{new any_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{
+                  : ptr_{new any_sentinel_impl<sentinel_t<Rng>, iterator_t<Rng>>{
                         end(rng)}}
                 {}
                 any_sentinel(any_sentinel &&) = default;
@@ -248,7 +248,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                       ConvertibleTo<range_reference_t<Rng>, Ref>())>
                 any_cursor(Rng &&rng, begin_tag)
-                  : ptr_{new any_cursor_impl<range_iterator_t<Rng>, Ref, Cat>{begin(rng)}}
+                  : ptr_{new any_cursor_impl<iterator_t<Rng>, Ref, Cat>{begin(rng)}}
                 {}
                 any_cursor(any_cursor &&) = default;
                 any_cursor(any_cursor const &that)

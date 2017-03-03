@@ -45,7 +45,7 @@ namespace ranges
             }
 
             template<typename Rng, typename F, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<F, projected<I, P>>())>
             bool
             operator()(Rng &&rng, F pred, P proj = P{}) const

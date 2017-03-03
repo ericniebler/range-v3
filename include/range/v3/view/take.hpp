@@ -37,14 +37,14 @@ namespace ranges
         {
         private:
             friend struct ranges::range_access;
-            range_difference_t<Rng> n_ = 0;
+            range_difference_type_t<Rng> n_ = 0;
 
             template<bool IsConst, typename T>
             using add_const_if = meta::if_c<IsConst, T const, T>;
             template<bool IsConst>
-            using CI = counted_iterator<range_iterator_t<add_const_if<IsConst, Rng>>>;
+            using CI = counted_iterator<iterator_t<add_const_if<IsConst, Rng>>>;
             template<bool IsConst>
-            using S = range_sentinel_t<add_const_if<IsConst, Rng>>;
+            using S = sentinel_t<add_const_if<IsConst, Rng>>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -86,7 +86,7 @@ namespace ranges
             }
         public:
             take_view() = default;
-            take_view(Rng rng, range_difference_t<Rng> n)
+            take_view(Rng rng, range_difference_type_t<Rng> n)
               : view_adaptor<take_view<Rng>, Rng, finite>(std::move(rng)), n_{n}
             {
                 RANGES_EXPECT(n >= 0);
@@ -102,14 +102,14 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!SizedRange<Rng>() && !is_infinite<Rng>())>
-                static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_t<Rng> n)
+                static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(SizedRange<Rng>() || is_infinite<Rng>())>
-                static auto invoke_(Rng && rng, range_difference_t<Rng> n)
+                static auto invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_exactly(
@@ -136,7 +136,7 @@ namespace ranges
 
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
-                auto operator()(Rng && rng, range_difference_t<Rng> n) const
+                auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_fn::invoke_(std::forward<Rng>(rng), n)

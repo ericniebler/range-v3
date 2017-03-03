@@ -59,7 +59,7 @@ namespace ranges
             }
 
             template<typename Rng, typename C, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && Range<Rng>())>
             bool operator()(Rng &&rng, C pred, P proj = P{}) const
             {

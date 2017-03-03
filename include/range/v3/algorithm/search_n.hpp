@@ -119,7 +119,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Sentinel<S, I>())>
-            I operator()(I begin, S end, iterator_difference_t<I> count, V const &val,
+            I operator()(I begin, S end, difference_type_t<I> count, V const &val,
                 C pred = C{}, P proj = P{}) const
             {
                 if(count <= 0)
@@ -133,10 +133,10 @@ namespace ranges
             }
 
             template<typename Rng, typename V, typename C = equal_to, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Range<Rng>())>
-            range_safe_iterator_t<Rng>
-            operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred = C{},
+            safe_iterator_t<Rng>
+            operator()(Rng &&rng, difference_type_t<I> count, V const &val, C pred = C{},
                 P proj = P{}) const
             {
                 if(count <= 0)

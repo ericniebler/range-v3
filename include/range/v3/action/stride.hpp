@@ -45,9 +45,9 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename T,
-                        typename I = range_iterator_t<Rng>,
-                        typename S = range_sentinel_t<Rng>,
-                        typename D = range_difference_t<Rng>>
+                        typename I = iterator_t<Rng>,
+                        typename S = sentinel_t<Rng>,
+                        typename D = range_difference_type_t<Rng>>
                     auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
@@ -60,12 +60,12 @@ namespace ranges
                 template<typename Rng, typename T>
                 using Concept = concepts::models<ConceptImpl, Rng, T>;
 
-                template<typename Rng, typename D = range_difference_t<Rng>,
+                template<typename Rng, typename D = range_difference_type_t<Rng>,
                     CONCEPT_REQUIRES_(Concept<Rng, D>())>
-                Rng operator()(Rng && rng, range_difference_t<Rng> const step) const
+                Rng operator()(Rng && rng, range_difference_type_t<Rng> const step) const
                 {
-                    using I = range_iterator_t<Rng>;
-                    using S = range_sentinel_t<Rng>;
+                    using I = iterator_t<Rng>;
+                    using S = sentinel_t<Rng>;
                     RANGES_EXPECT(0 < step);
                     if(1 < step)
                     {
@@ -92,11 +92,11 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::stride operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
-                    using S = range_sentinel_t<Rng>;
+                    using I = iterator_t<Rng>;
+                    using S = sentinel_t<Rng>;
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
                         "The object on which action::stride operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<Rng>>(),
                         "The stride argument to action::stride must be convertible to the range's "
                         "difference type.");
                     CONCEPT_ASSERT_MSG(Permutable<I>(),
