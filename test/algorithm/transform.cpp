@@ -27,7 +27,7 @@
 
 using namespace std::placeholders;
 
-template <class InIter, class OutIter>
+template<class InIter, class OutIter>
 void
 test1()
 {

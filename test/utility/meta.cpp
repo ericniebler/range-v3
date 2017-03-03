@@ -24,14 +24,14 @@ using namespace meta;
 
 namespace tc_detail
 {
-    template <typename Ret, typename... Is, typename... Ks, typename Tuples>
+    template<typename Ret, typename... Is, typename... Ks, typename Tuples>
     Ret tuple_cat_(list<Is...>, list<Ks...>, Tuples tpls)
     {
         return Ret{std::get<Ks::value>(std::get<Is::value>(tpls))...};
     }
 }
 
-template <typename... Tuples,
+template<typename... Tuples,
           typename Res = apply<quote<std::tuple>, concat<as_list<Tuples>...>>>
 Res tuple_cat(Tuples &&... tpls)
 {
@@ -74,17 +74,17 @@ static_assert(std::is_same<invoke<uncurry<curry<quote_trait<id>>>, std::tuple<in
                            list<int, short, double>>::value,
               "");
 
-template <typename, typename, typename = void>
+template<typename, typename, typename = void>
 struct can_invoke_ : std::false_type
 {
 };
 
-template <typename F, typename... As>
+template<typename F, typename... As>
 struct can_invoke_<F, meta::list<As...>, meta::void_<meta::invoke<F, As...>>> : std::true_type
 {
 };
 
-template <typename F, typename... As>
+template<typename F, typename... As>
 struct can_invoke : can_invoke_<F, meta::list<As...>>
 {
 };
@@ -109,7 +109,7 @@ static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value,
 
 // Not saying you should do it this way, but it's a good test.
 namespace l = meta::lazy;
-template <class L>
+template<class L>
 using cart_prod = reverse_fold<
     L, list<list<>>,
     lambda<
@@ -130,7 +130,7 @@ static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::
 static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
 #endif
 
-template <typename List>
+template<typename List>
 using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
 static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
 
@@ -147,7 +147,7 @@ static_assert(std::is_same<reverse_find_if<L, bind_front<quote<std::is_same>, do
 
 struct check_integral
 {
-    template <class T>
+    template<class T>
     constexpr T operator()(T &&i) const
     {
         static_assert(std::is_integral<T>{}, "");
@@ -156,7 +156,7 @@ struct check_integral
 };
 
 // Test for meta::let
-template <typename T, typename List>
+template<typename T, typename List>
 using find_index_ = let<
     var<_a, List>, var<_b, lazy::find<_a, T>>,
     lazy::if_<std::is_same<_b, list<>>, meta::npos, lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
@@ -164,26 +164,26 @@ static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
 static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
 
 // Test that the unselected branch does not get evaluated:
-template <typename T>
+template<typename T>
 using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
 static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
 
 // Test that and_ gets short-circuited:
-template <typename T>
+template<typename T>
 using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
 static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
 
 // Test that and_ gets short-circuited:
-template <typename T>
+template<typename T>
 using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
 static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
 
-template <typename A, int B = 0>
+template<typename A, int B = 0>
 struct lambda_test
 {
 };
 
-template <typename N>
+template<typename N>
 struct fact
     : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>, meta::size_t<1>>>
 {
@@ -195,7 +195,7 @@ static_assert(fact<meta::size_t<2>>::value == 2, "");
 static_assert(fact<meta::size_t<3>>::value == 6, "");
 static_assert(fact<meta::size_t<4>>::value == 24, "");
 
-template <std::size_t N>
+template<std::size_t N>
 struct fact2
     : let<lazy::if_c<(N > 0), lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N - 1>>,
                      meta::size_t<1>>>
@@ -208,7 +208,7 @@ static_assert(fact2<2>::value == 2, "");
 static_assert(fact2<3>::value == 6, "");
 static_assert(fact2<4>::value == 24, "");
 
-template <typename N>
+template<typename N>
 struct factorial
     : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
 {
@@ -220,7 +220,7 @@ static_assert(factorial<meta::size_t<2>>::value == 2, "");
 static_assert(factorial<meta::size_t<3>>::value == 6, "");
 static_assert(factorial<meta::size_t<4>>::value == 24, "");
 
-template <typename T>
+template<typename T>
 struct undef_t;
 
 int main()

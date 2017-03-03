@@ -279,11 +279,11 @@ namespace ranges
             }
 
             #if defined(__clang__) && !defined(_LIBCPP_VERSION)
-                template<class T, class Arg = T>
+                template<typename T, typename Arg = T>
                 struct is_trivially_copy_assignable
                   : meta::bool_<__is_trivially_assignable(T &, Arg const&)>
                 {};
-                template<class T, class Arg = T>
+                template<typename T, typename Arg = T>
                 struct is_trivially_move_assignable
                   : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
                 {};

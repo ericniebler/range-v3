@@ -30,7 +30,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_iter()
 {
@@ -46,7 +46,7 @@ test_iter()
     CHECK(ia[5] == 4);
 }
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_range()
 {
@@ -62,7 +62,7 @@ test_range()
     CHECK(ia[5] == 4);
 }
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_iter_rvalue()
 {
@@ -84,7 +84,7 @@ test_iter_rvalue()
     CHECK(*ia[5] == 4);
 }
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_range_rvalue()
 {

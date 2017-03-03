@@ -28,7 +28,7 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void test()
 {
     int ir[] = {5, 6, 7, 8, 9};

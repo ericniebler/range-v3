@@ -20,7 +20,7 @@
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
-template <typename I, typename S>
+template<typename I, typename S>
 void test_iterators(I begin, S end, ranges::difference_type_t<I> n)
 {
     using namespace ranges;
@@ -33,7 +33,7 @@ void test_iterators(I begin, S end, ranges::difference_type_t<I> n)
     CHECK(distance_compare(begin, end, (std::numeric_limits<difference_type_t<I>>::max)()) < 0);
 }
 
-template <typename Rng>
+template<typename Rng>
 void test_range(Rng&& rng, ranges::range_difference_type_t<Rng> n)
 {
     using namespace ranges;
@@ -46,7 +46,7 @@ void test_range(Rng&& rng, ranges::range_difference_type_t<Rng> n)
     CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::max)()) < 0);
 }
 
-template <typename Rng>
+template<typename Rng>
 void test_infinite_range(Rng&& rng)
 {
     using namespace ranges;

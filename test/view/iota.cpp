@@ -32,7 +32,7 @@ struct Int
     bool operator!=(Int j) const { return i != j.i; }
 };
 
-template <typename Integral>
+template<typename Integral>
 void test_iota_minus() {
   using namespace ranges;
   using D = detail::iota_difference_t<Integral>;

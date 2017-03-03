@@ -28,7 +28,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter1, class Iter2, class OutIter>
+template<class Iter1, class Iter2, class OutIter>
 void
 test()
 {

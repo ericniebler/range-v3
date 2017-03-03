@@ -24,7 +24,7 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
+template<class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
 void
 test()
 {
@@ -76,7 +76,7 @@ test()
 struct count_equal
 {
     static unsigned count;
-    template <class T>
+    template<class T>
     bool operator()(const T& x, const T& y)
     {
         ++count; return x == y;
@@ -85,7 +85,7 @@ struct count_equal
 
 unsigned count_equal::count = 0;
 
-template <class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
+template<class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
 void
 test_pred()
 {
@@ -167,7 +167,7 @@ struct S
     int i_;
 };
 
-template <class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
+template<class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
 void
 test_proj()
 {

@@ -35,7 +35,7 @@ namespace
 {
     std::mt19937 gen;
 
-    template <class Iter>
+    template<class Iter>
     void
     test_larger_sorts(int N, int M)
     {
@@ -67,7 +67,7 @@ namespace
         delete [] input;
     }
 
-    template <class Iter>
+    template<class Iter>
     void
     test_larger_sorts(int N)
     {
@@ -84,7 +84,7 @@ namespace
         test_larger_sorts<Iter>(N, N+1000);
     }
 
-    template <class Iter>
+    template<class Iter>
     void
     test()
     {

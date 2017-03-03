@@ -33,7 +33,7 @@ namespace
 {
     std::mt19937 gen;
 
-    template <class Iter, typename Sent = Iter>
+    template<class Iter, typename Sent = Iter>
     void
     test_one_iter(unsigned N, unsigned M)
     {
@@ -55,7 +55,7 @@ namespace
         delete [] ia;
     }
 
-    template <class Iter, typename Sent = Iter>
+    template<class Iter, typename Sent = Iter>
     void
     test_one_rng(unsigned N, unsigned M)
     {
@@ -90,7 +90,7 @@ namespace
         delete [] ia;
     }
 
-    template <class Iter>
+    template<class Iter>
     void
     test_one(unsigned N, unsigned M)
     {
@@ -100,7 +100,7 @@ namespace
         test_one_rng<Iter, typename sentinel_type<Iter>::type>(N, M);
     }
 
-    template <class Iter>
+    template<class Iter>
     void
     test(unsigned N)
     {
@@ -111,7 +111,7 @@ namespace
         test_one<Iter>(N, N);
     }
 
-    template <class Iter>
+    template<class Iter>
     void
     test()
     {

@@ -591,7 +591,7 @@ namespace ranges
             Char const *delim_;
         };
 
-        template <class Char, class Traits = std::char_traits<Char>>
+        template<typename Char, typename Traits = std::char_traits<Char>>
         struct ostreambuf_iterator
         {
         public:
@@ -877,7 +877,7 @@ namespace ranges
         {
             return x.base() - y.base();
         }
-        template <typename I,
+        template<typename I,
             CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
         move_iterator<I> operator+(difference_type_t<I> n, move_iterator<I> const &x)
         {

@@ -32,7 +32,7 @@ struct S
     int i;
 };
 
-template <class InIter, class OutIter, class InSent = InIter> void test()
+template<class InIter, class OutIter, class InSent = InIter> void test()
 {
     using ranges::adjacent_difference;
     using ranges::make_iterator_range;

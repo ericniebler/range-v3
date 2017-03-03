@@ -60,7 +60,7 @@ namespace
 
     kind last_call;
 
-    template <kind DisableKind>
+    template<kind DisableKind>
     struct fn
     {
         bool operator()() &

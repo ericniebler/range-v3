@@ -105,7 +105,7 @@ namespace
   using clock_t = std::chrono::high_resolution_clock;
   using duration_t = clock_t::duration;
 
-  template <typename Computation>
+  template<typename Computation>
   auto duration(Computation &&c) {
     auto time = []{ return clock_t::now(); };
     const auto start = time();
@@ -113,18 +113,18 @@ namespace
     return time() - start;
   }
 
-  template <typename Duration>
+  template<typename Duration>
   auto to_millis(Duration d) {
     return std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
   }
 
-  template <typename Durations> auto compute_mean(Durations &&durations) {
+  template<typename Durations> auto compute_mean(Durations &&durations) {
     using D = ranges::range_value_type_t<Durations>;
     D total = ranges::accumulate(durations, D{}, ranges::plus{}, ranges::convert_to<D>{});
     return total / ranges::size(durations);
   }
 
-  template <typename Durations> auto compute_stddev(Durations &&durations) {
+  template<typename Durations> auto compute_stddev(Durations &&durations) {
     using D = ranges::range_value_type_t<Durations>;
     using Rep = typename D::rep;
     const auto mean = compute_mean(durations);
@@ -146,7 +146,7 @@ namespace
     };
     std::vector<result_t> results;
 
-    template <typename Computation, typename Sizes>
+    template<typename Computation, typename Sizes>
     benchmark(Computation &&c, Sizes &&sizes, double target_deviation = 0.25,
               std::size_t max_iters = 100, std::size_t min_iters = 5) {
 
@@ -181,7 +181,7 @@ namespace
     }
   };
 
-  template <typename Seq, typename Comp>
+  template<typename Seq, typename Comp>
   struct computation_on_sequence {
     Seq seq;
     Comp comp;
@@ -197,13 +197,13 @@ namespace
     void operator()() { comp(data); }
   };
 
-  template <typename Seq, typename Comp>
+  template<typename Seq, typename Comp>
   auto make_computation_on_sequence(Seq s, Comp c, std::size_t max_size) {
     return computation_on_sequence<Seq, Comp>(std::move(s), std::move(c),
                                               max_size);
   }
 
-  template <typename Seq> void benchmark_sort(Seq &&seq, std::size_t max_size) {
+  template<typename Seq> void benchmark_sort(Seq &&seq, std::size_t max_size) {
     auto ranges_sort_comp =
         make_computation_on_sequence(seq, ranges::sort, max_size);
 
