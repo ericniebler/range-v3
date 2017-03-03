@@ -76,5 +76,14 @@ int main()
     ::check_equal(rng5, {29, 28, 27, 26, 25, 24, 23, 22, 21, 20});
     CHECK(size(rng5) == 10u);
 
+    {
+        // drop_exactly should work with random-access mutable-only Views.
+        auto odds = view::ints(0) |
+            view::chunk(2) |
+            view::transform(view::drop_exactly(1)) |
+            view::join;
+        (void)odds;
+    }
+
     return test_result();
 }

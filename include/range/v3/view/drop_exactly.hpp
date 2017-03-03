@@ -51,7 +51,15 @@ namespace ranges
             difference_type_ n_;
 
             // RandomAccessRange == true
+            template<typename BaseRng = Rng,
+                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
             range_iterator_t<Rng> get_begin_(std::true_type) const
+            {
+                return next(ranges::begin(rng_), n_);
+            }
+            template<typename BaseRng = Rng,
+                CONCEPT_REQUIRES_(!RandomAccessRange<BaseRng const>())>
+            range_iterator_t<Rng> get_begin_(std::true_type)
             {
                 return next(ranges::begin(rng_), n_);
             }
