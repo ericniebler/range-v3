@@ -204,7 +204,7 @@ namespace ranges
                     return {all(std::forward<Rng>(rng)), from, count};
                 }
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
+                    CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
                 static iterator_range<range_iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> count,
                     concepts::RandomAccessRange *, concepts::BoundedRange * = nullptr)

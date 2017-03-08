@@ -14,6 +14,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -23,8 +24,8 @@ int main()
 
     auto rng0 = view::iota(10) | view::delimit(25);
     ::check_equal(rng0, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-    ::models<concepts::View>(rng0);
-    ::models_not<concepts::BoundedView>(rng0);
+    ::models<concepts::View>(aux::copy(rng0));
+    ::models_not<concepts::BoundedView>(aux::copy(rng0));
     ::models<concepts::RandomAccessIterator>(rng0.begin());
     CONCEPT_ASSERT(RandomAccessView<delimit_view<std::vector<int>, int>>());
 

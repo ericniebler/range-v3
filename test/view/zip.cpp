@@ -26,6 +26,7 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -43,8 +44,8 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         using Rng = decltype((rng));
-        ::models_not<concepts::BoundedView>(rng);
-        ::models_not<concepts::SizedView>(rng);
+        ::models_not<concepts::BoundedView>(aux::copy(rng));
+        ::models_not<concepts::SizedView>(aux::copy(rng));
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
             std::tuple<int, std::string, std::string>>());
@@ -70,9 +71,9 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
-        ::models<concepts::View>(rng);
-        ::models_not<concepts::SizedView>(rng);
-        ::models_not<concepts::BoundedView>(rng);
+        ::models<concepts::View>(aux::copy(rng));
+        ::models_not<concepts::SizedView>(aux::copy(rng));
+        ::models_not<concepts::BoundedView>(aux::copy(rng));
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected;
@@ -86,8 +87,8 @@ int main()
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
     static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
-    ::models<concepts::BoundedView>(rnd_rng);
-    ::models<concepts::SizedView>(rnd_rng);
+    ::models<concepts::BoundedView>(aux::copy(rnd_rng));
+    ::models<concepts::SizedView>(aux::copy(rnd_rng));
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);

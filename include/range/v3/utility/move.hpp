@@ -89,45 +89,58 @@ namespace ranges
 
         RANGES_INLINE_VARIABLE(adl_move_detail::indirect_move_fn, indirect_move)
 
+        /// \cond
         namespace detail
         {
             template<typename I, typename O>
-            meta::and_<
-                std::is_constructible<
-                    meta::_t<value_type<I>>,
-                    decltype(indirect_move(std::declval<I &>()))>,
-                std::is_assignable<
-                    decltype(*std::declval<O &>()),
-                    decltype(indirect_move(std::declval<I &>()))>>
-            is_indirectly_movable_(int);
+            using is_indirectly_movable_ =
+                meta::bool_<
+                    std::is_constructible<
+                        meta::_t<value_type<I>>,
+                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                    std::is_assignable<
+                        meta::_t<value_type<I>> &,
+                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                    std::is_assignable<
+                        decltype(*std::declval<O &>()),
+                        meta::_t<value_type<I>>>::value &&
+                    std::is_assignable<
+                        decltype(*std::declval<O &>()),
+                        decltype(indirect_move(std::declval<I &>()))>::value>;
 
             template<typename I, typename O>
-            std::false_type
-            is_indirectly_movable_(long);
-
-            template<typename I, typename O>
-            meta::and_<
-                std::is_nothrow_constructible<
-                    meta::_t<value_type<I>>,
-                    decltype(indirect_move(std::declval<I &>()))>,
-                std::is_nothrow_assignable<
-                    decltype(*std::declval<O &>()),
-                    decltype(indirect_move(std::declval<I &>()))>>
-            is_nothrow_indirectly_movable_(int);
-
-            template<typename I, typename O>
-            std::false_type
-            is_nothrow_indirectly_movable_(long);
+            using is_nothrow_indirectly_movable_ =
+                meta::bool_<
+                    noexcept(iter_move(std::declval<I &>())) &&
+                    std::is_nothrow_constructible<
+                        meta::_t<value_type<I>>,
+                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                    std::is_nothrow_assignable<
+                        meta::_t<value_type<I>> &,
+                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                    std::is_nothrow_assignable<
+                        decltype(*std::declval<O &>()),
+                        meta::_t<value_type<I>>>::value &&
+                    std::is_nothrow_assignable<
+                        decltype(*std::declval<O &>()),
+                        decltype(indirect_move(std::declval<I &>()))>::value>;
         }
+        /// \endcond
 
         template<typename I, typename O>
         struct is_indirectly_movable
-          : decltype(detail::is_indirectly_movable_<I, O>(42))
+          : meta::_t<meta::if_<
+                meta::is_trait<meta::defer<detail::is_indirectly_movable_, I, O>>,
+                meta::defer<detail::is_indirectly_movable_, I, O>,
+                std::false_type>>
         {};
 
         template<typename I, typename O>
         struct is_nothrow_indirectly_movable
-          : decltype(detail::is_nothrow_indirectly_movable_<I, O>(42))
+          : meta::_t<meta::if_<
+                meta::is_trait<meta::defer<detail::is_nothrow_indirectly_movable_, I, O>>,
+                meta::defer<detail::is_nothrow_indirectly_movable_, I, O>,
+                std::false_type>>
         {};
     }
 }

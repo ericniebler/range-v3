@@ -55,8 +55,8 @@ namespace ranges
           : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
-            CONCEPT_ASSERT(Range<Rng>());
-            CONCEPT_ASSERT(!BoundedRange<Rng>());
+            CONCEPT_ASSERT(View<Rng>());
+            CONCEPT_ASSERT(!BoundedView<Rng>());
 
             Rng rng_;
 
@@ -68,12 +68,12 @@ namespace ranges
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(View<R>())>
+            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
             range_sentinel_t<R> end_(std::false_type) const
             {
                 return ranges::end(rng_);
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(View<R>())>
+            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
             range_iterator_t<R> end_(std::true_type) const
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
@@ -106,12 +106,12 @@ namespace ranges
                 return ranges::size(rng_);
             }
 
-            template<typename R = Rng const, CONCEPT_REQUIRES_(View<R>())>
+            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
             detail::bounded_iterator_t<R> begin() const
             {
                 return detail::bounded_iterator_t<R>{ranges::begin(rng_)};
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(View<R>())>
+            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
             detail::bounded_iterator_t<R> end() const
             {
                 return detail::bounded_iterator_t<R>{end_(detail::RA_and_Sized<R>{})};

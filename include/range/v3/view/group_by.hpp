@@ -70,14 +70,17 @@ namespace ranges
                         return invoke(fun_, *first_, ref);
                     }
                 };
-                take_while_view<iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
+                take_while_view<
+                    iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                    take_while_pred>
                 read() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }
                 void next()
                 {
-                    cur_ = ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
+                    cur_ =
+                        ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
                 }
                 bool equal(default_sentinel) const
                 {

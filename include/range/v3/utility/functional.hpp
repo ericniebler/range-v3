@@ -228,13 +228,14 @@ namespace ranges
 
                 template<typename Fun, typename T, typename U,
                     typename C =
-                        common_reference_t<T const &, U const &>>
+                        common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(std::is_same<T, U>{}),
                         concepts::model_of<Relation, Fun, T, T>(),
                         concepts::model_of<Relation, Fun, U, U>(),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
                         concepts::model_of<Relation, Fun, C, C>(),
                         concepts::model_of<Predicate, Fun, T, U>(),
                         concepts::model_of<Predicate, Fun, U, T>()

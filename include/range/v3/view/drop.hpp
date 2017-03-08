@@ -145,7 +145,7 @@ namespace ranges
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }
-                template<typename Rng, CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
                 static iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessRange*)
                 {
