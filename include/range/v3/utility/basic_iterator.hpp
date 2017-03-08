@@ -109,7 +109,7 @@ namespace ranges
                         typename cursor_traits<Cur>::common_refs,
                         meta::bind_front<
                             meta::quote<proxy_reference_conversion>,
-                            basic_proxy_reference<Cur>>>>
+                            basic_proxy_reference<Cur, Readable>>>>
             {
             private:
                 Cur *cur_;
@@ -307,7 +307,11 @@ namespace ranges
                             is_writable_cursor<Cur>,
                             basic_proxy_reference<Cur>,
                             cursor_reference_t<Cur>>>;
-                using const_reference_t = reference_t;
+                using const_reference_t =
+                    meta::if_<
+                        is_writable_cursor<Cur const>,
+                        basic_proxy_reference<Cur const>,
+                        cursor_reference_t<Cur>>;
             public:
                 using difference_type = range_access::cursor_difference_t<Cur>;
                 using value_type = range_access::cursor_value_t<Cur>;
@@ -425,7 +429,7 @@ namespace ranges
                 return reference_t{pos()};
             }
             CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
-                detail::is_writable_cursor<Cur>())
+                detail::is_writable_cursor<Cur const>())
             constexpr const_reference_t operator*() const
             noexcept(noexcept(
                 const_reference_t{std::declval<Cur const &>()}))

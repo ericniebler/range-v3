@@ -59,7 +59,7 @@ namespace ranges
         using range_category_t = concepts::InputRange::category_t<Rng>;
 
         template<typename Rng>
-        using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
+        using range_common_iterator_t = common_iterator_t<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
 
         template<typename Rng>
         using range_safe_iterator_t = decltype(ranges::safe_begin(std::declval<Rng>()));

@@ -67,6 +67,22 @@ namespace ranges
         template<typename I>
         using iterator_size = meta::defer<iterator_size_t, I>;
         /// @}
+
+        /// \cond
+        namespace detail
+        {
+            template<typename I>
+            using arrow_type_ = decltype(std::declval<I &>().operator->());
+
+            template<typename I>
+            struct pointer_type_
+              : meta::if_<
+                    meta::is_trait<meta::defer<arrow_type_, I>>,
+                    meta::defer<arrow_type_, I>,
+                    std::add_pointer<iterator_reference_t<I>>>
+            {};
+        }
+        /// \endcond
     }
 }
 
