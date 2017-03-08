@@ -57,8 +57,9 @@ namespace ranges
                 }
 
                 /// If it's a view already, pass it though.
-                template<typename T>
-                static T from_range(T && t, concepts::View*)
+                template<typename T,
+                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                static T from_range(T && t)
                 {
                     return std::forward<T>(t);
                 }
@@ -66,12 +67,12 @@ namespace ranges
                 /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
                 template<typename T,
-                    CONCEPT_REQUIRES_(!View<T>()),
+                    CONCEPT_REQUIRES_(!View<uncvref_t<T>>()),
                     typename I = range_iterator_t<T>,
                     typename S = range_sentinel_t<T>,
                     typename SIC = sized_range_concept<T>,
                     typename SIRC = sized_sentinel_concept<S, I>>
-                static auto from_range(T && t, concepts::Range*) ->
+                static auto from_range(T && t) ->
                     decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
                     static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
@@ -84,9 +85,9 @@ namespace ranges
                 template<typename T,
                     CONCEPT_REQUIRES_(Range<T>())>
                 auto operator()(T && t) const ->
-                    decltype(all_fn::from_range(std::forward<T>(t), view_concept<T>()))
+                    decltype(all_fn::from_range(std::forward<T>(t)))
                 {
-                    return all_fn::from_range(std::forward<T>(t), view_concept<T>());
+                    return all_fn::from_range(std::forward<T>(t));
                 }
 
                 template<typename T,

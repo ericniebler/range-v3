@@ -26,21 +26,21 @@ int main()
 
     {
         any_view<int> ints = view::ints;
-        ::models<concepts::InputView>(ints);
-        ::models_not<concepts::ForwardView>(ints);
+        ::models<concepts::InputView>(aux::copy(ints));
+        ::models_not<concepts::ForwardView>(aux::copy(ints));
         ::check_equal(ints | view::take(10), ten_ints);
         ::check_equal(ints | view::take(10), ten_ints);
     }
     {
         any_view<int> ints2 = view::ints | view::take(10);
-        ::models<concepts::InputView>(ints2);
-        ::models_not<concepts::ForwardView>(ints2);
+        ::models<concepts::InputView>(aux::copy(ints2));
+        ::models_not<concepts::ForwardView>(aux::copy(ints2));
         ::check_equal(ints2, ten_ints);
         ::check_equal(ints2, ten_ints);
     }
     {
         any_random_access_view<int> ints3 = view::ints | view::take(10);
-        ::models<concepts::RandomAccessView>(ints3);
+        ::models<concepts::RandomAccessView>(aux::copy(ints3));
         ::check_equal(ints3, ten_ints);
         ::check_equal(ints3, ten_ints);
         ::check_equal(aux::copy(ints3), ten_ints);

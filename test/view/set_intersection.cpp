@@ -27,6 +27,7 @@
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -50,9 +51,9 @@ int main()
     {
         auto res = view::set_intersection(i1_finite, i2_finite);
         
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
 
         using R = decltype(res);
         
@@ -72,9 +73,9 @@ int main()
     {
         auto res = view::set_intersection(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
 
         using R = decltype(res);
         
@@ -92,9 +93,9 @@ int main()
     {
         auto res = view::set_intersection(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
         
         using R = decltype(res);
 
@@ -110,9 +111,9 @@ int main()
 
         auto res2 = view::set_intersection(i1_infinite, i2_finite);
 
-        models<concepts::ForwardView>(res2);
-        models_not<concepts::RandomAccessView>(res2);
-        models_not<concepts::BoundedView>(res2);
+        models<concepts::ForwardView>(aux::copy(res2));
+        models_not<concepts::RandomAccessView>(aux::copy(res2));
+        models_not<concepts::BoundedView>(aux::copy(res2));
         
         using R2 = decltype(res2);
 

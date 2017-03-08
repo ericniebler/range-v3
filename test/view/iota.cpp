@@ -15,6 +15,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/c_str.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -67,18 +68,18 @@ int main()
     auto chars = view::ints(std::numeric_limits<char>::min(),
                             std::numeric_limits<char>::max());
     static_assert(Same<int, range_difference_t<decltype(chars)>>(), "");
-    ::models<concepts::RandomAccessView>(chars);
-    models<concepts::BoundedView>(chars);
+    ::models<concepts::RandomAccessView>(aux::copy(chars));
+    models<concepts::BoundedView>(aux::copy(chars));
 
     auto shorts = view::ints(std::numeric_limits<unsigned short>::min(),
                              std::numeric_limits<unsigned short>::max());
-    models<concepts::BoundedView>(shorts);
+    models<concepts::BoundedView>(aux::copy(shorts));
     static_assert(Same<int, range_difference_t<decltype(shorts)>>(), "");
 
     auto uints = view::closed_ints(
         std::numeric_limits<std::uint32_t>::min(),
         std::numeric_limits<std::uint32_t>::max());
-    models<concepts::BoundedView>(uints);
+    models<concepts::BoundedView>(aux::copy(uints));
     static_assert(Same<std::int64_t, range_difference_t<decltype(uints)>>(), "");
     static_assert(Same<std::uint64_t, range_size_t<decltype(uints)>>(), "");
     CHECK(uints.size() == (static_cast<uint64_t>(std::numeric_limits<std::uint32_t>::max()) + 1));
@@ -93,7 +94,7 @@ int main()
     {
         auto ints = view::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
-        models_not<concepts::BoundedView>(ints);
+        models_not<concepts::BoundedView>(aux::copy(ints));
     }
 
     {  // iota minus tests

@@ -1,5 +1,6 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/tokenize.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -32,8 +33,8 @@ int main()
     ::models_not<concepts::SizedRange>(crng);
     ::models_not<concepts::OutputRange>(crng);
 
-    // ::models<concepts::View>(rng);
-    // ::models<concepts::View>(crng);
+    // ::models<concepts::View>(aux::copy(rng));
+    // ::models<concepts::View>(aux::copy(crng));
 #endif
 
     return test_result();

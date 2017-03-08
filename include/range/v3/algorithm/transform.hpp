@@ -72,7 +72,8 @@ namespace ranges
             tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F fun, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(out), std::move(fun),
+                    std::move(proj));
             }
 
             // Double-range variant, 4-iterator version
@@ -95,7 +96,10 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(Range<Rng0>() && Range<Rng1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
-            tagged_tuple<tag::in1(range_safe_iterator_t<Rng0>), tag::in2(range_safe_iterator_t<Rng1>), tag::out(O)>
+            tagged_tuple<
+                tag::in1(range_safe_iterator_t<Rng0>),
+                tag::in2(range_safe_iterator_t<Rng1>),
+                tag::out(O)>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
