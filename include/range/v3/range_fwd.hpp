@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
+#include <range/v3/version.hpp>
 
 /// \defgroup group-utility Utility
 /// Utility classes
