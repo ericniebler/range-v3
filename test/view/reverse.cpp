@@ -18,6 +18,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/c_str.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -28,7 +29,7 @@ int main()
     // Reverse a random-access, bounded, sized range
     std::vector<int> rgv{0,1,2,3,4,5,6,7,8,9};
     auto const rng0 = rgv | view::reverse;
-    models<concepts::View>(rng0);
+    models<concepts::View>(aux::copy(rng0));
     models<concepts::RandomAccessRange>(rng0);
     models<concepts::BoundedRange>(rng0);
     models<concepts::SizedRange>(rng0);
@@ -40,7 +41,7 @@ int main()
     auto cnt = view::counted(rgv.begin(), 10);
     models_not<concepts::BoundedRange>(cnt);
     auto const rng1 = rgv | view::reverse;
-    models<concepts::View>(rng1);
+    models<concepts::View>(aux::copy(rng1));
     models<concepts::RandomAccessRange>(rng1);
     models<concepts::BoundedRange>(rng1);
     models<concepts::SizedRange>(rng1);
@@ -51,7 +52,7 @@ int main()
     // Reverse a random-access, non-bounded, non-sized range
     auto sz = view::c_str((char const*)"hello");
     auto rng2 = sz | view::reverse;
-    models<concepts::View>(rng2);
+    models<concepts::View>(aux::copy(rng2));
     models<concepts::RandomAccessRange>(rng2);
     models<concepts::BoundedRange>(rng2);
     models<concepts::SizedRange>(rng2);
@@ -64,7 +65,7 @@ int main()
     // Reverse a bidirectional, bounded, sized range
     std::list<int> rgl{0,1,2,3,4,5,6,7,8,9};
     auto const rng3 = rgl | view::reverse;
-    models<concepts::View>(rng3);
+    models<concepts::View>(aux::copy(rng3));
     models<concepts::BidirectionalRange>(rng3);
     models_not<concepts::RandomAccessRange>(rng3);
     models<concepts::BoundedRange>(rng3);
@@ -76,7 +77,7 @@ int main()
     // Reverse a bidirectional, weak, sized range
     auto cnt2 = view::counted(rgl.begin(), 10);
     auto rng4 = cnt2 | view::reverse;
-    models<concepts::View>(rng4);
+    models<concepts::View>(aux::copy(rng4));
     models<concepts::BidirectionalRange>(rng4);
     models_not<concepts::RandomAccessRange>(rng4);
     models<concepts::BoundedRange>(rng4);
@@ -91,7 +92,7 @@ int main()
     auto dlm = view::delimit(rgl.begin(), 9);
     models_not<concepts::BoundedRange>(dlm);
     auto rng5 = dlm | view::reverse;
-    models<concepts::View>(rng5);
+    models<concepts::View>(aux::copy(rng5));
     models<concepts::BidirectionalRange>(rng5);
     models_not<concepts::RandomAccessRange>(rng5);
     models<concepts::BoundedRange>(rng5);
@@ -105,7 +106,7 @@ int main()
     auto dlm2 = view::delimit(rgl, 10);
     models_not<concepts::BoundedRange>(dlm2);
     auto rng6 = dlm2 | view::reverse;
-    models<concepts::View>(rng6);
+    models<concepts::View>(aux::copy(rng6));
     models<concepts::BidirectionalRange>(rng6);
     models_not<concepts::RandomAccessRange>(rng6);
     models<concepts::BoundedRange>(rng6);

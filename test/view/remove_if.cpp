@@ -18,6 +18,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -47,10 +48,10 @@ int main()
     auto && rng = rgi | view::remove_if(is_even());
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng));
-    models<concepts::BoundedView>(rng);
-    models_not<concepts::SizedView>(rng);
-    models<concepts::BidirectionalView>(rng);
-    models_not<concepts::RandomAccessView>(rng);
+    models<concepts::BoundedView>(aux::copy(rng));
+    models_not<concepts::SizedView>(aux::copy(rng));
+    models<concepts::BidirectionalView>(aux::copy(rng));
+    models_not<concepts::RandomAccessView>(aux::copy(rng));
     ::check_equal(rng, {1,3,5,7,9});
     ::check_equal(rng | view::reverse, {9,7,5,3,1});
     auto tmp = rng | view::reverse;
@@ -58,19 +59,19 @@ int main()
 
     auto && rng2 = view::counted(rgi, 10) | view::remove_if(not_fn(is_odd()));
     has_type<int &>(*begin(rng2));
-    models<concepts::BidirectionalView>(rng2);
-    models_not<concepts::RandomAccessView>(rng2);
-    models<concepts::BoundedView>(rng2);
-    models_not<concepts::SizedView>(rng2);
+    models<concepts::BidirectionalView>(aux::copy(rng2));
+    models_not<concepts::RandomAccessView>(aux::copy(rng2));
+    models<concepts::BoundedView>(aux::copy(rng2));
+    models_not<concepts::SizedView>(aux::copy(rng2));
     ::check_equal(rng2, {1,3,5,7,9});
     CHECK(&*begin(rng2) == &rgi[0]);
 
     auto && rng3 = view::counted(bidirectional_iterator<int*>{rgi}, 10) | view::remove_if(is_even());
     has_type<int &>(*begin(rng3));
-    models<concepts::BidirectionalView>(rng3);
-    models_not<concepts::RandomAccessView>(rng3);
-    models_not<concepts::BoundedView>(rng3);
-    models_not<concepts::SizedView>(rng3);
+    models<concepts::BidirectionalView>(aux::copy(rng3));
+    models_not<concepts::RandomAccessView>(aux::copy(rng3));
+    models_not<concepts::BoundedView>(aux::copy(rng3));
+    models_not<concepts::SizedView>(aux::copy(rng3));
     ::check_equal(rng3, {1,3,5,7,9});
     CHECK(&*begin(rng3) == &rgi[0]);
     CHECK(&*prev(next(begin(rng3))) == &rgi[0]);

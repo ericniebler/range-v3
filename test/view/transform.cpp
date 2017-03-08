@@ -19,6 +19,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -39,8 +40,8 @@ int main()
     auto && rng = rgi | view::transform(is_odd());
     has_type<int &>(*begin(rgi));
     has_type<bool>(*begin(rng));
-    models<concepts::SizedView>(rng);
-    models<concepts::RandomAccessView>(rng);
+    models<concepts::SizedView>(aux::copy(rng));
+    models<concepts::RandomAccessView>(aux::copy(rng));
     ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
 
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
@@ -48,9 +49,9 @@ int main()
     has_type<int &>(*begin(rng2));
     CONCEPT_ASSERT(Same<range_value_t<decltype(rng2)>, int>());
     CONCEPT_ASSERT(Same<decltype(iter_move(begin(rng2))), int &&>());
-    models<concepts::BoundedView>(rng2);
-    models<concepts::SizedView>(rng2);
-    models<concepts::RandomAccessView>(rng2);
+    models<concepts::BoundedView>(aux::copy(rng2));
+    models<concepts::SizedView>(aux::copy(rng2));
+    models<concepts::RandomAccessView>(aux::copy(rng2));
     ::check_equal(rng2, {1,2,3,4,5,6,7,8,9,10});
     ::check_equal(rng2 | view::reverse, {10,9,8,7,6,5,4,3,2,1});
     CHECK(&*begin(rng2) == &rgp[0].first);
@@ -58,9 +59,9 @@ int main()
 
     auto && rng3 = view::counted(rgp, 10) | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng3));
-    models<concepts::BoundedView>(rng3);
-    models<concepts::SizedView>(rng3);
-    models<concepts::RandomAccessView>(rng3);
+    models<concepts::BoundedView>(aux::copy(rng3));
+    models<concepts::SizedView>(aux::copy(rng3));
+    models<concepts::RandomAccessView>(aux::copy(rng3));
     ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
     CHECK(&*begin(rng3) == &rgp[0].first);
     CHECK(rng3.size() == 10u);
@@ -68,10 +69,10 @@ int main()
     auto && rng4 = view::counted(forward_iterator<std::pair<int, int>*>{rgp}, 10)
                       | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng4));
-    models_not<concepts::BoundedView>(rng4);
-    models<concepts::SizedView>(rng4);
-    models<concepts::ForwardView>(rng4);
-    models_not<concepts::BidirectionalView>(rng4);
+    models_not<concepts::BoundedView>(aux::copy(rng4));
+    models<concepts::SizedView>(aux::copy(rng4));
+    models<concepts::ForwardView>(aux::copy(rng4));
+    models_not<concepts::BidirectionalView>(aux::copy(rng4));
     ::check_equal(rng4, {1,2,3,4,5,6,7,8,9,10});
     CHECK(&*begin(rng4) == &rgp[0].first);
     CHECK(rng4.size() == 10u);

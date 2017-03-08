@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <range/v3/core.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
@@ -72,9 +73,9 @@ int main()
 {
     using namespace ranges;
     auto r = MyRange{};
-    ::models<concepts::BoundedView>(r);
-    ::models<concepts::SizedView>(r);
-    ::models<concepts::RandomAccessView>(r);
+    ::models<concepts::BoundedView>(aux::copy(r));
+    ::models<concepts::SizedView>(aux::copy(r));
+    ::models<concepts::RandomAccessView>(aux::copy(r));
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 
     CHECK(7u == r.size());

@@ -16,6 +16,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/move.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -30,9 +31,9 @@ int main()
     has_type<int &>(*begin(rgi));
     has_type<int const &>(*begin(rng));
     CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>());
-    models<concepts::BoundedView>(rng);
-    models<concepts::SizedView>(rng);
-    models<concepts::RandomAccessView>(rng);
+    models<concepts::BoundedView>(aux::copy(rng));
+    models<concepts::SizedView>(aux::copy(rng));
+    models<concepts::RandomAccessView>(aux::copy(rng));
     ::check_equal(rng, {1, 2, 3, 4});
     CHECK(&*begin(rng) == &rgi[0]);
     CHECK(rng.size() == 4u);
@@ -40,10 +41,10 @@ int main()
     auto && rng2 = view::counted(forward_iterator<int*>(rgi), 4) | view::const_;
     has_type<int const &>(*begin(rng2));
     CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>());
-    models<concepts::ForwardView>(rng2);
-    models_not<concepts::BidirectionalView>(rng2);
-    models_not<concepts::BoundedView>(rng2);
-    models<concepts::SizedView>(rng2);
+    models<concepts::ForwardView>(aux::copy(rng2));
+    models_not<concepts::BidirectionalView>(aux::copy(rng2));
+    models_not<concepts::BoundedView>(aux::copy(rng2));
+    models<concepts::SizedView>(aux::copy(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
     CHECK(&*begin(rng2) == &rgi[0]);
     CHECK(rng2.size() == 4u);
@@ -54,9 +55,9 @@ int main()
     has_type<common_pair<int &&, int &&>>(iter_move(begin(zip)));
     has_type<common_pair<int const &, int const &>>(*begin(rng3));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng3)));
-    models<concepts::RandomAccessView>(rng3);
-    models<concepts::BoundedView>(rng3);
-    models<concepts::SizedView>(rng3);
+    models<concepts::RandomAccessView>(aux::copy(rng3));
+    models<concepts::BoundedView>(aux::copy(rng3));
+    models<concepts::SizedView>(aux::copy(rng3));
     using P = std::pair<int,int>;
     ::check_equal(rng3, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
     CHECK(&(*begin(rng3)).first == &rgi[0]);
@@ -68,9 +69,9 @@ int main()
     has_type<common_pair<int &&, int &&>>(iter_move(begin(zip2)));
     has_type<common_pair<int const &&, int const &&>>(*begin(rng4));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng4)));
-    models<concepts::RandomAccessView>(rng4);
-    models<concepts::BoundedView>(rng4);
-    models<concepts::SizedView>(rng4);
+    models<concepts::RandomAccessView>(aux::copy(rng4));
+    models<concepts::BoundedView>(aux::copy(rng4));
+    models<concepts::SizedView>(aux::copy(rng4));
     using P = std::pair<int,int>;
     ::check_equal(rng4, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
     CHECK(&(*begin(rng4)).first == &rgi[0]);

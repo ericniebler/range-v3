@@ -44,12 +44,20 @@ struct NotDestructible
 
 struct IntComparable
 {
-    explicit operator int() const;
+    operator int() const;
+
+    friend bool operator==(IntComparable, IntComparable);
+    friend bool operator!=(IntComparable, IntComparable);
 
     friend bool operator<(IntComparable, IntComparable);
     friend bool operator>(IntComparable, IntComparable);
     friend bool operator<=(IntComparable, IntComparable);
     friend bool operator>=(IntComparable, IntComparable);
+
+    friend bool operator==(int, IntComparable);
+    friend bool operator!=(int, IntComparable);
+    friend bool operator==(IntComparable, int);
+    friend bool operator!=(IntComparable, int);
 
     friend bool operator<(int, IntComparable);
     friend bool operator<(IntComparable, int);
@@ -61,24 +69,28 @@ struct IntComparable
     friend bool operator>=(IntComparable, int);
 };
 
-struct incomplete;
+struct IntSwappable
+{
+    operator int() const;
 
-template <class T, class...Us>
-using ConstructibleObject = ranges::concepts::models<ranges::concepts::ConstructibleObject, T, Us...>;
-template <class T, class...Us>
-using BindableReference = ranges::concepts::models<ranges::concepts::BindableReference, T, Us...>;
+    friend void swap(int &, IntSwappable);
+    friend void swap(IntSwappable, int &);
+    friend void swap(IntSwappable, IntSwappable);
+};
+
+struct incomplete;
 
 static_assert(ranges::Destructible<int>(), "");
 static_assert(ranges::Destructible<const int>(), "");
 static_assert(!ranges::Destructible<void>(), "");
-static_assert(!ranges::Destructible<int&>(), "");
+static_assert(ranges::Destructible<int&>(), "");
 static_assert(!ranges::Destructible<void()>(), "");
 static_assert(ranges::Destructible<void(*)()>(), "");
-static_assert(!ranges::Destructible<void(&)()>(), "");
+static_assert(ranges::Destructible<void(&)()>(), "");
 static_assert(!ranges::Destructible<int[]>(), "");
-static_assert(!ranges::Destructible<int[2]>(), "");
+static_assert(ranges::Destructible<int[2]>(), "");
 static_assert(ranges::Destructible<int(*)[2]>(), "");
-static_assert(!ranges::Destructible<int(&)[2]>(), "");
+static_assert(ranges::Destructible<int(&)[2]>(), "");
 static_assert(ranges::Destructible<moveonly>(), "");
 static_assert(ranges::Destructible<nonmovable>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");
@@ -91,17 +103,11 @@ static_assert(!ranges::Constructible<int const &>(), "");
 static_assert(!ranges::Constructible<int ()>(), "");
 static_assert(!ranges::Constructible<int(&)()>(), "");
 static_assert(!ranges::Constructible<int[]>(), "");
-static_assert(!ranges::Constructible<int[5]>(), "");
+static_assert(ranges::Constructible<int[5]>(), "");
 static_assert(!ranges::Constructible<nondefaultconstructible>(), "");
 static_assert(ranges::Constructible<int const(&)[5], int(&)[5]>(), "");
 static_assert(!ranges::Constructible<int, int(&)[3]>(), "");
 
-static_assert(ConstructibleObject<int, int>(), "");
-static_assert(ConstructibleObject<int, int&>(), "");
-static_assert(ConstructibleObject<int, int&&>(), "");
-static_assert(ConstructibleObject<int, const int>(), "");
-static_assert(ConstructibleObject<int, const int&>(), "");
-static_assert(ConstructibleObject<int, const int&&>(), "");
 static_assert(ranges::Constructible<int, int>(), "");
 static_assert(ranges::Constructible<int, int&>(), "");
 static_assert(ranges::Constructible<int, int&&>(), "");
@@ -109,12 +115,6 @@ static_assert(ranges::Constructible<int, const int>(), "");
 static_assert(ranges::Constructible<int, const int&>(), "");
 static_assert(ranges::Constructible<int, const int&&>(), "");
 
-static_assert(!BindableReference<int&, int>(), "");
-static_assert(BindableReference<int&, int&>(), "");
-static_assert(!BindableReference<int&, int&&>(), "");
-static_assert(!BindableReference<int&, const int>(), "");
-static_assert(!BindableReference<int&, const int&>(), "");
-static_assert(!BindableReference<int&, const int&&>(), "");
 static_assert(!ranges::Constructible<int&, int>(), "");
 static_assert(ranges::Constructible<int&, int&>(), "");
 static_assert(!ranges::Constructible<int&, int&&>(), "");
@@ -122,12 +122,6 @@ static_assert(!ranges::Constructible<int&, const int>(), "");
 static_assert(!ranges::Constructible<int&, const int&>(), "");
 static_assert(!ranges::Constructible<int&, const int&&>(), "");
 
-static_assert(BindableReference<const int&, int>(), "");
-static_assert(BindableReference<const int&, int&>(), "");
-static_assert(BindableReference<const int&, int&&>(), "");
-static_assert(BindableReference<const int&, const int>(), "");
-static_assert(BindableReference<const int&, const int&>(), "");
-static_assert(BindableReference<const int&, const int&&>(), "");
 static_assert(ranges::Constructible<const int&, int>(), "");
 static_assert(ranges::Constructible<const int&, int&>(), "");
 static_assert(ranges::Constructible<const int&, int&&>(), "");
@@ -135,12 +129,6 @@ static_assert(ranges::Constructible<const int&, const int>(), "");
 static_assert(ranges::Constructible<const int&, const int&>(), "");
 static_assert(ranges::Constructible<const int&, const int&&>(), "");
 
-static_assert(BindableReference<int&&, int>(), "");
-static_assert(!BindableReference<int&&, int&>(), "");
-static_assert(BindableReference<int&&, int&&>(), "");
-static_assert(!BindableReference<int&&, const int>(), "");
-static_assert(!BindableReference<int&&, const int&>(), "");
-static_assert(!BindableReference<int&&, const int&&>(), "");
 static_assert(ranges::Constructible<int&&, int>(), "");
 static_assert(!ranges::Constructible<int&&, int&>(), "");
 static_assert(ranges::Constructible<int&&, int&&>(), "");
@@ -148,12 +136,6 @@ static_assert(!ranges::Constructible<int&&, const int>(), "");
 static_assert(!ranges::Constructible<int&&, const int&>(), "");
 static_assert(!ranges::Constructible<int&&, const int&&>(), "");
 
-static_assert(BindableReference<const int&&, int>(), "");
-static_assert(!BindableReference<const int&&, int&>(), "");
-static_assert(BindableReference<const int&&, int&&>(), "");
-static_assert(BindableReference<const int&&, const int>(), "");
-static_assert(!BindableReference<const int&&, const int&>(), "");
-static_assert(BindableReference<const int&&, const int&&>(), "");
 static_assert(ranges::Constructible<const int&&, int>(), "");
 static_assert(!ranges::Constructible<const int&&, int&>(), "");
 static_assert(ranges::Constructible<const int&&, int&&>(), "");
@@ -176,7 +158,7 @@ static_assert(!ranges::DefaultConstructible<int const &>(), "");
 static_assert(!ranges::DefaultConstructible<int ()>(), "");
 static_assert(!ranges::DefaultConstructible<int(&)()>(), "");
 static_assert(!ranges::DefaultConstructible<int[]>(), "");
-static_assert(!ranges::DefaultConstructible<int[5]>(), "");
+static_assert(ranges::DefaultConstructible<int[5]>(), "");
 static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
 
 static_assert(ranges::MoveConstructible<int>(), "");
@@ -186,7 +168,6 @@ static_assert(ranges::MoveConstructible<int &&>(), "");
 static_assert(ranges::MoveConstructible<const int &>(), "");
 static_assert(ranges::MoveConstructible<const int &&>(), "");
 static_assert(ranges::Destructible<moveonly>(), "");
-static_assert(ConstructibleObject<moveonly, moveonly>(), "");
 static_assert(ranges::Constructible<moveonly, moveonly>(), "");
 static_assert(ranges::MoveConstructible<moveonly>(), "");
 static_assert(!ranges::MoveConstructible<nonmovable>(), "");
@@ -246,22 +227,23 @@ static_assert(!ranges::Predicate<std::less<int>, char*, int>(), "");
 static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
 
-namespace ranges
-{
-    template<> struct common_type<int, IntComparable> { using type = int; };
-    template<> struct common_type<IntComparable, int> { using type = int; };
-    template<typename TQual, typename UQual>
-    struct basic_common_reference<int, IntComparable, TQual, UQual>
-        { using type = int; };
-    template<typename TQual, typename UQual>
-    struct basic_common_reference<IntComparable, int, TQual, UQual>
-        { using type = int; };
-}
+static_assert(ranges::Swappable<int &>(), "");
+static_assert(!ranges::Swappable<int>(), "");
+static_assert(!ranges::Swappable<int const &>(), "");
+static_assert(ranges::Swappable<IntSwappable>(), "");
+static_assert(ranges::Swappable<IntSwappable, int &>(), "");
+static_assert(!ranges::Swappable<IntSwappable, int const &>(), "");
 
 static_assert(ranges::WeaklyOrdered<int>(), "");
 static_assert(ranges::Common<int, IntComparable>(), "");
+static_assert(ranges::CommonReference<int &, IntComparable &>(), "");
 static_assert(ranges::WeaklyOrdered<int, IntComparable>(), "");
 static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
+static_assert(ranges::WeaklyEqualityComparable<int, int>(), "");
+static_assert(ranges::EqualityComparable<int>(), "");
+static_assert(ranges::EqualityComparable<int, int>(), "");
+static_assert(ranges::EqualityComparable<int, IntComparable>(), "");
+static_assert(ranges::EqualityComparable<int &, IntComparable &>(), "");
 
 static_assert(
     std::is_same<

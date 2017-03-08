@@ -18,6 +18,7 @@
 #include <range/v3/istream_range.hpp>
 #include <range/v3/view/slice.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -29,71 +30,71 @@ int main()
 
     auto rng0 = rgi | view::slice(3, 9);
     has_type<int &>(*begin(rng0));
-    models<concepts::BoundedView>(rng0);
-    models<concepts::SizedView>(rng0);
+    models<concepts::BoundedView>(aux::copy(rng0));
+    models<concepts::SizedView>(aux::copy(rng0));
     models<concepts::RandomAccessIterator>(begin(rng0));
     ::check_equal(rng0, {3, 4, 5, 6, 7, 8});
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));
-    models<concepts::BoundedView>(rng1);
-    models<concepts::SizedView>(rng1);
+    models<concepts::BoundedView>(aux::copy(rng1));
+    models<concepts::SizedView>(aux::copy(rng1));
     models<concepts::RandomAccessIterator>(begin(rng1));
     ::check_equal(rng1, {8, 7, 6, 5, 4, 3});
 
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng2 = v | view::slice(3, 9) | view::reverse;
     has_type<int &>(*begin(rng2));
-    models<concepts::BoundedView>(rng2);
-    models<concepts::SizedView>(rng2);
+    models<concepts::BoundedView>(aux::copy(rng2));
+    models<concepts::SizedView>(aux::copy(rng2));
     models<concepts::RandomAccessIterator>(begin(rng2));
     ::check_equal(rng2, {8, 7, 6, 5, 4, 3});
 
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng3 = l | view::slice(3, 9);
     has_type<int &>(*begin(rng3));
-    models<concepts::View>(rng3);
-    models_not<concepts::BoundedView>(rng3);
-    models<concepts::SizedView>(rng3);
+    models<concepts::View>(aux::copy(rng3));
+    models_not<concepts::BoundedView>(aux::copy(rng3));
+    models<concepts::SizedView>(aux::copy(rng3));
     models<concepts::BidirectionalIterator>(begin(rng3));
     models_not<concepts::RandomAccessIterator>(begin(rng3));
     ::check_equal(rng3, {3, 4, 5, 6, 7, 8});
 
     auto rng4 = view::iota(10) | view::slice(10, 20);
-    ::models<concepts::BoundedView>(rng4);
-    ::models<concepts::SizedView>(rng4);
+    ::models<concepts::BoundedView>(aux::copy(rng4));
+    ::models<concepts::SizedView>(aux::copy(rng4));
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
     ::check_equal(rng4, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
 
     auto rng5 = view::iota(10)[{10, 20}];
-    ::models<concepts::BoundedView>(rng5);
-    ::models<concepts::SizedView>(rng5);
+    ::models<concepts::BoundedView>(aux::copy(rng5));
+    ::models<concepts::SizedView>(aux::copy(rng5));
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
     ::check_equal(rng5, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
 
     auto rng6 = view::all(l)[{3, 9}];
     has_type<int &>(*begin(rng6));
-    models<concepts::View>(rng6);
-    models_not<concepts::BoundedView>(rng6);
-    models<concepts::SizedView>(rng6);
+    models<concepts::View>(aux::copy(rng6));
+    models_not<concepts::BoundedView>(aux::copy(rng6));
+    models<concepts::SizedView>(aux::copy(rng6));
     models<concepts::BidirectionalIterator>(begin(rng6));
     models_not<concepts::RandomAccessIterator>(begin(rng6));
     ::check_equal(rng6, {3, 4, 5, 6, 7, 8});
 
     auto rng7 = view::all(l)[{3, end}];
     has_type<int &>(*begin(rng7));
-    models<concepts::View>(rng7);
-    models<concepts::BoundedView>(rng7);
-    models<concepts::SizedView>(rng7);
+    models<concepts::View>(aux::copy(rng7));
+    models<concepts::BoundedView>(aux::copy(rng7));
+    models<concepts::SizedView>(aux::copy(rng7));
     models<concepts::BidirectionalIterator>(begin(rng7));
     models_not<concepts::RandomAccessIterator>(begin(rng7));
     ::check_equal(rng7, {3, 4, 5, 6, 7, 8, 9, 10});
 
     auto rng8 = view::all(l)[{end-5,end-2}];
     has_type<int &>(*begin(rng8));
-    models<concepts::View>(rng8);
-    models_not<concepts::BoundedView>(rng8);
-    models<concepts::SizedView>(rng8);
+    models<concepts::View>(aux::copy(rng8));
+    models_not<concepts::BoundedView>(aux::copy(rng8));
+    models<concepts::SizedView>(aux::copy(rng8));
     models<concepts::BidirectionalIterator>(begin(rng8));
     models_not<concepts::RandomAccessIterator>(begin(rng8));
     ::check_equal(rng8, {6, 7, 8});

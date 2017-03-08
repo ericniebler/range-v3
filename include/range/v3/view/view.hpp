@@ -73,7 +73,7 @@ namespace ranges
             template<typename Rng>
             using ViewableRange = meta::and_<
                 Range<Rng>,
-                meta::or_<std::is_lvalue_reference<Rng>, View<Rng>>>;
+                meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
 
             template<typename View>
             struct view : pipeable<view<View>>

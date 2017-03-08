@@ -13,6 +13,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/repeat.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -20,8 +21,8 @@ int main()
 {
     using namespace ranges;
     auto rng = view::repeat(9) | view::take(10);
-    ::models<concepts::SizedView>(rng);
-    ::models<concepts::View>(rng);
+    ::models<concepts::SizedView>(aux::copy(rng));
+    ::models<concepts::View>(aux::copy(rng));
     ::models<concepts::RandomAccessIterator>(rng.begin());
     ::check_equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9});
 

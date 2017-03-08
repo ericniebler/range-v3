@@ -30,10 +30,9 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
-
-
 
 int main()
 {
@@ -53,9 +52,9 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_finite, i2_finite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
         
         using R = decltype(res);
 
@@ -83,9 +82,9 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
         
         using R = decltype(res);
 
@@ -116,9 +115,9 @@ int main()
     {
         auto res1 = view::set_symmetric_difference(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(res1);
-        models_not<concepts::RandomAccessView>(res1);
-        models_not<concepts::BoundedView>(res1);
+        models<concepts::ForwardView>(aux::copy(res1));
+        models_not<concepts::RandomAccessView>(aux::copy(res1));
+        models_not<concepts::BoundedView>(aux::copy(res1));
         
         using R1 = decltype(res1);
 
@@ -134,9 +133,9 @@ int main()
         // now swap the operands:
         auto res2 = view::set_symmetric_difference(i2_infinite, i1_finite);
 
-        models<concepts::ForwardView>(res2);
-        models_not<concepts::RandomAccessView>(res2);
-        models_not<concepts::BoundedView>(res2);
+        models<concepts::ForwardView>(aux::copy(res2));
+        models_not<concepts::RandomAccessView>(aux::copy(res2));
+        models_not<concepts::BoundedView>(aux::copy(res2));
         
         using R2 = decltype(res2);
 

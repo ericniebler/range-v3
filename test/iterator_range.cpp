@@ -12,6 +12,7 @@
 #include <list>
 #include <vector>
 #include <range/v3/core.hpp>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/view/all.hpp>
 #include "./simple_test.hpp"
@@ -26,7 +27,7 @@ int main()
 
     using namespace ranges;
     iterator_range<std::vector<int>::iterator> r0 {vi.begin(), vi.end()};
-    ::models<concepts::SizedView>(r0);
+    ::models<concepts::SizedView>(aux::copy(r0));
     CHECK(r0.size() == 4u);
     CHECK(r0.begin() == vi.begin());
     CHECK(r0.end() == vi.end());
@@ -38,8 +39,8 @@ int main()
     CHECK(p0.second == vi.end());
 
     iterator_range<std::vector<int>::iterator, unreachable> r1 { r0.begin(), {} };
-    ::models<concepts::View>(r1);
-    ::models_not<concepts::SizedView>(r1);
+    ::models<concepts::View>(aux::copy(r1));
+    ::models_not<concepts::SizedView>(aux::copy(r1));
     CHECK(r1.begin() == vi.begin()+1);
     r1.end() = unreachable{};
 
@@ -60,7 +61,7 @@ int main()
 
     std::list<int> li{1,2,3,4};
     sized_iterator_range<std::list<int>::iterator> l0 {li.begin(), li.end(), li.size()};
-    ::models<concepts::SizedView>(l0);
+    ::models<concepts::SizedView>(aux::copy(l0));
     CHECK(l0.begin() == li.begin());
     CHECK(l0.end() == li.end());
     CHECK(l0.size() == li.size());
