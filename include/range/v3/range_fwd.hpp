@@ -266,14 +266,8 @@ namespace ranges
             template<typename...Ts>
             void valid_exprs(Ts &&...);
 
-            template<typename I, typename S>
-            struct common_cursor;
-
             template<typename I, typename D = meta::_t<difference_type<I>>>
             struct counted_cursor;
-
-            template<typename I>
-            struct move_cursor;
 
             template<typename I>
             struct move_into_cursor;
@@ -405,9 +399,17 @@ namespace ranges
                  cardinality C = range_cardinality<BaseRng>::value>
         struct view_adaptor;
 
+        /// \cond
+        inline namespace _common_iterator
+        {
+            template<typename I, typename S>
+            struct common_iterator;
+        }
+        /// \endcond
+
         template<typename I, typename S>
-        using common_iterator =
-            meta::if_<std::is_same<I, S>, I, basic_iterator<detail::common_cursor<I, S>>>;
+        using common_iterator_t =
+            meta::if_<std::is_same<I, S>, I, common_iterator<I, S>>;
 
         template<typename First, typename Second>
         struct compressed_pair;
@@ -437,6 +439,9 @@ namespace ranges
 
         template<typename T, bool RValue = false>
         struct reference_wrapper;
+
+        template<typename>
+        struct is_reference_wrapper;
 
         template<typename T>
         using rvalue_reference_wrapper = reference_wrapper<T, true>;
@@ -495,8 +500,7 @@ namespace ranges
             basic_iterator<detail::counted_cursor<I, D>>;
 
         template<typename I>
-        using move_iterator =
-            basic_iterator<detail::move_cursor<I>>;
+        struct move_iterator;
 
         template<typename I>
         using move_into_iterator =

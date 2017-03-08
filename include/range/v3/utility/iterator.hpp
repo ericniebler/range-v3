@@ -436,46 +436,48 @@ namespace ranges
         /// \sa `iter_move_fn`
         RANGES_INLINE_VARIABLE(iter_move_fn, iter_move)
 
-        /// \cond
-        namespace detail
+        template<typename Container>
+        struct back_insert_iterator
         {
-            template<typename Cont>
-            struct back_insert_cursor
-            {
-                struct mixin : basic_mixin<back_insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<back_insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
-                    {}
-                };
-                Cont *cont_ = nullptr;
-                back_insert_cursor() = default;
-                back_insert_cursor(Cont &cont) noexcept
-                  : cont_(std::addressof(cont))
-                {}
-                void write(typename Cont::value_type const &v) const
-                {
-                    cont_->push_back(v);
-                }
-                void write(typename Cont::value_type &&v) const
-                {
-                    cont_->push_back(std::move(v));
-                }
-            };
-        }
-        /// \endcond
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
 
-        template<typename Cont>
-        using back_insert_iterator = basic_iterator<detail::back_insert_cursor<Cont>>;
+            constexpr back_insert_iterator() = default;
+            explicit back_insert_iterator(Container &x)
+              : container_(std::addressof(x))
+            {}
+            back_insert_iterator &operator=(typename Container::value_type const &value)
+            {
+                container_->push_back(value);
+                return *this;
+            }
+            back_insert_iterator &operator=(typename Container::value_type &&value)
+            {
+                container_->push_back(std::move(value));
+                return *this;
+            }
+            back_insert_iterator &operator*()
+            {
+                return *this;
+            }
+            back_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            back_insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container *container_ = nullptr;
+        };
 
         struct back_inserter_fn
         {
-            template<typename Cont>
-            constexpr back_insert_iterator<Cont> operator()(Cont &cont) const
+            template<typename Container>
+            constexpr back_insert_iterator<Container> operator()(Container &x) const
             {
-                return back_insert_iterator<Cont>{cont};
+                return back_insert_iterator<Container>{x};
             }
         };
 
@@ -483,39 +485,41 @@ namespace ranges
         /// \sa `back_inserter_fn`
         RANGES_INLINE_VARIABLE(back_inserter_fn, back_inserter)
 
-        /// \cond
-        namespace detail
+        template<typename Container>
+        struct front_insert_iterator
         {
-            template<typename Cont>
-            struct front_insert_cursor
-            {
-                struct mixin : basic_mixin<front_insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<front_insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
-                    {}
-                };
-                Cont *cont_ = nullptr;
-                front_insert_cursor() = default;
-                explicit front_insert_cursor(Cont &cont) noexcept
-                  : cont_(std::addressof(cont))
-                {}
-                void write(typename Cont::value_type const &v) const
-                {
-                    cont_->push_front(v);
-                }
-                void write(typename Cont::value_type &&v) const
-                {
-                    cont_->push_front(std::move(v));
-                }
-            };
-        }
-        /// \endcond
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
 
-        template<typename Cont>
-        using front_insert_iterator = basic_iterator<detail::front_insert_cursor<Cont>>;
+            constexpr front_insert_iterator() = default;
+            explicit front_insert_iterator(Container &x)
+              : container_(std::addressof(x))
+            {}
+            front_insert_iterator &operator=(typename Container::value_type const &value)
+            {
+                container_->push_front(value);
+                return *this;
+            }
+            front_insert_iterator &operator=(typename Container::value_type &&value)
+            {
+                container_->push_front(std::move(value));
+                return *this;
+            }
+            front_insert_iterator &operator*()
+            {
+                return *this;
+            }
+            front_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            front_insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container *container_ = nullptr;
+        };
 
         struct front_inserter_fn
         {
@@ -530,40 +534,42 @@ namespace ranges
         /// \sa `front_inserter_fn`
         RANGES_INLINE_VARIABLE(front_inserter_fn, front_inserter)
 
-        /// \cond
-        namespace detail
+        template<typename Container>
+        struct insert_iterator
         {
-            template<typename Cont>
-            struct insert_cursor
-            {
-                Cont *cont_ = nullptr;
-                typename Cont::iterator where_ = {};
-                struct mixin : basic_mixin<insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
-                      : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
-                    {}
-                };
-                insert_cursor() = default;
-                explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
-                  : cont_(&cont), where_(where)
-                {}
-                void write(typename Cont::value_type const &v)
-                {
-                    where_ = ranges::next(cont_->insert(where_, v));
-                }
-                void write(typename Cont::value_type &&v)
-                {
-                    where_ = ranges::next(cont_->insert(where_, std::move(v)));
-                }
-            };
-        }
-        /// \cond
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
 
-        template<typename Cont>
-        using insert_iterator = basic_iterator<detail::insert_cursor<Cont>>;
+            constexpr insert_iterator() = default;
+            explicit insert_iterator(Container &x, typename Container::iterator w)
+              : container_(std::addressof(x)), where_(w)
+            {}
+            insert_iterator &operator=(typename Container::value_type const &value)
+            {
+                where_ = ranges::next(container_->insert(where_, value));
+                return *this;
+            }
+            insert_iterator &operator=(typename Container::value_type &&value)
+            {
+                where_ = ranges::next(container_->insert(where_, std::move(value)));
+                return *this;
+            }
+            insert_iterator &operator*()
+            {
+                return *this;
+            }
+            insert_iterator &operator++()
+            {
+                return *this;
+            }
+            insert_iterator &operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container* container_ = nullptr;
+            typename Container::iterator where_ = detail::value_init{};
+        };
 
         struct inserter_fn
         {
@@ -578,51 +584,92 @@ namespace ranges
         /// \sa `inserter_fn`
         RANGES_INLINE_VARIABLE(inserter_fn, inserter)
 
-        /// \cond
-        namespace detail {
-            template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
-            struct ostream_cursor
-            {
-                using ostream_type = std::basic_ostream<Char, Traits>;
-
-                ostream_type *sout_ = nullptr;
-                Char const *delim_ = nullptr;
-
-                struct mixin : protected basic_mixin<ostream_cursor>
-                {
-                    // difference_type is exported by basic_iterator
-                    using char_type = Char;
-                    using traits_type = Traits;
-                    using ostream_type = ostream_cursor::ostream_type;
-
-                    mixin() = default;
-                    using basic_mixin<ostream_cursor>::basic_mixin;
-                    constexpr mixin(ostream_type &sout,
-                        Char const *delim = nullptr) noexcept
-                    : basic_mixin<ostream_cursor>(ostream_cursor{sout, delim})
-                    {}
-                };
-
-                ostream_cursor() = default;
-                constexpr ostream_cursor(ostream_type &sout,
-                    Char const *delim = nullptr) noexcept
-                  : sout_(std::addressof(sout)), delim_(delim)
-                {}
-                template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
-                    CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
-                void write(U && u)
-                {
-                    RANGES_EXPECT(sout_);
-                    *sout_ << u;
-                    if(delim_)
-                        *sout_ << delim_;
-                }
-            };
-        }
-        /// \endcond
-
         template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
-        using ostream_iterator = basic_iterator<detail::ostream_cursor<T, Char, Traits>>;
+        struct ostream_iterator
+        {
+            using difference_type = std::ptrdiff_t;
+            using char_type = Char;
+            using traits_type = Traits;
+            using ostream_type = std::basic_ostream<Char, Traits>;
+
+            constexpr ostream_iterator() = default;
+            ostream_iterator(ostream_type &s, Char const *d = nullptr) noexcept
+              : sout_(&s), delim_(d)
+            {}
+            template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
+                CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
+            ostream_iterator& operator=(U &&value)
+            {
+                RANGES_EXPECT(sout_);
+                *sout_ << value;
+                if(delim_)
+                    *sout_ << delim_;
+                return *this;
+            }
+            ostream_iterator& operator*()
+            {
+                return *this;
+            }
+            ostream_iterator& operator++()
+            {
+                return *this;
+            }
+            ostream_iterator& operator++(int)
+            {
+                return *this;
+            }
+        private:
+            ostream_type *sout_;
+            Char const *delim_;
+        };
+
+        template <class Char, class Traits = std::char_traits<Char>>
+        struct ostreambuf_iterator
+        {
+        public:
+            typedef ptrdiff_t difference_type;
+            typedef Char char_type;
+            typedef Traits traits_type;
+            typedef std::basic_streambuf<Char, Traits> streambuf_type;
+            typedef std::basic_ostream<Char, Traits> ostream_type;
+
+            constexpr ostreambuf_iterator() = default;
+            ostreambuf_iterator(ostream_type &s) noexcept
+              : ostreambuf_iterator(s.rdbuf())
+            {
+            }
+            ostreambuf_iterator(streambuf_type *s) noexcept
+              : sbuf_(s)
+            {
+                RANGES_ASSERT(s != nullptr);
+            }
+            ostreambuf_iterator &operator=(Char c)
+            {
+                RANGES_ASSERT(sbuf_ != nullptr);
+                if(!failed_)
+                    failed_ = (sbuf_->sputc(c) == Traits::eof());
+                return *this;
+            }
+            ostreambuf_iterator &operator*()
+            {
+                return *this;
+            }
+            ostreambuf_iterator &operator++()
+            {
+                return *this;
+            }
+            ostreambuf_iterator &operator++(int)
+            {
+                return *this;
+            }
+            bool failed() const noexcept
+            {
+                return failed_;
+            }
+        private:
+            streambuf_type *sbuf_ = nullptr;
+            bool failed_ = false;
+        };
 
         /// \cond
         namespace detail
@@ -726,80 +773,150 @@ namespace ranges
             return reverse_iterator<I>(i);
         }
 
-        /// \cond
-        namespace detail
+        template<typename I>
+        struct move_iterator
         {
-            template<typename I>
-            struct move_cursor
+        private:
+            CONCEPT_ASSERT(InputIterator<I>());
+            I current_ = detail::value_init{};
+        public:
+            using iterator_type = I;
+            using difference_type = iterator_difference_t<I>;
+            using value_type = iterator_value_t<I>;
+            using iterator_category = input_iterator_tag;
+            using reference = iterator_rvalue_reference_t<I>;
+
+            constexpr move_iterator() = default;
+            explicit move_iterator(I i)
+              : current_(i)
+            {}
+            template<typename O,
+                CONCEPT_REQUIRES_(ConvertibleTo<O, I>())>
+            move_iterator(move_iterator<O> const &i)
+              : current_(i.base())
+            {}
+            template<typename O,
+                CONCEPT_REQUIRES_(ConvertibleTo<O, I>())>
+            move_iterator &operator=(move_iterator<O> const & i)
             {
-            private:
-                CONCEPT_ASSERT(InputIterator<I>());
-                friend range_access;
-                using single_pass = std::true_type;
-                //using single_pass = SinglePass<I>;
-                using value_type = iterator_value_t<I>;
-                using difference_type = iterator_difference_t<I>;
+                current_ = i.base();
+                return *this;
+            }
+            I base() const
+            {
+                return current_;
+            }
+            auto operator*() const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                iter_move(current_)
+            )
+            move_iterator &operator++()
+            {
+                ++current_;
+                return *this;
+            }
+            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            void operator++(int)
+            {
+                ++current_;
+            }
+            CONCEPT_REQUIRES(ForwardIterator<I>())
+            move_iterator operator++(int)
+            {
+                return move_iterator(current_++);
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            move_iterator &operator--()
+            {
+                --current_;
+                return *this;
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            move_iterator operator--(int)
+            {
+                return move_iterator(current_--);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator operator+(difference_type n) const
+            {
+                return move_iterator(current_ + n);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator &operator+=(difference_type n)
+            {
+                current_ += n;
+                return *this;
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator operator-(difference_type n) const
+            {
+                return move_iterator(current_ - n);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator &operator-=(difference_type n)
+            {
+                current_ -= n;
+                return *this;
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            reference operator[](difference_type n) const
+            {
+                return iter_move(current_ + n);
+            }
+        };
 
-                struct mixin
-                  : basic_mixin<move_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<move_cursor>::basic_mixin;
-                    constexpr explicit mixin(I it)
-                      : mixin{move_cursor(detail::move(it))}
-                    {}
-                    I base() const
-                    {
-                        return this->get().it_;
-                    }
-                };
-
-                I it_;
-
-                constexpr move_cursor(I it)
-                  : it_(it)
-                {}
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    iter_move(it_)
-                )
-                void next()
-                {
-                    ++it_;
-                }
-                CONCEPT_REQUIRES(ForwardIterator<I>())
-                bool equal(move_cursor const &that) const
-                {
-                    return it_ == that.it_;
-                }
-                //CONCEPT_REQUIRES(BidirectionalIterator<I>())
-                //void prev()
-                //{
-                //    --it_;
-                //}
-                //CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                //void advance(iterator_difference_t<I> n)
-                //{
-                //    it_ += n;
-                //}
-                CONCEPT_REQUIRES(SizedSentinel<I, I>())
-                iterator_difference_t<I> distance_to(move_cursor const &that) const
-                {
-                    return that.it_ - it_;
-                }
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    iter_move(it_)
-                )
-            public:
-                constexpr move_cursor()
-                  : it_{}
-                {}
-            };
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(EqualityComparable<I1, I2>())>
+        bool operator==(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() == y.base();
         }
-        /// \endcond
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(EqualityComparable<I1, I2>())>
+        bool operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(x == y);
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator<(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() < y.base();
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(y < x);
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator>(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return y < x;
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(x < y);
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(SizedSentinel<I1, I2>())>
+        iterator_difference_t<I2> operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() - y.base();
+        }
+        template <typename I,
+            CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+        move_iterator<I> operator+(iterator_difference_t<I> n, move_iterator<I> const &x)
+        {
+            return x + n;
+        }
+
+        CONCEPT_ASSERT(InputIterator<move_iterator<int*>>());
 
         struct make_move_iterator_fn
         {
@@ -1043,7 +1160,61 @@ namespace ranges
         RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::recounted_fn,
                                recounted)
         /// @}
+
+        /// \cond
+        namespace detail
+        {
+            struct std_output_iterator_traits
+            {
+                using iterator_category = std::output_iterator_tag;
+                using difference_type = std::ptrdiff_t;
+                using value_type = void;
+                using reference = void;
+                using pointer = void;
+            };
+        }
+        /// \endcond
     }
 }
+
+/// \cond
+namespace std
+{
+    template<typename Container>
+    struct iterator_traits< ::ranges::back_insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Container>
+    struct iterator_traits< ::ranges::front_insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Container>
+    struct iterator_traits< ::ranges::insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename T, typename Char, typename Traits>
+    struct iterator_traits< ::ranges::ostream_iterator<T, Char, Traits>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Char, typename Traits>
+    struct iterator_traits< ::ranges::ostreambuf_iterator<Char, Traits>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename I>
+    struct iterator_traits< ::ranges::move_iterator<I>>
+    {
+        using iterator_category = std::input_iterator_tag;
+        using difference_type = typename ::ranges::move_iterator<I>::difference_type;
+        using value_type = typename ::ranges::move_iterator<I>::value_type;
+        using reference = typename ::ranges::move_iterator<I>::reference;
+        using pointer = meta::_t<std::add_pointer<reference>>;
+    };
+}
+/// \endcond
 
 #endif
