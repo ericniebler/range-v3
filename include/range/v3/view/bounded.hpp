@@ -46,7 +46,7 @@ namespace ranges
             template<typename R>
             using bounded_iterator_t = meta::if_<RA_and_Sized<R>,
                 range_iterator_t<R>,
-                common_iterator<range_iterator_t<R>, range_sentinel_t<R>>>;
+                common_iterator_t<range_iterator_t<R>, range_sentinel_t<R>>>;
             /// \endcond
         }
 
