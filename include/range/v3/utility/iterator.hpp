@@ -390,7 +390,8 @@ namespace ranges
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
         {
-            template<typename I, typename S, CONCEPT_REQUIRES_(SizedSentinel<S, I>())>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(SizedSentinel<S, I>() && ForwardIterator<I>())>
             RANGES_CXX14_CONSTEXPR
             size_type_t<I> operator()(I begin, S end) const
             {
