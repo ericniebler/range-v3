@@ -31,14 +31,14 @@ namespace ranges
 {
     inline namespace v3
     {
-        template <typename I, typename O, typename BOp = minus, typename P = ident,
+        template<typename I, typename O, typename BOp = minus, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invocable::result_t<P&, V>,
             typename Y = concepts::Invocable::result_t<BOp&, X, X>>
         using AdjacentDifferentiable = meta::strict_and<
             InputIterator<I>,
-            OutputIterator<O, X &&>,
-            OutputIterator<O, Y &&>,
+            OutputIterator<O, X>,
+            OutputIterator<O, Y>,
             Invocable<P&, V>,
             Invocable<BOp&, X, X>,
             CopyConstructible<uncvref_t<X>>,
@@ -46,7 +46,7 @@ namespace ranges
 
         struct adjacent_difference_fn
         {
-            template <typename I, typename S, typename O, typename BOp = minus,
+            template<typename I, typename S, typename O, typename BOp = minus,
                 typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() &&
                     AdjacentDifferentiable<I, O, BOp, P>())>
@@ -73,7 +73,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            template <typename I, typename S, typename O, typename S2,
+            template<typename I, typename S, typename O, typename S2,
                 typename BOp = minus, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
                     AdjacentDifferentiable<I, O, BOp, P>())>
@@ -101,7 +101,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            template <typename Rng, typename ORef, typename BOp = minus, typename P = ident,
+            template<typename Rng, typename ORef, typename BOp = minus, typename P = ident,
                 typename I = range_iterator_t<Rng>, typename O = uncvref_t<ORef>,
                 CONCEPT_REQUIRES_(Range<Rng>() &&
                     AdjacentDifferentiable<I, O, BOp, P>())>
@@ -112,7 +112,7 @@ namespace ranges
                                std::move(proj));
             }
 
-            template <typename Rng, typename ORng, typename BOp = minus,
+            template<typename Rng, typename ORng, typename BOp = minus,
                 typename P = ident, typename I = range_iterator_t<Rng>,
                 typename O = range_iterator_t<ORng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Range<ORng>() &&

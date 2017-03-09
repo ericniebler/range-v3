@@ -29,7 +29,7 @@ namespace ranges
             struct copy_fn : copy_tag
             {
                 template<typename T,
-                    CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T &&>())>
+                    CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T>())>
                 detail::decay_t<T> operator()(T && t) const
                 {
                     return static_cast<T &&>(t);
@@ -43,7 +43,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `copy_fn`
             template<typename T,
-                CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T &&>())>
+                CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T>())>
             detail::decay_t<T> operator|(T && t, copy_fn)
             {
                 return static_cast<T &&>(t);

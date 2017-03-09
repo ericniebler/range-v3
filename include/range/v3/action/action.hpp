@@ -101,7 +101,7 @@ namespace ranges
                 {}
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(Range<Rng &>() && Invocable<Action const&, Rng &, Rest &&...>())>
+                    CONCEPT_REQUIRES_(Range<Rng &>() && Invocable<Action const&, Rng &, Rest...>())>
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -119,7 +119,7 @@ namespace ranges
 
             template<typename Rng, typename Action,
                 CONCEPT_REQUIRES_(is_pipeable<Action>() && Range<Rng &>() &&
-                    Invocable<bitwise_or, ref_t<Rng &> &&, Action &>() &&
+                    Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
                         result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())>
             Rng & operator|=(Rng & rng, Action && action)

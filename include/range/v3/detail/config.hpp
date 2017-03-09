@@ -93,6 +93,11 @@ namespace ranges
     { return (__VA_ARGS__); }                                   \
     /**/
 
+#define RANGES_AUTO_RETURN_NOEXCEPT(...)                        \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))      \
+    { return (__VA_ARGS__); }                                   \
+    /**/
+
 #define RANGES_DECLTYPE_NOEXCEPT(...)                           \
     noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
     decltype(__VA_ARGS__)                                       \
@@ -172,6 +177,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
+#define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 // Generic configuration using SD-6 feature test macros with fallback to __cplusplus
@@ -191,11 +197,13 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-internal-declaration")
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-member-function")
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY RANGES_DIAGNOSTIC_IGNORE("-Wzero-length-array")
+#define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 #else
 #define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
+#define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT RANGES_DIAGNOSTIC_IGNORE("-Wc++1z-compat")
 #endif
 #else
 #define RANGES_DIAGNOSTIC_PUSH
@@ -210,6 +218,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
+#define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 #endif
 #endif // MSVC/Generic configuration switch
 
@@ -371,7 +380,8 @@ namespace ranges
     RANGES_DIAGNOSTIC_IGNORE_PRAGMAS            \
     RANGES_DIAGNOSTIC_IGNORE_SHADOWING          \
     RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL \
-    RANGES_DIAGNOSTIC_IGNORE_INDENTATION
+    RANGES_DIAGNOSTIC_IGNORE_INDENTATION        \
+    RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 #define RANGES_RE_ENABLE_WARNINGS RANGES_DIAGNOSTIC_POP
 #else

@@ -30,7 +30,7 @@ namespace ranges
         namespace adl_push_back_detail
         {
             template<typename Cont, typename T,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_t<Cont>, T>())>
             auto push_back(Cont && cont, T && t) ->
                 decltype((void)unwrap_reference(cont).push_back(std::forward<T>(t)))
             {
@@ -59,13 +59,13 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename T>
-                    auto requires_(Rng && rng, T &&) -> decltype(
+                    auto requires_(Rng &&rng, T &&t) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::InputRange, Rng>(),
                             concepts::is_true(meta::or_<
                                 Constructible<range_value_t<Rng>, T>,
                                 Range<T>>()),
-                            ((void)push_back(rng, std::declval<T>()), 42)
+                            ((void)push_back(rng, (T &&) t), 42)
                         ));
                 };
 

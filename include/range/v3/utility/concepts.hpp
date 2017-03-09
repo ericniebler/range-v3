@@ -105,7 +105,7 @@ namespace ranges
                 std::false_type;
 
             template<typename...Ts, typename Concept,
-                typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
+                typename = decltype(&Concept::template requires_<Ts...>)>
             auto models_(Concept *) ->
                 meta::apply<
                     meta::quote<meta::lazy::strict_and>,
@@ -124,23 +124,6 @@ namespace ranges
                 constexpr operator Head*() const { return nullptr; }
                 constexpr Head* operator()() const { return nullptr; }
             };
-
-            // Workaround https://llvm.org/bugs/show_bug.cgi?id=24181
-            template<typename T>
-            struct avoid_empty_braces_
-              : std::false_type
-            {};
-            template<typename T>
-            struct avoid_empty_braces_<std::initializer_list<T>>
-              : std::true_type
-            {};
-            template<typename T>
-            struct avoid_empty_braces_<T*>
-              : std::true_type
-            {};
-            template<typename T>
-            using avoid_empty_braces =
-                meta::_t<avoid_empty_braces_<uncvref_t<T>>>;
         }
         /// \endcond
 
@@ -191,7 +174,7 @@ namespace ranges
                 using base_concepts_t = meta::list<Concepts...>;
 
                 template<typename...Ts>
-                void requires_(Ts &&...);
+                void requires_();
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,12 +222,12 @@ namespace ranges
                 template<typename ...Ts>
                 struct same : std::true_type {};
                 template<typename T, typename ...Us>
-                struct same<T, Us...> : meta::strict_and<std::is_same<T, Us>...> {};
+                struct same<T, Us...> : meta::and_c<std::is_same<T, Us>::value...> {};
                 template<typename ...Ts>
                 using same_t = meta::_t<same<Ts...>>;
 
                 template<typename ...Ts>
-                auto requires_(Ts &&...) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(same_t<Ts...>{})
                     ));
@@ -253,19 +236,19 @@ namespace ranges
             /// \cond
             struct ImplicitlyConvertibleTo
             {
-                template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename From, typename To>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_convertible<T, U>{})
+                        concepts::is_true(std::is_convertible<From, To>{})
                     ));
             };
 
             struct ExplicitlyConvertibleTo
             {
-                template<typename T, typename U>
-                auto requires_(T && t, U &&) -> decltype(
+                template<typename From, typename To>
+                auto requires_(From (&from)()) -> decltype(
                     concepts::valid_expr(
-                        static_cast<U>(std::forward<T>(t))
+                        ((void) static_cast<To>(from()), 42)
                     ));
             };
             /// \endcond
@@ -277,7 +260,7 @@ namespace ranges
             struct DerivedFrom
             {
                 template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_base_of<U, T>{})
                     ));
@@ -288,22 +271,20 @@ namespace ranges
                 template<typename T, typename U, typename...Rest>
                 using reference_t = common_reference_t<T, U, Rest...>;
 
-                template<typename T, typename U,
-                    typename C = reference_t<T, U>>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename T, typename U>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, C, reference_t<U, T>>(),
-                        ((void)C(std::declval<T>()), 42),
-                        ((void)C(std::declval<U>()), 42)
+                        concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
+                        ((void)reference_t<T, U>(std::declval<T>()), 42),
+                        ((void)reference_t<T, U>(std::declval<U>()), 42)
                     ));
 
                 template<typename T, typename U, typename...Rest,
-                    typename CommonReference_ = CommonReference,
-                    typename C = reference_t<T, U>>
-                auto requires_(T &&, U &&, Rest&&...) -> decltype(
+                    typename CommonReference_ = CommonReference>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CommonReference_, T, U>(),
-                        concepts::model_of<CommonReference_, C, Rest...>()
+                        concepts::model_of<CommonReference_, reference_t<T, U>, Rest...>()
                     ));
             };
 
@@ -312,38 +293,40 @@ namespace ranges
                 template<typename T, typename U, typename...Rest>
                 using value_t = common_type_t<T, U, Rest...>;
 
-                template<typename T, typename U,
-                    meta::if_<std::is_same<uncvref_t<T>, uncvref_t<U>>, int> = 0>
-                auto requires_(T &&, U &&) ->
-                    void;
-
-                template<typename T, typename U,
-                    meta::if_c<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value, int> = 0,
-                    typename C = value_t<T, U>,
-                    typename R = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename T, typename U>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, C, value_t<U, T>>(),
-                        ((void)C(std::declval<T>()), 42),
-                        ((void)C(std::declval<U>()), 42),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<CommonReference, C &, R &&>()
+                        concepts::is_true(std::is_same<uncvref_t<T>, uncvref_t<U>>{})
+                    ));
+
+                template<typename T, typename U>
+                auto requires_() -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_false(std::is_same<uncvref_t<T>, uncvref_t<U>>{}),
+                        concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
+                        ((void)value_t<T, U>(std::declval<T>()), 42),
+                        ((void)value_t<T, U>(std::declval<U>()), 42),
+                        concepts::model_of<
+                            CommonReference, T const &, U const &>(),
+                        concepts::model_of<
+                            CommonReference,
+                            value_t<T, U> &,
+                            common_reference_t<T const &, U const &>>()
                     ));
 
                 template<typename T, typename U, typename...Rest,
-                    typename Common_ = Common,
-                    typename C = value_t<T, U>>
-                auto requires_(T &&, U &&, Rest&&...) -> decltype(
+                    typename Common_ = Common>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Common_, T, U>(),
-                        concepts::model_of<Common_, C, Rest...>()
+                        concepts::model_of<Common_, value_t<T, U>, Rest...>()
                     ));
             };
 
             struct Integral
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<T>{})
                     ));
@@ -353,7 +336,7 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_signed<T>{})
                     ));
@@ -363,7 +346,7 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_unsigned<T>{})
                     ));
@@ -372,7 +355,7 @@ namespace ranges
             struct Assignable
             {
                 template<typename T, typename U>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &&t, U &&u) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(static_cast<T &&>(t) = static_cast<U &&>(u))
                     ));
@@ -474,10 +457,10 @@ namespace ranges
               : refines<EqualityComparable, WeaklyOrdered>
             {
                 template<typename T>
-                void requires_(T &&);
+                void requires_();
 
                 template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<TotallyOrdered, T>(),
                         concepts::model_of<TotallyOrdered, U>()
@@ -649,7 +632,7 @@ RANGES_DIAGNOSTIC_POP
               : refines<MoveConstructible>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Assignable, T &, T &&>(),
                         concepts::model_of<Swappable, T &>()
@@ -660,13 +643,13 @@ RANGES_DIAGNOSTIC_POP
               : refines<Movable, CopyConstructible>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         // Spec requires this to be validated
                         concepts::model_of<Assignable, T &, T const &>(),
                         // Spec does not require these to be validated
                         concepts::model_of<Assignable, T &, T &>(),
-                        concepts::model_of<Assignable, T &, T const &&>()
+                        concepts::model_of<Assignable, T &, T const>()
                     ));
             };
 
@@ -699,19 +682,13 @@ RANGES_DIAGNOSTIC_POP
         template<typename T, typename U>
         using DerivedFrom = concepts::models<concepts::DerivedFrom, T, U>;
 
-        // This is an ugly hack around the fact that the core concept-checking
-        // code doesn't handle void very well.
         template<typename T, typename U, typename...Rest>
         using CommonReference =
-            meta::or_<
-                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
-                concepts::models<concepts::CommonReference, T, U, Rest...>>;
+            concepts::models<concepts::CommonReference, T, U, Rest...>;
 
         template<typename T, typename U, typename...Rest>
         using Common =
-            meta::or_<
-                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
-                concepts::models<concepts::Common, T, U, Rest...>>;
+            concepts::models<concepts::Common, T, U, Rest...>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

@@ -88,6 +88,10 @@
     #endif
 #endif
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
+RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
+
 namespace ranges
 {
     inline namespace v3
@@ -102,7 +106,7 @@ namespace ranges
                 using result_t = result_of_t<Gen&()>;
 
                 template<typename Gen, typename Result = result_t<Gen>>
-                auto requires_(Gen && gen) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<UnsignedIntegral, Result>(),
                         concepts::has_type<Result>(uncvref_t<Gen>::min()),
@@ -123,7 +127,7 @@ namespace ranges
         {
             namespace randutils
             {
-                template <typename T,
+                template<typename T,
                     CONCEPT_REQUIRES_(Integral<T>())>
                 RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
                 {
@@ -136,7 +140,7 @@ namespace ranges
                     }
                 }
 
-                template <typename T>
+                template<typename T>
                 RANGES_CXX14_CONSTEXPR std::uint32_t hash(T && value)
                 {
                     auto hasher = std::hash<uncvref_t<T>>{};
@@ -320,7 +324,7 @@ namespace ranges
 
                     std::array<IntRep, count> mixer_;
 
-                    template <typename I, typename S,
+                    template<typename I, typename S,
                         CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     void mix_entropy(I begin, S end)
@@ -358,14 +362,14 @@ namespace ranges
                     seed_seq_fe(const seed_seq_fe&)     = delete;
                     void operator=(const seed_seq_fe&)  = delete;
 
-                    template <typename T,
+                    template<typename T,
                         CONCEPT_REQUIRES_(ConvertibleTo<T const&, IntRep>())>
                     seed_seq_fe(std::initializer_list<T> init)
                     {
                         seed(init.begin(), init.end());
                     }
 
-                    template <typename I, typename S,
+                    template<typename I, typename S,
                         CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     seed_seq_fe(I begin, S end)
@@ -374,7 +378,7 @@ namespace ranges
                     }
 
                     // generating functions
-                    template <typename I, typename S,
+                    template<typename I, typename S,
                         CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>())>
                     void generate(I dest_begin, S dest_end) const
                     {
@@ -399,7 +403,7 @@ namespace ranges
                         return count;
                     }
 
-                    template <typename O,
+                    template<typename O,
                         CONCEPT_REQUIRES_(WeaklyIncrementable<O>() &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>())>
                     void param(O dest) const
@@ -440,7 +444,7 @@ namespace ranges
                         ranges::copy(mixer_copy, dest);
                     }
 
-                    template <typename I, typename S,
+                    template<typename I, typename S,
                         CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     void seed(I begin, S end)
@@ -488,13 +492,13 @@ namespace ranges
                 *       http://www.pcg-random.org/posts/cpps-random_device.html
                 */
 
-                template <typename SeedSeq>
+                template<typename SeedSeq>
                 struct auto_seeded : public SeedSeq {
                     auto_seeded()
                         : auto_seeded(randutils::local_entropy(
                             randutils::hash(this), randutils::crushto32(typeid(*this).hash_code())))
                     {}
-                    template <std::size_t N>
+                    template<std::size_t N>
                     auto_seeded(std::array<std::uint32_t, N> const& seeds)
                         : SeedSeq(seeds.begin(), seeds.end())
                     {}
@@ -573,6 +577,8 @@ namespace ranges
         /// \endcond
     }
 }
+
+RANGES_DIAGNOSTIC_POP
 
 #undef RANGES_CPU_ENTROPY
 

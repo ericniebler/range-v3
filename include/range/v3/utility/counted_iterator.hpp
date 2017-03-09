@@ -123,13 +123,13 @@ namespace ranges
                     return *it_;
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I const, T &&>())>
+                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I const, T>())>
                 void write(T && t) const
                 {
                     *it_ = (T &&) t;
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
+                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T>())>
                 void write(T && t)
                 {
                     *it_ = (T &&) t;

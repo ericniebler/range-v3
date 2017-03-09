@@ -49,7 +49,7 @@ namespace ranges
                 {
                     template<typename Rng, typename C, typename P = ident,
                         typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng&&, C&&, P&& = P{}) -> decltype(
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::model_of<concepts::ErasableRange, Rng, I, I>(),

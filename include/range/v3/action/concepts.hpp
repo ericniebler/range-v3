@@ -51,7 +51,7 @@ namespace ranges
               : refines<ForwardRange>
             {
                 template<typename T>
-                auto requires_(T&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DefaultConstructible, uncvref_t<T>>(),
                         concepts::model_of<Movable, uncvref_t<T>>(),
@@ -63,8 +63,9 @@ namespace ranges
             struct Container
               : refines<SemiContainer>
             {
-                template<typename T, typename I = detail::movable_input_iterator<range_value_t<T>>>
-                auto requires_(T&&) -> decltype(
+                template<typename T,
+                    typename I = detail::movable_input_iterator<range_value_t<T>>>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, uncvref_t<T>, I, I>()
                     ));
@@ -82,11 +83,11 @@ namespace ranges
             struct Reservable
               : refines<Container>
             {
-                template <typename C>
+                template<typename C>
                 using size_type =
                     decltype(std::declval<const C&>().size());
 
-                template <typename C, typename S = size_type<C>>
+                template<typename C, typename S = size_type<C>>
                 auto requires_(C&& c, S&& s = S{}) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral, S>(),
@@ -97,7 +98,7 @@ namespace ranges
             struct ReserveAndAssignable
               : refines<Reservable(_1), InputIterator(_2)>
             {
-                template <typename C, typename I>
+                template<typename C, typename I>
                 auto requires_(C&& c, I&& i) -> decltype(
                     concepts::valid_expr(
                         ((void)c.assign(i, i), 42)
@@ -105,14 +106,14 @@ namespace ranges
             };
         }
 
-        template <typename C>
+        template<typename C>
         using Reservable = concepts::models<concepts::Reservable, C>;
 
-        template <typename C, typename I>
+        template<typename C, typename I>
         using ReserveAndAssignable =
             concepts::models<concepts::ReserveAndAssignable, C, I>;
 
-        template <typename C>
+        template<typename C>
         using RandomAccessReservable =
             meta::strict_and<Reservable<C>, RandomAccessRange<C>>;
 

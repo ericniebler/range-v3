@@ -139,8 +139,8 @@ namespace ranges
                     InputRange<Rng>,
                     IndirectInvocable<Fun, range_iterator_t<Rng>, range_iterator_t<Rng>>,
                     ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>)>,
+                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
+                            range_common_reference_t<Rng> &&)>,
                         range_value_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
@@ -162,8 +162,8 @@ namespace ranges
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
                     CONCEPT_ASSERT_MSG(ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>)>,
+                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
+                            range_common_reference_t<Rng> &&)>,
                         range_value_t<Rng>>(),
                         "The return type of the function passed to view::partial_sum must be "
                         "convertible to the value type of the range.");
