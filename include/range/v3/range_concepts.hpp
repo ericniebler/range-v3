@@ -49,8 +49,26 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            template<typename T>
+            struct view_predicate_;
+        }
+        /// \endcond
+
         /// \addtogroup group-concepts
         /// @{
+
+        // Specialize this if the default is wrong.
+        template<typename T>
+        struct enable_view
+        {};
+
+        // Specialize this if the default is wrong.
+        template<typename T>
+        struct disable_sized_range : std::false_type {};
+
         namespace concepts
         {
             ///
@@ -185,21 +203,6 @@ namespace ranges
                     ));
             };
 
-            /// INTERNAL ONLY
-            /// A type is ContainerLike_ if it is Range and the const-ness of its
-            /// reference type is sensitive to the const-ness of the Container
-            struct ContainerLike_
-              : refines<InputRange>
-            {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(
-                            std::is_same<reference_t<detail::as_ref_t<T>>,
-                                         reference_t<detail::as_cref_t<T>>>())
-                    ));
-            };
-
             ///
             /// View concepts below
             ///
@@ -211,7 +214,7 @@ namespace ranges
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SemiRegular, T>(),
-                        concepts::is_true(is_view<T>())
+                        concepts::is_true(detail::view_predicate_<T>())
                     ));
             };
 
@@ -271,10 +274,6 @@ namespace ranges
 
         template<typename T>
         using SizedRange = concepts::models<concepts::SizedRange, T>;
-
-        /// INTERNAL ONLY
-        template<typename T>
-        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
 
         template<typename T>
         using View = concepts::models<concepts::View, T>;
@@ -383,19 +382,55 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename T>
+            std::is_same<reference_t<concepts::Range::iterator_t<T>>, reference_t<concepts::Range::iterator_t<T const>>>
+            view_like_(int);
+
+            template<typename T>
+            std::false_type
+            view_like_(long);
+
+            template<typename T>
+            using view_like = decltype(detail::view_like_<T>(42));
+
             // Something is a view if it's a Range and either:
             //  - It doesn't look like a container, or
             //  - It's derived from view_base
             template<typename T>
-            struct is_view_impl_
-              : std::integral_constant<
-                    bool,
-                    Range<T>() && (!ContainerLike_<T>() || DerivedFrom<T, view_base>())
-                >
+            struct view_predicate_
+              : meta::_t<meta::if_<
+                    meta::is_trait<enable_view<T>>,
+                    enable_view<T>,
+                    meta::bool_<view_like<T>() || DerivedFrom<T, view_base>()>>>
+            {};
+
+            template<typename T>
+            struct view_predicate_<std::initializer_list<T>>
+              : std::false_type
+            {};
+
+            template<class Key, class Compare, class Alloc>
+            struct view_predicate_<std::set<Key, Compare, Alloc>>
+              : std::false_type
+            {};
+
+            template<class Key, class Compare, class Alloc>
+            struct view_predicate_<std::multiset<Key, Compare, Alloc>>
+              : std::false_type
+            {};
+
+            template<class Key, class Hash, class Pred, class Alloc>
+            struct view_predicate_<std::unordered_set<Key, Hash, Pred, Alloc>>
+              : std::false_type
+            {};
+
+            template<class Key, class Hash, class Pred, class Alloc>
+            struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
+              : std::false_type
             {};
 
             template<typename T, std::size_t N>
-            struct is_view_impl_<T[N]>
+            struct view_predicate_<T[N]>
               : std::false_type
             {};
         }
@@ -406,42 +441,10 @@ namespace ranges
 
         // Specialize this if the default is wrong.
         template<typename T>
-        struct disable_sized_range : std::false_type {};
-
-        // Specialize this if the default is wrong.
-        template<typename T, typename Enable>
-        struct is_view
-          : meta::if_<
-                std::is_same<T, uncvref_t<T>>,
-                detail::is_view_impl_<T>,
-                is_view<uncvref_t<T>>>
-        {};
-
-        // By default, the is_view default heuristic guesses wrong for these container types:
-        template<typename T>
-        struct is_view<std::initializer_list<T>>
-          : std::false_type
-        {};
-
-        template<class Key, class Compare, class Alloc>
-        struct is_view<std::set<Key, Compare, Alloc>>
-          : std::false_type
-        {};
-
-        template<class Key, class Compare, class Alloc>
-        struct is_view<std::multiset<Key, Compare, Alloc>>
-          : std::false_type
-        {};
-
-        template<class Key, class Hash, class Pred, class Alloc>
-        struct is_view<std::unordered_set<Key, Hash, Pred, Alloc>>
-          : std::false_type
-        {};
-
-        template<class Key, class Hash, class Pred, class Alloc>
-        struct is_view<std::unordered_multiset<Key, Hash, Pred, Alloc>>
-          : std::false_type
-        {};
+        using is_view
+            RANGES_DEPRECATED("If you need to override the logic of the View concept, please use ranges::enable_view."
+                              "Otherwise, please use the View concept directly.") =
+                View<T>;
 
         /// @}
     }

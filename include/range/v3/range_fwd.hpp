@@ -351,8 +351,8 @@ namespace ranges
         template<typename Rng>
         using is_infinite = meta::bool_<range_cardinality<Rng>::value == infinite>;
 
-        template<typename T, typename Enable = void>
-        struct is_view;
+        template<typename T>
+        struct enable_view;
 
         template<typename R>
         struct disable_sized_range;
