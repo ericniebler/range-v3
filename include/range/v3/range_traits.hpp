@@ -62,10 +62,11 @@ namespace ranges
         using range_common_iterator_t = common_iterator_t<iterator_t<Rng>, sentinel_t<Rng>>;
 
         template<typename Rng>
-        using safe_iterator_t = decltype(ranges::safe_begin(std::declval<Rng>()));
-
-        template<typename Rng>
-        using safe_sentinel_t = decltype(ranges::safe_end(std::declval<Rng>()));
+        using safe_iterator_t =
+            meta::if_<
+                std::is_lvalue_reference<Rng>,
+                meta::if_<Range<Rng>, iterator_t<Rng>>,
+                dangling<iterator_t<Rng>>>;
 
         /// \cond
         // Deprecated type aliases
@@ -97,12 +98,15 @@ namespace ranges
         template<typename Rng>
         using range_safe_iterator_t
             RANGES_DEPRECATED("Please use ranges::safe_iterator_t instead") =
-                decltype(ranges::safe_begin(std::declval<Rng>()));
+                safe_iterator_t<Rng>;
 
         template<typename Rng>
         using range_safe_sentinel_t
             RANGES_DEPRECATED("Please use ranges::safe_sentinel_t instead") =
-                decltype(ranges::safe_end(std::declval<Rng>()));
+                meta::if_<
+                    std::is_lvalue_reference<Rng>,
+                    meta::if_<Range<Rng>, sentinel_t<Rng>>,
+                    dangling<sentinel_t<Rng>>>;
 
         // Deprecated metafunctions
         template<typename Rng>

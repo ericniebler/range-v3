@@ -82,7 +82,7 @@ namespace ranges
             struct is_adl_swappable_;
 
             template<typename T,
-                typename = decltype(std::swap(std::declval<T &&>(), std::declval<T &&>()))>
+                typename = decltype(std::swap(std::declval<T>(), std::declval<T>()))>
             std::true_type try_std_swap_(int);
 
             template<typename T>
@@ -105,9 +105,9 @@ namespace ranges
                 // ... then:
                 // this signature is well-formed but deleted, intentionally
                 // creating an ambiguity with std::swap if it would be found
-                // by ADL. If std::swap would *not* be found by ADL, then the
-                // overload set for unqualified swap is empty and the type is
-                // not swappable.
+                // by ADL. If std::swap would *not* be found by ADL, then this
+                // is the only overload in the overload set and the type is
+                // deemed not swappable.
             swap(T &, T &) = delete;
 
             template<typename T, std::size_t N,
@@ -134,7 +134,7 @@ namespace ranges
             swap(T (&)[N], T (&)[N]) = delete;
 
             template<typename T, typename U,
-                typename = decltype(swap(std::declval<T &&>(), std::declval<U &&>()))>
+                typename = decltype(swap(std::declval<T>(), std::declval<U>()))>
             std::true_type try_adl_swap_(int);
 
             template<typename T, typename U>
@@ -265,7 +265,7 @@ namespace ranges
             struct is_adl_indirectly_swappable_;
 
             template<typename T,
-                typename = decltype(std::iter_swap(std::declval<T &&>(), std::declval<T &&>()))>
+                typename = decltype(std::iter_swap(std::declval<T>(), std::declval<T>()))>
             std::true_type try_std_iter_swap_(int);
 
             template<typename T>
@@ -310,7 +310,7 @@ namespace ranges
             iter_swap(T, T) = delete;
 
             template<typename T, typename U,
-                typename = decltype(iter_swap(std::declval<T &&>(), std::declval<U &&>()))>
+                typename = decltype(iter_swap(std::declval<T>(), std::declval<U>()))>
             std::true_type try_adl_iter_swap_(int);
 
             template<typename T, typename U>
