@@ -55,7 +55,7 @@ int main()
     models<concepts::View>(aux::copy(rng2));
     models<concepts::RandomAccessRange>(rng2);
     models<concepts::BoundedRange>(rng2);
-    models<concepts::SizedRange>(rng2);
+    models_not<concepts::SizedRange>(rng2);
     CHECK(rng2.size() == 5u);
     auto const & crng2 = rng2;
     models_not<concepts::Range>(crng2);

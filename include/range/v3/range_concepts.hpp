@@ -65,10 +65,6 @@ namespace ranges
         struct enable_view
         {};
 
-        // Specialize this if the default is wrong.
-        template<typename T>
-        struct disable_sized_range : std::false_type {};
-
         namespace concepts
         {
             ///
