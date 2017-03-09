@@ -1,0 +1,4 @@
+var structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1adjacent__filter__view_3_01_ts_8_8_8_01_4_01_4 =
+[
+    [ "type", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1adjacent__filter__view_3_01_ts_8_8_8_01_4_01_4.html#ad3c69ed42c1f0dd4fbece27556e0024d", null ]
+];

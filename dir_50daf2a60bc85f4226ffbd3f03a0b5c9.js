@@ -27,8 +27,7 @@ var dir_50daf2a60bc85f4226ffbd3f03a0b5c9 =
       [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1slice__fn_1_1_concept_impl.html", "structranges_1_1v3_1_1action_1_1slice__fn_1_1_concept_impl" ]
     ] ],
     [ "sort.hpp", "action_2sort_8hpp.html", [
-      [ "sort_fn", "structranges_1_1v3_1_1action_1_1sort__fn.html", "structranges_1_1v3_1_1action_1_1sort__fn" ],
-      [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1sort__fn_1_1_concept_impl.html", "structranges_1_1v3_1_1action_1_1sort__fn_1_1_concept_impl" ]
+      [ "sort_fn", "structranges_1_1v3_1_1action_1_1sort__fn.html", "structranges_1_1v3_1_1action_1_1sort__fn" ]
     ] ],
     [ "split.hpp", "action_2split_8hpp.html", [
       [ "split_fn", "structranges_1_1v3_1_1action_1_1split__fn.html", "structranges_1_1v3_1_1action_1_1split__fn" ]

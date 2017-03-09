@@ -1,4 +1,5 @@
 var memory_8hpp =
 [
-    [ "make_counted_raw_storage_iterator", "memory_8hpp.html#ga7788de72e9a9997bd85308f363955f51", null ]
+    [ "iter_ref", "memory_8hpp.html#gaf00564590e452ae2daa95d275f0503fd", null ],
+    [ "make_raw_buffer", "memory_8hpp.html#ga3c102fcaafb2f4255b7ed5b7d9692326", null ]
 ];

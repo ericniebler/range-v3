@@ -1,14 +1,13 @@
 var searchData=
 [
   ['back_5ffn',['back_fn',['../structranges_1_1v3_1_1back__fn.html',1,'ranges::v3']]],
+  ['back_5finsert_5fiterator',['back_insert_iterator',['../structranges_1_1v3_1_1back__insert__iterator.html',1,'ranges::v3']]],
   ['back_5finserter_5ffn',['back_inserter_fn',['../structranges_1_1v3_1_1back__inserter__fn.html',1,'ranges::v3']]],
   ['bad_5fany_5fcast',['bad_any_cast',['../structranges_1_1v3_1_1bad__any__cast.html',1,'ranges::v3']]],
   ['basic_5fcommon_5freference',['basic_common_reference',['../structranges_1_1v3_1_1basic__common__reference.html',1,'ranges::v3']]],
   ['basic_5fiterator',['basic_iterator',['../structranges_1_1v3_1_1basic__iterator.html',1,'ranges::v3']]],
   ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
   ['basic_5fmixin_3c_20adaptor_5fcursor_20_3e',['basic_mixin&lt; adaptor_cursor &gt;',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
-  ['basic_5fmixin_3c_20adaptor_5fsentinel_20_3e',['basic_mixin&lt; adaptor_sentinel &gt;',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
-  ['basic_5fsentinel',['basic_sentinel',['../structranges_1_1v3_1_1basic__sentinel.html',1,'ranges::v3']]],
   ['basic_5fview',['basic_view',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['basic_5fview_3c_20cardinality_20_3e',['basic_view&lt; Cardinality &gt;',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['begin_5ftag',['begin_tag',['../structranges_1_1v3_1_1begin__tag.html',1,'ranges::v3']]],
@@ -30,10 +29,9 @@ var searchData=
   ['boundedview',['BoundedView',['../structranges_1_1v3_1_1concepts_1_1_bounded_view.html',1,'ranges::v3::concepts']]],
   ['box',['box',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20adaptor_5fcursor_20_3e',['box&lt; adaptor_cursor &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
-  ['box_3c_20adaptor_5fsentinel_20_3e',['box&lt; adaptor_sentinel &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20element_2c_20tag_2c_20detail_3a_3abox_5fcompress_3a_3acoalesce_20_3e',['box&lt; Element, Tag, detail::box_compress::coalesce &gt;',['../classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1coalesce_01_4.html',1,'ranges::v3']]],
   ['box_3c_20element_2c_20tag_2c_20detail_3a_3abox_5fcompress_3a_3aebo_20_3e',['box&lt; Element, Tag, detail::box_compress::ebo &gt;',['../classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1ebo_01_4.html',1,'ranges::v3']]],
-  ['box_3c_20function_5ftype_3c_20fn_20_3e_20_3e',['box&lt; function_type&lt; Fn &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20fn_2c_20indirected_3c_20fn_20_3e_20_3e',['box&lt; Fn, indirected&lt; Fn &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20offset_5ft_20_3e',['box&lt; offset_t &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20t_20_3e',['box&lt; T &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

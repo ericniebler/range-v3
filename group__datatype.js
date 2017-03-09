@@ -5,5 +5,5 @@ var group__datatype =
     [ "Extension", "group__extension.html", "group__extension" ],
     [ "lazy", "group__lazy__datatype.html", "group__lazy__datatype" ],
     [ "nil_", "structmeta_1_1nil__.html", null ],
-    [ "inherit", "group__datatype.html#ga566e84a9156a9495cde951ebda1c3abd", null ]
+    [ "inherit", "group__datatype.html#ga4ee1f5c67cfebce46ba874af9d41ae30", null ]
 ];

@@ -32,12 +32,10 @@ var searchData=
   ['any',['any',['../structranges_1_1v3_1_1any.html',1,'ranges::v3']]],
   ['any_5fof_5ffn',['any_of_fn',['../structranges_1_1v3_1_1any__of__fn.html',1,'ranges::v3']]],
   ['any_5fview',['any_view',['../structranges_1_1v3_1_1any__view.html',1,'ranges::v3']]],
-  ['apply',['apply',['../structmeta_1_1v1_1_1extension_1_1apply.html',1,'meta::v1::extension']]],
-  ['apply',['apply',['../structmeta_1_1extension_1_1apply.html',1,'meta::extension']]],
+  ['apply',['apply',['../structmeta_1_1extension_1_1apply.html',1,'meta::extension::apply&lt; F, List &gt;'],['../structmeta_1_1v1_1_1extension_1_1apply.html',1,'meta::v1::extension::apply&lt; F, List &gt;']]],
   ['apply_3c_20f_2c_20integer_5fsequence_3c_20t_2c_20is_2e_2e_2e_20_3e_20_3e',['apply&lt; F, integer_sequence&lt; T, Is... &gt; &gt;',['../structmeta_1_1extension_1_1apply_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_01_4_01_4.html',1,'meta::extension']]],
   ['apply_3c_20f_2c_20ret_28args_2e_2e_2e_29_3e',['apply&lt; F, Ret(Args...)&gt;',['../structmeta_1_1extension_1_1apply_3_01_f_00_01_ret_07_args_8_8_8_08_4.html',1,'meta::extension']]],
   ['apply_3c_20f_2c_20t_3c_20ts_2e_2e_2e_20_3e_20_3e',['apply&lt; F, T&lt; Ts... &gt; &gt;',['../structmeta_1_1extension_1_1apply_3_01_f_00_01_t_3_01_ts_8_8_8_01_4_01_4.html',1,'meta::extension']]],
-  ['as_5ffunction_5ffn',['as_function_fn',['../structranges_1_1v3_1_1as__function__fn.html',1,'ranges::v3']]],
   ['assignable',['Assignable',['../structranges_1_1v3_1_1concepts_1_1_assignable.html',1,'ranges::v3::concepts']]],
   ['at_5ffn',['at_fn',['../structranges_1_1v3_1_1at__fn.html',1,'ranges::v3']]]
 ];

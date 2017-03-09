@@ -1,0 +1,4 @@
+var structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1adjacent__remove__if__view_3_01_ts6f038c260369c90e57b8c1b607f71300 =
+[
+    [ "type", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1adjacent__remove__if__view_3_01_ts6f038c260369c90e57b8c1b607f71300.html#a8cff0460ec12974d3e2beaaac986c2a5", null ]
+];

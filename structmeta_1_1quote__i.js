@@ -1,4 +1,4 @@
 var structmeta_1_1quote__i =
 [
-    [ "invoke", "structmeta_1_1quote__i.html#a211dad101e93c0f7bd22d0df3a246ee9", null ]
+    [ "invoke", "structmeta_1_1quote__i.html#a1a98f88c40337abe03c086be6e971bfa", null ]
 ];

@@ -1,0 +1,4 @@
+var structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1take__while__view_3_01_ts_8_8_8_9a621c754c93d941e38dbc3e4c17a5bc =
+[
+    [ "type", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1take__while__view_3_01_ts_8_8_8_9a621c754c93d941e38dbc3e4c17a5bc.html#a2cb35bac4f1abbb12577cde86f3922f0", null ]
+];

@@ -1,5 +1,5 @@
 var unique__copy_8hpp =
 [
-    [ "UniqueCopyable", "unique__copy_8hpp.html#gad00141451d1fafde3baee27ab80189b8", null ],
+    [ "UniqueCopyable", "unique__copy_8hpp.html#ga0ede7754dc614627d77044396a3c429c", null ],
     [ "unique_copy", "unique__copy_8hpp.html#ga487eba78c844adbe80e2051c2d090349", null ]
 ];

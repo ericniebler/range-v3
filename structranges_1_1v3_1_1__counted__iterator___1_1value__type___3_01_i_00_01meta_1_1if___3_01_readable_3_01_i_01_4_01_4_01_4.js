@@ -1,0 +1,4 @@
+var structranges_1_1v3_1_1__counted__iterator___1_1value__type___3_01_i_00_01meta_1_1if___3_01_readable_3_01_i_01_4_01_4_01_4 =
+[
+    [ "type", "structranges_1_1v3_1_1__counted__iterator___1_1value__type___3_01_i_00_01meta_1_1if___3_01_readable_3_01_i_01_4_01_4_01_4.html#a504eba4a9dd2bc0dd03c0e7a51483724", null ]
+];

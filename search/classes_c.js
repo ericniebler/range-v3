@@ -5,6 +5,6 @@ var searchData=
   ['nil_5f',['nil_',['../structmeta_1_1nil__.html',1,'meta']]],
   ['none_5fof_5ffn',['none_of_fn',['../structranges_1_1v3_1_1none__of__fn.html',1,'ranges::v3']]],
   ['not_5fequal_5fto',['not_equal_to',['../structranges_1_1v3_1_1not__equal__to.html',1,'ranges::v3']]],
-  ['not_5ffn',['not_fn',['../structranges_1_1v3_1_1not__fn.html',1,'ranges::v3']]],
+  ['not_5ffn_5ffn',['not_fn_fn',['../structranges_1_1v3_1_1not__fn__fn.html',1,'ranges::v3']]],
   ['nth_5felement_5ffn',['nth_element_fn',['../structranges_1_1v3_1_1nth__element__fn.html',1,'ranges::v3']]]
 ];

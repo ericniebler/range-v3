@@ -4,7 +4,7 @@ var dir_7e8da53cb0bc1762e5680ccc5286e997 =
     [ "associated_types.hpp", "associated__types_8hpp.html", null ],
     [ "basic_iterator.hpp", "basic__iterator_8hpp.html", "basic__iterator_8hpp" ],
     [ "box.hpp", "box_8hpp.html", "box_8hpp" ],
-    [ "common_iterator.hpp", "common__iterator_8hpp.html", null ],
+    [ "common_iterator.hpp", "common__iterator_8hpp.html", "common__iterator_8hpp" ],
     [ "common_tuple.hpp", "common__tuple_8hpp.html", "common__tuple_8hpp" ],
     [ "common_type.hpp", "common__type_8hpp.html", [
       [ "tuple", "classstd_1_1tuple.html", null ]
@@ -17,6 +17,7 @@ var dir_7e8da53cb0bc1762e5680ccc5286e997 =
     [ "functional.hpp", "functional_8hpp.html", "functional_8hpp" ],
     [ "get.hpp", "get_8hpp.html", "get_8hpp" ],
     [ "infinity.hpp", "infinity_8hpp.html", null ],
+    [ "invoke.hpp", "invoke_8hpp.html", "invoke_8hpp" ],
     [ "iterator.hpp", "iterator_8hpp.html", "iterator_8hpp" ],
     [ "iterator_concepts.hpp", "iterator__concepts_8hpp.html", "iterator__concepts_8hpp" ],
     [ "iterator_traits.hpp", "iterator__traits_8hpp.html", "iterator__traits_8hpp" ],
@@ -25,6 +26,7 @@ var dir_7e8da53cb0bc1762e5680ccc5286e997 =
     [ "nullptr_v.hpp", "nullptr__v_8hpp.html", "nullptr__v_8hpp" ],
     [ "optional.hpp", "optional_8hpp.html", null ],
     [ "random.hpp", "random_8hpp.html", "random_8hpp" ],
+    [ "scope_exit.hpp", "scope__exit_8hpp.html", "scope__exit_8hpp" ],
     [ "semiregular.hpp", "semiregular_8hpp.html", "semiregular_8hpp" ],
     [ "swap.hpp", "swap_8hpp.html", "swap_8hpp" ],
     [ "tagged_pair.hpp", "tagged__pair_8hpp.html", "tagged__pair_8hpp" ],

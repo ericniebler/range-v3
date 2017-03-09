@@ -12,8 +12,6 @@ var searchData=
   ['minmax_2ehpp',['minmax.hpp',['../minmax_8hpp.html',1,'']]],
   ['minmax_5felement_2ehpp',['minmax_element.hpp',['../minmax__element_8hpp.html',1,'']]],
   ['mismatch_2ehpp',['mismatch.hpp',['../mismatch_8hpp.html',1,'']]],
-  ['move_2ehpp',['move.hpp',['../utility_2move_8hpp.html',1,'']]],
-  ['move_2ehpp',['move.hpp',['../view_2move_8hpp.html',1,'']]],
-  ['move_2ehpp',['move.hpp',['../algorithm_2move_8hpp.html',1,'']]],
+  ['move_2ehpp',['move.hpp',['../algorithm_2move_8hpp.html',1,'(Global Namespace)'],['../utility_2move_8hpp.html',1,'(Global Namespace)'],['../view_2move_8hpp.html',1,'(Global Namespace)']]],
   ['move_5fbackward_2ehpp',['move_backward.hpp',['../move__backward_8hpp.html',1,'']]]
 ];

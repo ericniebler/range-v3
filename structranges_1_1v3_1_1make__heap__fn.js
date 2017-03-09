@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1make__heap__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1make__heap__fn.html#a90af32112ee140b5ff83d6248dbe387b", null ],
-    [ "operator()", "structranges_1_1v3_1_1make__heap__fn.html#a85dd39c422c208817d4aecab1b7a4f7c", null ]
+    [ "operator()", "structranges_1_1v3_1_1make__heap__fn.html#a1fb1ba22a8777f6141ca1c6417118576", null ],
+    [ "operator()", "structranges_1_1v3_1_1make__heap__fn.html#a6e327092eb5f6e0a7bbc749abf5494c8", null ]
 ];

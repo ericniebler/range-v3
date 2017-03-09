@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['quote_5ftrait',['quote_trait',['../group__composition.html#gac6c8e7f22915d3dc4b3d5aff59752f92',1,'meta']]],
-  ['quote_5ftrait_5fi',['quote_trait_i',['../group__composition.html#ga8518a9e6a4cfb3bf77582f91b552de13',1,'meta']]]
+  ['quote_5ftrait',['quote_trait',['../group__composition.html#ga945a0c21082eec9a2c7b9b8bda15e580',1,'meta']]],
+  ['quote_5ftrait_5fi',['quote_trait_i',['../group__composition.html#ga4e3348a777312c3f3b7cc0d6cd93a240',1,'meta']]]
 ];

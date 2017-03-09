@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1set__union__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1set__union__fn.html#a7d8eab5f4890acac888522dbbe83ab8d", null ],
-    [ "operator()", "structranges_1_1v3_1_1set__union__fn.html#a8ad590385b1dbab0bb9ae5310fbcd3cf", null ]
+    [ "operator()", "structranges_1_1v3_1_1set__union__fn.html#ab34e25d19c40a530be0eb00a134935e8", null ],
+    [ "operator()", "structranges_1_1v3_1_1set__union__fn.html#a98383919d8e1c8967138aff450d60ca2", null ]
 ];

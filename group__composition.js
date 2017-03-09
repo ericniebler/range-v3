@@ -9,17 +9,17 @@ var group__composition =
     ] ],
     [ "compose", "structmeta_1_1compose.html", null ],
     [ "flip", "structmeta_1_1flip.html", [
-      [ "invoke", "structmeta_1_1flip.html#a720dbbdef122313d1178e31d31c54537", null ]
+      [ "invoke", "structmeta_1_1flip.html#a3416cadde54b3542f776355282316233", null ]
     ] ],
     [ "quote", "structmeta_1_1quote.html", [
-      [ "invoke", "structmeta_1_1quote.html#abd8c2aa60ac715f0803d3d35a4576ccd", null ]
+      [ "invoke", "structmeta_1_1quote.html#afae0f8b20da9e2adc89acb9aa8e49a21", null ]
     ] ],
     [ "quote_i", "structmeta_1_1quote__i.html", [
-      [ "invoke", "structmeta_1_1quote__i.html#a211dad101e93c0f7bd22d0df3a246ee9", null ]
+      [ "invoke", "structmeta_1_1quote__i.html#a1a98f88c40337abe03c086be6e971bfa", null ]
     ] ],
     [ "curry", "group__composition.html#ga208c20d6d38a9efe6230dd116bd20758", null ],
     [ "on", "group__composition.html#ga5509ba80767f533bd5ebb33f6c8cc60a", null ],
-    [ "quote_trait", "group__composition.html#gac6c8e7f22915d3dc4b3d5aff59752f92", null ],
-    [ "quote_trait_i", "group__composition.html#ga8518a9e6a4cfb3bf77582f91b552de13", null ],
+    [ "quote_trait", "group__composition.html#ga945a0c21082eec9a2c7b9b8bda15e580", null ],
+    [ "quote_trait_i", "group__composition.html#ga4e3348a777312c3f3b7cc0d6cd93a240", null ],
     [ "uncurry", "group__composition.html#ga28038544178439e161d464466adc7f62", null ]
 ];
