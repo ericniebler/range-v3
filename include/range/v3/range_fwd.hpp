@@ -76,12 +76,10 @@ namespace ranges
         }
         using end_fn = _end_::fn;
 
-        namespace adl_size_detail
+        namespace _size_
         {
-            struct size_fn;
+            struct fn;
         }
-
-        using adl_size_detail::size_fn;
         /// \endcond
 
         template<typename...>
