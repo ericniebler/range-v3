@@ -112,22 +112,22 @@ namespace ranges
             #endif
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, iterator_size_t<I> size)
               : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, iterator_size_t<I> size)
               : sized_iterator_range{detail::move(rng).first(), detail::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
               : sized_iterator_range{detail::move(rng).rng_.first(), detail::move(rng).rng_.second, rng.size_}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Assignable<I &, X &&>() && Assignable<S &, Y &&>())>
+                CONCEPT_REQUIRES_(Assignable<I &, X>() && Assignable<S &, Y>())>
             sized_iterator_range &operator=(sized_iterator_range<X, Y> rng)
             {
                 rng_ = detail::move(rng).rng_;

@@ -39,6 +39,10 @@
 /// \defgroup group-concepts Concepts
 /// Concept-checking classes and utilities
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
+RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
+
 namespace ranges
 {
     inline namespace v3
@@ -278,15 +282,17 @@ namespace ranges
             struct from_end_;
 
             template<typename ...Ts>
-            void ignore_unused(Ts &&...)
-            {}
+            constexpr int ignore_unused(Ts &&...)
+            {
+                return 42;
+            }
 
             #if defined(__clang__) && !defined(_LIBCPP_VERSION)
-                template <class T, class Arg = T>
+                template<class T, class Arg = T>
                 struct is_trivially_copy_assignable
                   : meta::bool_<__is_trivially_assignable(T &, Arg const&)>
                 {};
-                template <class T, class Arg = T>
+                template<class T, class Arg = T>
                 struct is_trivially_move_assignable
                   : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
                 {};
@@ -758,5 +764,7 @@ namespace ranges
         }
     }
 }
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

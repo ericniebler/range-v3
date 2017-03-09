@@ -105,13 +105,13 @@ namespace ranges
 
         #ifndef RANGES_DOXYGEN_INVOKED
             template<typename Arg, typename Val = detail::decay_t<Arg>,
-                CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg &&>()))>
+                CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg>()))>
             void operator()(Arg &&) const
             {
                 CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
                     "The object passed to yield must be a model of the CopyConstructible "
                     "concept; that is, it needs to be copy and move constructible, and destructible.");
-                CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg &&>(),
+                CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg>(),
                     "The object type passed to yield must be initializable from the "
                     "actual argument expression.");
             }
@@ -167,7 +167,7 @@ namespace ranges
         template<typename Rng, typename Fun,
             CONCEPT_REQUIRES_(Range<Rng>() && CopyConstructible<Fun>() &&
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
-                Range<result_of_t<Fun&(range_common_reference_t<Rng>)>>())>
+                Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())>
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(std::forward<Rng>(rng), std::move(fun)))
         {

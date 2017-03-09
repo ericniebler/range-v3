@@ -28,13 +28,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        template <typename I, typename O, typename BOp = plus, typename P = ident,
+        template<typename I, typename O, typename BOp = plus, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invocable::result_t<P&, V>,
             typename Y = concepts::Invocable::result_t<BOp&, X, X>>
         using PartialSummable = meta::strict_and<
             InputIterator<I>,
-            OutputIterator<O, X &&>,
+            OutputIterator<O, X>,
             Invocable<P&, V>,
             CopyConstructible<uncvref_t<X>>,
             Invocable<BOp&, X, X>,
@@ -42,7 +42,7 @@ namespace ranges
 
         struct partial_sum_fn
         {
-            template <typename I, typename S, typename O, typename BOp = plus,
+            template<typename I, typename S, typename O, typename BOp = plus,
                 typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && PartialSummable<I, O, BOp, P>())>
             tagged_pair<tag::in(I), tag::out(O)>
@@ -66,7 +66,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            template <typename I, typename S, typename O, typename S2,
+            template<typename I, typename S, typename O, typename S2,
                 typename BOp = plus, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
                     PartialSummable<I, O, BOp, P>())>
@@ -92,7 +92,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            template <typename Rng, typename ORef, typename BOp = plus,
+            template<typename Rng, typename ORef, typename BOp = plus,
                 typename P = ident, typename I = range_iterator_t<Rng>,
                 typename O = uncvref_t<ORef>,
                 CONCEPT_REQUIRES_(Range<Rng>() && PartialSummable<I, O, BOp, P>())>
@@ -103,7 +103,7 @@ namespace ranges
                                std::move(bop), std::move(proj));
             }
 
-            template <typename Rng, typename ORng, typename BOp = plus,
+            template<typename Rng, typename ORng, typename BOp = plus,
                 typename P = ident, typename I = range_iterator_t<Rng>,
                 typename O = range_iterator_t<ORng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Range<ORng>() &&

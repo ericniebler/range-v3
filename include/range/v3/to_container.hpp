@@ -51,7 +51,7 @@ namespace ranges
               : pipeable<to_container_fn<ContainerMetafunctionClass>>
             {
             private:
-                template <typename C, typename R>
+                template<typename C, typename R>
                 using ReserveConcept =
                     meta::strict_and<
                         ReserveAndAssignable<C, range_common_iterator_t<R>>,

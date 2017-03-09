@@ -47,7 +47,7 @@ namespace ranges
                 {
                     template<typename Rng, typename F, typename P = ident,
                         typename I = range_iterator_t<Rng>>
-                        auto requires_(Rng&&, F&&, P&& = P{}) -> decltype(
+                        auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::InputRange, Rng>(),
                             concepts::is_true(Transformable1<I, I, F, P>())
@@ -83,7 +83,7 @@ namespace ranges
                         "common reference type if no projection is specified.");
                     CONCEPT_ASSERT_MSG(Writable<range_iterator_t<Rng>,
                             concepts::Invocable::result_t<F&,
-                                concepts::Invocable::result_t<P&, range_common_reference_t<Rng>>> &&>(),
+                                concepts::Invocable::result_t<P&, range_common_reference_t<Rng>>>>(),
                         "The result type of the function passed to action::transform must "
                         "be writable back into the source range.");
                 }

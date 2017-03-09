@@ -33,7 +33,7 @@ namespace ranges
         namespace adl_insert_detail
         {
             template<typename Cont, typename T,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_t<Cont>, T>())>
             auto insert(Cont && cont, T && t) ->
                 decltype(unwrap_reference(cont).insert(std::forward<T>(t)))
             {
@@ -60,7 +60,7 @@ namespace ranges
 
             template<typename Cont, typename I, typename T,
                 CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<I>() &&
-                    Constructible<range_value_t<Cont>, T &&>())>
+                    Constructible<range_value_t<Cont>, T>())>
             auto insert(Cont && cont, I p, T && t) ->
                 decltype(unwrap_reference(cont).insert(p, std::forward<T>(t)))
             {
@@ -69,7 +69,7 @@ namespace ranges
 
             template<typename Cont, typename I, typename N, typename T,
                 CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<I>() && Integral<N>() &&
-                    Constructible<range_value_t<Cont>, T &&>())>
+                    Constructible<range_value_t<Cont>, T>())>
             auto insert(Cont && cont, I p, N n, T && t) ->
                 decltype(unwrap_reference(cont).insert(p, n, std::forward<T>(t)))
             {
@@ -149,7 +149,7 @@ namespace ranges
             struct insert_fn
             {
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Range<Rng>() && Constructible<range_value_t<Rng>, T &&>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && Constructible<range_value_t<Rng>, T>())>
                 auto operator()(Rng && rng, T && t) const ->
                     decltype(insert(std::forward<Rng>(rng), std::forward<T>(t)))
                 {
@@ -184,7 +184,7 @@ namespace ranges
 
                 template<typename Rng, typename I, typename T,
                     CONCEPT_REQUIRES_(Range<Rng>() && Iterator<I>() &&
-                        Constructible<range_value_t<Rng>, T &&>())>
+                        Constructible<range_value_t<Rng>, T>())>
                 auto operator()(Rng && rng, I p, T && t) const ->
                     decltype(insert(std::forward<Rng>(rng), p, std::forward<T>(t)))
                 {
@@ -211,7 +211,7 @@ namespace ranges
 
                 template<typename Rng, typename I, typename N, typename T,
                     CONCEPT_REQUIRES_(Range<Rng>() && Iterator<I>() && Integral<N>()
-                        && Constructible<range_value_t<Rng>, T &&>())>
+                        && Constructible<range_value_t<Rng>, T>())>
                 auto operator()(Rng && rng, I p, N n, T && t) const ->
                     decltype(insert(std::forward<Rng>(rng), p, n, std::forward<T>(t)))
                 {
