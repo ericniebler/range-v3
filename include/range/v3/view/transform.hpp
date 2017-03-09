@@ -272,7 +272,7 @@ namespace ranges
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
-            template <class Self>
+            template<class Self>
             static constexpr size_type_ size_(Self& self)
             {
                 return ranges::min(
@@ -436,18 +436,18 @@ namespace ranges
                 using Concept = meta::and_<
                     InputRange<Rng>,
                     CopyConstructible<Fun>,
-                    Invocable<Fun&, range_reference_t<Rng> &&>,
+                    Invocable<Fun&, range_reference_t<Rng>>,
                     meta::not_<Same<void, concepts::Invocable::result_t<
-                        Fun&, range_reference_t<Rng> &&>>>>;
+                        Fun&, range_reference_t<Rng>>>>>;
 
                 template<typename Rng1, typename Rng2, typename Fun>
                 using Concept2 = meta::and_<
                     InputRange<Rng1>,
                     InputRange<Rng2>,
                     CopyConstructible<Fun>,
-                    Invocable<Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>,
+                    Invocable<Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>,
                     meta::not_<Same<void, concepts::Invocable::result_t<
-                        Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>>>>;
+                        Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -477,12 +477,12 @@ namespace ranges
                         CopyConstructible<Fun>(),
                         "The function passed to view::transform must be CopyConstructible.");
                     CONCEPT_ASSERT_MSG(
-                        Invocable<Fun&, range_reference_t<Rng> &&>(),
+                        Invocable<Fun&, range_reference_t<Rng>>(),
                         "The function passed to view::transform must be callable with an argument "
                         "of the range's reference type.");
                     CONCEPT_ASSERT_MSG(
                         meta::not_<Same<void, concepts::Invocable::result_t<
-                            Fun&, range_reference_t<Rng> &&>>>(),
+                            Fun&, range_reference_t<Rng>>>>(),
                         "The function passed to view::transform must return non-void when called "
                         "with an argument of the range's reference type.");
                 }
@@ -501,12 +501,12 @@ namespace ranges
                         CopyConstructible<Fun>(),
                         "The function passed to view::transform must be CopyConstructible.");
                     CONCEPT_ASSERT_MSG(
-                        Invocable<Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>(),
+                        Invocable<Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>(),
                         "The function passed to view::transform must be callable with arguments "
                         "of the ranges' reference types.");
                     CONCEPT_ASSERT_MSG(
                         meta::not_<Same<void, concepts::Invocable::result_t<
-                            Fun&, range_reference_t<Rng1> &&, range_reference_t<Rng2> &&>>>(),
+                            Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>>(),
                         "The function passed to view::transform must return non-void when called "
                         "with arguments of the ranges' reference types.");
                 }

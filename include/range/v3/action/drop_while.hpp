@@ -48,7 +48,7 @@ namespace ranges
                 {
                     template<typename Rng, typename Fun,
                         typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng&&, Fun&&) -> decltype(
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::is_true(IndirectPredicate<Fun, range_iterator_t<Rng>>{}),

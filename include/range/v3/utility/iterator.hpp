@@ -113,14 +113,14 @@ namespace ranges
                 }
                 // Advance to a certain position:
                 template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() && Assignable<I&, S&&>())>
+                    CONCEPT_REQUIRES_(Sentinel<S, I>() && Assignable<I&, S>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator()(I &i, S s) const
                 {
                     i = std::move(s);
                 }
                 template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() && !Assignable<I&, S&&>())>
+                    CONCEPT_REQUIRES_(Sentinel<S, I>() && !Assignable<I&, S>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator()(I &i, S s) const
                 {
@@ -930,13 +930,13 @@ namespace ranges
                     ++it_;
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T>>())>
                 void write(T &&t) noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T>>())>
                 void write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);

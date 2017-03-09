@@ -137,20 +137,20 @@ matrix:
       os: linux
       addons: *clang5
 
-      # gcc-4.8 C++11 Debug/Release
-    - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off HEADERS=On
-      os: linux
-      addons: &gcc48
-        apt:
-          packages:
-            - g++-4.8
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
+    #   # gcc-4.8 C++11 Debug/Release
+    # - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off HEADERS=On
+    #   os: linux
+    #   addons: &gcc48
+    #     apt:
+    #       packages:
+    #         - g++-4.8
+    #         - valgrind
+    #       sources:
+    #         - ubuntu-toolchain-r-test
 
-    - env: GCC_VERSION=4.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
-      os: linux
-      addons: *gcc48
+    # - env: GCC_VERSION=4.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+    #   os: linux
+    #   addons: *gcc48
 
       # gcc-4.9 C++11/C++14 Release
     - env: GCC_VERSION=4.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off

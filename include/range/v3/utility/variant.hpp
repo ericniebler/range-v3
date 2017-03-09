@@ -75,11 +75,11 @@ namespace ranges
                 // \pre Requires distance(r) <= N
                 // \pre Requires DefaultConstructible<T>() || distance(r) == N
                 template<typename R,
-                    CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>&&>())>
+                    CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>>())>
                 explicit indexed_datum(R &&r)
                   : indexed_datum{ranges::begin(r), ranges::end(r)}
                 {}
-                CONCEPT_REQUIRES(Assignable<T &, T &&>())
+                CONCEPT_REQUIRES(Assignable<T &, T>())
                 indexed_datum &operator=(indexed_datum &&that)
                 {
                     ranges::move(that.data_, data_);
@@ -94,7 +94,7 @@ namespace ranges
                 // \pre Requires ranges::distance(r) <= N
                 template<typename R,
                     CONCEPT_REQUIRES_(InputRange<R>() &&
-                        Assignable<T &, range_reference_t<R>&&>())>
+                        Assignable<T &, range_reference_t<R>>())>
                 indexed_datum &operator=(R &&r)
                 {
                     ranges::copy(r, data_);

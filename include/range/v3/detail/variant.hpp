@@ -56,7 +56,7 @@ namespace ranges
     #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
         inline namespace
         {
-            template <std::size_t I>
+            template<std::size_t I>
             constexpr auto& emplaced_index = static_const<emplaced_index_t<I>>::value;
         }
     #else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
@@ -146,7 +146,7 @@ namespace ranges
                   : datum_{}
                 {}
                 template<typename... Ts,
-                    CONCEPT_REQUIRES_(Constructible<T, Ts &&...>())>
+                    CONCEPT_REQUIRES_(Constructible<T, Ts...>())>
                 constexpr indexed_datum(Ts &&... ts)
                   : datum_(detail::forward<Ts>(ts)...)
                 {}
@@ -210,7 +210,7 @@ namespace ranges
         } // namespace detail
 
         template<std::size_t N, typename... Ts, typename... Args,
-            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args &&...>::value, int> = 42>
+            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args...>::value, int> = 42>
         void emplace(variant<Ts...>&, Args &&...);
 
         namespace detail
@@ -359,7 +359,7 @@ namespace ranges
                     return detail::move(var.data_());
                 }
                 template<typename...Ts>
-                static variant<Ts...> make_empty(meta::id<variant<Ts...>>)
+                static variant<Ts...> make_empty(meta::id<variant<Ts...>> = {})
                 {
                     return variant<Ts...>{empty_variant_tag{}};
                 }
@@ -574,10 +574,10 @@ namespace ranges
               : variant{emplaced_index<0>}
             {}
             template<std::size_t N, typename...Args,
-                CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args &&...>())>
+                CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args...>())>
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
-              : detail::variant_data<Ts...>{meta::size_t<N>{}
-              , detail::forward<Args>(args)...}, index_(N)
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, detail::forward<Args>(args)...}
+              , index_(N)
             {}
             template<std::size_t N, typename T,
                 CONCEPT_REQUIRES_(Constructible<datum_t<N>, std::initializer_list<T>>())>
@@ -617,7 +617,7 @@ namespace ranges
                 return sizeof...(Ts);
             }
             template<std::size_t N, typename ...Args,
-                CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args &&...>())>
+                CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args...>())>
             void emplace(Args &&...args)
             {
                 this->clear_();
@@ -728,7 +728,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // emplace
         template<std::size_t N, typename... Ts, typename... Args,
-            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args &&...>::value, int>>
+            meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args...>::value, int>>
         void emplace(variant<Ts...> &var, Args &&...args)
         {
             var.template emplace<N>(detail::forward<Args>(args)...);

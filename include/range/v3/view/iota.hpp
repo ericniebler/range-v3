@@ -38,7 +38,7 @@ namespace ranges
               : refines<Incrementable>
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(--t),
                         concepts::has_type<T>(t--)
@@ -49,7 +49,7 @@ namespace ranges
               : refines<SemiRegular(_1), WeaklyIncrementable(_2)>
             {
                 template<typename T, typename U>
-                auto requires_(T&& t, U&& u) -> decltype(
+                auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<WeaklyEqualityComparable, T, U>(),
                         concepts::model_of<Integral>(t - u),
@@ -61,7 +61,7 @@ namespace ranges
               : refines<BidirectionalIncrementable>
             {
                 template<typename T>
-                auto requires_(T&& t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(t - t),
                         concepts::has_type<T &>(t += (t - t)),

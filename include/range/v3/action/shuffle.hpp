@@ -47,7 +47,7 @@ namespace ranges
                 {
                     template<typename Rng, typename Gen,
                         typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng&&, Gen&&) -> decltype(
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::RandomAccessRange, Rng>(),
                             concepts::is_true(Permutable<I>()),
