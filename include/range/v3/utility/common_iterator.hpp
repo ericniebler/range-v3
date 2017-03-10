@@ -133,15 +133,16 @@ namespace ranges
                 detail::cidata(that).visit_i(emplace_fn{&data_});
                 return *this;
             }
-            auto operator*()
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            reference_t<I> operator*()
+            RANGES_AUTO_RETURN_NOEXCEPT
             (
                 *ranges::get<0>(data_)
             )
-            auto operator*() const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            template<typename I2 = I, CONCEPT_REQUIRES_(Readable<I2 const>())>
+            reference_t<I> operator*() const
+            RANGES_AUTO_RETURN_NOEXCEPT
             (
-                *ranges::get<0>(data_)
+                *static_cast<I2 const &>(ranges::get<0>(data_))
             )
             template<typename J = I, CONCEPT_REQUIRES_(Readable<J>())>
             auto operator->() const

@@ -263,9 +263,6 @@ namespace ranges
             template<typename Pred, typename Val>
             struct replacer_if_fn;
 
-            template<typename I, typename D = meta::_t<difference_type<I>>>
-            struct counted_cursor;
-
             template<typename I>
             struct move_into_cursor;
 
@@ -489,7 +486,7 @@ namespace ranges
             struct const_fn;
         }
 
-        template<typename I, typename D = meta::_t<difference_type<I>>>
+        template<typename I>
         struct counted_view;
 
         namespace view
@@ -499,9 +496,11 @@ namespace ranges
 
         struct default_sentinel { };
 
-        template<typename I, typename D = meta::_t<difference_type<I>>>
-        using counted_iterator =
-            basic_iterator<detail::counted_cursor<I, D>>;
+        namespace _counted_iterator_
+        {
+            template<typename I, typename = void>
+            struct counted_iterator;
+        }
 
         template<typename I>
         struct move_iterator;

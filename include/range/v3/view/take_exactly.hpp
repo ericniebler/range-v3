@@ -45,7 +45,7 @@ namespace ranges
             template<typename Rng,
                 bool IsRandomAccessBounded /*= is_random_access_bounded_<Rng>::value*/>
             struct take_exactly_view_
-              : view_facade<take_exactly_view_<Rng, IsRandomAccessBounded>, finite>
+              : view_interface<take_exactly_view_<Rng, IsRandomAccessBounded>>
             {
             private:
                 friend range_access;
@@ -53,22 +53,26 @@ namespace ranges
                 Rng rng_;
                 difference_type_ n_;
 
-                counted_cursor<iterator_t<Rng>> begin_cursor()
-                {
-                    return {ranges::begin(rng_), n_};
-                }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
-                counted_cursor<iterator_t<BaseRng const>> begin_cursor() const
-                {
-                    return {ranges::begin(rng_), n_};
-                }
             public:
                 take_exactly_view_() = default;
                 take_exactly_view_(Rng rng, difference_type_ n)
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
+                }
+                counted_iterator<iterator_t<Rng>> begin()
+                {
+                    return {ranges::begin(rng_), n_};
+                }
+                template<typename BaseRng = Rng,
+                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
+                counted_iterator<iterator_t<BaseRng const>> begin() const
+                {
+                    return {ranges::begin(rng_), n_};
+                }
+                default_sentinel end() const
+                {
+                    return {};
                 }
                 range_size_type_t<Rng> size() const
                 {

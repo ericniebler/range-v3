@@ -56,7 +56,7 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair p, concepts::ForwardIterator *fi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair const p, concepts::ForwardIterator *fi)
             {
                 // *begin is known to be false
                 // len >= 1
@@ -74,11 +74,10 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
-                    using value_type = value_type_t<I>;
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
+                    auto tmpbuf = make_raw_buffer(p.first);
+                    auto buf = tmpbuf.begin();
                     *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(make_move_iterator(next(begin)),
@@ -168,11 +167,10 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
-                    using value_type = value_type_t<I>;
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
+                    auto tmpbuf = ranges::make_raw_buffer(p.first);
+                    auto buf = tmpbuf.begin();
                     *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(make_move_iterator(next(begin)),
