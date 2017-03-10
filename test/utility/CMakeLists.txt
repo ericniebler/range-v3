@@ -27,3 +27,6 @@ add_test(test.utility.variant utility.variant)
 
 add_executable(utility.meta meta.cpp)
 add_test(test.utility.meta utility.meta)
+
+add_executable(utility.scope_exit scope_exit.cpp)
+add_test(test.utility.scope_exit utility.scope_exit)
