@@ -16,7 +16,7 @@
 #include <utility>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -30,26 +30,30 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename I, typename D /* = difference_type_t<I>*/>
+        template<typename I>
         struct counted_view
-          : view_facade<counted_view<I, D>, finite>
+          : view_interface<counted_view<I>>
         {
         private:
             friend range_access;
             using size_type_ = size_type_t<I>;
             I it_;
-            D n_;
+            difference_type_t<I> n_;
 
-            detail::counted_cursor<I, D> begin_cursor() const
-            {
-                return {it_, n_};
-            }
         public:
             counted_view() = default;
-            counted_view(I it, D n)
+            counted_view(I it, difference_type_t<I> n)
               : it_(it), n_(n)
             {
                 RANGES_EXPECT(0 <= n_);
+            }
+            counted_iterator<I> begin() const
+            {
+                return make_counted_iterator(it_, n_);
+            }
+            default_sentinel end() const
+            {
+                return {};
             }
             size_type_ size() const
             {

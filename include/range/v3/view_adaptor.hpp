@@ -61,7 +61,7 @@ namespace ranges
             struct adaptor_value_type_2_<
                 BaseIter,
                 Adapt,
-                meta::void_<decltype(Adapt::read(BaseIter{}, adaptor_base_current_mem_fn{}))>>
+                meta::void_<decltype(Adapt::read(std::declval<BaseIter const &>(), adaptor_base_current_mem_fn{}))>>
               : compressed_pair<BaseIter, Adapt>
             {
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;

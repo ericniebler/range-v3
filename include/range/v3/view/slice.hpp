@@ -28,7 +28,6 @@
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/view/counted.hpp>
 #include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -90,15 +89,19 @@ namespace ranges
                             is_infinite<Rng>{});
                     return *begin_;
                 }
-                detail::counted_cursor<iterator_t<Rng>> begin_cursor()
-                {
-                    return {get_begin_(), count_};
-                }
             public:
                 slice_view_() = default;
                 slice_view_(Rng rng, difference_type_ from, difference_type_ count)
                   : rng_(std::move(rng)), from_(from), count_(count)
                 {}
+                counted_iterator<iterator_t<Rng>> begin()
+                {
+                    return make_counted_iterator(get_begin_(), count_);
+                }
+                default_sentinel end()
+                {
+                    return {};
+                }
                 range_size_type_t<Rng> size() const
                 {
                     return static_cast<range_size_type_t<Rng>>(count_);

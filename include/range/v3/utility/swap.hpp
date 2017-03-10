@@ -167,8 +167,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
                     !is_adl_swappable_<T &>::value &&
-                    std::is_move_constructible<T>::value &&
-                    std::is_move_assignable<T>::value>
+                    detail::is_movable_<T>::value>
                 operator()(T &a, T &b) const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (

@@ -108,7 +108,7 @@ namespace ranges
                 void operator()(I &i, difference_type_t<I> n) const
                 {
                     // Use ADL here to give custom iterator types (like counted_iterator)
-                    // a chance to optimize it (see view/counted.hpp)
+                    // a chance to optimize it (see utility/counted_iterator.hpp)
                     advance(i, n);
                 }
                 // Advance to a certain position:
@@ -140,7 +140,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
-        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn,advance)
+        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn, advance)
 
         namespace adl_advance_detail
         {

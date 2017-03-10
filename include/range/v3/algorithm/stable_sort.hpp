@@ -119,9 +119,8 @@ namespace ranges
                 // The first call to merge_sort_loop moves into raw storage. Construct on-demand
                 // and keep track of how many objects we need to destroy.
                 V *buffer_end = buffer + len;
-                std::unique_ptr<V, detail::destroy_n<V>> h{buffer, {}};
-                auto raw_buffer = ranges::make_counted_raw_storage_iterator(buffer, h.get_deleter());
-                stable_sort_fn::merge_sort_loop(begin, end, raw_buffer, step_size, pred, proj);
+                auto tmpbuf = make_raw_buffer(buffer);
+                stable_sort_fn::merge_sort_loop(begin, end, tmpbuf.begin(), step_size, pred, proj);
                 step_size *= 2;
             loop:
                 stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, step_size, pred, proj);
