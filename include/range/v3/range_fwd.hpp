@@ -384,8 +384,14 @@ namespace ranges
         template<typename Cur>
         struct basic_mixin;
 
-        template<typename Cur>
-        struct basic_iterator;
+        /// \cond
+        namespace _basic_iterator_
+        {
+            template<typename Cur>
+            struct basic_iterator;
+        }
+        using _basic_iterator_::basic_iterator;
+        /// \endcond
 
         template<cardinality>
         struct basic_view : view_base
@@ -400,11 +406,12 @@ namespace ranges
         struct view_adaptor;
 
         /// \cond
-        inline namespace _common_iterator
+        namespace _common_iterator_
         {
             template<typename I, typename S>
             struct common_iterator;
         }
+        using _common_iterator_::common_iterator;
         /// \endcond
 
         template<typename I, typename S>

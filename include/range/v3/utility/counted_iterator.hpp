@@ -113,9 +113,9 @@ namespace ranges
                 template<typename II = I,
                     CONCEPT_REQUIRES_(Readable<II>())>
                 iterator_rvalue_reference_t<II> move() const
-                    noexcept(noexcept(iter_move(std::declval<II const &>())))
+                    noexcept(noexcept(ranges::iter_move(std::declval<II const &>())))
                 {
-                    return iter_move(it_);
+                    return ranges::iter_move(it_);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
                 iterator_reference_t<I> read() const

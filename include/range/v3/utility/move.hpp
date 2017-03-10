@@ -63,33 +63,58 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
+            template<typename T,
+                typename = decltype(iter_move(std::declval<T &&>()))>
+            std::true_type try_adl_iter_move_(int);
+
+            template<typename T>
+            std::false_type try_adl_iter_move_(long);
+
+            template<typename T>
+            struct is_adl_indirectly_movable_
+              : meta::id_t<decltype(adl_move_detail::try_adl_iter_move_<T>(42))>
+            {};
+
             // TODO: investigate the breakage when these are made constexpr.
             // (Results in ODR-use of projected_readable::operator*)
-
-            // Default indirect_move overload.
-            template<typename I,
-                typename R = decltype(*std::declval<I const &>())>
-            aux::move_t<R> indirect_move(I const &i)
-                noexcept(noexcept(static_cast<aux::move_t<R>>(aux::move(*i))))
+            struct iter_move_fn
             {
-                return aux::move(*i);
-            }
-
-            struct indirect_move_fn
-            {
-                template<typename I>
-                auto operator()(I const &i) const
+                template<typename I,
+                    typename = meta::if_c<is_adl_indirectly_movable_<I &>::value>>
+                auto operator()(I &&i) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    indirect_move(i)
+                    iter_move(i)
+                )
+
+                template<typename I,
+                    typename = meta::if_c<!is_adl_indirectly_movable_<I &>::value>,
+                    typename R = decltype(*std::declval<I &>())>
+                auto operator()(I &&i) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    static_cast<aux::move_t<R>>(aux::move(*i))
                 )
             };
         }
         /// \endcond
 
-        RANGES_INLINE_VARIABLE(adl_move_detail::indirect_move_fn, indirect_move)
+        RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
 
         /// \cond
+        struct indirect_move_fn
+        {
+            template<typename I>
+            RANGES_DEPRECATED("Please replace uses of ranges::indirect_move with ranges::iter_move.")
+            void operator()(I &&i) const
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_move((I &&) i)
+            )
+        };
+
+        RANGES_INLINE_VARIABLE(indirect_move_fn, indirect_move)
+
         namespace detail
         {
             template<typename I, typename O>
@@ -97,16 +122,16 @@ namespace ranges
                 meta::bool_<
                     std::is_constructible<
                         meta::_t<value_type<I>>,
-                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                        decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_assignable<
                         meta::_t<value_type<I>> &,
-                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                        decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_assignable<
                         decltype(*std::declval<O &>()),
                         meta::_t<value_type<I>>>::value &&
                     std::is_assignable<
                         decltype(*std::declval<O &>()),
-                        decltype(indirect_move(std::declval<I &>()))>::value>;
+                        decltype(iter_move(std::declval<I &>()))>::value>;
 
             template<typename I, typename O>
             using is_nothrow_indirectly_movable_ =
@@ -114,16 +139,16 @@ namespace ranges
                     noexcept(iter_move(std::declval<I &>())) &&
                     std::is_nothrow_constructible<
                         meta::_t<value_type<I>>,
-                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                        decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_nothrow_assignable<
                         meta::_t<value_type<I>> &,
-                        decltype(indirect_move(std::declval<I &>()))>::value &&
+                        decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_nothrow_assignable<
                         decltype(*std::declval<O &>()),
                         meta::_t<value_type<I>>>::value &&
                     std::is_nothrow_assignable<
                         decltype(*std::declval<O &>()),
-                        decltype(indirect_move(std::declval<I &>()))>::value>;
+                        decltype(iter_move(std::declval<I &>()))>::value>;
         }
         /// \endcond
 

@@ -144,6 +144,11 @@ static_assert(!meta::is_trait<ranges::value_type<int*&&>>::value, "");
 static_assert(!meta::is_trait<ranges::value_type<int(&)(int)>>::value, "");
 static_assert(!meta::is_trait<ranges::value_type<std::ostream&>>::value, "");
 
+CONCEPT_ASSERT(IndirectlySwappable<int *, int *>());
+CONCEPT_ASSERT(IndirectlyMovable<int const *, int *>());
+CONCEPT_ASSERT(!IndirectlySwappable<int const *, int const *>());
+CONCEPT_ASSERT(!IndirectlyMovable<int const *, int const *>());
+
 int main()
 {
     test_insert_iterator();

@@ -83,7 +83,7 @@ namespace ranges
                 (
                     invoke(fun_, it)
                 )
-                auto indirect_move(range_iterator_t<Rng> it) const
+                auto iter_move(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     invoke(fun_, move_tag{}, it)

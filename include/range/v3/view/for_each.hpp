@@ -40,7 +40,7 @@ namespace ranges
         {
             for_each_view() = default;
             for_each_view(Rng rng, F f)
-              : join_view<transform_view<Rng, F>>{{std::move(rng), std::move(f)}}
+              : for_each_view::join_view{{std::move(rng), std::move(f)}}
             {}
         };
 

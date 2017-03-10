@@ -20,8 +20,8 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/swap.hpp> // for indirect_swap
-#include <range/v3/utility/move.hpp> // for indirect_move
+#include <range/v3/utility/swap.hpp> // for iter_swap
+#include <range/v3/utility/move.hpp> // for iter_move
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -403,38 +403,6 @@ namespace ranges
         /// \ingroup group-utility
         /// \sa `iter_size_fn`
         RANGES_INLINE_VARIABLE(iter_size_fn, iter_size)
-
-        struct iter_swap_fn
-        {
-            template<typename Readable0, typename Readable1,
-                CONCEPT_REQUIRES_(IndirectlySwappable<Readable0, Readable1>())>
-            RANGES_CXX14_CONSTEXPR
-            void operator()(Readable0 a, Readable1 b) const
-                noexcept(is_nothrow_indirectly_swappable<Readable0, Readable1>::value)
-            {
-                indirect_swap(std::move(a), std::move(b));
-            }
-        };
-
-        /// \ingroup group-utility
-        /// \sa `iter_swap_fn`
-        RANGES_INLINE_VARIABLE(iter_swap_fn, iter_swap)
-
-        struct iter_move_fn
-        {
-            template<typename I,
-                CONCEPT_REQUIRES_(Readable<I>())>
-            RANGES_CXX14_CONSTEXPR
-            iterator_rvalue_reference_t<I> operator()(I const &i) const
-                noexcept(noexcept(indirect_move(i)))
-            {
-                return indirect_move(i);
-            }
-        };
-
-        /// \ingroup group-utility
-        /// \sa `iter_move_fn`
-        RANGES_INLINE_VARIABLE(iter_move_fn, iter_move)
 
         template<typename Container>
         struct back_insert_iterator

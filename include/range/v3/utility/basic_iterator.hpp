@@ -314,13 +314,20 @@ namespace ranges
             using box<T>::get;
         };
 
+        /// \cond
+        namespace _basic_iterator_
+        {
+        /// \endcond
+
         template<typename Cur>
         struct basic_iterator
           : range_access::mixin_base_t<Cur>
           , detail::iterator_associated_types_base<Cur>
         {
         private:
-            friend struct range_access;
+            template<typename Cur2>
+            friend struct basic_iterator;
+            friend struct ranges::range_access;
             using mixin_t = range_access::mixin_base_t<Cur>;
             CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
@@ -347,7 +354,7 @@ namespace ranges
                     Constructible<mixin_t, OtherCur>())>
             RANGES_CXX14_CONSTEXPR
             basic_iterator(basic_iterator<OtherCur> that)
-              : mixin_t{range_access::pos(std::move(that))}
+              : mixin_t{std::move(that.pos())}
             {}
             // Mix in any additional constructors defined and exported by the mixin
             using mixin_t::mixin_t;
@@ -586,7 +593,21 @@ namespace ranges
             {
                 return *(*this + n);
             }
+
+            // Optionally support hooking iter_move when the cursor sports a
+            // move() member function.
+            template<typename C = Cur,
+               CONCEPT_REQUIRES_(Same<C, Cur>() && detail::InputCursor<Cur>())>
+            RANGES_CXX14_CONSTEXPR
+            friend auto iter_move(basic_iterator const &it)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                range_access::move(static_cast<basic_iterator<C> const &>(it).pos())
+            )
         };
+        /// \cond
+        } // namespace _basic_iterator_
+        /// \endcond
 
         /// Get a cursor from a basic_iterator
         struct get_cursor_fn
@@ -616,21 +637,6 @@ namespace ranges
         /// \ingroup group-utility
         RANGES_INLINE_VARIABLE(get_cursor_fn, get_cursor)
         /// @}
-
-        /// \cond
-        namespace detail
-        {
-            // Optionally support hooking iter_move when the cursor sports a
-            // move() member function.
-            template<typename C, CONCEPT_REQUIRES_(InputCursor<C>())>
-            RANGES_CXX14_CONSTEXPR
-            auto indirect_move(basic_iterator<C> const &it)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                range_access::move(get_cursor(it))
-            )
-        }
-        /// \endcond
     }
 }
 

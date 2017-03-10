@@ -143,7 +143,7 @@ namespace ranges
                 using reference_t = decltype(*std::declval<I &>());
 
                 template<typename I>
-                using rvalue_reference_t = decltype(indirect_move(std::declval<I &>()));
+                using rvalue_reference_t = decltype(iter_move(std::declval<I &>()));
 
                 template<typename I>
                 using common_reference_t =
@@ -227,10 +227,10 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
-                        ((void)ranges::indirect_swap((I1 &&) i1, (I2 &&) i2), 42),
-                        ((void)ranges::indirect_swap((I1 &&) i1, (I1 &&) i1), 42),
-                        ((void)ranges::indirect_swap((I2 &&) i2, (I2 &&) i2), 42),
-                        ((void)ranges::indirect_swap((I2 &&) i2, (I1 &&) i1), 42)
+                        ((void)ranges::iter_swap((I1 &&) i1, (I2 &&) i2), 42),
+                        ((void)ranges::iter_swap((I1 &&) i1, (I1 &&) i1), 42),
+                        ((void)ranges::iter_swap((I2 &&) i2, (I2 &&) i2), 42),
+                        ((void)ranges::iter_swap((I2 &&) i2, (I1 &&) i1), 42)
                     ));
             };
 

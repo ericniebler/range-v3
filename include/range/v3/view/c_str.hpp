@@ -24,6 +24,39 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            template<class T>
+            struct is_char_type_
+                : std::false_type
+            {};
+
+            template<>
+            struct is_char_type_<char>
+                : std::true_type
+            {};
+
+            template<>
+            struct is_char_type_<wchar_t>
+                : std::true_type
+            {};
+
+            template<>
+            struct is_char_type_<char16_t>
+                : std::true_type
+            {};
+
+            template<>
+            struct is_char_type_<char32_t>
+                : std::true_type
+            {};
+
+            template<class T>
+            using is_char_type = is_char_type_<meta::_t<std::remove_cv<T>>>;
+        }
+        /// \endcond
+
         /// \addtogroup group-views
         /// @{
         namespace view
@@ -31,87 +64,22 @@ namespace ranges
             struct c_str_fn
             {
                 // Fixed-length
-                template<std::size_t N>
-                ranges::iterator_range<char *> operator()(char (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<char const*> operator()(char const (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<wchar_t *> operator()(wchar_t (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<wchar_t const*> operator()(wchar_t const (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<char16_t *> operator()(char16_t (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<char16_t const*> operator()(char16_t const (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<char32_t *> operator()(char32_t (&sz)[N]) const
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-                template<std::size_t N>
-                ranges::iterator_range<char32_t const*> operator()(char32_t const (&sz)[N]) const
+                template<typename Char, std::size_t N,
+                    CONCEPT_REQUIRES_(detail::is_char_type<Char>())>
+                ranges::iterator_range<Char *> operator()(Char (&sz)[N]) const
                 {
                     return {&sz[0], &sz[N-1]};
                 }
 
                 // Null-terminated
-                ranges::delimit_view<ranges::iterator_range<char *, ranges::unreachable>, char>
-                operator()(char *sz) const
+                template<typename Char,
+                    CONCEPT_REQUIRES_(detail::is_char_type<Char>())>
+                ranges::delimit_view<
+                    ranges::iterator_range<Char *, ranges::unreachable>,
+                    meta::_t<std::remove_cv<Char>>>
+                operator()(Char *sz) const volatile
                 {
-                    return ranges::view::delimit(sz, '\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<char const *, ranges::unreachable>, char>
-                operator()(char const *sz) const
-                {
-                    return ranges::view::delimit(sz, '\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<wchar_t *, ranges::unreachable>, wchar_t>
-                operator()(wchar_t *sz) const
-                {
-                    return ranges::view::delimit(sz, L'\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<wchar_t const *, ranges::unreachable>, wchar_t>
-                operator()(wchar_t const *sz) const
-                {
-                    return ranges::view::delimit(sz, L'\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<char16_t *, ranges::unreachable>, char16_t>
-                operator()(char16_t *sz) const
-                {
-                    return ranges::view::delimit(sz, u'\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<char16_t const *, ranges::unreachable>, char16_t>
-                operator()(char16_t const *sz) const
-                {
-                    return ranges::view::delimit(sz, u'\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<char32_t *, ranges::unreachable>, char32_t>
-                operator()(char32_t *sz) const
-                {
-                    return ranges::view::delimit(sz, U'\0');
-                }
-                ranges::delimit_view<ranges::iterator_range<char32_t const *, ranges::unreachable>, char32_t>
-                operator()(char32_t const *sz) const
-                {
-                    return ranges::view::delimit(sz, U'\0');
+                    return ranges::view::delimit(sz, Char(0));
                 }
             };
 
