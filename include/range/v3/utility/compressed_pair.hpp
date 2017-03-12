@@ -46,16 +46,17 @@ namespace ranges
 
                 compressed_tuple_() = default;
 
-                // TODO: EXPLICIT
                 template<typename... Args,
                     meta::if_<meta::strict_and<std::is_constructible<Ts, Args>...>, int> = 0>
                 constexpr compressed_tuple_(Args &&... args)
+                    noexcept(meta::strict_and<std::is_nothrow_constructible<storage<Ts, Is, Ts...>, Args>...>::value)
                   : storage<Ts, Is, Ts...>{detail::forward<Args>(args)}...
                 {}
 
                 template<typename... Us,
                     meta::if_<meta::strict_and<std::is_constructible<Us, Ts const &>...>, int> = 0>
                 constexpr operator std::tuple<Us...> () const
+                    noexcept(meta::strict_and<std::is_nothrow_constructible<Us, Ts const &>...>::value)
                 {
                     return std::tuple<Us...>{get<Is>(*this)...};
                 }
@@ -66,19 +67,28 @@ namespace ranges
                 compressed_tuple_<meta::list<Ts...>, meta::make_index_sequence<sizeof...(Ts)>>;
 
             template<std::size_t I, typename... Ts, std::size_t... Is, typename T = meta::at_c<meta::list<Ts...>, I>>
-            RANGES_CXX14_CONSTEXPR T &get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> &tuple) noexcept
+            RANGES_CXX14_CONSTEXPR T &
+            get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> &tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> &>(tuple).get();
             }
             template<std::size_t I, typename... Ts, std::size_t... Is, typename T = meta::at_c<meta::list<Ts...>, I>>
-            constexpr T const &get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> const &tuple) noexcept
+            constexpr T const &
+            get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> const &tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> const &>(tuple).get();
             }
             template<std::size_t I, typename... Ts, std::size_t... Is, typename T = meta::at_c<meta::list<Ts...>, I>>
-            RANGES_CXX14_CONSTEXPR T && get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> && tuple) noexcept
+            RANGES_CXX14_CONSTEXPR T &&
+            get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> &&tuple) noexcept
             {
                 return static_cast<storage<T, I, Ts...> &&>(tuple).get();
+            }
+            template<std::size_t I, typename... Ts, std::size_t... Is, typename T = meta::at_c<meta::list<Ts...>, I>>
+            RANGES_CXX14_CONSTEXPR T const &&
+            get(compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>> const &&tuple) noexcept
+            {
+                return static_cast<storage<T, I, Ts...> const &&>(tuple).get();
             }
         }
         /// \endcond
@@ -88,11 +98,10 @@ namespace ranges
         struct make_compressed_tuple_fn
         {
             template<typename... Args>
-            constexpr auto operator()(Args &&... args) const ->
-                compressed_tuple<bind_element_t<Args>...>
-            {
-                return {detail::forward<Args>(args)...};
-            }
+            constexpr auto operator()(Args &&... args) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+                compressed_tuple<bind_element_t<Args>...>{detail::forward<Args>(args)...}
+            )
         };
 
         /// \ingroup group-utility
@@ -124,6 +133,8 @@ namespace ranges
                 meta::if_<meta::strict_and<std::is_constructible<F, First const &>,
                                            std::is_constructible<S, Second const &>>, int> = 0>
             constexpr operator std::pair<F, S> () const
+                noexcept(std::is_nothrow_constructible<F, First const&>::value &&
+                    std::is_nothrow_constructible<S, Second const&>::value)
             {
                 return std::pair<F, S>{first(), second()};
             }
@@ -132,11 +143,12 @@ namespace ranges
         struct make_compressed_pair_fn
         {
             template<typename First, typename Second>
-            constexpr auto operator()(First && f, Second && s) const ->
-                compressed_pair<bind_element_t<First>, bind_element_t<Second>>
-            {
-                return {detail::forward<First>(f), detail::forward<Second>(s)};
-            }
+            constexpr auto operator()(First && f, Second && s) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+                compressed_pair<bind_element_t<First>, bind_element_t<Second>>{
+                    detail::forward<First>(f), detail::forward<Second>(s)
+                }
+            )
         };
 
         /// \ingroup group-utility
