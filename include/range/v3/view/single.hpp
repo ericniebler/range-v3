@@ -38,7 +38,7 @@ namespace ranges
           : view_facade<single_view<Val>, (cardinality)1>
         {
         private:
-            friend struct range_access;
+            friend struct ranges::range_access;
             semiregular_t<Val> value_;
             struct cursor
             {

@@ -48,10 +48,10 @@ namespace ranges
                 {
                     return **it;
                 }
-                auto indirect_move(range_iterator_t<Rng> const &it) const ->
-                    decltype(ranges::indirect_move(*it))
+                auto iter_move(range_iterator_t<Rng> const &it) const ->
+                    decltype(ranges::iter_move(*it))
                 {
-                    return ranges::indirect_move(*it);
+                    return ranges::iter_move(*it);
                 }
             };
             adaptor begin_adaptor() const

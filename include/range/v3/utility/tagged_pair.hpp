@@ -122,16 +122,16 @@ namespace ranges
                     return *this;
                 }
                 template<int dummy_ = 42>
-                RANGES_CXX14_CONSTEXPR meta::if_c<dummy_ == 43 || is_swappable<Base &>::value>
+                RANGES_CXX14_CONSTEXPR meta::if_c<dummy_ == 43 || is_swappable<Base>::value>
                 swap(tagged &that)
-                    noexcept(is_nothrow_swappable<Base &>::value)
+                    noexcept(is_nothrow_swappable<Base>::value)
                 {
                     ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
                 }
                 template<int dummy_ = 42>
-                friend RANGES_CXX14_CONSTEXPR meta::if_c<dummy_ == 43 || is_swappable<Base &>::value>
+                friend RANGES_CXX14_CONSTEXPR meta::if_c<dummy_ == 43 || is_swappable<Base>::value>
                 swap(tagged &x, tagged &y)
-                    noexcept(is_nothrow_swappable<Base &>::value)
+                    noexcept(is_nothrow_swappable<Base>::value)
                 {
                     x.swap(y);
                 }

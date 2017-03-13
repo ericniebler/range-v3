@@ -186,7 +186,7 @@ int main()
     }
 
     // This is actually a test of the logic of view_adaptor. Since the stride view
-    // does not redefine the current member function, the base range's indirect_move
+    // does not redefine the current member function, the base range's iter_move
     // function gets picked up automatically.
     {
         auto rng0 = view::zip(vi, vs);

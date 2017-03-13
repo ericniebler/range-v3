@@ -36,7 +36,7 @@ namespace ranges
           : view_adaptor<take_view<Rng>, Rng, finite>
         {
         private:
-            friend struct range_access;
+            friend struct ranges::range_access;
             range_difference_t<Rng> n_ = 0;
 
             template<bool IsConst, typename T>

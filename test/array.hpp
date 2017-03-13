@@ -23,6 +23,7 @@
 
 #ifndef RANGES_V3_TEST_ARRAY_HPP
 #define RANGES_V3_TEST_ARRAY_HPP
+
 #include <stdexcept>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -61,7 +62,7 @@ namespace test {
             ranges::fill_n(elems_, N, u);
         }
         RANGES_CXX14_CONSTEXPR
-        void swap(array& a) noexcept(ranges::is_nothrow_swappable<T, T>::value)
+        void swap(array& a) noexcept(ranges::is_nothrow_swappable<T>::value)
         {
             ranges::swap_ranges(elems_, elems_ + N, a.elems_);
         }
@@ -238,8 +239,8 @@ namespace test {
     template <class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     auto swap(array<T, N>& x, array<T, N>& y)
-    noexcept(ranges::is_nothrow_swappable<T, T>::value)
-    -> typename std::enable_if<ranges::is_swappable<T, T>::value, void>::type
+    noexcept(ranges::is_nothrow_swappable<T>::value)
+    -> typename std::enable_if<ranges::is_swappable<T>::value, void>::type
     {
         x.swap(y);
     }
