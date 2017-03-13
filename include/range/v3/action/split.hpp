@@ -44,7 +44,7 @@ namespace ranges
                     meta::if_c<
                         (bool) ranges::Container<Rng>(),
                         uncvref_t<Rng>,
-                        std::vector<range_value_t<Rng>>>;
+                        std::vector<range_value_type_t<Rng>>>;
             public:
                 // BUGBUG something is not right with the actions. It should be possible
                 // to move a container into a split and have elements moved into the result.
@@ -64,7 +64,7 @@ namespace ranges
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(view::split_fn::ElementConcept<Rng>())>
-                std::vector<split_value_t<Rng>> operator()(Rng && rng, range_value_t<Rng> val) const
+                std::vector<split_value_t<Rng>> operator()(Rng && rng, range_value_type_t<Rng> val) const
                 {
                     return view::split(rng, std::move(val))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
@@ -79,13 +79,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!ConvertibleTo<T, range_value_t<Rng>>())>
+                    CONCEPT_REQUIRES_(!ConvertibleTo<T, range_value_type_t<Rng>>())>
                 void operator()(Rng &&, T &&) const volatile
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_type_t<Rng>>(),
                         "The delimiter argument to action::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "
@@ -93,7 +93,7 @@ namespace ranges
                         "range's value type, "
                         "(3) A Predicate that is callable with one argument of the range's reference "
                         "type, or "
-                        "(4) A Callable that accepts two arguments, the range's iterator "
+                        "(4) An Invocable that accepts two arguments, the range's iterator "
                         "and sentinel, and that returns a std::pair<bool, I> where I is the "
                         "input range's difference_type.");
                 }

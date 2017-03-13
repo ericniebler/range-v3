@@ -82,7 +82,7 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectRelation<C, projected<I, P>>())>
             meta::if_<std::is_lvalue_reference<Rng>,

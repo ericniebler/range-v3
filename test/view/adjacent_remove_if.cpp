@@ -16,6 +16,7 @@
 #include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
@@ -31,8 +32,8 @@ int main()
 
     auto && rng = rgi | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng));
-    models<concepts::BoundedView>(rng);
-    models_not<concepts::SizedView>(rng);
+    models<concepts::BoundedView>(aux::copy(rng));
+    models_not<concepts::SizedView>(aux::copy(rng));
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
     CONCEPT_ASSERT(OutputIterator<decltype(ranges::back_inserter(out)), int>());
@@ -44,18 +45,18 @@ int main()
     auto && rng2 = view::counted(rgi, 7)
       | view::adjacent_remove_if([&](int i, int j){return i == j && true_;});
     has_type<int &>(*begin(rng2));
-    models<concepts::ForwardView>(rng2);
-    models<concepts::BoundedView>(rng2);
-    models_not<concepts::SizedView>(rng2);
+    models<concepts::ForwardView>(aux::copy(rng2));
+    models<concepts::BoundedView>(aux::copy(rng2));
+    models_not<concepts::SizedView>(aux::copy(rng2));
     models<concepts::ForwardIterator>(begin(rng2));
     models_not<concepts::BidirectionalIterator>(begin(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
 
     auto && rng3 = view::counted(forward_iterator<int*>(rgi), 7) | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng3));
-    models<concepts::ForwardView>(rng3);
-    models_not<concepts::BoundedView>(rng3);
-    models_not<concepts::SizedView>(rng3);
+    models<concepts::ForwardView>(aux::copy(rng3));
+    models_not<concepts::BoundedView>(aux::copy(rng3));
+    models_not<concepts::SizedView>(aux::copy(rng3));
     models<concepts::ForwardIterator>(begin(rng3));
     models_not<concepts::BidirectionalIterator>(begin(rng3));
     ::check_equal(rng3, {1, 2, 3, 4});
@@ -64,9 +65,9 @@ int main()
       | view::adjacent_remove_if([](int,int){return true;});
     has_type<int &>(*begin(rng4));
     CHECK(*begin(rng4) == 4);
-    models<concepts::ForwardView>(rng4);
-    models_not<concepts::BoundedView>(rng4);
-    models_not<concepts::SizedView>(rng4);
+    models<concepts::ForwardView>(aux::copy(rng4));
+    models_not<concepts::BoundedView>(aux::copy(rng4));
+    models_not<concepts::SizedView>(aux::copy(rng4));
     models<concepts::ForwardIterator>(begin(rng4));
     models_not<concepts::BidirectionalIterator>(begin(rng4));
     ::check_equal(rng4, {4});
@@ -74,9 +75,9 @@ int main()
     auto is_odd_then_even = [](int i, int j){return 1==i%2 && 0 == j%2;};
     auto && rng5 = view::iota(0, 11) | view::adjacent_remove_if(is_odd_then_even);
     has_type<int>(*begin(rng5));
-    models<concepts::ForwardView>(rng5);
-    models<concepts::BoundedView>(rng5);
-    models_not<concepts::SizedView>(rng5);
+    models<concepts::ForwardView>(aux::copy(rng5));
+    models<concepts::BoundedView>(aux::copy(rng5));
+    models_not<concepts::SizedView>(aux::copy(rng5));
     models<concepts::ForwardIterator>(begin(rng5));
     models_not<concepts::BidirectionalIterator>(begin(rng5));
     ::check_equal(rng5, {0,2,4,6,8,10});

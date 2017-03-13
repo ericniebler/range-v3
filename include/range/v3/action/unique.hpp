@@ -45,9 +45,9 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename C = equal_to, typename P = ident,
-                        typename I = range_iterator_t<Rng>,
-                        typename S = range_sentinel_t<Rng>>
-                        auto requires_(Rng&&, C&& = C{}, P&& = P{}) -> decltype(
+                        typename I = iterator_t<Rng>,
+                        typename S = sentinel_t<Rng>>
+                        auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
@@ -59,7 +59,7 @@ namespace ranges
                 using Concept = concepts::models<ConceptImpl, Rng, C, P>;
 
                 template<typename Rng, typename C = equal_to, typename P = ident,
-                    typename I = range_iterator_t<Rng>,
+                    typename I = iterator_t<Rng>,
                     CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
                 Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 {
@@ -76,8 +76,8 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::unique operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
-                    using S = range_sentinel_t<Rng>;
+                    using I = iterator_t<Rng>;
+                    using S = sentinel_t<Rng>;
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
                         "The object on which action::unique operates must allow element "
                         "removal.");

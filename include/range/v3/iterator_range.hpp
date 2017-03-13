@@ -94,7 +94,7 @@ namespace ranges
             template<typename X, typename Y>
             friend struct sized_iterator_range;
             iterator_range<I, S> rng_;
-            iterator_size_t<I> size_;
+            size_type_t<I> size_;
         public:
             using iterator = I;
             using sentinel = S;
@@ -103,31 +103,31 @@ namespace ranges
         #endif
 
             sized_iterator_range() = default;
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I begin, S end, iterator_size_t<I> size)
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I begin, S end, size_type_t<I> size)
               : rng_{detail::move(begin), detail::move(end)}, size_(size)
             {
             #ifndef NDEBUG
                 RANGES_ASSERT(!ForwardIterator<I>() ||
-                    static_cast<iterator_size_t<I>>(ranges::distance(rng_)) == size_);
+                    static_cast<size_type_t<I>>(ranges::distance(rng_)) == size_);
             #endif
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, iterator_size_t<I> size)
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type_t<I> size)
               : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, iterator_size_t<I> size)
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, size_type_t<I> size)
               : sized_iterator_range{detail::move(rng).first(), detail::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
               : sized_iterator_range{detail::move(rng).rng_.first(), detail::move(rng).rng_.second, rng.size_}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Assignable<I &, X &&>() && Assignable<S &, Y &&>())>
+                CONCEPT_REQUIRES_(Assignable<I &, X>() && Assignable<S &, Y>())>
             sized_iterator_range &operator=(sized_iterator_range<X, Y> rng)
             {
                 rng_ = detail::move(rng).rng_;
@@ -142,7 +142,7 @@ namespace ranges
             {
                 return rng_.end();
             }
-            iterator_size_t<I> size() const
+            size_type_t<I> size() const
             {
                 return size_;
             }
@@ -178,7 +178,7 @@ namespace ranges
             /// \return `{begin, end, size}`
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(Sentinel<S, I>())>
-            constexpr sized_iterator_range<I, S> operator()(I begin, S end, iterator_size_t<I> size) const
+            constexpr sized_iterator_range<I, S> operator()(I begin, S end, size_type_t<I> size) const
             {
                 CONCEPT_ASSERT(Sentinel<S, I>());
                 return {detail::move(begin), detail::move(end), size};
@@ -201,7 +201,7 @@ namespace ranges
         /// \overload
         template<std::size_t N, typename I, typename S,
             CONCEPT_REQUIRES_(N == 2)>
-        constexpr iterator_size_t<I> get(sized_iterator_range<I, S> const &p)
+        constexpr size_type_t<I> get(sized_iterator_range<I, S> const &p)
         {
             return p.size();
         }
@@ -258,7 +258,7 @@ namespace std
     template<typename I, typename S>
     struct tuple_element<2, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = ::ranges::v3::iterator_size_t<I>;
+        using type = ::ranges::v3::size_type_t<I>;
     };
 }
 /// \endcond

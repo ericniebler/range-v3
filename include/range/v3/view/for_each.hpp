@@ -40,7 +40,7 @@ namespace ranges
         {
             for_each_view() = default;
             for_each_view(Rng rng, F f)
-              : join_view<transform_view<Rng, F>>{{std::move(rng), std::move(f)}}
+              : for_each_view::join_view{{std::move(rng), std::move(f)}}
             {}
         };
 
@@ -60,7 +60,7 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     Range<Rng>,
-                    IndirectInvocable<F, range_iterator_t<Rng>>,
+                    IndirectInvocable<F, iterator_t<Rng>>,
                     Range<concepts::Invocable::result_t<F&, range_common_reference_t<Rng>>>>;
 
                 template<typename Rng, typename F,
@@ -78,7 +78,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "Rng is not a model of the Range concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, iterator_t<Rng>>(),
                         "The function F is not callable with arguments of the type of the range's "
                         "common reference type.");
                     CONCEPT_ASSERT_MSG(Range<concepts::Invocable::result_t<F&,
@@ -105,13 +105,13 @@ namespace ranges
 
         #ifndef RANGES_DOXYGEN_INVOKED
             template<typename Arg, typename Val = detail::decay_t<Arg>,
-                CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg &&>()))>
+                CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg>()))>
             void operator()(Arg &&) const
             {
                 CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
                     "The object passed to yield must be a model of the CopyConstructible "
                     "concept; that is, it needs to be copy and move constructible, and destructible.");
-                CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg &&>(),
+                CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg>(),
                     "The object type passed to yield must be initializable from the "
                     "actual argument expression.");
             }
@@ -167,7 +167,7 @@ namespace ranges
         template<typename Rng, typename Fun,
             CONCEPT_REQUIRES_(Range<Rng>() && CopyConstructible<Fun>() &&
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
-                Range<result_of_t<Fun&(range_common_reference_t<Rng>)>>())>
+                Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())>
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(std::forward<Rng>(rng), std::move(fun)))
         {

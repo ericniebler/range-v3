@@ -32,7 +32,7 @@ namespace ranges
             template<typename Rng,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>())>
             RANGES_CXX14_CONSTEXPR
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
+            auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
                 decltype(begin(rng)[n])
             {
                 return begin(rng)[n];

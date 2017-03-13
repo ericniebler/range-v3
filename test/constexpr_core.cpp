@@ -26,25 +26,25 @@
 // non-range-v3 iterators, and it is not constexpr:
 template<typename T, typename I = random_access_iterator<T>>
 RANGES_CXX14_CONSTEXPR
-void advance(random_access_iterator<T> & i, ranges::iterator_difference_t<I> n) {
+void advance(random_access_iterator<T> & i, ranges::difference_type_t<I> n) {
     ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
 }
 
 template<typename T, typename I = bidirectional_iterator<T>>
 RANGES_CXX14_CONSTEXPR
-void advance(bidirectional_iterator<T> & i, ranges::iterator_difference_t<I> n) {
+void advance(bidirectional_iterator<T> & i, ranges::difference_type_t<I> n) {
     ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
 }
 
 template<typename T, typename I = forward_iterator<T>>
 RANGES_CXX14_CONSTEXPR
-void advance(forward_iterator<T> & i, ranges::iterator_difference_t<I> n) {
+void advance(forward_iterator<T> & i, ranges::difference_type_t<I> n) {
     ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
 }
 
 template<typename T, typename I = input_iterator<T>>
 RANGES_CXX14_CONSTEXPR
-void advance(input_iterator<T> & i, ranges::iterator_difference_t<I> n) {
+void advance(input_iterator<T> & i, ranges::difference_type_t<I> n) {
     ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
 }
 

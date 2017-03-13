@@ -134,54 +134,60 @@ namespace ranges
         namespace concepts
         {
             struct Readable
-              : refines<Movable, DefaultConstructible>
             {
+            private:
+                template<typename I,
+                    typename R = decltype(*std::declval<I &>()),
+                    typename = R&>
+                using reference_t_ = R;
+
+                template<typename I,
+                    typename = reference_t_<I>,
+                    typename R = decltype(iter_move(std::declval<I &>())),
+                    typename = R&>
+                using rvalue_reference_t_ = R;
+            public:
                 // Associated types
                 template<typename I>
                 using value_t = meta::_t<value_type<I>>;
 
                 template<typename I>
-                using reference_t = decltype(*std::declval<I &>());
+                using reference_t = reference_t_<I>;
 
                 template<typename I>
-                using rvalue_reference_t = decltype(indirect_move(std::declval<I &>()));
+                using rvalue_reference_t = rvalue_reference_t_<I>;
 
                 template<typename I>
                 using common_reference_t =
-                    ranges::common_reference_t<reference_t<I> &&, value_t<I> &>;
+                    ranges::common_reference_t<reference_t<I>, value_t<I> &>;
 
                 template<typename I>
-                auto requires_(I&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         // The value, reference and rvalue reference types are related
                         // through the CommonReference concept.
-                        concepts::model_of<CommonReference, reference_t<I> &&, value_t<I> &>(),
-                        concepts::model_of<CommonReference, reference_t<I> &&, rvalue_reference_t<I> &&>(),
-                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>()
-                        // // Experimental additional tests. If nothing else, this is a good workout
-                        // // for the common_reference code.
-                        // concepts::model_of<Same, ranges::common_reference_t<reference_t<I>, value_t<I>>, value_t<I>>(),
-                        // concepts::model_of<Same, ranges::common_reference_t<rvalue_reference_t<I>, value_t<I>>, value_t<I>>()
+                        concepts::model_of<CommonReference, reference_t<I>, value_t<I> &>(),
+                        concepts::model_of<CommonReference, reference_t<I>, rvalue_reference_t<I>>(),
+                        concepts::model_of<CommonReference, rvalue_reference_t<I>, value_t<I> const &>()
                     ));
             };
 
             struct Writable
-              : refines<Movable(_1), DefaultConstructible(_1)>
             {
                 template<typename Out, typename T>
-                auto requires_(Out && o, T && t) -> decltype(
+                auto requires_(Out& o, T &&t) -> decltype(
                     concepts::valid_expr(
-                        ((void)(*(Out &&)o = (T &&)t), 42)
+                        ((void)(*o = (T &&) t), 42)
                     ));
             };
 
             struct IndirectlyMovable
             {
                 template<typename I, typename O>
-                auto requires_(I&&, O&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
-                        concepts::model_of<Writable, O, Readable::rvalue_reference_t<I> &&>()
+                        concepts::model_of<Writable, O, Readable::rvalue_reference_t<I>>()
                     ));
             };
 
@@ -189,24 +195,24 @@ namespace ranges
               : refines<IndirectlyMovable>
             {
                 template<typename I, typename O>
-                auto requires_(I&&, O&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Movable, Readable::value_t<I>>(),
                         concepts::model_of<Constructible, Readable::value_t<I>,
-                            Readable::rvalue_reference_t<I> &&>(),
+                            Readable::rvalue_reference_t<I>>(),
                         concepts::model_of<Assignable, Readable::value_t<I> &,
-                            Readable::rvalue_reference_t<I> &&>(),
-                        concepts::model_of<Writable, O, Readable::value_t<I> &&>()
+                            Readable::rvalue_reference_t<I>>(),
+                        concepts::model_of<Writable, O, Readable::value_t<I>>()
                     ));
             };
 
             struct IndirectlyCopyable
             {
                 template<typename I, typename O>
-                auto requires_(I&&, O&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
-                        concepts::model_of<Writable, O, Readable::reference_t<I> &&>()
+                        concepts::model_of<Writable, O, Readable::reference_t<I>>()
                     ));
             };
 
@@ -214,14 +220,14 @@ namespace ranges
               : refines<IndirectlyCopyable>
             {
                 template<typename I, typename O>
-                auto requires_(I&&, O&&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Copyable, Readable::value_t<I>>(),
                         concepts::model_of<Constructible, Readable::value_t<I>,
-                            Readable::reference_t<I> &&>(),
+                            Readable::reference_t<I>>(),
                         concepts::model_of<Assignable, Readable::value_t<I> &,
-                            Readable::reference_t<I> &&>(),
-                        concepts::model_of<Writable, O, Readable::common_reference_t<I> &&>(),
+                            Readable::reference_t<I>>(),
+                        concepts::model_of<Writable, O, Readable::common_reference_t<I>>(),
                         concepts::model_of<Writable, O, Readable::value_t<I> const &>()
                     ));
             };
@@ -233,10 +239,10 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
-                        ((void)ranges::indirect_swap(i1, i2), 42),
-                        ((void)ranges::indirect_swap(i1, i1), 42),
-                        ((void)ranges::indirect_swap(i2, i2), 42),
-                        ((void)ranges::indirect_swap(i2, i1), 42)
+                        ((void)ranges::iter_swap((I1 &&) i1, (I2 &&) i2), 42),
+                        ((void)ranges::iter_swap((I1 &&) i1, (I1 &&) i1), 42),
+                        ((void)ranges::iter_swap((I2 &&) i2, (I2 &&) i2), 42),
+                        ((void)ranges::iter_swap((I2 &&) i2, (I1 &&) i1), 42)
                     ));
             };
 
@@ -248,7 +254,7 @@ namespace ranges
                 using difference_t = meta::_t<difference_type<I>>;
 
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<difference_t<I>>{}),
                         concepts::has_type<I &>(++i),
@@ -260,7 +266,7 @@ namespace ranges
               : refines<Regular, WeaklyIncrementable>
             {
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<I>(i++)
                     ));
@@ -270,7 +276,7 @@ namespace ranges
               : refines<WeaklyIncrementable, Copyable>
             {
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         ((void)*i, 42)
                     ));
@@ -285,7 +291,7 @@ namespace ranges
             {
                 template<typename S, typename I,
                     typename D = WeaklyIncrementable::difference_t<I>>
-                auto requires_(S&& s, I&& i) -> decltype(
+                auto requires_(S s, I i) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(
                             disable_sized_sentinel<uncvref_t<S>, uncvref_t<I>>()),
@@ -296,7 +302,13 @@ namespace ranges
 
             struct OutputIterator
               : refines<Iterator(_1), Writable>
-            {};
+            {
+                template<typename Out, typename T>
+                auto requires_(Out o, T &&t) -> decltype(
+                    concepts::valid_expr(
+                        *o++ = (T &&) t
+                    ));
+            };
 
             struct InputIterator
               : refines<Iterator, Readable>
@@ -308,7 +320,7 @@ namespace ranges
                 using category_t = meta::_t<ranges::iterator_category<I>>;
 
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>()
                     ));
@@ -318,7 +330,7 @@ namespace ranges
               : refines<InputIterator, Incrementable, Sentinel(_1, _1)>
             {
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::forward_iterator_tag>()
                     ));
@@ -328,7 +340,7 @@ namespace ranges
               : refines<ForwardIterator>
             {
                 template<typename I>
-                auto requires_(I&& i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::bidirectional_iterator_tag>(),
                         concepts::has_type<I &>(--i),
@@ -340,8 +352,8 @@ namespace ranges
             struct RandomAccessIterator
               : refines<BidirectionalIterator, TotallyOrdered, SizedSentinel(_1, _1)>
             {
-                template<typename I, typename V = common_reference_t<I>>
-                auto requires_(I&& i) -> decltype(
+                template<typename I>
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::random_access_iterator_tag>(),
                         concepts::has_type<I>(i + (i - i)),
@@ -349,9 +361,7 @@ namespace ranges
                         concepts::has_type<I>(i - (i - i)),
                         concepts::has_type<I &>(i += (i-i)),
                         concepts::has_type<I &>(i -= (i - i)),
-                        // BUGBUG Should be CommonReference<V const &, decltype(i[i-i])>
-                        // Redesign basic_iterator's operator[]'s proxy reference type
-                        concepts::convertible_to<V>(i[i - i])
+                        concepts::model_of<Same, reference_t<I>, decltype(i[i - i])>()
                     ));
             };
         }
@@ -446,11 +456,14 @@ namespace ranges
             template<typename I>
             struct exclusively_writable_<I, true>
             {
+                template<typename T, typename U>
+                using assignable_res_t = decltype(std::declval<T>() = std::declval<U>());
+
                 template<typename T>
                 using invoke =
                     meta::and_<
                         Writable<I, T>,
-                        meta::not_<Assignable<concepts::Readable::reference_t<I> &&, T>>>;
+                        meta::not_<meta::is_trait<meta::defer<assignable_res_t, concepts::Readable::reference_t<I>, T>>>>;
             };
         }
         /// \endcond
@@ -463,12 +476,12 @@ namespace ranges
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
-                meta::list<concepts::Readable::value_t<I> &, concepts::Readable::reference_t<I> &&>;
+                meta::list<concepts::Readable::value_t<I> &, concepts::Readable::reference_t<I> /*&&*/>;
 
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
             // Readables. Return all the results as a list.
-            template <class...Is>
+            template<class...Is>
             using iter_args_lists_ =
                 meta::push_back<
                     meta::cartesian_product<
@@ -484,6 +497,7 @@ namespace ranges
 
         template<typename C, typename ...Is>
         using IndirectInvocable = meta::and_<
+            CopyConstructible<uncvref_t<C>>,
             meta::strict_and<Readable<Is>...>,
             CopyConstructible<C>,
             // C must be callable with the values and references read from the Is.
@@ -499,13 +513,17 @@ namespace ranges
                 detail::iter_map_reduce_fn_<
                     meta::bind_front<meta::quote<concepts::Invocable::result_t>, C&>,
                     meta::quote<CommonReference>>,
-                Is...> >;
+                Is...>>;
+
+        template<typename C, typename ...Is>
+        using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
         using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
+            CopyConstructible<uncvref_t<C>>,
             meta::strict_and<Readable<Is>...>,
             CopyConstructible<C>,
             meta::lazy::invoke<
@@ -516,6 +534,7 @@ namespace ranges
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
+            CopyConstructible<uncvref_t<C>>,
             meta::strict_and<Readable<I0>, Readable<I1>>,
             CopyConstructible<C>,
             meta::lazy::invoke<
@@ -537,9 +556,12 @@ namespace ranges
             template<typename Fun, typename... Is>
             struct indirect_result_of_<
                 Fun(Is...),
-                meta::if_<Invocable<Fun, concepts::Readable::reference_t<Is>...>>>
+                meta::if_c<meta::and_c<(bool) Readable<Is>()...>::value>>
+              : meta::if_c<
+                    (bool) Invocable<Fun, concepts::Readable::reference_t<Is>...>(),
+                    meta::defer<concepts::Invocable::result_t, Fun, concepts::Readable::reference_t<Is>...>,
+                    meta::nil_>
             {
-                using type = result_of_t<Fun(concepts::Readable::reference_t<Is>...)>;
             };
         }
 
@@ -565,7 +587,10 @@ namespace ranges
         /// \endcond
 
         template<typename I, typename Proj>
-        using projected = meta::if_c<IndirectInvocable<Proj, I>::value, detail::projected_<I, Proj>>;
+        using projected =
+            meta::if_c<
+                IndirectRegularInvocable<Proj, I>::value,
+                detail::projected_<I, Proj>>;
 
         template<typename I, typename Proj>
         struct difference_type<detail::projected_<I, Proj>>
@@ -647,12 +672,12 @@ namespace ranges
 
 namespace __gnu_debug
 {
-    template <class I1, class I2, class Seq,
+    template<class I1, class I2, class Seq,
         CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I2>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
-    template <class I1, class Seq,
+    template<class I1, class Seq,
         CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I1>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;

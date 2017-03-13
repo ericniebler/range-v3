@@ -38,9 +38,9 @@ namespace ranges
             }
 
             template<typename Rng, typename V,
-                typename O = range_iterator_t<Rng>,
+                typename O = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(OutputRange<Rng, V const &>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
             {
                 return (*this)(begin(rng), end(rng), val);
             }

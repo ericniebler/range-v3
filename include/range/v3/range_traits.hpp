@@ -32,19 +32,19 @@ namespace ranges
 
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using range_iterator_t = concepts::Range::iterator_t<Rng>;
+        using iterator_t = concepts::Range::iterator_t<Rng>;
 
         template<typename Rng>
-        using range_sentinel_t = concepts::Range::sentinel_t<Rng>;
+        using sentinel_t = concepts::Range::sentinel_t<Rng>;
 
         template<typename Rng>
-        using range_difference_t = concepts::Range::difference_t<Rng>;
+        using range_difference_type_t = concepts::Range::difference_t<Rng>;
 
         template<typename Rng>
-        using range_size_t = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+        using range_size_type_t = meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
 
         template<typename Rng>
-        using range_value_t = concepts::InputRange::value_t<Rng>;
+        using range_value_type_t = concepts::InputRange::value_t<Rng>;
 
         template<typename Rng>
         using range_reference_t = concepts::InputRange::reference_t<Rng>;
@@ -59,43 +59,101 @@ namespace ranges
         using range_category_t = concepts::InputRange::category_t<Rng>;
 
         template<typename Rng>
-        using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
+        using range_common_iterator_t = common_iterator_t<iterator_t<Rng>, sentinel_t<Rng>>;
 
         template<typename Rng>
-        using range_safe_iterator_t = decltype(ranges::safe_begin(std::declval<Rng>()));
-
-        template<typename Rng>
-        using range_safe_sentinel_t = decltype(ranges::safe_end(std::declval<Rng>()));
-
-        // Metafunctions
-        template<typename Rng>
-        using range_iterator = meta::defer<range_iterator_t, Rng>;
-
-        template<typename Rng>
-        using range_sentinel = meta::defer<range_sentinel_t, Rng>;
-
-        template<typename Rng>
-        using range_category = meta::defer<range_category_t, Rng>;
-
-        template<typename Rng>
-        using range_value = meta::defer<range_value_t, Rng>;
-
-        template<typename Rng>
-        using range_difference = meta::defer<range_difference_t, Rng>;
-
-        template<typename Rng>
-        using range_reference = meta::defer<range_reference_t, Rng>;
-
-        template<typename Rng>
-        using range_rvalue_reference = meta::defer<range_rvalue_reference_t, Rng>;
-
-        template<typename Rng>
-        using range_common_reference = meta::defer<range_common_reference_t, Rng>;
-
-        template<typename Rng>
-        using range_size = meta::defer<range_size_t, Rng>;
+        using safe_iterator_t =
+            meta::if_<
+                std::is_lvalue_reference<Rng>,
+                meta::if_<Range<Rng>, iterator_t<Rng>>,
+                dangling<iterator_t<Rng>>>;
 
         /// \cond
+        // Deprecated type aliases
+        template<typename Rng>
+        using range_iterator_t
+            RANGES_DEPRECATED("Please use ranges::iterator_t instead") =
+                concepts::Range::iterator_t<Rng>;
+
+        template<typename Rng>
+        using range_sentinel_t
+            RANGES_DEPRECATED("Please use ranges::sentinel_t instead") =
+                concepts::Range::sentinel_t<Rng>;
+
+        template<typename Rng>
+        using range_difference_t
+            RANGES_DEPRECATED("Please use ranges::range_difference_type_t instead") =
+                concepts::Range::difference_t<Rng>;
+
+        template<typename Rng>
+        using range_size_t
+            RANGES_DEPRECATED("Please use ranges::range_size_type_t instead") =
+                meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+
+        template<typename Rng>
+        using range_value_t
+            RANGES_DEPRECATED("Please use ranges::range_value_type_t instead") =
+                concepts::InputRange::value_t<Rng>;
+
+        template<typename Rng>
+        using range_safe_iterator_t
+            RANGES_DEPRECATED("Please use ranges::safe_iterator_t instead") =
+                safe_iterator_t<Rng>;
+
+        template<typename Rng>
+        using range_safe_sentinel_t
+            RANGES_DEPRECATED("Please use ranges::safe_sentinel_t instead") =
+                meta::if_<
+                    std::is_lvalue_reference<Rng>,
+                    meta::if_<Range<Rng>, sentinel_t<Rng>>,
+                    dangling<sentinel_t<Rng>>>;
+
+        // Deprecated metafunctions
+        template<typename Rng>
+        using range_iterator
+            RANGES_DEPRECATED("range_iterator is deprecated") =
+                meta::defer<range_iterator_t, Rng>;
+
+        template<typename Rng>
+        using range_sentinel
+            RANGES_DEPRECATED("range_sentinel is deprecated") =
+                meta::defer<range_sentinel_t, Rng>;
+
+        template<typename Rng>
+        using range_category
+            RANGES_DEPRECATED("range_category is deprecated") =
+                meta::defer<range_category_t, Rng>;
+
+        template<typename Rng>
+        using range_value
+            RANGES_DEPRECATED("range_value is deprecated") =
+                meta::defer<range_value_t, Rng>;
+
+        template<typename Rng>
+        using range_difference
+            RANGES_DEPRECATED("range_difference is deprecated") =
+                meta::defer<range_difference_t, Rng>;
+
+        template<typename Rng>
+        using range_reference
+            RANGES_DEPRECATED("range_reference is deprecated") =
+                meta::defer<range_reference_t, Rng>;
+
+        template<typename Rng>
+        using range_rvalue_reference
+            RANGES_DEPRECATED("range_rvalue_reference is deprecated") =
+                meta::defer<range_rvalue_reference_t, Rng>;
+
+        template<typename Rng>
+        using range_common_reference
+            RANGES_DEPRECATED("range_common_reference is deprecated") =
+                meta::defer<range_common_reference_t, Rng>;
+
+        template<typename Rng>
+        using range_size
+            RANGES_DEPRECATED("range_size is deprecated") =
+                meta::defer<range_size_t, Rng>;
+
         namespace detail
         {
             std::integral_constant<cardinality, finite> test_cardinality(void *);

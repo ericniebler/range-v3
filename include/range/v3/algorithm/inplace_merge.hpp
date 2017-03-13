@@ -56,15 +56,13 @@ namespace ranges
             {
             private:
                 template<typename I, typename C, typename P>
-                static void impl(I begin, I middle, I end, iterator_difference_t<I> len1,
-                    iterator_difference_t<I> len2, iterator_value_t<I> *buf, C &pred, P &proj)
+                static void impl(I begin, I middle, I end, difference_type_t<I> len1,
+                    difference_type_t<I> len2, value_type_t<I> *const buf, C &pred, P &proj)
                 {
-                    using value_type = iterator_value_t<I>;
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{buf, {}};
-                    auto p = ranges::make_counted_raw_storage_iterator(buf, h.get_deleter());
+                    auto tmpbuf = make_raw_buffer(buf);
                     if(len1 <= len2)
                     {
-                        p = ranges::move(begin, middle, p).second;
+                        auto p = ranges::move(begin, middle, tmpbuf.begin()).second;
                         merge(make_move_iterator(buf), make_move_sentinel(p.base().base()),
                             make_move_iterator(std::move(middle)),
                             make_move_sentinel(std::move(end)), std::move(begin),
@@ -72,9 +70,9 @@ namespace ranges
                     }
                     else
                     {
-                        p = ranges::move(middle, end, p).second;
+                        auto p = ranges::move(middle, end, tmpbuf.begin()).second;
                         using RBi = std::reverse_iterator<I>;
-                        using Rv = std::reverse_iterator<value_type*>;
+                        using Rv = std::reverse_iterator<value_type_t<I> *>;
                         merge(make_move_iterator(RBi{std::move(middle)}),
                             make_move_sentinel(RBi{std::move(begin)}),
                             make_move_iterator(Rv{p.base().base()}),
@@ -86,11 +84,11 @@ namespace ranges
             public:
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sortable<I, C, P>())>
-                void operator()(I begin, I middle, I end, iterator_difference_t<I> len1,
-                    iterator_difference_t<I> len2, iterator_value_t<I> *buf,
+                void operator()(I begin, I middle, I end, difference_type_t<I> len1,
+                    difference_type_t<I> len2, value_type_t<I> *buf,
                     std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
                 {
-                    using D = iterator_difference_t<I>;
+                    using D = difference_type_t<I>;
                     while(true)
                     {
                         // if middle == end, we're done
@@ -179,11 +177,11 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sortable<I, C, P>())>
-                void operator()(I begin, I middle, I end, iterator_difference_t<I> len1,
-                    iterator_difference_t<I> len2, C pred = C{}, P proj = P{}) const
+                void operator()(I begin, I middle, I end, difference_type_t<I> len1,
+                    difference_type_t<I> len2, C pred = C{}, P proj = P{}) const
                 {
                     merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
-                        _nullptr_v<iterator_value_t<I>>(), 0, std::move(pred), std::move(proj));
+                        _nullptr_v<value_type_t<I>>(), 0, std::move(pred), std::move(proj));
                 }
             };
 
@@ -201,7 +199,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sortable<I, C, P>())>
             I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 auto len1 = distance(begin, middle);
                 auto len2_and_end = enumerate(middle, end);
                 auto buf_size = ranges::min(len1, len2_and_end.first);
@@ -219,9 +217,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng>
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, I middle, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),

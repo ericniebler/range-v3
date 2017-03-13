@@ -38,8 +38,8 @@ Most of the source code in this project are mine, and those are under the Boost 
 --------------------------------------------
 The code is known to work on the following compilers:
 
-- clang 3.4.0
-- GCC 4.9.0
+- clang 3.5.2
+- GCC 4.9.4
 
 \section tutorial-quick-start Quick Start
 
@@ -199,7 +199,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
             adaptor() = default;
             adaptor(semiregular_t<Fun> const &fun) : fun_(fun) {}
             // Here is where we apply Fun to the elements:
-            auto read(range_iterator_t<Rng> it) const -> decltype(fun_(*it))
+            auto read(iterator_t<Rng> it) const -> decltype(fun_(*it))
             {
                 return fun_(*it);
             }

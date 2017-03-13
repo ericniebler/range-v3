@@ -47,11 +47,11 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename Fun,
-                        typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng&&, Fun&&) -> decltype(
+                        typename I = iterator_t<Rng>>
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::is_true(IndirectPredicate<Fun, range_iterator_t<Rng>>{}),
+                            concepts::is_true(IndirectPredicate<Fun, iterator_t<Rng>>{}),
                             concepts::model_of<concepts::ErasableRange, Rng, I, I>()
                         ));
                 };
@@ -60,7 +60,7 @@ namespace ranges
                 using Concept = concepts::models<ConceptImpl, Rng, Fun>;
 
                 template<typename Rng, typename Fun,
-                    typename I = range_iterator_t<Rng>,
+                    typename I = iterator_t<Rng>,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 Rng operator()(Rng && rng, Fun fun) const
                 {
@@ -77,11 +77,11 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::drop_while operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Fun, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Fun, iterator_t<Rng>>(),
                         "The function passed to action::drop_while must be callable with objects "
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::drop_while operates must allow element "
                         "removal.");

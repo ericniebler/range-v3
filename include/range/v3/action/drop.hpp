@@ -46,9 +46,9 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename T,
-                        typename I = range_iterator_t<Rng>,
-                        typename D = range_difference_t<Rng>>
-                    auto requires_(Rng&&, T&&) -> decltype(
+                        typename I = iterator_t<Rng>,
+                        typename D = range_difference_type_t<Rng>>
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
@@ -59,9 +59,9 @@ namespace ranges
                 template<typename Rng, typename T>
                 using Concept = concepts::models<ConceptImpl, Rng, T>;
 
-                template<typename Rng, typename D = range_difference_t<Rng>,
+                template<typename Rng, typename D = range_difference_type_t<Rng>,
                     CONCEPT_REQUIRES_(Concept<Rng, D>())>
-                Rng operator()(Rng && rng, range_difference_t<Rng> n) const
+                Rng operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
@@ -76,10 +76,10 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::drop operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<Rng>>(),
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

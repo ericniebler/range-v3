@@ -51,10 +51,10 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
-                I operator()(I const begin_, iterator_difference_t<I> const n_, C pred = C{}, P proj = P{}) const
+                I operator()(I const begin_, difference_type_t<I> const n_, C pred = C{}, P proj = P{}) const
                 {
                     RANGES_EXPECT(0 <= n_);
-                    iterator_difference_t<I> p = 0, c = 1;
+                    difference_type_t<I> p = 0, c = 1;
                     I pp = begin_;
                     while(c < n_)
                     {
@@ -79,7 +79,7 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
-                bool operator()(I begin, iterator_difference_t<I> n, C pred = C{}, P proj = P{}) const
+                bool operator()(I begin, difference_type_t<I> n, C pred = C{}, P proj = P{}) const
                 {
                     return is_heap_until_n(begin, n, std::move(pred), std::move(proj)) == begin + n;
                 }
@@ -102,9 +102,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Range<Rng>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_until_n(begin(rng), distance(rng), std::move(pred),
                     std::move(proj));
@@ -127,7 +127,7 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Range<Rng>())>
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
@@ -146,7 +146,7 @@ namespace ranges
             struct sift_up_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, iterator_difference_t<I> len, C pred = C{}, P proj = P{}) const
+                void operator()(I begin, difference_type_t<I> len, C pred = C{}, P proj = P{}) const
                 {
                     if(len > 1)
                     {
@@ -155,7 +155,7 @@ namespace ranges
                         I i = begin + len;
                         if(invoke(pred, invoke(proj, *i), invoke(proj, *--end)))
                         {
-                            iterator_value_t<I> v = iter_move(end);
+                            value_type_t<I> v = iter_move(end);
                             do
                             {
                                 *end = iter_move(i);
@@ -176,7 +176,7 @@ namespace ranges
             struct sift_down_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, iterator_difference_t<I> len, I start, C pred = C {}, P proj = P{}) const
+                void operator()(I begin, difference_type_t<I> len, I start, C pred = C {}, P proj = P{}) const
                 {
                     // left-child of start is at 2 * start + 1
                     // right-child of start is at 2 * start + 2
@@ -200,7 +200,7 @@ namespace ranges
                         // we are, start is larger than it's largest child
                         return;
 
-                    iterator_value_t<I> top = iter_move(start);
+                    value_type_t<I> top = iter_move(start);
                     do
                     {
                         // we are not in heap-order, swap the parent with it's largest child
@@ -245,9 +245,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
                 auto n = distance(rng);
@@ -268,7 +268,7 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
-                void operator()(I begin, iterator_difference_t<I> len, C pred = C{},
+                void operator()(I begin, difference_type_t<I> len, C pred = C{},
                     P proj = P{}) const
                 {
                     if(len > 1)
@@ -297,9 +297,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
                 auto n = distance(rng);
@@ -318,7 +318,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                iterator_difference_t<I> const n = distance(begin, end);
+                difference_type_t<I> const n = distance(begin, end);
                 if(n > 1)
                     // start from the first parent, there is no need to consider children
                     for(auto start = (n - 2) / 2; start >= 0; --start)
@@ -327,12 +327,12 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
-                iterator_difference_t<I> const n = distance(rng);
+                difference_type_t<I> const n = distance(rng);
                 if(n > 1)
                     // start from the first parent, there is no need to consider children
                     for(auto start = (n - 2) / 2; start >= 0; --start)
@@ -351,19 +351,19 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                iterator_difference_t<I> const n = distance(begin, end);
+                difference_type_t<I> const n = distance(begin, end);
                 for(auto i = n; i > 1; --i)
                     detail::pop_heap_n(begin, i, std::ref(pred), std::ref(proj));
                 return begin + n;
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng &>() && Sortable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
-                iterator_difference_t<I> const n = distance(rng);
+                difference_type_t<I> const n = distance(rng);
                 for(auto i = n; i > 1; --i)
                     detail::pop_heap_n(begin, i, std::ref(pred), std::ref(proj));
                 return begin + n;

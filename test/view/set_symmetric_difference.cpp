@@ -30,10 +30,9 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
-
-
 
 int main()
 {
@@ -53,13 +52,13 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_finite, i2_finite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, int&>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), int&&>());
 
@@ -83,15 +82,15 @@ int main()
     {
         auto res = view::set_symmetric_difference(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(res);
-        models_not<concepts::RandomAccessView>(res);
-        models_not<concepts::BoundedView>(res);
+        models<concepts::ForwardView>(aux::copy(res));
+        models_not<concepts::RandomAccessView>(aux::copy(res));
+        models_not<concepts::BoundedView>(aux::copy(res));
         
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>,
-                            common_type_t<range_value_t<decltype(i1_infinite)>,
-                                          range_value_t<decltype(i2_infinite)>>>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>,
+                            common_type_t<range_value_type_t<decltype(i1_infinite)>,
+                                          range_value_type_t<decltype(i2_infinite)>>>());
         CONCEPT_ASSERT(Same<range_reference_t<R>,
                             common_reference_t<range_reference_t<decltype(i1_infinite)>,
                                                range_reference_t<decltype(i2_infinite)>>
@@ -116,13 +115,13 @@ int main()
     {
         auto res1 = view::set_symmetric_difference(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(res1);
-        models_not<concepts::RandomAccessView>(res1);
-        models_not<concepts::BoundedView>(res1);
+        models<concepts::ForwardView>(aux::copy(res1));
+        models_not<concepts::RandomAccessView>(aux::copy(res1));
+        models_not<concepts::BoundedView>(aux::copy(res1));
         
         using R1 = decltype(res1);
 
-        CONCEPT_ASSERT(Same<range_value_t<R1>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R1>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R1>, int>()); // our infinite range does not give out references
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, int>());
 
@@ -134,13 +133,13 @@ int main()
         // now swap the operands:
         auto res2 = view::set_symmetric_difference(i2_infinite, i1_finite);
 
-        models<concepts::ForwardView>(res2);
-        models_not<concepts::RandomAccessView>(res2);
-        models_not<concepts::BoundedView>(res2);
+        models<concepts::ForwardView>(aux::copy(res2));
+        models_not<concepts::RandomAccessView>(aux::copy(res2));
+        models_not<concepts::BoundedView>(aux::copy(res2));
         
         using R2 = decltype(res2);
 
-        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, int>()); // our infinite range does not give out references
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, int>());
 
@@ -179,13 +178,13 @@ int main()
     {
         auto res1 = view::set_symmetric_difference(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_ASSERT(Same<range_value_t<R1>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R1>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R1>, const int&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, const int&&>());
         
         auto res2 = view::set_symmetric_difference(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, int>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, const int&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, const int&&>());
     }
@@ -224,7 +223,7 @@ int main()
     // sets with different element types, custom orderings
     {        
         auto res = view::set_symmetric_difference(b_finite, d_finite, [](const B& a, const D& b){ return a.val < b.val; });
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res)>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, B&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, B&&>());
         ::check_equal(res, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{8}, B{20}});
@@ -241,7 +240,7 @@ int main()
                                                    &B::val,
                                                    &D::val
                                                   );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res1)>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, B&>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, B&&>());
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{8}, B{20}});
@@ -251,7 +250,7 @@ int main()
                                                    ident(),
                                                    [](const B& x){ return x.val; }
                                                   );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, B>());
+        CONCEPT_ASSERT(Same<range_value_type_t<decltype(res2)>, B>());
         CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, B>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, B>());
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{2}, B{3}, B{4}, B{5}, B{7}, B{9}, B{20}});
@@ -285,7 +284,7 @@ int main()
  
         using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<R>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, MoveOnlyString>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
     }

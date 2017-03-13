@@ -29,7 +29,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class InIter, class OutIter, class Sent = InIter>
+template<class InIter, class OutIter, class Sent = InIter>
 void test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4};
@@ -46,7 +46,7 @@ void test_iter()
     CHECK(ib[4] == 4);
 }
 
-template <class InIter, class OutIter, class Sent = InIter>
+template<class InIter, class OutIter, class Sent = InIter>
 void test_rng()
 {
     int ia[] = {0, 1, 2, 3, 4};
@@ -64,7 +64,7 @@ void test_rng()
     CHECK(ib[4] == 4);
 }
 
-template <class InIter, class OutIter>
+template<class InIter, class OutIter>
 void test()
 {
     using Sent = typename sentinel_type<InIter>::type;

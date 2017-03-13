@@ -27,7 +27,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_char()
 {
@@ -56,7 +56,7 @@ test_char()
     CHECK(j.get_unsafe() == Iter(ca + 4));
 }
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_int()
 {

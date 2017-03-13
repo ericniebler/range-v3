@@ -65,16 +65,16 @@ namespace
 
     struct indirect_less
     {
-        template <class P>
+        template<class P>
         bool operator()(const P& x, const P& y)
             {return *x < *y;}
     };
 
-    template <class RI>
+    template<class RI>
     void
     test_sort_helper(RI f, RI l)
     {
-        using value_type = ranges::iterator_value_t<RI>;
+        using value_type = ranges::value_type_t<RI>;
         auto sort = make_testable_1<false>(ranges::sort);
         if (f != l)
         {
@@ -100,7 +100,7 @@ namespace
         }
     }
 
-    template <class RI>
+    template<class RI>
     void
     test_sort_driver_driver(RI f, RI l, int start, RI real_last)
     {
@@ -116,14 +116,14 @@ namespace
         }
     }
 
-    template <class RI>
+    template<class RI>
     void
     test_sort_driver(RI f, RI l, int start)
     {
         test_sort_driver_driver(f, l, start, l);
     }
 
-    template <int sa>
+    template<int sa>
     void
     test_sort_()
     {

@@ -26,6 +26,7 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -43,10 +44,10 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         using Rng = decltype((rng));
-        ::models_not<concepts::BoundedView>(rng);
-        ::models_not<concepts::SizedView>(rng);
+        ::models_not<concepts::BoundedView>(aux::copy(rng));
+        ::models_not<concepts::SizedView>(aux::copy(rng));
         CONCEPT_ASSERT(Same<
-            range_value_t<Rng>,
+            range_value_type_t<Rng>,
             std::tuple<int, std::string, std::string>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
@@ -54,7 +55,7 @@ int main()
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
             common_tuple<int &&, std::string const &&, std::string &&>>());
-        CONCEPT_ASSERT(ConvertibleTo<range_value_t<Rng> &&,
+        CONCEPT_ASSERT(ConvertibleTo<range_value_type_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
@@ -70,9 +71,9 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
-        ::models<concepts::View>(rng);
-        ::models_not<concepts::SizedView>(rng);
-        ::models_not<concepts::BoundedView>(rng);
+        ::models<concepts::View>(aux::copy(rng));
+        ::models_not<concepts::SizedView>(aux::copy(rng));
+        ::models_not<concepts::BoundedView>(aux::copy(rng));
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected;
@@ -86,8 +87,8 @@ int main()
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
     static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
-    ::models<concepts::BoundedView>(rnd_rng);
-    ::models<concepts::SizedView>(rnd_rng);
+    ::models<concepts::BoundedView>(aux::copy(rnd_rng));
+    ::models<concepts::SizedView>(aux::copy(rnd_rng));
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);
@@ -149,7 +150,7 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_value_type_t<R2>, MoveOnlyString>());
         CONCEPT_ASSERT(Same<range_reference_t<R2>, MoveOnlyString &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
     }
@@ -158,10 +159,10 @@ int main()
         auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
         auto rng = view::zip(v, v);
         using Rng = decltype(rng);
-        using I = range_iterator_t<Rng>;
+        using I = iterator_t<Rng>;
         CONCEPT_ASSERT(Readable<I>());
         CONCEPT_ASSERT(Same<
-            range_value_t<Rng>,
+            range_value_type_t<Rng>,
             std::pair<MoveOnlyString, MoveOnlyString>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
@@ -185,13 +186,13 @@ int main()
     }
 
     // This is actually a test of the logic of view_adaptor. Since the stride view
-    // does not redefine the current member function, the base range's indirect_move
+    // does not redefine the current member function, the base range's iter_move
     // function gets picked up automatically.
     {
         auto rng0 = view::zip(vi, vs);
         auto rng1 = view::stride(rng0, 2);
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
-        CONCEPT_ASSERT(Same<range_value_t<decltype(rng1)>, range_value_t<decltype(rng0)>>());
+        CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng1)>, range_value_type_t<decltype(rng0)>>());
     }
 
     // Test for noexcept iter_move

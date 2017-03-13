@@ -112,16 +112,15 @@ namespace ranges
             template<typename I, typename V, typename C, typename P>
             static void merge_sort_with_buffer(I begin, I end, V *buffer, C &pred, P &proj)
             {
-                iterator_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
+                difference_type_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
                 stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
                 if(step_size >= len)
                     return;
                 // The first call to merge_sort_loop moves into raw storage. Construct on-demand
                 // and keep track of how many objects we need to destroy.
                 V *buffer_end = buffer + len;
-                std::unique_ptr<V, detail::destroy_n<V>> h{buffer, {}};
-                auto raw_buffer = ranges::make_counted_raw_storage_iterator(buffer, h.get_deleter());
-                stable_sort_fn::merge_sort_loop(begin, end, raw_buffer, step_size, pred, proj);
+                auto tmpbuf = make_raw_buffer(buffer);
+                stable_sort_fn::merge_sort_loop(begin, end, tmpbuf.begin(), step_size, pred, proj);
                 step_size *= 2;
             loop:
                 stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, step_size, pred, proj);
@@ -160,8 +159,8 @@ namespace ranges
             I operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
                 I end = ranges::next(begin, end_);
-                using D = iterator_difference_t<I>;
-                using V = iterator_value_t<I>;
+                using D = difference_type_t<I>;
+                using V = value_type_t<I>;
                 D len = end - begin;
                 auto buf = len > 256 ? std::get_temporary_buffer<V>(len) : detail::value_init{};
                 std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};
@@ -173,9 +172,9 @@ namespace ranges
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessRange<Rng>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
