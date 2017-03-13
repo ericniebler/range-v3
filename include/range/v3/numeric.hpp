@@ -11,10 +11,21 @@
 #ifndef RANGES_V3_NUMERIC_HPP
 #define RANGES_V3_NUMERIC_HPP
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wundef"
+
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/numeric/adjacent_difference.hpp>
 #include <range/v3/numeric/iota.hpp>
 #include <range/v3/numeric/inner_product.hpp>
 #include <range/v3/numeric/partial_sum.hpp>
+
+#pragma clang diagnostic pop
 
 #endif

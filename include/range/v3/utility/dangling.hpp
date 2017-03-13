@@ -14,6 +14,17 @@
 #ifndef RANGES_V3_UTILITY_DANGLING_HPP
 #define RANGES_V3_UTILITY_DANGLING_HPP
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wundef"
+#endif
+
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -195,5 +206,9 @@ namespace ranges
         RANGES_INLINE_VARIABLE(sanitize_fn, sanitize)
     }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #endif

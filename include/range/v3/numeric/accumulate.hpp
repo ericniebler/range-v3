@@ -13,6 +13,17 @@
 #ifndef RANGES_V3_NUMERIC_ACCUMULATE_HPP
 #define RANGES_V3_NUMERIC_ACCUMULATE_HPP
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wundef"
+#endif
+
 #include <meta/meta.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
@@ -56,5 +67,9 @@ namespace ranges
         RANGES_INLINE_VARIABLE(with_braced_init_args<accumulate_fn>, accumulate)
     }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #endif

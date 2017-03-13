@@ -14,6 +14,15 @@
 #ifndef RANGES_V3_ALGORITHM_HPP
 #define RANGES_V3_ALGORITHM_HPP
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wpadded"
+#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma clang diagnostic ignored "-Wundef"
+
 #include <range/v3/detail/config.hpp>
 RANGES_DISABLE_WARNINGS
 
@@ -99,5 +108,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
 
 RANGES_RE_ENABLE_WARNINGS
+
+#pragma clang diagnostic pop
 
 #endif
