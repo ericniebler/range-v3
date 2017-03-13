@@ -87,8 +87,10 @@ namespace ranges
             private:
                 template<typename Rng>
                 static constexpr auto impl(Rng && rng, long)
-                    noexcept(noexcept(begin(static_cast<Rng &&>(rng)))) ->
-                    decltype(begin(static_cast<Rng &&>(rng)))
+#if !defined(__GNUC__) || __GNUC__ >= 5
+                    noexcept(noexcept(begin(static_cast<Rng &&>(rng))))
+#endif
+                    -> decltype(begin(static_cast<Rng &&>(rng)))
                 {
                     return begin(static_cast<Rng &&>(rng));
                 }
@@ -103,8 +105,10 @@ namespace ranges
             public:
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
-                    noexcept(noexcept(begin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    detail::decay_t<decltype(begin_fn::impl(static_cast<Rng &&>(rng), 0))>
+#if !defined(__GNUC__) || __GNUC__ >= 5
+                    noexcept(noexcept(begin_fn::impl(static_cast<Rng &&>(rng), 0)))
+#endif
+                    -> detail::decay_t<decltype(begin_fn::impl(static_cast<Rng &&>(rng), 0))>
                 {
                     return begin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
