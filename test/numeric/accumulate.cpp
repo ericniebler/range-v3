@@ -33,7 +33,7 @@ struct S
     }
 };
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void test()
 {
     int ia[] = {1, 2, 3, 4, 5, 6};

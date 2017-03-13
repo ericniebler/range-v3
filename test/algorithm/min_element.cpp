@@ -34,7 +34,7 @@ namespace
 {
     std::mt19937 gen;
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter(Iter first, Sent last)
     {
@@ -67,7 +67,7 @@ namespace
             CHECK(res.get_unsafe() == last);
     }
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter(unsigned N)
     {
@@ -77,7 +77,7 @@ namespace
         test_iter(Iter(a.get()), Sent(a.get()+N));
     }
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter()
     {
@@ -89,7 +89,7 @@ namespace
         test_iter<Iter, Sent>(1000);
     }
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter_comp(Iter first, Sent last)
     {
@@ -122,7 +122,7 @@ namespace
             CHECK(res.get_unsafe() == last);
     }
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter_comp(unsigned N)
     {
@@ -132,7 +132,7 @@ namespace
         test_iter_comp(Iter(a.get()), Sent(a.get()+N));
     }
 
-    template <class Iter, class Sent = Iter>
+    template<class Iter, class Sent = Iter>
     void
     test_iter_comp()
     {

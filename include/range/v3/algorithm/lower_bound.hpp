@@ -42,9 +42,9 @@ namespace ranges
             }
 
             template<typename Rng, typename V, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && BinarySearchable<I, V, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
             {
                 return partition_point(rng,
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));

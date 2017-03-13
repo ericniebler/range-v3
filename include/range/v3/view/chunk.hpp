@@ -49,9 +49,9 @@ namespace ranges
             using offset_t =
                 meta::if_<
                     BidirectionalRange<Rng>,
-                    range_difference_t<Rng>,
-                    constant<range_difference_t<Rng>, 0>>;
-            range_difference_t<Rng> n_;
+                    range_difference_type_t<Rng>,
+                    constant<range_difference_type_t<Rng>, 0>>;
+            range_difference_type_t<Rng> n_;
             friend range_access;
             struct adaptor;
             adaptor begin_adaptor() const
@@ -60,16 +60,16 @@ namespace ranges
             }
         public:
             chunk_view() = default;
-            chunk_view(Rng rng, range_difference_t<Rng> n)
+            chunk_view(Rng rng, range_difference_type_t<Rng> n)
               : chunk_view::view_adaptor(std::move(rng)), n_(n)
             {
                 RANGES_EXPECT(0 < n_);
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 auto sz = ranges::distance(this->base());
-                return static_cast<range_size_t<Rng>>(sz / n_ + (0 != (sz % n_)));
+                return static_cast<range_size_type_t<Rng>>(sz / n_ + (0 != (sz % n_)));
             }
         };
 
@@ -78,45 +78,45 @@ namespace ranges
           : adaptor_base, private box<offset_t>
         {
         private:
-            range_difference_t<Rng> n_;
-            range_sentinel_t<Rng> end_;
+            range_difference_type_t<Rng> n_;
+            sentinel_t<Rng> end_;
             offset_t & offset() {return this->box<offset_t>::get();}
             offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;
-            adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
+            adaptor(range_difference_type_t<Rng> n, sentinel_t<Rng> end)
               : box<offset_t>{0}, n_(n), end_(end)
             {}
-            auto read(range_iterator_t<Rng> it) const ->
+            auto read(iterator_t<Rng> it) const ->
                 decltype(view::take(make_iterator_range(std::move(it), end_), n_))
             {
                 RANGES_EXPECT(it != end_);
                 RANGES_EXPECT(0 == offset());
                 return view::take(make_iterator_range(std::move(it), end_), n_);
             }
-            void next(range_iterator_t<Rng> &it)
+            void next(iterator_t<Rng> &it)
             {
                 RANGES_EXPECT(it != end_);
                 RANGES_EXPECT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
             CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-            void prev(range_iterator_t<Rng> &it)
+            void prev(iterator_t<Rng> &it)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
             }
             CONCEPT_REQUIRES(
-                SizedSentinel<range_iterator_t<Rng>, range_iterator_t<Rng>>())
-            range_difference_t<Rng> distance_to(range_iterator_t<Rng> const &here,
-                range_iterator_t<Rng> const &there, adaptor const &that) const
+                SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+            range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &here,
+                iterator_t<Rng> const &there, adaptor const &that) const
             {
                 // This assertion is true for all range types except cyclic ranges:
                 //RANGES_EXPECT(0 == ((there - here) + that.offset() - offset()) % n_);
                 return ((there - here) + that.offset() - offset()) / n_;
             }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-            void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
+            void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
             {
                 if(0 < n)
                     offset() = ranges::advance(it, n * n_ + offset(), end_);
@@ -144,7 +144,7 @@ namespace ranges
             public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
-                chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
+                chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }

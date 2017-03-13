@@ -52,10 +52,10 @@ namespace ranges
 
             /// \overload
             template<typename Rng, typename C = equal_to, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectRelation<C, projected<I, P>>())>
-            range_safe_iterator_t<Rng>
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

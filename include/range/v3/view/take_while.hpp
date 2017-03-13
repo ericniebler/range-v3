@@ -56,7 +56,7 @@ namespace ranges
                 sentinel_adaptor(semiregular_ref_or_val_t<Pred, IsConst> pred)
                   : pred_(std::move(pred))
                 {}
-                bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
+                bool empty(iterator_t<Rng> it, sentinel_t<Rng> end) const
                 {
                     return it == end || !invoke(pred_, it);
                 }
@@ -65,7 +65,7 @@ namespace ranges
             {
                 return {pred_};
             }
-            CONCEPT_REQUIRES(Invocable<Pred const&, range_iterator_t<Rng>>())
+            CONCEPT_REQUIRES(Invocable<Pred const&, iterator_t<Rng>>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};
@@ -106,7 +106,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    Predicate<Pred&, range_iterator_t<Rng>>,
+                    Predicate<Pred&, iterator_t<Rng>>,
                     CopyConstructible<Pred>>;
 
                 template<typename Rng, typename Pred,
@@ -123,7 +123,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::take_while operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(Predicate<Pred&, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(Predicate<Pred&, iterator_t<Rng>>(),
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's iterator type, and its result type must be convertible to "
                         "bool.");
@@ -148,7 +148,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    IndirectPredicate<Pred, range_iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -164,7 +164,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::take_while operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's common reference type, and its result type must be "
                         "convertible to bool.");

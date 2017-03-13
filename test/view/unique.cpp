@@ -20,6 +20,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -66,8 +67,8 @@ int main()
 
     auto && rng = rgi | view::unique;
     has_type<int &>(*begin(rng));
-    models<concepts::BoundedView>(rng);
-    models_not<concepts::SizedView>(rng);
+    models<concepts::BoundedView>(aux::copy(rng));
+    models_not<concepts::SizedView>(aux::copy(rng));
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
     copy(rng, ranges::back_inserter(out));
@@ -76,9 +77,9 @@ int main()
     std::vector<ci_string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
     auto && rng3 = rgs | view::unique;
     has_type<ci_string &>(*begin(rng3));
-    models<concepts::ForwardView>(rng3);
-    models<concepts::BoundedView>(rng3);
-    models_not<concepts::SizedView>(rng3);
+    models<concepts::ForwardView>(aux::copy(rng3));
+    models<concepts::BoundedView>(aux::copy(rng3));
+    models_not<concepts::SizedView>(aux::copy(rng3));
     models<concepts::ForwardIterator>(begin(rng3));
     models_not<concepts::BidirectionalIterator>(begin(rng3));
     auto fs = rng3 | view::transform([](ci_string s){return std::string(s.c_str());});

@@ -61,11 +61,11 @@ namespace ranges
             struct adaptor_value_type_2_<
                 BaseIter,
                 Adapt,
-                meta::void_<decltype(Adapt::read(BaseIter{}, adaptor_base_current_mem_fn{}))>>
+                meta::void_<decltype(Adapt::read(std::declval<BaseIter const &>(), adaptor_base_current_mem_fn{}))>>
               : compressed_pair<BaseIter, Adapt>
             {
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
-                using value_type = iterator_value_t<BaseIter>;
+                using value_type = value_type_t<BaseIter>;
             };
 
             template<typename BaseIter, typename Adapt, typename Enable = void>
@@ -107,12 +107,12 @@ namespace ranges
             adaptor_base(detail::any, detail::any = {}, detail::any = {})
             {}
             template<typename Rng>
-            range_iterator_t<base_range_t<Rng>> begin(Rng &rng) const
+            iterator_t<base_range_t<Rng>> begin(Rng &rng) const
             {
                 return ranges::begin(rng.base());
             }
             template<typename Rng>
-            range_sentinel_t<base_range_t<Rng>> end(Rng &rng) const
+            sentinel_t<base_range_t<Rng>> end(Rng &rng) const
             {
                 return ranges::end(rng.base());
             }
@@ -122,9 +122,9 @@ namespace ranges
                 return it0 == it1;
             }
             template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
-            static iterator_reference_t<I> read(I const &it,
+            static reference_t<I> read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
-                noexcept(noexcept(iterator_reference_t<I>(*it)))
+                noexcept(noexcept(reference_t<I>(*it)))
             {
                 return *it;
             }
@@ -139,12 +139,12 @@ namespace ranges
                 --it;
             }
             template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            static void advance(I &it, iterator_difference_t<I> n)
+            static void advance(I &it, difference_type_t<I> n)
             {
                 it += n;
             }
             template<typename I, CONCEPT_REQUIRES_(SizedSentinel<I, I>())>
-            static iterator_difference_t<I> distance_to(I const &it0, I const &it1)
+            static difference_type_t<I> distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
@@ -279,7 +279,7 @@ namespace ranges
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A &>().advance(std::declval<BaseIter &>(), 0))>
-            void advance(iterator_difference_t<BaseIter> n)
+            void advance(difference_type_t<BaseIter> n)
             {
                 second().advance(first(), n);
             }
@@ -306,44 +306,44 @@ namespace ranges
             {
                 return this->distance_to_(that, 42);
             }
-            // If the adaptor has an indirect_move function, use it.
+            // If the adaptor has an iter_move function, use it.
             template<typename A = Adapt, typename X = decltype(
-                std::declval<A const&>().indirect_move(
+                std::declval<A const&>().iter_move(
                     std::declval<BaseIter const&>()))>
-            X indirect_move_(int) const
-                noexcept(noexcept(std::declval<A const &>().indirect_move(
+            X iter_move_(int) const
+                noexcept(noexcept(std::declval<A const &>().iter_move(
                     std::declval<BaseIter const &>())))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 using R = decltype(second().read(first()));
                 static_assert(
                     CommonReference<X &&, V const &>(),
-                    "In your adaptor, the result of your indirect_move member function does "
+                    "In your adaptor, the result of your iter_move member function does "
                     "not share a common reference with your value type.");
                 static_assert(
                     CommonReference<R &&, X &&>(),
-                    "In your adaptor, the result of your indirect_move member function does "
+                    "In your adaptor, the result of your iter_move member function does "
                     "not share a common reference with the result of your read member "
                     "function.");
-                return second().indirect_move(first());
+                return second().iter_move(first());
             }
-            // If there is no indirect_move member and the adaptor has not overridden the read
-            // member function, then dispatch to the base iterator's indirect_move function.
+            // If there is no iter_move member and the adaptor has not overridden the read
+            // member function, then dispatch to the base iterator's iter_move function.
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A const &>().read(
                     std::declval<BaseIter const &>(), detail::adaptor_base_current_mem_fn{})),
-                typename X = iterator_rvalue_reference_t<BaseIter>>
-            X indirect_move_(long) const
-                noexcept(noexcept(X(ranges::indirect_move(std::declval<BaseIter const &>()))))
+                typename X = rvalue_reference_t<BaseIter>>
+            X iter_move_(long) const
+                noexcept(noexcept(X(ranges::iter_move(std::declval<BaseIter const &>()))))
             {
-                return ranges::indirect_move(first());
+                return ranges::iter_move(first());
             }
-            // If the adaptor does not have an indirect_move function but overrides the read
+            // If the adaptor does not have an iter_move function but overrides the read
             // member function, apply std::move to the result of calling current.
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A const &>().read(std::declval<BaseIter const &>())),
                 typename X = aux::move_t<R>>
-            X indirect_move_(detail::any) const
+            X iter_move_(detail::any) const
                 noexcept(noexcept(X(static_cast<X &&>(
                     std::declval<A const &>().read(std::declval<BaseIter const &>())))))
             {
@@ -352,15 +352,15 @@ namespace ranges
                     CommonReference<X &&, V const &>(),
                     "In your adaptor, you've specified a value type that does not share a common "
                     "reference type with the result of moving the result of the read member "
-                    "function. Consider defining an indirect_move function in your adaptor.");
+                    "function. Consider defining an iter_move function in your adaptor.");
                 return static_cast<X &&>(second().read(first()));
             }
-            // Gives users a way to override the default indirect_move function in their adaptors.
+            // Gives users a way to override the default iter_move function in their adaptors.
             auto move() const
-                noexcept(noexcept(std::declval<const adaptor_cursor &>().indirect_move_(42))) ->
-                decltype(std::declval<const adaptor_cursor &>().indirect_move_(42))
+                noexcept(noexcept(std::declval<const adaptor_cursor &>().iter_move_(42))) ->
+                decltype(std::declval<const adaptor_cursor &>().iter_move_(42))
             {
-                return indirect_move_(42);
+                return iter_move_(42);
             }
         public:
             using base_t::base_t;
@@ -425,7 +425,7 @@ namespace ranges
             // has const begin/end accessors. That disables the const begin()/end() accessors
             // in view_facade, meaning the derived range type only has mutable iterators.
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && View<base_range_t const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const &>())>
             adaptor_cursor_t<D const> begin_cursor() const
             {
                 auto adapt = range_access::begin_adaptor(derived(), 42);
@@ -433,7 +433,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && View<base_range_t const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const &>())>
             adaptor_sentinel_t<D const> end_cursor() const
             {
                 auto adapt = range_access::end_adaptor(derived(), 42);

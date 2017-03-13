@@ -43,13 +43,13 @@ namespace ranges
         private:
             friend range_access;
             semiregular_t<Pred> pred_;
-            detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
+            detail::non_propagating_cache<iterator_t<Rng>> begin_;
 
             struct adaptor : adaptor_base
             {
             private:
                 adjacent_remove_if_view *rng_;
-                void satisfy(range_iterator_t<Rng> &it) const
+                void satisfy(iterator_t<Rng> &it) const
                 {
                     auto const end = ranges::end(rng_->mutable_base());
                     auto &pred = rng_->pred_;
@@ -65,7 +65,7 @@ namespace ranges
                 adaptor(adjacent_remove_if_view &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(adjacent_remove_if_view &) const
+                iterator_t<Rng> begin(adjacent_remove_if_view &) const
                 {
                     auto &beg = rng_->begin_;
                     if(!beg)
@@ -75,7 +75,7 @@ namespace ranges
                     }
                     return *beg;
                 }
-                void next(range_iterator_t<Rng> &it) const
+                void next(iterator_t<Rng> &it) const
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
                     this->satisfy(++it);
@@ -116,8 +116,8 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectPredicate<Pred, range_iterator_t<Rng>,
-                        range_iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, iterator_t<Rng>,
+                        iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -132,8 +132,8 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>,
-                        range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>,
+                        iterator_t<Rng>>(),
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

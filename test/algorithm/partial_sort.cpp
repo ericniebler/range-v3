@@ -37,7 +37,7 @@ namespace
 
     struct indirect_less
     {
-        template <class P>
+        template<class P>
         bool operator()(const P& x, const P& y)
             {return *x < *y;}
     };

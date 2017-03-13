@@ -38,7 +38,7 @@ namespace ranges
           : view_facade<single_view<Val>, (cardinality)1>
         {
         private:
-            friend struct range_access;
+            friend struct ranges::range_access;
             semiregular_t<Val> value_;
             struct cursor
             {
@@ -108,13 +108,13 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Arg, typename Val = detail::decay_t<Arg>,
-                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg &&>()))>
+                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg>()))>
                 void operator()(Arg &&) const
                 {
                     CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
                         "The object passed to view::single must be a model of the CopyConstructible "
                         "concept; that is, it needs to be copy and move constructible, and destructible.");
-                    CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg &&>(),
+                    CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg>(),
                         "The object type passed to view::single must be initializable from the "
                         "actual argument expression.");
                 }

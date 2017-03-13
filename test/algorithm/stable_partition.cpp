@@ -46,7 +46,7 @@ struct odd_first
     }
 };
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_iter()
 {
@@ -192,7 +192,7 @@ test_iter()
     }
 }
 
-template <class Iter, class Sent = Iter>
+template<class Iter, class Sent = Iter>
 void
 test_range()
 {
@@ -353,7 +353,7 @@ struct move_only
 
 int move_only::count = 0;
 
-template <class Iter>
+template<class Iter>
 void
 test_move_only()
 {

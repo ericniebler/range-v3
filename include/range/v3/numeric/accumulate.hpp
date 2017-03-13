@@ -44,7 +44,7 @@ namespace ranges
             }
 
             template<typename Rng, typename T, typename Op = plus, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Accumulateable<I, T, Op, P>())>
             T operator()(Rng && rng, T init, Op op = Op{}, P proj = P{}) const
             {

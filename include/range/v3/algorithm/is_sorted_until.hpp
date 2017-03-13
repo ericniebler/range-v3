@@ -60,10 +60,10 @@ namespace ranges
             }
 
             template<typename Rng, typename R = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectRelation<R, projected<I, P>>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, R pred = R{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

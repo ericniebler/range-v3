@@ -33,7 +33,7 @@ namespace ranges
         struct min_fn
         {
             template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>, typename V = iterator_value_t<I>,
+                typename I = iterator_t<Rng>, typename V = value_type_t<I>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
                     IndirectRelation<C, projected<I, P>>())>
             RANGES_CXX14_CONSTEXPR V operator()(Rng &&rng, C pred = C{}, P proj = P{}) const

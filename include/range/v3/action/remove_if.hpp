@@ -48,8 +48,8 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename C, typename P = ident,
-                        typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng&&, C&&, P&& = P{}) -> decltype(
+                        typename I = iterator_t<Rng>>
+                    auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
@@ -77,7 +77,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::remove_if operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::remove_if operates must allow element "
                         "removal.");

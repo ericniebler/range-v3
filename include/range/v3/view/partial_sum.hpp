@@ -47,7 +47,7 @@ namespace ranges
         private:
             friend range_access;
             semiregular_t<Fun> fun_;
-            using single_pass = SinglePass<range_iterator_t<Rng>>;
+            using single_pass = SinglePass<iterator_t<Rng>>;
             using use_sentinel_t = meta::or_<meta::not_<BoundedRange<Rng>>, single_pass>;
 
             template<bool IsConst>
@@ -55,7 +55,7 @@ namespace ranges
             {
             private:
                 using partial_sum_view_t = meta::invoke<meta::add_const_if_c<IsConst>, partial_sum_view>;
-                optional<range_value_t<Rng>> sum_;
+                optional<range_value_type_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
             public:
                 using single_pass = partial_sum_view::single_pass;
@@ -63,14 +63,14 @@ namespace ranges
                 adaptor(partial_sum_view_t &rng)
                   : sum_{}, rng_(&rng)
                 {}
-                adaptor(partial_sum_view_t &rng, range_value_t<Rng> sum)
+                adaptor(partial_sum_view_t &rng, range_value_type_t<Rng> sum)
                   : sum_(std::move(sum)), rng_(&rng)
                 {}
-                range_value_t<Rng> read(range_iterator_t<Rng>) const
+                range_value_type_t<Rng> read(iterator_t<Rng>) const
                 {
                     return *sum_;
                 }
-                void next(range_iterator_t<Rng> &it)
+                void next(iterator_t<Rng> &it)
                 {
                     using R = range_common_reference_t<Rng>;
                     if(++it != ranges::end(rng_->mutable_base()))
@@ -114,7 +114,7 @@ namespace ranges
               , fun_(std::move(fun))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
@@ -137,11 +137,11 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    IndirectInvocable<Fun, range_iterator_t<Rng>, range_iterator_t<Rng>>,
+                    IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>,
                     ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>)>,
-                        range_value_t<Rng>>>;
+                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
+                            range_common_reference_t<Rng> &&)>,
+                        range_value_type_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -157,14 +157,14 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<Fun, range_iterator_t<Rng>,
-                        range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<Fun, iterator_t<Rng>,
+                        iterator_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
                     CONCEPT_ASSERT_MSG(ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>)>,
-                        range_value_t<Rng>>(),
+                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
+                            range_common_reference_t<Rng> &&)>,
+                        range_value_type_t<Rng>>(),
                         "The return type of the function passed to view::partial_sum must be "
                         "convertible to the value type of the range.");
                 }

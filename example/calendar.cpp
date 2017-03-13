@@ -159,7 +159,7 @@ auto layout_months() {
 template<class Rng>
 class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
     CONCEPT_ASSERT(ForwardRange<Rng>());
-    ranges::range_difference_t<Rng> n_;
+    ranges::range_difference_type_t<Rng> n_;
     friend range_access;
     class adaptor;
     adaptor begin_adaptor() {
@@ -167,24 +167,24 @@ class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
     }
 public:
     chunk_view() = default;
-    chunk_view(Rng rng, ranges::range_difference_t<Rng> n)
+    chunk_view(Rng rng, ranges::range_difference_type_t<Rng> n)
       : chunk_view::view_adaptor(std::move(rng)), n_(n)
     {}
 };
 
 template<class Rng>
 class chunk_view<Rng>::adaptor : public adaptor_base {
-    ranges::range_difference_t<Rng> n_;
-    range_sentinel_t<Rng> end_;
+    ranges::range_difference_type_t<Rng> n_;
+    sentinel_t<Rng> end_;
 public:
     adaptor() = default;
-    adaptor(ranges::range_difference_t<Rng> n, range_sentinel_t<Rng> end)
+    adaptor(ranges::range_difference_type_t<Rng> n, sentinel_t<Rng> end)
       : n_(n), end_(end)
     {}
-    auto read(range_iterator_t<Rng> it) const {
+    auto read(iterator_t<Rng> it) const {
         return view::take(make_iterator_range(std::move(it), end_), n_);
     }
-    void next(range_iterator_t<Rng> &it) {
+    void next(iterator_t<Rng> &it) {
         ranges::advance(it, n_, end_);
     }
     void prev() = delete;
@@ -199,7 +199,7 @@ auto chunk(std::size_t n) {
         using Rng = decltype(rng);
         return chunk_view<view::all_t<Rng>>{
             view::all(std::forward<Rng>(rng)),
-            static_cast<ranges::range_difference_t<Rng>>(n)};
+            static_cast<ranges::range_difference_type_t<Rng>>(n)};
     });
 }
 
@@ -208,7 +208,7 @@ auto chunk(std::size_t n) {
 template<class Rngs>
 class interleave_view : public view_facade<interleave_view<Rngs>> {
     friend range_access;
-    std::vector<range_value_t<Rngs>> rngs_;
+    std::vector<range_value_type_t<Rngs>> rngs_;
     struct cursor;
     cursor begin_cursor() {
         return {0, &rngs_, view::transform(rngs_, ranges::begin)};
@@ -223,8 +223,8 @@ public:
 template<class Rngs>
 struct interleave_view<Rngs>::cursor  {
     std::size_t n_;
-    std::vector<range_value_t<Rngs>> *rngs_;
-    std::vector<range_iterator_t<range_value_t<Rngs>>> its_;
+    std::vector<range_value_type_t<Rngs>> *rngs_;
+    std::vector<iterator_t<range_value_type_t<Rngs>>> its_;
     decltype(auto) read() const {
         return *its_[n_];
     }
@@ -236,7 +236,7 @@ struct interleave_view<Rngs>::cursor  {
         return n_ == 0 && its_.end() != mismatch(its_, *rngs_,
             std::not_equal_to<>(), ident(), ranges::end).in1();
     }
-    CONCEPT_REQUIRES(ForwardRange<range_value_t<Rngs>>())
+    CONCEPT_REQUIRES(ForwardRange<range_value_type_t<Rngs>>())
     bool equal(cursor const& that) const {
         return n_ == that.n_ && its_ == that.its_;
     }

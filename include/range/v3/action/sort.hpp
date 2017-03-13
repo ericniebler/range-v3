@@ -45,7 +45,7 @@ namespace ranges
             public:
                 template<typename Rng, typename C = ordered_less, typename P = ident>
                 using Concept = meta::and_<
-                    ForwardRange<Rng>, Sortable<range_iterator_t<Rng>, C, P>>;
+                    ForwardRange<Rng>, Sortable<iterator_t<Rng>, C, P>>;
 
                 template<typename Rng, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
@@ -63,7 +63,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::sort operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");

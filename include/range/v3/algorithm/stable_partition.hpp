@@ -56,7 +56,7 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair p, concepts::ForwardIterator *fi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair const p, concepts::ForwardIterator *fi)
             {
                 // *begin is known to be false
                 // len >= 1
@@ -74,11 +74,10 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
-                    using value_type = iterator_value_t<I>;
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
+                    auto tmpbuf = make_raw_buffer(p.first);
+                    auto buf = tmpbuf.begin();
                     *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(make_move_iterator(next(begin)),
@@ -121,7 +120,7 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end, C pred, P proj, concepts::ForwardIterator *fi)
             {
-                using difference_type = iterator_difference_t<I>;
+                using difference_type = difference_type_t<I>;
                 difference_type const alloc_limit = 3;  // might want to make this a function of trivial assignment
                 // Either prove all true and return begin or point to first false
                 while(true)
@@ -134,7 +133,7 @@ namespace ranges
                 }
                 // We now have a reduced range [begin, end)
                 // *begin is known to be false
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 auto len_end = enumerate(begin, end);
                 auto p = len_end.first >= alloc_limit ?
                     std::get_temporary_buffer<value_type>(len_end.first) : detail::value_init{};
@@ -168,11 +167,10 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
-                    using value_type = iterator_value_t<I>;
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
+                    auto tmpbuf = ranges::make_raw_buffer(p.first);
+                    auto buf = tmpbuf.begin();
                     *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(make_move_iterator(next(begin)),
@@ -232,8 +230,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end_, C pred, P proj, concepts::BidirectionalIterator *bi)
             {
-                using difference_type = iterator_difference_t<I>;
-                using value_type = iterator_value_t<I>;
+                using difference_type = difference_type_t<I>;
+                using value_type = value_type_t<I>;
                 difference_type const alloc_limit = 4;  // might want to make this a function of trivial assignment
                 // Either prove all true and return begin or point to first false
                 while(true)
@@ -274,9 +272,9 @@ namespace ranges
 
             // BUGBUG Can this be optimized if Rng has O1 size?
             template<typename Rng, typename C, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Range<Rng>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

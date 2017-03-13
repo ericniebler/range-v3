@@ -20,8 +20,8 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/swap.hpp> // for indirect_swap
-#include <range/v3/utility/move.hpp> // for indirect_move
+#include <range/v3/utility/swap.hpp> // for iter_swap
+#include <range/v3/utility/move.hpp> // for iter_move
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -39,7 +39,7 @@ namespace ranges
 
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::InputIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::InputIterator *)
             {
                 RANGES_EXPECT(n >= 0);
                 for(; n > 0; --n)
@@ -47,7 +47,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::BidirectionalIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::BidirectionalIterator *)
             {
                 if(n > 0)
                     for(; n > 0; --n)
@@ -58,7 +58,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, iterator_difference_t<I> n, concepts::RandomAccessIterator *)
+            void advance_impl(I &i, difference_type_t<I> n, concepts::RandomAccessIterator *)
             {
                 i += n;
             }
@@ -67,14 +67,14 @@ namespace ranges
             // but only input from the perspective of std::advance.
             template<typename Cur>
             RANGES_CXX14_CONSTEXPR
-            void advance(basic_iterator<Cur> &i, iterator_difference_t<basic_iterator<Cur>> n)
+            void advance(basic_iterator<Cur> &i, difference_type_t<basic_iterator<Cur>> n)
             {
                 adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur>>{});
             }
             // Hijack std::advance for raw pointers, since std::advance is not constexpr
             template<typename T>
             RANGES_CXX14_CONSTEXPR
-            void advance(T*& i, iterator_difference_t<T*> n)
+            void advance(T*& i, difference_type_t<T*> n)
             {
                 adl_advance_detail::advance_impl(i, n, iterator_concept<T*>{});
             }
@@ -105,22 +105,22 @@ namespace ranges
                 template<typename I,
                     CONCEPT_REQUIRES_(Iterator<I>())>
                 RANGES_CXX14_CONSTEXPR
-                void operator()(I &i, iterator_difference_t<I> n) const
+                void operator()(I &i, difference_type_t<I> n) const
                 {
                     // Use ADL here to give custom iterator types (like counted_iterator)
-                    // a chance to optimize it (see view/counted.hpp)
+                    // a chance to optimize it (see utility/counted_iterator.hpp)
                     advance(i, n);
                 }
                 // Advance to a certain position:
                 template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() && Assignable<I&, S&&>())>
+                    CONCEPT_REQUIRES_(Sentinel<S, I>() && Assignable<I&, S>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator()(I &i, S s) const
                 {
                     i = std::move(s);
                 }
                 template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() && !Assignable<I&, S&&>())>
+                    CONCEPT_REQUIRES_(Sentinel<S, I>() && !Assignable<I&, S>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator()(I &i, S s) const
                 {
@@ -130,7 +130,7 @@ namespace ranges
                 template<typename I, typename S,
                     CONCEPT_REQUIRES_(Sentinel<S, I>())>
                 RANGES_CXX14_CONSTEXPR
-                iterator_difference_t<I> operator()(I &it, iterator_difference_t<I> n, S bound) const
+                difference_type_t<I> operator()(I &it, difference_type_t<I> n, S bound) const
                 {
                     return advance_fn::bounded_(it, n, std::move(bound),
                         sized_sentinel_concept<S, I>(), iterator_concept<I>());
@@ -140,7 +140,7 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
-        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn,advance)
+        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn, advance)
 
         namespace adl_advance_detail
         {
@@ -155,7 +155,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             void advance_fn::to_(I &i, S s, concepts::SizedSentinel*)
             {
-                iterator_difference_t<I> d = s - i;
+                difference_type_t<I> d = s - i;
                 RANGES_EXPECT(0 <= d);
                 ranges::advance(i, d);
             }
@@ -212,7 +212,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(Iterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n) const
+            I operator()(I it, difference_type_t<I> n) const
             {
                 advance(it, n);
                 return it;
@@ -228,7 +228,7 @@ namespace ranges
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(Sentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n, S bound) const
+            I operator()(I it, difference_type_t<I> n, S bound) const
             {
                 advance(it, n, std::move(bound));
                 return it;
@@ -244,7 +244,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n = 1) const
+            I operator()(I it, difference_type_t<I> n = 1) const
             {
                 advance(it, -n);
                 return it;
@@ -252,7 +252,7 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, iterator_difference_t<I> n, I bound) const
+            I operator()(I it, difference_type_t<I> n, I bound) const
             {
                 advance(it, -n, std::move(bound));
                 return it;
@@ -294,7 +294,7 @@ namespace ranges
                 return {n + d, ranges::next(begin, end)};
             }
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
+            template<typename I, typename S, typename D = difference_type_t<I>,
                 CONCEPT_REQUIRES_(Iterator<I>() && Sentinel<S, I>() && Integral<D>())>
             RANGES_CXX14_CONSTEXPR
             std::pair<D, I> operator()(I begin, S end, D d = 0) const
@@ -326,7 +326,7 @@ namespace ranges
                 return n + d;
             }
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
+            template<typename I, typename S, typename D = difference_type_t<I>,
                 CONCEPT_REQUIRES_(Iterator<I>() && Sentinel<S, I>() && Integral<D>())>
             RANGES_CXX14_CONSTEXPR
             D operator()(I begin, S end, D d = 0) const
@@ -345,7 +345,7 @@ namespace ranges
         private:
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::Sentinel*) const
+            int impl_i(I begin, S end, difference_type_t<I> n, concepts::Sentinel*) const
             {
                 if (n >= 0) {
                     for (; n > 0; --n) {
@@ -362,9 +362,9 @@ namespace ranges
             }
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::SizedSentinel*) const
+            int impl_i(I begin, S end, difference_type_t<I> n, concepts::SizedSentinel*) const
             {
-                iterator_difference_t<I> dist = end - begin;
+                difference_type_t<I> dist = end - begin;
                 if (dist > n)
                     return  1;
                 else if (dist < n)
@@ -376,7 +376,7 @@ namespace ranges
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            int operator()(I begin, S end, iterator_difference_t<I> n) const
+            int operator()(I begin, S end, difference_type_t<I> n) const
             {
                 return this->impl_i(std::move(begin), std::move(end), n,
                     sized_sentinel_concept<S, I>());
@@ -390,13 +390,14 @@ namespace ranges
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
         {
-            template<typename I, typename S, CONCEPT_REQUIRES_(SizedSentinel<S, I>())>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(SizedSentinel<S, I>() && ForwardIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            iterator_size_t<I> operator()(I begin, S end) const
+            size_type_t<I> operator()(I begin, S end) const
             {
-                iterator_difference_t<I> n = end - begin;
+                difference_type_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
-                return static_cast<iterator_size_t<I>>(n);
+                return static_cast<size_type_t<I>>(n);
             }
         };
 
@@ -404,78 +405,48 @@ namespace ranges
         /// \sa `iter_size_fn`
         RANGES_INLINE_VARIABLE(iter_size_fn, iter_size)
 
-        struct iter_swap_fn
+        template<typename Container>
+        struct back_insert_iterator
         {
-            template<typename Readable0, typename Readable1,
-                CONCEPT_REQUIRES_(IndirectlySwappable<Readable0, Readable1>())>
-            RANGES_CXX14_CONSTEXPR
-            void operator()(Readable0 a, Readable1 b) const
-                noexcept(is_nothrow_indirectly_swappable<Readable0, Readable1>::value)
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
+
+            constexpr back_insert_iterator() = default;
+            explicit back_insert_iterator(Container &x)
+              : container_(std::addressof(x))
+            {}
+            back_insert_iterator &operator=(typename Container::value_type const &value)
             {
-                indirect_swap(std::move(a), std::move(b));
+                container_->push_back(value);
+                return *this;
             }
-        };
-
-        /// \ingroup group-utility
-        /// \sa `iter_swap_fn`
-        RANGES_INLINE_VARIABLE(iter_swap_fn, iter_swap)
-
-        struct iter_move_fn
-        {
-            template<typename I,
-                CONCEPT_REQUIRES_(Readable<I>())>
-            RANGES_CXX14_CONSTEXPR
-            iterator_rvalue_reference_t<I> operator()(I const &i) const
-                noexcept(noexcept(indirect_move(i)))
+            back_insert_iterator &operator=(typename Container::value_type &&value)
             {
-                return indirect_move(i);
+                container_->push_back(std::move(value));
+                return *this;
             }
-        };
-
-        /// \ingroup group-utility
-        /// \sa `iter_move_fn`
-        RANGES_INLINE_VARIABLE(iter_move_fn, iter_move)
-
-        /// \cond
-        namespace detail
-        {
-            template<typename Cont>
-            struct back_insert_cursor
+            back_insert_iterator &operator*()
             {
-                struct mixin : basic_mixin<back_insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<back_insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
-                    {}
-                };
-                Cont *cont_ = nullptr;
-                back_insert_cursor() = default;
-                back_insert_cursor(Cont &cont) noexcept
-                  : cont_(std::addressof(cont))
-                {}
-                void write(typename Cont::value_type const &v) const
-                {
-                    cont_->push_back(v);
-                }
-                void write(typename Cont::value_type &&v) const
-                {
-                    cont_->push_back(std::move(v));
-                }
-            };
-        }
-        /// \endcond
-
-        template<typename Cont>
-        using back_insert_iterator = basic_iterator<detail::back_insert_cursor<Cont>>;
+                return *this;
+            }
+            back_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            back_insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container *container_ = nullptr;
+        };
 
         struct back_inserter_fn
         {
-            template<typename Cont>
-            constexpr back_insert_iterator<Cont> operator()(Cont &cont) const
+            template<typename Container>
+            constexpr back_insert_iterator<Container> operator()(Container &x) const
             {
-                return back_insert_iterator<Cont>{cont};
+                return back_insert_iterator<Container>{x};
             }
         };
 
@@ -483,39 +454,41 @@ namespace ranges
         /// \sa `back_inserter_fn`
         RANGES_INLINE_VARIABLE(back_inserter_fn, back_inserter)
 
-        /// \cond
-        namespace detail
+        template<typename Container>
+        struct front_insert_iterator
         {
-            template<typename Cont>
-            struct front_insert_cursor
-            {
-                struct mixin : basic_mixin<front_insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<front_insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
-                    {}
-                };
-                Cont *cont_ = nullptr;
-                front_insert_cursor() = default;
-                explicit front_insert_cursor(Cont &cont) noexcept
-                  : cont_(std::addressof(cont))
-                {}
-                void write(typename Cont::value_type const &v) const
-                {
-                    cont_->push_front(v);
-                }
-                void write(typename Cont::value_type &&v) const
-                {
-                    cont_->push_front(std::move(v));
-                }
-            };
-        }
-        /// \endcond
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
 
-        template<typename Cont>
-        using front_insert_iterator = basic_iterator<detail::front_insert_cursor<Cont>>;
+            constexpr front_insert_iterator() = default;
+            explicit front_insert_iterator(Container &x)
+              : container_(std::addressof(x))
+            {}
+            front_insert_iterator &operator=(typename Container::value_type const &value)
+            {
+                container_->push_front(value);
+                return *this;
+            }
+            front_insert_iterator &operator=(typename Container::value_type &&value)
+            {
+                container_->push_front(std::move(value));
+                return *this;
+            }
+            front_insert_iterator &operator*()
+            {
+                return *this;
+            }
+            front_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            front_insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container *container_ = nullptr;
+        };
 
         struct front_inserter_fn
         {
@@ -530,40 +503,42 @@ namespace ranges
         /// \sa `front_inserter_fn`
         RANGES_INLINE_VARIABLE(front_inserter_fn, front_inserter)
 
-        /// \cond
-        namespace detail
+        template<typename Container>
+        struct insert_iterator
         {
-            template<typename Cont>
-            struct insert_cursor
-            {
-                Cont *cont_ = nullptr;
-                typename Cont::iterator where_ = {};
-                struct mixin : basic_mixin<insert_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<insert_cursor>::basic_mixin;
-                    explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
-                      : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
-                    {}
-                };
-                insert_cursor() = default;
-                explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
-                  : cont_(&cont), where_(where)
-                {}
-                void write(typename Cont::value_type const &v)
-                {
-                    where_ = ranges::next(cont_->insert(where_, v));
-                }
-                void write(typename Cont::value_type &&v)
-                {
-                    where_ = ranges::next(cont_->insert(where_, std::move(v)));
-                }
-            };
-        }
-        /// \cond
+            using container_type = Container;
+            using difference_type = std::ptrdiff_t;
 
-        template<typename Cont>
-        using insert_iterator = basic_iterator<detail::insert_cursor<Cont>>;
+            constexpr insert_iterator() = default;
+            explicit insert_iterator(Container &x, typename Container::iterator w)
+              : container_(std::addressof(x)), where_(w)
+            {}
+            insert_iterator &operator=(typename Container::value_type const &value)
+            {
+                where_ = ranges::next(container_->insert(where_, value));
+                return *this;
+            }
+            insert_iterator &operator=(typename Container::value_type &&value)
+            {
+                where_ = ranges::next(container_->insert(where_, std::move(value)));
+                return *this;
+            }
+            insert_iterator &operator*()
+            {
+                return *this;
+            }
+            insert_iterator &operator++()
+            {
+                return *this;
+            }
+            insert_iterator &operator++(int)
+            {
+                return *this;
+            }
+        private:
+            Container* container_ = nullptr;
+            typename Container::iterator where_ = detail::value_init{};
+        };
 
         struct inserter_fn
         {
@@ -578,51 +553,92 @@ namespace ranges
         /// \sa `inserter_fn`
         RANGES_INLINE_VARIABLE(inserter_fn, inserter)
 
-        /// \cond
-        namespace detail {
-            template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
-            struct ostream_cursor
-            {
-                using ostream_type = std::basic_ostream<Char, Traits>;
-
-                ostream_type *sout_ = nullptr;
-                Char const *delim_ = nullptr;
-
-                struct mixin : protected basic_mixin<ostream_cursor>
-                {
-                    // difference_type is exported by basic_iterator
-                    using char_type = Char;
-                    using traits_type = Traits;
-                    using ostream_type = ostream_cursor::ostream_type;
-
-                    mixin() = default;
-                    using basic_mixin<ostream_cursor>::basic_mixin;
-                    constexpr mixin(ostream_type &sout,
-                        Char const *delim = nullptr) noexcept
-                    : basic_mixin<ostream_cursor>(ostream_cursor{sout, delim})
-                    {}
-                };
-
-                ostream_cursor() = default;
-                constexpr ostream_cursor(ostream_type &sout,
-                    Char const *delim = nullptr) noexcept
-                  : sout_(std::addressof(sout)), delim_(delim)
-                {}
-                template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
-                    CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
-                void write(U && u) const
-                {
-                    RANGES_EXPECT(sout_);
-                    *sout_ << u;
-                    if(delim_)
-                        *sout_ << delim_;
-                }
-            };
-        }
-        /// \endcond
-
         template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
-        using ostream_iterator = basic_iterator<detail::ostream_cursor<T, Char, Traits>>;
+        struct ostream_iterator
+        {
+            using difference_type = std::ptrdiff_t;
+            using char_type = Char;
+            using traits_type = Traits;
+            using ostream_type = std::basic_ostream<Char, Traits>;
+
+            constexpr ostream_iterator() = default;
+            ostream_iterator(ostream_type &s, Char const *d = nullptr) noexcept
+              : sout_(&s), delim_(d)
+            {}
+            template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
+                CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
+            ostream_iterator& operator=(U &&value)
+            {
+                RANGES_EXPECT(sout_);
+                *sout_ << value;
+                if(delim_)
+                    *sout_ << delim_;
+                return *this;
+            }
+            ostream_iterator& operator*()
+            {
+                return *this;
+            }
+            ostream_iterator& operator++()
+            {
+                return *this;
+            }
+            ostream_iterator& operator++(int)
+            {
+                return *this;
+            }
+        private:
+            ostream_type *sout_;
+            Char const *delim_;
+        };
+
+        template<typename Char, typename Traits = std::char_traits<Char>>
+        struct ostreambuf_iterator
+        {
+        public:
+            typedef ptrdiff_t difference_type;
+            typedef Char char_type;
+            typedef Traits traits_type;
+            typedef std::basic_streambuf<Char, Traits> streambuf_type;
+            typedef std::basic_ostream<Char, Traits> ostream_type;
+
+            constexpr ostreambuf_iterator() = default;
+            ostreambuf_iterator(ostream_type &s) noexcept
+              : ostreambuf_iterator(s.rdbuf())
+            {
+            }
+            ostreambuf_iterator(streambuf_type *s) noexcept
+              : sbuf_(s)
+            {
+                RANGES_ASSERT(s != nullptr);
+            }
+            ostreambuf_iterator &operator=(Char c)
+            {
+                RANGES_ASSERT(sbuf_ != nullptr);
+                if(!failed_)
+                    failed_ = (sbuf_->sputc(c) == Traits::eof());
+                return *this;
+            }
+            ostreambuf_iterator &operator*()
+            {
+                return *this;
+            }
+            ostreambuf_iterator &operator++()
+            {
+                return *this;
+            }
+            ostreambuf_iterator &operator++(int)
+            {
+                return *this;
+            }
+            bool failed() const noexcept
+            {
+                return failed_;
+            }
+        private:
+            streambuf_type *sbuf_ = nullptr;
+            bool failed_ = false;
+        };
 
         /// \cond
         namespace detail
@@ -657,7 +673,7 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto read() const -> iterator_reference_t<I>
+                auto read() const -> reference_t<I>
                 {
                     return *arrow();
                 }
@@ -690,13 +706,13 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
                 RANGES_CXX14_CONSTEXPR
-                void advance(iterator_difference_t<I> n)
+                void advance(difference_type_t<I> n)
                 {
                     it_ -= n;
                 }
                 CONCEPT_REQUIRES(SizedSentinel<I, I>())
                 RANGES_CXX14_CONSTEXPR
-                iterator_difference_t<I>
+                difference_type_t<I>
                 distance_to(reverse_cursor const &that) const
                 {
                     return it_ - that.base();
@@ -726,80 +742,150 @@ namespace ranges
             return reverse_iterator<I>(i);
         }
 
-        /// \cond
-        namespace detail
+        template<typename I>
+        struct move_iterator
         {
-            template<typename I>
-            struct move_cursor
+        private:
+            CONCEPT_ASSERT(InputIterator<I>());
+            I current_ = detail::value_init{};
+        public:
+            using iterator_type = I;
+            using difference_type = difference_type_t<I>;
+            using value_type = value_type_t<I>;
+            using iterator_category = input_iterator_tag;
+            using reference = rvalue_reference_t<I>;
+
+            constexpr move_iterator() = default;
+            explicit move_iterator(I i)
+              : current_(i)
+            {}
+            template<typename O,
+                CONCEPT_REQUIRES_(ConvertibleTo<O, I>())>
+            move_iterator(move_iterator<O> const &i)
+              : current_(i.base())
+            {}
+            template<typename O,
+                CONCEPT_REQUIRES_(ConvertibleTo<O, I>())>
+            move_iterator &operator=(move_iterator<O> const & i)
             {
-            private:
-                CONCEPT_ASSERT(InputIterator<I>());
-                friend range_access;
-                using single_pass = std::true_type;
-                //using single_pass = SinglePass<I>;
-                using value_type = iterator_value_t<I>;
-                using difference_type = iterator_difference_t<I>;
+                current_ = i.base();
+                return *this;
+            }
+            I base() const
+            {
+                return current_;
+            }
+            auto operator*() const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                iter_move(current_)
+            )
+            move_iterator &operator++()
+            {
+                ++current_;
+                return *this;
+            }
+            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            void operator++(int)
+            {
+                ++current_;
+            }
+            CONCEPT_REQUIRES(ForwardIterator<I>())
+            move_iterator operator++(int)
+            {
+                return move_iterator(current_++);
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            move_iterator &operator--()
+            {
+                --current_;
+                return *this;
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            move_iterator operator--(int)
+            {
+                return move_iterator(current_--);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator operator+(difference_type n) const
+            {
+                return move_iterator(current_ + n);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator &operator+=(difference_type n)
+            {
+                current_ += n;
+                return *this;
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator operator-(difference_type n) const
+            {
+                return move_iterator(current_ - n);
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            move_iterator &operator-=(difference_type n)
+            {
+                current_ -= n;
+                return *this;
+            }
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            reference operator[](difference_type n) const
+            {
+                return iter_move(current_ + n);
+            }
+        };
 
-                struct mixin
-                  : basic_mixin<move_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<move_cursor>::basic_mixin;
-                    constexpr explicit mixin(I it)
-                      : mixin{move_cursor(detail::move(it))}
-                    {}
-                    I base() const
-                    {
-                        return this->get().it_;
-                    }
-                };
-
-                I it_;
-
-                constexpr move_cursor(I it)
-                  : it_(it)
-                {}
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    iter_move(it_)
-                )
-                void next()
-                {
-                    ++it_;
-                }
-                CONCEPT_REQUIRES(ForwardIterator<I>())
-                bool equal(move_cursor const &that) const
-                {
-                    return it_ == that.it_;
-                }
-                //CONCEPT_REQUIRES(BidirectionalIterator<I>())
-                //void prev()
-                //{
-                //    --it_;
-                //}
-                //CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                //void advance(iterator_difference_t<I> n)
-                //{
-                //    it_ += n;
-                //}
-                CONCEPT_REQUIRES(SizedSentinel<I, I>())
-                iterator_difference_t<I> distance_to(move_cursor const &that) const
-                {
-                    return that.it_ - it_;
-                }
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    iter_move(it_)
-                )
-            public:
-                constexpr move_cursor()
-                  : it_{}
-                {}
-            };
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(EqualityComparable<I1, I2>())>
+        bool operator==(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() == y.base();
         }
-        /// \endcond
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(EqualityComparable<I1, I2>())>
+        bool operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(x == y);
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator<(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() < y.base();
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(y < x);
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator>(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return y < x;
+        }
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(TotallyOrdered<I1, I2>())>
+        bool operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return !(x < y);
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(SizedSentinel<I1, I2>())>
+        difference_type_t<I2> operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        {
+            return x.base() - y.base();
+        }
+        template<typename I,
+            CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+        move_iterator<I> operator+(difference_type_t<I> n, move_iterator<I> const &x)
+        {
+            return x + n;
+        }
+
+        CONCEPT_ASSERT(InputIterator<move_iterator<int*>>());
 
         struct make_move_iterator_fn
         {
@@ -897,7 +983,7 @@ namespace ranges
             template<typename I>
             struct move_into_cursor_types<I, true>
             {
-                using value_type = iterator_value_t<I>;
+                using value_type = value_type_t<I>;
                 using single_pass = SinglePass<I>;
             };
 
@@ -930,19 +1016,19 @@ namespace ranges
                     ++it_;
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T>>())>
                 void write(T &&t) noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T>>())>
                 void write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> read() const
+                reference_t<I> read() const
                     noexcept(noexcept(*std::declval<I const&>()))
                 {
                     return *it_;
@@ -958,19 +1044,19 @@ namespace ranges
                     --it_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                void advance(iterator_difference_t<I> n)
+                void advance(difference_type_t<I> n)
                 {
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(SizedSentinel<I, I>())
-                iterator_difference_t<I> distance_to(move_into_cursor const &that) const
+                difference_type_t<I> distance_to(move_into_cursor const &that) const
                 {
                     return that.it_ - it_;
                 }
                 template<typename II = I,
                     CONCEPT_REQUIRES_(Same<I, II>() && Readable<II>())>
                 RANGES_CXX14_CONSTEXPR
-                iterator_rvalue_reference_t<II const> move() const
+                rvalue_reference_t<II const> move() const
                     noexcept(noexcept(iter_move(std::declval<II const&>())))
                 {
                     return iter_move(it_);
@@ -1007,7 +1093,7 @@ namespace ranges
             }
 
             template<typename I>
-            constexpr I recounted(I const &, I i, iterator_difference_t<I>)
+            constexpr I recounted(I const &, I i, difference_type_t<I>)
             {
                 return i;
             }
@@ -1027,7 +1113,7 @@ namespace ranges
             {
                 template<typename I, typename J>
                 constexpr
-                auto operator()(I i, J j, iterator_difference_t<J> n) const ->
+                auto operator()(I i, J j, difference_type_t<J> n) const ->
                     decltype(recounted((I&&)i, (J&&)j, n))
                 {
                     return recounted((I&&)i, (J&&)j, n);
@@ -1043,7 +1129,61 @@ namespace ranges
         RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::recounted_fn,
                                recounted)
         /// @}
+
+        /// \cond
+        namespace detail
+        {
+            struct std_output_iterator_traits
+            {
+                using iterator_category = std::output_iterator_tag;
+                using difference_type = std::ptrdiff_t;
+                using value_type = void;
+                using reference = void;
+                using pointer = void;
+            };
+        }
+        /// \endcond
     }
 }
+
+/// \cond
+namespace std
+{
+    template<typename Container>
+    struct iterator_traits< ::ranges::back_insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Container>
+    struct iterator_traits< ::ranges::front_insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Container>
+    struct iterator_traits< ::ranges::insert_iterator<Container>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename T, typename Char, typename Traits>
+    struct iterator_traits< ::ranges::ostream_iterator<T, Char, Traits>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename Char, typename Traits>
+    struct iterator_traits< ::ranges::ostreambuf_iterator<Char, Traits>>
+      : ::ranges::detail::std_output_iterator_traits
+    {};
+
+    template<typename I>
+    struct iterator_traits< ::ranges::move_iterator<I>>
+    {
+        using iterator_category = std::input_iterator_tag;
+        using difference_type = typename ::ranges::move_iterator<I>::difference_type;
+        using value_type = typename ::ranges::move_iterator<I>::value_type;
+        using reference = typename ::ranges::move_iterator<I>::reference;
+        using pointer = meta::_t<std::add_pointer<reference>>;
+    };
+}
+/// \endcond
 
 #endif

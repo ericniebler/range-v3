@@ -24,7 +24,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template <class Iter1, class Iter2, class Sent1 = Iter1, class Sent2 = Iter2>
+template<class Iter1, class Iter2, class Sent1 = Iter1, class Sent2 = Iter2>
 void
 test_iter1()
 {
@@ -94,7 +94,7 @@ void test_iter()
     test_iter1<const int*, const int*>();
 }
 
-template <class Iter1, class Iter2, class Sent1 = Iter1, class Sent2 = Iter2>
+template<class Iter1, class Iter2, class Sent1 = Iter1, class Sent2 = Iter2>
 void
 test_iter_comp1()
 {

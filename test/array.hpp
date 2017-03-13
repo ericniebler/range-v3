@@ -23,6 +23,7 @@
 
 #ifndef RANGES_V3_TEST_ARRAY_HPP
 #define RANGES_V3_TEST_ARRAY_HPP
+
 #include <stdexcept>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -61,7 +62,7 @@ namespace test {
             ranges::fill_n(elems_, N, u);
         }
         RANGES_CXX14_CONSTEXPR
-        void swap(array& a) noexcept(ranges::is_nothrow_swappable<T, T>::value)
+        void swap(array& a) noexcept(ranges::is_nothrow_swappable<T>::value)
         {
             ranges::swap_ranges(elems_, elems_ + N, a.elems_);
         }
@@ -191,35 +192,35 @@ namespace test {
         }
     };
 
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator==(const array<T, N>& x, const array<T, N>& y)
     {
         return ranges::equal(x.elems_, x.elems_ + N, y.elems_);
     }
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator!=(const array<T, N>& x, const array<T, N>& y)
     {
         return !(x == y);
     }
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator<(const array<T, N>& x, const array<T, N>& y)
     {
         return ranges::lexicographical_compare(x.elems_, x.elems_ + N, y.elems_, y.elems_ + N);
     }
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator>(const array<T, N>& x, const array<T, N>& y)
     {
         return y < x;
     }
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator<=(const array<T, N>& x, const array<T, N>& y)
@@ -227,7 +228,7 @@ namespace test {
         return !(y < x);
     }
 
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     bool
     operator>=(const array<T, N>& x, const array<T, N>& y)
@@ -235,16 +236,16 @@ namespace test {
          return !(x < y);
     }
 
-    template <class T, size_t N>
+    template<class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     auto swap(array<T, N>& x, array<T, N>& y)
-    noexcept(ranges::is_nothrow_swappable<T, T>::value)
-    -> typename std::enable_if<ranges::is_swappable<T, T>::value, void>::type
+    noexcept(ranges::is_nothrow_swappable<T>::value)
+    -> typename std::enable_if<ranges::is_swappable<T>::value, void>::type
     {
         x.swap(y);
     }
 
-    template <size_t I, class T, size_t N>
+    template<size_t I, class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     T& get(array<T, N>& a) noexcept
     {
@@ -252,7 +253,7 @@ namespace test {
         return a.elems_[I];
     }
 
-    template <size_t I, class T, size_t N>
+    template<size_t I, class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     const T& get(const array<T, N>& a) noexcept
     {
@@ -260,7 +261,7 @@ namespace test {
         return a.elems_[I];
     }
 
-    template <size_t I, class T, size_t N>
+    template<size_t I, class T, size_t N>
     RANGES_CXX14_CONSTEXPR
     T&& get(array<T, N>&& a) noexcept
     {
@@ -285,11 +286,11 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 namespace std
 {
 
-template <class T, size_t N>
+template<class T, size_t N>
 class tuple_size<test::array<T, N>>
     : public integral_constant<size_t, N> {};
 
-template <size_t I, class T, size_t N>
+template<size_t I, class T, size_t N>
 class tuple_element<I, test::array<T, N> >
 {
  public:

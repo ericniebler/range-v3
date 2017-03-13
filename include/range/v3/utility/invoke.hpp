@@ -23,7 +23,9 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-RANGES_DISABLE_WARNINGS
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
+RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 namespace ranges
 {
@@ -173,6 +175,6 @@ namespace ranges
     } // namespace v3
 } // namespace ranges
 
-RANGES_RE_ENABLE_WARNINGS
+RANGES_DIAGNOSTIC_POP
 
 #endif // RANGES_V3_UTILITY_INVOKE_HPP

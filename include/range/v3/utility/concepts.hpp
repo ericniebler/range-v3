@@ -105,7 +105,7 @@ namespace ranges
                 std::false_type;
 
             template<typename...Ts, typename Concept,
-                typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
+                typename = decltype(&Concept::template requires_<Ts...>)>
             auto models_(Concept *) ->
                 meta::apply<
                     meta::quote<meta::lazy::strict_and>,
@@ -124,23 +124,6 @@ namespace ranges
                 constexpr operator Head*() const { return nullptr; }
                 constexpr Head* operator()() const { return nullptr; }
             };
-
-            // Workaround https://llvm.org/bugs/show_bug.cgi?id=24181
-            template<typename T>
-            struct avoid_empty_braces_
-              : std::false_type
-            {};
-            template<typename T>
-            struct avoid_empty_braces_<std::initializer_list<T>>
-              : std::true_type
-            {};
-            template<typename T>
-            struct avoid_empty_braces_<T*>
-              : std::true_type
-            {};
-            template<typename T>
-            using avoid_empty_braces =
-                meta::_t<avoid_empty_braces_<uncvref_t<T>>>;
         }
         /// \endcond
 
@@ -191,7 +174,7 @@ namespace ranges
                 using base_concepts_t = meta::list<Concepts...>;
 
                 template<typename...Ts>
-                void requires_(Ts &&...);
+                void requires_();
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,12 +222,12 @@ namespace ranges
                 template<typename ...Ts>
                 struct same : std::true_type {};
                 template<typename T, typename ...Us>
-                struct same<T, Us...> : meta::strict_and<std::is_same<T, Us>...> {};
+                struct same<T, Us...> : meta::and_c<std::is_same<T, Us>::value...> {};
                 template<typename ...Ts>
                 using same_t = meta::_t<same<Ts...>>;
 
                 template<typename ...Ts>
-                auto requires_(Ts &&...) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(same_t<Ts...>{})
                     ));
@@ -253,19 +236,19 @@ namespace ranges
             /// \cond
             struct ImplicitlyConvertibleTo
             {
-                template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename From, typename To>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_convertible<T, U>{})
+                        concepts::is_true(std::is_convertible<From, To>{})
                     ));
             };
 
             struct ExplicitlyConvertibleTo
             {
-                template<typename T, typename U>
-                auto requires_(T && t, U &&) -> decltype(
+                template<typename From, typename To>
+                auto requires_(From (&from)()) -> decltype(
                     concepts::valid_expr(
-                        static_cast<U>(std::forward<T>(t))
+                        ((void) static_cast<To>(from()), 42)
                     ));
             };
             /// \endcond
@@ -277,9 +260,11 @@ namespace ranges
             struct DerivedFrom
             {
                 template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_base_of<U, T>{})
+                        concepts::is_true(std::is_base_of<U, T>{}),
+                        concepts::is_true(std::is_convertible<
+                            meta::_t<std::remove_cv<T>> *, meta::_t<std::remove_cv<U>> *>{})
                     ));
             };
 
@@ -288,22 +273,20 @@ namespace ranges
                 template<typename T, typename U, typename...Rest>
                 using reference_t = common_reference_t<T, U, Rest...>;
 
-                template<typename T, typename U,
-                    typename C = reference_t<T, U>>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename T, typename U>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, C, reference_t<U, T>>(),
-                        ((void)C(std::declval<T>()), 42),
-                        ((void)C(std::declval<U>()), 42)
+                        concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
+                        concepts::model_of<ConvertibleTo, T, reference_t<T, U>>(),
+                        concepts::model_of<ConvertibleTo, U, reference_t<T, U>>()
                     ));
 
                 template<typename T, typename U, typename...Rest,
-                    typename CommonReference_ = CommonReference,
-                    typename C = reference_t<T, U>>
-                auto requires_(T &&, U &&, Rest&&...) -> decltype(
+                    typename CommonReference_ = CommonReference>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CommonReference_, T, U>(),
-                        concepts::model_of<CommonReference_, C, Rest...>()
+                        concepts::model_of<CommonReference_, reference_t<T, U>, Rest...>()
                     ));
             };
 
@@ -312,38 +295,40 @@ namespace ranges
                 template<typename T, typename U, typename...Rest>
                 using value_t = common_type_t<T, U, Rest...>;
 
-                template<typename T, typename U,
-                    meta::if_<std::is_same<uncvref_t<T>, uncvref_t<U>>, int> = 0>
-                auto requires_(T &&, U &&) ->
-                    void;
-
-                template<typename T, typename U,
-                    meta::if_c<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value, int> = 0,
-                    typename C = value_t<T, U>,
-                    typename R = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename T, typename U>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, C, value_t<U, T>>(),
-                        ((void)C(std::declval<T>()), 42),
-                        ((void)C(std::declval<U>()), 42),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<CommonReference, C &, R &&>()
+                        concepts::is_true(std::is_same<uncvref_t<T>, uncvref_t<U>>{})
+                    ));
+
+                template<typename T, typename U>
+                auto requires_() -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_false(std::is_same<uncvref_t<T>, uncvref_t<U>>{}),
+                        concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
+                        concepts::model_of<ConvertibleTo, T, value_t<T, U>>(),
+                        concepts::model_of<ConvertibleTo, U, value_t<T, U>>(),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
+                        concepts::model_of<
+                            CommonReference,
+                            value_t<T, U> &,
+                            common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
                     ));
 
                 template<typename T, typename U, typename...Rest,
-                    typename Common_ = Common,
-                    typename C = value_t<T, U>>
-                auto requires_(T &&, U &&, Rest&&...) -> decltype(
+                    typename Common_ = Common>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Common_, T, U>(),
-                        concepts::model_of<Common_, C, Rest...>()
+                        concepts::model_of<Common_, value_t<T, U>, Rest...>()
                     ));
             };
 
             struct Integral
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<T>{})
                     ));
@@ -353,7 +338,7 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_signed<T>{})
                     ));
@@ -363,34 +348,41 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_unsigned<T>{})
+                        concepts::is_false(std::is_signed<T>{})
                     ));
             };
 
             struct Assignable
             {
                 template<typename T, typename U>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &&t, U &&u) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T &>(static_cast<T &&>(t) = static_cast<U &&>(u))
+                        concepts::is_true(std::is_lvalue_reference<T>{}),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
+                        concepts::has_type<T>((T &&) t = (U &&) u)
                     ));
             };
 
             struct Swappable
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_(T &&t) -> decltype(
                     concepts::valid_expr(
-                        ((void)swap(std::declval<T>(), std::declval<T>()), 42)
+                        ((void)ranges::swap((T &&) t, (T &&) t), 42)
                     ));
 
                 template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        ((void)swap(std::declval<T>(), std::declval<U>()), 42),
-                        ((void)swap(std::declval<U>(), std::declval<T>()), 42)
+                        concepts::model_of<Swappable, T>(),
+                        concepts::model_of<Swappable, U>(),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
+                        ((void)ranges::swap((T &&) t, (U &&) u), 42),
+                        ((void)ranges::swap((U &&) u, (T &&) t), 42)
                     ));
             };
 
@@ -400,7 +392,8 @@ namespace ranges
             struct WeaklyEqualityComparable
             {
                 template<typename T, typename U>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
+                    // Not to spec: doesn't compare to a Boolean trait
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t == u),
                         concepts::convertible_to<bool>(t != u),
@@ -412,30 +405,31 @@ namespace ranges
             struct EqualityComparable
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(detail::as_cref_t<T> t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t == t),
                         concepts::convertible_to<bool>(t != t)
                     ));
 
-                template<typename T, typename U,
-                    meta::if_<std::is_same<T, U>, int> = 0>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename T, typename U>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
+                        concepts::is_true(std::is_same<T, U>{}),
                         concepts::model_of<EqualityComparable, T>()
                     ));
 
                 // Cross-type equality comparison from N3351:
                 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
                 template<typename T, typename U,
-                    meta::if_c<!std::is_same<T, U>::value, int> = 0,
-                    typename C = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(T &&, U &&) -> decltype(
+                    typename C = common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
+                        concepts::is_false(std::is_same<T, U>{}),
                         concepts::model_of<EqualityComparable, T>(),
                         concepts::model_of<EqualityComparable, U>(),
                         concepts::model_of<WeaklyEqualityComparable, T, U>(),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
                         concepts::model_of<EqualityComparable, C>()
                     ));
             };
@@ -452,12 +446,13 @@ namespace ranges
                     ));
 
                 template<typename T, typename U,
-                    typename C = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(T && t, U && u) -> decltype(
+                    typename C = common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
+                auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<WeaklyOrdered, T>(),
                         concepts::model_of<WeaklyOrdered, U>(),
-                        concepts::model_of<CommonReference, T const &, U const &>(),
+                        concepts::model_of<
+                            CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
                         concepts::model_of<WeaklyOrdered, C>(),
                         concepts::convertible_to<bool>(t < u),
                         concepts::convertible_to<bool>(u < t),
@@ -474,10 +469,10 @@ namespace ranges
               : refines<EqualityComparable, WeaklyOrdered>
             {
                 template<typename T>
-                void requires_(T &&);
+                void requires_();
 
                 template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<TotallyOrdered, T>(),
                         concepts::model_of<TotallyOrdered, U>()
@@ -491,157 +486,54 @@ namespace ranges
             struct Destructible
             {
                 template<typename T,
-                    meta::if_<std::is_object<T>, int> = 0>
-                auto requires_(T && t, T* const p = nullptr) -> decltype(
+                    typename UnRefT = meta::_t<std::remove_reference<T>>>
+                auto requires_(T &t, UnRefT const &ct) -> decltype(
                     concepts::valid_expr(
-                        ((void)t.~T(), 42),
                         concepts::is_true(std::is_nothrow_destructible<T>()),
-                        concepts::has_type<T*>(&t),
-                        concepts::has_type<const T*>(&std::declval<const T&>()),
-                        ((void)delete p, 42),
-                        ((void)delete[] p, 42)
+                        concepts::has_type<UnRefT *>(&t),
+                        concepts::has_type<UnRefT const *>(&ct)
                     ));
             };
-
-            /// \cond
-            struct ConstructibleObject
-              : refines<Destructible(_1)>
-            {
-                template<typename T,
-                    meta::if_<detail::avoid_empty_braces<T>, int> = 0>
-                auto requires_(T &&) -> decltype(
-                    concepts::valid_expr(
-                        ((void)T(), 42),
-                        new T()
-                    ));
-
-                template<typename T,
-                    meta::if_c<!detail::avoid_empty_braces<T>::value, int> = 0>
-                auto requires_(T &&) -> decltype(
-                    concepts::valid_expr(
-                        ((void)T{}, 42),
-                        new T{}
-                    ));
-
-                // Avoid CWG DR1467.
-                template<typename T, typename U>
-                using DR1467 =
-#if defined(__clang__) && (__clang_major__ < 3 || ( __clang_major__ == 3 && __clang_minor__ <= 4) || (__clang_major__ == 6 && __clang_minor__ == 0))
-                  // 3.4 has a bug involving uniform initialization and conversion operators,
-                  // so just avoid brace initialization in all cases for construction from a
-                  // single argument.
-                  // also: Apple clang 3.5 seemingly still has the bug and reports its version incorrectly (__clang_major__ == 6 && __clang_minor__ == 0)
-                  meta::bool_<true || std::is_same<T, U>::value>;
-#else
-                  std::is_same<uncvref_t<T>, uncvref_t<U>>;
-#endif
-
-                template<typename T, typename U,
-                    meta::if_<DR1467<T, U>, int> = 0>
-                auto requires_(T &&, U &&) -> decltype(
-                    concepts::valid_expr(
-                        ((void)T(std::declval<U>()), 42),
-                        new T(std::declval<U>())
-                    ));
-
-                template<typename T, typename U,
-                    meta::if_c<!DR1467<T, U>::value, int> = 0>
-                auto requires_(T &&, U &&) -> decltype(
-                    concepts::valid_expr(
-                        ((void)T{std::declval<U>()}, 42),
-                        new T{std::declval<U>()}
-                    ));
-
-                template<typename T, typename U, typename V, typename... Args>
-                auto requires_(T &&, U &&, V &&, meta::id_t<Args> &&...) -> decltype(
-                    concepts::valid_expr(
-                        ((void)T{std::declval<U>(), std::declval<V>(), std::declval<Args>()...}, 42),
-                        new T{std::declval<U>(), std::declval<V>(), std::declval<Args>()...}
-                    ));
-            };
-
-            struct BindableReference
-            {
-                template<typename T, typename... Args,
-                    meta::if_<std::is_reference<T>, int> = 0>
-                auto requires_(T &&, meta::id_t<Args> &&...) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_constructible<T, Args...>())
-                    ));
-            };
-            /// \endcond
 
             struct Constructible
+              : refines<Destructible(_1)>
             {
-                template<typename T, typename... Args,
-                    meta::if_c<!std::is_reference<T>::value, int> = 0>
-                auto requires_(T &&, meta::id_t<Args> &&...) -> decltype(
+                template<typename T, typename... Args>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConstructibleObject, T, Args...>()
-                    ));
-
-                template<typename T, typename... Args,
-                    meta::if_<std::is_reference<T>, int> = 0>
-                auto requires_(T &&, meta::id_t<Args> &&...) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<BindableReference, T, Args...>()
+                        concepts::is_true(std::is_constructible<T, Args...>{})
                     ));
             };
-
-#if defined(__clang__) && __clang_major__ >= 4
-// Workaround https://llvm.org/bugs/show_bug.cgi?id=30723
-RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
-#endif
 
             struct DefaultConstructible
               : refines<Constructible>
             {
-                template<typename T, std::size_t N = 42,
-                    meta::if_c<!detail::avoid_empty_braces<T>::value, int> = 0>
-                auto requires_(T &&) -> decltype(
-                    concepts::valid_expr(
-                        new T[N]{}
-                    ));
-
-                // Workaround https://llvm.org/bugs/show_bug.cgi?id=24181
-                template<typename T, std::size_t N = 42,
-                    meta::if_<detail::avoid_empty_braces<T>, int> = 0>
-                auto requires_(T &&) -> decltype(
-                    concepts::valid_expr(
-                        new T[N]()
-                    ));
+                template<typename T>
+                void requires_();
             };
-
-#if defined(__clang__) && __clang_major__ >= 4
-// Workaround https://llvm.org/bugs/show_bug.cgi?id=30723
-RANGES_DIAGNOSTIC_POP
-#endif
 
             struct MoveConstructible
             {
-                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
-                auto requires_(T &&) -> decltype(
+                template<typename T>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Constructible, T, UnCvT &&>(),
-                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT &&, T>()
+                        concepts::model_of<Constructible, T, T>(),
+                        concepts::model_of<ConvertibleTo, T, T>()
                     ));
             };
 
             struct CopyConstructible
               : refines<MoveConstructible>
             {
-                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
-                auto requires_(T &&) -> decltype(
+                template<typename T>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        // Spec requires these to be validated
-                        concepts::model_of<Constructible, T, UnCvT const &>(),
-                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT const &, T>(),
-                        // Spec does not require these to be validated
-                        concepts::model_of<Constructible, T, UnCvT &>(),
-                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT &, T>(),
-                        concepts::model_of<Constructible, T, UnCvT const &&>(),
-                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT const &&, T>()
+                        concepts::model_of<Constructible, T, T &>(),
+                        concepts::model_of<Constructible, T, T const &>(),
+                        concepts::model_of<Constructible, T, T const>(),
+                        concepts::model_of<ConvertibleTo, T &, T>(),
+                        concepts::model_of<ConvertibleTo, T const &, T>(),
+                        concepts::model_of<ConvertibleTo, T const, T>()
                     ));
             };
 
@@ -649,9 +541,10 @@ RANGES_DIAGNOSTIC_POP
               : refines<MoveConstructible>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Assignable, T &, T &&>(),
+                        concepts::is_true(std::is_object<T>{}),
+                        concepts::model_of<Assignable, T &, T>(),
                         concepts::model_of<Swappable, T &>()
                     ));
             };
@@ -660,13 +553,13 @@ RANGES_DIAGNOSTIC_POP
               : refines<Movable, CopyConstructible>
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         // Spec requires this to be validated
                         concepts::model_of<Assignable, T &, T const &>(),
                         // Spec does not require these to be validated
                         concepts::model_of<Assignable, T &, T &>(),
-                        concepts::model_of<Assignable, T &, T const &&>()
+                        concepts::model_of<Assignable, T &, T const>()
                     ));
             };
 
@@ -699,19 +592,13 @@ RANGES_DIAGNOSTIC_POP
         template<typename T, typename U>
         using DerivedFrom = concepts::models<concepts::DerivedFrom, T, U>;
 
-        // This is an ugly hack around the fact that the core concept-checking
-        // code doesn't handle void very well.
         template<typename T, typename U, typename...Rest>
         using CommonReference =
-            meta::or_<
-                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
-                concepts::models<concepts::CommonReference, T, U, Rest...>>;
+            concepts::models<concepts::CommonReference, T, U, Rest...>;
 
         template<typename T, typename U, typename...Rest>
         using Common =
-            meta::or_<
-                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
-                concepts::models<concepts::Common, T, U, Rest...>>;
+            concepts::models<concepts::Common, T, U, Rest...>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

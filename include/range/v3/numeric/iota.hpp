@@ -25,7 +25,7 @@ namespace ranges
     {
         struct iota_fn
         {
-            template<typename O, typename S, class T,
+            template<typename O, typename S, typename T,
                 CONCEPT_REQUIRES_(OutputIterator<O, T const &>() && Sentinel<S, O>() &&
                     WeaklyIncrementable<T>())>
             O operator()(O begin, S end, T val) const
@@ -35,9 +35,9 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, class T,
+            template<typename Rng, typename T,
                 CONCEPT_REQUIRES_(OutputRange<Rng, T const &>() && WeaklyIncrementable<T>())>
-            range_safe_iterator_t<Rng> operator()(Rng && rng, T val) const
+            safe_iterator_t<Rng> operator()(Rng && rng, T val) const
             {
                 return (*this)(begin(rng), end(rng), detail::move(val));
             }

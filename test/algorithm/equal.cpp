@@ -126,7 +126,7 @@ void test_rng()
 
 int comparison_count = 0;
 
-template <typename T>
+template<typename T>
 bool counting_equals(const T &a, const T &b)
 {
     ++comparison_count;

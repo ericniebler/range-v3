@@ -53,15 +53,15 @@ namespace ranges
 
                 template<typename I>
                 [[noreturn]]
-                common_type_t<decay_t<unwrap_reference_t<Val const &>>, iterator_value_t<I>> &
+                common_type_t<decay_t<unwrap_reference_t<Val const &>>, value_type_t<I>> &
                 operator()(copy_tag, I const &) const
                 {
                     RANGES_EXPECT(false);
                 }
 
                 template<typename I,
-                    CONCEPT_REQUIRES_(!Invocable<Pred const&, iterator_reference_t<I>>())>
-                common_reference_t<unwrap_reference_t<Val const &>, iterator_reference_t<I>>
+                    CONCEPT_REQUIRES_(!Invocable<Pred const&, reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i)
                 {
                     auto &&x = *i;
@@ -70,8 +70,8 @@ namespace ranges
                     return (decltype(x) &&) x;
                 }
                 template<typename I,
-                    CONCEPT_REQUIRES_(Invocable<Pred const&, iterator_reference_t<I>>())>
-                common_reference_t<unwrap_reference_t<Val const &>, iterator_reference_t<I>>
+                    CONCEPT_REQUIRES_(Invocable<Pred const&, reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i) const
                 {
                     auto &&x = *i;
@@ -81,8 +81,8 @@ namespace ranges
                 }
 
                 template<typename I,
-                    CONCEPT_REQUIRES_(!Invocable<Pred const&, iterator_rvalue_reference_t<I>>())>
-                common_reference_t<unwrap_reference_t<Val const &>, iterator_rvalue_reference_t<I>>
+                    CONCEPT_REQUIRES_(!Invocable<Pred const&, rvalue_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i)
                 {
                     auto &&x = iter_move(i);
@@ -91,8 +91,8 @@ namespace ranges
                     return (decltype(x) &&) x;
                 }
                 template<typename I,
-                    CONCEPT_REQUIRES_(Invocable<Pred const&, iterator_rvalue_reference_t<I>>())>
-                common_reference_t<unwrap_reference_t<Val const &>, iterator_rvalue_reference_t<I>>
+                    CONCEPT_REQUIRES_(Invocable<Pred const&, rvalue_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);
@@ -123,8 +123,8 @@ namespace ranges
                 template<typename Rng, typename Pred, typename Val>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    IndirectPredicate<Pred, range_iterator_t<Rng>>,
-                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>>,
+                    IndirectPredicate<Pred, iterator_t<Rng>>,
+                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_type_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>>;
 
@@ -144,12 +144,12 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::replace_if operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The function passed to view::replace_if must be callable with "
                         "objects of the range's common reference type, and the result must be "
                         "convertible to bool.");
                     CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
-                            range_value_t<Rng>>(),
+                            range_value_type_t<Rng>>(),
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
                     CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val const &>,

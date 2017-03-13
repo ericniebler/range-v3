@@ -54,7 +54,7 @@ namespace ranges
                 {
                     // Must save a copy into a local because we will need this value
                     // even after we advance the input iterator.
-                    iterator_value_t<I> value = *begin; // This is guaranteed by IndirectlyCopyable
+                    value_type_t<I> value = *begin; // This is guaranteed by IndirectlyCopyable
                     *out = value;
                     ++out;
                     while(++begin != end)
@@ -130,9 +130,9 @@ namespace ranges
 
             /// \overload
             template<typename Rng, typename O, typename C = equal_to, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Range<Rng>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),

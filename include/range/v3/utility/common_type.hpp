@@ -79,7 +79,7 @@ namespace ranges
             using _rref_res =
                 meta::if_<std::is_reference<R>, meta::_t<std::remove_reference<R>> &&, R>;
 
-            template <class T, class U>
+            template<class T, class U>
             using _lref_res = _cond_res<_copy_cv<T, U> &, _copy_cv<U, T> &>;
 
         #if !defined(__GNUC__) || defined(__clang__)

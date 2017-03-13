@@ -23,75 +23,77 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-concepts
+        // Specialize this if the default is wrong.
+        template<typename T>
+        struct disable_sized_range : std::false_type {};
+
         /// \cond
-        namespace adl_size_detail
+        namespace _size_
         {
-            template<typename Rng>
-            constexpr auto impl(Rng && rng, ...)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                iter_size(begin(rng), end(rng))
-            )
-            template<typename Rng,
-                typename Result = detail::decay_t<decltype(size(std::declval<Rng&>()))>,
-                CONCEPT_REQUIRES_(Integral<Result>())>
-            constexpr Result impl(Rng && rng, long)
-                noexcept(noexcept(size(rng)))
-            {
-                return size(rng);
-            }
-            template<typename Rng,
-                typename Result = detail::decay_t<decltype(std::declval<Rng&>().size())>,
-                CONCEPT_REQUIRES_(Integral<Result>())>
-            constexpr Result impl(Rng && rng, int)
-                noexcept(noexcept(rng.size()))
-            {
-                return rng.size();
-            }
+            template<typename T>
+            void size(T const &) = delete;
 
-            struct size_fn : iter_size_fn
+            struct fn : iter_size_fn
             {
-                using iter_size_fn::operator();
-
-                // Built-in arrays
-                template<typename T, std::size_t N>
-                constexpr std::size_t operator()(T (&)[N]) const noexcept
-                {
-                    return N;
-                }
-                template<typename T, std::size_t N>
-                constexpr std::size_t operator()(T const (&)[N]) const noexcept
-                {
-                    return N;
-                }
-                template<typename T, std::size_t N>
-                constexpr std::size_t operator()(T (&&)[N]) const noexcept
+            private:
+                template<typename R, std::size_t N>
+                static constexpr std::size_t impl_(R const (&)[N], int) noexcept
                 {
                     return N;
                 }
 
-                // A reference-wrapped Range
-                template<typename T>
-                constexpr auto operator()(std::reference_wrapper<T> t) const
-                    noexcept(noexcept(std::declval<const size_fn&>()(t.get()))) ->
-                    decltype(std::declval<const size_fn&>()(t.get()))
-                {
-                    return (*this)(t.get());
-                }
-                template<typename T, bool RValue>
-                constexpr auto operator()(ranges::reference_wrapper<T, RValue> t) const
-                    noexcept(noexcept(std::declval<const size_fn&>()(t.get()))) ->
-                    decltype(std::declval<const size_fn&>()(t.get()))
-                {
-                    return (*this)(t.get());
-                }
+                // Prefer member if it returns Integral.
+                template<typename R,
+                    typename = meta::if_c<!disable_sized_range<R>()>,
+                    typename N = decltype(aux::copy(std::declval<R const &>().size())),
+                    CONCEPT_REQUIRES_(Integral<N>())>
+                static constexpr N impl_(R const &r, int)
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    r.size()
+                )
 
-                // Other
-                template<typename Rng>
-                constexpr auto operator()(Rng && rng) const
+                // Use ADL if it returns Integral.
+                template<typename R,
+                    typename = meta::if_c<!disable_sized_range<R>()>,
+                    typename N = decltype(aux::copy(size(std::declval<R const &>()))),
+                    CONCEPT_REQUIRES_(Integral<N>())>
+                static constexpr N impl_(R const &r, long)
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    size(r)
+                )
+
+                template<typename R>
+                static RANGES_CXX14_CONSTEXPR auto impl_(R const &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    adl_size_detail::impl(detail::forward<Rng>(rng), 42)
+                    ranges::iter_size(ranges::cbegin(r), ranges::cend(r))
+                )
+
+            public:
+                using iter_size_fn::operator();
+
+                template<typename R>
+                constexpr auto operator()(R const &r) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fn::impl_(r, 42)
+                )
+
+                template<typename T, typename Fn = fn>
+                constexpr auto operator()(std::reference_wrapper<T> ref) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    Fn()(ref.get())
+                )
+
+                template<typename T, bool RValue, typename Fn = fn>
+                constexpr auto operator()(ranges::reference_wrapper<T, RValue> ref) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    Fn()(ref.get())
                 )
             };
         }
@@ -99,7 +101,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
-        RANGES_INLINE_VARIABLE(adl_size_detail::size_fn, size)
+        RANGES_INLINE_VARIABLE(_size_::fn, size)
     }
 }
 

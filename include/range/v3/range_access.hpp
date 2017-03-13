@@ -67,18 +67,18 @@ namespace ranges
             struct Cursor
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<concepts::SemiRegular, T>(),
                         concepts::model_of<concepts::SemiRegular, mixin_base_t<T>>(),
-                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T &&>(),
+                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T>(),
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>()
                     ));
             };
             struct HasCursorNext
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
                         (t.next(), concepts::void_)
                     ));
@@ -87,7 +87,7 @@ namespace ranges
               : concepts::refines<concepts::SemiRegular(concepts::_1), Cursor(concepts::_2)>
             {
                 template<typename S, typename C>
-                auto requires_(S && s, C && c) -> decltype(
+                auto requires_(S &s, C &c) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(c.equal(s))
                     ));
@@ -95,7 +95,7 @@ namespace ranges
             struct ReadableCursor
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
                         t.read()
                     ));
@@ -111,7 +111,7 @@ namespace ranges
             struct WritableCursor
             {
                 template<typename T, typename U>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &t, U &&u) -> decltype(
                     concepts::valid_expr(
                         (t.write((U &&) u), 42)
                     ));
@@ -120,7 +120,7 @@ namespace ranges
               : concepts::refines<CursorSentinel>
             {
                 template<typename S, typename C>
-                auto requires_(S && s, C && c) -> decltype(
+                auto requires_(S &s, C &c) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<concepts::SignedIntegral>(c.distance_to(s))
                     ));
@@ -135,7 +135,7 @@ namespace ranges
               : concepts::refines<InputCursor, CursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(single_pass_t<uncvref_t<T>>())
                     ));
@@ -144,7 +144,7 @@ namespace ranges
               : concepts::refines<ForwardCursor>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
                         (t.prev(), concepts::void_)
                     ));
@@ -153,7 +153,7 @@ namespace ranges
               : concepts::refines<BidirectionalCursor, SizedCursorSentinel(concepts::_1, concepts::_1)>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
@@ -161,7 +161,7 @@ namespace ranges
             struct InfiniteCursor
             {
                 template<typename T>
-                auto requires_(T &&) -> decltype(
+                auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(typename T::is_infinite{})
                     ));
@@ -310,12 +310,21 @@ namespace ranges
             template<typename Cur>
             using cursor_value_t = typename cursor_value<Cur>::type;
 
-            template<typename BI,
-                CONCEPT_REQUIRES_(meta::is<meta::_t<std::decay<BI>>, basic_iterator>())>
-            static RANGES_CXX14_CONSTEXPR auto pos(BI && it)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
-                std::forward<BI>(it).pos()
-            )
+            template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR Cur &pos(basic_iterator<Cur> &it) noexcept
+            {
+                return it.pos();
+            }
+            template<typename Cur>
+            static constexpr Cur const &pos(basic_iterator<Cur> const &it) noexcept
+            {
+                return it.pos();
+            }
+            template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR Cur &&pos(basic_iterator<Cur> &&it) noexcept
+            {
+                return detail::move(it.pos());
+            }
 
             template<typename Cur>
             static RANGES_CXX14_CONSTEXPR Cur cursor(basic_iterator<Cur> it)
@@ -420,7 +429,7 @@ namespace ranges
 
             template<typename Cur>
             struct is_writable_cursor_<Cur, true>
-              : WritableCursor<Cur, range_access::cursor_value_t<Cur> &&>
+              : WritableCursor<Cur, range_access::cursor_value_t<Cur>>
             {};
 
             template<typename Cur>

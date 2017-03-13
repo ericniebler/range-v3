@@ -57,27 +57,30 @@ namespace ranges
             {
             private:
                 friend range_access; friend group_by_view;
-                range_iterator_t<Rng> cur_;
-                range_sentinel_t<Rng> last_;
+                iterator_t<Rng> cur_;
+                sentinel_t<Rng> last_;
                 semiregular_ref_or_val_t<Fun, IsConst> fun_;
 
                 struct take_while_pred
                 {
-                    range_iterator_t<Rng> first_;
+                    iterator_t<Rng> first_;
                     semiregular_ref_or_val_t<Fun, IsConst> fun_;
                     bool operator()(range_reference_t<Rng> ref) const
                     {
                         return invoke(fun_, *first_, ref);
                     }
                 };
-                take_while_view<iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
+                take_while_view<
+                    iterator_range<iterator_t<Rng>, sentinel_t<Rng>>,
+                    take_while_pred>
                 read() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }
                 void next()
                 {
-                    cur_ = ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
+                    cur_ =
+                        ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
                 }
                 bool equal(default_sentinel) const
                 {
@@ -87,8 +90,8 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(semiregular_ref_or_val_t<Fun, IsConst> fun, range_iterator_t<Rng> first,
-                    range_sentinel_t<Rng> last)
+                cursor(semiregular_ref_or_val_t<Fun, IsConst> fun, iterator_t<Rng> first,
+                    sentinel_t<Rng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {}
             public:
@@ -128,7 +131,7 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectRelation<Fun, range_iterator_t<Rng>>>;
+                    IndirectRelation<Fun, iterator_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -145,7 +148,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::group_by operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectRelation<Fun, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectRelation<Fun, iterator_t<Rng>>(),
                         "The function passed to view::group_by must be callable with two arguments "
                         "of the range's common reference type, and its return type must be "
                         "convertible to bool.");

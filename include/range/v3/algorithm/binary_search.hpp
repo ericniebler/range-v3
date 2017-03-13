@@ -50,7 +50,7 @@ namespace ranges
 
             /// \overload
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && BinarySearchable<I, V2, C, P>())>
             bool
             operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const

@@ -31,245 +31,266 @@ namespace ranges
         /// \cond
         namespace detail
         {
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ == 2
-            // Semi-workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=77537
-            template<typename T, typename... Args>
-            struct pair_construct_hack
-              : Constructible<T, Args...>
-            {};
-
-            template<typename First, typename Second, typename Arg1, typename Arg2>
-            struct pair_construct_hack<std::pair<First, Second>, std::pair<Arg1, Arg2>>
-              : meta::and_<
-                    std::is_constructible<First, Arg1>,
-                    std::is_constructible<Second, Arg2>,
-                    meta::defer<Constructible, std::pair<First, Second>, std::pair<Arg1, Arg2>>>
-            {};
-
-            template<typename First, typename Second, typename Arg1, typename Arg2>
-            struct pair_construct_hack<std::pair<First, Second>, common_pair<Arg1, Arg2>>
-              : meta::and_<
-                    std::is_constructible<First, Arg1>,
-                    std::is_constructible<Second, Arg2>,
-                    meta::defer<Constructible, std::pair<First, Second>, std::pair<Arg1, Arg2>>>
-            {};
-
-            template<typename T, typename... Args>
-            using is_nothrow_constructible_hack = meta::and_<
-                pair_construct_hack<T, Args...>,
-                meta::defer<std::is_nothrow_constructible, T, Args...>>;
-#else
-            template<typename T, typename... Args>
-            using pair_construct_hack = Constructible<T, Args &&...>;
-
-            template<typename T, typename... Args>
-            using is_nothrow_constructible_hack = std::is_nothrow_constructible<T, Args...>;
-#endif
-
-            template<typename T>
-            class operator_arrow_proxy
+            template<typename I, typename S>
+            variant<I, S> &cidata(common_iterator<I, S> &that)
             {
-                T value_;
-            public:
-                template<typename U, CONCEPT_REQUIRES_(pair_construct_hack<T, U>())>
-                constexpr explicit operator_arrow_proxy(U && u)
-                    noexcept(is_nothrow_constructible_hack<T, U>::value)
-                  : value_(std::forward<U>(u))
-                {}
-                T const *operator->() const noexcept
-                {
-                    return std::addressof(value_);
-                }
-            };
-
-            template <class, class = void>
-            struct HasMemberOperatorArrow : std::false_type {};
-            template <class T>
-            struct HasMemberOperatorArrow<T, meta::void_<
-                decltype(std::declval<T>().operator->())>>
-              : std::true_type
-            {};
-
-            template<typename I,
-                CONCEPT_REQUIRES_(std::is_pointer<I>::value ||
-                    HasMemberOperatorArrow<I>())>
-            constexpr I operator_arrow_(I const &i, int)
-            noexcept(std::is_nothrow_copy_constructible<I>::value)
-            {
-                return i;
+                return that.data_;
             }
-
-            template<typename I,
-                CONCEPT_REQUIRES_(std::is_reference<iterator_reference_t<I>>())>
-            auto operator_arrow_(I const &i, long)
-                noexcept(noexcept(*i)) ->
-                decltype(std::addressof(std::declval<iterator_reference_t<I> &>()))
-            {
-                auto && tmp = *i;
-                return std::addressof(tmp);
-            }
-
-            template<typename I, typename R = iterator_reference_t<I>,
-                typename V = iterator_value_t<I>,
-                CONCEPT_REQUIRES_(!std::is_reference<R>::value &&
-                    Constructible<V, R>())>
-            operator_arrow_proxy<V> operator_arrow_(I const &i, ...)
-                noexcept(
-                    std::is_nothrow_move_constructible<
-                        operator_arrow_proxy<V>>::value &&
-                    std::is_nothrow_constructible<
-                        operator_arrow_proxy<V>, R>::value)
-            {
-                return operator_arrow_proxy<V>{*i};
-            }
-
-            template<typename I, CONCEPT_REQUIRES_(InputIterator<I>())>
-            auto operator_arrow(I const &i)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::operator_arrow_(i, 42)
-            )
-
-            template<typename I, bool IsReadable = (bool) Readable<I>()>
-            struct common_cursor_types
-            {};
-
-            template<typename I>
-            struct common_cursor_types<I, true>
-            {
-                using single_pass = SinglePass<I>;
-                using value_type = iterator_value_t<I>;
-            };
 
             template<typename I, typename S>
-            struct common_cursor
-              : private common_cursor_types<I>
+            variant<I, S> const &cidata(common_iterator<I, S> const &that)
+            {
+                return that.data_;
+            }
+        }
+
+        // Detail namespace, otherwise clang complains that iter_move
+        // and iter_swap conflict with the namespace scope objects of the
+        // same name.
+        namespace _common_iterator_
+        {
+        /// \endcond
+
+        template<typename I, typename S>
+        struct common_iterator
+        {
+        private:
+            CONCEPT_ASSERT(Iterator<I>());
+            CONCEPT_ASSERT(Sentinel<S, I>());
+            CONCEPT_ASSERT(!Same<I, S>());
+            variant<I, S> data_;
+
+            friend variant<I, S> &detail::cidata<>(common_iterator<I, S> &);
+            friend variant<I, S> const &detail::cidata<>(common_iterator<I, S> const &);
+            struct emplace_fn
+            {
+                variant<I, S> *data_;
+                template<typename T, std::size_t N>
+                void operator()(indexed_element<T, N> t) const
+                {
+                    ranges::emplace<N>(*data_, t.get());
+                }
+            };
+            struct arrow_proxy_
             {
             private:
-                friend range_access;
-                static_assert(!std::is_same<I, S>::value,
-                              "Error: iterator and sentinel types are the same");
-                using difference_type = iterator_difference_t<I>;
-                struct mixin
-                  : basic_mixin<common_cursor>
-                {
-                    mixin() = default;
-                    using basic_mixin<common_cursor>::basic_mixin;
-                    explicit mixin(I it)
-                      : mixin(common_cursor{std::move(it)})
-                    {}
-                    explicit mixin(S se)
-                      : mixin(common_cursor{std::move(se)})
-                    {}
-                };
-
-                variant<I, S> data_;
-
-                explicit common_cursor(I it)
-                  : data_(emplaced_index<0>, std::move(it))
+                friend common_iterator;
+                value_type_t<I> keep_;
+                arrow_proxy_(reference_t<I>&& x)
+                  : keep_(std::move(x))
                 {}
-                explicit common_cursor(S se)
-                  : data_(emplaced_index<1>, std::move(se))
-                {}
-                bool is_sentinel() const
-                {
-                    RANGES_EXPECT(data_.valid());
-                    return data_.index() == 1u;
-                }
-                I & it()
-                {
-                    RANGES_EXPECT(!is_sentinel());
-                    return ranges::get<0>(data_);
-                }
-                I const & it() const
-                {
-                    RANGES_EXPECT(!is_sentinel());
-                    return ranges::get<0>(data_);
-                }
-                S const & se() const
-                {
-                    RANGES_EXPECT(is_sentinel());
-                    return ranges::get<1>(data_);
-                }
-                template<typename OI, typename OS,
-                    CONCEPT_REQUIRES_(
-                        (bool)SizedSentinel<OS, I>() &&
-                        (bool)SizedSentinel<OI, I>() &&
-                        (bool)SizedSentinel<S, OI>())>
-                iterator_difference_t<I>
-                distance_to(common_cursor<OI, OS> const &that) const
-                {
-                    return that.is_sentinel() ?
-                        (this->is_sentinel() ? 0 : that.se() - this->it()) :
-                        (this->is_sentinel() ?
-                             that.it() - this->se() :
-                             that.it() - this->it());
-                }
-                CONCEPT_REQUIRES(Readable<I>())
-                iterator_rvalue_reference_t<I> move() const
-                    noexcept(noexcept(iter_move(std::declval<I const &>())))
-                {
-                    return iter_move(it());
-                }
-                CONCEPT_REQUIRES(Readable<I>())
-                iterator_reference_t<I> read() const
-                {
-                    return *it();
-                }
-                template<typename T,
-                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
-                void write(T && t) const
-                {
-                    *it() = (T &&) t;
-                }
-                template<typename II = I, CONCEPT_REQUIRES_(Readable<II>())>
-                auto arrow() const
-                    noexcept(noexcept(
-                        detail::operator_arrow(std::declval<II const &>()))) ->
-                    decltype(detail::operator_arrow(std::declval<II const &>()))
-                {
-                    return detail::operator_arrow(it());
-                }
-                template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(Sentinel<S2, I>() && Sentinel<S, I2>() &&
-                        !EqualityComparable<I, I2>())>
-                bool equal(common_cursor<I2, S2> const &that) const
-                {
-                    return is_sentinel() ?
-                        (that.is_sentinel() || that.it() == se()) :
-                        (!that.is_sentinel() || it() == that.se());
-                }
-                template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(Sentinel<S2, I>() && Sentinel<S, I2>() &&
-                        EqualityComparable<I, I2>())>
-                bool equal(common_cursor<I2, S2> const &that) const
-                {
-                    return is_sentinel() ?
-                        (that.is_sentinel() || that.it() == se()) :
-                        (that.is_sentinel() ?
-                            it() == that.se() :
-                            it() == that.it());
-                }
-                void next()
-                {
-                    ++it();
-                }
-                // BUGBUG TODO what about advance??
             public:
-                common_cursor() = default;
-                template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(ExplicitlyConvertibleTo<I, I2>() &&
-                                      ExplicitlyConvertibleTo<S, S2>())>
-                operator common_cursor<I2, S2>() const
+                const value_type_t<I>* operator->() const noexcept
                 {
-                    return is_sentinel() ?
-                        common_cursor<I2, S2>{S2{se()}} :
-                        common_cursor<I2, S2>{I2{it()}};
+                    return std::addressof(keep_);
                 }
+            };
+            template<typename T>
+            static T *operator_arrow_(T *p, int) noexcept
+            {
+                return p;
+            }
+            template<typename J, typename = detail::arrow_type_<J const>>
+            static J operator_arrow_(J const &j, int) noexcept(noexcept(J(j)))
+            {
+                return j;
+            }
+            template<typename J, typename R = reference_t<J>,
+                CONCEPT_REQUIRES_(std::is_reference<R>::value)>
+            static meta::_t<std::add_pointer<R>> operator_arrow_(J const &j, long) noexcept
+            {
+                auto &&r = *j;
+                return std::addressof(r);
+            }
+            template<typename J, typename V = value_type_t<J>,
+                typename R = reference_t<J>,
+                CONCEPT_REQUIRES_(Constructible<V, R>())>
+            static arrow_proxy_ operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j))))
+            {
+                return arrow_proxy_(*j);
+            }
+        public:
+            using difference_type = difference_type_t<I>;
+
+            common_iterator() = default;
+            common_iterator(I i)
+              : data_(emplaced_index<0>, std::move(i))
+            {}
+            common_iterator(S s)
+              : data_(emplaced_index<1>, std::move(s))
+            {}
+            template<typename I2, typename S2,
+                CONCEPT_REQUIRES_(ConvertibleTo<I2, I>() && ConvertibleTo<S2, S>())>
+            common_iterator(common_iterator<I2, S2> const &that)
+              : data_(detail::variant_core_access::make_empty<I, S>())
+            {
+                detail::cidata(that).visit_i(emplace_fn{&data_});
+            }
+            template<typename I2, typename S2,
+                CONCEPT_REQUIRES_(ConvertibleTo<I2, I>() && ConvertibleTo<S2, S>())>
+            common_iterator& operator=(common_iterator<I2, S2> const &that)
+            {
+                detail::cidata(that).visit_i(emplace_fn{&data_});
+                return *this;
+            }
+            reference_t<I> operator*()
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                *ranges::get<0>(data_)
+            )
+            template<typename I2 = I, CONCEPT_REQUIRES_(Readable<I2 const>())>
+            reference_t<I> operator*() const
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                *static_cast<I2 const &>(ranges::get<0>(data_))
+            )
+            template<typename J = I, CONCEPT_REQUIRES_(Readable<J>())>
+            auto operator->() const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                common_iterator::operator_arrow_((J const &) ranges::get<0>(data_), 42)
+            )
+            common_iterator& operator++()
+            {
+                ++ranges::get<0>(data_);
+                return *this;
+            }
+            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            auto operator++(int)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::get<0>(data_)++
+            )
+            CONCEPT_REQUIRES(ForwardIterator<I>())
+            common_iterator operator++(int)
+            {
+                return common_iterator(ranges::get<0>(data_)++);
+            }
+
+            CONCEPT_REQUIRES(InputIterator<I>())
+            friend RANGES_CXX14_CONSTEXPR
+            auto iter_move(const common_iterator& i)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_move(ranges::get<0>(detail::cidata(i)))
+            )
+            template<typename I2, typename S2,
+                CONCEPT_REQUIRES_(IndirectlySwappable<I2, I>())>
+            friend auto iter_swap(
+                const common_iterator& x, common_iterator<I2, S2> const &y)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_swap(
+                    ranges::get<0>(detail::cidata(x)),
+                    ranges::get<0>(detail::cidata(y)))
+            )
+        };
+
+        template<typename I1, typename I2, typename S1, typename S2,
+            CONCEPT_REQUIRES_(Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
+                !EqualityComparable<I1, I2>())>
+        bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        {
+            return detail::cidata(x).index() == 1u ?
+                (detail::cidata(y).index() == 1u || ranges::get<0>(detail::cidata(y)) == ranges::get<1>(detail::cidata(x))) :
+                (detail::cidata(y).index() != 1u || ranges::get<0>(detail::cidata(x)) == ranges::get<1>(detail::cidata(y)));
+        }
+
+        template<typename I1, typename I2, typename S1, typename S2,
+            CONCEPT_REQUIRES_(Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
+                EqualityComparable<I1, I2>())>
+        bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        {
+            return detail::cidata(x).index() == 1u ?
+                (detail::cidata(y).index() == 1u || ranges::get<0>(detail::cidata(y)) == ranges::get<1>(detail::cidata(x))) :
+                (detail::cidata(y).index() == 1u ?
+                    ranges::get<0>(detail::cidata(x)) == ranges::get<1>(detail::cidata(y)) :
+                    ranges::get<0>(detail::cidata(x)) == ranges::get<0>(detail::cidata(y)));
+        }
+
+        template<typename I1, typename I2, typename S1, typename S2,
+            CONCEPT_REQUIRES_(Sentinel<S1, I2>() && Sentinel<S2, I1>())>
+        bool operator!=(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        {
+            return !(x == y);
+        }
+
+        template<typename I1, typename I2, typename S1, typename S2,
+            CONCEPT_REQUIRES_(SizedSentinel<I1, I2>() && SizedSentinel<S1, I2>() &&
+                SizedSentinel<S2, I1>())>
+        difference_type_t<I2> operator-(
+            common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        {
+            return detail::cidata(x).index() == 1u ?
+                (detail::cidata(y).index() == 1u ? 0 : ranges::get<1>(detail::cidata(x)) - ranges::get<0>(detail::cidata(y))) :
+                (detail::cidata(y).index() == 1u ?
+                    ranges::get<0>(detail::cidata(x)) - ranges::get<1>(detail::cidata(y)) :
+                    ranges::get<0>(detail::cidata(x)) - ranges::get<0>(detail::cidata(y)));
+        }
+
+        /// \cond
+        } // namespace _common_iterator_
+        /// \endcond
+
+        template<typename I, typename S>
+        struct value_type<common_iterator<I, S>>
+          : meta::if_<
+                Readable<I>,
+                meta::defer<value_type_t, I>,
+                meta::nil_>
+        {};
+
+        template<typename I, typename S>
+        struct iterator_category<common_iterator<I, S>>
+          : meta::if_<
+                InputIterator<I>,
+                meta::if_<
+                    ForwardIterator<I>,
+                    meta::id<forward_iterator_tag>,
+                    meta::id<input_iterator_tag>>,
+                meta::nil_>
+        {};
+
+        /// \cond
+        namespace detail
+        {
+            template<typename I, bool = (bool) InputIterator<I>()>
+            struct common_iterator_std_traits
+            {
+                using iterator_category =
+                    meta::if_c<
+                        (bool) ForwardIterator<I>() &&
+                            std::is_reference<reference_t<I>>::value,
+                        std::forward_iterator_tag,
+                        std::input_iterator_tag>;
+                using difference_type = difference_type_t<I>;
+                using value_type = value_type_t<I>;
+                using reference = reference_t<I>;
+                using pointer = meta::_t<detail::pointer_type_<I>>;
+            };
+
+            template<typename I>
+            struct common_iterator_std_traits<I, false>
+            {
+                using iterator_category = std::output_iterator_tag;
+                using difference_type = difference_type_t<I>;
+                using value_type = void;
+                using reference = void;
+                using pointer = void;
             };
         }
         /// \endcond
     }
 }
+
+/// \cond
+namespace std
+{
+    template<typename I, typename S>
+    struct iterator_traits< ::ranges::common_iterator<I, S>>
+      : ::ranges::detail::common_iterator_std_traits<I>
+    {};
+}
+/// \endcond
 
 #endif

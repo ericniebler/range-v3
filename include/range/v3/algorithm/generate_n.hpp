@@ -35,9 +35,9 @@ namespace ranges
         {
             template<typename O, typename F,
                 CONCEPT_REQUIRES_(Invocable<F&>() &&
-                    OutputIterator<O, result_of_t<F&()> &&>())>
+                    OutputIterator<O, result_of_t<F&()>>())>
             tagged_pair<tag::out(O), tag::fun(F)>
-            operator()(O begin, iterator_difference_t<O> n, F fun) const
+            operator()(O begin, difference_type_t<O> n, F fun) const
             {
                 RANGES_EXPECT(n >= 0);
                 auto norig = n;

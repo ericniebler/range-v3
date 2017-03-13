@@ -55,7 +55,7 @@ add_custom_target(gh-pages.copy
 )
 
 execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+    COMMAND ${GIT_EXECUTABLE} -C ${CMAKE_SOURCE_DIR} rev-parse --short HEAD
     OUTPUT_VARIABLE RANGE_V3_GIT_SHORT_SHA
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )

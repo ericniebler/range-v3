@@ -47,8 +47,8 @@ namespace ranges
         {
         private:
             friend range_access;
-            using size_type_ = range_size_t<Rng>;
-            using difference_type_ = range_difference_t<Rng>;
+            using size_type_ = range_size_type_t<Rng>;
+            using difference_type_ = range_difference_type_t<Rng>;
 
             // Bidirectional and random-access stride iterators need to remember how
             // far past they end they are, so that when they're decremented, they can
@@ -64,7 +64,7 @@ namespace ranges
             struct adaptor : adaptor_base, private offset_t
             {
             private:
-                using iterator = ranges::range_iterator_t<Rng>;
+                using iterator = ranges::iterator_t<Rng>;
                 stride_view const *rng_;
                 offset_t & offset() { return *this; }
                 offset_t const & offset() const { return *this; }
@@ -198,7 +198,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
-                stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> step) const
+                stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> step) const
                 {
                     return {all(std::forward<Rng>(rng)), step};
                 }

@@ -15,6 +15,7 @@
 #include <range/v3/view/partial_sum.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -35,9 +36,9 @@ int main()
     auto && rng = rgi | view::partial_sum();
     has_type<int &>(*begin(rgi));
     has_type<int>(*begin(rng));
-    models<concepts::SizedView>(rng);
-    models<concepts::ForwardView>(rng);
-    models_not<concepts::BidirectionalView>(rng);
+    models<concepts::SizedView>(aux::copy(rng));
+    models<concepts::ForwardView>(aux::copy(rng));
+    models_not<concepts::BidirectionalView>(aux::copy(rng));
     ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
 
     auto it = begin(rng);
