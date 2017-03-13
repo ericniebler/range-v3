@@ -69,6 +69,7 @@ Release Notes:
   Bring many interfaces into sync with the Ranges TS.
   - Many interfaces are simply renamed. The following table shows the old names
     and the new. (All names are in the `ranges::v1` namespace.)
+
     | Old Name                      | New Name                  |
     |-------------------------------|---------------------------|
     | `indirect_swap`               | `iter_swap`               |
