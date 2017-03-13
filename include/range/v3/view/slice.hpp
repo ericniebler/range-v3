@@ -172,7 +172,7 @@ namespace ranges
         /// \endcond
 
         /// \cond
-        namespace adl_begin_end_detail
+        namespace _end_
         {
             template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
             detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist)
