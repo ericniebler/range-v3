@@ -62,6 +62,12 @@ The code is known to work on the following compilers:
 - on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
 - on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/9mekkhw1wm22rum9/branch/master?svg=true)](https://ci.appveyor.com/project/CaseyCarter/range-v3)
 
+Release Notes:
+--------------
+
+* **0.1.1** Small tweak to `Writable` concept to fix #537
+* **0.1.0** March 8, 2017, Begin semantic versioning 
+
 Say Thanks!
 -----------
 
