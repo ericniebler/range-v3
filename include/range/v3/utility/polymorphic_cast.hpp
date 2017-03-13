@@ -5,6 +5,7 @@
 
 #ifndef RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP
 #define RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP
+#include <range/v3/detail/config.hpp>
 
 namespace ranges
 {

@@ -46,7 +46,7 @@ matrix:
       addons: *clang36
 
     # clang 3.7 C++11/14 Release libc++
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: &clang37
         apt:
@@ -59,12 +59,12 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
 
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On HEADERS=On
+    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On HEADERS=On CLANG_MODULES=On
       os: linux
       addons: *clang37
 
     # clang 3.8 C++11/14 Release ASAN libc++
-    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: &clang38
         apt:
@@ -77,12 +77,12 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
 
-    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On HEADERS=On
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On HEADERS=On CLANG_MODULES=On
       os: linux
       addons: *clang38
 
     # clang 3.9 C++11/14 Release ASAN libc++
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: &clang39
         apt:
@@ -95,12 +95,12 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.9
 
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On HEADERS=On
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On HEADERS=On CLANG_MODULES=On
       os: linux
       addons: *clang39
 
     # clang 5 C++11/14/1z Debug/Release-ASAN libc++, 11 Debug libstdc++
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: &clang5
         apt:
@@ -113,27 +113,27 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On HEADERS=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On HEADERS=On CLANG_MODULES=On
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On CLANG_MODULES=On
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off CLANG_MODULES=On
       os: linux
       addons: *clang5
 
@@ -259,6 +259,7 @@ install:
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"; fi
   - if [ "$HEADERS" == "On" ]; then HEADER_CHECK=1; else HEADER_CHECK=0; fi
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=$HEADER_CHECK
+  - if [ "$CLANG_MODULES" == "On" ] && [ "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="/usr/include/c++/v1/module.modulemap"; fi
   - make -j2 VERBOSE=1
 
 script:
