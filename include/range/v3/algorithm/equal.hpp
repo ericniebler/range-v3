@@ -78,7 +78,7 @@ namespace ranges
 
             template<typename Rng0, typename I1Ref,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
-                typename I0 = range_iterator_t<Rng0>,
+                typename I0 = iterator_t<Rng0>,
                 typename I1 = uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
                     Range<Rng0>() && Iterator<I1>() &&
@@ -93,8 +93,8 @@ namespace ranges
 
             template<typename Rng0, typename Rng1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
-                typename I0 = range_iterator_t<Rng0>,
-                typename I1 = range_iterator_t<Rng1>,
+                typename I0 = iterator_t<Rng0>,
+                typename I1 = iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
                     Range<Rng0>() && Range<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>()

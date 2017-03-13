@@ -48,14 +48,14 @@ namespace ranges
         private:
             friend range_access;
             semiregular_t<Pred> pred_;
-            detail::non_propagating_cache<range_iterator_t<Rng>> begin_;
+            detail::non_propagating_cache<iterator_t<Rng>> begin_;
 
             struct adaptor
               : adaptor_base
             {
             private:
                 remove_if_view *rng_;
-                void satisfy(range_iterator_t<Rng> &it) const
+                void satisfy(iterator_t<Rng> &it) const
                 {
                     it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()),
                         std::ref(rng_->pred_));
@@ -65,7 +65,7 @@ namespace ranges
                 adaptor(remove_if_view &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(remove_if_view &) const
+                iterator_t<Rng> begin(remove_if_view &) const
                 {
                     auto &beg = rng_->begin_;
                     if(!beg)
@@ -75,12 +75,12 @@ namespace ranges
                     }
                     return *beg;
                 }
-                void next(range_iterator_t<Rng> &it) const
+                void next(iterator_t<Rng> &it) const
                 {
                     this->satisfy(++it);
                 }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-                void prev(range_iterator_t<Rng> &it) const
+                void prev(iterator_t<Rng> &it) const
                 {
                     auto &pred = rng_->pred_;
                     do --it; while(invoke(pred, *it));
@@ -122,7 +122,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    IndirectPredicate<Pred, range_iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -139,7 +139,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::remove_if must be a model of the "
                         "InputRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The second argument to view::remove_if must be callable with "
                         "a value of the range, and the return type must be convertible "
                         "to bool");

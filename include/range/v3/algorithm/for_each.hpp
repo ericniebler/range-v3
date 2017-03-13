@@ -47,8 +47,8 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    IndirectInvocable<F, projected<range_iterator_t<Rng>, P>>())>
-            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::fun(F)>
+                    IndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
             operator()(Rng &&rng, F fun, P proj = P{}) const
             {
                 return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in(),

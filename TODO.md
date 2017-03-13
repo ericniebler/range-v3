@@ -7,7 +7,7 @@
         CONCEPT_REQUIRES_(RandomAccessIterator<I>() &&
                           SizedSentinel<S, I>() &&
                           is_contiguous_iterator<I>())>
-    iterator_range<std::add_pointer_t<iterator_reference_t<I>>>
+    iterator_range<std::add_pointer_t<reference_t<I>>>
     as_contiguous_range(I begin, S end)
     {
         if(begin == end)

@@ -75,12 +75,12 @@ namespace ranges
             {
             private:
                 friend common_iterator;
-                iterator_value_t<I> keep_;
-                arrow_proxy_(iterator_reference_t<I>&& x)
+                value_type_t<I> keep_;
+                arrow_proxy_(reference_t<I>&& x)
                   : keep_(std::move(x))
                 {}
             public:
-                const iterator_value_t<I>* operator->() const noexcept
+                const value_type_t<I>* operator->() const noexcept
                 {
                     return std::addressof(keep_);
                 }
@@ -95,22 +95,22 @@ namespace ranges
             {
                 return j;
             }
-            template<typename J, typename R = iterator_reference_t<J>,
+            template<typename J, typename R = reference_t<J>,
                 CONCEPT_REQUIRES_(std::is_reference<R>::value)>
             static meta::_t<std::add_pointer<R>> operator_arrow_(J const &j, long) noexcept
             {
                 auto &&r = *j;
                 return std::addressof(r);
             }
-            template<typename J, typename V = iterator_value_t<J>,
-                typename R = iterator_reference_t<J>,
+            template<typename J, typename V = value_type_t<J>,
+                typename R = reference_t<J>,
                 CONCEPT_REQUIRES_(Constructible<V, R>())>
             static arrow_proxy_ operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j))))
             {
                 return arrow_proxy_(*j);
             }
         public:
-            using difference_type = iterator_difference_t<I>;
+            using difference_type = difference_type_t<I>;
 
             common_iterator() = default;
             common_iterator(I i)
@@ -217,7 +217,7 @@ namespace ranges
         template<typename I1, typename I2, typename S1, typename S2,
             CONCEPT_REQUIRES_(SizedSentinel<I1, I2>() && SizedSentinel<S1, I2>() &&
                 SizedSentinel<S2, I1>())>
-        iterator_difference_t<I2> operator-(
+        difference_type_t<I2> operator-(
             common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
@@ -235,7 +235,7 @@ namespace ranges
         struct value_type<common_iterator<I, S>>
           : meta::if_<
                 Readable<I>,
-                meta::defer<iterator_value_t, I>,
+                meta::defer<value_type_t, I>,
                 meta::nil_>
         {};
 
@@ -259,12 +259,12 @@ namespace ranges
                 using iterator_category =
                     meta::if_c<
                         (bool) ForwardIterator<I>() &&
-                            std::is_reference<iterator_reference_t<I>>::value,
+                            std::is_reference<reference_t<I>>::value,
                         std::forward_iterator_tag,
                         std::input_iterator_tag>;
-                using difference_type = iterator_difference_t<I>;
-                using value_type = iterator_value_t<I>;
-                using reference = iterator_reference_t<I>;
+                using difference_type = difference_type_t<I>;
+                using value_type = value_type_t<I>;
+                using reference = reference_t<I>;
                 using pointer = meta::_t<detail::pointer_type_<I>>;
             };
 
@@ -272,7 +272,7 @@ namespace ranges
             struct common_iterator_std_traits<I, false>
             {
                 using iterator_category = std::output_iterator_tag;
-                using difference_type = iterator_difference_t<I>;
+                using difference_type = difference_type_t<I>;
                 using value_type = void;
                 using reference = void;
                 using pointer = void;

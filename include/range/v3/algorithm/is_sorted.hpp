@@ -49,7 +49,7 @@ namespace ranges
             }
 
             template<typename Rng, typename R = ordered_less, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectRelation<R, projected<I, P>>())>
             bool operator()(Rng &&rng, R rel = R{}, P proj = P{}) const

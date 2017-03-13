@@ -32,10 +32,10 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool = SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>::value>
+            template<typename Rng, bool = SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>::value>
             class size_tracker
             {
-                range_difference_t<Rng> size_;
+                range_difference_type_t<Rng> size_;
             public:
                 CONCEPT_ASSERT(ForwardRange<Rng>() || SizedRange<Rng>());
                 size_tracker() = default;
@@ -46,7 +46,7 @@ namespace ranges
                 {
                     --size_;
                 }
-                range_difference_t<Rng> get(Rng &, range_iterator_t<Rng> &) const
+                range_difference_type_t<Rng> get(Rng &, iterator_t<Rng> &) const
                 {
                     return size_;
                 }
@@ -62,7 +62,7 @@ namespace ranges
                 {}
                 void decrement()
                 {}
-                range_difference_t<Rng> get(Rng &rng, range_iterator_t<Rng> const &it) const
+                range_difference_type_t<Rng> get(Rng &rng, iterator_t<Rng> const &it) const
                 {
                     return ranges::end(rng) - it;
                 }
@@ -79,11 +79,11 @@ namespace ranges
           : public view_facade<sample_view<Rng, URNG>, finite>
           , tagged_compressed_tuple<
                 tag::range(Rng),
-                tag::size(mutable_<range_difference_t<Rng>>),
+                tag::size(mutable_<range_difference_type_t<Rng>>),
                 tag::engine(reference_wrapper<URNG>)>
         {
             friend range_access;
-            using D = range_difference_t<Rng>;
+            using D = range_difference_type_t<Rng>;
             using base_t = tagged_compressed_tuple<
                 tag::range(Rng), tag::size(mutable_<D>), tag::engine(reference_wrapper<URNG>)>;
             using base_t::engine;
@@ -93,12 +93,12 @@ namespace ranges
             class cursor
               : tagged_compressed_tuple<
                     tag::range(sample_view const *),
-                    tag::current(range_iterator_t<Rng const>),
+                    tag::current(iterator_t<Rng const>),
                     tag::size(detail::size_tracker<Rng const>)>
             {
                 using base_t = tagged_compressed_tuple<
                     tag::range(sample_view const*),
-                    tag::current(range_iterator_t<Rng const>),
+                    tag::current(iterator_t<Rng const>),
                     tag::size(detail::size_tracker<Rng const>)>;
                 using base_t::current;
                 using base_t::range;
@@ -131,7 +131,7 @@ namespace ranges
                     }
                 }
             public:
-                using value_type = range_value_t<Rng>;
+                using value_type = range_value_type_t<Rng>;
                 using difference_type = D;
 
                 cursor() = default;
@@ -188,10 +188,10 @@ namespace ranges
                     InputRange<Rng>, UniformRandomNumberGenerator<URNG>,
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<URNG>,
-                        range_difference_t<Rng>>,
+                        range_difference_type_t<Rng>>,
                     meta::or_<
                         SizedRange<Rng>,
-                        SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>,
+                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
                         ForwardRange<Rng>>>;
 
                 friend view_access;
@@ -207,7 +207,7 @@ namespace ranges
                 template<typename Rng, typename URNG = detail::default_random_engine,
                     CONCEPT_REQUIRES_(Constraint<Rng, URNG>())>
                 sample_view<all_t<Rng>, URNG> operator()(
-                    Rng && rng, range_difference_t<Rng> sample_size,
+                    Rng && rng, range_difference_type_t<Rng> sample_size,
                     URNG &generator = detail::get_random_engine()) const
                 {
                     return sample_view<all_t<Rng>, URNG>{
@@ -228,14 +228,14 @@ namespace ranges
                         "UniformRandomNumberGenerator concept.");
                     CONCEPT_ASSERT_MSG(meta::or_<
                         SizedRange<Rng>,
-                        SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>,
+                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
                         ForwardRange<Rng>>(),
                         "The underlying range for view::sample must either satisfy the SizedRange"
                         "concept, have iterator and sentinel types that satisfy the "
                         "SizedSentinel concept, or be a forward range.");
                     CONCEPT_ASSERT_MSG(ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<URNG>,
-                        range_difference_t<Rng>>(),
+                        range_difference_type_t<Rng>>(),
                         "The random generator passed to view::sample has to have a return type "
                         "convertible to the base iterator difference type.");
                 }

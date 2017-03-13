@@ -143,14 +143,14 @@ namespace ranges
 
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident,
-                typename I1 = range_iterator_t<Rng1>,
-                typename I2 = range_iterator_t<Rng2>,
+                typename I1 = iterator_t<Rng1>,
+                typename I2 = iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
                     Range<Rng1>() &&
                     Range<Rng2>()
                 )>
-            range_safe_iterator_t<Rng1>
+            safe_iterator_t<Rng1>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {

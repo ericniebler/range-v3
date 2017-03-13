@@ -30,13 +30,13 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename I, typename D /* = iterator_difference_t<I>*/>
+        template<typename I, typename D /* = difference_type_t<I>*/>
         struct counted_view
           : view_facade<counted_view<I, D>, finite>
         {
         private:
             friend range_access;
-            using size_type_ = iterator_size_t<I>;
+            using size_type_ = size_type_t<I>;
             I it_;
             D n_;
 
@@ -63,7 +63,7 @@ namespace ranges
             {
                 template<typename I,
                     CONCEPT_REQUIRES_(Iterator<I>())>
-                counted_view<I> operator()(I it, iterator_difference_t<I> n) const
+                counted_view<I> operator()(I it, difference_type_t<I> n) const
                 {
                     return {std::move(it), n};
                 }

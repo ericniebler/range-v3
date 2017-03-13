@@ -49,14 +49,14 @@ namespace ranges
 
                 template<typename I>
                 [[noreturn]]
-                common_type_t<decay_t<unwrap_reference_t<Val2 const &>>, iterator_value_t<I>> &
+                common_type_t<decay_t<unwrap_reference_t<Val2 const &>>, value_type_t<I>> &
                 operator()(copy_tag, I const &) const
                 {
                     RANGES_EXPECT(false);
                 }
 
                 template<typename I>
-                common_reference_t<unwrap_reference_t<Val2 const &>, iterator_reference_t<I>>
+                common_reference_t<unwrap_reference_t<Val2 const &>, reference_t<I>>
                 operator()(I const &i) const
                 {
                     auto &&x = *i;
@@ -66,7 +66,7 @@ namespace ranges
                 }
 
                 template<typename I>
-                common_reference_t<unwrap_reference_t<Val2 const &>, iterator_rvalue_reference_t<I>>
+                common_reference_t<unwrap_reference_t<Val2 const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);
@@ -116,8 +116,8 @@ namespace ranges
                 using Concept = meta::and_<
                     InputRange<Rng>,
                     Same<V1, V2>,
-                    EqualityComparable<V1, range_value_t<Rng>>,
-                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>>,
+                    EqualityComparable<V1, range_value_type_t<Rng>>,
+                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>>;
 
@@ -143,11 +143,11 @@ namespace ranges
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<V1, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(EqualityComparable<V1, range_value_type_t<Rng>>(),
                         "The values passed to view::replace must be EqualityComparable "
                         "to the range's value type.");
                     CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
-                            range_value_t<Rng>>(),
+                            range_value_type_t<Rng>>(),
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
                     CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val2 const &>,

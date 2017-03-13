@@ -46,7 +46,7 @@ namespace ranges
                 // is past the equal range (i.e., denotes an element greater
                 // than val), or is in the equal range (denotes an element equal
                 // to val).
-                auto dist = iterator_difference_t<I>{1};
+                auto dist = difference_type_t<I>{1};
                 while(true)
                 {
                     auto mid = begin;
@@ -95,7 +95,7 @@ namespace ranges
             }
 
             template<typename Rng, typename V, typename C = ordered_less,
-                typename P = ident, typename I = range_iterator_t<Rng>,
+                typename P = ident, typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && !SizedRange<Rng>() &&
                     BinarySearchable<I, V, C, P>())>
             meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
@@ -105,7 +105,7 @@ namespace ranges
             }
 
             template<typename Rng, typename V, typename C = ordered_less,
-                typename P = ident, typename I = range_iterator_t<Rng>,
+                typename P = ident, typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(SizedRange<Rng>() && BinarySearchable<I, V, C, P>())>
             meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
             operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const

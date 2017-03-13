@@ -46,7 +46,7 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename C = ordered_less, typename P = ident,
-                        typename I = range_iterator_t<Rng>>
+                        typename I = iterator_t<Rng>>
                     auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
@@ -73,7 +73,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::stable_sort operates must be a model of the "
                         "ForwardRange concept.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");

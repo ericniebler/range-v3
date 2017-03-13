@@ -51,7 +51,7 @@ namespace ranges
             {
                 // Probe exponentially for either end-of-range or an iterator
                 // that is past the partition point (i.e., does not satisfy pred).
-                auto len = iterator_difference_t<I>{1};
+                auto len = difference_type_t<I>{1};
                 while(true)
                 {
                     auto mid = begin;
@@ -78,19 +78,19 @@ namespace ranges
             }
 
             template<typename Rng, typename C, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && !SizedRange<Rng>() &&
                     PartitionPointable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
             {
                 return (*this)(
                     begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
             template<typename Rng, typename C, typename P = ident,
-                typename I = range_iterator_t<Rng>,
+                typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(SizedRange<Rng>() && PartitionPointable<I, C, P>())>
-            range_safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
             {
                 auto len = distance(rng);
                 return aux::partition_point_n(

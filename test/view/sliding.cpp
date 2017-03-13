@@ -51,28 +51,28 @@ namespace
     {}
 
     template<typename Adapted>
-    void test_prev(Adapted& a, range_iterator_t<Adapted> const& it, std::true_type)
+    void test_prev(Adapted& a, iterator_t<Adapted> const& it, std::true_type)
     {
         ::models<concepts::BidirectionalRange>(a);
         ::check_equal(*ranges::prev(it, 3), view::iota(N - K - 2, N - 2));
     }
     template<typename Adapted>
-    void test_prev(Adapted&, range_iterator_t<Adapted> const&, std::false_type)
+    void test_prev(Adapted&, iterator_t<Adapted> const&, std::false_type)
     {}
 
     template<typename Rng,
         bool = RandomAccessRange<Rng>() || (BidirectionalRange<Rng>() && BoundedRange<Rng>())>
     struct size_compare
     {
-        range_iterator_t<Rng> iter1_;
-        range_iterator_t<Rng> iter2_;
-        range_difference_t<Rng> dist_;
+        iterator_t<Rng> iter1_;
+        iterator_t<Rng> iter2_;
+        range_difference_type_t<Rng> dist_;
     };
     template<typename Rng>
     struct size_compare<Rng, true>
     {
-        range_iterator_t<Rng> iter1_;
-        range_difference_t<Rng> dist_;
+        iterator_t<Rng> iter1_;
+        range_difference_type_t<Rng> dist_;
     };
 
     template<typename Base>
@@ -84,8 +84,8 @@ namespace
         test_size(rng, SizedRange<Base>());
 
         CONCEPT_ASSERT(Same<
-            meta::_t<iterator_concept<range_iterator_t<Base>>>,
-            meta::_t<iterator_concept<range_iterator_t<Adapted>>>>());
+            meta::_t<iterator_concept<iterator_t<Base>>>,
+            meta::_t<iterator_concept<iterator_t<Adapted>>>>());
 
         auto it = ranges::begin(rng);
         test_bounded(rng, BoundedRange<Base>());

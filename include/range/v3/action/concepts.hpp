@@ -64,7 +64,7 @@ namespace ranges
               : refines<SemiContainer>
             {
                 template<typename T,
-                    typename I = detail::movable_input_iterator<range_value_t<T>>>
+                    typename I = detail::movable_input_iterator<range_value_type_t<T>>>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, uncvref_t<T>, I, I>()

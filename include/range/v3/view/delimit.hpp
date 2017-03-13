@@ -47,7 +47,7 @@ namespace ranges
                 sentinel_adaptor(Val value)
                   : value_(std::move(value))
                 {}
-                bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
+                bool empty(iterator_t<Rng> it, sentinel_t<Rng> end) const
                 {
                     return it == end || *it == value_;
                 }

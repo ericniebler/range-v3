@@ -135,15 +135,27 @@ namespace ranges
         {
             struct Readable
             {
+            private:
+                template<typename I,
+                    typename R = decltype(*std::declval<I &>()),
+                    typename = R&>
+                using reference_t_ = R;
+
+                template<typename I,
+                    typename = reference_t_<I>,
+                    typename R = decltype(iter_move(std::declval<I &>())),
+                    typename = R&>
+                using rvalue_reference_t_ = R;
+            public:
                 // Associated types
                 template<typename I>
                 using value_t = meta::_t<value_type<I>>;
 
                 template<typename I>
-                using reference_t = decltype(*std::declval<I &>());
+                using reference_t = reference_t_<I>;
 
                 template<typename I>
-                using rvalue_reference_t = decltype(iter_move(std::declval<I &>()));
+                using rvalue_reference_t = rvalue_reference_t_<I>;
 
                 template<typename I>
                 using common_reference_t =

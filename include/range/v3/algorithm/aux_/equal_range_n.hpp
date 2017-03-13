@@ -37,7 +37,7 @@ namespace ranges
                 template<typename I, typename V, typename R = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V, R, P>())>
                 iterator_range<I>
-                operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred = R{},
+                operator()(I begin, difference_type_t<I> dist, V const & val, R pred = R{},
                     P proj = P{}) const
                 {
                     if(0 < dist)

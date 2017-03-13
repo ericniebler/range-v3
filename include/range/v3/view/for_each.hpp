@@ -60,7 +60,7 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     Range<Rng>,
-                    IndirectInvocable<F, range_iterator_t<Rng>>,
+                    IndirectInvocable<F, iterator_t<Rng>>,
                     Range<concepts::Invocable::result_t<F&, range_common_reference_t<Rng>>>>;
 
                 template<typename Rng, typename F,
@@ -78,7 +78,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "Rng is not a model of the Range concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, iterator_t<Rng>>(),
                         "The function F is not callable with arguments of the type of the range's "
                         "common reference type.");
                     CONCEPT_ASSERT_MSG(Range<concepts::Invocable::result_t<F&,

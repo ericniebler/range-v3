@@ -199,7 +199,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
             adaptor() = default;
             adaptor(semiregular_t<Fun> const &fun) : fun_(fun) {}
             // Here is where we apply Fun to the elements:
-            auto read(range_iterator_t<Rng> it) const -> decltype(fun_(*it))
+            auto read(iterator_t<Rng> it) const -> decltype(fun_(*it))
             {
                 return fun_(*it);
             }

@@ -46,7 +46,7 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename Gen,
-                        typename I = range_iterator_t<Rng>>
+                        typename I = iterator_t<Rng>>
                     auto requires_() -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::RandomAccessRange, Rng>(),
@@ -54,7 +54,7 @@ namespace ranges
                             concepts::is_true(UniformRandomNumberGenerator<Gen>()),
                             concepts::is_true(ConvertibleTo<
                                 concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                                iterator_difference_t<I>>())
+                                difference_type_t<I>>())
                         ));
                 };
 
@@ -77,7 +77,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(RandomAccessRange<Rng>(),
                         "The object on which action::shuffle operates must be a model of the "
                         "RandomAccessRange concept.");
-                    using I = range_iterator_t<Rng>;
+                    using I = iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(Permutable<I>(),
                         "The iterator type of the range passed to action::shuffle must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
@@ -87,7 +87,7 @@ namespace ranges
                         "UniformRandomNumberGenerator concept.");
                     CONCEPT_ASSERT_MSG(ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        iterator_difference_t<I>>(),
+                        difference_type_t<I>>(),
                         "The random generator passed to action::shuffle has to have a return type "
                         "convertible to the container iterator difference type.");
                 }

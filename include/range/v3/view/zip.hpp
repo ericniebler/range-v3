@@ -40,7 +40,7 @@ namespace ranges
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
                 [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                    std::tuple<iterator_value_t<Its>...>
+                    std::tuple<value_type_t<Its>...>
                 {
                     RANGES_EXPECT(false);
                 }
@@ -49,10 +49,10 @@ namespace ranges
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
                 auto operator()(Its const &...its) const
-                    noexcept(meta::and_c<noexcept(iterator_reference_t<Its>(*its))...>::value)
+                    noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    common_tuple<iterator_reference_t<Its>...>{*its...}
+                    common_tuple<reference_t<Its>...>{*its...}
                 )
 
                 // tuple rvalue reference
@@ -60,17 +60,17 @@ namespace ranges
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
                 auto operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
-                        noexcept(iterator_rvalue_reference_t<Its>(iter_move(its)))...>::value)
+                        noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    common_tuple<iterator_rvalue_reference_t<Its>...>{iter_move(its)...}
+                    common_tuple<rvalue_reference_t<Its>...>{iter_move(its)...}
                 )
 
                 // pair value
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
                 [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
-                    std::pair<iterator_value_t<It1>, iterator_value_t<It2>>
+                    std::pair<value_type_t<It1>, value_type_t<It2>>
                 {
                     RANGES_EXPECT(false);
                 }
@@ -79,22 +79,22 @@ namespace ranges
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
                 auto operator()(It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(iterator_reference_t<It1>(*it1)) &&
-                             noexcept(iterator_reference_t<It2>(*it2)))
+                    noexcept(noexcept(reference_t<It1>(*it1)) &&
+                             noexcept(reference_t<It2>(*it2)))
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    common_pair<iterator_reference_t<It1>, iterator_reference_t<It2>>{*it1, *it2}
+                    common_pair<reference_t<It1>, reference_t<It2>>{*it1, *it2}
                 )
 
                 // pair rvalue reference
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
                 auto operator()(move_tag, It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(iterator_rvalue_reference_t<It1>(iter_move(it1))) &&
-                             noexcept(iterator_rvalue_reference_t<It2>(iter_move(it2))))
+                    noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
+                             noexcept(rvalue_reference_t<It2>(iter_move(it2))))
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    common_pair<iterator_rvalue_reference_t<It1>, iterator_rvalue_reference_t<It2>>{
+                    common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>{
                         iter_move(it1), iter_move(it2)}
                 )
             };
