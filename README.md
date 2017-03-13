@@ -68,7 +68,7 @@ Release Notes:
 * **0.2.0** March 13, 2017
   Bring many interfaces into sync with the Ranges TS.
   - Many interfaces are simply renamed. The following table shows the old names
-    and the new. (All names are in the `ranges::v1` namespace.)
+    and the new. (All names are in the `ranges::v3` namespace.)
 
     | Old Name                      | New Name                  |
     |-------------------------------|---------------------------|
