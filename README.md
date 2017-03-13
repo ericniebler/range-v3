@@ -65,8 +65,61 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
-* **0.1.1** Small tweak to `Writable` concept to fix #537
-* **0.1.0** March 8, 2017, Begin semantic versioning 
+* **0.2.0** March 13, 2017
+  Bring many interfaces into sync with the Ranges TS.
+  - Many interfaces are simply renamed. The following table shows the old names
+    and the new. (All names are in the `ranges::v1` namespace.)
+    | Old Name                      | New Name                  |
+    |-------------------------------|---------------------------|
+    | `indirect_swap`               | `iter_swap`               |
+    | `indirect_move`               | `iter_move`               |
+    | `iterator_value_t`            | `value_type_t`            |
+    | `iterator_reference_t`        | `reference_t`             |
+    | `iterator_difference_t`       | `difference_type_t`       |
+    | `iterator_size_t`             | `size_type_t`             |
+    | `iterator_rvalue_reference_t` | `rvalue_reference_t`      |
+    | `iterator_common_reference_t` | `iter_common_reference_t` |
+    | `range_value_t`               | `range_value_type_t`      |
+    | `range_difference_t`          | `range_difference_type_t` |
+    | `range_size_t`                | `range_size_type_t`       |
+    | `range_iterator_t`            | `iterator_t`              |
+    | `range_sentinel_t`            | `sentinel_t`              |
+  - `common_iterator` now requires that its two types (`Iterator` and `Sentinel`)
+    are different. Use `common_iterator_t<I, S>` to get the old behavior (i.e., if the two types are the same, it is an alias for `I`; otherwise, it is
+    `common_iterator<I, S>`). 
+  - The following iterator adaptors now work with iterators that return proxies
+    from their dereference operator (i.e., `operator*`):
+    * `common_iterator`
+    * `counted_iterator`
+  - The following customization points are now implemented per the Ranges TS
+    spec and will no longer find the associated unconstrained overload in
+    namespace `std::`:
+    * `ranges::begin`
+    * `ranges::end`
+    * `ranges::size`
+    * `ranges::swap`
+    * `ranges::iter_swap`
+
+    (In practice, this has very little effect but it may effect overloading in
+    rare situations.)
+  - `ranges::is_swappable` now only takes one template parameter. The new
+    `ranges::is_swappable_with<T, U>` tests whether `T` and `U` are swappable.
+    `ranges::is_swappable<T>` is equivalent to `ranges::is_swappable_with<T &, T &>`.
+  - The following object concepts have changed to conform with the Ranges TS
+    specification, and approved changes (see [P0547](http://wg21.link/p0547)):
+    * `Destructible`
+    * `Constructible`
+    * `DefaultConstructible`
+    * `MoveConstructible`
+    * `MoveConstructible`
+    * `Movable`
+    * `Assignable`
+  - The `View` concept is no longer satisfied by reference types.
+  - The syntax for defining a concept has changed slightly. See [utility/iterator_concepts.hpp](https://github.com/ericniebler/range-v3/blob/master/include/range/v3/utility/iterator_concepts.hpp) for examples.
+* **0.1.1**
+  Small tweak to `Writable` concept to fix #537.
+* **0.1.0**
+  March 8, 2017, Begin semantic versioning 
 
 Say Thanks!
 -----------
