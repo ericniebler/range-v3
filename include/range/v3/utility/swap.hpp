@@ -100,7 +100,7 @@ namespace ranges
 
             struct swap_fn
             {
-                // Dispatch to customization point:
+                // Dispatch to user-defined swap found via ADL:
                 template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_swappable_<T, U>::value>
@@ -110,7 +110,8 @@ namespace ranges
                     (void) swap((T &&) t, (U &&) u)
                 )
 
-                // Handle swappable types
+                // For instrinsicly swappable (i.e., movable) types for which
+                // a swap overload cannot be found via ADL, swap by moving.
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -122,7 +123,9 @@ namespace ranges
                     (void)(b = ranges::exchange(a, (T &&) b))
                 )
 
-                // Handle arrays
+                // For arrays of instrinsicly swappable (i.e., movable) types
+                // for which a swap overload cannot be found via ADL, swap array
+                // elements by moving.
                 template<typename T, typename U, std::size_t N>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -135,6 +138,9 @@ namespace ranges
                         (*this)(t[i], u[i]);
                 }
 
+                // For rvalue pairs and tuples of swappable types, swap the
+                // members. This permits code like:
+                //   ranges::swap(std::tie(a,b,c), std::tie(d,e,f));
                 template<typename F0, typename S0, typename F1, typename S1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_swappable_with<F0, F1>::value && is_swappable_with<S0, S1>::value>
@@ -143,8 +149,8 @@ namespace ranges
                         is_nothrow_swappable_with<F0, F1>::value &&
                         is_nothrow_swappable_with<S0, S1>::value)
                 {
-                    swap_fn{}(std::move(left).first, std::move(right).first);
-                    swap_fn{}(std::move(left).second, std::move(right).second);
+                    swap_fn{}(detail::move(left).first, detail::move(right).first);
+                    swap_fn{}(detail::move(left).second, detail::move(right).second);
                 }
 
                 template<typename ...Ts, typename ...Us>
@@ -168,7 +174,6 @@ namespace ranges
                 }
             };
 
-            // Now implementations
             template<typename T, typename U, typename = void>
             struct is_swappable_with_
               : std::false_type
@@ -214,6 +219,10 @@ namespace ranges
             template<typename T, typename U>
             std::false_type try_adl_iter_swap_(long);
 
+            // Test whether an overload of iter_swap for a T and a U can be found
+            // via ADL with the iter_swap overload above participating in the
+            // overload set. This depends on user-defined iter_swap overloads
+            // being a better match than the overload in namespace std.
             template<typename T, typename U>
             struct is_adl_indirectly_swappable_
               : meta::id_t<decltype(adl_swap_detail::try_adl_iter_swap_<T, U>(42))>
@@ -221,7 +230,7 @@ namespace ranges
 
             struct iter_swap_fn
             {
-                // Dispatch to customization point:
+                // *If* a user-defined iter_swap is found via ADL, call that:
                 template<typename T, typename U>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
@@ -231,7 +240,8 @@ namespace ranges
                     (void) iter_swap((T &&) t, (U &&) u)
                 )
 
-                // Handle readables of swappable types
+                // *Otherwise*, for Readable types with swappable reference
+                // types, call ranges::swap(*a, *b)
                 template<typename I0, typename I1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -244,7 +254,11 @@ namespace ranges
                     swap_fn{}(*a, *b)
                 )
 
-                // Handle indirectly movable types
+                // *Otherwise*, for Readable types that are mutually
+                // IndirectlyMovableStorable, implement as:
+                //      value_type_t<T0> tmp = iter_move(a);
+                //      *a = iter_move(b);
+                //      *b = std::move(tmp);
                 template<typename I0, typename I1>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
@@ -265,7 +279,6 @@ namespace ranges
                 }
             };
 
-            // Now implementations
             template<typename T, typename U, typename Enable = void>
             struct is_indirectly_swappable_
               : std::false_type
