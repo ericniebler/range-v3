@@ -44,10 +44,10 @@ namespace ranges
             }
         }
 
-        // Inline namespace, otherwise clang complains that indirect_move
-        // and indirect_swap conflict with the namespace scope objects of the
+        // Detail namespace, otherwise clang complains that iter_move
+        // and iter_swap conflict with the namespace scope objects of the
         // same name.
-        inline namespace _common_iterator
+        namespace _common_iterator_
         {
         /// \endcond
 
@@ -168,14 +168,14 @@ namespace ranges
 
             CONCEPT_REQUIRES(InputIterator<I>())
             friend RANGES_CXX14_CONSTEXPR
-            auto indirect_move(const common_iterator& i)
+            auto iter_move(const common_iterator& i)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::iter_move(ranges::get<0>(detail::cidata(i)))
             )
             template<typename I2, typename S2,
                 CONCEPT_REQUIRES_(IndirectlySwappable<I2, I>())>
-            friend auto indirect_swap(
+            friend auto iter_swap(
                 const common_iterator& x, common_iterator<I2, S2> const &y)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -184,28 +184,6 @@ namespace ranges
                     ranges::get<0>(detail::cidata(y)))
             )
         };
-        /// \cond
-        } // inline namespace _common_iterator
-        /// \endcond
-
-        template<typename I, typename S>
-        struct value_type<common_iterator<I, S>>
-          : meta::if_<
-                Readable<I>,
-                meta::defer<iterator_value_t, I>,
-                meta::nil_>
-        {};
-
-        template<typename I, typename S>
-        struct iterator_category<common_iterator<I, S>>
-          : meta::if_<
-                InputIterator<I>,
-                meta::if_<
-                    ForwardIterator<I>,
-                    meta::id<forward_iterator_tag>,
-                    meta::id<input_iterator_tag>>,
-                meta::nil_>
-        {};
 
         template<typename I1, typename I2, typename S1, typename S2,
             CONCEPT_REQUIRES_(Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
@@ -248,6 +226,29 @@ namespace ranges
                     ranges::get<0>(detail::cidata(x)) - ranges::get<1>(detail::cidata(y)) :
                     ranges::get<0>(detail::cidata(x)) - ranges::get<0>(detail::cidata(y)));
         }
+
+        /// \cond
+        } // namespace _common_iterator_
+        /// \endcond
+
+        template<typename I, typename S>
+        struct value_type<common_iterator<I, S>>
+          : meta::if_<
+                Readable<I>,
+                meta::defer<iterator_value_t, I>,
+                meta::nil_>
+        {};
+
+        template<typename I, typename S>
+        struct iterator_category<common_iterator<I, S>>
+          : meta::if_<
+                InputIterator<I>,
+                meta::if_<
+                    ForwardIterator<I>,
+                    meta::id<forward_iterator_tag>,
+                    meta::id<input_iterator_tag>>,
+                meta::nil_>
+        {};
 
         /// \cond
         namespace detail

@@ -29,11 +29,30 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename T, typename U = T>
+        /// \cond
+        namespace detail
+        {
+            template<typename T>
+            struct is_movable_
+              : meta::and_<
+                    std::is_object<T>,
+                    std::is_move_constructible<T>,
+                    std::is_move_assignable<T>>
+            {};
+        }
+        /// \endcond
+
+        template<typename T>
         struct is_swappable;
 
-        template<typename T, typename U = T>
+        template<typename T>
         struct is_nothrow_swappable;
+
+        template<typename T, typename U>
+        struct is_swappable_with;
+
+        template<typename T, typename U>
+        struct is_nothrow_swappable_with;
 
         template<typename T, typename U = T>
         struct is_indirectly_swappable;
@@ -44,11 +63,11 @@ namespace ranges
         template <class T, class U = T>
         RANGES_CXX14_CONSTEXPR
         meta::if_c<
-            std::is_constructible<T, T>::value &&
+            std::is_move_constructible<T>::value &&
             std::is_assignable<T &, U>::value, T>
         exchange(T &t, U &&u)
             noexcept(
-                std::is_nothrow_constructible<T, T>::value &&
+                std::is_nothrow_move_constructible<T>::value &&
                 std::is_nothrow_assignable<T &, U>::value)
         {
             T tmp((T &&) t);
@@ -69,14 +88,14 @@ namespace ranges
 
             template<typename T, typename U,
                 typename = decltype(swap(std::declval<T &&>(), std::declval<U &&>()))>
-            std::true_type try_swap_(int);
+            std::true_type try_adl_swap_(int);
 
             template<typename T, typename U>
-            std::false_type try_swap_(long);
+            std::false_type try_adl_swap_(long);
 
-            template<typename T, typename U>
-            struct is_swap_customized_
-              : meta::id_t<decltype(adl_swap_detail::try_swap_<T, U>(42))>
+            template<typename T, typename U = T>
+            struct is_adl_swappable_
+              : meta::id_t<decltype(adl_swap_detail::try_adl_swap_<T, U>(42))>
             {};
 
             struct swap_fn
@@ -84,20 +103,19 @@ namespace ranges
                 // Dispatch to customization point:
                 template <class T, class U>
                 RANGES_CXX14_CONSTEXPR
-                meta::if_c<is_swap_customized_<T, U>::value>
+                meta::if_c<is_adl_swappable_<T, U>::value>
                 operator()(T &&t, U &&u) const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
-                    (void)swap((T &&) t, (U &&) u)
+                    (void) swap((T &&) t, (U &&) u)
                 )
 
                 // Handle swappable types
                 template <class T>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
-                    !is_swap_customized_<T &, T &>::value &&
-                    std::is_constructible<T, T>::value &&
-                    std::is_assignable<T &, T>::value>
+                    !is_adl_swappable_<T &>::value &&
+                    detail::is_movable_<T>::value>
                 operator()(T &a, T &b) const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -108,10 +126,10 @@ namespace ranges
                 template <class T, class U, std::size_t N>
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
-                    !is_swap_customized_<T (&)[N], U (&)[N]>::value &&
-                    is_swappable<T &, U &>::value>
+                    !is_adl_swappable_<T (&)[N], U (&)[N]>::value &&
+                    is_swappable_with<T &, U &>::value>
                 operator()(T (&t)[N], U (&u)[N]) const
-                    noexcept(is_nothrow_swappable<T, U>::value)
+                    noexcept(is_nothrow_swappable_with<T &, U &>::value)
                 {
                     for(std::size_t i = 0; i < N; ++i)
                         (*this)(t[i], u[i]);
@@ -119,11 +137,11 @@ namespace ranges
 
                 template<typename F0, typename S0, typename F1, typename S1>
                 RANGES_CXX14_CONSTEXPR
-                meta::if_c<is_swappable<F0, F1>::value && is_swappable<S0, S1>::value>
+                meta::if_c<is_swappable_with<F0, F1>::value && is_swappable_with<S0, S1>::value>
                 operator()(std::pair<F0, S0> &&left, std::pair<F1, S1> &&right) const
                     noexcept(
-                        is_nothrow_swappable<F0, F1>::value &&
-                        is_nothrow_swappable<S0, S1>::value)
+                        is_nothrow_swappable_with<F0, F1>::value &&
+                        is_nothrow_swappable_with<S0, S1>::value)
                 {
                     swap_fn{}(std::move(left).first, std::move(right).first);
                     swap_fn{}(std::move(left).second, std::move(right).second);
@@ -131,9 +149,9 @@ namespace ranges
 
                 template<typename ...Ts, typename ...Us>
                 RANGES_CXX14_CONSTEXPR
-                meta::if_c<meta::and_c<is_swappable<Ts, Us>::value...>::value>
+                meta::if_c<meta::and_c<is_swappable_with<Ts, Us>::value...>::value>
                 operator()(std::tuple<Ts...> &&left, std::tuple<Us...> &&right) const
-                    noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value)
+                    noexcept(meta::and_c<is_nothrow_swappable_with<Ts, Us>::value...>::value)
                 {
                     swap_fn::impl(detail::move(left), detail::move(right),
                         meta::make_index_sequence<sizeof...(Ts)>{});
@@ -152,19 +170,19 @@ namespace ranges
 
             // Now implementations
             template<typename T, typename U, typename = void>
-            struct is_swappable_
+            struct is_swappable_with_
               : std::false_type
             {};
 
             template<typename T, typename U>
-            struct is_swappable_<T, U, meta::void_<
+            struct is_swappable_with_<T, U, meta::void_<
                 decltype(swap_fn{}(std::declval<T>(), std::declval<U>())),
                 decltype(swap_fn{}(std::declval<U>(), std::declval<T>()))>>
               : std::true_type
             {};
 
             template<typename T, typename U>
-            struct is_nothrow_swappable_
+            struct is_nothrow_swappable_with_
               : meta::bool_<noexcept(swap_fn{}(std::declval<T>(), std::declval<U>()))>
             {};
 
@@ -182,40 +200,68 @@ namespace ranges
 
             // Q: But I have an iterator whose operator* returns an rvalue
             //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?
-            // A: With an overload of indirect_swap.
+            // A: With an overload of iter_swap.
 
-            // Forward-declarations first!
-            template<typename I0, typename I1>
-            RANGES_CXX14_CONSTEXPR
-            meta::if_c<
-                is_swappable<decltype(*std::declval<I0 &>()),
-                             decltype(*std::declval<I1 &>())>::value>
-            indirect_swap(I0 a, I1 b)
-                noexcept(is_nothrow_swappable<decltype(*std::declval<I0 &>()),
-                                              decltype(*std::declval<I1 &>())>::value);
+            // Intentionally create an ambiguity with std::swap, which is
+            // (possibly) unconstrained.
+            template<typename T>
+            void iter_swap(T, T) = delete;
 
-            template<typename I0, typename I1>
-            RANGES_CXX14_CONSTEXPR
-            meta::if_c<
-                !is_swappable<
-                    decltype(*std::declval<I0 &>()),
-                    decltype(*std::declval<I1 &>())>::value &&
-                is_indirectly_movable<I0, I1>::value &&
-                is_indirectly_movable<I1, I0>::value>
-            indirect_swap(I0 a, I1 b)
-                noexcept(
-                    is_nothrow_indirectly_movable<I0, I1>::value &&
-                    is_nothrow_indirectly_movable<I1, I0>::value);
+            template<typename T, typename U,
+                typename = decltype(iter_swap(std::declval<T &&>(), std::declval<U &&>()))>
+            std::true_type try_adl_iter_swap_(int);
 
-            struct indirect_swap_fn
+            template<typename T, typename U>
+            std::false_type try_adl_iter_swap_(long);
+
+            template<typename T, typename U>
+            struct is_adl_indirectly_swappable_
+              : meta::id_t<decltype(adl_swap_detail::try_adl_iter_swap_<T, U>(42))>
+            {};
+
+            struct iter_swap_fn
             {
+                // Dispatch to customization point:
+                template <class T, class U>
+                RANGES_CXX14_CONSTEXPR
+                meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
+                operator()(T &&t, U &&u) const
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    (void) iter_swap((T &&) t, (U &&) u)
+                )
+
+                // Handle readables of swappable types
                 template<typename I0, typename I1>
                 RANGES_CXX14_CONSTEXPR
-                meta::if_c<is_indirectly_swappable<I0, I1>::value>
-                operator()(I0 a, I1 b) const
-                    noexcept(is_nothrow_indirectly_swappable<I0, I1>::value)
+                meta::if_c<
+                    !is_adl_indirectly_swappable_<I0, I1>::value &&
+                    is_swappable_with<decltype(*std::declval<I0 &>()),
+                                      decltype(*std::declval<I1 &>())>::value>
+                operator()(I0 &&a, I1 &&b) const
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    swap_fn{}(*a, *b)
+                )
+
+                // Handle indirectly movable types
+                template<typename I0, typename I1>
+                RANGES_CXX14_CONSTEXPR
+                meta::if_c<
+                    !is_adl_indirectly_swappable_<I0, I1>::value &&
+                    !is_swappable_with<
+                        decltype(*std::declval<I0 &>()),
+                        decltype(*std::declval<I1 &>())>::value &&
+                    is_indirectly_movable<I0, I1>::value &&
+                    is_indirectly_movable<I1, I0>::value>
+                operator()(I0 &&a, I1 &&b) const
+                    noexcept(
+                        is_nothrow_indirectly_movable<I0, I1>::value &&
+                        is_nothrow_indirectly_movable<I1, I0>::value)
                 {
-                    indirect_swap(std::move(a), std::move(b));
+                    meta::_t<value_type<I0>> v0 = iter_move(a);
+                    *a = iter_move(b);
+                    *b = detail::move(v0);
                 }
             };
 
@@ -227,65 +273,41 @@ namespace ranges
 
             template<typename T, typename U>
             struct is_indirectly_swappable_<T, U, meta::void_<
-                decltype(indirect_swap(std::declval<T>(), std::declval<U>()))>>
+                decltype(iter_swap_fn{}(std::declval<T>(), std::declval<U>()))>>
               : std::true_type
             {};
 
             template<typename T, typename U>
             struct is_nothrow_indirectly_swappable_
-              : meta::bool_<noexcept(indirect_swap(std::declval<T>(), std::declval<U>()))>
+              : meta::bool_<noexcept(iter_swap_fn{}(std::declval<T>(), std::declval<U>()))>
             {};
-
-            // Q: Why isn't this called "iter_swap"?
-            // A: Because it needs to be findable with ADL, and if we call it iter_swap and
-            //    ::std is an associated namespace of one of the arguments, then it'll find
-            //    the unconstrained std::iter_swap, which we don't want. The real fix is to
-            //    properly constrain std::iter_swap and rename this.
-
-            template<typename I0, typename I1>
-            RANGES_CXX14_CONSTEXPR
-            meta::if_c<
-                is_swappable<decltype(*std::declval<I0 &>()),
-                             decltype(*std::declval<I1 &>())>::value>
-            indirect_swap(I0 a, I1 b)
-                noexcept(is_nothrow_swappable<decltype(*std::declval<I0 &>()),
-                                              decltype(*std::declval<I1 &>())>::value)
-            {
-                swap_fn{}(*a, *b);
-            }
-
-            template<typename I0, typename I1>
-            RANGES_CXX14_CONSTEXPR
-            meta::if_c<
-                !is_swappable<
-                    decltype(*std::declval<I0 &>()),
-                    decltype(*std::declval<I1 &>())>::value &&
-                is_indirectly_movable<I0, I1>::value &&
-                is_indirectly_movable<I1, I0>::value>
-            indirect_swap(I0 a, I1 b)
-                noexcept(
-                    is_nothrow_indirectly_movable<I0, I1>::value &&
-                    is_nothrow_indirectly_movable<I1, I0>::value)
-            {
-                meta::_t<value_type<I0>> v0 = indirect_move(a);
-                *a = indirect_move(b);
-                *b = std::move(v0);
-            }
         }
         /// \endcond
 
         /// \ingroup group-utility
         template<typename T, typename U>
-        struct is_swappable
-          : adl_swap_detail::is_swappable_<T, U>
+        struct is_swappable_with
+          : adl_swap_detail::is_swappable_with_<T, U>
         {};
 
         /// \ingroup group-utility
         template<typename T, typename U>
-        struct is_nothrow_swappable
+        struct is_nothrow_swappable_with
           : meta::and_<
-                is_swappable<T, U>,
-                adl_swap_detail::is_nothrow_swappable_<T, U>>
+                is_swappable_with<T, U>,
+                adl_swap_detail::is_nothrow_swappable_with_<T, U>>
+        {};
+
+        /// \ingroup group-utility
+        template<typename T>
+        struct is_swappable
+          : is_swappable_with<T &, T &>
+        {};
+
+        /// \ingroup group-utility
+        template<typename T>
+        struct is_nothrow_swappable
+          : is_nothrow_swappable_with<T &, T &>
         {};
 
         /// \ingroup group-utility
@@ -307,8 +329,23 @@ namespace ranges
         RANGES_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
 
         /// \ingroup group-utility
-        /// \relates adl_swap_detail::indirect_swap_fn
-        RANGES_INLINE_VARIABLE(adl_swap_detail::indirect_swap_fn, indirect_swap)
+        /// \relates adl_swap_detail::iter_swap_fn
+        RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
+
+        /// \cond
+        struct indirect_swap_fn
+        {
+            template<typename I0, typename I1>
+            RANGES_DEPRECATED("Please replace uses of ranges::indirect_swap with ranges::iter_swap.")
+            void operator()(I0 &&i0, I1 &&i1) const
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_swap((I0 &&) i0, (I1 &&) i1)
+            )
+        };
+
+        RANGES_INLINE_VARIABLE(indirect_swap_fn, indirect_swap)
+        /// \endcond
     }
 }
 

@@ -39,7 +39,7 @@ namespace ranges
           : view_facade<generate_view<G>, infinite>
         {
         private:
-            friend struct range_access;
+            friend struct ranges::range_access;
             using result_t = result_of_t<G&()>;
             semiregular_t<G> gen_;
             semiregular_t<result_t> val_;

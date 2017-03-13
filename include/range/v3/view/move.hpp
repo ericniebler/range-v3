@@ -47,7 +47,7 @@ namespace ranges
                 {
                     return ranges::iter_move(it);
                 }
-                range_rvalue_reference_t<Rng> indirect_move(range_iterator_t<Rng> const &it) const
+                range_rvalue_reference_t<Rng> iter_move(range_iterator_t<Rng> const &it) const
                 {
                     return ranges::iter_move(it);
                 }

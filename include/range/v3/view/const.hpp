@@ -54,7 +54,7 @@ namespace ranges
                 {
                     return *it;
                 }
-                rvalue_reference_ indirect_move(range_iterator_t<Rng> const &it) const
+                rvalue_reference_ iter_move(range_iterator_t<Rng> const &it) const
                     noexcept(noexcept(ranges::iter_move(it)))
                 {
                     return ranges::iter_move(it);
