@@ -87,7 +87,7 @@ namespace ranges
             void swap(T (&)[N], T (&)[N]) = delete;
 
             template<typename T, typename U,
-                typename = decltype(swap(std::declval<T &&>(), std::declval<U &&>()))>
+                typename = decltype(swap(std::declval<T>(), std::declval<U>()))>
             std::true_type try_adl_swap_(int);
 
             template<typename T, typename U>
@@ -213,7 +213,7 @@ namespace ranges
             void iter_swap(T, T) = delete;
 
             template<typename T, typename U,
-                typename = decltype(iter_swap(std::declval<T &&>(), std::declval<U &&>()))>
+                typename = decltype(iter_swap(std::declval<T>(), std::declval<U>()))>
             std::true_type try_adl_iter_swap_(int);
 
             template<typename T, typename U>
