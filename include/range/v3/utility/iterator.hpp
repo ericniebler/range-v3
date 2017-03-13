@@ -610,7 +610,7 @@ namespace ranges
                 {}
                 template<typename U, typename V = meta::if_<std::is_void<T>, U, T>,
                     CONCEPT_REQUIRES_(ConvertibleTo<U, V const&>())>
-                void write(U && u)
+                void write(U && u) const
                 {
                     RANGES_EXPECT(sout_);
                     *sout_ << u;

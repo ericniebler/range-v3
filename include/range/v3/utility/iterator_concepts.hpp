@@ -171,7 +171,9 @@ namespace ranges
                 template<typename Out, typename T>
                 auto requires_(Out && o, T && t) -> decltype(
                     concepts::valid_expr(
-                        ((void)(*(Out &&)o = (T &&)t), 42)
+                        ((void)(*(Out &&)o = (T &&)t), 42),
+                        ((void)(const_cast<Readable::reference_t<Out> const &&>(*(Out &&)o)
+                            = (T &&)t), 42)
                     ));
             };
 

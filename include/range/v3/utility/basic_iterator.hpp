@@ -113,7 +113,7 @@ namespace ranges
             {
             private:
                 Cur *cur_;
-                template<typename OtherCur, bool OtherReadable>
+                template<typename, bool>
                 friend struct basic_proxy_reference;
                 template<typename, typename>
                 friend struct proxy_reference_conversion;
@@ -132,7 +132,7 @@ namespace ranges
                 }
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
-                void write_(T && t)
+                void write_(T && t) const
                 {
                     range_access::write(*cur_, (T &&) t);
                 }
@@ -162,6 +162,19 @@ namespace ranges
                     this->write_(that.read_());
                     return *this;
                 }
+                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                RANGES_CXX14_CONSTEXPR
+                basic_proxy_reference const &operator=(basic_proxy_reference && that) const
+                {
+                    return *this = that;
+                }
+                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                RANGES_CXX14_CONSTEXPR
+                basic_proxy_reference const &operator=(basic_proxy_reference const &that) const
+                {
+                    this->write_(that.read_());
+                    return *this;
+                }
                 template<typename OtherCur,
                     CONCEPT_REQUIRES_(ReadableCursor<OtherCur>() &&
                         WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
@@ -179,10 +192,35 @@ namespace ranges
                     this->write_(that.read_());
                     return *this;
                 }
+                template<typename OtherCur,
+                    CONCEPT_REQUIRES_(ReadableCursor<OtherCur>() &&
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
+                RANGES_CXX14_CONSTEXPR
+                basic_proxy_reference const &operator=(basic_proxy_reference<OtherCur> && that) const
+                {
+                    return *this = that;
+                }
+                template<typename OtherCur,
+                    CONCEPT_REQUIRES_(ReadableCursor<OtherCur>() &&
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
+                RANGES_CXX14_CONSTEXPR
+                basic_proxy_reference const &operator=(basic_proxy_reference<OtherCur> const &that) const
+                {
+                    this->write_(that.read_());
+                    return *this;
+                }
                 template<typename T,
                     CONCEPT_REQUIRES_(WritableCursor<Cur, T &&>())>
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(T && t)
+                {
+                    this->write_((T &&) t);
+                    return *this;
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(WritableCursor<Cur, T &&>())>
+                RANGES_CXX14_CONSTEXPR
+                basic_proxy_reference const &operator=(T && t) const
                 {
                     this->write_((T &&) t);
                     return *this;
@@ -355,6 +393,18 @@ namespace ranges
             basic_iterator &operator=(T && t)
             noexcept(noexcept(
                 std::declval<Cur &>().write(static_cast<T &&>(t))))
+            {
+                pos().write(static_cast<T &&>(t));
+                return *this;
+            }
+
+            template<typename T,
+                CONCEPT_REQUIRES_(!Same<detail::decay_t<T>, basic_iterator>() &&
+                    !detail::HasCursorNext<Cur>() && detail::WritableCursor<Cur const, T>())>
+            RANGES_CXX14_CONSTEXPR
+            basic_iterator const &operator=(T && t) const
+            noexcept(noexcept(
+                std::declval<Cur const &>().write(static_cast<T &&>(t))))
             {
                 pos().write(static_cast<T &&>(t));
                 return *this;
