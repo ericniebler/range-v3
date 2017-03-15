@@ -40,5 +40,8 @@ add_test(test.istream_range, istream_range)
 add_executable(bug474 bug474.cpp)
 add_test(test.bug474, bug474)
 
+add_executable(bug566 bug566.cpp)
+add_test(test.bug566, bug566)
+
 add_executable(span span.cpp)
 add_test(test.span, span)
