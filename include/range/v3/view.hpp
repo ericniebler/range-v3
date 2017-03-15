@@ -44,6 +44,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/join.hpp>
+#include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/partial_sum.hpp>
