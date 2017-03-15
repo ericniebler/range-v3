@@ -13,10 +13,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-#ifdef __GNUC__
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
-#pragma GCC diagnostic ignored "-Wunneeded-member-function"
-#endif
+RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
 
 namespace
 {
