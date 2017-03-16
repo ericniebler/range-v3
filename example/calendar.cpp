@@ -153,6 +153,8 @@ auto layout_months() {
     });
 }
 
+namespace cal_example {
+
 // In:  Range<T>
 // Out: Range<Range<T>>, where each inner range has $n$ elements.
 //                       The last range may have fewer.
@@ -191,13 +193,15 @@ public:
     void distance_to() = delete;
 };
 
+}  // namespace cal_example
+
 // In:  Range<T>
 // Out: Range<Range<T>>, where each inner range has $n$ elements.
 //                       The last range may have fewer.
 auto chunk(std::size_t n) {
     return make_pipeable([=](auto&& rng) {
         using Rng = decltype(rng);
-        return chunk_view<view::all_t<Rng>>{
+        return cal_example::chunk_view<view::all_t<Rng>>{
             view::all(std::forward<Rng>(rng)),
             static_cast<ranges::range_difference_type_t<Rng>>(n)};
     });
