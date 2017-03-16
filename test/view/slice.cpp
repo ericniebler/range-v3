@@ -99,8 +99,11 @@ int main()
     models_not<concepts::RandomAccessIterator>(begin(rng8));
     ::check_equal(rng8, {6, 7, 8});
 
-    auto rng9 = view::ints(0)[{0,end}];
+    auto rng9 = view::iota(0)[{0,end}];
     static_assert(is_infinite<decltype(rng9)>::value, "should be infinite");
+
+    auto rng10 = view::ints(0)[{0,end}];
+    static_assert(!is_infinite<decltype(rng10)>::value, "should not be infinite");
 
     {
         std::string str{"0 1 2 3 4 5 6 7 8 9"};

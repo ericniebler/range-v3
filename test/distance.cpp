@@ -110,11 +110,11 @@ int main()
     }
 
     {
-        test_range(view::ints(0) | view::take_while([](int i) { return i < 4; }), 4);
+        test_range(view::iota(0) | view::take_while([](int i) { return i < 4; }), 4);
     }
 
     {
-        test_infinite_range(view::ints(0u));
+        test_infinite_range(view::iota(0u));
     }
 
     return ::test_result();
