@@ -163,6 +163,55 @@ namespace ranges
                     :  static_cast<D>(v0 - v1);
             }
 
+            template<typename Val, CONCEPT_REQUIRES_(SignedIntegral<Val>())>
+            RANGES_CXX14_CONSTEXPR
+            iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
+                using D = iota_difference_t<Val>;
+                RANGES_EXPECT(from <= to);
+                static_assert(sizeof(iota_difference_t<Val>) >= sizeof(Val),
+                    "iota_difference_type must be at least as wide as the signed integer type; "
+                    "otherwise the expression below might overflow when to - from would not.");
+                return static_cast<D>(to) - static_cast<D>(from);  
+            }
+
+            template<typename Val, CONCEPT_REQUIRES_(UnsignedIntegral<Val>())>
+            RANGES_CXX14_CONSTEXPR
+            iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
+                using D = iota_difference_t<Val>;
+                using UD = meta::_t<std::make_unsigned<D>>;
+                // Disable wrap-semantics for UnsignedIntegral types.
+                // See discussion in: https://github.com/ericniebler/range-v3/pull/593
+                RANGES_EXPECT(from <= to);
+                // view::take_exactly(Rng rng, difference_type_t<Rng> n) takes a
+                // number of type difference_type_t<Rng>, which for view::iota is
+                // equal to iota_difference_t<Val>.
+                //
+                // The expression (to - from) shall not overflow this signed
+                // difference type. This is ensured by the RANGES_EXPECT below,
+                // in which:
+                // - the expression is evaluated using the unsigned integer type of the inputs, and
+                // - compared against the maximum value representable by the
+                //   signed difference_type (which is always positive and can
+                //   always be represented by an unsigned integer type of the
+                //   same width).
+                //
+                static_assert(sizeof(D) >= sizeof(Val),
+                    "the difference type of view::iota must be at least as wide as the UnsignedIntegral type");
+                RANGES_EXPECT(Val(to - from) <= static_cast<UD>(std::numeric_limits<D>::max()));
+                return static_cast<D>(Val(to - from));
+            }
+
+            template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
+            RANGES_CXX14_CONSTEXPR
+            iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
+                using D = iota_difference_t<Val>;
+                auto dist = ints_open_distance_(from, to);
+                // Check whether dist + 1 would overflow the signed integer type,
+                // introducing undefined behavior:
+                RANGES_EXPECT(dist < std::numeric_limits<D>::max());
+                return dist + D(1);
+            }
+
             template<typename Val,
                 typename C = common_type_t<Val, iota_difference_t<Val>>>
             auto iota_plus_(Val const &v, iota_difference_t<Val> n, std::true_type)
@@ -494,11 +543,14 @@ namespace ranges
                 {
                     return iota_view<Val>{value};
                 }
-                template<typename Val>
-                meta::if_c<
-                    (bool)Integral<Val>(),
-                    detail::take_exactly_view_<iota_view<Val>, true>>
-                operator()(Val from, Val to) const;
+                
+                template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
+                auto operator()(Val from, Val to) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    detail::take_exactly_view_<iota_view<Val>, true>
+                        {iota_view<Val>{from}, detail::ints_open_distance_(from, to)}
+                )
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
@@ -518,22 +570,14 @@ namespace ranges
             #endif
             };
 
-            template<typename Val>
-            meta::if_c<
-                (bool)Integral<Val>(),
-                detail::take_exactly_view_<iota_view<Val>, true>>
-            ints_fn::operator()(Val from, Val to) const
-            {
-                return {iota_view<Val>{from}, detail::iota_minus_(to, from)};
-            }
-
             struct closed_ints_fn
             {
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>
+                RANGES_DEPRECATED("view::closed_ints is deprecated; use view::closed_indices instead!")
                 detail::take_exactly_view_<iota_view<Val>, true> operator()(Val from, Val to) const
                 {
-                    return {iota_view<Val>{from}, detail::iota_minus_(to, from) + 1};
+                    return {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
@@ -550,8 +594,6 @@ namespace ranges
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(ints_fn, ints)
 
-            /// \relates closed_ints_fn
-            /// \ingroup group-views
             RANGES_INLINE_VARIABLE(closed_ints_fn, closed_ints)
         }
         /// @}

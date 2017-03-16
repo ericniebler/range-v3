@@ -38,6 +38,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/group_by.hpp>
+#include <range/v3/view/indices.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/iota.hpp>
