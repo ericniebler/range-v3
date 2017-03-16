@@ -310,7 +310,7 @@ namespace ranges
                 template<typename Out, typename T>
                 auto requires_(Out o, T &&t) -> decltype(
                     concepts::valid_expr(
-                        *o++ = (T &&) t
+                        ((void)(*o++ = (T &&) t), 42)
                     ));
             };
 
