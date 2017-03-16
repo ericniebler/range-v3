@@ -153,10 +153,10 @@ int main()
 
         CHECK(list_view.size() == 3u);
         has_type<int &>(*begin(list_view));
-        ::models<concepts::SizedView>(list_view);
-        ::models<concepts::BidirectionalView>(list_view);
+        ::models<concepts::SizedRange>(list_view);
+        ::models<concepts::BidirectionalRange>(list_view);
         ::models<concepts::BidirectionalIterator>(begin(list_view));
-        ::models_not<concepts::RandomAccessView>(list_view);
+        ::models_not<concepts::RandomAccessRange>(list_view);
         ::models_not<concepts::RandomAccessIterator>(begin(list_view));
 
         // test bidirectional range iterator
@@ -179,8 +179,8 @@ int main()
         auto list_view = std::move(iter_range) | view::shared;
 
         has_type<int &>(*begin(list_view));
-        ::models_not<concepts::SizedView>(list_view);
-        ::models<concepts::BidirectionalView>(list_view);
+        ::models_not<concepts::SizedRange>(list_view);
+        ::models<concepts::BidirectionalRange>(list_view);
         ::models<concepts::BidirectionalIterator>(begin(list_view));
 
         // test its iterator
@@ -196,8 +196,8 @@ int main()
 
         CHECK(vec_view.size() == 3u);
         has_type<int &>(*begin(vec_view));
-        ::models<concepts::SizedView>(vec_view);
-        ::models<concepts::RandomAccessView>(vec_view);
+        ::models<concepts::SizedRange>(vec_view);
+        ::models<concepts::RandomAccessRange>(vec_view);
         ::models<concepts::RandomAccessIterator>(begin(vec_view));
         CHECK(vec_view[0] == 1);
         CHECK(vec_view[1] == 2);
@@ -219,8 +219,8 @@ int main()
 
         CHECK(vec_view.size() == 3u);
         has_type<const int &>(*begin(vec_view));
-        ::models<concepts::SizedView>(vec_view);
-        ::models<concepts::RandomAccessView>(vec_view);
+        ::models<concepts::SizedRange>(vec_view);
+        ::models<concepts::RandomAccessRange>(vec_view);
         ::models<concepts::RandomAccessIterator>(begin(vec_view));
         CHECK(vec_view[0] == 1);
         CHECK(vec_view[1] == 2);

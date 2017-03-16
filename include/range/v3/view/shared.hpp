@@ -55,23 +55,23 @@ namespace ranges
             {}
 
             // use the stored range's begin and end
-            range_iterator_t<range_t> begin() const
+            iterator_t<range_t> begin() const
             {
                 return ranges::begin(rng_);
             }
-            range_sentinel_t<range_t> end() const
+            sentinel_t<range_t> end() const
             {
                 return ranges::end(rng_);
             }
 
             // use the const-most size() function provided by the range
             CONCEPT_REQUIRES(SizedRange<const range_t>())
-            range_size_t<range_t> size() const
+            range_size_type_t<range_t> size() const
             {
                 return ranges::size(rng_);
             }
             CONCEPT_REQUIRES(SizedRange<range_t>() && !SizedRange<const range_t>())
-            range_size_t<range_t> size()
+            range_size_type_t<range_t> size()
             {
                 return ranges::size(rng_);
             }
