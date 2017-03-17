@@ -45,11 +45,18 @@ namespace ranges
                     make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(fun))))
                 )
             public:
+                template<typename Rng, typename Fun>
+                using Concept = meta::and_<
+                    transform_fn::Concept<Rng, Fun>,
+                    meta::lazy::invoke<
+                        meta::compose<
+                            meta::quote<InputRange>,
+                            meta::bind_front<meta::quote<concepts::Invocable::result_t>, Fun&>,
+                            meta::quote<range_reference_t>>,
+                        Rng>>;
+
                 template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(
-                      transform_fn::Concept<Rng, Fun>()
-                      && InputRange<concepts::Invocable::result_t<
-                          Fun&, range_reference_t<Rng>>>())>
+                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 auto operator()(Rng && rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -58,10 +65,7 @@ namespace ranges
 
         #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(
-                      !transform_fn::Concept<Rng, Fun>()
-                      || !InputRange<concepts::Invocable::result_t<
-                          Fun&, range_reference_t<Rng>>>())>
+                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
