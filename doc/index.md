@@ -374,3 +374,48 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
 <DT>\link ranges::v3::view::zip_with_fn `view::zip_with`\endlink</DT>
   <DD>Given *N* ranges and a *N*-ary function, return a new range where *M*<SUP>th</SUP> element is the result of calling the function on the *M*<SUP>th</SUP> elements of all *N* ranges.</DD>
 </DL>
+
+\section range-actions Range Actions
+
+--------------------------------------------
+
+Below is a list of the eager range combinators, or *actions*, that Range v3 provides, and a blurb about how each is intended to be used.
+
+<DL>
+<DT>\link ranges::v3::action::drop_fn `action::drop`\endlink</DT>
+  <DD>Removes the first `N` elements of the source range.</DD>
+<DT>\link ranges::v3::action::drop_while_fn `action::drop_while`\endlink</DT>
+  <DD>Removes the first elements of the source range that satisfy the unary predicate.</DD>
+<DT>`action::erase`</DT>
+  <DD>Removes all elements in the sub-range of the source (range version) or all elements after position.</DD>
+<DT>`action::insert`</DT>
+  <DD>Inserts all elements of the range into the source at position.</DD>
+<DT>\link ranges::v3::action::join_fn `action::join`\endlink</DT>
+  <DD>Flattens a range of ranges.</DD>
+<DT> `action::push_back`</DT>
+  <DD>Appends elements to the tail of the source.</DD>
+<DT>`action::push_front`</DT>
+  <DD>Appends elements before the head of the source.</DD>
+<DT>\link ranges::v3::action::remove_if_fn `action::remove_if`\endlink</DT>
+  <DD>Removes all elements from the source that satisfy the predicate.</DD>
+<DT>\link ranges::v3::action::shuffle_fn `action::shuffle`\endlink</DT>
+  <DD>Shuffles the source range.</DD>
+<DT>\link ranges::v3::action::slice_fn `action::slice`\endlink</DT>
+  <DD>Removes all elements from the source that are not part of the sub-range.</DD>
+<DT>\link ranges::v3::action::sort_fn `action::sort`\endlink</DT>
+  <DD>Sorts the source range (unstable).</DD>
+<DT>\link ranges::v3::action::split_fn `action::split`\endlink</DT>
+  <DD>Split a range into a sequence of subranges using a delimiter (a value, a sequence of values, a predicate, or a binary function returning a `pair<bool, N>`).</DD>
+<DT>\link ranges::v3::action::stable_sort_fn `action::stable_sort`\endlink</DT>
+  <DD>Sorts the source range (stable).</DD>
+<DT>\link ranges::v3::action::stride_fn `action::stride`\endlink</DT>
+  <DD>Removes all elements whose position does not match the stride.</DD>
+<DT>\link ranges::v3::action::take_fn `action::take`\endlink</DT>
+  <DD>Keeps the first `N`-th elements of the range, removes the rest.</DD>
+<DT>\link ranges::v3::action::take_while_fn `action::take_while`\endlink</DT>
+  <DD>Keeps the first elements that satisfy the predicate, removes the rest.</DD>
+<DT>\link ranges::v3::action::transform_fn `action::transform`\endlink</DT>
+  <DD>Replaces elements of the source with the result of the unary function.</DD>
+<DT>`action::unique`</DT>
+  <DD>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements.</DD>
+</DL>
