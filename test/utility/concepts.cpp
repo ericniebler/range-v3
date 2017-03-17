@@ -78,8 +78,6 @@ struct IntSwappable
     friend void swap(IntSwappable, IntSwappable);
 };
 
-struct incomplete;
-
 static_assert(ranges::Destructible<int>(), "");
 static_assert(ranges::Destructible<const int>(), "");
 static_assert(!ranges::Destructible<void>(), "");
@@ -94,7 +92,6 @@ static_assert(ranges::Destructible<int(&)[2]>(), "");
 static_assert(ranges::Destructible<moveonly>(), "");
 static_assert(ranges::Destructible<nonmovable>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");
-static_assert(!ranges::Destructible<incomplete>(), "");
 
 static_assert(ranges::Constructible<int>(), "");
 static_assert(ranges::Constructible<int const>(), "");

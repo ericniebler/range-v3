@@ -52,9 +52,9 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 3.5.2
-- GCC 4.9.4 (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
-- VS2015 Update 3 "Clang with Microsoft CodeGen" (Clang/C2)
+- clang 3.6.2 (or later)
+- GCC 4.9.4 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
+- "Clang with Microsoft CodeGen" (Clang/C2) VS2015 Update 3 (or later)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
@@ -87,7 +87,7 @@ Release Notes:
     | `range_sentinel_t`            | `sentinel_t`              |
   - `common_iterator` now requires that its two types (`Iterator` and `Sentinel`)
     are different. Use `common_iterator_t<I, S>` to get the old behavior (i.e., if the two types are the same, it is an alias for `I`; otherwise, it is
-    `common_iterator<I, S>`). 
+    `common_iterator<I, S>`).
   - The following iterator adaptors now work with iterators that return proxies
     from their dereference operator (i.e., `operator*`):
     * `common_iterator`
@@ -120,7 +120,7 @@ Release Notes:
 * **0.1.1**
   Small tweak to `Writable` concept to fix #537.
 * **0.1.0**
-  March 8, 2017, Begin semantic versioning 
+  March 8, 2017, Begin semantic versioning
 
 Say Thanks!
 -----------

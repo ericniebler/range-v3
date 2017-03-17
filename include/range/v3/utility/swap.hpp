@@ -188,7 +188,8 @@ namespace ranges
 
             template<typename T, typename U>
             struct is_nothrow_swappable_with_
-              : meta::bool_<noexcept(swap_fn{}(std::declval<T>(), std::declval<U>()))>
+              : meta::bool_<noexcept(swap_fn{}(std::declval<T>(), std::declval<U>())) &&
+                            noexcept(swap_fn{}(std::declval<U>(), std::declval<T>()))>
             {};
 
             // Q: Should std::reference_wrapper be considered a proxy wrt swapping rvalues?
