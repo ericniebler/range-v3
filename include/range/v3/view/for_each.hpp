@@ -46,7 +46,10 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(transform_fn::Concept<Rng, Fun>())>
+                    CONCEPT_REQUIRES_(
+                      transform_fn::Concept<Rng, Fun>()
+                      && InputRange<concepts::Invocable::result_t<
+                          Fun&, range_reference_t<Rng>>>())>
                 auto operator()(Rng && rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -55,7 +58,10 @@ namespace ranges
 
         #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!transform_fn::Concept<Rng, Fun>())>
+                    CONCEPT_REQUIRES_(
+                      !transform_fn::Concept<Rng, Fun>()
+                      || !InputRange<concepts::Invocable::result_t<
+                          Fun&, range_reference_t<Rng>>>())>
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
@@ -68,9 +74,9 @@ namespace ranges
                         Invocable<Fun&, range_reference_t<Rng>>(),
                         "The function passed to view::for_each must be callable with an argument "
                         "of the range's reference type.");
-                    CONCEPT_ASSERT_MSG(Range<concepts::Invocable::result_t<
+                    CONCEPT_ASSERT_MSG(InputRange<concepts::Invocable::result_t<
                         Fun&, range_reference_t<Rng>>>(),
-                        "To use view::for_each, the function F must return a model of the Range "
+                        "To use view::for_each, the function F must return a model of the InputRange "
                         "concept.");
                 }
         #endif

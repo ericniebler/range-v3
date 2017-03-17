@@ -301,6 +301,8 @@ namespace ranges
         {
             struct join_fn
             {
+                // Don't forget to update view::for_each whenever this set
+                // of concepts changes
                 template<typename Rng>
                 using JoinableRange_ = meta::and_<
                     InputRange<Rng>,
