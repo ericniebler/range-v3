@@ -160,7 +160,7 @@ namespace ranges
             explicit cycled_view(Rng rng)
               : rng_(std::move(rng))
             {
-                RANGES_EXPECT(!ranges::empty(rng));
+                RANGES_EXPECT(!ranges::empty(rng_));
             }
         };
 
