@@ -154,40 +154,13 @@ int main()
         CHECK(list_view.size() == 3u);
         has_type<int &>(*begin(list_view));
         ::models<concepts::SizedRange>(list_view);
+        ::models<concepts::BoundedRange>(list_view);
         ::models<concepts::BidirectionalRange>(list_view);
-        ::models<concepts::BidirectionalIterator>(begin(list_view));
         ::models_not<concepts::RandomAccessRange>(list_view);
-        ::models_not<concepts::RandomAccessIterator>(begin(list_view));
 
         // test bidirectional range iterator
-        auto list_iter = begin(list_view);
-        CHECK(*list_iter == 1);
-        CHECK(*(++list_iter) == 2);
-        auto nxt = next(list_iter, 1);
-        auto prev = next(list_iter, -1);
-        CHECK(*nxt == 3);
-        CHECK(*prev == 1);
-        CHECK(*(--nxt) == *list_iter);
-        CHECK(*(++prev) == *list_iter);
-        CHECK(*(--list_iter) == 1);
-    }
-
-    {
-        // test bidirectional range, which does not know its size
-        auto base_list = std::list<int>{1, 2, 3};
-        auto iter_range = make_iterator_range(begin(base_list), end(base_list));
-        auto list_view = std::move(iter_range) | view::shared;
-
-        has_type<int &>(*begin(list_view));
-        ::models_not<concepts::SizedRange>(list_view);
-        ::models<concepts::BidirectionalRange>(list_view);
-        ::models<concepts::BidirectionalIterator>(begin(list_view));
-
-        // test its iterator
-        auto list_iter = begin(list_view);
-        CHECK(*list_iter == 1);
-        CHECK(*(++list_iter) == 2);
-        CHECK(*(--list_iter) == 1);
+        CHECK(*begin(list_view) == 1);
+        CHECK(*prev(end(list_view)) == 3);
     }
 
     {
@@ -197,59 +170,11 @@ int main()
         CHECK(vec_view.size() == 3u);
         has_type<int &>(*begin(vec_view));
         ::models<concepts::SizedRange>(vec_view);
+        ::models<concepts::BoundedRange>(vec_view);
         ::models<concepts::RandomAccessRange>(vec_view);
-        ::models<concepts::RandomAccessIterator>(begin(vec_view));
         CHECK(vec_view[0] == 1);
         CHECK(vec_view[1] == 2);
         CHECK(vec_view[2] == 3);
-
-        // test random access range iterator
-        auto vec_iter = begin(vec_view);
-        CHECK(*vec_iter == 1);
-        CHECK(vec_iter[0] == 1);
-        CHECK(vec_iter[1] == 2);
-        CHECK(vec_iter[2] == 3);
-    }
-
-    {
-        // test const random access range
-        const std::vector<int> cvec{1, 2, 3};
-        const auto cvec_ptr = std::make_shared<const std::vector<int>>(cvec);
-        auto vec_view = cvec_ptr | view::shared;
-
-        CHECK(vec_view.size() == 3u);
-        has_type<const int &>(*begin(vec_view));
-        ::models<concepts::SizedRange>(vec_view);
-        ::models<concepts::RandomAccessRange>(vec_view);
-        ::models<concepts::RandomAccessIterator>(begin(vec_view));
-        CHECK(vec_view[0] == 1);
-        CHECK(vec_view[1] == 2);
-        CHECK(vec_view[2] == 3);
-
-        // test const random access range iterator
-        auto vec_iter = begin(vec_view);
-        CHECK(*vec_iter == 1);
-        CHECK(vec_iter[0] == 1);
-        CHECK(vec_iter[1] == 2);
-        CHECK(vec_iter[2] == 3);
-    }
-
-    {
-        // check ranges::for_each
-        auto vec_view = std::vector<int>{1, 2, 3} | view::shared;
-        std::vector<int> vec_view_copy;
-        for_each(vec_view, [&](int a) { vec_view_copy.push_back(a); });
-        ::check_equal(vec_view, vec_view_copy);
-    }
-
-    {
-        // check RANGES_FOR
-        auto vec_view = std::vector<int>{1, 2, 3} | view::shared;
-        std::vector<int> vec_view_copy;
-        RANGES_FOR(int a, vec_view) {
-            vec_view_copy.push_back(a);
-        }
-        ::check_equal(vec_view, vec_view_copy);
     }
 
     {
