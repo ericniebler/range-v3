@@ -35,46 +35,39 @@ namespace ranges
             // shared storage
             std::shared_ptr<Rng> rng_ptr_;
 
-            // range of the shared storage
-            using range_t = view::all_t<Rng>;
-            range_t rng_;
-
-
         public:
             shared_view() = default;
 
             // construct from a shared_ptr
-            RANGES_NDEBUG_CONSTEXPR shared_view(std::shared_ptr<Rng> pt)
-              : rng_ptr_(std::move(pt)),
-                rng_{view::all(*rng_ptr_)}
+            shared_view(std::shared_ptr<Rng> pt) noexcept
+              : rng_ptr_{std::move(pt)}
             {}
 
             // construct from a range rvalue
-            RANGES_NDEBUG_CONSTEXPR shared_view(Rng && t)
-              : rng_ptr_{std::make_shared<Rng>(std::move(t))},
-                rng_{view::all(*rng_ptr_)}
+            explicit shared_view(Rng && t)
+              : rng_ptr_{std::make_shared<Rng>(std::move(t))}
             {}
 
             // use the stored range's begin and end
-            iterator_t<range_t> begin() const
+            iterator_t<Rng> begin() const
             {
-                return ranges::begin(rng_);
+                return ranges::begin(*rng_ptr_);
             }
-            sentinel_t<range_t> end() const
+            sentinel_t<Rng> end() const
             {
-                return ranges::end(rng_);
+                return ranges::end(*rng_ptr_);
             }
 
             // use the const-most size() function provided by the range
-            CONCEPT_REQUIRES(SizedRange<const range_t>())
-            range_size_type_t<range_t> size() const
+            CONCEPT_REQUIRES(SizedRange<const Rng>())
+            range_size_type_t<Rng> size() const
             {
-                return ranges::size(rng_);
+                return ranges::size(*rng_ptr_);
             }
-            CONCEPT_REQUIRES(SizedRange<range_t>() && !SizedRange<const range_t>())
-            range_size_type_t<range_t> size()
+            CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<const Rng>())
+            range_size_type_t<Rng> size()
             {
-                return ranges::size(rng_);
+                return ranges::size(*rng_ptr_);
             }
 
             // shared storage access
@@ -115,7 +108,7 @@ namespace ranges
                     typename std::enable_if<std::is_rvalue_reference<Rng&&>::value, bool>::type = 0>
                 shared_view<typename std::remove_reference<Rng>::type> operator()(Rng && t) const
                 {
-                    return {std::move(t)};
+                    return shared_view<typename std::remove_reference<Rng>::type>{std::move(t)};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
