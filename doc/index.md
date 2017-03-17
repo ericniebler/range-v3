@@ -289,6 +289,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is removed from the result range; otherwise, it is included. The last element in the source range is always included.</DD>
 <DT>\link ranges::v3::view::all_fn `view::all`\endlink</DT>
   <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
+<DT>\link ranges::v3::any_view `any_view<T>(rng)`\endlink</DT>
+  <DD>Type-erased range of elements with value type `T`; can store _any_ range with this value type.</DD>
 <DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
   <DD>Convert the source range to a *bounded* range, where the type of the `end` is the same as the `begin`. Useful for iterating over a range with C++'s range-based `for` loop.</DD>
 <DT>\link ranges::v3::view::chunk_fn `view::chunk`\endlink</DT>
@@ -299,6 +301,10 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Present a `const` view of a source range.</DD>
 <DT>\link ranges::v3::view::counted_fn `view::counted`\endlink</DT>
   <DD>Given an iterator `it` and a count `n`, create a range that starts at `it` and includes the next `n` elements.</DD>
+<DT>\link ranges::v3::view::cycle_fn `view::cycle`\endlink</DT>
+  <DD>Returns an infinite range that endlessly repeats the source range.</DD>
+<DT>\link ranges::v3::view::c_str_fn `view::c_str`\endlink</DT>
+  <DD>View a `\0`-terminated C string (e.g. from a `const char*`) as a range.</DD>
 <DT>\link ranges::v3::view::delimit_fn `view::delimit`\endlink</DT>
   <DD>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, `view::delimit` can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value.</DD>
 <DT>\link ranges::v3::view::drop_fn `view::drop`\endlink</DT>
@@ -309,6 +315,10 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Remove elements from the front of a range that satisfy a unary predicate.</DD>
 <DT>\link ranges::v3::view::empty() `view::empty`\endlink</DT>
   <DD>Create an empty range with a given value type.</DD>
+<DT>\link ranges::v3::view::filter_fn `view::filter`\endlink</DT>
+  <DD>Given a source range and a unary predicate, filter the elements that satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor.)</DD>
+<DT>\link ranges::v3::view::for_each_fn `view::for_each`\endlink</DT>
+  <DD>Lazily applies an unary function to each element in the source range that returns another range (possibly empty), flattening the result.</DD>
 <DT>\link ranges::v3::view::generate_fn `view::generate`\endlink</DT>
   <DD>Given a nullary function, return an infinite range whose elements are generated with the function.</DD>
 <DT>\link ranges::v3::view::generate_n_fn `view::generate_n`\endlink</DT>
@@ -320,7 +330,7 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
 <DT>\link ranges::v3::view::intersperse_fn `view::intersperse`\endlink</DT>
   <DD>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source.</DD>
 <DT>\link ranges::v3::view::ints_fn `view::ints`\endlink</DT>
-  <DD>Generate a range of monotonically increasing `int`s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive).</DD>
+  <DD>Generate a range of monotonically increasing `int`s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive). An inclusive version is provided by `closed_ints`.</DD>
 <DT>\link ranges::v3::view::iota_fn `view::iota`\endlink</DT>
   <DD>A generalization of `view::ints` that generates a sequence of monotonically increasing values of any incrementable type. When specified with a single argument, the result is an infinite range beginning at the specified value. With two arguments, the values are assumed to denote a half-open range.</DD>
 <DT>\link ranges::v3::view::join_fn `view::join`\endlink</DT>
@@ -343,6 +353,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Given a source range, a unary predicate and a target value, create a new range where all elements that satisfy the predicate are replaced with the target value.</DD>
 <DT>\link ranges::v3::view::reverse_fn `view::reverse`\endlink</DT>
   <DD>Create a new range that traverses the source range in reverse order.</DD>
+<DT>\link ranges::v3::view::sample_fn `view::sample`\endlink</DT>
+  <DD>Returns a random sample of a range of length `size(range)`.</DD>
 <DT>\link ranges::v3::view::single_fn `view::single`\endlink</DT>
   <DD>Given a value, create a range with exactly one element.</DD>
 <DT>\link ranges::v3::view::slice_fn `view::slice`\endlink</DT>

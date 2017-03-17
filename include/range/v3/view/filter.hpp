@@ -25,6 +25,8 @@ namespace ranges
     {
         namespace view
         {
+            /// Given a source range and a unary predicate, filter the elements
+            /// that satisfy the predicate.
             struct filter_fn
             {
                 template<typename Rng, typename Pred>

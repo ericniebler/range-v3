@@ -166,6 +166,8 @@ namespace ranges
 
         namespace view
         {
+            /// Returns an infinite range that endlessly repeats the source
+            /// range.
             struct cycle_fn
             {
             private:
