@@ -46,6 +46,9 @@ namespace ranges
 
         namespace view
         {
+            /// Lazily applies an unary function to each element in the source
+            /// range that returns another range (possibly empty), flattening
+            /// the result.
             struct for_each_fn
             {
             private:

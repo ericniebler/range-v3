@@ -181,6 +181,8 @@ namespace ranges
 
         namespace view
         {
+
+            /// Returns a random sample of a range of length `size(range)`.
             class sample_fn
             {
                 template<typename Rng, typename URNG>
