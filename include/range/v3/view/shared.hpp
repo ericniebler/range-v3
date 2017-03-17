@@ -104,8 +104,9 @@ namespace ranges
 #endif
 
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>()),
-                    typename std::enable_if<std::is_rvalue_reference<Rng&&>::value, bool>::type = 0>
+                    CONCEPT_REQUIRES_(Range<Rng>()
+                                      && !View<Rng>()
+                                      && std::is_rvalue_reference<Rng&&>::value)>
                 shared_view<typename std::remove_reference<Rng>::type> operator()(Rng && t) const
                 {
                     return shared_view<typename std::remove_reference<Rng>::type>{std::move(t)};
@@ -113,21 +114,20 @@ namespace ranges
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>()),
-                    typename std::enable_if<!std::is_rvalue_reference<Rng&&>::value, bool>::type E = 0>
+                    CONCEPT_REQUIRES_(!Range<Rng>()
+                                      || View<Rng>()
+                                      || !std::is_rvalue_reference<Rng&&>::value)>
                 void operator()(Rng &&) const
-                {
-                    static_assert(E, "view::shared needs an rvalue reference"
-                                     "to build a shared object.");
-                }
-
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Range<Rng>())>
-                void operator()(Rng) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "The object on which view::shared operates must be a "
                         "model of the Range concept.");
+                    CONCEPT_ASSERT_MSG(!View<Rng>(),
+                        "view::shared cannot be constructed from a view."
+                        " Please copy the original view instead.");
+                    CONCEPT_ASSERT_MSG(std::is_rvalue_reference<Rng&&>::value,
+                        "view::shared needs an rvalue reference"
+                        "to build a shared object.");
                 }
 #endif
             };
