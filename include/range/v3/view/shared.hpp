@@ -106,17 +106,17 @@ namespace ranges
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Range<Rng>()
                                       && !View<Rng>()
-                                      && std::is_rvalue_reference<Rng&&>::value)>
-                shared_view<typename std::remove_reference<Rng>::type> operator()(Rng && t) const
+                                      && !std::is_reference<Rng>::value)>
+                shared_view<Rng> operator()(Rng && t) const
                 {
-                    return shared_view<typename std::remove_reference<Rng>::type>{std::move(t)};
+                    return shared_view<Rng>{std::move(t)};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!Range<Rng>()
                                       || View<Rng>()
-                                      || !std::is_rvalue_reference<Rng&&>::value)>
+                                      || std::is_reference<Rng>::value)>
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
