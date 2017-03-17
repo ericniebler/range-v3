@@ -138,7 +138,7 @@ namespace ranges
 
             template<typename Rng>
             using shared_t =
-                meta::_t<std::decay<decltype(shared(std::declval<Rng>()))>>;
+                detail::decay_t<decltype(shared(std::declval<Rng>()))>;
 
         } // namespace view
         /// @}
