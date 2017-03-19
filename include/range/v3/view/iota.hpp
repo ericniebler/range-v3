@@ -488,17 +488,23 @@ namespace ranges
             {
                 ints_fn() = default;
 
-                template<typename Val,
-                    CONCEPT_REQUIRES_(Integral<Val>())>
-                iota_view<Val> operator()(Val value) const
-                {
-                    return iota_view<Val>{value};
-                }
                 template<typename Val>
                 meta::if_c<
                     (bool)Integral<Val>(),
                     detail::take_exactly_view_<iota_view<Val>, true>>
-                operator()(Val from, Val to) const;
+                operator()(Val from, Val to) const
+                {
+                    return {iota_view<Val>{from}, detail::iota_minus_(to, from)};
+                }
+
+                template<typename Val,
+                    CONCEPT_REQUIRES_(Integral<Val>())>
+                auto operator()(Val to) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    (*this)(Val(), to)
+                )
+
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
@@ -518,15 +524,6 @@ namespace ranges
             #endif
             };
 
-            template<typename Val>
-            meta::if_c<
-                (bool)Integral<Val>(),
-                detail::take_exactly_view_<iota_view<Val>, true>>
-            ints_fn::operator()(Val from, Val to) const
-            {
-                return {iota_view<Val>{from}, detail::iota_minus_(to, from)};
-            }
-
             struct closed_ints_fn
             {
                 template<typename Val,
@@ -535,10 +532,26 @@ namespace ranges
                 {
                     return {iota_view<Val>{from}, detail::iota_minus_(to, from) + 1};
                 }
+
+                template<typename Val,
+                    CONCEPT_REQUIRES_(Integral<Val>())>
+                auto operator()(Val to) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    (*this)(Val(), to)
+                )
+
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!Integral<Val>())>
                 void operator()(Val, Val) const
+                {
+                    CONCEPT_ASSERT_MSG(Integral<Val>(),
+                        "The object passed to view::closed_ints must be Integral");
+                }
+                template<typename Val,
+                    CONCEPT_REQUIRES_(!Integral<Val>())>
+                void operator()(Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),
                         "The object passed to view::closed_ints must be Integral");

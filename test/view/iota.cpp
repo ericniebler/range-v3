@@ -59,11 +59,13 @@ int main()
         {'h','e','l','l','o',' ','w','o','r','l'});
 
     ::check_equal(view::ints | view::take(10), {0,1,2,3,4,5,6,7,8,9});
-    ::check_equal(view::ints(0) | view::take(10), {0,1,2,3,4,5,6,7,8,9});
+    ::check_equal(view::iota(0) | view::take(10), {0,1,2,3,4,5,6,7,8,9});
+    ::check_equal(view::ints(10) | view::take(10), {0,1,2,3,4,5,6,7,8,9});
     ::check_equal(view::ints(0,9), {0,1,2,3,4,5,6,7,8});
     ::check_equal(view::closed_ints(0,9), {0,1,2,3,4,5,6,7,8,9});
     ::check_equal(view::ints(1,10), {1,2,3,4,5,6,7,8,9});
     ::check_equal(view::closed_ints(1,10), {1,2,3,4,5,6,7,8,9,10});
+    ::check_equal(view::closed_ints(10), {0, 1,2,3,4,5,6,7,8,9,10});
 
     auto chars = view::ints(std::numeric_limits<char>::min(),
                             std::numeric_limits<char>::max());
