@@ -65,7 +65,8 @@ namespace ranges
                     size(r)
                 )
 
-                template<typename R>
+                template<typename R, typename I = decltype(ranges::cbegin(std::declval<R const&>())),
+                    CONCEPT_REQUIRES_(ForwardIterator<I>())>
                 static RANGES_CXX14_CONSTEXPR auto impl_(R const &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (

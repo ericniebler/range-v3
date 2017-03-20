@@ -391,9 +391,9 @@ namespace ranges
         struct iter_size_fn
         {
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(SizedSentinel<S, I>() && ForwardIterator<I>())>
+                CONCEPT_REQUIRES_(SizedSentinel<S, I>())>
             RANGES_CXX14_CONSTEXPR
-            size_type_t<I> operator()(I begin, S end) const
+            size_type_t<I> operator()(I const& begin, S end) const
             {
                 difference_type_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
