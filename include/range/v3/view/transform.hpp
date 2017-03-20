@@ -432,6 +432,8 @@ namespace ranges
                         protect(std::move(fun))))
                 )
             public:
+                // Don't forget to update view::for_each whenever this set
+                // of concepts changes
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputRange<Rng>,

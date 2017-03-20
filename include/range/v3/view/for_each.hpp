@@ -32,18 +32,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng, typename F>
-        struct for_each_view
-          : join_view<transform_view<Rng, F>>
-        {
-            for_each_view() = default;
-            for_each_view(Rng rng, F f)
-              : for_each_view::join_view{{std::move(rng), std::move(f)}}
-            {}
-        };
-
         namespace view
         {
             /// Lazily applies an unary function to each element in the source
@@ -53,43 +41,52 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename F>
-                static auto bind(for_each_fn for_each, F f)
+                template<typename Fun>
+                static auto bind(for_each_fn for_each, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(f))))
+                    make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(fun))))
                 )
             public:
-                template<typename Rng, typename F>
+                template<typename Rng, typename Fun>
                 using Concept = meta::and_<
-                    Range<Rng>,
-                    IndirectInvocable<F, iterator_t<Rng>>,
-                    Range<concepts::Invocable::result_t<F&, range_common_reference_t<Rng>>>>;
+                    transform_fn::Concept<Rng, Fun>,
+                    meta::lazy::invoke<
+                        meta::compose<
+                            meta::quote<InputRange>,
+                            meta::bind_front<meta::quote<concepts::Invocable::result_t>, Fun&>,
+                            meta::quote<range_reference_t>>,
+                        Rng>>;
 
-                template<typename Rng, typename F,
-                    CONCEPT_REQUIRES_(Concept<Rng, F>())>
-                for_each_view<all_t<Rng>, F> operator()(Rng && rng, F f) const
-                {
-                    return {all(std::forward<Rng>(rng)), std::move(f)};
-                }
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                auto operator()(Rng && rng, Fun fun) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    join(transform(std::forward<Rng>(rng), std::move(fun)))
+                )
 
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error reporting
-                template<typename Rng, typename F,
-                    CONCEPT_REQUIRES_(!Concept<Rng, F>())>
-                void operator()(Rng &&, F) const
+        #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                void operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "Rng is not a model of the Range concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<F, iterator_t<Rng>>(),
-                        "The function F is not callable with arguments of the type of the range's "
-                        "common reference type.");
-                    CONCEPT_ASSERT_MSG(Range<concepts::Invocable::result_t<F&,
-                        range_common_reference_t<Rng>>>(),
-                        "To use view::for_each, the function F must return a model of the Range "
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The object on which view::for_each operates must be a model of the "
+                        "InputRange concept.");
+                    CONCEPT_ASSERT_MSG(
+                        CopyConstructible<Fun>(),
+                        "The function passed to view::for_each must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(
+                        Invocable<Fun&, range_reference_t<Rng>>(),
+                        "The function passed to view::for_each must be callable with an argument "
+                        "of the range's reference type.");
+                    CONCEPT_ASSERT_MSG(InputRange<concepts::Invocable::result_t<
+                        Fun&, range_reference_t<Rng>>>(),
+                        "To use view::for_each, the function F must return a model of the InputRange "
                         "concept.");
                 }
-            #endif
+        #endif
             };
 
             /// \relates for_each_fn
@@ -179,7 +176,5 @@ namespace ranges
         /// \endcond
     }
 }
-
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::for_each_view)
 
 #endif
