@@ -23,10 +23,11 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/view/c_str.hpp>
+#include <range/v3/view/cartesian_product.hpp>
+#include <range/v3/view/chunk.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>
-#include <range/v3/view/chunk.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/drop.hpp>
@@ -45,9 +46,9 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/partial_sum.hpp>
+#include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/repeat_n.hpp>
-#include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/replace_if.hpp>
 #include <range/v3/view/reverse.hpp>
@@ -62,12 +63,12 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/take_while.hpp>
-#include <range/v3/view/transform.hpp>
 #include <range/v3/view/tokenize.hpp>
+#include <range/v3/view/transform.hpp>
 #include <range/v3/view/unbounded.hpp>
 #include <range/v3/view/unique.hpp>
-#include <range/v3/view/zip_with.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/view/zip_with.hpp>
 
 RANGES_RE_ENABLE_WARNINGS
 

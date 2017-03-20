@@ -45,14 +45,6 @@ namespace ranges
             common_tuple(That && that, meta::index_sequence<Is...>)
               : std::tuple<Ts...>{std::get<Is>(std::forward<That>(that))...}
             {}
-            std::tuple<Ts...> & base() noexcept
-            {
-                return *this;
-            }
-            std::tuple<Ts...> const & base() const noexcept
-            {
-                return *this;
-            }
             struct element_assign_
             {
                 template<typename T, typename U>
@@ -93,6 +85,15 @@ namespace ranges
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
             {}
+
+            std::tuple<Ts...> & base() noexcept
+            {
+                return *this;
+            }
+            std::tuple<Ts...> const & base() const noexcept
+            {
+                return *this;
+            }
 
             // Assignment
             template<typename...Us,

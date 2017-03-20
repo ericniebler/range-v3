@@ -42,7 +42,7 @@ namespace ranges
             using ConvertibleToContainer = meta::strict_and<
                 Range<Cont>,
                 meta::not_<View<Cont>>,
-                Movable<Cont>,
+                MoveConstructible<Cont>,
                 ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>,
                 Constructible<Cont, I, I>>;
 
@@ -59,7 +59,7 @@ namespace ranges
 
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont impl(Rng && rng, std::false_type) const
                 {
                     using I = range_common_iterator_t<Rng>;
@@ -68,7 +68,7 @@ namespace ranges
 
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
+                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
                                       ReserveConcept<Cont, Rng>())>
                 Cont impl(Rng && rng, std::true_type) const
                 {
@@ -83,7 +83,7 @@ namespace ranges
             public:
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont operator()(Rng && rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
