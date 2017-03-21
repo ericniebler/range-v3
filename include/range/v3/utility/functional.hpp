@@ -181,6 +181,17 @@ namespace ranges
           : coerce<T>
         {};
 
+        struct dereference_fn
+        {
+            template<typename I>
+            constexpr auto operator()(I &i) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                *i
+            )
+        };
+        RANGES_INLINE_VARIABLE(dereference_fn, dereference)
+
         /// \addtogroup group-concepts
         /// @{
         namespace concepts
