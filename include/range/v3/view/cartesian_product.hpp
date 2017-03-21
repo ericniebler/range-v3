@@ -49,26 +49,12 @@ namespace ranges
             struct cartesian_size_fn
             {
                 template<typename Rng, CONCEPT_REQUIRES_(SizedRange<Rng>())>
-                auto operator()(std::size_t s, Rng && rng)
+                auto operator()(std::size_t s, Rng &&rng)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     s * static_cast<std::size_t>(ranges::size(rng))
                 )
             };
-
-            template<typename View,
-                CONCEPT_REQUIRES_(BoundedRange<View>())>
-            static iterator_t<View> last_iter(View& v)
-            {
-                return ranges::end(v);
-            }
-            template<typename View,
-                CONCEPT_REQUIRES_(!BoundedRange<View>() &&
-                    RandomAccessRange<View>() && SizedRange<View>())>
-            static iterator_t<View> last_iter(View& v)
-            {
-                return ranges::begin(v) + ranges::size(v);
-            }
         } // namespace detail
 
         template<typename...Views>
@@ -123,8 +109,8 @@ namespace ranges
                 }
                 void next_(meta::size_t<1>)
                 {
-                    auto& v = std::get<0>(view_->views_);
-                    auto& i = std::get<0>(its_);
+                    auto &v = std::get<0>(view_->views_);
+                    auto &i = std::get<0>(its_);
                     auto const last = ranges::end(v);
                     RANGES_EXPECT(i != last);
                     ++i;
@@ -132,8 +118,8 @@ namespace ranges
                 template<std::size_t N>
                 void next_(meta::size_t<N>)
                 {
-                    auto& v = std::get<N - 1>(view_->views_);
-                    auto& i = std::get<N - 1>(its_);
+                    auto &v = std::get<N - 1>(view_->views_);
+                    auto &i = std::get<N - 1>(its_);
                     auto const last = ranges::end(v);
                     RANGES_EXPECT(i != last);
                     if (++i == last)
@@ -149,16 +135,18 @@ namespace ranges
                 template<std::size_t N>
                 void prev_(meta::size_t<N>)
                 {
-                    auto& v = std::get<N - 1>(view_->views_);
-                    auto& i = std::get<N - 1>(its_);
+                    auto &v = std::get<N - 1>(view_->views_);
+                    auto &i = std::get<N - 1>(its_);
                     if (i == ranges::begin(v))
                     {
-                        i = detail::last_iter(v);
+                        CONCEPT_ASSERT(CanBidi<IsConst>());
+                        // CanBidi<IsConst> implies this advance call is O(1)
+                        ranges::advance(i, ranges::end(v));
                         prev_(meta::size_t<N - 1>{});
                     }
                     --i;
                 }
-                bool equal_(cursor const&, meta::size_t<sizeof...(Views)>) const
+                bool equal_(cursor const &, meta::size_t<sizeof...(Views)>) const
                 {
                     return true;
                 }
@@ -252,13 +240,13 @@ namespace ranges
             public:
                 using value_type = std::tuple<range_value_type_t<Views>...>;
                 cursor() = default;
-                explicit cursor(begin_tag, constify_if<cartesian_product_view>& view)
+                explicit cursor(begin_tag, constify_if<cartesian_product_view> &view)
                   : view_(&view)
                   , its_(tuple_transform(view.views_, ranges::begin))
                 {
                     check_at_end_(meta::size_t<sizeof...(Views)>{});
                 }
-                explicit cursor(end_tag, constify_if<cartesian_product_view>& view)
+                explicit cursor(end_tag, constify_if<cartesian_product_view> &view)
                   : cursor(begin_tag{}, view)
                 {
                     std::get<0>(its_) = ranges::end(std::get<0>(view.views_));
@@ -346,7 +334,8 @@ namespace ranges
             }
         };
 
-        namespace view {
+        namespace view
+        {
             struct cartesian_product_fn
             {
                 template<typename... Rngs>
