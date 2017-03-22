@@ -19,6 +19,7 @@ var functional_8hpp =
     [ "operator|", "functional_8hpp.html#ga67df89791cd36fa8a858ede615c77ae8", null ],
     [ "operator|", "functional_8hpp.html#ga8d2ca72a205107a619125498af79f14b", null ],
     [ "compose", "functional_8hpp.html#ga44ca8bae41d72e1845434f43055249b5", null ],
+    [ "dereference", "functional_8hpp.html#gab6efb7e322663fb1bd3cd99ca3c4f776", null ],
     [ "indirect", "functional_8hpp.html#ga7ea92d2e2decac4b4c9d9231081a61df", null ],
     [ "make_pipeable", "functional_8hpp.html#ga9421f091b207dbe3e5ea63db5d36550a", null ],
     [ "not_fn", "functional_8hpp.html#ga4c6057d4419c56aade6b452f726dcb4a", null ],

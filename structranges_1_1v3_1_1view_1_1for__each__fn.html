@@ -98,7 +98,9 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1for__eac
 <div class="title">ranges::v3::view::for_each_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
+<div class="textblock"><p>Lazily applies an unary function to each element in the source range that returns another range (possibly empty), flattening the result. </p>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
 Synopsis of methods</h2></td></tr>
 <tr class="memitem:gaedba72e114673fe8d4c223b6a258c50e"><td class="memItemLeft" align="right" valign="top">
@@ -107,17 +109,17 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a372e8199b2d1d608da91cf82d40fecf6"><td class="memTemplParams" colspan="2"><a id="a372e8199b2d1d608da91cf82d40fecf6"></a>
-template&lt;typename Rng , typename F &gt; </td></tr>
-<tr class="memitem:a372e8199b2d1d608da91cf82d40fecf6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Range</a>&lt; Rng &gt;, IndirectInvocable&lt; F, iterator_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Range</a>&lt; concepts::Invocable::result_t&lt; F &amp;, range_common_reference_t&lt; Rng &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:a372e8199b2d1d608da91cf82d40fecf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab24e8ce7e0497cf1a24ef986b8df64ff"><td class="memTemplParams" colspan="2"><a id="ab24e8ce7e0497cf1a24ef986b8df64ff"></a>
+template&lt;typename Rng , typename Fun &gt; </td></tr>
+<tr class="memitem:ab24e8ce7e0497cf1a24ef986b8df64ff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff">meta::and_</a>&lt; transform_fn::Concept&lt; Rng, Fun &gt;, <a class="el" href="group__lazy__invocation.html#gae2ce92c73f97fd571560bca641674383">meta::lazy::invoke</a>&lt; <a class="el" href="structmeta_1_1compose.html">meta::compose</a>&lt; <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a> &gt;, <a class="el" href="structmeta_1_1bind__front.html">meta::bind_front</a>&lt; <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; concepts::Invocable::result_t &gt;, Fun &amp; &gt;, <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; range_reference_t &gt; &gt;, Rng &gt; &gt;</td></tr>
+<tr class="separator:ab24e8ce7e0497cf1a24ef986b8df64ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a15dea08263f8b570aea41a3968b3713f"><td class="memTemplParams" colspan="2"><a id="a15dea08263f8b570aea41a3968b3713f"></a>
-template&lt;typename Rng , typename F , requires  = (Concept&lt;Rng, F&gt;())&gt; </td></tr>
-<tr class="memitem:a15dea08263f8b570aea41a3968b3713f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1for__each__view.html">for_each_view</a>&lt; all_t&lt; Rng &gt;, F &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, F f) const</td></tr>
-<tr class="separator:a15dea08263f8b570aea41a3968b3713f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42fe1d06ac90e3398f21e70a678d6465"><td class="memTemplParams" colspan="2"><a id="a42fe1d06ac90e3398f21e70a678d6465"></a>
+template&lt;typename Rng , typename Fun , requires  = (Concept&lt;Rng, Fun&gt;())&gt; </td></tr>
+<tr class="memitem:a42fe1d06ac90e3398f21e70a678d6465"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const -&gt; decltype(join(transform(std::forward&lt; Rng &gt;(rng), std::move(fun))))</td></tr>
+<tr class="separator:a42fe1d06ac90e3398f21e70a678d6465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

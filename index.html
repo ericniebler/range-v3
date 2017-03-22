@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 </li>
 <li class="level1"><a href="#tutorial-quick-start">Quick Start</a></li>
 <li class="level1"><a href="#range-views">Range Views</a></li>
+<li class="level1"><a href="#range-actions">Range Actions</a></li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="tutorial-preface"></a>
@@ -179,6 +180,8 @@ Range Views</h1>
 <dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is removed from the result range; otherwise, it is included. The last element in the source range is always included. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1all__fn.html"><code>view::all</code></a> </dt>
 <dd>Return a range containing all the elements in the source. Useful for converting containers to ranges. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1any__view.html"><code>any_view&lt;T&gt;(rng)</code></a> </dt>
+<dd>Type-erased range of elements with value type <code>T</code>; can store <em>any</em> range with this value type. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1bounded__fn.html"><code>view::bounded</code></a> </dt>
 <dd>Convert the source range to a <em>bounded</em> range, where the type of the <code>end</code> is the same as the <code>begin</code>. Useful for iterating over a range with C++'s range-based <code>for</code> loop. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1chunk__fn.html"><code>view::chunk</code></a> </dt>
@@ -189,6 +192,10 @@ Range Views</h1>
 <dd>Present a <code>const</code> view of a source range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1counted__fn.html"><code>view::counted</code></a> </dt>
 <dd>Given an iterator <code>it</code> and a count <code>n</code>, create a range that starts at <code>it</code> and includes the next <code>n</code> elements. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1cycle__fn.html"><code>view::cycle</code></a> </dt>
+<dd>Returns an infinite range that endlessly repeats the source range. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1c__str__fn.html"><code>view::c_str</code></a> </dt>
+<dd>View a <code>\0</code>-terminated C string (e.g. from a <code>const char*</code>) as a range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1delimit__fn.html"><code>view::delimit</code></a> </dt>
 <dd>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, <code>view::delimit</code> can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1drop__fn.html"><code>view::drop</code></a> </dt>
@@ -199,6 +206,10 @@ Range Views</h1>
 <dd>Remove elements from the front of a range that satisfy a unary predicate. </dd>
 <dt><a class="el" href="group__list.html#gada7280d87ece1a3dc6b203ee0e86e71c"><code>view::empty</code></a> </dt>
 <dd>Create an empty range with a given value type. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1filter__fn.html"><code>view::filter</code></a> </dt>
+<dd>Given a source range and a unary predicate, filter the elements that satisfy the predicate. (For users of Boost.Range, this is like the <code>filter</code> adaptor.) </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1for__each__fn.html"><code>view::for_each</code></a> </dt>
+<dd>Lazily applies an unary function to each element in the source range that returns another range (possibly empty), flattening the result. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1generate__fn.html"><code>view::generate</code></a> </dt>
 <dd>Given a nullary function, return an infinite range whose elements are generated with the function. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1generate__n__fn.html"><code>view::generate_n</code></a> </dt>
@@ -210,7 +221,7 @@ Range Views</h1>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1intersperse__fn.html"><code>view::intersperse</code></a> </dt>
 <dd>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1ints__fn.html"><code>view::ints</code></a> </dt>
-<dd>Generate a range of monotonically increasing <code>int</code>s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive). </dd>
+<dd>Generate a range of monotonically increasing <code>int</code>s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive). An inclusive version is provided by <code>closed_ints</code>. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1iota__fn.html"><code>view::iota</code></a> </dt>
 <dd>A generalization of <code>view::ints</code> that generates a sequence of monotonically increasing values of any incrementable type. When specified with a single argument, the result is an infinite range beginning at the specified value. With two arguments, the values are assumed to denote a half-open range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html"><code>view::join</code></a> </dt>
@@ -233,6 +244,8 @@ Range Views</h1>
 <dd>Given a source range, a unary predicate and a target value, create a new range where all elements that satisfy the predicate are replaced with the target value. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1reverse__fn.html"><code>view::reverse</code></a> </dt>
 <dd>Create a new range that traverses the source range in reverse order. </dd>
+<dt><a class="el" href="classranges_1_1v3_1_1view_1_1sample__fn.html"><code>view::sample</code></a> </dt>
+<dd>Returns a random sample of a range of length <code>size(range)</code>. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1single__fn.html"><code>view::single</code></a> </dt>
 <dd>Given a value, create a range with exactly one element. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1slice__fn.html"><code>view::slice</code></a> </dt>
@@ -263,6 +276,48 @@ Range Views</h1>
 <dd>Given <em>N</em> ranges, return a new range where <em>M</em><sup>th</sup> element is the result of calling <code>make_tuple</code> on the <em>M</em><sup>th</sup> elements of all <em>N</em> ranges. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1zip__with__fn.html"><code>view::zip_with</code></a> </dt>
 <dd>Given <em>N</em> ranges and a <em>N</em>-ary function, return a new range where <em>M</em><sup>th</sup> element is the result of calling the function on the <em>M</em><sup>th</sup> elements of all <em>N</em> ranges. </dd>
+</dl>
+<h1><a class="anchor" id="range-actions"></a>
+Range Actions</h1>
+<hr/>
+<p>Below is a list of the eager range combinators, or <em>actions</em>, that Range v3 provides, and a blurb about how each is intended to be used.</p>
+<dl>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1drop__fn.html"><code>action::drop</code></a> </dt>
+<dd>Removes the first <code>N</code> elements of the source range. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1drop__while__fn.html"><code>action::drop_while</code></a> </dt>
+<dd>Removes the first elements of the source range that satisfy the unary predicate. </dd>
+<dt><code>action::erase</code> </dt>
+<dd>Removes all elements in the sub-range of the source (range version) or all elements after position. </dd>
+<dt><code>action::insert</code> </dt>
+<dd>Inserts all elements of the range into the source at position. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1join__fn.html"><code>action::join</code></a> </dt>
+<dd>Flattens a range of ranges. </dd>
+<dt><code>action::push_back</code> </dt>
+<dd>Appends elements to the tail of the source. </dd>
+<dt><code>action::push_front</code> </dt>
+<dd>Appends elements before the head of the source. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1remove__if__fn.html"><code>action::remove_if</code></a> </dt>
+<dd>Removes all elements from the source that satisfy the predicate. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1shuffle__fn.html"><code>action::shuffle</code></a> </dt>
+<dd>Shuffles the source range. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1slice__fn.html"><code>action::slice</code></a> </dt>
+<dd>Removes all elements from the source that are not part of the sub-range. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1sort__fn.html"><code>action::sort</code></a> </dt>
+<dd>Sorts the source range (unstable). </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1split__fn.html"><code>action::split</code></a> </dt>
+<dd>Split a range into a sequence of subranges using a delimiter (a value, a sequence of values, a predicate, or a binary function returning a <code>pair&lt;bool, N&gt;</code>). </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1stable__sort__fn.html"><code>action::stable_sort</code></a> </dt>
+<dd>Sorts the source range (stable). </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1stride__fn.html"><code>action::stride</code></a> </dt>
+<dd>Removes all elements whose position does not match the stride. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1take__fn.html"><code>action::take</code></a> </dt>
+<dd>Keeps the first <code>N</code>-th elements of the range, removes the rest. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1take__while__fn.html"><code>action::take_while</code></a> </dt>
+<dd>Keeps the first elements that satisfy the predicate, removes the rest. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1action_1_1transform__fn.html"><code>action::transform</code></a> </dt>
+<dd>Replaces elements of the source with the result of the unary function. </dd>
+<dt><code>action::unique</code> </dt>
+<dd>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements. </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->

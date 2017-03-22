@@ -110,8 +110,9 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view__interface.
 <area href="structranges_1_1v3_1_1view__base.html" alt="ranges::v3::view_base" shape="rect" coords="180,0,531,24"/>
 <area href="structranges_1_1v3_1_1tail__view.html" alt="ranges::v3::tail_view&lt; Rng &gt;" shape="rect" coords="0,168,351,192"/>
 <area href="structranges_1_1v3_1_1view__facade.html" alt="ranges::v3::view_facade&lt; Derived, Cardinality &gt;" shape="rect" coords="361,168,712,192"/>
-<area href="structranges_1_1v3_1_1view__adaptor.html" alt="ranges::v3::view_adaptor&lt; Derived, BaseRng, Cardinality &gt;" shape="rect" coords="361,224,712,248"/>
-<area href="structranges_1_1v3_1_1intersperse__view.html" alt="ranges::v3::intersperse_view&lt; Rng &gt;" shape="rect" coords="361,280,712,304"/>
+<area href="classranges_1_1v3_1_1cartesian__product__view.html" alt="ranges::v3::cartesian_product_view&lt; Views &gt;" shape="rect" coords="180,224,531,248"/>
+<area href="structranges_1_1v3_1_1view__adaptor.html" alt="ranges::v3::view_adaptor&lt; Derived, BaseRng, Cardinality &gt;" shape="rect" coords="541,224,892,248"/>
+<area href="structranges_1_1v3_1_1intersperse__view.html" alt="ranges::v3::intersperse_view&lt; Rng &gt;" shape="rect" coords="541,280,892,304"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -216,7 +217,7 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 <tr class="memdesc:afc48e8f4937ce470cfef9fcb10db2c03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the size of the range, if it can be determined: <br /></td></tr>
 <tr class="separator:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplParams" colspan="2"><a id="afc48e8f4937ce470cfef9fcb10db2c03"></a>
-template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp;                    SizedSentinel&lt;sentinel_t&lt;const D&gt;, iterator_t&lt;const D&gt;&gt;())&gt; </td></tr>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp;                    SizedSentinel&lt;sentinel_t&lt;const D&gt;, iterator_t&lt;const D&gt;&gt;() &amp;&amp;                    ForwardIterator&lt;iterator_t&lt;const D&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>size</b> () const</td></tr>
 <tr class="separator:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26bec67a5967726e826e2a095b3377f2"><td class="memItemLeft" align="right" valign="top"><a id="a26bec67a5967726e826e2a095b3377f2"></a>

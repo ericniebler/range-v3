@@ -246,7 +246,7 @@ constexpr <a class="el" href="structranges_1_1v3_1_1default__sentinel.html">defa
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng, typename ValRng&gt; </div>
+template&lt;typename Rng , typename ValRng &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr size_type <a class="el" href="structranges_1_1v3_1_1join__view.html">ranges::v3::join_view</a>&lt; Rng, ValRng &gt;::size </td>
@@ -266,7 +266,7 @@ template&lt;typename Rng, typename ValRng&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng, typename ValRng&gt; </div>
+template&lt;typename Rng , typename ValRng &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">size_type <a class="el" href="structranges_1_1v3_1_1join__view.html">ranges::v3::join_view</a>&lt; Rng, ValRng &gt;::size </td>
@@ -277,6 +277,8 @@ template&lt;typename Rng, typename ValRng&gt; </div>
       </table>
 </div><div class="memdoc">
 <dl class="section pre"><dt>Precondition</dt><dd>detail::join_cardinality&lt;Rng  ValRng&gt;::value &lt; 0 &amp;&amp; range_cardinality&lt;Rng&gt;::value &gt;= 0 &amp;&amp; ForwardRange&lt;Rng&gt;() &amp;&amp; SizedRange&lt;range_reference_t&lt;Rng&gt;&gt;() &amp;&amp; SizedRange&lt;ValRng&gt;()) </dd></dl>
+
+<p class="reference">References <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>, <a class="el" href="group__group-core.html#ga6e1ed0455c69f1a3536870eb05141260">ranges::v3::end</a>, <a class="el" href="group__group-algorithms.html#ga231cf1ea1874a1589423358592df426d">ranges::v3::equal</a>, <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>, and <a class="el" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">ranges::v3::next</a>.</p>
 
 </div>
 </div>

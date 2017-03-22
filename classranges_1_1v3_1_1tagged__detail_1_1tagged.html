@@ -110,10 +110,10 @@ $(document).ready(function(){initNavTree('classranges_1_1v3_1_1tagged__detail_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a667138d344d6393ba5dd97826111d00e"><td class="memTemplParams" colspan="2"><a id="a667138d344d6393ba5dd97826111d00e"></a>
-template&lt;int dummy_ = 42&gt; </td></tr>
-<tr class="memitem:a667138d344d6393ba5dd97826111d00e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; dummy_==43||<a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; Base &amp; &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;x, <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;y) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; Base &amp;&gt;::value)</td></tr>
-<tr class="separator:a667138d344d6393ba5dd97826111d00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ec804bdd8342ab0bfea064b56d01493"><td class="memTemplParams" colspan="2"><a id="a1ec804bdd8342ab0bfea064b56d01493"></a>
+template&lt;typename B  = Base&gt; </td></tr>
+<tr class="memitem:a1ec804bdd8342ab0bfea064b56d01493"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; <a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; B &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;x, <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;y) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; B &gt;::value)</td></tr>
+<tr class="separator:a1ec804bdd8342ab0bfea064b56d01493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -129,10 +129,10 @@ template&lt;typename Other , typename  = meta::if_&lt;can_convert&lt;Other&gt;&g
 template&lt;typename U , typename  = meta::if_c&lt;!std::is_same&lt;tagged, detail::decay_t&lt;U&gt;&gt;::value&gt;, typename  = decltype(std::declval&lt;Base &amp;&gt;() = std::declval&lt;U&gt;())&gt; </td></tr>
 <tr class="memitem:ac215f006292d17abe91b92b5e8a268c7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;u) noexcept(noexcept(std::declval&lt; Base &amp;&gt;()=std::forward&lt; U &gt;(u)))</td></tr>
 <tr class="separator:ac215f006292d17abe91b92b5e8a268c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f6bd7032da17ab2dcfd543dc5b9d10b"><td class="memTemplParams" colspan="2"><a id="a6f6bd7032da17ab2dcfd543dc5b9d10b"></a>
-template&lt;int dummy_ = 42&gt; </td></tr>
-<tr class="memitem:a6f6bd7032da17ab2dcfd543dc5b9d10b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; dummy_==43||<a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; Base &amp; &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;that) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; Base &amp;&gt;::value)</td></tr>
-<tr class="separator:a6f6bd7032da17ab2dcfd543dc5b9d10b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88d4b447f2da5a66af1a1ff437403f8a"><td class="memTemplParams" colspan="2"><a id="a88d4b447f2da5a66af1a1ff437403f8a"></a>
+template&lt;typename B  = Base&gt; </td></tr>
+<tr class="memitem:a88d4b447f2da5a66af1a1ff437403f8a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; <a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; B &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged</a> &amp;that) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; B &gt;::value)</td></tr>
+<tr class="separator:a88d4b447f2da5a66af1a1ff437403f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8adf6535297981be1c2aef6f3ff43c80"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a8adf6535297981be1c2aef6f3ff43c80">tagged</a> (Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)</td></tr>
 <tr class="separator:a8adf6535297981be1c2aef6f3ff43c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0290f2cb92d9ea5615c77b0aac11e0cf"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a0290f2cb92d9ea5615c77b0aac11e0cf">tagged</a> (Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)</td></tr>

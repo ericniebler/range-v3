@@ -96,7 +96,8 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_wri
 
 <p>This is the complete list of members for <a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>requires_</b>(Out &amp;o, T &amp;&amp;t) -&gt; decltype(concepts::valid_expr(((void)(*o=(T &amp;&amp;) t), 42))) (defined in <a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a>)</td><td class="entry"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>reference_t</b> typedef (defined in <a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a>)</td><td class="entry"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>requires_</b>(Out &amp;o, T &amp;&amp;t) -&gt; decltype(concepts::valid_expr(((void)(*o=(T &amp;&amp;) t), 42),((void)(const_cast&lt; reference_t&lt; Out &gt; const &amp;&amp;&gt;(*o)=(T &amp;&amp;) t), 42))) (defined in <a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a>)</td><td class="entry"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

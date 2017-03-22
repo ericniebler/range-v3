@@ -7,6 +7,7 @@ var group__group_actions =
     [ "push_back", "group__group-actions.html#gada4bdea69b0f12fad3fae7900d0c6d09", null ],
     [ "push_front", "group__group-actions.html#gac7f6fadd408fb05733c220f1e5f1d3c2", null ],
     [ "remove_if", "group__group-actions.html#ga673f1edcd5ad49303d37605d71b52e0e", null ],
+    [ "reverse", "group__group-actions.html#ga4c5cc0cc96a941b2fdc9fa5d744da163", null ],
     [ "shuffle", "group__group-actions.html#gafe303f755344bdfce359ad8dc1f04407", null ],
     [ "slice", "group__group-actions.html#gaea92c971cf16891792933cf5e86f3527", null ],
     [ "sort", "group__group-actions.html#ga4794d711c7f88c00d6511a3e0524a2c1", null ],

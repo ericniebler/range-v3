@@ -867,10 +867,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga5ab070a1264eaac8ab81870056a327d3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::TotallyOrdered::requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_totally_ordered.html">TotallyOrdered</a>, T &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_totally_ordered.html">TotallyOrdered</a>, U &gt;()))</td></tr>
 <tr class="separator:ga5ab070a1264eaac8ab81870056a327d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga049129e5e2d0060d1b3c5c5f222ee242"><td class="memTemplParams" colspan="2"><a id="ga049129e5e2d0060d1b3c5c5f222ee242"></a>
-template&lt;typename T , typename UnRefT  = meta::_t&lt;std::remove_reference&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ga049129e5e2d0060d1b3c5c5f222ee242"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Destructible::requires_</b> (T &amp;t, UnRefT const &amp;ct) -&gt; decltype(concepts::valid_expr(concepts::is_true(std::is_nothrow_destructible&lt; T &gt;()), concepts::has_type&lt; UnRefT *&gt;(&amp;t), concepts::has_type&lt; UnRefT const *&gt;(&amp;ct)))</td></tr>
-<tr class="separator:ga049129e5e2d0060d1b3c5c5f222ee242"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a345dfaba2b86ebb3a758c0df41ff19"><td class="memTemplParams" colspan="2"><a id="ga7a345dfaba2b86ebb3a758c0df41ff19"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga7a345dfaba2b86ebb3a758c0df41ff19"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Destructible::requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::is_true(std::is_nothrow_destructible&lt; T &gt;())))</td></tr>
+<tr class="separator:ga7a345dfaba2b86ebb3a758c0df41ff19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabfb2ea1c61d316fd8e0b569b694b8b97"><td class="memTemplParams" colspan="2"><a id="gabfb2ea1c61d316fd8e0b569b694b8b97"></a>
 template&lt;typename T , typename... Args&gt; </td></tr>
 <tr class="memitem:gabfb2ea1c61d316fd8e0b569b694b8b97"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Constructible::requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::is_true(std::is_constructible&lt; T, Args... &gt;</td></tr>

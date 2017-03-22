@@ -107,11 +107,12 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view__facade.htm
  <div class="center">
   <img src="structranges_1_1v3_1_1view__facade.png" usemap="#ranges::v3::view_5Ffacade_3C_20Derived_2C_20Cardinality_20_3E_map" alt=""/>
   <map id="ranges::v3::view_5Ffacade_3C_20Derived_2C_20Cardinality_20_3E_map" name="ranges::v3::view_5Ffacade_3C_20Derived_2C_20Cardinality_20_3E_map">
-<area href="structranges_1_1v3_1_1view__interface.html" alt="ranges::v3::view_interface&lt; Derived, Cardinality &gt;" shape="rect" coords="0,112,351,136"/>
-<area href="structranges_1_1v3_1_1basic__view.html" alt="ranges::v3::basic_view&lt; Cardinality &gt;" shape="rect" coords="0,56,351,80"/>
-<area href="structranges_1_1v3_1_1view__base.html" alt="ranges::v3::view_base" shape="rect" coords="0,0,351,24"/>
-<area href="structranges_1_1v3_1_1view__adaptor.html" alt="ranges::v3::view_adaptor&lt; Derived, BaseRng, Cardinality &gt;" shape="rect" coords="0,224,351,248"/>
-<area href="structranges_1_1v3_1_1intersperse__view.html" alt="ranges::v3::intersperse_view&lt; Rng &gt;" shape="rect" coords="0,280,351,304"/>
+<area href="structranges_1_1v3_1_1view__interface.html" alt="ranges::v3::view_interface&lt; Derived, Cardinality &gt;" shape="rect" coords="180,112,531,136"/>
+<area href="structranges_1_1v3_1_1basic__view.html" alt="ranges::v3::basic_view&lt; Cardinality &gt;" shape="rect" coords="180,56,531,80"/>
+<area href="structranges_1_1v3_1_1view__base.html" alt="ranges::v3::view_base" shape="rect" coords="180,0,531,24"/>
+<area href="classranges_1_1v3_1_1cartesian__product__view.html" alt="ranges::v3::cartesian_product_view&lt; Views &gt;" shape="rect" coords="0,224,351,248"/>
+<area href="structranges_1_1v3_1_1view__adaptor.html" alt="ranges::v3::view_adaptor&lt; Derived, BaseRng, Cardinality &gt;" shape="rect" coords="361,224,712,248"/>
+<area href="structranges_1_1v3_1_1intersperse__view.html" alt="ranges::v3::intersperse_view&lt; Rng &gt;" shape="rect" coords="361,280,712,304"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -217,7 +218,7 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 <tr class="memdesc:afc48e8f4937ce470cfef9fcb10db2c03 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the size of the range, if it can be determined: <br /></td></tr>
 <tr class="separator:afc48e8f4937ce470cfef9fcb10db2c03 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="memTemplParams" colspan="2"><a id="afc48e8f4937ce470cfef9fcb10db2c03"></a>
-template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp;                    SizedSentinel&lt;sentinel_t&lt;const D&gt;, iterator_t&lt;const D&gt;&gt;())&gt; </td></tr>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp;                    SizedSentinel&lt;sentinel_t&lt;const D&gt;, iterator_t&lt;const D&gt;&gt;() &amp;&amp;                    ForwardIterator&lt;iterator_t&lt;const D&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="memTemplItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>size</b> () const</td></tr>
 <tr class="separator:afc48e8f4937ce470cfef9fcb10db2c03 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26bec67a5967726e826e2a095b3377f2 inherit pub_methods_structranges_1_1v3_1_1view__interface"><td class="memItemLeft" align="right" valign="top"><a id="a26bec67a5967726e826e2a095b3377f2"></a>

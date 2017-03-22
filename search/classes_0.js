@@ -5,6 +5,7 @@ var searchData=
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3adrop_5ffn_20_3e',['action&lt; ranges::v3::action::drop_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3adrop_5fwhile_5ffn_20_3e',['action&lt; ranges::v3::action::drop_while_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3ajoin_5ffn_20_3e',['action&lt; ranges::v3::action::join_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
+  ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3areverse_5ffn_20_3e',['action&lt; ranges::v3::action::reverse_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3ashuffle_5ffn_20_3e',['action&lt; ranges::v3::action::shuffle_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3aslice_5ffn_20_3e',['action&lt; ranges::v3::action::slice_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_3c_20ranges_3a_3av3_3a_3aaction_3a_3asort_5ffn_20_3e',['action&lt; ranges::v3::action::sort_fn &gt;',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],

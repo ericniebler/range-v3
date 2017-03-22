@@ -20,6 +20,7 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
     [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],
     [ "bounded.hpp", "bounded_8hpp.html", "bounded_8hpp" ],
     [ "c_str.hpp", "c__str_8hpp.html", null ],
+    [ "cartesian_product.hpp", "cartesian__product_8hpp.html", "cartesian__product_8hpp" ],
     [ "chunk.hpp", "chunk_8hpp.html", [
       [ "range_const_iterator< ::ranges::v3::chunk_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::chunk_view< Ts... > const >()> >", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1chunk__view_3_01_ts_8_8_8_01_4_00_5e405414c3919bce4de2d9ec90d947ec.html", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1chunk__view_3_01_ts_8_8_8_01_4_00_5e405414c3919bce4de2d9ec90d947ec" ],
       [ "range_mutable_iterator< ::ranges::v3::chunk_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::chunk_view< Ts... > >()> >", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1chunk__view_3_01_ts_8_8_8_01_4_0723755abb2e66e2dd9a5f2ef2daeede4.html", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1chunk__view_3_01_ts_8_8_8_01_4_0723755abb2e66e2dd9a5f2ef2daeede4" ],
@@ -98,12 +99,11 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
       [ "filter_fn", "structranges_1_1v3_1_1view_1_1filter__fn.html", "structranges_1_1v3_1_1view_1_1filter__fn" ]
     ] ],
     [ "for_each.hpp", "view_2for__each_8hpp.html", [
-      [ "range_const_iterator< ::ranges::v3::for_each_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::for_each_view< Ts... > const >()> >", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_451fa113bf0e59f399c763d2b38c9c5d9.html", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_451fa113bf0e59f399c763d2b38c9c5d9" ],
-      [ "range_mutable_iterator< ::ranges::v3::for_each_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::for_each_view< Ts... > >()> >", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01b964716d1b12cc08986ef3ea41df54e2.html", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01b964716d1b12cc08986ef3ea41df54e2" ],
-      [ "range_size< ::ranges::v3::for_each_view< Ts... > >", "structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_4_01_4.html", null ],
-      [ "range_size< ::ranges::v3::for_each_view< Ts... > const >", "structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_4_01const_01_4.html", null ],
-      [ "range_value< ::ranges::v3::for_each_view< Ts... > >", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_4_01_4.html", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1for__each__view_3_01_ts_8_8_8_01_4_01_4" ],
-      [ "for_each_fn", "structranges_1_1v3_1_1view_1_1for__each__fn.html", "structranges_1_1v3_1_1view_1_1for__each__fn" ]
+      [ "lazy_yield_if_fn", "structranges_1_1v3_1_1lazy__yield__if__fn.html", "structranges_1_1v3_1_1lazy__yield__if__fn" ],
+      [ "for_each_fn", "structranges_1_1v3_1_1view_1_1for__each__fn.html", "structranges_1_1v3_1_1view_1_1for__each__fn" ],
+      [ "yield_fn", "structranges_1_1v3_1_1yield__fn.html", "structranges_1_1v3_1_1yield__fn" ],
+      [ "yield_from_fn", "structranges_1_1v3_1_1yield__from__fn.html", "structranges_1_1v3_1_1yield__from__fn" ],
+      [ "yield_if_fn", "structranges_1_1v3_1_1yield__if__fn.html", "structranges_1_1v3_1_1yield__if__fn" ]
     ] ],
     [ "generate.hpp", "view_2generate_8hpp.html", null ],
     [ "generate_n.hpp", "view_2generate__n_8hpp.html", [

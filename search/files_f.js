@@ -16,7 +16,7 @@ var searchData=
   ['replace_5fcopy_2ehpp',['replace_copy.hpp',['../replace__copy_8hpp.html',1,'']]],
   ['replace_5fcopy_5fif_2ehpp',['replace_copy_if.hpp',['../replace__copy__if_8hpp.html',1,'']]],
   ['replace_5fif_2ehpp',['replace_if.hpp',['../algorithm_2replace__if_8hpp.html',1,'(Global Namespace)'],['../view_2replace__if_8hpp.html',1,'(Global Namespace)']]],
-  ['reverse_2ehpp',['reverse.hpp',['../algorithm_2reverse_8hpp.html',1,'(Global Namespace)'],['../view_2reverse_8hpp.html',1,'(Global Namespace)']]],
+  ['reverse_2ehpp',['reverse.hpp',['../action_2reverse_8hpp.html',1,'(Global Namespace)'],['../algorithm_2reverse_8hpp.html',1,'(Global Namespace)'],['../view_2reverse_8hpp.html',1,'(Global Namespace)']]],
   ['reverse_5fcopy_2ehpp',['reverse_copy.hpp',['../reverse__copy_8hpp.html',1,'']]],
   ['rotate_2ehpp',['rotate.hpp',['../rotate_8hpp.html',1,'']]],
   ['rotate_5fcopy_2ehpp',['rotate_copy.hpp',['../rotate__copy_8hpp.html',1,'']]]

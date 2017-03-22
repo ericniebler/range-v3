@@ -34,6 +34,5 @@ var searchData=
   ['overload_5ffn',['overload_fn',['../structranges_1_1v3_1_1overload__fn.html',1,'ranges::v3']]],
   ['overloaded',['overloaded',['../structranges_1_1v3_1_1overloaded.html',1,'ranges::v3::overloaded&lt; Fns &gt;'],['../structranges_1_1v3_1_1overloaded_3_01_first_00_01_rest_8_8_8_01_4.html#a03a85cb0142df34297b067dd99540835',1,'ranges::v3::overloaded&lt; First, Rest... &gt;::overloaded()']]],
   ['overloaded_3c_20first_2c_20rest_2e_2e_2e_20_3e',['overloaded&lt; First, Rest... &gt;',['../structranges_1_1v3_1_1overloaded_3_01_first_00_01_rest_8_8_8_01_4.html',1,'ranges::v3']]],
-  ['overloaded_3c_3e',['overloaded&lt;&gt;',['../structranges_1_1v3_1_1overloaded_3_4.html',1,'ranges::v3']]],
-  ['reference_5fwrapper_3c_20t_20_3e',['reference_wrapper&lt; T &gt;',['../group__group-utility.html#gaa3c6e2f36b5694a76ae260dece0ff2cb',1,'ranges::v3::reference_wrapper']]]
+  ['overloaded_3c_3e',['overloaded&lt;&gt;',['../structranges_1_1v3_1_1overloaded_3_4.html',1,'ranges::v3']]]
 ];

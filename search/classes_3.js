@@ -11,6 +11,7 @@ var searchData=
   ['delimit_5ffn',['delimit_fn',['../structranges_1_1v3_1_1view_1_1delimit__fn.html',1,'ranges::v3::view']]],
   ['delimit_5fimpl_5ffn',['delimit_impl_fn',['../structranges_1_1v3_1_1view_1_1delimit__impl__fn.html',1,'ranges::v3::view']]],
   ['delimit_5fview',['delimit_view',['../structranges_1_1v3_1_1delimit__view.html',1,'ranges::v3']]],
+  ['dereference_5ffn',['dereference_fn',['../structranges_1_1v3_1_1dereference__fn.html',1,'ranges::v3']]],
   ['derivedfrom',['DerivedFrom',['../structranges_1_1v3_1_1concepts_1_1_derived_from.html',1,'ranges::v3::concepts']]],
   ['destructible',['Destructible',['../structranges_1_1v3_1_1concepts_1_1_destructible.html',1,'ranges::v3::concepts']]],
   ['difference_5ftype',['difference_type',['../structranges_1_1v3_1_1difference__type.html',1,'ranges::v3']]],

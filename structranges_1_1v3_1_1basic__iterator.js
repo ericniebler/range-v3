@@ -34,6 +34,7 @@ var structranges_1_1v3_1_1basic__iterator =
     [ "operator->", "structranges_1_1v3_1_1basic__iterator.html#a35668f66fe97edd8a381176a1639d4be", null ],
     [ "operator->", "structranges_1_1v3_1_1basic__iterator.html#a3498c1c82d7e9e692954af648820c5ed", null ],
     [ "operator=", "structranges_1_1v3_1_1basic__iterator.html#af2c6c8bea40ea4080addc6e2a6053d06", null ],
+    [ "operator=", "structranges_1_1v3_1_1basic__iterator.html#aef80a209e9058418ba228f9e928049b6", null ],
     [ "operator[]", "structranges_1_1v3_1_1basic__iterator.html#a39dbb7d2d401a2c53f4d0466636a7213", null ],
     [ "basic_iterator", "structranges_1_1v3_1_1basic__iterator.html#a7c9449b1177d2e2e405cf579b0e18821", null ],
     [ "basic_iterator", "structranges_1_1v3_1_1basic__iterator.html#ad6c87e02a9c5a64d2fd0bcf77f7d7fad", null ],
