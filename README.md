@@ -65,6 +65,10 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.0** March 22, 2017
+  New in this release:
+  - `view::cartesian_product`
+  - `action::reverse`
 * **0.2.0** March 13, 2017
   Bring many interfaces into sync with the Ranges TS.
   - Many interfaces are simply renamed. The following table shows the old names
