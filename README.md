@@ -65,7 +65,7 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
-* **0.2.0** March 22, 2017
+* **0.2.1** March 22, 2017
   New in this release:
   - `view::cartesian_product`
   - `action::reverse`
