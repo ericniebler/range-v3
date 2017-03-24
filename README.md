@@ -93,7 +93,7 @@ Release Notes:
     are different. Use `common_iterator_t<I, S>` to get the old behavior (i.e., if the two types are the same, it is an alias for `I`; otherwise, it is
     `common_iterator<I, S>`).
   - The following iterator adaptors now work with iterators that return proxies
-    from their dereference operator (i.e., `operator*`):
+    from their postfix increment operator (i.e., `operator++(int)`):
     * `common_iterator`
     * `counted_iterator`
   - The following customization points are now implemented per the Ranges TS

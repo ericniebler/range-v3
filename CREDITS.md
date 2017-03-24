@@ -5,7 +5,7 @@ In range-v3, I have integrated many ideas that come from other people. I would b
 
 | Contributor                 | Contribution |
 |-----------------------------|------|
-| Jeremy Seik                 | Container algorithms (in Boost pre-history), Boost.Iterators |
+| Jeremy Siek                 | Container algorithms (in Boost pre-history), Boost.Iterators |
 | Thorston Ottoson            | Boost.Range v1 |
 | Neil Groves                 | Boost.Range v2 |
 | David Abrahams, Thomas Witt | Boost.Iterators, Sentinels |
