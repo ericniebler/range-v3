@@ -27,7 +27,7 @@ An Abreviated History
 
 I came to Boost in the early 2000's. By that time, Boost already had a Range library (Thorston Ottoson's). At this time, Boost.Range was little more that the `begin` and `end` free functions, and range-based overloads of the STL algorithms that dispatched to the iterator-based overloads in namespace `std`.
 
-Boost also already had the Iterators library by David Abrahams and Jeremy Seik. This library had iterator adaptors like `filter_iterator` and `transform_iterator`.
+Boost also already had the Iterators library by David Abrahams and Jeremy Siek. This library had iterator adaptors like `filter_iterator` and `transform_iterator`.
 
 **Range v2**
 
