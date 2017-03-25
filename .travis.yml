@@ -132,7 +132,7 @@ matrix:
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On HEADERS=On CLANG_MODULES=Off BOOST=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z ASAN=Off LIBCXX=On HEADERS=On CLANG_MODULES=Off BOOST=Off
       os: linux
       addons: *clang5
 
