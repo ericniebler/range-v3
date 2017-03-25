@@ -14,7 +14,7 @@ In range-v3, I have integrated many ideas that come from other people. I would b
 | Andrew Sutton               | C++ Concepts "Lite", Origin Libraries, Palo Alto Report |
 | Doug Gregor                 | C++0x Concepts |
 | Casey Carter                | Co-author and Editor, Ranges TS; major code contributions |
-| GonzaloBG                   | Many ideas, bug reports, and code contributions |
+| Gonzalo Brito Gadeschi      | Many ideas, bug reports, and code contributions |
 | Alexander Stepanov          | STL, Generic Programming, Iterators, Elements of Programming, etc. |
 | Bjarne Stroustrup           | A tireless effort to add proper support for Generic Programming to C++, early support for my Ranges proposal |
 | Herb Sutter                 | Early support for my Ranges proposal |
