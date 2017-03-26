@@ -73,6 +73,10 @@ namespace ranges
             {
                 return 0u;
             }
+            constexpr T const *data() const
+            {
+                return nullptr;
+            }
         };
 
         namespace view
