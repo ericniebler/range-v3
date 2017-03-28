@@ -326,7 +326,7 @@ namespace ranges
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(std::forward<Rngs>(rngs))...
+                        all(static_cast<Rngs&&>(rngs))...
                     };
                 }
 
@@ -375,7 +375,7 @@ namespace ranges
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(std::forward<Rngs>(rngs))...
+                        all(static_cast<Rngs&&>(rngs))...
                     };
                 }
 

@@ -146,7 +146,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(static_cast<Rng&&>(rng)), n};
                 }
 
                 // For the sake of better error messages:

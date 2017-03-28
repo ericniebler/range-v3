@@ -201,8 +201,8 @@ namespace ranges
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(std::forward<Rng1>(rng1)),
-                            all(std::forward<Rng2>(rng2)),
+                    return {all(static_cast<Rng1&&>(rng1)),
+                            all(static_cast<Rng2&&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -363,8 +363,8 @@ namespace ranges
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(std::forward<Rng1>(rng1)),
-                            all(std::forward<Rng2>(rng2)),
+                    return {all(static_cast<Rng1&&>(rng1)),
+                            all(static_cast<Rng2&&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -573,8 +573,8 @@ namespace ranges
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(std::forward<Rng1>(rng1)),
-                            all(std::forward<Rng2>(rng2)),
+                    return {all(static_cast<Rng1&&>(rng1)),
+                            all(static_cast<Rng2&&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -793,8 +793,8 @@ namespace ranges
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(std::forward<Rng1>(rng1)),
-                            all(std::forward<Rng2>(rng2)),
+                    return {all(static_cast<Rng1&&>(rng1)),
+                            all(static_cast<Rng2&&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};

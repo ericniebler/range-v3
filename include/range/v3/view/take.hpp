@@ -104,7 +104,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(!SizedRange<Rng>() && !is_infinite<Rng>())>
                 static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(static_cast<Rng&&>(rng)), n};
                 }
 
                 template<typename Rng,
@@ -113,7 +113,7 @@ namespace ranges
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_exactly(
-                        std::forward<Rng>(rng),
+                        static_cast<Rng&&>(rng),
                         is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
 
@@ -139,7 +139,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_fn::invoke_(std::forward<Rng>(rng), n)
+                    take_fn::invoke_(static_cast<Rng&&>(rng), n)
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

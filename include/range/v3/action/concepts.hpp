@@ -139,7 +139,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        detail::is_lvalue_container_like(std::forward<T>(t))
+                        detail::is_lvalue_container_like(static_cast<T&&>(t))
                     ));
             };
         }

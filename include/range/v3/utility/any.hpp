@@ -108,7 +108,7 @@ namespace ranges
             template<typename TRef, typename T = detail::decay_t<TRef>,
                 CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
             any(TRef &&t)
-              : ptr_(new impl<T>(std::forward<TRef>(t)))
+              : ptr_(new impl<T>(static_cast<TRef&&>(t)))
             {}
             any(any &&) noexcept = default;
             any(any const &that)
@@ -124,7 +124,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
             any &operator=(TRef &&t)
             {
-                any{std::forward<TRef>(t)}.swap(*this);
+                any{static_cast<TRef&&>(t)}.swap(*this);
                 return *this;
             }
             void clear() noexcept

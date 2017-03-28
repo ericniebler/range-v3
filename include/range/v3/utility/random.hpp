@@ -144,7 +144,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR std::uint32_t hash(T && value)
                 {
                     auto hasher = std::hash<uncvref_t<T>>{};
-                    return randutils::crushto32(hasher(detail::forward<T>(value)));
+                    return randutils::crushto32(hasher(static_cast<T&&>(value)));
                 }
 
                 constexpr std::uint32_t fnv(std::uint32_t hash, const char* pos)

@@ -131,13 +131,13 @@ namespace ranges
                     CONCEPT_REQUIRES_(Range<Rng>() && !BoundedRange<Rng>())>
                 bounded_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return bounded_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return bounded_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Range<Rng>() && BoundedRange<Rng>())>
                 all_t<Rng> operator()(Rng && rng) const
                 {
-                    return all(std::forward<Rng>(rng));
+                    return all(static_cast<Rng&&>(rng));
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

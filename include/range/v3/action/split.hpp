@@ -73,7 +73,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(view::split_fn::SubRangeConcept<Rng, Sub>())>
                 std::vector<split_value_t<Rng>> operator()(Rng && rng, Sub && sub) const
                 {
-                    return view::split(rng, std::forward<Sub>(sub))
+                    return view::split(rng, static_cast<Sub&&>(sub))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
 

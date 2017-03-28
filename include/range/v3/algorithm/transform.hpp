@@ -129,7 +129,7 @@ namespace ranges
             operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
-                return (*this)(begin(rng0), end(rng0), std::forward<I1Ref>(begin1), unreachable{},
+                return (*this)(begin(rng0), end(rng0), static_cast<I1Ref&&>(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
         };

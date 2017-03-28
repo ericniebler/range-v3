@@ -325,7 +325,7 @@ namespace ranges
                 {
                     static_assert(meta::and_c<(bool)InputRange<Rngs>()...>::value,
                         "Expecting Input Ranges");
-                    return concat_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
+                    return concat_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
                 }
             };
 
