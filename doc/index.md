@@ -337,6 +337,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Given a range of ranges, join them into a flattened sequence of elements. Optionally, you can specify a value or a range to be inserted between each source range.</DD>
 <DT>\link ranges::v3::view::keys_fn `view::keys`\endlink</DT>
   <DD>Given a range of `pair`s (like a `std::map`), return a new range consisting of just the first element of the `pair`.</DD>
+<DT>\link ranges::v3::view::linear_distribute_fn `view::linear_distribute`\endlink</DT>
+  <DD>Distributes `n` values linearly in the closed interval `[from, to]` (the end points are always included). If `from == to`, returns `n`-times `to`, and if `n == 1` it returns `to`.</DD>
 <DT>\link ranges::v3::view::move_fn `view::move`\endlink</DT>
   <DD>Given a source range, return a new range where each element has been has been cast to an rvalue reference.</DD>
 <DT>\link ranges::v3::view::partial_sum_fn `view::partial_sum`\endlink</DT>

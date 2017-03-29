@@ -61,6 +61,9 @@ add_test(test.view.iota, view.iota)
 add_executable(view.join join.cpp)
 add_test(test.view.join, view.join)
 
+add_executable(view.linear_distribute linear_distribute.cpp)
+add_test(test.view.linear_distribute, view.linear_distribute)
+
 add_executable(view.map keys_value.cpp)
 add_test(test.view.map, view.map)
 
