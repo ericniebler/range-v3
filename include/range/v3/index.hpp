@@ -12,56 +12,55 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_AT_HPP
-#define RANGES_V3_AT_HPP
+#ifndef RANGES_V3_INDEX_HPP
+#define RANGES_V3_INDEX_HPP
 
-#include <stdexcept>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/index.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// Checked indexed range access.
+        /// \cond
+        namespace index_detail
+        {
+            template<typename Rng, typename T>
+            using Concept = meta::and_<
+                RandomAccessRange<Rng>,
+                // Only evaluate this one if the previous one succeeded
+                meta::lazy::invoke<
+                    meta::compose<
+                        meta::bind_front<meta::quote<ConvertibleTo>, T>,
+                        meta::quote<range_difference_type_t>>,
+                    Rng>>;
+        }  // namespace index_detail
+        /// \endcond
+
+        /// Unchecked indexed range access.
         ///
         /// \ingroup group-core
-        struct at_fn
+        struct index_fn
         {
             /// \return `begin(rng)[n]`
             template<typename Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && SizedRange<Rng>())>
-            RANGES_CXX14_CONSTEXPR
-            auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
-                decltype(begin(rng)[n])
-            {
-                if (n >= ranges::distance(rng))
-                {
-                    throw std::out_of_range("ranges::at");
-                }
-                return begin(rng)[n];
-            }
-            /// \return `begin(rng)[n]`
-            template<typename Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && !SizedRange<Rng>())>
-            RANGES_DEPRECATED(
-                "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
-                "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
-                "Use ranges::index for unchecked access instead!")
+                CONCEPT_REQUIRES_(RandomAccessRange<Rng>())>
             RANGES_CXX14_CONSTEXPR
             auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                index(std::forward<Rng>(rng), n)
-            )
-
+                noexcept(noexcept(ranges::begin(rng)[n]) &&
+                         noexcept(n < ranges::distance(rng)))
+              ->
+                decltype(ranges::begin(rng)[n])
+            {
+                RANGES_EXPECT(!SizedRange<Rng>() || n < ranges::distance(rng));
+                return ranges::begin(rng)[n];
+            }
             /// \return `begin(rng)[n]`
-            template<typename Rng, typename T, typename Self = at_fn,
+            template<typename Rng, typename T, typename Self = index_fn,
                      typename D = range_difference_type_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() &&
                                   !Same<uncvref_t<T>, D>() &&
@@ -79,19 +78,19 @@ namespace ranges
             void operator()(R&&, T&&) const
             {
                 CONCEPT_ASSERT_MSG(RandomAccessRange<R>(),
-                    "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
+                    "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
                 CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<R>>(),
-                    "ranges::at(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
+                    "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             }
-          /// \endcond
+            /// \endcond
         };
 
-        /// Checked indexed range access.
+        /// Unchecked indexed range access.
         ///
         /// \ingroup group-core
-        /// \sa `at_fn`
-        RANGES_INLINE_VARIABLE(at_fn, at)
+        /// \sa `index_fn`
+        RANGES_INLINE_VARIABLE(index_fn, index)
     }
 }
 
-#endif
+#endif  // RANGES_V3_INDEX_HPP
