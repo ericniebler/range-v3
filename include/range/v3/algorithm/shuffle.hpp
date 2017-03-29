@@ -64,7 +64,7 @@ namespace ranges
             safe_iterator_t<Rng>
             operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             {
-                return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
+                return (*this)(begin(rng), end(rng), static_cast<Gen&&>(rand));
             }
         };
 

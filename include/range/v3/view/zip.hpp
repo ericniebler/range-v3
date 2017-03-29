@@ -126,7 +126,7 @@ namespace ranges
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_<Range<Rngs>...>());
-                    return zip_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
+                    return zip_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

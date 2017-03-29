@@ -90,7 +90,7 @@ namespace ranges
                 indirect_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(InputRange<Rng>());
-                    return indirect_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return indirect_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

@@ -177,7 +177,7 @@ namespace ranges
                     range_difference_type_t<Sub> len_;
                     subrange_pred() = default;
                     subrange_pred(Sub && sub)
-                      : sub_(all(std::forward<Sub>(sub))), len_(distance(sub_))
+                      : sub_(all(static_cast<Sub&&>(sub))), len_(distance(sub_))
                     {}
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
@@ -228,25 +228,25 @@ namespace ranges
                     CONCEPT_REQUIRES_(FunctionConcept<Rng, Fun>())>
                 split_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(PredicateConcept<Rng, Fun>())>
                 split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
+                    return {all(static_cast<Rng&&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ElementConcept<Rng>())>
                 split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng && rng, range_value_type_t<Rng> val) const
                 {
-                    return {all(std::forward<Rng>(rng)), {std::move(val)}};
+                    return {all(static_cast<Rng&&>(rng)), {std::move(val)}};
                 }
                 template<typename Rng, typename Sub,
                     CONCEPT_REQUIRES_(SubRangeConcept<Rng, Sub>())>
                 split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng && rng, Sub && sub) const
                 {
-                    return {all(std::forward<Rng>(rng)), {std::forward<Sub>(sub)}};
+                    return {all(static_cast<Rng&&>(rng)), {static_cast<Sub&&>(sub)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

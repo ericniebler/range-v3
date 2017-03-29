@@ -65,8 +65,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Gen>())>
                 Rng operator()(Rng && rng, Gen && gen) const
                 {
-                    ranges::shuffle(rng, std::forward<Gen>(gen));
-                    return std::forward<Rng>(rng);
+                    ranges::shuffle(rng, static_cast<Gen&&>(gen));
+                    return static_cast<Rng&&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

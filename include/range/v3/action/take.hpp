@@ -66,7 +66,7 @@ namespace ranges
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
-                    return std::forward<Rng>(rng);
+                    return static_cast<Rng&&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

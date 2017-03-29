@@ -57,7 +57,7 @@ namespace ranges
                 Rng operator()(Rng && rng) const
                 {
                     ranges::reverse(rng);
-                    return std::forward<Rng>(rng);
+                    return static_cast<Rng&&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

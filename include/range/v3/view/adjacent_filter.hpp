@@ -106,7 +106,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
                 adjacent_filter_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(pred)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,

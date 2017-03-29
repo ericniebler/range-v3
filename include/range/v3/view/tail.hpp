@@ -51,7 +51,7 @@ namespace ranges
 
             tail_view() = default;
             tail_view(Rng rng)
-              : rng_(std::forward<Rng>(rng))
+              : rng_(static_cast<Rng&&>(rng))
             {
                 CONCEPT_ASSERT(InputRange<Rng>());
                 RANGES_EXPECT(!ForwardRange<Rng>() || !empty(rng_));
@@ -100,7 +100,7 @@ namespace ranges
                 {
                     static_assert(range_cardinality<Rng>::value != 0,
                         "Can't take the tail of an empty range.");
-                    return tail_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return tail_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

@@ -449,7 +449,7 @@ namespace ranges
             view_adaptor &operator=(view_adaptor &&) = default;
             view_adaptor &operator=(view_adaptor const &) = default;
             constexpr view_adaptor(BaseRng && rng)
-              : rng_(view::all(detail::forward<BaseRng>(rng)))
+              : rng_(view::all(static_cast<BaseRng&&>(rng)))
             {}
             base_range_t & base()
             {

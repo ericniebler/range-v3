@@ -126,9 +126,9 @@ namespace ranges
                 replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
                 operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
-                    return {all(std::forward<Rng>(rng)),
-                            {std::forward<Val1>(old_value),
-                             std::forward<Val2>(new_value)}};
+                    return {all(static_cast<Rng&&>(rng)),
+                            {static_cast<Val1&&>(old_value),
+                             static_cast<Val2&&>(new_value)}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting

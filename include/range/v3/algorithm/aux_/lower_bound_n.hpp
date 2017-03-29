@@ -37,7 +37,7 @@ namespace ranges
                 template<typename T>
                 bool operator()(T&& t) const
                 {
-                    return invoke(pred_, std::forward<T>(t), val_);
+                    return invoke(pred_, static_cast<T&&>(t), val_);
                 }
             };
 

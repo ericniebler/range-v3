@@ -85,7 +85,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 move_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return move_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return move_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

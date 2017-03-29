@@ -200,7 +200,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
                 stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> step) const
                 {
-                    return {all(std::forward<Rng>(rng)), step};
+                    return {all(static_cast<Rng&&>(rng)), step};
                 }
 
                 // For the purpose of better error messages:

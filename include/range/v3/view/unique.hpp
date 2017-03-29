@@ -41,7 +41,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 unique_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return {all(std::forward<Rng>(rng)), not_equal_to{}};
+                    return {all(static_cast<Rng&&>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
