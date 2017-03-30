@@ -65,6 +65,13 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.2** March 30, 2017
+  New in this release:
+  - `view::linear_distribute(from,to,n)` - A view of `n` elements between `from` and `to`, distributed evenly.
+  - `view::indices(n)` - A view of the indices `[0,1,2...n-1]`.
+  - `view::closed_indices(n)` - A view of the indices `[0,1,2...n]`.
+
+  This release deprecates `view::ints(n)` as confusing to new users.
 * **0.2.1** March 22, 2017
   New in this release:
   - `view::cartesian_product`
