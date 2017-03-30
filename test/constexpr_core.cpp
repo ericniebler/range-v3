@@ -251,13 +251,12 @@ RANGES_CXX14_CONSTEXPR auto test_init_list() -> bool {
     if (!test_crits(a)) { return false; }
     if (!test_non_member_f(a)) { return false; }
 
-    // std::initializer_list live in std:: so ADL will always pick std::swap
-    // std::initializer_list<int> b{5, 6, 7, 8};
-    // ranges::swap(a, b);
-    // if (ranges::index(a, 0) != 5 || ranges::index(b, 0) != 1
-    //     || ranges::index(a, 3) != 8 || ranges::index(b, 3) != 4) {
-    //     return false;
-    // }
+    std::initializer_list<int> b{5, 6, 7, 8};
+    ranges::swap(a, b);
+    if (ranges::at(a, 0) != 5 || ranges::at(b, 0) != 1
+        || ranges::at(a, 3) != 8 || ranges::at(b, 3) != 4) {
+        return false;
+    }
 
     return true;
 }
