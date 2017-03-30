@@ -114,14 +114,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac603c9a146ecb48ac21108a54b929cdd"><td class="memItemLeft" align="right" valign="top"><a id="ac603c9a146ecb48ac21108a54b929cdd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>action</b> (Action a)</td></tr>
 <tr class="separator:ac603c9a146ecb48ac21108a54b929cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a319be93726daebc228f83347fd479572"><td class="memTemplParams" colspan="2"><a id="a319be93726daebc228f83347fd479572"></a>
+<tr class="memitem:a5165ec957fcd266faab67123b3b067b5"><td class="memTemplParams" colspan="2"><a id="a5165ec957fcd266faab67123b3b067b5"></a>
 template&lt;typename Rng , typename... Rest, requires  = (Range&lt;Rng &amp;&gt;() &amp;&amp; Invocable&lt;Action const&amp;, Rng &amp;, Rest...&gt;())&gt; </td></tr>
-<tr class="memitem:a319be93726daebc228f83347fd479572"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, Rest &amp;&amp;... rest) const -&gt; decltype(invoke(action_, rng, detail::forward&lt; Rest &gt;(rest)...))</td></tr>
-<tr class="separator:a319be93726daebc228f83347fd479572"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41d86e5d4767d26e809fb65f3c1de52c"><td class="memTemplParams" colspan="2"><a id="a41d86e5d4767d26e809fb65f3c1de52c"></a>
+<tr class="memitem:a5165ec957fcd266faab67123b3b067b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, Rest &amp;&amp;... rest) const -&gt; decltype(invoke(action_, rng, static_cast&lt; Rest &amp;&amp;&gt;(rest)...))</td></tr>
+<tr class="separator:a5165ec957fcd266faab67123b3b067b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691ccdd6bea9bb6a2b39d5bb76b997fe"><td class="memTemplParams" colspan="2"><a id="a691ccdd6bea9bb6a2b39d5bb76b997fe"></a>
 template&lt;typename T , typename... Rest, typename A  = Action&gt; </td></tr>
-<tr class="memitem:a41d86e5d4767d26e809fb65f3c1de52c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T &amp;&amp;t, Rest &amp;&amp;... rest) const -&gt; decltype(make_action(<a class="el" href="structranges_1_1v3_1_1action_1_1action__access_1_1impl.html">action_access::impl</a>&lt; A &gt;::bind(action_, detail::forward&lt; T &gt;(t), detail::forward&lt; Rest &gt;(rest)...)))</td></tr>
-<tr class="separator:a41d86e5d4767d26e809fb65f3c1de52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691ccdd6bea9bb6a2b39d5bb76b997fe"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (T &amp;&amp;t, Rest &amp;&amp;... rest) const -&gt; decltype(make_action(<a class="el" href="structranges_1_1v3_1_1action_1_1action__access_1_1impl.html">action_access::impl</a>&lt; A &gt;::bind(action_, static_cast&lt; T &amp;&amp;&gt;(t), static_cast&lt; Rest &amp;&amp;&gt;(rest)...)))</td></tr>
+<tr class="separator:a691ccdd6bea9bb6a2b39d5bb76b997fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

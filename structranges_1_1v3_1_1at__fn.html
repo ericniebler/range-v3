@@ -91,26 +91,44 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1at__fn.html','')
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structranges_1_1v3_1_1at__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ranges::v3::at_fn Struct Reference<div class="ingroups"><a class="el" href="group__group-core.html">Core</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
+<div class="textblock"><p>Checked indexed range access. </p>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; SizedRange&lt;Rng&gt;())&gt; </td></tr>
 <tr class="memitem:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#a28c106fd71d5e560493c1cd2e1d24deb">operator()</a> (Rng &amp;&amp;rng, range_difference_type_t&lt; Rng &gt; n) const -&gt; decltype(begin(rng)[n])</td></tr>
 <tr class="separator:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; !SizedRange&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#ae50b4b10b2ab6160ca9425cd461fbe07">operator()</a> (Rng &amp;&amp;rng, range_difference_type_t&lt; Rng &gt; n) const noexcept(noexcept(decltype(index(std::forward&lt; Rng &gt;(rng), n))(index(std::forward&lt; Rng &gt;(rng), n)))) -&gt; decltype(index(std::forward&lt; Rng &gt;(rng), n))</td></tr>
+<tr class="separator:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0895b764afde739050e08bca4e29387"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename T , typename Self  = at_fn, typename D  = range_difference_type_t&lt;Rng&gt;, requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp;                                  !Same&lt;uncvref_t&lt;T&gt;, D&gt;() &amp;&amp;                                  ConvertibleTo&lt;T, D&gt;())&gt; </td></tr>
+<tr class="memitem:af0895b764afde739050e08bca4e29387"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#af0895b764afde739050e08bca4e29387">operator()</a> (Rng &amp;&amp;rng, T &amp;&amp;t) const noexcept(noexcept(decltype(Self{}((Rng &amp;&amp;) rng, static_cast&lt; D &gt;((T &amp;&amp;) t)))(Self{}((Rng &amp;&amp;) rng, static_cast&lt; D &gt;((T &amp;&amp;) t))))) -&gt; decltype(Self</td></tr>
+<tr class="separator:af0895b764afde739050e08bca4e29387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42f1a308c44fec01949be6d5d607b293"><td class="memItemLeft" align="right" valign="top"><a id="a42f1a308c44fec01949be6d5d607b293"></a>
+Rng&#160;</td><td class="memItemRight" valign="bottom"><b>static_cast</b> ((T &amp;&amp;) t)))</td></tr>
+<tr class="separator:a42f1a308c44fec01949be6d5d607b293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a3e58049bc55d1113277783312ffa4c93"><td class="memItemLeft" align="right" valign="top"><a id="a3e58049bc55d1113277783312ffa4c93"></a>
+Rng &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>rng</b></td></tr>
+<tr class="separator:a3e58049bc55d1113277783312ffa4c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a28c106fd71d5e560493c1cd2e1d24deb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28c106fd71d5e560493c1cd2e1d24deb">&#9670;&nbsp;</a></span>operator()()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a28c106fd71d5e560493c1cd2e1d24deb">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;())&gt; </div>
+template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; SizedRange&lt;Rng&gt;())&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto ranges::v3::at_fn::operator() </td>
@@ -134,7 +152,85 @@ template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;())&gt; </di
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>begin(rng)[n]</code> </dd></dl>
 
-<p class="reference">References <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>.</p>
+<p class="reference">References <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>, and <a class="el" href="group__group-core.html#gae77f7b6b33494f548b1bba9cf7a30985">ranges::v3::distance</a>.</p>
+
+</div>
+</div>
+<a id="ae50b4b10b2ab6160ca9425cd461fbe07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae50b4b10b2ab6160ca9425cd461fbe07">&#9670;&nbsp;</a></span>operator()() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; !SizedRange&lt;Rng&gt;())&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ranges::v3::at_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Rng &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rng</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">range_difference_type_t&lt; Rng &gt;&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; decltype( index(std::forward&lt;Rng&gt;(rng), n) )   </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>begin(rng)[n]</code> </dd></dl>
+
+</div>
+</div>
+<a id="af0895b764afde739050e08bca4e29387"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0895b764afde739050e08bca4e29387">&#9670;&nbsp;</a></span>operator()() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng , typename T , typename Self  = at_fn, typename D  = range_difference_type_t&lt;Rng&gt;, requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp;                                  !Same&lt;uncvref_t&lt;T&gt;, D&gt;() &amp;&amp;                                  ConvertibleTo&lt;T, D&gt;())&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ranges::v3::at_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Rng &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rng</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; decltype( Self</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>begin(rng)[n]</code> </dd></dl>
 
 </div>
 </div>

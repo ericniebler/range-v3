@@ -122,6 +122,10 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
       [ "range_value< ::ranges::v3::group_by_view< Ts... > >", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1group__by__view_3_01_ts_8_8_8_01_4_01_4.html", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1group__by__view_3_01_ts_8_8_8_01_4_01_4" ],
       [ "group_by_fn", "structranges_1_1v3_1_1view_1_1group__by__fn.html", "structranges_1_1v3_1_1view_1_1group__by__fn" ]
     ] ],
+    [ "indices.hpp", "indices_8hpp.html", [
+      [ "closed_indices_fn", "structranges_1_1v3_1_1view_1_1closed__indices__fn.html", "structranges_1_1v3_1_1view_1_1closed__indices__fn" ],
+      [ "indices_fn", "structranges_1_1v3_1_1view_1_1indices__fn.html", "structranges_1_1v3_1_1view_1_1indices__fn" ]
+    ] ],
     [ "indirect.hpp", "indirect_8hpp.html", [
       [ "range_const_iterator< ::ranges::v3::indirect_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::indirect_view< Ts... > const >()> >", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1indirect__view_3_01_ts_8_8_8_01_4_378a276b0abe52fd321db1d13495394b.html", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1indirect__view_3_01_ts_8_8_8_01_4_378a276b0abe52fd321db1d13495394b" ],
       [ "range_mutable_iterator< ::ranges::v3::indirect_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::indirect_view< Ts... > >()> >", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1indirect__view_3_01_ts_8_8_8_01_1e463994e424bcacd278b48b7bee144f.html", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1indirect__view_3_01_ts_8_8_8_01_1e463994e424bcacd278b48b7bee144f" ],
@@ -141,6 +145,7 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
       [ "range_value< ::ranges::v3::join_view< Ts... > >", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1join__view_3_01_ts_8_8_8_01_4_01_4.html", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1join__view_3_01_ts_8_8_8_01_4_01_4" ],
       [ "join_fn", "structranges_1_1v3_1_1view_1_1join__fn.html", "structranges_1_1v3_1_1view_1_1join__fn" ]
     ] ],
+    [ "linear_distribute.hpp", "linear__distribute_8hpp.html", null ],
     [ "map.hpp", "map_8hpp.html", [
       [ "keys_fn", "structranges_1_1v3_1_1view_1_1keys__fn.html", "structranges_1_1v3_1_1view_1_1keys__fn" ],
       [ "values_fn", "structranges_1_1v3_1_1view_1_1values__fn.html", "structranges_1_1v3_1_1view_1_1values__fn" ]

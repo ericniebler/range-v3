@@ -89,10 +89,45 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1reference__wrapp
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structranges_1_1v3_1_1reference__wrapper-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ranges::v3::reference_wrapper&lt; T, RValue &gt; Struct Template Reference</div>  </div>
+<div class="title">ranges::v3::reference_wrapper&lt; T, RValue &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__group-utility.html">Utility</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ga8d020d2a04dc4a5cb9c5a4f689a0b1ca"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; RValue, T &amp;&amp;, T &amp; &gt;</td></tr>
+<tr class="separator:ga8d020d2a04dc4a5cb9c5a4f689a0b1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadf3b83bf730f8ff2ec819469deab4ef4"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = T</td></tr>
+<tr class="separator:gadf3b83bf730f8ff2ec819469deab4ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:gaa0af0b9165f518251dfeba0495e08c93"><td class="memItemLeft" align="right" valign="top">
+constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () const noexcept</td></tr>
+<tr class="separator:gaa0af0b9165f518251dfeba0495e08c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga15b96a32d7abe21e3a58621edd22f51f"><td class="memItemLeft" align="right" valign="top">
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>operator reference</b> () const noexcept</td></tr>
+<tr class="separator:ga15b96a32d7abe21e3a58621edd22f51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3c6e2f36b5694a76ae260dece0ff2cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa3c6e2f36b5694a76ae260dece0ff2cb">operator std::reference_wrapper&lt; T &gt;</a> () const noexcept</td></tr>
+<tr class="separator:gaa3c6e2f36b5694a76ae260dece0ff2cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0593bceb56c130fa42efa27c94530cea"><td class="memTemplParams" colspan="2">
+template&lt;typename ... Args&gt; </td></tr>
+<tr class="memitem:ga0593bceb56c130fa42efa27c94530cea"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Args &amp;&amp;...args) const noexcept(noexcept(decltype(invoke(std::declval&lt; reference &gt;(), std::declval&lt; Args &gt;()...))(invoke(std::declval&lt; reference &gt;(), std::declval&lt; Args &gt;()...)))) -&gt; decltype(invoke(std::declval&lt; reference &gt;(), std::declval&lt; Args &gt;()...))</td></tr>
+<tr class="separator:ga0593bceb56c130fa42efa27c94530cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8da7a87c5a38339fc3dd64a2daffb5e8"><td class="memItemLeft" align="right" valign="top">
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>reference_wrapper</b> (reference t) noexcept</td></tr>
+<tr class="separator:ga8da7a87c5a38339fc3dd64a2daffb5e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fbb15154c60df2705fb8cab403b55dc"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>reference_wrapper</b> (<a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; RValue, T &amp;, T &amp;&amp;&gt;)=delete</td></tr>
+<tr class="separator:ga4fbb15154c60df2705fb8cab403b55dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

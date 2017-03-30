@@ -239,10 +239,10 @@ template&lt;typename T , typename U  = meta::if_&lt;                std::is_lval
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga2e97de15d43ecc8788f50e3fc1ab469d"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::bind_forward</b> (<a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; T &gt;&gt; &amp;&amp;t) noexcept</td></tr>
 <tr class="separator:ga2e97de15d43ecc8788f50e3fc1ab469d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga9f43392d84b0de421c4a46d750a53f3f"><td class="memTemplParams" colspan="2">
 template&lt;typename Arg , typename Pipe , requires  = (!is_pipeable&lt;Arg&gt;() &amp;&amp; is_pipeable&lt;Pipe&gt;())&gt; </td></tr>
-<tr class="memitem:ga67df89791cd36fa8a858ede615c77ae8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
-<tr class="separator:ga67df89791cd36fa8a858ede615c77ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9f43392d84b0de421c4a46d750a53f3f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(static_cast&lt; Arg &amp;&amp;&gt;(arg), pipe))</td></tr>
+<tr class="separator:ga9f43392d84b0de421c4a46d750a53f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplParams" colspan="2">
 template&lt;typename Pipe0 , typename Pipe1 , requires  = (is_pipeable&lt;Pipe0&gt;() &amp;&amp; is_pipeable&lt;Pipe1&gt;())&gt; </td></tr>
 <tr class="memitem:ga8d2ca72a205107a619125498af79f14b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>

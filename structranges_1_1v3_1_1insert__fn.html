@@ -99,42 +99,42 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1insert__fn.html'
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af072a6352a7c7a562e2b33ea52122846"><td class="memTemplParams" colspan="2"><a id="af072a6352a7c7a562e2b33ea52122846"></a>
+<tr class="memitem:a0d7d3588b09f9e2213b741c161961d65"><td class="memTemplParams" colspan="2"><a id="a0d7d3588b09f9e2213b741c161961d65"></a>
 template&lt;typename Rng , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Constructible&lt;range_value_type_t&lt;Rng&gt;, T&gt;())&gt; </td></tr>
-<tr class="memitem:af072a6352a7c7a562e2b33ea52122846"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, T &amp;&amp;t) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), std::forward&lt; T &gt;(t)))</td></tr>
-<tr class="separator:af072a6352a7c7a562e2b33ea52122846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc67738ab7fb46931c11508a0a2c6f78"><td class="memTemplParams" colspan="2"><a id="abc67738ab7fb46931c11508a0a2c6f78"></a>
+<tr class="memitem:a0d7d3588b09f9e2213b741c161961d65"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
+<tr class="separator:a0d7d3588b09f9e2213b741c161961d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a079d695354581a9b3e6bb0e2bf77d61d"><td class="memTemplParams" colspan="2"><a id="a079d695354581a9b3e6bb0e2bf77d61d"></a>
 template&lt;typename Rng , typename Rng2 , requires  = (Range&lt;Rng&gt;() &amp;&amp; Range&lt;Rng2&gt;())&gt; </td></tr>
-<tr class="memitem:abc67738ab7fb46931c11508a0a2c6f78"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), std::forward&lt; Rng2 &gt;(rng2)))</td></tr>
-<tr class="separator:abc67738ab7fb46931c11508a0a2c6f78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a211693ceabb5f161a6fc34ae3a4bbcf3"><td class="memTemplParams" colspan="2"><a id="a211693ceabb5f161a6fc34ae3a4bbcf3"></a>
+<tr class="memitem:a079d695354581a9b3e6bb0e2bf77d61d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), static_cast&lt; Rng2 &amp;&amp;&gt;(rng2)))</td></tr>
+<tr class="separator:a079d695354581a9b3e6bb0e2bf77d61d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ba091692578212b30b19e2807f3a813"><td class="memTemplParams" colspan="2"><a id="a4ba091692578212b30b19e2807f3a813"></a>
 template&lt;typename Rng , typename T , requires  = (Range&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:a211693ceabb5f161a6fc34ae3a4bbcf3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), rng2))</td></tr>
-<tr class="separator:a211693ceabb5f161a6fc34ae3a4bbcf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7171e57273e518ff8e35ed554f27c21f"><td class="memTemplParams" colspan="2"><a id="a7171e57273e518ff8e35ed554f27c21f"></a>
+<tr class="memitem:a4ba091692578212b30b19e2807f3a813"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), rng2))</td></tr>
+<tr class="separator:a4ba091692578212b30b19e2807f3a813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ee98acbd30c00e5642d642edd4bb328"><td class="memTemplParams" colspan="2"><a id="a8ee98acbd30c00e5642d642edd4bb328"></a>
 template&lt;typename Rng , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
-<tr class="memitem:a7171e57273e518ff8e35ed554f27c21f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I i, S j) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), i, j))</td></tr>
-<tr class="separator:a7171e57273e518ff8e35ed554f27c21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f753b6cf700a9eb55b918fdf53b8d87"><td class="memTemplParams" colspan="2"><a id="a1f753b6cf700a9eb55b918fdf53b8d87"></a>
+<tr class="memitem:a8ee98acbd30c00e5642d642edd4bb328"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), i, j))</td></tr>
+<tr class="separator:a8ee98acbd30c00e5642d642edd4bb328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memTemplParams" colspan="2"><a id="aaed66d88374cc4b8c5e860f28f1dc559"></a>
 template&lt;typename Rng , typename I , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp;                        Constructible&lt;range_value_type_t&lt;Rng&gt;, T&gt;())&gt; </td></tr>
-<tr class="memitem:a1f753b6cf700a9eb55b918fdf53b8d87"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, T &amp;&amp;t) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), p, std::forward&lt; T &gt;(t)))</td></tr>
-<tr class="separator:a1f753b6cf700a9eb55b918fdf53b8d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc30cf9a93fdb938add58eff59a25151"><td class="memTemplParams" colspan="2"><a id="acc30cf9a93fdb938add58eff59a25151"></a>
+<tr class="memitem:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
+<tr class="separator:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memTemplParams" colspan="2"><a id="ab3cabf12e984723fea48f8cb28fe4ac2"></a>
 template&lt;typename Rng , typename I , typename Rng2 , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Range&lt;Rng2&gt;())&gt; </td></tr>
-<tr class="memitem:acc30cf9a93fdb938add58eff59a25151"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), p, std::forward&lt; Rng2 &gt;(rng2)))</td></tr>
-<tr class="separator:acc30cf9a93fdb938add58eff59a25151"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6e116d224d7ba2f792d542089bde2c2"><td class="memTemplParams" colspan="2"><a id="ae6e116d224d7ba2f792d542089bde2c2"></a>
+<tr class="memitem:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, static_cast&lt; Rng2 &amp;&amp;&gt;(rng2)))</td></tr>
+<tr class="separator:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6462a8dd7ec14b0881197543bd8520bf"><td class="memTemplParams" colspan="2"><a id="a6462a8dd7ec14b0881197543bd8520bf"></a>
 template&lt;typename Rng , typename I , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;())&gt; </td></tr>
-<tr class="memitem:ae6e116d224d7ba2f792d542089bde2c2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), p, rng2))</td></tr>
-<tr class="separator:ae6e116d224d7ba2f792d542089bde2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af713b7e9e9b81888231c71d2484d616d"><td class="memTemplParams" colspan="2"><a id="af713b7e9e9b81888231c71d2484d616d"></a>
+<tr class="memitem:a6462a8dd7ec14b0881197543bd8520bf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, rng2))</td></tr>
+<tr class="separator:a6462a8dd7ec14b0881197543bd8520bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memTemplParams" colspan="2"><a id="affda3e09b6f60255b9e09556fdd8a2e9"></a>
 template&lt;typename Rng , typename I , typename N , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Integral&lt;N&gt;()                        &amp;&amp; Constructible&lt;range_value_type_t&lt;Rng&gt;, T&gt;())&gt; </td></tr>
-<tr class="memitem:af713b7e9e9b81888231c71d2484d616d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, N n, T &amp;&amp;t) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), p, n, std::forward&lt; T &gt;(t)))</td></tr>
-<tr class="separator:af713b7e9e9b81888231c71d2484d616d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38492a3ae171cf9ea66bd8a474e32e6e"><td class="memTemplParams" colspan="2"><a id="a38492a3ae171cf9ea66bd8a474e32e6e"></a>
+<tr class="memitem:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, N n, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, n, static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
+<tr class="separator:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memTemplParams" colspan="2"><a id="a6d99291b5a3667a2e8a197e656c5a3d4"></a>
 template&lt;typename Rng , typename P , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
-<tr class="memitem:a38492a3ae171cf9ea66bd8a474e32e6e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, P p, I i, S j) const -&gt; decltype(insert(std::forward&lt; Rng &gt;(rng), p, i, j))</td></tr>
-<tr class="separator:a38492a3ae171cf9ea66bd8a474e32e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, P p, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, i, j))</td></tr>
+<tr class="separator:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

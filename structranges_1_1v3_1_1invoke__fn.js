@@ -1,10 +1,10 @@
 var structranges_1_1v3_1_1invoke__fn =
 [
-    [ "detail::forward", "group__group-utility.html#gab17d597cb07977f4fbf4370b0fa2ce19", null ],
-    [ "detail::forward", "group__group-utility.html#gaa7eb12f9ef772e0794eb5687e266f75b", null ],
-    [ "detail::forward", "structranges_1_1v3_1_1invoke__fn.html#gab17d597cb07977f4fbf4370b0fa2ce19", null ],
-    [ "operator()", "group__group-utility.html#ga0ec7e2f4f71e11ffb3f23a20c145161e", null ],
-    [ "operator()", "group__group-utility.html#gaaaf1bd0045898fafe19a1a0686ede604", null ],
-    [ "operator()", "group__group-utility.html#ga07e3ebeb119b0ae926fed30c1e887c37", null ],
+    [ "operator()", "group__group-utility.html#gaa11621adae0c13c5ebff90682c537cd0", null ],
+    [ "operator()", "group__group-utility.html#ga14f8542253fd4bbb9692834c1452cc67", null ],
+    [ "operator()", "group__group-utility.html#ga8275b7ba12ce0a52cada2efc5e5a44ed", null ],
+    [ "static_cast", "group__group-utility.html#gac47d22dcf2709f7e875bb39c64ef681f", null ],
+    [ "static_cast", "group__group-utility.html#ga5e98ff3fca0779c3da3b7e9979d77d83", null ],
+    [ "static_cast", "structranges_1_1v3_1_1invoke__fn.html#gac47d22dcf2709f7e875bb39c64ef681f", null ],
     [ "ptr", "group__group-utility.html#ga6fe2a1a4d695d10d98b5669169cfaaf6", null ]
 ];

@@ -324,12 +324,21 @@ var group__group_views =
       [ "operator()", "group__group-views.html#gab4a87026f78794a7e87050684db49364", null ],
       [ "Concept", "group__group-views.html#ga69c3f78b918aa232ab231208104199c8", null ]
     ] ],
+    [ "linear_distribute_fn", "structranges_1_1v3_1_1view_1_1linear__distribute__fn.html", [
+      [ "linear_distribute", "group__group-views.html#gaddd41feec27ced025be3cf2f34197ff1", null ],
+      [ "operator()", "group__group-views.html#gacf7ea0366873484fdd2805783a0643f3", null ]
+    ] ],
+    [ "linear_distribute_view", "structranges_1_1v3_1_1view_1_1linear__distribute__view.html", [
+      [ "size", "group__group-views.html#ga92bc7f72baee879a5530869aeb30215b", null ],
+      [ "linear_distribute_view", "group__group-views.html#gaaab5a5609ab0a0d0f73287b9d9e97c78", null ],
+      [ "linear_distribute_view", "group__group-views.html#ga912068fac355bf26524a0eefd8175634", null ]
+    ] ],
     [ "make_view_fn", "structranges_1_1v3_1_1view_1_1make__view__fn.html", [
       [ "operator()", "group__group-views.html#ga96596e78df2a3810a3cf10a089cd0c02", null ]
     ] ],
     [ "view", "structranges_1_1v3_1_1view_1_1view.html", [
-      [ "operator()", "group__group-views.html#gaad68eee67f14fba1e9568366a8ffb5a7", null ],
-      [ "operator()", "group__group-views.html#ga64b4a1293fe3e0082d7625a516cf2758", null ],
+      [ "operator()", "group__group-views.html#gafc4e6cd6088d01bd209fe5dd0b70532b", null ],
+      [ "operator()", "group__group-views.html#gaa5fcb86a2f2c0d3bc725d7ff23e53235", null ],
       [ "view", "group__group-views.html#ga9a3af6ef594492da14ea1c7e3687f440", null ],
       [ "view", "group__group-views.html#ga3b6f0165030d33f9b4e032a90453e181", null ]
     ] ],

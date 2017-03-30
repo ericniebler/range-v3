@@ -228,6 +228,8 @@ Range Views</h1>
 <dd>Given a range of ranges, join them into a flattened sequence of elements. Optionally, you can specify a value or a range to be inserted between each source range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1keys__fn.html"><code>view::keys</code></a> </dt>
 <dd>Given a range of <code>pair</code>s (like a <code>std::map</code>), return a new range consisting of just the first element of the <code>pair</code>. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1linear__distribute__fn.html"><code>view::linear_distribute</code></a> </dt>
+<dd>Distributes <code>n</code> values linearly in the closed interval <code>[from, to]</code> (the end points are always included). If <code>from == to</code>, returns <code>n</code>-times <code>to</code>, and if <code>n == 1</code> it returns <code>to</code>. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1move__fn.html"><code>view::move</code></a> </dt>
 <dd>Given a source range, return a new range where each element has been has been cast to an rvalue reference. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1partial__sum__fn.html"><code>view::partial_sum</code></a> </dt>

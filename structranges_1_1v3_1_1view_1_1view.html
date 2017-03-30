@@ -111,14 +111,14 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1view.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gaad68eee67f14fba1e9568366a8ffb5a7"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gafc4e6cd6088d01bd209fe5dd0b70532b"><td class="memTemplParams" colspan="2">
 template&lt;typename Rng , typename... Rest, requires  = (ViewConcept&lt;Rng, Rest...&gt;())&gt; </td></tr>
-<tr class="memitem:gaad68eee67f14fba1e9568366a8ffb5a7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Rest &amp;&amp;... rest) const -&gt; decltype(view_(std::forward&lt; Rng &gt;(rng), std::forward&lt; Rest &gt;(rest)...))</td></tr>
-<tr class="separator:gaad68eee67f14fba1e9568366a8ffb5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga64b4a1293fe3e0082d7625a516cf2758"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gafc4e6cd6088d01bd209fe5dd0b70532b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Rest &amp;&amp;... rest) const -&gt; decltype(view_(static_cast&lt; Rng &amp;&amp;&gt;(rng), static_cast&lt; Rest &amp;&amp;&gt;(rest)...))</td></tr>
+<tr class="separator:gafc4e6cd6088d01bd209fe5dd0b70532b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5fcb86a2f2c0d3bc725d7ff23e53235"><td class="memTemplParams" colspan="2">
 template&lt;typename... Ts, typename V  = View&gt; </td></tr>
-<tr class="memitem:ga64b4a1293fe3e0082d7625a516cf2758"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Ts &amp;&amp;... ts) const -&gt; decltype(make_view(<a class="el" href="structranges_1_1v3_1_1view_1_1view__access_1_1impl.html">view_access::impl</a>&lt; V &gt;::bind(view_, std::forward&lt; Ts &gt;(ts)...)))</td></tr>
-<tr class="separator:ga64b4a1293fe3e0082d7625a516cf2758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5fcb86a2f2c0d3bc725d7ff23e53235"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Ts &amp;&amp;... ts) const -&gt; decltype(make_view(<a class="el" href="structranges_1_1v3_1_1view_1_1view__access_1_1impl.html">view_access::impl</a>&lt; V &gt;::bind(view_, static_cast&lt; Ts &amp;&amp;&gt;(ts)...)))</td></tr>
+<tr class="separator:gaa5fcb86a2f2c0d3bc725d7ff23e53235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3b6f0165030d33f9b4e032a90453e181"><td class="memItemLeft" align="right" valign="top">
 &#160;</td><td class="memItemRight" valign="bottom"><b>view</b> (<a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">View</a> a)</td></tr>
 <tr class="separator:ga3b6f0165030d33f9b4e032a90453e181"><td class="memSeparator" colspan="2">&#160;</td></tr>

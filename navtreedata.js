@@ -30,18 +30,19 @@ var NAVTREEINDEX =
 ".html",
 "common__iterator_8hpp.html",
 "group__group-algorithms.html#ga96739c9c340ea9a34d3b4d1cddd0d11e",
-"group__invocation.html",
-"iterator_8hpp.html#ga43051d1c9b35463aca549c767c847b8c",
-"meta_8hpp.html#gac86ed38a4d92fb8a8c13d0a394d3f5e3",
-"structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1cycled__view_3_01_ts_8_8_8_01_4_00521f817d1d1fab4d8c9553b8c72297ab.html#a6765f1b3bcc1ed48f780bcb4b58c090a",
-"structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1adjacent__remove__if__view_3_01_ts_8_8_8_01_4_01_4.html#afa71821e17e4ff603aba6d36c96d0940",
-"structranges_1_1v3_1_1action_1_1take__while__fn.html#a975a8e124bd38568a1ac8f3aa394ddd3",
-"structranges_1_1v3_1_1concepts_1_1_common.html#ga758283bbc9147396875f4564a5f32d28",
-"structranges_1_1v3_1_1difference__type_3_01_t_01const_01_4.html",
-"structranges_1_1v3_1_1iter__transform2__view.html#a05a8d9d4ef1fe5852b3427ececf87fad",
-"structranges_1_1v3_1_1partial__sum__fn.html#a68d7bf242905b1715419324764d7772e",
-"structranges_1_1v3_1_1take__view.html#a6c48ddea8576fc85cc618420bec48592",
-"structranges_1_1v3_1_1view_1_1view__access_1_1impl.html"
+"group__group-views.html#gad45968db49aeb62b063c1d3930c7823b",
+"insert_8hpp.html#gade8cf570c27cf211eb6390954c837e5e",
+"meta_8hpp.html#gaa05d678299baae3495fc15bb04f98788",
+"span_8hpp.html#a4126d332ee15ae5c65b0739b4209d840",
+"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1reverse__view_3_01_ts_8_8_8_01_4_01const_01_4.html",
+"structranges_1_1v3_1_1action_1_1slice__fn.html",
+"structranges_1_1v3_1_1common__tuple.html#afcf9aafd6f64c42e9c825fd09a7152bb",
+"structranges_1_1v3_1_1detail_1_1set__intersection__cursor.html#a06da896eaed8f4045afd7b43bdada403",
+"structranges_1_1v3_1_1is__indirectly__movable.html",
+"structranges_1_1v3_1_1ostream__iterator.html#a067a40db7d2a2ba6ed5eaa87e3b1655d",
+"structranges_1_1v3_1_1sliding__view__detail_1_1trailing_3_01_rng_00_01true_01_4.html#a3bf3fd57ea370c5b96a056738333745a",
+"structranges_1_1v3_1_1view_1_1single__fn.html#a1080f4b711a9f33138f851584e80696e",
+"view_2iota_8hpp.html#a40689474161ad35c0ed61ceee3d096ef"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -6,6 +6,7 @@ var searchData=
   ['cartesian_5fsize_5ffn',['cartesian_size_fn',['../structranges_1_1v3_1_1detail_1_1cartesian__size__fn.html',1,'ranges::v3::detail']]],
   ['chunk_5ffn',['chunk_fn',['../structranges_1_1v3_1_1view_1_1chunk__fn.html',1,'ranges::v3::view']]],
   ['chunk_5fview',['chunk_view',['../structranges_1_1v3_1_1chunk__view.html',1,'ranges::v3']]],
+  ['closed_5findices_5ffn',['closed_indices_fn',['../structranges_1_1v3_1_1view_1_1closed__indices__fn.html',1,'ranges::v3::view']]],
   ['closed_5fints_5ffn',['closed_ints_fn',['../structranges_1_1v3_1_1view_1_1closed__ints__fn.html',1,'ranges::v3::view']]],
   ['closed_5fiota_5ffn',['closed_iota_fn',['../structranges_1_1v3_1_1view_1_1closed__iota__fn.html',1,'ranges::v3::view']]],
   ['closed_5fiota_5fview',['closed_iota_view',['../structranges_1_1v3_1_1closed__iota__view.html',1,'ranges::v3']]],

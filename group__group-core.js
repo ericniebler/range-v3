@@ -16,7 +16,11 @@ var group__group_core =
       [ "base", "structranges_1_1v3_1_1adaptor__sentinel.html#a227439afee06479afcc88956e83b6284", null ]
     ] ],
     [ "at_fn", "structranges_1_1v3_1_1at__fn.html", [
-      [ "operator()", "structranges_1_1v3_1_1at__fn.html#a28c106fd71d5e560493c1cd2e1d24deb", null ]
+      [ "operator()", "structranges_1_1v3_1_1at__fn.html#a28c106fd71d5e560493c1cd2e1d24deb", null ],
+      [ "operator()", "structranges_1_1v3_1_1at__fn.html#ae50b4b10b2ab6160ca9425cd461fbe07", null ],
+      [ "operator()", "structranges_1_1v3_1_1at__fn.html#af0895b764afde739050e08bca4e29387", null ],
+      [ "static_cast", "structranges_1_1v3_1_1at__fn.html#a42f1a308c44fec01949be6d5d607b293", null ],
+      [ "rng", "structranges_1_1v3_1_1at__fn.html#a3e58049bc55d1113277783312ffa4c93", null ]
     ] ],
     [ "back_fn", "structranges_1_1v3_1_1back__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1back__fn.html#a4bbf4f8c3a44fc606040abce994845ed", null ]
@@ -54,6 +58,12 @@ var group__group_core =
       [ "cached", "structranges_1_1v3_1_1getlines__range.html#a9bbcb72e47a064ef0b4735063c2c13e9", null ],
       [ "getlines_range", "structranges_1_1v3_1_1getlines__range.html#aa9bcbcaa1693e67bed626778541b5a65", null ],
       [ "getlines_range", "structranges_1_1v3_1_1getlines__range.html#ade49e5643642c5f50b63f702b305658f", null ]
+    ] ],
+    [ "index_fn", "structranges_1_1v3_1_1index__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1index__fn.html#a905bb7fed19ff2080de1f7e6555f280d", null ],
+      [ "operator()", "structranges_1_1v3_1_1index__fn.html#a47fc4a541101adfcb880b4acf7554502", null ],
+      [ "static_cast", "structranges_1_1v3_1_1index__fn.html#a6bc3a9e498fb2e84ef9a5dbdfe56754a", null ],
+      [ "rng", "structranges_1_1v3_1_1index__fn.html#ad03344a8f21794c164b88149948b2f82", null ]
     ] ],
     [ "input_iterator_tag", "structranges_1_1v3_1_1input__iterator__tag.html", null ],
     [ "istream_range", "structranges_1_1v3_1_1istream__range.html", [
@@ -183,6 +193,7 @@ var group__group_core =
     [ "enumerate", "group__group-core.html#gaea4cba33b3f10f828c5c3418a6b271a7", null ],
     [ "front", "group__group-core.html#ga6dff9c25c486dcbc71307b450a872645", null ],
     [ "get_unsafe", "group__group-core.html#ga8d1fa62a9a20fbe47c13cb31186a0864", null ],
+    [ "index", "group__group-core.html#gac68a09086002062df6bc9e2247d1667d", null ],
     [ "make_iterator_range", "group__group-core.html#gaf295cac4cc679ca932ce873fbbcbc806", null ],
     [ "rbegin", "group__group-core.html#ga2355e32e7932cc939dcd713b721a695e", null ],
     [ "rend", "group__group-core.html#ga5e3a352ca5ba2f02d0e85df43117580a", null ],

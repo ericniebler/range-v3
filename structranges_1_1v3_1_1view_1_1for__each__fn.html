@@ -116,10 +116,10 @@ template&lt;typename Rng , typename Fun &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a42fe1d06ac90e3398f21e70a678d6465"><td class="memTemplParams" colspan="2"><a id="a42fe1d06ac90e3398f21e70a678d6465"></a>
+<tr class="memitem:a09c8d1abe38e5ea5e9c3815928356d5e"><td class="memTemplParams" colspan="2"><a id="a09c8d1abe38e5ea5e9c3815928356d5e"></a>
 template&lt;typename Rng , typename Fun , requires  = (Concept&lt;Rng, Fun&gt;())&gt; </td></tr>
-<tr class="memitem:a42fe1d06ac90e3398f21e70a678d6465"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const -&gt; decltype(join(transform(std::forward&lt; Rng &gt;(rng), std::move(fun))))</td></tr>
-<tr class="separator:a42fe1d06ac90e3398f21e70a678d6465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c8d1abe38e5ea5e9c3815928356d5e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const -&gt; decltype(join(transform(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(fun))))</td></tr>
+<tr class="separator:a09c8d1abe38e5ea5e9c3815928356d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

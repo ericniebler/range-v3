@@ -21,5 +21,6 @@ var view_2iota_8hpp =
     [ "incrementable_concept", "view_2iota_8hpp.html#a40689474161ad35c0ed61ceee3d096ef", null ],
     [ "incrementable_concept_t", "view_2iota_8hpp.html#a83ba53d6090dc791a6d96cc133eb354a", null ],
     [ "RandomAccessIncrementable", "view_2iota_8hpp.html#a6cd3b6a85a7eb6eafb973e0c6056b7c1", null ],
-    [ "SizedIncrementableSentinel", "view_2iota_8hpp.html#afe66b9526bba6a8694be42d1b47fb38e", null ]
+    [ "SizedIncrementableSentinel", "view_2iota_8hpp.html#afe66b9526bba6a8694be42d1b47fb38e", null ],
+    [ "closed_ints", "view_2iota_8hpp.html#acef7a2c700da79978d721fc7e345d871", null ]
 ];
