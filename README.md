@@ -53,7 +53,7 @@ Supported Compilers
 The code is known to work on the following compilers:
 
 - clang 3.6.2 (or later)
-- GCC 4.9.4 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
+- GCC 4.9.1 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
 - "Clang with Microsoft CodeGen" (Clang/C2) VS2015 Update 3 (or later)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
