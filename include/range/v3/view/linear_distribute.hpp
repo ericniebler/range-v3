@@ -60,7 +60,7 @@ namespace ranges
                 {
                     RANGES_EXPECT(n_ > 0);
                     --n_;
-                    if (n_ == 0)
+                    if(n_ == 0)
                     {
                         from_ = to_;
                     }

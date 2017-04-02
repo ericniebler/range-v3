@@ -122,7 +122,7 @@ namespace ranges
                     auto &i = std::get<N - 1>(its_);
                     auto const last = ranges::end(v);
                     RANGES_EXPECT(i != last);
-                    if (++i == last)
+                    if(++i == last)
                     {
                         i = ranges::begin(v);
                         next_(meta::size_t<N - 1>{});
@@ -137,7 +137,7 @@ namespace ranges
                 {
                     auto &v = std::get<N - 1>(view_->views_);
                     auto &i = std::get<N - 1>(its_);
-                    if (i == ranges::begin(v))
+                    if(i == ranges::begin(v))
                     {
                         CONCEPT_ASSERT(CanBidi<IsConst>());
                         // CanBidi<IsConst> implies this advance call is O(1)
@@ -199,19 +199,19 @@ namespace ranges
                     auto const first = ranges::begin(std::get<N - 1>(view_->views_));
                     auto const idx = i - first;
                     auto d = inf.distance;
-                    if (static_cast<std::ptrdiff_t>(my_size) - idx < d || d < -idx)
+                    if(static_cast<std::ptrdiff_t>(my_size) - idx < d || d < -idx)
                     {
                         auto const new_size = inf.size_product * static_cast<std::ptrdiff_t>(my_size);
                         auto div = d / new_size;
                         d %= new_size;
-                        if (static_cast<std::ptrdiff_t>(my_size) - idx < d)
+                        if(static_cast<std::ptrdiff_t>(my_size) - idx < d)
                         {
                             i = first;
                             d -= static_cast<std::ptrdiff_t>(my_size) - idx;
                             ++div;
                             RANGES_EXPECT(0 <= d && d < static_cast<std::ptrdiff_t>(my_size));
                         }
-                        else if (d < -idx)
+                        else if(d < -idx)
                         {
                             i = first + static_cast<std::ptrdiff_t>(my_size);
                             d += idx;
@@ -226,7 +226,7 @@ namespace ranges
                 {}
                 void check_at_end_(meta::size_t<1>, bool at_end = false)
                 {
-                    if (at_end)
+                    if(at_end)
                     {
                         ranges::advance(std::get<0>(its_), ranges::end(std::get<0>(view_->views_)));
                     }
@@ -322,7 +322,7 @@ namespace ranges
             CONCEPT_REQUIRES(CanSize<true>())
             std::size_t size() const
             {
-                if (sizeof...(Views) == 0) return 0;
+                if(sizeof...(Views) == 0) return 0;
                 return tuple_foldl(views_, std::size_t{1},
                     detail::cartesian_size_fn{});
             }

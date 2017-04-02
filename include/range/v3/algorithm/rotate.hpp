@@ -122,7 +122,7 @@ namespace ranges
                     return {middle, end};
                 }
                 auto const g = rotate_fn::gcd(m1, m2);
-                for (I p = begin + g; p != begin;)
+                for(I p = begin + g; p != begin;)
                 {
                     value_type_t<I> t = iter_move(--p);
                     I p1 = p;

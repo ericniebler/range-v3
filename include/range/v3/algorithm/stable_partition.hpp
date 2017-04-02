@@ -60,7 +60,7 @@ namespace ranges
             {
                 // *begin is known to be false
                 // len >= 1
-                if (len == 1)
+                if(len == 1)
                     return begin;
                 if(len == 2)
                 {

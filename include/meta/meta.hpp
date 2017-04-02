@@ -1978,7 +1978,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t index_() {
+                static constexpr std::size_t index_()
+                {
                     constexpr bool s_v[] = {std::is_same<T, V>::value...};
                     return find_index_i_(s_v, s_v + sizeof...(T));
                 }
@@ -2039,7 +2040,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t index_() {
+                static constexpr std::size_t index_()
+                {
                     constexpr bool s_v[] = {std::is_same<T, V>::value...};
                     return reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T));
                 }
@@ -2135,7 +2137,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t index_() {
+                static constexpr std::size_t index_()
+                {
                     constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                     return detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v;
                 }
@@ -2199,7 +2202,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t index_() {
+                static constexpr std::size_t index_()
+                {
                     constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                     return detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
                                                       s_v + sizeof...(List)) - s_v;
@@ -2331,7 +2335,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t count__() {
+                static constexpr std::size_t count__()
+                {
                     constexpr bool s_v[] = {std::is_same<T, List>::value...};
                     return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
                 }
@@ -2379,7 +2384,8 @@ namespace meta
             {
               #if defined(__clang__) && __cplusplus > 201402L
                 // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr std::size_t count_() {
+                static constexpr std::size_t count_()
+                {
                     constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
                     return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
                 }

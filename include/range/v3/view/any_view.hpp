@@ -53,7 +53,9 @@ namespace ranges
                 T obj;
             public:
                 object() = default;
-                object(T o) : obj(std::move(o)) {}
+                object(T o)
+                  : obj(std::move(o))
+                {}
                 T &get() { return obj; }
                 T const &get() const { return obj; }
             };

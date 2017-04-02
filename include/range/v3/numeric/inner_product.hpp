@@ -57,7 +57,7 @@ namespace ranges
             T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                for (; begin1 != end1; ++begin1, ++begin2)
+                for(; begin1 != end1; ++begin1, ++begin2)
                   init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
                 return init;
             }
@@ -73,7 +73,7 @@ namespace ranges
             T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                for (; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
+                for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                   init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
                 return init;
             }

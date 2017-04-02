@@ -80,7 +80,7 @@ namespace ranges
         private:
             range_difference_type_t<Rng> n_;
             sentinel_t<Rng> end_;
-            offset_t & offset() {return this->box<offset_t>::get();}
+            offset_t & offset() { return this->box<offset_t>::get(); }
             offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;

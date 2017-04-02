@@ -55,9 +55,9 @@ namespace ranges
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
                 n = ranges::min(pop_size, n);
-                for (; n > 0 && first != last; ++first)
+                for(; n > 0 && first != last; ++first)
                 {
-                    if (dist(gen, param_t{0, --pop_size}) < n)
+                    if(dist(gen, param_t{0, --pop_size}) < n)
                     {
                         --n;
                         *out = *first;
@@ -89,11 +89,11 @@ namespace ranges
             operator()(I first, S last, O out, difference_type_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
             {
-                if (n <= 0)
+                if(n <= 0)
                     goto done;
-                for (difference_type_t<I> i = 0; i < n; (void)++i, ++first)
+                for(difference_type_t<I> i = 0; i < n; (void)++i, ++first)
                 {
-                    if (first == last)
+                    if(first == last)
                     {
                         out += i;
                         goto done;
@@ -102,10 +102,10 @@ namespace ranges
                 }
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
-                for (auto pop_size = n; first != last; (void)++first, ++pop_size)
+                for(auto pop_size = n; first != last; (void)++first, ++pop_size)
                 {
                     auto const i = dist(gen, param_t{0, pop_size});
-                    if (i < n)
+                    if(i < n)
                         out[i] = *first;
                 }
                 out += n;

@@ -112,20 +112,20 @@ namespace ranges
                 void advance()
                 {
                     RANGES_EXPECT(range());
-                    if (range()->size() > 0)
+                    if(range()->size() > 0)
                     {
                         using Dist = std::uniform_int_distribution<D>;
                         using Param_t = typename Dist::param_type;
                         Dist dist{};
                         URNG& engine = range()->engine().get();
 
-                        for (; ; ++current(), size().decrement())
+                        for(; ; ++current(), size().decrement())
                         {
                             RANGES_ASSERT(current() != ranges::end(range()->range()));
                             auto n = pop_size();
                             RANGES_EXPECT(n > 0);
                             const Param_t interval{ 0, n - 1 };
-                            if (dist(engine, interval) < range()->size())
+                            if(dist(engine, interval) < range()->size())
                                 break;
                         }
                     }
@@ -139,7 +139,7 @@ namespace ranges
                 : base_t{&rng, ranges::begin(rng.range()), rng.range()}
                 {
                     auto n = pop_size();
-                    if (rng.size() > n)
+                    if(rng.size() > n)
                         rng.size() = n;
                     advance();
                 }
