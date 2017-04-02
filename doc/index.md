@@ -39,7 +39,7 @@ Most of the source code in this project are mine, and those are under the Boost 
 The code is known to work on the following compilers:
 
 - clang 3.5.2
-- GCC 4.9.4
+- GCC 4.9.1
 
 \section tutorial-quick-start Quick Start
 
