@@ -38,7 +38,7 @@ Most of the source code in this project are mine, and those are under the Boost 
 --------------------------------------------
 The code is known to work on the following compilers:
 
-- clang 3.5.2
+- clang 3.6.2
 - GCC 4.9.1
 
 \section tutorial-quick-start Quick Start
@@ -293,6 +293,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Type-erased range of elements with value type `T`; can store _any_ range with this value type.</DD>
 <DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
   <DD>Convert the source range to a *bounded* range, where the type of the `end` is the same as the `begin`. Useful for iterating over a range with C++'s range-based `for` loop.</DD>
+<DT>\link ranges::v3::view::cartesian_product_fn `view::cartesian_product`\endlink</DT>
+  <DD>Enumerates the n-ary cartesian product of `n` ranges, i.e., generates all `n`-tuples `(e1, e2, ... , en)` where `e1` is an element of the first range, `e2` is an element of the second range, etc.</DD>
 <DT>\link ranges::v3::view::chunk_fn `view::chunk`\endlink</DT>
   <DD>Given a source range and an integer *N*, produce a range of contiguous ranges where each inner range has *N* contiguous elements. The final range may have fewer than *N* elements.</DD>
 <DT>\link ranges::v3::view::concat_fn `view::concat`\endlink</DT>
@@ -361,6 +363,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
   <DD>Given a value, create a range with exactly one element.</DD>
 <DT>\link ranges::v3::view::slice_fn `view::slice`\endlink</DT>
   <DD>Give a source range a lower bound (inclusive) and an upper bound (exclusive), create a new range that begins and ends at the specified offsets. Both the begin and the end can be integers relative to the front, or relative to the end with "`end-2`" syntax.</DD>
+<DT>\link ranges::v3::view::sliding_fn `view::sliding`\endlink</DT>
+  <DD>Given a range and a count `n`, place a window over the first `n` elements of the underlying range. Return the contents of that window as the first element of the adapted range, then slide the window forward one element at a time until hitting the end of the underlying range.</DD>
 <DT>\link ranges::v3::view::split_fn `view::split`\endlink</DT>
   <DD>Given a source range and a delimiter specifier, split the source range into a range of ranges using the delimiter specifier to find the boundaries. The delimiter specifier can be a value, a subrange, a predicate, or a function. The predicate should take an single argument of the range's reference type and return true if and only if the element is part of a delimiter. The function should accept current/end iterators into the source range and return `make_pair(true, iterator_past_the_delimiter)` if the current position is a boundary; otherwise, `make_pair(false, cur)`. The delimiter character(s) are excluded from the resulting range of ranges.</DD>
 <DT>\link ranges::v3::view::stride_fn `view::stride`\endlink</DT>
