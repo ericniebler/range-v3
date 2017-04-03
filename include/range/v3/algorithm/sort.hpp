@@ -182,7 +182,7 @@ namespace ranges
             I operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
                 I end = ranges::next(begin, std::move(end_));
-                if (begin != end)
+                if(begin != end)
                 {
                     sort_fn::introsort_loop(begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
                     sort_fn::final_insertion_sort(begin, end, pred, proj);

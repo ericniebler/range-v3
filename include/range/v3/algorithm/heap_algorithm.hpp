@@ -222,7 +222,7 @@ namespace ranges
                         }
 
                         // check if we are in heap-order
-                    } while (!invoke(pred, invoke(proj, *child_i), invoke(proj, top)));
+                    } while(!invoke(pred, invoke(proj, *child_i), invoke(proj, top)));
                     *start = std::move(top);
                 }
             };

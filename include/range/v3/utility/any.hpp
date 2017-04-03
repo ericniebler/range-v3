@@ -77,7 +77,8 @@ namespace ranges
 
             struct interface
             {
-                virtual ~interface() {}
+                virtual ~interface()
+                {}
                 virtual interface *clone() const = 0;
                 virtual std::type_info const & type() const noexcept = 0;
             };
@@ -89,7 +90,9 @@ namespace ranges
                 T obj;
             public:
                 impl() = default;
-                impl(T o) : obj(std::move(o)) {}
+                impl(T o)
+                  : obj(std::move(o))
+                {}
                 T &get() { return obj; }
                 T const &get() const { return obj; }
                 impl *clone() const override

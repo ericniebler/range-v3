@@ -239,7 +239,8 @@ namespace ranges
                         tail_t tail;
                     };
 
-                    type() {}
+                    type()
+                    {}
                     template<typename... Args>
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}
@@ -264,8 +265,10 @@ namespace ranges
                         tail_t tail;
                     };
 
-                    type() {}
-                    ~type() {}
+                    type()
+                    {}
+                    ~type()
+                    {}
                     template<typename... Args>
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}

@@ -121,9 +121,9 @@ namespace ranges
             int impl_r(Rng &rng, range_difference_type_t<Rng> n, concepts::SizedRange*) const
             {
                 auto dist = distance(rng); // O(1) since rng is a SizedRange
-                if (dist > n)
+                if(dist > n)
                     return  1;
-                else if (dist < n)
+                else if(dist < n)
                     return -1;
                 else
                     return  0;

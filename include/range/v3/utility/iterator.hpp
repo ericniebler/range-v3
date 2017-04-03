@@ -347,30 +347,25 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             int impl_i(I begin, S end, difference_type_t<I> n, concepts::Sentinel*) const
             {
-                if (n >= 0) {
-                    for (; n > 0; --n) {
-                        if (begin == end) {
-                            return -1;
-                        }
-                        ++begin;
-                    }
-                    return begin == end ? 0 : 1;
-                }
-                else {
+                if(n < 0)
                     return 1;
+                for(; n > 0; --n, ++begin)
+                {
+                    if(begin == end)
+                        return -1;
                 }
+                return begin == end ? 0 : 1;
             }
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             int impl_i(I begin, S end, difference_type_t<I> n, concepts::SizedSentinel*) const
             {
                 difference_type_t<I> dist = end - begin;
-                if (dist > n)
+                if(n < dist)
                     return  1;
-                else if (dist < n)
+                if(dist < n)
                     return -1;
-                else
-                    return  0;
+                return  0;
             }
         public:
             template<typename I, typename S,

@@ -160,7 +160,7 @@ namespace ranges
             iterator_t<Rng> get_first()
             {
                 auto &first = this->cache();
-                if (!first)
+                if(!first)
                 {
                     first = ranges::next(
                         ranges::begin(this->base()),
@@ -232,7 +232,7 @@ namespace ranges
             iterator_t<Rng> get_last()
             {
                 auto &last = this->cache();
-                if (!last)
+                if(!last)
                 {
                     last = ranges::prev(
                                 ranges::end(this->base()), this->n_ - 1,

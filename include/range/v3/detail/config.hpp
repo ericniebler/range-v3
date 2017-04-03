@@ -16,7 +16,7 @@
 #define RANGES_V3_DETAIL_CONFIG_HPP
 
 #include <iosfwd>
-#if (defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
+#if(defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
     (!defined(NDEBUG) && !defined(RANGES_ASSERT) && \
      defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5)
 #include <cstdio>
