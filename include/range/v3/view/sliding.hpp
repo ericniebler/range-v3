@@ -160,7 +160,7 @@ namespace ranges
             iterator_t<Rng> get_first()
             {
                 auto &first = this->cache();
-                if (!first)
+                if(!first)
                 {
                     first = ranges::next(
                         ranges::begin(this->base()),
@@ -232,7 +232,7 @@ namespace ranges
             iterator_t<Rng> get_last()
             {
                 auto &last = this->cache();
-                if (!last)
+                if(!last)
                 {
                     last = ranges::prev(
                                 ranges::end(this->base()), this->n_ - 1,
@@ -341,7 +341,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 sliding_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(static_cast<Rng&&>(rng)), n};
                 }
 
                 // For the sake of better error messages:

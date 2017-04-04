@@ -55,9 +55,9 @@ namespace ranges
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
                 n = ranges::min(pop_size, n);
-                for (; n > 0 && first != last; ++first)
+                for(; n > 0 && first != last; ++first)
                 {
-                    if (dist(gen, param_t{0, --pop_size}) < n)
+                    if(dist(gen, param_t{0, --pop_size}) < n)
                     {
                         --n;
                         *out = *first;
@@ -78,7 +78,7 @@ namespace ranges
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, std::move(out), n, std::forward<Gen>(gen));
+                    k, std::move(out), n, static_cast<Gen&&>(gen));
             }
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&,
@@ -89,11 +89,11 @@ namespace ranges
             operator()(I first, S last, O out, difference_type_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
             {
-                if (n <= 0)
+                if(n <= 0)
                     goto done;
-                for (difference_type_t<I> i = 0; i < n; (void)++i, ++first)
+                for(difference_type_t<I> i = 0; i < n; (void)++i, ++first)
                 {
-                    if (first == last)
+                    if(first == last)
                     {
                         out += i;
                         goto done;
@@ -102,10 +102,10 @@ namespace ranges
                 }
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
-                for (auto pop_size = n; first != last; (void)++first, ++pop_size)
+                for(auto pop_size = n; first != last; (void)++first, ++pop_size)
                 {
                     auto const i = dist(gen, param_t{0, pop_size});
-                    if (i < n)
+                    if(i < n)
                         out[i] = *first;
                 }
                 out += n;
@@ -124,7 +124,7 @@ namespace ranges
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, begin(out), distance(out), std::forward<Gen>(gen));
+                    k, begin(out), distance(out), static_cast<Gen&&>(gen));
             }
             template<typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&,
@@ -137,7 +137,7 @@ namespace ranges
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(std::move(first), std::move(last), begin(out),
-                    distance(out), std::forward<Gen>(gen));
+                    distance(out), static_cast<Gen&&>(gen));
             }
             template<typename Rng, typename O,
                 typename Gen = detail::default_random_engine&,
@@ -149,7 +149,7 @@ namespace ranges
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    std::move(out), n, std::forward<Gen>(gen));
+                    std::move(out), n, static_cast<Gen&&>(gen));
             }
             template<typename Rng, typename O,
                 typename Gen = detail::default_random_engine&,
@@ -161,7 +161,7 @@ namespace ranges
                 Gen && gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    std::move(out), n, std::forward<Gen>(gen));
+                    std::move(out), n, static_cast<Gen&&>(gen));
             }
             template<typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&,
@@ -177,7 +177,7 @@ namespace ranges
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    begin(out), distance(out), std::forward<Gen>(gen));
+                    begin(out), distance(out), static_cast<Gen&&>(gen));
             }
             template<typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&,
@@ -193,7 +193,7 @@ namespace ranges
                 Gen && gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    begin(out), distance(out), std::forward<Gen>(gen));
+                    begin(out), distance(out), static_cast<Gen&&>(gen));
             }
         };
 

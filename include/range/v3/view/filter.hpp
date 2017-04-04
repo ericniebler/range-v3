@@ -25,6 +25,8 @@ namespace ranges
     {
         namespace view
         {
+            /// Given a source range and a unary predicate, filter the elements
+            /// that satisfy the predicate.
             struct filter_fn
             {
                 template<typename Rng, typename Pred>
@@ -33,7 +35,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(Range<Rng>());
                     CONCEPT_ASSERT(IndirectPredicate<Pred, iterator_t<Rng>>());
-                    return {all(std::forward<Rng>(rng)), not_fn(std::move(pred))};
+                    return {all(static_cast<Rng&&>(rng)), not_fn(std::move(pred))};
                 }
                 template<typename Pred>
                 auto operator()(Pred pred) const ->

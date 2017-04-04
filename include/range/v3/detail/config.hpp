@@ -16,7 +16,7 @@
 #define RANGES_V3_DETAIL_CONFIG_HPP
 
 #include <iosfwd>
-#if (defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
+#if(defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
     (!defined(NDEBUG) && !defined(RANGES_ASSERT) && \
      defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5)
 #include <cstdio>
@@ -178,6 +178,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
 #define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
+#define RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 // Generic configuration using SD-6 feature test macros with fallback to __cplusplus
@@ -192,6 +193,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wundefined-internal")
 #define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS RANGES_DIAGNOSTIC_IGNORE("-Wmismatched-tags")
 #define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION RANGES_DIAGNOSTIC_IGNORE("-Wsign-conversion")
+#define RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL RANGES_DIAGNOSTIC_IGNORE("-Wfloat-equal")
 #ifdef __clang__
 #define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS RANGES_DIAGNOSTIC_IGNORE("-Wglobal-constructors")
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-internal-declaration")
@@ -219,6 +221,7 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
 #define RANGES_DIAGNOSTIC_IGNORE_ZERO_LENGTH_ARRAY
 #define RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
+#define RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
 #endif
 #endif // MSVC/Generic configuration switch
 

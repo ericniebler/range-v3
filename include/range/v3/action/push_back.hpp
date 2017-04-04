@@ -32,17 +32,17 @@ namespace ranges
             template<typename Cont, typename T,
                 CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())>
             auto push_back(Cont && cont, T && t) ->
-                decltype((void)unwrap_reference(cont).push_back(std::forward<T>(t)))
+                decltype((void)unwrap_reference(cont).push_back(static_cast<T&&>(t)))
             {
-                unwrap_reference(cont).push_back(std::forward<T>(t));
+                unwrap_reference(cont).push_back(static_cast<T&&>(t));
             }
 
             template<typename Cont, typename Rng,
                 CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Range<Rng>())>
             auto push_back(Cont && cont, Rng && rng) ->
-                decltype((void)ranges::insert(unwrap_reference(cont), end(cont), std::forward<Rng>(rng)))
+                decltype((void)ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng)))
             {
-                ranges::insert(unwrap_reference(cont), end(cont), std::forward<Rng>(rng));
+                ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng));
             }
 
             struct push_back_fn
@@ -76,8 +76,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, T>())>
                 Rng operator()(Rng && rng, T && t) const
                 {
-                    push_back(rng, std::forward<T>(t));
-                    return std::forward<Rng>(rng);
+                    push_back(rng, static_cast<T&&>(t));
+                    return static_cast<Rng&&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

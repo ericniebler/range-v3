@@ -94,7 +94,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "Rng must be a model of the Range concept");
-                    return const_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return const_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
             };
 

@@ -131,7 +131,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Integral<T>())>
                 RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
                 {
-                    if (sizeof(T) <= 4)
+                    if(sizeof(T) <= 4)
                         return static_cast<std::uint32_t>(value);
                     else {
                         auto result = static_cast<std::uint64_t>(value);
@@ -144,7 +144,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR std::uint32_t hash(T && value)
                 {
                     auto hasher = std::hash<uncvref_t<T>>{};
-                    return randutils::crushto32(hasher(detail::forward<T>(value)));
+                    return randutils::crushto32(hasher(static_cast<T&&>(value)));
                 }
 
                 constexpr std::uint32_t fnv(std::uint32_t hash, const char* pos)
@@ -330,31 +330,34 @@ namespace ranges
                     void mix_entropy(I begin, S end)
                     {
                         auto hash_const = INIT_A;
-                        auto hash = [&](IntRep value) {
+                        auto hash = [&](IntRep value)
+                        {
                             value ^= hash_const;
                             hash_const *= MULT_A;
                             value *= hash_const;
                             value ^= value >> XSHIFT;
                             return value;
                         };
-                        auto mix = [](IntRep x, IntRep y) {
+                        auto mix = [](IntRep x, IntRep y)
+                        {
                             IntRep result = MIX_MULT_L*x - MIX_MULT_R*y;
                             result ^= result >> XSHIFT;
                             return result;
                         };
 
-                        for (auto& elem : mixer_) {
-                            if (begin != end)
+                        for(auto& elem : mixer_)
+                        {
+                            if(begin != end)
                                 elem = hash(static_cast<IntRep>(*begin++));
                             else
                                 elem = hash(IntRep{0});
                         }
-                        for (auto& src : mixer_)
-                            for (auto& dest : mixer_)
-                                if (&src != &dest)
+                        for(auto& src : mixer_)
+                            for(auto& dest : mixer_)
+                                if(&src != &dest)
                                     dest = mix(dest,hash(src));
-                        for (; begin != end; ++begin)
-                            for (auto& dest : mixer_)
+                        for(; begin != end; ++begin)
+                            for(auto& dest : mixer_)
                                 dest = mix(dest,hash(static_cast<IntRep>(*begin)));
                     }
 
@@ -386,9 +389,10 @@ namespace ranges
                         auto src_end   = mixer_.end();
                         auto src       = src_begin;
                         auto hash_const = INIT_B;
-                        for (auto dest = dest_begin; dest != dest_end; ++dest) {
+                        for(auto dest = dest_begin; dest != dest_end; ++dest)
+                        {
                             auto dataval = *src;
-                            if (++src == src_end)
+                            if(++src == src_end)
                                 src = src_begin;
                             dataval ^= hash_const;
                             hash_const *= MULT_B;
@@ -412,14 +416,16 @@ namespace ranges
                         const IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
 
                         auto mixer_copy = mixer_;
-                        for (std::size_t round = 0; round < mix_rounds; ++round) {
+                        for(std::size_t round = 0; round < mix_rounds; ++round)
+                        {
                             // Advance to the final value.  We'll backtrack from that.
                             auto hash_const = INIT_A*randutils::fast_exp(MULT_A, IntRep(count * count));
 
-                            for (auto src = mixer_copy.rbegin(); src != mixer_copy.rend(); ++src)
-                                for (auto dest = mixer_copy.rbegin(); dest != mixer_copy.rend();
+                            for(auto src = mixer_copy.rbegin(); src != mixer_copy.rend(); ++src)
+                                for(auto dest = mixer_copy.rbegin(); dest != mixer_copy.rend();
                                     ++dest)
-                                    if (src != dest) {
+                                    if(src != dest)
+                                    {
                                         IntRep revhashed = *src;
                                         auto mult_const = hash_const;
                                         hash_const *= INV_A;
@@ -432,7 +438,8 @@ namespace ranges
                                         unmixed *= MIX_INV_L;
                                         *dest = unmixed;
                                     }
-                            for (auto i = mixer_copy.rbegin(); i != mixer_copy.rend(); ++i) {
+                            for(auto i = mixer_copy.rbegin(); i != mixer_copy.rend(); ++i)
+                            {
                                 IntRep unhashed = *i;
                                 unhashed ^= unhashed >> XSHIFT;
                                 unhashed *= randutils::fast_exp(hash_const, IntRep(-1));
@@ -452,7 +459,7 @@ namespace ranges
                         mix_entropy(begin, end);
                         // For very small sizes, we do some additional mixing.  For normal
                         // sizes, this loop never performs any iterations.
-                        for (std::size_t i = 1; i < mix_rounds; ++i)
+                        for(std::size_t i = 1; i < mix_rounds; ++i)
                             stir();
                     }
 
@@ -561,7 +568,8 @@ namespace ranges
                     sizeof(default_random_engine),
                     alignof(default_random_engine)>> storage;
 
-                if (!initialized) {
+                if(!initialized)
+                {
                     ::new(static_cast<void*>(&storage)) default_random_engine{Seeder{}.base()};
                     initialized = true;
                 }

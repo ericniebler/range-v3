@@ -162,7 +162,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng>())>
                 intersperse_view<all_t<Rng>> operator()(Rng && rng, range_value_type_t<Rng> val) const
                 {
-                    return {all(std::forward<Rng>(rng)), {std::move(val)}};
+                    return {all(static_cast<Rng&&>(rng)), {std::move(val)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

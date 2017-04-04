@@ -194,6 +194,7 @@ RANGES_CXX14_CONSTEXPR auto test_non_member_f(Sequence1234&& a) -> bool {
     if (ranges::empty(a)) { return false; }
     if (ranges::front(a) != 1) { return false; }
     if (ranges::back(a) != 4) { return false; }
+    if (ranges::index(a, 2) != 3) { return false; }
     if (ranges::at(a, 2) != 3) { return false; }
     if (ranges::size(a) != 4) { return false; }
     return true;
@@ -250,13 +251,12 @@ RANGES_CXX14_CONSTEXPR auto test_init_list() -> bool {
     if (!test_crits(a)) { return false; }
     if (!test_non_member_f(a)) { return false; }
 
-    // std::initializer_list live in std:: so ADL will always pick std::swap
-    // std::initializer_list<int> b{5, 6, 7, 8};
-    // ranges::swap(a, b);
-    // if (ranges::at(a, 0) != 5 || ranges::at(b, 0) != 1
-    //     || ranges::at(a, 3) != 8 || ranges::at(b, 3) != 4) {
-    //     return false;
-    // }
+    std::initializer_list<int> b{5, 6, 7, 8};
+    ranges::swap(a, b);
+    if (ranges::at(a, 0) != 5 || ranges::at(b, 0) != 1
+        || ranges::at(a, 3) != 8 || ranges::at(b, 3) != 4) {
+        return false;
+    }
 
     return true;
 }

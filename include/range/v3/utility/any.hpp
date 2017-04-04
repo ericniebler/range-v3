@@ -77,7 +77,8 @@ namespace ranges
 
             struct interface
             {
-                virtual ~interface() {}
+                virtual ~interface()
+                {}
                 virtual interface *clone() const = 0;
                 virtual std::type_info const & type() const noexcept = 0;
             };
@@ -89,7 +90,9 @@ namespace ranges
                 T obj;
             public:
                 impl() = default;
-                impl(T o) : obj(std::move(o)) {}
+                impl(T o)
+                  : obj(std::move(o))
+                {}
                 T &get() { return obj; }
                 T const &get() const { return obj; }
                 impl *clone() const override
@@ -108,7 +111,7 @@ namespace ranges
             template<typename TRef, typename T = detail::decay_t<TRef>,
                 CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
             any(TRef &&t)
-              : ptr_(new impl<T>(std::forward<TRef>(t)))
+              : ptr_(new impl<T>(static_cast<TRef&&>(t)))
             {}
             any(any &&) noexcept = default;
             any(any const &that)
@@ -124,7 +127,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
             any &operator=(TRef &&t)
             {
-                any{std::forward<TRef>(t)}.swap(*this);
+                any{static_cast<TRef&&>(t)}.swap(*this);
                 return *this;
             }
             void clear() noexcept

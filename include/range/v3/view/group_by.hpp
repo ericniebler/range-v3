@@ -137,7 +137,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 group_by_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

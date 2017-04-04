@@ -26,8 +26,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <range/v3/span.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -36,6 +34,10 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <range/v3/view/empty.hpp>
+#include "./simple_test.hpp"
+#include "./test_utils.hpp"
 
 using namespace ranges;
 
@@ -991,6 +993,11 @@ int main()
         span<S const>{arr};
         span<S const> cs = s;
         (void)cs;
+    }
+
+    {
+        span<int const> s{ranges::view::empty<int>()};
+        CHECK(s.empty());
     }
 
     test_default_constructor();

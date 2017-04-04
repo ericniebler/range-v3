@@ -52,19 +52,30 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 3.5.2
-- GCC 4.9.4 (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
-- VS2015 Update 3 "Clang with Microsoft CodeGen" (Clang/C2)
+- clang 3.6.2 (or later)
+- GCC 4.9.1 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
+- "Clang with Microsoft CodeGen" (Clang/C2) VS2015 Update 3 (or later)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
 **Build status**
 - on Travis-CI: [![Travis Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
-- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/9mekkhw1wm22rum9/branch/master?svg=true)](https://ci.appveyor.com/project/CaseyCarter/range-v3)
+- on AppVeyor: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/fwl9ymc2t6ukn9qj/branch/master?svg=true)](https://ci.appveyor.com/project/ericniebler/range-v3)
 
 Release Notes:
 --------------
 
+* **0.2.2** March 30, 2017
+  New in this release:
+  - `view::linear_distribute(from,to,n)` - A view of `n` elements between `from` and `to`, distributed evenly.
+  - `view::indices(n)` - A view of the indices `[0,1,2...n-1]`.
+  - `view::closed_indices(n)` - A view of the indices `[0,1,2...n]`.
+
+  This release deprecates `view::ints(n)` as confusing to new users.
+* **0.2.1** March 22, 2017
+  New in this release:
+  - `view::cartesian_product`
+  - `action::reverse`
 * **0.2.0** March 13, 2017
   Bring many interfaces into sync with the Ranges TS.
   - Many interfaces are simply renamed. The following table shows the old names
@@ -87,9 +98,9 @@ Release Notes:
     | `range_sentinel_t`            | `sentinel_t`              |
   - `common_iterator` now requires that its two types (`Iterator` and `Sentinel`)
     are different. Use `common_iterator_t<I, S>` to get the old behavior (i.e., if the two types are the same, it is an alias for `I`; otherwise, it is
-    `common_iterator<I, S>`). 
+    `common_iterator<I, S>`).
   - The following iterator adaptors now work with iterators that return proxies
-    from their dereference operator (i.e., `operator*`):
+    from their postfix increment operator (i.e., `operator++(int)`):
     * `common_iterator`
     * `counted_iterator`
   - The following customization points are now implemented per the Ranges TS
@@ -120,7 +131,7 @@ Release Notes:
 * **0.1.1**
   Small tweak to `Writable` concept to fix #537.
 * **0.1.0**
-  March 8, 2017, Begin semantic versioning 
+  March 8, 2017, Begin semantic versioning
 
 Say Thanks!
 -----------

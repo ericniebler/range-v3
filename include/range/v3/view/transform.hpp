@@ -351,7 +351,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
                 template<typename Rng1, typename Rng2, typename Fun,
@@ -359,7 +359,7 @@ namespace ranges
                 iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
-                    return {all(std::forward<Rng1>(rng1)), all(std::forward<Rng2>(rng2)), std::move(fun)};
+                    return {all(static_cast<Rng1&&>(rng1)), all(static_cast<Rng2&&>(rng2)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -432,6 +432,8 @@ namespace ranges
                         protect(std::move(fun))))
                 )
             public:
+                // Don't forget to update view::for_each whenever this set
+                // of concepts changes
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputRange<Rng>,
@@ -453,7 +455,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
                 template<typename Rng1, typename Rng2, typename Fun,
@@ -461,7 +463,7 @@ namespace ranges
                 transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
-                    return {all(std::forward<Rng1>(rng1)), all(std::forward<Rng2>(rng2)),
+                    return {all(static_cast<Rng1&&>(rng1)), all(static_cast<Rng2&&>(rng2)),
                         std::move(fun)};
                 }
 

@@ -46,7 +46,7 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
                 I end = ranges::next(begin, end_), res = end;
-                for (; begin != end; ++out)
+                for(; begin != end; ++out)
                     *out = *--end;
                 return {res, out};
             }

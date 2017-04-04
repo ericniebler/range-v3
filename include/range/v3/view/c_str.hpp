@@ -61,6 +61,8 @@ namespace ranges
         /// @{
         namespace view
         {
+            /// View a `\0`-terminated C string (e.g. from a const char*) as a
+            /// range.
             struct c_str_fn
             {
                 // Fixed-length

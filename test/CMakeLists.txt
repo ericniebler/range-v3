@@ -19,6 +19,9 @@ add_test(test.view_facade view_facade)
 add_executable(view_adaptor view_adaptor.cpp)
 add_test(test.view_adaptor view_adaptor)
 
+add_executable(index index.cpp)
+add_test(test.index index)
+
 add_executable(iterator_range iterator_range.cpp)
 add_test(test.iterator_range iterator_range)
 
@@ -39,6 +42,9 @@ add_test(test.istream_range, istream_range)
 
 add_executable(bug474 bug474.cpp)
 add_test(test.bug474, bug474)
+
+add_executable(bug566 bug566.cpp)
+add_test(test.bug566, bug566)
 
 add_executable(span span.cpp)
 add_test(test.span, span)

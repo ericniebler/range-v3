@@ -204,7 +204,7 @@ namespace ranges
                 invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     concepts::InputRange *, concepts::Range * = nullptr)
                 {
-                    return {all(std::forward<Rng>(rng)), from, count};
+                    return {all(static_cast<Rng&&>(rng)), from, count};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
@@ -254,11 +254,11 @@ namespace ranges
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const ->
-                    decltype(slice_fn::invoke_(std::forward<Rng>(rng), from, to - from,
+                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
                         range_concept<Rng>{}))
                 {
                     RANGES_EXPECT(0 <= from && from <= to);
-                    return slice_fn::invoke_(std::forward<Rng>(rng), from, to - from,
+                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
                         range_concept<Rng>{});
                 }
                 // slice(rng, 4, end-2)
@@ -268,14 +268,14 @@ namespace ranges
                     CONCEPT_REQUIRES_(InputRange<Rng>() && SizedRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_type_t<Rng> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(std::forward<Rng>(rng), from,
+                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from,
                         distance(rng) + to.dist_ - from, range_concept<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
-                    return slice_fn::invoke_(std::forward<Rng>(rng), from,
+                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from,
                         distance(rng) + to.dist_ - from, range_concept<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
@@ -284,14 +284,14 @@ namespace ranges
                         ForwardRange<Rng>())>
                 auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(std::forward<Rng>(rng), from.dist_,
+                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_concept<Rng>{},
                         bounded_range_concept<Rng>{}()))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(from.dist_ <= to.dist_);
-                    return slice_fn::invoke_(std::forward<Rng>(rng), from.dist_,
+                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_concept<Rng>{},
                         bounded_range_concept<Rng>{}());
                 }
@@ -299,10 +299,10 @@ namespace ranges
                 template<typename Rng,
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_type_t<Rng> from, end_fn) const ->
-                    decltype(ranges::view::drop_exactly(std::forward<Rng>(rng), from))
+                    decltype(ranges::view::drop_exactly(static_cast<Rng&&>(rng), from))
                 {
                     RANGES_EXPECT(0 <= from);
-                    return ranges::view::drop_exactly(std::forward<Rng>(rng), from);
+                    return ranges::view::drop_exactly(static_cast<Rng&&>(rng), from);
                 }
                 // slice(rng, end-4, end)
                 template<typename Rng,
@@ -310,13 +310,13 @@ namespace ranges
                         ForwardRange<Rng>())>
                 auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     end_fn) const ->
-                    decltype(slice_fn::invoke_(std::forward<Rng>(rng), from.dist_,
+                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
                         -from.dist_, range_concept<Rng>{},
                         bounded_range_concept<Rng>{}()))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
-                    return slice_fn::invoke_(std::forward<Rng>(rng), from.dist_,
+                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
                         -from.dist_, range_concept<Rng>{},
                         bounded_range_concept<Rng>{}());
                 }

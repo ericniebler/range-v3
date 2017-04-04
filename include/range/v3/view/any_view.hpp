@@ -53,7 +53,9 @@ namespace ranges
                 T obj;
             public:
                 object() = default;
-                object(T o) : obj(std::move(o)) {}
+                object(T o)
+                  : obj(std::move(o))
+                {}
                 T &get() { return obj; }
                 T const &get() const { return obj; }
             };
@@ -362,7 +364,7 @@ namespace ranges
             template<typename Rng>
             any_view(Rng && rng, std::true_type)
               : ptr_{new detail::any_view_impl<view::all_t<Rng>, Ref, Cat>{
-                    view::all(std::forward<Rng>(rng))}}
+                    view::all(static_cast<Rng&&>(rng))}}
             {}
             template<typename Rng>
             any_view(Rng &&, std::false_type)
@@ -380,7 +382,7 @@ namespace ranges
                     InputRange<Rng>,
                     meta::defer<CompatibleRange, Rng>>::value)>
             any_view(Rng && rng)
-              : any_view(std::forward<Rng>(rng),
+              : any_view(static_cast<Rng&&>(rng),
                   meta::bool_<detail::to_cat_(range_concept<Rng>{}) >= Cat>{})
             {}
             any_view(any_view &&) = default;

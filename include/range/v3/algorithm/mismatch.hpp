@@ -82,7 +82,7 @@ namespace ranges
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), std::forward<I2>(begin2), std::move(pred),
+                return (*this)(begin(rng1), end(rng1), static_cast<I2&&>(begin2), std::move(pred),
                     std::move(proj1), std::move(proj2));
             }
 

@@ -147,7 +147,7 @@ namespace ranges
                 static drop_exactly_view<all_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::InputRange*)
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(static_cast<Rng&&>(rng)), n};
                 }
                 template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
@@ -161,7 +161,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_exactly_fn::invoke_(std::forward<Rng>(rng), n, range_concept<Rng>{})
+                    drop_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_concept<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,

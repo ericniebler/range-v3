@@ -39,17 +39,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // Dereference the iterator and coerce the return type
-            template<typename Reference>
-            struct deref_fun
-            {
-                template<typename I>
-                Reference operator()(I const &it) const
-                {
-                    return *it;
-                }
-            };
-
             template<typename State, typename Value>
             using concat_cardinality =
                 std::integral_constant<cardinality,
@@ -254,7 +243,8 @@ namespace ranges
                 reference read() const
                 {
                     // Kind of a dumb implementation. Surely there's a better way.
-                    return ranges::get<0>(unique_variant(its_.visit(detail::deref_fun<reference>{})));
+                    return ranges::get<0>(unique_variant(its_.visit(
+                        compose(convert_to<reference>{}, dereference_fn{}))));
                 }
                 void next()
                 {
@@ -335,7 +325,7 @@ namespace ranges
                 {
                     static_assert(meta::and_c<(bool)InputRange<Rngs>()...>::value,
                         "Expecting Input Ranges");
-                    return concat_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
+                    return concat_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
                 }
             };
 

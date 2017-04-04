@@ -148,7 +148,7 @@ namespace ranges
                 template<typename... Ts,
                     CONCEPT_REQUIRES_(Constructible<T, Ts...>())>
                 constexpr indexed_datum(Ts &&... ts)
-                  : datum_(detail::forward<Ts>(ts)...)
+                  : datum_(static_cast<Ts&&>(ts)...)
                 {}
                 RANGES_CXX14_CONSTEXPR indexed_element<T, Index::value> ref()
                 {
@@ -239,7 +239,8 @@ namespace ranges
                         tail_t tail;
                     };
 
-                    type() {}
+                    type()
+                    {}
                     template<typename... Args>
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}
@@ -264,8 +265,10 @@ namespace ranges
                         tail_t tail;
                     };
 
-                    type() {}
-                    ~type() {}
+                    type()
+                    {}
+                    ~type()
+                    {}
                     template<typename... Args>
                     constexpr type(meta::size_t<0>, Args &&... args)
                       : head{((Args &&) args)...}
@@ -382,11 +385,11 @@ namespace ranges
                 template<typename U, std::size_t ...Is>
                 void construct_(U &u, meta::index_sequence<Is...>)
                 {
-                    ::new((void*)std::addressof(u)) U(detail::forward<Ts>(std::get<Is>(args_))...);
+                    ::new((void*)std::addressof(u)) U(static_cast<Ts&&>(std::get<Is>(args_))...);
                 }
 
                 construct_fn(Ts &&...ts)
-                  : args_{detail::forward<Ts>(ts)...}
+                  : args_{static_cast<Ts&&>(ts)...}
                 {}
                 template<typename U, std::size_t M>
                 [[noreturn]] meta::if_c<N != M> operator()(indexed_datum<U, meta::size_t<M>> &)
@@ -434,7 +437,7 @@ namespace ranges
                 auto operator()(Ts &&...ts) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    ranges::emplace<N>(*var_, detail::forward<Ts>(ts)...)
+                    ranges::emplace<N>(*var_, static_cast<Ts&&>(ts)...)
                 )
             };
 
@@ -576,7 +579,7 @@ namespace ranges
             template<std::size_t N, typename...Args,
                 CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args...>())>
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
-              : detail::variant_data<Ts...>{meta::size_t<N>{}, detail::forward<Args>(args)...}
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args&&>(args)...}
               , index_(N)
             {}
             template<std::size_t N, typename T,
@@ -621,7 +624,7 @@ namespace ranges
             void emplace(Args &&...args)
             {
                 this->clear_();
-                detail::construct_fn<N, Args&&...> fn{detail::forward<Args>(args)...};
+                detail::construct_fn<N, Args&&...> fn{static_cast<Args&&>(args)...};
                 detail::variant_visit_(N, data_(), std::ref(fn), ident{});
                 index_ = N;
             }
@@ -731,7 +734,7 @@ namespace ranges
             meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args...>::value, int>>
         void emplace(variant<Ts...> &var, Args &&...args)
         {
-            var.template emplace<N>(detail::forward<Args>(args)...);
+            var.template emplace<N>(static_cast<Args&&>(args)...);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

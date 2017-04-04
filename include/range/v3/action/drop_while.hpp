@@ -66,7 +66,7 @@ namespace ranges
                 {
                     ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
                         std::move(fun)));
-                    return std::forward<Rng>(rng);
+                    return static_cast<Rng&&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

@@ -57,7 +57,7 @@ namespace ranges
             T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                for (; begin1 != end1; ++begin1, ++begin2)
+                for(; begin1 != end1; ++begin1, ++begin2)
                   init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
                 return init;
             }
@@ -73,7 +73,7 @@ namespace ranges
             T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                for (; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
+                for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                   init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
                 return init;
             }
@@ -89,7 +89,7 @@ namespace ranges
             T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), std::forward<I2Ref>(begin2), std::move(init),
+                return (*this)(begin(rng1), end(rng1), static_cast<I2Ref&&>(begin2), std::move(init),
                     std::move(bop1), std::move(bop2),  std::move(proj1), std::move(proj2));
             }
 

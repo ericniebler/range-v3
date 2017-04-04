@@ -21,6 +21,14 @@
 
 using namespace ranges;
 
+struct MoveOnlyReadable
+{
+    using value_type = std::unique_ptr<int>;
+    value_type operator*() const;
+};
+
+CONCEPT_ASSERT(Readable<MoveOnlyReadable>());
+
 void test_insert_iterator()
 {
     CONCEPT_ASSERT(OutputIterator<insert_iterator<std::vector<int>>, int&&>());

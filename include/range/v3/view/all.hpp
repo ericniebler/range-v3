@@ -61,7 +61,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
                 static T from_range(T && t)
                 {
-                    return std::forward<T>(t);
+                    return static_cast<T&&>(t);
                 }
 
                 /// If it is container-like, turn it into a view, being careful
@@ -85,9 +85,9 @@ namespace ranges
                 template<typename T,
                     CONCEPT_REQUIRES_(Range<T>())>
                 auto operator()(T && t) const ->
-                    decltype(all_fn::from_range(std::forward<T>(t)))
+                    decltype(all_fn::from_range(static_cast<T&&>(t)))
                 {
-                    return all_fn::from_range(std::forward<T>(t));
+                    return all_fn::from_range(static_cast<T&&>(t));
                 }
 
                 template<typename T,

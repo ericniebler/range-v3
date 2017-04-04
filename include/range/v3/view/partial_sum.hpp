@@ -147,7 +147,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 partial_sum_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(std::forward<Rng>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,

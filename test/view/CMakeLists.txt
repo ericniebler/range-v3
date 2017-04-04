@@ -10,6 +10,9 @@ add_test(test.view.any_view, view.any_view)
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)
 
+add_executable(view.cartesian_product cartesian_product.cpp)
+add_test(test.view.cartesian_product, view.cartesian_product)
+
 add_executable(view.chunk chunk.cpp)
 add_test(test.view.chunk, view.chunk)
 
@@ -57,6 +60,9 @@ add_test(test.view.iota, view.iota)
 
 add_executable(view.join join.cpp)
 add_test(test.view.join, view.join)
+
+add_executable(view.linear_distribute linear_distribute.cpp)
+add_test(test.view.linear_distribute, view.linear_distribute)
 
 add_executable(view.map keys_value.cpp)
 add_test(test.view.map, view.map)

@@ -166,6 +166,8 @@ namespace ranges
 
         namespace view
         {
+            /// Returns an infinite range that endlessly repeats the source
+            /// range.
             struct cycle_fn
             {
             private:
@@ -178,7 +180,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 cycled_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
-                    return cycled_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
+                    return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED

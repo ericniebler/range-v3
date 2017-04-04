@@ -112,20 +112,20 @@ namespace ranges
                 void advance()
                 {
                     RANGES_EXPECT(range());
-                    if (range()->size() > 0)
+                    if(range()->size() > 0)
                     {
                         using Dist = std::uniform_int_distribution<D>;
                         using Param_t = typename Dist::param_type;
                         Dist dist{};
                         URNG& engine = range()->engine().get();
 
-                        for (; ; ++current(), size().decrement())
+                        for(; ; ++current(), size().decrement())
                         {
                             RANGES_ASSERT(current() != ranges::end(range()->range()));
                             auto n = pop_size();
                             RANGES_EXPECT(n > 0);
                             const Param_t interval{ 0, n - 1 };
-                            if (dist(engine, interval) < range()->size())
+                            if(dist(engine, interval) < range()->size())
                                 break;
                         }
                     }
@@ -139,7 +139,7 @@ namespace ranges
                 : base_t{&rng, ranges::begin(rng.range()), rng.range()}
                 {
                     auto n = pop_size();
-                    if (rng.size() > n)
+                    if(rng.size() > n)
                         rng.size() = n;
                     advance();
                 }
@@ -181,6 +181,8 @@ namespace ranges
 
         namespace view
         {
+
+            /// Returns a random sample of a range of length `size(range)`.
             class sample_fn
             {
                 template<typename Rng, typename URNG>
@@ -211,7 +213,7 @@ namespace ranges
                     URNG &generator = detail::get_random_engine()) const
                 {
                     return sample_view<all_t<Rng>, URNG>{
-                        all(std::forward<Rng>(rng)), sample_size, generator
+                        all(static_cast<Rng&&>(rng)), sample_size, generator
                     };
                 }
 

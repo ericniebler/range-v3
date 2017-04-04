@@ -100,12 +100,15 @@ namespace ranges
             template<typename Concept>
             using base_concepts_of_t = meta::_t<base_concepts_of<Concept>>;
 
+            template<typename T>
+            T gcc_bugs_bugs_bugs(T);
+
             template<typename...Ts>
             auto models_(any) ->
                 std::false_type;
 
             template<typename...Ts, typename Concept,
-                typename = decltype(&Concept::template requires_<Ts...>)>
+                typename = decltype(gcc_bugs_bugs_bugs(&Concept::template requires_<Ts...>))>
             auto models_(Concept *) ->
                 meta::apply<
                     meta::quote<meta::lazy::strict_and>,
@@ -485,13 +488,10 @@ namespace ranges
 
             struct Destructible
             {
-                template<typename T,
-                    typename UnRefT = meta::_t<std::remove_reference<T>>>
-                auto requires_(T &t, UnRefT const &ct) -> decltype(
+                template<typename T>
+                auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_nothrow_destructible<T>()),
-                        concepts::has_type<UnRefT *>(&t),
-                        concepts::has_type<UnRefT const *>(&ct)
+                        concepts::is_true(std::is_nothrow_destructible<T>())
                     ));
             };
 

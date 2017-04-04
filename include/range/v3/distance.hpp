@@ -55,8 +55,10 @@ namespace ranges
             {
                 // Better not be trying to compute the distance of an infinite range:
                 RANGES_EXPECT(!is_infinite<Rng>::value);
-                return this->impl_r(rng, d, bounded_range_concept<Rng>(),
+                auto result = this->impl_r(rng, d, bounded_range_concept<Rng>(),
                     sized_range_concept<Rng>());
+                RANGES_EXPECT(result.first >= d);
+                return result;
             }
         };
 
@@ -73,6 +75,7 @@ namespace ranges
                 return enumerate(rng, d).first;
             }
             template<typename Rng, typename D>
+            RANGES_CXX14_CONSTEXPR
             D impl_r(Rng &rng, D d, concepts::SizedRange*) const
             {
                 return static_cast<D>(size(rng)) + d;
@@ -82,11 +85,14 @@ namespace ranges
 
             template<typename Rng, typename D = range_difference_type_t<Rng>,
                 CONCEPT_REQUIRES_(Integral<D>() && Range<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             D operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
                 RANGES_EXPECT(!is_infinite<Rng>::value);
-                return this->impl_r(rng, d, sized_range_concept<Rng>());
+                auto result = this->impl_r(rng, d, sized_range_concept<Rng>());
+                RANGES_EXPECT(result >= d);
+                return result;
             }
         };
 
@@ -115,9 +121,9 @@ namespace ranges
             int impl_r(Rng &rng, range_difference_type_t<Rng> n, concepts::SizedRange*) const
             {
                 auto dist = distance(rng); // O(1) since rng is a SizedRange
-                if (dist > n)
+                if(dist > n)
                     return  1;
-                else if (dist < n)
+                else if(dist < n)
                     return -1;
                 else
                     return  0;

@@ -80,7 +80,7 @@ namespace ranges
         private:
             range_difference_type_t<Rng> n_;
             sentinel_t<Rng> end_;
-            offset_t & offset() {return this->box<offset_t>::get();}
+            offset_t & offset() { return this->box<offset_t>::get(); }
             offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;
@@ -146,7 +146,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
-                    return {all(std::forward<Rng>(rng)), n};
+                    return {all(static_cast<Rng&&>(rng)), n};
                 }
 
                 // For the sake of better error messages:
