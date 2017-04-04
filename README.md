@@ -65,6 +65,9 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.3** April 4, 2017
+  Fix the following bug:
+  - iterators that return move-only types by value do not satisfy Readable (ericniebler/stl2#399).
 * **0.2.2** March 30, 2017
   New in this release:
   - `view::linear_distribute(from,to,n)` - A view of `n` elements between `from` and `to`, distributed evenly.
