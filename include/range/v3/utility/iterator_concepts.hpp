@@ -166,9 +166,9 @@ namespace ranges
                     concepts::valid_expr(
                         // The value, reference and rvalue reference types are related
                         // through the CommonReference concept.
-                        concepts::model_of<CommonReference, reference_t<I>, value_t<I> &>(),
-                        concepts::model_of<CommonReference, reference_t<I>, rvalue_reference_t<I>>(),
-                        concepts::model_of<CommonReference, rvalue_reference_t<I>, value_t<I> const &>()
+                        concepts::model_of<CommonReference, reference_t<I> &&, value_t<I> &>(),
+                        concepts::model_of<CommonReference, reference_t<I> &&, rvalue_reference_t<I> &&>(),
+                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>()
                     ));
             };
 
