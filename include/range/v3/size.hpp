@@ -38,7 +38,7 @@ namespace ranges
             {
             private:
                 template<typename R, std::size_t N>
-                static constexpr std::size_t impl_(R const (&)[N], int) noexcept
+                static constexpr std::size_t impl_(R (&)[N], int) noexcept
                 {
                     return N;
                 }
@@ -46,9 +46,9 @@ namespace ranges
                 // Prefer member if it returns Integral.
                 template<typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(std::declval<R const &>().size())),
+                    typename N = decltype(aux::copy(std::declval<R &>().size())),
                     CONCEPT_REQUIRES_(Integral<N>())>
-                static constexpr N impl_(R const &r, int)
+                static constexpr N impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     r.size()
@@ -57,17 +57,17 @@ namespace ranges
                 // Use ADL if it returns Integral.
                 template<typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(size(std::declval<R const &>()))),
+                    typename N = decltype(aux::copy(size(std::declval<R &>()))),
                     CONCEPT_REQUIRES_(Integral<N>())>
-                static constexpr N impl_(R const &r, long)
+                static constexpr N impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     size(r)
                 )
 
-                template<typename R, typename I = decltype(ranges::cbegin(std::declval<R const&>())),
+                template<typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())),
                     CONCEPT_REQUIRES_(ForwardIterator<I>())>
-                static RANGES_CXX14_CONSTEXPR auto impl_(R const &r, ...)
+                static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::iter_size(ranges::cbegin(r), ranges::cend(r))
@@ -77,7 +77,7 @@ namespace ranges
                 using iter_size_fn::operator();
 
                 template<typename R>
-                constexpr auto operator()(R const &r) const
+                constexpr auto operator()(R &&r) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fn::impl_(r, 42)
@@ -102,6 +102,8 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
+        /// Not to spec per N4651: allow non-const size functions (See
+        /// https://github.com/ericniebler/range-v3/issues/385)
         RANGES_INLINE_VARIABLE(_size_::fn, size)
     }
 }
