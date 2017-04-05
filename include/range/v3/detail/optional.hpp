@@ -27,13 +27,19 @@ namespace ranges
         struct in_place_t {};
         RANGES_INLINE_VARIABLE(in_place_t, in_place)
 
+        struct nullopt_t {};
+        RANGES_INLINE_VARIABLE(nullopt_t, nullopt)
+
         template<typename T>
         struct optional
         {
         private:
             variant<meta::nil_, T> data_;
         public:
-            optional() = default;
+            constexpr optional() noexcept = default;
+            constexpr optional(nullopt_t) noexcept
+              : optional()
+            {}
             optional(T t)
               : data_(emplaced_index<1>, std::move(t))
             {}
@@ -41,16 +47,16 @@ namespace ranges
             explicit optional(in_place_t, Args &&...args)
               : data_(emplaced_index<1>, static_cast<Args&&>(args)...)
             {}
-            explicit operator bool() const
+            explicit operator bool() const noexcept
             {
                 return data_.index() != 0;
             }
-            T & operator*()
+            T &operator*() noexcept
             {
                 RANGES_EXPECT(*this);
                 return ranges::get<1>(data_);
             }
-            T const & operator*() const
+            T const &operator*() const noexcept
             {
                 RANGES_EXPECT(*this);
                 return ranges::get<1>(data_);
@@ -65,7 +71,12 @@ namespace ranges
                 ranges::emplace<1>(data_, std::move(t));
                 return *this;
             }
-            void reset()
+            optional &operator=(nullopt_t) noexcept
+            {
+                reset();
+                return *this;
+            }
+            void reset() noexcept
             {
                 ranges::emplace<0>(data_);
             }
