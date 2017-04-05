@@ -9,22 +9,81 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <iostream>
+#include <forward_list>
 #include <list>
 #include <vector>
-#include <forward_list>
 #include <range/v3/core.hpp>
-#include <range/v3/view/iota.hpp>
 #include <range/v3/view/chunk.hpp>
-#include <range/v3/view/reverse.hpp>
-#include <range/v3/view/repeat.hpp>
 #include <range/v3/view/cycle.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/move.hpp>
+#include <range/v3/view/repeat.hpp>
+#include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 #include "../test_utils.hpp"
+
+using namespace ranges;
+
+namespace
+{
+    void test_input_ranges()
+    {
+        int ints[] = {0,1,2,3,4};
+        constexpr auto N = ranges::size(ints);
+        constexpr auto K = 2;
+        auto base = [&]
+        {
+            auto first = input_iterator<int*, true>(ranges::begin(ints));
+            auto last = input_iterator<int*, true>(ranges::end(ints));
+            return make_iterator_range(first, last, N);
+        }();
+        auto make_range = [&]{ return view::chunk(decltype(base)(base), +K); };
+        auto rng = make_range();
+        using Rng = decltype(rng);
+        CONCEPT_ASSERT(InputRange<Rng>());
+        CONCEPT_ASSERT(!ForwardRange<Rng>());
+        CONCEPT_ASSERT(SizedRange<Rng>());
+        CHECK(ranges::size(rng) == (N + K - 1) / K);
+        CONCEPT_ASSERT(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>());
+        CHECK((ranges::end(rng) - ranges::begin(rng)) == int((N + K - 1) / K));
+
+        rng = make_range();
+        auto i = ranges::begin(rng);
+        auto e = ranges::end(rng);
+        CHECK(i != e);
+        if (i == e) return;
+        {
+            auto r = *i;
+            CHECK(ranges::size(r) == 2u);
+            auto ii = ranges::begin(r);
+            auto ee = ranges::end(r);
+            CHECK(ii != ee);
+            if (ii == ee) return;
+            CHECK((ee - ii) == 2);
+            CHECK(*ii == 0);
+            CHECK(++ii != ee);
+            if (ii == ee) return;
+            CHECK((ee - ii) == 1);
+            CHECK(*ii == 1);
+            CHECK(++ii == ee);
+            CHECK((ee - ii) == 0);
+        }
+        CHECK(++i != e);
+        if (i == e) return;
+        ::check_equal(*i, {2,3});
+        CHECK(++i != e);
+        if (i != e)
+        {
+            ::check_equal(*i, {4});
+            CHECK(++i == e);
+        }
+    }
+}
 
 int main()
 {
-    using namespace ranges;
-
     std::vector<int> v = view::iota(0,11);
     auto rng1 = v | view::chunk(3);
     ::models<concepts::RandomAccessRange>(rng1);
@@ -136,6 +195,8 @@ int main()
         CHECK((next(it,6) - it) == 2);
         CHECK((next(it,7) - it) == 0);
     }
+
+    test_input_ranges();
 
     return ::test_result();
 }

@@ -36,15 +36,17 @@ namespace ranges
         private:
             variant<meta::nil_, T> data_;
         public:
-            constexpr optional() noexcept = default;
+            constexpr optional() noexcept {} // GCC 4.9 doesn't like =default here.
             constexpr optional(nullopt_t) noexcept
               : optional()
             {}
             optional(T t)
+                noexcept(std::is_nothrow_move_constructible<T>::value)
               : data_(emplaced_index<1>, std::move(t))
             {}
             template<typename...Args, CONCEPT_REQUIRES_(Constructible<T, Args...>())>
             explicit optional(in_place_t, Args &&...args)
+                noexcept(std::is_nothrow_constructible<T, Args...>::value)
               : data_(emplaced_index<1>, static_cast<Args&&>(args)...)
             {}
             explicit operator bool() const noexcept
@@ -62,11 +64,13 @@ namespace ranges
                 return ranges::get<1>(data_);
             }
             optional &operator=(T const &t)
+                noexcept(std::is_nothrow_copy_constructible<T>::value)
             {
                 ranges::emplace<1>(data_, t);
                 return *this;
             }
             optional &operator=(T &&t)
+                noexcept(std::is_nothrow_move_constructible<T>::value)
             {
                 ranges::emplace<1>(data_, std::move(t));
                 return *this;
