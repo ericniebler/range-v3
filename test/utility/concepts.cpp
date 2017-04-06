@@ -266,6 +266,12 @@ static_assert(
         ranges::concepts::View
     >::value, "");
 
+struct myview {
+    const char *begin();
+    const char *end();
+};
+CONCEPT_ASSERT(ranges::View<myview>());
+
 int main()
 {
     return test_result();
