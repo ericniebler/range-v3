@@ -383,7 +383,7 @@ namespace ranges
             view_like_(int);
 
             template<typename T>
-            std::false_type
+            std::true_type
             view_like_(long);
 
             template<typename T>
