@@ -43,19 +43,14 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename C = ordered_less, typename P = ident,
-                        typename I = iterator_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::is_true(Sortable<I, C, P>())
-                        ));
-                };
-
                 template<typename Rng, typename C = ordered_less, typename P = ident>
-                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
+                using Concept = meta::and_<
+                    ForwardRange<Rng>,
+                    meta::lazy::invoke<
+                        meta::compose<
+                            meta::bind_back<meta::quote<Sortable>, C, P>,
+                            meta::quote<iterator_t>>,
+                        Rng>>;
 
                 template<typename Rng, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
