@@ -1125,31 +1125,38 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename... Bools>
-            struct _and_;
+            template <bool>
+            struct _and_
+            {
+                template <class = void>
+                using invoke = std::true_type;
+            };
 
             template <>
-            struct _and_<> : std::true_type
+            struct _and_<false>
             {
+                template <typename Bool_, typename... Bools>
+                using invoke = invoke<
+                    if_c<!Bool_::type::value,
+                         id<std::false_type>,
+                         _and_<0==sizeof...(Bools)>>, Bools...>;
             };
 
-            template <typename Bool_, typename... Bools>
-            struct _and_<Bool_, Bools...>
-                : if_c<!Bool_::type::value, std::false_type, _and_<Bools...>>
+            template <bool>
+            struct _or_
             {
+                template <class = void>
+                using invoke = std::false_type;
             };
-
-            template <typename... Bools>
-            struct _or_;
 
             template <>
-            struct _or_<> : std::false_type
+            struct _or_<false>
             {
-            };
-
-            template <typename Bool_, typename... Bools>
-            struct _or_<Bool_, Bools...> : if_c<Bool_::type::value, std::true_type, _or_<Bools...>>
-            {
+                template <typename Bool_, typename... Bools>
+                using invoke = invoke<
+                    if_c<Bool_::type::value,
+                         id<std::true_type>,
+                         _or_<0 == sizeof...(Bools)>>, Bools...>;
             };
         } // namespace detail
         /// \endcond
@@ -1190,7 +1197,7 @@ namespace meta
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using and_ = _t<detail::_and_<Bools...>>;
+        using and_ = invoke<detail::_and_<0 == sizeof...(Bools)>, Bools...>;
 
         /// Logically or together all the Boolean parameters
         /// \ingroup logical
@@ -1210,7 +1217,7 @@ namespace meta
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using or_ = _t<detail::_or_<Bools...>>;
+        using or_ = invoke<detail::_or_<0 == sizeof...(Bools)>, Bools...>;
 
         namespace lazy
         {
