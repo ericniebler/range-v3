@@ -52,8 +52,8 @@ namespace ranges
                 friend action_access;
 
             public:
-                template<typename Rng, typename I = iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Permutable<I>())>
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(reverse_detail::Concept<Rng>())>
                 Rng operator()(Rng && rng) const
                 {
                     ranges::reverse(rng);

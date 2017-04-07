@@ -63,11 +63,18 @@ namespace ranges
             private:
                 Action action_;
                 friend pipeable_access;
+
+                template<typename Rng, typename...Rest>
+                using ActionConcept = meta::and_<
+                    Range<Rng>,
+                    Invocable<Action const&, Rng, Rest...>>;
+
                 template<typename Rng>
                 using ActionPipeConcept = meta::and_<
                     Invocable<Action&, Rng>,
                     Range<Rng>,
                     meta::not_<std::is_reference<Rng>>>;
+
                 // Pipeing requires things are passed by value.
                 template<typename Rng, typename Act,
                     CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
@@ -76,6 +83,7 @@ namespace ranges
                 (
                     invoke(act.action_, detail::move(rng))
                 )
+
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 template<typename Rng, typename Act,
@@ -94,19 +102,22 @@ namespace ranges
                         "Or, wrap the argument with std::ref to pass it by reference.");
                 }
             #endif
+
             public:
                 action() = default;
                 action(Action a)
                   : action_(detail::move(a))
                 {}
+
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(Range<Rng &>() && Invocable<Action const&, Rng &, Rest...>())>
+                    CONCEPT_REQUIRES_(ActionConcept<Rng &, Rest...>())>
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     invoke(action_, rng, static_cast<Rest&&>(rest)...)
                 )
+
                 // Currying overload.
                 template<typename T, typename...Rest, typename A = Action>
                 auto operator()(T && t, Rest &&... rest) const

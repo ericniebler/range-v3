@@ -47,8 +47,12 @@ namespace ranges
                 template<typename Rng>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    InputRange<range_value_type_t<Rng>>,
-                    SemiRegular<join_value_t<Rng>>>;
+                    meta::lazy::invoke<
+                        meta::compose<meta::quote<InputRange>, meta::quote<range_value_type_t>>,
+                        Rng>,
+                    meta::lazy::invoke<
+                        meta::compose<meta::quote<SemiRegular>, meta::quote<join_value_t>>,
+                        Rng>>;
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>

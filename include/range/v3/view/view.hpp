@@ -93,6 +93,7 @@ namespace ranges
                 (
                     v.view_(static_cast<Rng&&>(rng))
                 )
+
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 template<typename Rng, typename Vw,
@@ -110,11 +111,13 @@ namespace ranges
                         "a named variable, and then pipe it to the view.");
                 }
             #endif
+
             public:
                 view() = default;
                 view(View a)
                   : view_(std::move(a))
                 {}
+
                 // Calling directly requires View arguments or lvalue containers.
                 template<typename Rng, typename...Rest,
                     CONCEPT_REQUIRES_(ViewConcept<Rng, Rest...>())>
@@ -123,6 +126,7 @@ namespace ranges
                 (
                     view_(static_cast<Rng&&>(rng), static_cast<Rest&&>(rest)...)
                 )
+
                 // Currying overload.
                 template<typename...Ts, typename V = View>
                 auto operator()(Ts &&... ts) const

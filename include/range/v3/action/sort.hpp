@@ -45,7 +45,12 @@ namespace ranges
             public:
                 template<typename Rng, typename C = ordered_less, typename P = ident>
                 using Concept = meta::and_<
-                    ForwardRange<Rng>, Sortable<iterator_t<Rng>, C, P>>;
+                    ForwardRange<Rng>,
+                    meta::lazy::invoke<
+                        meta::compose<
+                            meta::bind_back<meta::quote<Sortable>, C, P>,
+                            meta::quote<iterator_t>>,
+                        Rng>>;
 
                 template<typename Rng, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
