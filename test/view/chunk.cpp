@@ -17,6 +17,7 @@
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/cycle.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/reverse.hpp>
@@ -197,6 +198,17 @@ int main()
     }
 
     test_input_ranges();
+
+    {
+        // Regression test for #567
+        std::vector<std::vector<int>> data{{1, 2, 3}, {4, 5, 6}};
+        auto rng = data | view::join | view::chunk(2);
+        using Rng = decltype(rng);
+        CONCEPT_ASSERT(InputRange<Rng>());
+        CONCEPT_ASSERT(InputRange<range_reference_t<Rng>>());
+        int const expected[][2] = {{1, 2}, {3, 4}, {5, 6}};
+        ::check_equal(rng, expected);
+    }
 
     return ::test_result();
 }
