@@ -258,37 +258,73 @@ namespace ranges
                 return 42;
             }
 
-            #if defined(__clang__) && !defined(_LIBCPP_VERSION)
-                template<typename T, typename Arg = T>
-                struct is_trivially_copy_assignable
-                  : meta::bool_<__is_trivially_assignable(T &, Arg const&)>
-                {};
-                template<typename T, typename Arg = T>
-                struct is_trivially_move_assignable
-                  : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
-                {};
-             #elif defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
-                template<typename T>
-                using is_trivially_copy_assignable = std::is_trivial<T>;
+            template<int I>
+            struct priority_tag
+              : priority_tag<I - 1>
+            {};
 
-                template<typename T>
-                using is_trivially_move_assignable = std::is_trivial<T>;
-            #else
-                using std::is_trivially_copy_assignable;
-                using std::is_trivially_move_assignable;
-            #endif
+            template<>
+            struct priority_tag<0>
+            {};
 
-            #if RANGES_CXX_LIB_IS_FINAL > 0
-                #if defined(__clang__) && !defined(_LIBCPP_VERSION)
-                    template<typename T>
-                    using is_final = meta::bool_<__is_final(T)>;
-                #else
-                    using std::is_final;
-                #endif
-            #else
-                template<typename T>
-                using is_final = std::false_type;
-            #endif
+        #if defined(__clang__) && !defined(_LIBCPP_VERSION)
+            template<typename T, typename Arg = T>
+            struct is_trivially_copy_assignable
+                : meta::bool_<__is_trivially_assignable(T &, Arg const&)>
+            {};
+            template<typename T, typename Arg = T>
+            struct is_trivially_move_assignable
+                : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
+            {};
+        #elif defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
+            template<typename T>
+            using is_trivially_copy_assignable = std::is_trivial<T>;
+
+            template<typename T>
+            using is_trivially_move_assignable = std::is_trivial<T>;
+        #else
+            using std::is_trivially_copy_assignable;
+            using std::is_trivially_move_assignable;
+        #endif
+
+        #if RANGES_CXX_LIB_IS_FINAL > 0
+        # if defined(__clang__) && !defined(_LIBCPP_VERSION)
+            template<typename T>
+            using is_final = meta::bool_<__is_final(T)>;
+        # else
+            using std::is_final;
+        # endif
+        #else
+            template<typename T>
+            using is_final = std::false_type;
+        #endif
+
+            // Work around libc++'s buggy std::is_function
+        #if !defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 3800
+            using std::is_function;
+        #else
+            // Function types here:
+            template<typename T>
+            char (&is_function_impl_(priority_tag<0>))[1];
+
+            // Array types here:
+            template<typename T, typename = decltype((*(T*)0)[0])>
+            char (&is_function_impl_(priority_tag<1>))[2];
+
+            // Anything that can be returned from a function here (including
+            // void and reference types):
+            template<typename T, typename = T(*)()>
+            char (&is_function_impl_(priority_tag<2>))[3];
+
+            // Classes and unions (including abstract types) here:
+            template<typename T, typename = int T::*>
+            char (&is_function_impl_(priority_tag<3>))[4];
+
+            template <typename T>
+            struct is_function
+              : meta::bool_<sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1>
+            {};
+        #endif
 
             template<typename T>
             struct remove_rvalue_reference
@@ -304,10 +340,6 @@ namespace ranges
 
             template<typename T>
             using remove_rvalue_reference_t = meta::_t<remove_rvalue_reference<T>>;
-
-            template<int I>
-            struct priority_tag : priority_tag<I - 1> {};
-            template<> struct priority_tag<0> {};
         }
         /// \endcond
 
