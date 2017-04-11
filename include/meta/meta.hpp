@@ -1192,12 +1192,18 @@ namespace meta
         template <typename... Bools>
         using strict_and = and_c<Bools::type::value...>;
 
+#if !defined(__clang__) || __clang_major__ >= 4 || __clang_minor__ >= 8
         /// Logically and together all the integral constant-wrapped Boolean parameters,
         /// \e with
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using and_ = invoke<detail::_and_<0 == sizeof...(Bools)>, Bools...>;
+#else
+        // Make a trip through quote<> to avoid CWG1430
+        template <typename... Bools>
+        using and_ = invoke<quote<detail::_and_<0 == sizeof...(Bools)>:: template invoke>, Bools...>;
+#endif
 
         /// Logically or together all the Boolean parameters
         /// \ingroup logical
@@ -1212,12 +1218,18 @@ namespace meta
         template <typename... Bools>
         using strict_or = or_c<Bools::type::value...>;
 
+#if !defined(__clang__) || __clang_major__ >= 4 || __clang_minor__ >= 8
         /// Logically or together all the integral constant-wrapped Boolean parameters,
         /// \e with
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using or_ = invoke<detail::_or_<0 == sizeof...(Bools)>, Bools...>;
+#else
+        // Make a trip through quote<> to avoid CWG1430
+        template <typename... Bools>
+        using or_ = invoke<quote<detail::_or_<0 == sizeof...(Bools)>:: template invoke>, Bools...>;
+#endif
 
         namespace lazy
         {
