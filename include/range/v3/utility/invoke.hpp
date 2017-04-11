@@ -102,7 +102,7 @@ namespace ranges
             )
         public:
             template<typename F, typename Obj, typename First, typename... Rest,
-                meta::if_c<std::is_function<F>::value, int> = 0>
+                meta::if_c<detail::is_function<F>::value, int> = 0>
             constexpr auto operator()(F (Obj::*ptr), First && first, Rest &&... rest) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -111,7 +111,7 @@ namespace ranges
                     ptr, static_cast<First&&>(first), static_cast<Rest&&>(rest)...)
             )
             template<typename Data, typename Obj, typename First,
-                meta::if_c<!std::is_function<Data>::value, int> = 0>
+                meta::if_c<!detail::is_function<Data>::value, int> = 0>
             constexpr auto operator()(Data (Obj::*ptr), First && first) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
