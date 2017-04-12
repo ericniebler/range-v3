@@ -47,16 +47,21 @@ namespace ranges
                 (
                     make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(fun))))
                 )
+
+                struct Concept_
+                {
+                    template<typename Rng, typename Fun>
+                    auto requires_() -> decltype(
+                        concepts::valid_expr(
+                            concepts::is_true(transform_fn::Concept<Rng, Fun>()),
+                            concepts::model_of<
+                                concepts::InputRange,
+                                concepts::Invocable::result_t<Fun&, range_reference_t<Rng>>>()));
+                };
+
             public:
                 template<typename Rng, typename Fun>
-                using Concept = meta::and_<
-                    transform_fn::Concept<Rng, Fun>,
-                    meta::lazy::invoke<
-                        meta::compose<
-                            meta::quote<InputRange>,
-                            meta::bind_front<meta::quote<concepts::Invocable::result_t>, Fun&>,
-                            meta::quote<range_reference_t>>,
-                        Rng>>;
+                using Concept = concepts::models<Concept_, Rng, Fun>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>

@@ -17,6 +17,7 @@
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/action/action.hpp>
+#include <range/v3/action/sort.hpp>
 #include <range/v3/algorithm/stable_sort.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -43,17 +44,8 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
-                template<typename Rng, typename C = ordered_less, typename P = ident>
-                using Concept = meta::and_<
-                    ForwardRange<Rng>,
-                    meta::lazy::invoke<
-                        meta::compose<
-                            meta::bind_back<meta::quote<Sortable>, C, P>,
-                            meta::quote<iterator_t>>,
-                        Rng>>;
-
                 template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
+                    CONCEPT_REQUIRES_(sort_fn::Sortable<Rng, C, P>())>
                 Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::stable_sort(rng, std::move(pred), std::move(proj));
@@ -62,7 +54,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(!Concept<Rng, C, P>())>
+                    CONCEPT_REQUIRES_(!sort_fn::Sortable<Rng, C, P>())>
                 void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
