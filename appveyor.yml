@@ -9,14 +9,15 @@ configuration:
   - Release
 
 cache:
-  - C:\cmake-3.7.2-win32-x86
+  - C:\cmake-3.9.1-win32-x86
 
 install:
   - ps: |
-      if (![IO.File]::Exists("C:\cmake-3.7.2-win32-x86\bin\cmake.exe")) {
-        Start-FileDownload 'https://cmake.org/files/v3.7/cmake-3.7.2-win32-x86.zip'
-        7z x -y cmake-3.7.2-win32-x86.zip -oC:\
+      if (![IO.File]::Exists("C:\cmake-3.9.1-win32-x86\bin\cmake.exe")) {
+        Start-FileDownload 'https://cmake.org/files/v3.9/cmake-3.9.1-win32-x86.zip'
+        7z x -y cmake-3.9.1-win32-x86.zip -oC:\
       }
+      $env:PATH="C:\cmake-3.9.1-win32-x86\bin;$env:PATH"
   - mkdir build && cd build
   - ps: |
       if ($env:PLATFORM -eq "x64" -and $env:CONFIGURATION -eq "Debug") {
@@ -24,7 +25,7 @@ install:
       } else {
         $env:NO_HEADER_CHECK=1
       }
-  - C:\cmake-3.7.2-win32-x86\bin\cmake .. -DRANGE_V3_NO_HEADER_CHECK=%NO_HEADER_CHECK% -T v140_clang_c2
+  - cmake .. -DRANGE_V3_NO_HEADER_CHECK=%NO_HEADER_CHECK% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -T v140_clang_c2
 
 build:
   project: c:/projects/range-v3/build/ALL_BUILD.vcxproj
@@ -32,6 +33,6 @@ build:
   verbosity: minimal
 
 test_script:
-  - C:\cmake-3.7.2-win32-x86\bin\ctest -j2
+  - ctest -j2
 
 deploy: off

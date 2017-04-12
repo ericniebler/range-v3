@@ -1,89 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
+# Copyright Eric Niebler 2014
+# Copyright Gonzalo Brito Gadeschi 2014, 2017
+# Copyright Louis Dionne 2015
+# Copyright Casey Carter 2016
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+cmake_minimum_required(VERSION 3.6)
 
 project(Range-v3 CXX)
 
-find_package(Doxygen)
-find_package(Git)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 
-include_directories(include)
+include(TestHeaders)
+include(ranges_options)
+include(ranges_env)
+include(ranges_flags)
+include(CTest)
 
 enable_testing()
-include(CTest)
-include(CheckCXXCompilerFlag)
-include(CMakeDependentOption)
 
-option(RANGES_MODULES "Enables Clang Modules." OFF)
-
-find_program(MEMORYCHECK_COMMAND valgrind)
-if(MEMORYCHECK_COMMAND)
-  message("Valgrind: ${MEMORYCHECK_COMMAND}")
-  set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
-else()
-  message("Valgrind not found")
-endif()
-
-macro(range_v3_append_flag testname flag)
-  check_cxx_compiler_flag(${flag} ${testname})
-  if (${testname})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-  endif()
-endmacro()
-
-# Select C++ standard to be used for compiling the tests,
-# for example: 11, 14, 17, 1z, 1y, ...
-#
-if(NOT RANGES_CXX_STD)
-  # Defaults to C++11 if not set:
-  set(RANGES_CXX_STD 11)
-endif()
-
-if("x${CMAKE_CXX_COMPILER_ID}" MATCHES "x.*Clang")
-  # Clang/C2 will blow up with various parts of the standard library
-  # if compiling with -std less than c++14.
-  if(("x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") AND (RANGES_CXX_STD EQUAL 11))
-    set(CMAKE_CXX_STANDARD 14)
-    set(RANGES_CXX_STD 14)
-  endif()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Werror -pedantic-errors")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat -Wno-c++98-compat-pedantic")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-weak-vtables -Wno-padded")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-prototypes -Wno-missing-variable-declarations")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow -Wno-old-style-cast")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-documentation -Wno-documentation-unknown-command")
-  if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-global-constructors -Wno-exit-time-destructors")
-  endif()
-  if (RANGES_MODULES)
-    if(NOT RANGES_LIBCXX_MODULE)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules -fmodule-map-file=${PROJECT_SOURCE_DIR}/include/module.modulemap -fmodules-cache-path=${PROJECT_BINARY_DIR}/module.cache")
-    else()
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules -fmodule-map-file=${PROJECT_SOURCE_DIR}/include/module.modulemap -fmodules-cache-path=${PROJECT_BINARY_DIR}/module.cache -fno-implicit-module-maps -fmodule-map-file=${RANGES_LIBCXX_MODULE}")
-    endif()
-  endif()
-  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
-  set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -DNDEBUG")
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror -pedantic-errors")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-strict-overflow")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers")
-    endif()
-  elseif((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "7.0") OR (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "7.0"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-noexcept-type")
-  endif()
-  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
-  set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -DNDEBUG")
-# else()
-#   message(FATAL_ERROR "Unknown compiler. Good luck!")
-endif()
-
-range_v3_append_flag(RANGE_V3_HAS_MARCH_NATIVE "-march=native")
-range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
+include_directories(include)
+add_subdirectory(doc)
+add_subdirectory(test)
+add_subdirectory(example)
+add_subdirectory(perf)
 
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
@@ -173,10 +114,6 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
-add_subdirectory(doc)
-add_subdirectory(test)
-add_subdirectory(example)
-add_subdirectory(perf)
 
 install(DIRECTORY include/ DESTINATION include
         FILES_MATCHING PATTERN "*.hpp")
