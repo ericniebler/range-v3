@@ -450,13 +450,7 @@ namespace ranges
             using base_t::first;
             using base_t::second;
         public:
-            CONCEPT_REQUIRES(meta::and_<
-                DefaultConstructible<First>, DefaultConstructible<Rest>...>())
-            constexpr overloaded()
-                noexcept(meta::strict_and<
-                    std::is_nothrow_default_constructible<First>,
-                    std::is_nothrow_default_constructible<Rest>...>::value)
-            {}
+            overloaded() = default;
             constexpr overloaded(First first, Rest... rest)
               : overloaded::compressed_pair{
                     detail::move(first),
