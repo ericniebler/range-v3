@@ -30,30 +30,27 @@ namespace ranges
         /// @{
         namespace action
         {
-            /// \cond
-            namespace reverse_detail
-            {
-                template<typename Rng>
-                using Concept = meta::and_<
-                    BidirectionalRange<Rng>,
-                    // Only evaluate this one if the previous one succeeded
-                    meta::lazy::invoke<
-                        meta::compose<
-                            meta::quote<Permutable>,
-                            meta::quote<iterator_t>>,
-                        Rng>>;
-            }  // namespace reverse_detail
-            /// \endcond
-
             /// Reversed the source range in-place.
             struct reverse_fn
             {
             private:
                 friend action_access;
 
+                struct Reversible_
+                {
+                    template<typename Rng>
+                    auto requires_() -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::BidirectionalRange, Rng>(),
+                            concepts::is_true(Permutable<iterator_t<Rng>>())
+                        ));
+                };
             public:
-                template<typename Rng, typename I = iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Permutable<I>())>
+                template<typename Rng>
+                using Reversible = concepts::models<Reversible_, Rng>;
+
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Reversible<Rng>())>
                 Rng operator()(Rng && rng) const
                 {
                     ranges::reverse(rng);
@@ -62,7 +59,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(!reverse_detail::Concept<Rng>())>
+                         CONCEPT_REQUIRES_(!Reversible<Rng>())>
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),

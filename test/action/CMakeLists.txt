@@ -10,6 +10,9 @@ add_test(test.act.drop_while act.drop_while)
 add_executable(act.insert insert.cpp)
 add_test(test.act.insert act.insert)
 
+add_executable(act.join join.cpp)
+add_test(test.act.join act.join)
+
 add_executable(act.push_front push_front.cpp)
 add_test(test.act.push_front act.push_front)
 
@@ -33,6 +36,9 @@ add_test(test.act.sort act.sort)
 
 add_executable(act.split split.cpp)
 add_test(test.act.split act.split)
+
+add_executable(act.stable_sort stable_sort.cpp)
+add_test(test.act.stable_sort act.stable_sort)
 
 add_executable(act.stride stride.cpp)
 add_test(test.act.stride act.stride)

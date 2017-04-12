@@ -17,6 +17,7 @@
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/action/action.hpp>
+#include <range/v3/action/sort.hpp>
 #include <range/v3/algorithm/stable_sort.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -43,22 +44,8 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename C = ordered_less, typename P = ident,
-                        typename I = iterator_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::is_true(Sortable<I, C, P>())
-                        ));
-                };
-
-                template<typename Rng, typename C = ordered_less, typename P = ident>
-                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
-
                 template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
+                    CONCEPT_REQUIRES_(sort_fn::Sortable<Rng, C, P>())>
                 Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::stable_sort(rng, std::move(pred), std::move(proj));
@@ -67,7 +54,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(!Concept<Rng, C, P>())>
+                    CONCEPT_REQUIRES_(!sort_fn::Sortable<Rng, C, P>())>
                 void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
