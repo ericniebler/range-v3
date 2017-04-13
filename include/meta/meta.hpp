@@ -646,39 +646,23 @@ namespace meta
                 using type = std::true_type;
             };
 
-            struct defer_if_
-            {
-                template <template <typename...> class C, typename... Ts>
-                struct result
-                {
-                    using type = C<Ts...>;
-                };
-                template <template <typename...> class C, typename... Ts,
-                    typename = C<Ts...>>
-                result<C, Ts...> try_();
-                template <template <typename...> class C, typename... Ts>
-                nil_ try_() const;
-            };
-
-            struct defer_i_if_
-            {
-                template <typename T, template <T...> class C, T... Is>
-                struct result
-                {
-                    using type = C<Is...>;
-                };
-                template <typename T, template <T...> class C, T... Is,
-                    typename = C<Is...>>
-                result<T, C, Is...> try_();
-                template <typename T, template <T...> class C, T... Is>
-                nil_ try_() const;
-            };
+            template <template <typename...> class C, typename... Ts,
+                template <typename...> class D = C>
+            id<D<Ts...>> try_defer_(int);
+            template <template <typename...> class C, typename... Ts>
+            nil_ try_defer_(long);
 
             template <template <typename...> class C, typename... Ts>
-            using defer_ = decltype(defer_if_{}.try_<C, Ts...>());
+            using defer_ = decltype(detail::try_defer_<C, Ts...>(0));
+
+            template <typename T, template <T...> class C, T... Is,
+                template <T...> class D = C>
+            id<D<Is...>> try_defer_i_(int);
+            template <typename T, template <T...> class C, T... Is>
+            nil_ try_defer_i_(long);
 
             template <typename T, template <T...> class C, T... Is>
-            using defer_i_ = decltype(defer_i_if_{}.try_<T, C, Is...>());
+            using defer_i_ = decltype(detail::try_defer_i_<T, C, Is...>(0));
 
             template <typename T>
             using _t_t = _t<_t<T>>;
@@ -686,15 +670,14 @@ namespace meta
         /// \endcond
 
         /// An alias for `std::true_type` if `T::type` exists and names a type;
-        /// otherwise, it's an
-        /// alias for `std::false_type`.
+        /// otherwise, it's an alias for `std::false_type`.
         /// \ingroup trait
         template <typename T>
         using is_trait = _t<detail::is_trait_<T>>;
 
         /// An alias for `std::true_type` if `T::invoke` exists and names a class
-        /// template or
-        /// alias template; otherwise, it's an alias for `std::false_type`.
+        /// template or alias template; otherwise, it's an alias for
+        /// `std::false_type`.
         /// \ingroup trait
         template <typename T>
         using is_callable = _t<detail::is_callable_<T>>;
@@ -702,15 +685,12 @@ namespace meta
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer
         /// A wrapper that defers the instantiation of a template \p C with type
-        /// parameters \p Ts in
-        /// a \c lambda or \c let expression.
+        /// parameters \p Ts in a \c lambda or \c let expression.
         ///
         /// In the code below, the lambda would ideally be written as
         /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
-        /// expects its first
-        /// argument to be a list, not a placeholder. Instead, we express it using \c
-        /// defer as
-        /// follows:
+        /// expects its first argument to be a list, not a placeholder. Instead,
+        /// we express it using \c defer as follows:
         ///
         /// \code
         /// template<typename List>
@@ -727,8 +707,7 @@ namespace meta
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_i
         /// A wrapper that defers the instantiation of a template \p C with integral
-        /// constant
-        /// parameters \p Is in a \c lambda or \c let expression.
+        /// constant parameters \p Is in a \c lambda or \c let expression.
         /// \sa `defer`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
