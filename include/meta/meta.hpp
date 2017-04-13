@@ -576,17 +576,20 @@ namespace meta
         template <typename T>
         struct id
         {
-            /// \cond
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
             // Redirect through decltype for compilers that have not
             // yet implemented CWG 1558:
             // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
             static id impl(void *);
-            /// \endcond
-
-            using type = T;
 
             template <typename... Ts>
             using invoke = _t<decltype(id::impl(static_cast<list<Ts...> *>(nullptr)))>;
+#else
+            template <typename...>
+            using invoke = T;
+#endif
+
+            using type = T;
         };
 
         /// An alias for type \p T. Useful in non-deduced contexts.
@@ -605,8 +608,16 @@ namespace meta
 
         /// An alias for `void`.
         /// \ingroup trait
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
+        // Redirect through decltype for compilers that have not
+        // yet implemented CWG 1558:
+        // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
         template <typename... Ts>
         using void_ = invoke<id<void>, Ts...>;
+#else
+        template <typename...>
+        using void_ = void;
+#endif
 
         /// \cond
         namespace detail
