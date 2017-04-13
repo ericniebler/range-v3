@@ -65,6 +65,9 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.4** April 12, 2017
+  Fix the following bug:
+  - `action::stable_sort` of `vector` broken on Clang 3.8.1 since ~last Xmas (ericniebler/range-v3#632).
 * **0.2.3** April 4, 2017
   Fix the following bug:
   - iterators that return move-only types by value do not satisfy Readable (ericniebler/stl2#399).
