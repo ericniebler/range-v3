@@ -9,6 +9,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <utility> // for std::swap on C++14.
 #include <map>
 #include <set>
 #include <list>
