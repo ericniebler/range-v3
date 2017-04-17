@@ -253,7 +253,8 @@ namespace ranges
                 CONCEPT_REQUIRES(EqualityComparable<decltype(its_)>())
                 bool equal(cursor const &pos) const
                 {
-                    return its_ == pos.its_;
+                    return its_.is_valid() == pos.its_.is_valid() &&
+                        (!its_.is_valid() || its_ == pos.its_);
                 }
                 bool equal(sentinel<IsConst> const &pos) const
                 {
