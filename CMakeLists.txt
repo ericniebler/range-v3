@@ -87,11 +87,16 @@ range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   RELATIVE "${CMAKE_SOURCE_DIR}/include"
                   "${CMAKE_SOURCE_DIR}/include/*.hpp")
+				  
+# Add header files as sources to fix MSVS 2017 not finding source during debugging
+file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
+                  "${CMAKE_SOURCE_DIR}/include/*.hpp")
+
 include(TestHeaders)
 if(RANGE_V3_NO_HEADER_CHECK)
-  add_custom_target(headers)
+  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 else()
-  add_custom_target(headers ALL)
+  add_custom_target(headers ALL SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
 generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 
