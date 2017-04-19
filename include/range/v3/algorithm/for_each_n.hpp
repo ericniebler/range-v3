@@ -35,25 +35,26 @@ namespace ranges
             template<typename I, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() &&
                     IndirectInvocable<F, projected<I, P>>())>
-            tagged_pair<tag::in(I), tag::fun(F)>
-            operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
+            I operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
             {
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
                 auto b = uncounted(begin);
                 for(; 0 < n; ++b, --n)
                     invoke(fun, invoke(proj, *b));
-                return {recounted(begin, b, norig), detail::move(fun)};
+                return recounted(begin, b, norig);
             }
 
             template<typename Rng, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
                     IndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, range_difference_type_t<Rng> n, F fun, P proj = P{}) const
             {
-                return {(*this)(begin(rng), n, ref(fun), detail::move(proj)).in(),
-                    detail::move(fun)};
+                if (SizedRange<Rng>())
+                    RANGES_EXPECT(n <= distance(rng));
+
+                return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));
             }
         };
 
