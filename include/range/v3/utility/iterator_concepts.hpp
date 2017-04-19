@@ -523,9 +523,6 @@ namespace ranges
         using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
-        using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
-
-        template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
             CopyConstructible<uncvref_t<C>>,
             meta::strict_and<Readable<Is>...>,
