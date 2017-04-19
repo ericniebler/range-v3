@@ -28,7 +28,7 @@ namespace ranges
         struct bad_any_cast
           : std::bad_cast
         {
-            virtual const char* what() const noexcept override
+            const char* what() const noexcept override
             {
                 return "bad any_cast";
             }
