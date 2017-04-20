@@ -34,7 +34,7 @@ namespace ranges
         {
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectInvocable<F, projected<I, P>>())>
+                    MoveIndirectInvocable<F, projected<I, P>>())>
             tagged_pair<tag::in(I), tag::fun(F)>
             operator()(I begin, S end, F fun, P proj = P{}) const
             {
@@ -47,7 +47,7 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    IndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
+                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
             operator()(Rng &&rng, F fun, P proj = P{}) const
             {

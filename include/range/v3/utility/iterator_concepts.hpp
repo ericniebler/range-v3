@@ -528,6 +528,12 @@ namespace ranges
             CopyConstructible<C>>;
 
         template<typename C, typename ...Is>
+        using MoveIndirectInvocable = meta::and_<
+            detail::common_result_indirect_invocable_<C, Is...>,
+            MoveConstructible<uncvref_t<C>>,
+            MoveConstructible<C>>;
+
+        template<typename C, typename ...Is>
         using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
