@@ -94,6 +94,7 @@ namespace ranges
         /// \endcond
 
         using compressed_tuple_detail::compressed_tuple;
+        using compressed_tuple_detail::get;
 
         struct make_compressed_tuple_fn
         {
