@@ -14,6 +14,13 @@
 #ifndef RANGES_V3_UTILITY_POLY_HPP
 #define RANGES_V3_UTILITY_POLY_HPP
 
+#if __cpp_noexcept_function_type && \
+    __cpp_nontype_template_args && \
+    __cpp_lib_invoke && \
+    __cpp_if_constexpr && \
+    __cpp_template_auto && \
+    __cpp_inline_variables
+
 #include <functional>
 #include <memory>
 #include <tuple>
@@ -138,7 +145,7 @@ namespace ranges
             {
                 template <class T, class U = std::decay_t<T>>
                 inline constexpr bool in_situ_v =
-                    sizeof(U) <= sizeof(data_obj) && std::is_nothrow_move_constructible_v<U>;
+                    sizeof(U) <= sizeof(data_obj) && std::is_nothrow_move_constructible<U>::value;
             }
 
             template <class T>
@@ -256,7 +263,8 @@ namespace ranges
                 }
                 static void copy(data_obj const& from, data_obj& to)
                 {
-                    if constexpr (std::is_copy_constructible_v<T>)
+                    // BUGBUG
+                    if constexpr (std::is_copy_constructible<T>::value)
                     {
                         if constexpr (in_situ_v<T>)
                             ::new(static_cast<void*>(&to.buff_)) T(get<T>(from));
@@ -620,10 +628,10 @@ namespace ranges
             extends() = default;
             using Base::Base;
             explicit extends(Base&& b)
-            : Base(std::move(b))
+              : Base(std::move(b))
             {}
             explicit extends(Base const & b)
-            : Base(b)
+              : Base(b)
             {}
         private:
             friend detail::call_helper;
@@ -638,4 +646,5 @@ namespace ranges
     }
 }
 
+#endif
 #endif
