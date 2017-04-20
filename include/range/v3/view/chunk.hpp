@@ -194,8 +194,14 @@ namespace ranges
 
             RANGES_CXX14_CONSTEXPR Rng &base() noexcept { return ranges::get<0>(data_); }
             constexpr Rng const &base() const noexcept { return ranges::get<0>(data_); }
-            RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> &n() noexcept { return ranges::get<1>(data_); }
-            constexpr range_difference_type_t<Rng> const &n() const noexcept { return ranges::get<1>(data_); }
+            RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> &n() noexcept
+            {
+                return ranges::get<1>(data_);
+            }
+            constexpr range_difference_type_t<Rng> const &n() const noexcept
+            {
+                return ranges::get<1>(data_);
+            }
 
             RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> &remainder() noexcept
             {
@@ -412,9 +418,9 @@ namespace ranges
                 void operator()(Rng &&, T) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The first argument to view::chunk must be a model of the ForwardRange concept");
+                        "The first argument to view::chunk must satisfy the ForwardRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
-                        "The second argument to view::chunk must be a model of the Integral concept");
+                        "The second argument to view::chunk must satisfy the Integral concept");
                 }
             #endif
             };
