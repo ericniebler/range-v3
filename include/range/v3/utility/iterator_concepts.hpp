@@ -524,13 +524,11 @@ namespace ranges
         template<typename C, typename ...Is>
         using IndirectInvocable = meta::and_<
             detail::common_result_indirect_invocable_<C, Is...>,
-            CopyConstructible<uncvref_t<C>>,
             CopyConstructible<C>>;
 
         template<typename C, typename ...Is>
         using MoveIndirectInvocable = meta::and_<
             detail::common_result_indirect_invocable_<C, Is...>,
-            MoveConstructible<uncvref_t<C>>,
             MoveConstructible<C>>;
 
         template<typename C, typename ...Is>
@@ -539,13 +537,11 @@ namespace ranges
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
             detail::indirect_invocable_<Predicate, C, Is...>,
-            CopyConstructible<uncvref_t<C>>,
             CopyConstructible<C>>;
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
             detail::indirect_invocable_<Relation, C, I0, I1>,
-            CopyConstructible<uncvref_t<C>>,
             CopyConstructible<C>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
