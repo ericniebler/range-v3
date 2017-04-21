@@ -37,6 +37,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/algorithm/for_each_n.hpp>
 #include <range/v3/algorithm/generate.hpp>
 #include <range/v3/algorithm/generate_n.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
