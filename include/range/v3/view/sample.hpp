@@ -15,10 +15,13 @@
 #define RANGES_V3_VIEW_SAMPLE_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
+#include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>

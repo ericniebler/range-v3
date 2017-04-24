@@ -982,7 +982,6 @@ void test_case_fixed_size_conversions()
     CONCEPT_ASSERT(!std::is_convertible<decltype((arr)), span<int, 2>>::value);
     CONCEPT_ASSERT(!std::is_convertible<span<int, 4>, span<int, 2>>::value);
 
-
     // you can convert statically
     {
         const span<int, 2> s2 = {arr, 2};

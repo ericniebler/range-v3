@@ -22,11 +22,15 @@ int main()
 
     int rgi[] = {1, 1, 1, 2, 3, 4, 4};
     std::vector<int> vi(begin(rgi), end(rgi));
-    std::list<int> li(begin(rgi), end(rgi));
+    std::list<int> const li(begin(rgi), end(rgi));
 
-    iterator_range<int *> x = view::all(rgi);
-    iterator_range<std::vector<int>::iterator> y = view::all(vi);
-    sized_iterator_range<std::list<int>::iterator> z = view::all(li);
+    auto x = view::all(rgi);
+    ::has_type<ref_view<decltype(rgi)> &>(x);
+    CONCEPT_ASSERT(range_cardinality<decltype(x)>::value == 7);
+    auto y = view::all(vi);
+    ::has_type<ref_view<decltype(vi)> &>(y);
+    auto z = view::all(li);
+    ::has_type<ref_view<decltype(li)> &>(z);
 
     x = view::all(x);
     y = view::all(y);
@@ -36,7 +40,9 @@ int main()
     CHECK(y.size() == 7u);
     CHECK(z.size() == 7u);
 
-    ranges::reference_wrapper<int[7]> rrgi = view::all(std::ref(rgi));
+    auto rrgi = view::all(std::ref(rgi));
+    ::has_type<decltype((x))>(rrgi);
+    CONCEPT_ASSERT(range_cardinality<decltype(x)>::value == 7);
     auto stdref = std::ref(rgi);
     rrgi = view::all(stdref);
     rrgi = view::all(static_cast<std::reference_wrapper<int[7]> const &>(stdref));

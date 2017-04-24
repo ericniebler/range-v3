@@ -22,6 +22,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/memory.hpp>

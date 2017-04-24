@@ -202,6 +202,7 @@ namespace ranges
                 {                                                                    \
                     return detail::adl_get<I>(static_cast<Untagged const &>(*this)); \
                 }                                                                    \
+                void NAME() const && = delete;                                       \
             };                                                                       \
         };                                                                           \
     }                                                                                \
