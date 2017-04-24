@@ -14,12 +14,12 @@
 #ifndef RANGES_V3_UTILITY_POLY_HPP
 #define RANGES_V3_UTILITY_POLY_HPP
 
-#if __cpp_noexcept_function_type && \
-    __cpp_nontype_template_args && \
-    __cpp_lib_invoke && \
-    __cpp_if_constexpr && \
-    __cpp_template_auto && \
-    __cpp_inline_variables
+#if defined(__cpp_noexcept_function_type) && \
+    defined(__cpp_nontype_template_args) && \
+    defined(__cpp_lib_invoke) && \
+    defined(__cpp_if_constexpr) && \
+    defined(__cpp_template_auto) && \
+    defined(__cpp_inline_variables)
 
 #include <functional>
 #include <memory>
@@ -34,8 +34,22 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            struct call_helper
+            {
+                template <std::size_t N, typename This, typename...As>
+                static decltype(auto) call(This&& _this, As&&...args)
+                {
+                    return static_cast<This&&>(_this)
+                        .template call<N>(static_cast<As&&>(args)...);
+                }
+            };
+        }
+
         template <auto...Ps>
-        struct members;
+        struct members
+        {};
 
         template <class I>
         struct poly;
@@ -50,19 +64,55 @@ namespace ranges
             }
         };
 
+        struct bad_poly_cast
+          : std::bad_cast
+        {
+            bad_poly_cast() = default;
+            char const* what() const noexcept override
+            {
+                return "bad_poly_cast";
+            }
+        };
+
+        template <class...I>
+        struct extends
+        {
+            using subsumptions = meta::list<I...>;
+        };
+
+        template <std::size_t N, typename This, typename...As>
+        decltype(auto) call(This&& _this, As&&...args)
+        {
+            return detail::call_helper::call<N>(
+                static_cast<This&&>(_this), static_cast<As&&>(args)...);
+        }
+
         namespace detail
         {
-            struct call_helper
+            struct TypeInfo;
+
+            template <class I, class = void>
+            struct subsumptions_of_
             {
-                template <std::size_t N, typename This, typename...As>
-                static decltype(auto) call(This&& _this, As&&...args)
-                {
-                    return static_cast<This&&>(_this)
-                        .template call<N>(static_cast<As&&>(args)...);
-                }
+                using type = meta::list<I>;
             };
 
-            struct any
+            template <class I>
+            struct subsumptions_of_<I, std::void_t<typename I::subsumptions>>
+            {
+                using type =
+                    meta::push_front<
+                        meta::join<
+                            meta::transform<
+                                typename I::subsumptions,
+                                meta::quote_trait<subsumptions_of_>>>,
+                        I>;
+            };
+
+            template <class I>
+            using subsumptions_of = meta::push_back<meta::_t<subsumptions_of_<I>>, TypeInfo>;
+
+            struct bottom
             {
                 template <class T>
                 [[noreturn]] /* implicit */ operator T&&() const
@@ -71,17 +121,40 @@ namespace ranges
                 }
             };
 
-            struct archetype
+            struct archetype_root
             {
-                template <std::size_t N, class...As>
-                [[noreturn]] any call(As&&...) const
+                template <std::size_t, class...As>
+                [[noreturn]] bottom call(As&&...) const
                 {
                     std::terminate();
                 }
             };
 
-            struct data_obj
+            struct archetype_helper
             {
+                template <class State, class I>
+                using invoke = typename I::template interface<State>;
+            };
+
+            template <class I>
+            using archetype =
+                meta::reverse_fold<subsumptions_of<I>, archetype_root, archetype_helper>;
+
+            template <class I, class T>
+            using members_of = typename I::template members<T>;
+
+            template <class I, class T = archetype<I>>
+            using interface_of = typename I::template interface<T>;
+
+            struct data
+            {
+                data() = default;
+                data(data const&)
+                {}
+                data& operator=(data const&)
+                {
+                    return *this;
+                }
                 union
                 {
                     void* pobj_ = nullptr;
@@ -89,37 +162,31 @@ namespace ranges
                 };
             };
 
-            template <class I, class T>
-            using members_of = typename I::template members<T>;
-
-            template <class I, class T = archetype>
-            using interface_of = typename I::template interface<T>;
-
             template <class Member>
             struct signature_of_;
 
             template <class R, class C, class...As>
             struct signature_of_<R (C::*)(As...)>
             {
-                using type = R(*)(data_obj&, As...);
+                using type = R(*)(data&, As...);
             };
 
             template <class R, class C, class...As>
             struct signature_of_<R (C::*)(As...) const>
             {
-                using type = R(*)(data_obj const&, As...);
+                using type = R(*)(data const&, As...);
             };
 
             template <class R, class This, class...As>
             struct signature_of_<R(*)(This&, As...)>
             {
-                using type = R(*)(data_obj&, As...);
+                using type = R(*)(data&, As...);
             };
 
             template <class R, class This, class...As>
             struct signature_of_<R(*)(This const&, As...)>
             {
-                using type = R(*)(data_obj const&, As...);
+                using type = R(*)(data const&, As...);
             };
 
             template <auto Arch>
@@ -133,23 +200,18 @@ namespace ranges
                 template <class R, class...Args>
                 constexpr operator fn_t<R, Args...> () const noexcept
                 {
-                    return +[](Args...) -> R { throw bad_poly_access(); };
+                    return [](Args...) -> R { throw bad_poly_access(); };
                 }
             };
-            namespace
-            {
-                inline constexpr throw_thunk const throw_ {};
-            }
 
-            namespace
-            {
-                template <class T, class U = std::decay_t<T>>
-                inline constexpr bool in_situ_v =
-                    sizeof(U) <= sizeof(data_obj) && std::is_nothrow_move_constructible<U>::value;
-            }
+            inline constexpr throw_thunk const throw_ {};
+
+            template <class T, class U = std::decay_t<T>>
+            inline constexpr bool in_situ_v =
+                sizeof(U) <= sizeof(data) && std::is_nothrow_move_constructible<U>::value;
 
             template <class T>
-            T& get(data_obj& d)
+            T& get(data& d)
             {
                 if constexpr (in_situ_v<T>)
                     return *static_cast<T*>(static_cast<void*>(&d.buff_));
@@ -158,7 +220,7 @@ namespace ranges
             }
 
             template <class T>
-            T const & get(data_obj const& d)
+            T const & get(data const& d)
             {
                 if constexpr (in_situ_v<T>)
                     return *static_cast<T const*>(static_cast<void const*>(&d.buff_));
@@ -168,69 +230,16 @@ namespace ranges
 
             enum class state : short { empty, in_situ, on_heap };
 
-            inline void noop_destroy(data_obj&)
+            inline void noop_destroy(data&)
             {}
-            inline void noop_copy(data_obj const&, data_obj&)
+            inline void noop_copy(data const&, data&)
             {}
-            inline void noop_move(data_obj&, data_obj&)
+            inline void noop_move(data&, data&)
             {}
             inline std::type_info const& noop_type() noexcept
             {
                 return typeid(void);
             }
-
-            template <class>
-            struct vtable_;
-
-            template <auto...Arch>
-            struct vtable_<members<Arch...>>
-            {
-                using type =
-                    std::tuple<
-                        state,
-                        void(*)(data_obj&),                     // destroy
-                        void(*)(data_obj const &, data_obj&),   // copy
-                        void(*)(data_obj&, data_obj&),          // move
-                        std::type_info const&(*)() noexcept,    // type
-                        signature_of<Arch>...>;
-            };
-
-            template <class I>
-            using vtable = meta::_t<vtable_<members_of<I, interface_of<I>>>>;
-
-            template <class VTable, class Arch>
-            struct make_noop_vtable_;
-
-            template <class VTable, auto...Arch>
-            struct make_noop_vtable_<VTable, members<Arch...>>
-            {
-                static constexpr VTable const value {
-                    state::empty,
-                    noop_destroy,
-                    noop_copy,
-                    noop_move,
-                    noop_type,
-                    static_cast<signature_of<Arch>>(throw_)...
-                };
-            };
-
-            template <class VTable, auto...Arch>
-            constexpr VTable const make_noop_vtable_<VTable, members<Arch...>>::value;
-
-            template <class I>
-            constexpr vtable<I> const* noop_vptr =
-                &make_noop_vtable_<vtable<I>, members_of<I, interface_of<I>>>::value;
-
-            template <class I>
-            struct data_vptr
-            {
-                vtable<I> const* vptr_ = noop_vptr<I>;
-            };
-
-            template <class I>
-            struct data
-              : data_vptr<I>, data_obj
-            {};
 
             template <class T, auto User>
             struct thunk_fn
@@ -245,23 +254,20 @@ namespace ranges
                 }
             };
 
-            namespace
-            {
-                template <class T, auto User>
-                inline constexpr thunk_fn<T, User> thunk {};
-            }
+            template <class T, auto User>
+            inline constexpr thunk_fn<T, User> thunk {};
 
             template <class T>
             struct basic_thunks
             {
-                static void destroy(data_obj& d)
+                static void destroy(data& d)
                 {
                     if constexpr (in_situ_v<T>)
                         get<T>(d).~T();
                     else
                         delete &get<T>(d);
                 }
-                static void copy(data_obj const& from, data_obj& to)
+                static void copy(data const& from, data& to)
                 {
                     // BUGBUG
                     if constexpr (std::is_copy_constructible<T>::value)
@@ -272,7 +278,7 @@ namespace ranges
                             to.pobj_ = new T(get<T>(from));
                     }
                 }
-                static void move(data_obj& from, data_obj& to)
+                static void move(data& from, data& to)
                 {
                     if constexpr (in_situ_v<T>)
                     {
@@ -282,123 +288,155 @@ namespace ranges
                     else
                         to.pobj_ = std::exchange(from.pobj_, nullptr);
                 }
-                static std::type_info const& type() noexcept
+                static std::type_info const& type(T const&)
                 {
                     return typeid(T);
                 }
+                static void* cast(T& t, std::type_info const& ti)
+                {
+                    return ti == typeid(T)
+                        ? std::addressof(t)
+                        : throw ::poly::bad_poly_cast();
+                }
+                static void const* ccast(T const& t, std::type_info const& ti)
+                {
+                    return ti == typeid(T)
+                        ? std::addressof(t)
+                        : throw ::poly::bad_poly_cast();
+                }
             };
 
-            template <class T, class VTable, class User>
-            struct make_vtable_;
-
-            template <class T, class VTable, auto...User>
-            struct make_vtable_<T, VTable, members<User...>>
+            struct TypeInfo
             {
-                static constexpr VTable const value {
-                    in_situ_v<T> ? state::in_situ : state::on_heap,
-                    &basic_thunks<T>::destroy,
-                    &basic_thunks<T>::copy,
-                    &basic_thunks<T>::move,
-                    &basic_thunks<T>::type,
-                    thunk<T, User>...
+                template <class Base>
+                struct interface : Base
+                {
+                    std::type_info const& type_info() const noexcept
+                    {
+                        return ::poly::call<0>(*this);
+                    }
+                    template <class T>
+                    T& cast()
+                    {
+                        return *static_cast<T*>(::poly::call<1>(*this, typeid(T)));
+                    }
+                    template <class T>
+                    T const& cast() const
+                    {
+                        return *static_cast<T const*>(::poly::call<2>(*this, typeid(T)));
+                    }
                 };
+
+                template <class T>
+                using members = ::poly::members<
+                    &basic_thunks<T>::type,
+                    &basic_thunks<T>::cast,
+                    &basic_thunks<T>::ccast>;
             };
 
-            template <class T, class VTable, auto...User>
-            constexpr VTable const make_vtable_<T, VTable, members<User...>>::value;
+            template <class I, class = members_of<I, interface_of<I>>>
+            struct vtable_node;
 
-            template <class I, class T>
-            constexpr vtable<I> const* vptr =
-                &make_vtable_<T, vtable<I>, members_of<I, T>>::value;
-
-            namespace
+            template <class I, auto...Arch>
+            struct vtable_node<I, members<Arch...>>
             {
-                inline constexpr struct in_place_t {} in_place {};
-            }
+            private:
+                using mbrs = std::tuple<signature_of<Arch>...>;
+                template <class T, auto...User>
+                static constexpr mbrs make(members<User...>)
+                {
+                    return {thunk<T, User>...};
+                }
+                static constexpr mbrs noop()
+                {
+                    return {static_cast<signature_of<Arch>>(throw_)...};
+                }
+            public:
+                constexpr vtable_node() noexcept
+                  : mbrs_(noop())
+                {}
+                template <class T>
+                explicit constexpr vtable_node(meta::id<T> t) noexcept
+                  : mbrs_(make<T>(members_of<I, T>{}))
+                {}
+                mbrs mbrs_;
+            };
+
+            template <class>
+            struct vtable_;
+
+            template <class...S>
+            struct vtable_<meta::list<S...>>
+            : vtable_node<S>...
+            {
+                constexpr vtable_() noexcept
+                  : vtable_node<S>{}...
+                  , state_(state::empty)
+                  , destroy_(noop_destroy)
+                  , copy_(noop_copy)
+                  , move_(noop_move)
+                {}
+                template <class T>
+                explicit constexpr vtable_(meta::id<T> t) noexcept
+                  : vtable_node<S>{t}...
+                  , state_(in_situ_v<T> ? state::in_situ : state::on_heap)
+                  , destroy_(basic_thunks<T>::destroy)
+                  , copy_(basic_thunks<T>::copy)
+                  , move_(basic_thunks<T>::move)
+                {}
+                state state_;
+                void (*destroy_)(data&);
+                void (*copy_)(data const &, data&);
+                void (*move_)(data &, data&);
+            };
 
             template <class I>
-            struct storage
-            {
-                storage() = default;
-                storage(storage&& that)
-                {
-                    std::get<3>(*that.data_.vptr_)(that.data_, data_);
-                    data_.vptr_ = std::exchange(that.data_.vptr_, noop_vptr<I>);
-                }
-                storage(storage const& that)
-                {
-                    std::get<2>(*that.data_.vptr_)(that.data_, data_);
-                    data_.vptr_ = that.data_.vptr_;
-                }
-                ~storage()
-                {
-                    std::get<1>(*data_.vptr_)(data_);
-                    data_.vptr_ = noop_vptr<I>;
-                }
-                storage& operator=(storage that) noexcept
-                {
-                    std::get<1>(*data_.vptr_)(data_); // destroy this
-                    std::get<3>(*data_.vptr_)(that.data_, data_); // Move (nothrow)
-                    data_.vptr_ = std::exchange(that.data_.vptr_, noop_vptr<I>);
-                    return *this;
-                }
-                std::type_info const& type() const noexcept
-                {
-                    return std::get<4>(*data_.vptr_)();
-                }
-                bool empty() const noexcept
-                {
-                    return std::get<0>(*data_.vptr_) == state::empty;
-                }
-                void swap(storage<I>& that) noexcept
-                {
-                    switch (std::get<0>(*data_.vptr_))
-                    {
-                    case state::empty:
-                        *this = std::move(that);
-                        break;            
-                    case state::on_heap:
-                        if (state::on_heap == std::get<0>(*that.data_.vptr_))
-                        {
-                            std::swap(data_.pobj_, that.data_.pobj_);
-                            std::swap(data_.vptr_, that.data_.vptr_);
-                        }
-                        else // fall through
-                    case state::in_situ:
-                        std::swap(*this, that);
-                    }
-                }
+            using vtable = vtable_<subsumptions_of<I>>;
 
+            template <class I, class T = void>
+            inline constexpr vtable<I> const vtbl{meta::id<T>{}};
+
+            template <class I>
+            inline constexpr vtable<I> const vtbl<I, void>{};
+
+            template <class I>
+            decltype(auto) select(vtable_node<meta::id_t<I>> const& vtbl)
+            {
+                return vtbl.mbrs_;
+            }
+
+            template <class Poly, class I, class Tail>
+            struct poly_base_node
+              : Tail
+            {
             private:
                 friend struct poly<I>;
                 friend call_helper;
 
-                template <class T, class U = std::decay_t<T>>
-                explicit storage(in_place_t, T&& t)
-                {
-                    if constexpr (in_situ_v<U>)
-                        ::new(static_cast<void*>(&data_.buff_)) U(static_cast<T&&>(t));
-                    else
-                        data_.pobj_ = new U(static_cast<T&&>(t));
-                    data_.vptr_ = vptr<I, U>;
-                }
-
                 template <std::size_t K, typename...As>
                 decltype(auto) call(As&&...as)
                 {
-                    return std::get<K+5>(*data_.vptr_)(data_, static_cast<As&&>(as)...);
+                    auto& poly = static_cast<Poly&>(*this);
+                    return std::get<K>(select<I>(*poly.vptr_))(poly, static_cast<As&&>(as)...);
                 }
                 template <std::size_t K, typename...As>
                 decltype(auto) call(As&&...as) const
                 {
-                    return std::get<K+5>(*data_.vptr_)(data_, static_cast<As&&>(as)...);
+                    auto& poly = static_cast<Poly const&>(*this);
+                    return std::get<K>(select<I>(*poly.vptr_))(poly, static_cast<As&&>(as)...);
                 }
-
-                data<I> data_;
             };
 
-            template <class I>
-            using poly_base = interface_of<I, storage<I>>;
+            template <class Poly>
+            struct poly_base_helper
+            {
+                template <class State, class I>
+                using invoke = interface_of<I, poly_base_node<Poly, I, State>>;
+            };
+
+            template <class Poly, class I>
+            using poly_base =
+                meta::reverse_fold<subsumptions_of<I>, meta::nil_, poly_base_helper<Poly>>;
 
             template <class Fun>
             struct sig_t
@@ -506,81 +544,60 @@ namespace ranges
                     return t;
                 }
             };
-
         } // namespace detail
-
-        template <std::size_t N, typename This, typename...As>
-        decltype(auto) call(This&& _this, As&&...args)
-        {
-            return detail::call_helper::call<N>(
-                static_cast<This&&>(_this), static_cast<As&&>(args)...);
-        }
-
-        /**
-         Type-erasing wrapper. Use as follows to, e.g., define a std::function-like type:
-
-         \code
-            template <class Sig>
-            struct Function;
-
-            // Declare an abstract interface
-            template <class R, class...As>
-            struct Function<R(As...)>
-            {
-                // The interface is defined here, as a nested class template.
-                template <class Base>
-                struct interface : ranges::extends<Base>
-                {
-                    using ranges::extends<Base>::extends;
-                    // The public members to expose go here:
-                    R operator()(As...as)
-                    {
-                        // Use ranges::call to dispatch to the correct handler. ranges::call<N>
-                        // will dispatch to the N-th element captured in the `members` alias below.
-                        return static_cast<R>(
-                            ranges::call<0>(*this, static_cast<As&&>(as)...));
-                    }
-                };
-                // For a type T, capture the relevant members to which ranges::call will dispatch.
-                // ranges::sig is only needed to disambiguate overloads.
-                template <class T>
-                using members =
-                    ranges::members<ranges::sig<R(As...)>(&T::operator())>;
-            };
-
-            template <class Sig>
-            using function = ranges::poly<Function<Sig>>;
-         \endcode
-         */
 
         template <class I>
         struct poly
-          : detail::poly_base<I>
+          : detail::poly_base<poly<I>, I>
+          , private detail::data
         {
         private:
+            template <class, class, class>
+            friend struct detail::poly_base_node;
             template <class T>
             using if_not_self = meta::if_<meta::not_<std::is_same<T, poly>>, int>;
-
+            detail::vtable<I> const *vptr_ = &detail::vtbl<I>;
         public:
             poly() = default;
-            poly(poly&&) = default;
-            poly(poly const&) = default;
+            poly(poly&& that)
+            {
+                that.vptr_->move_(that, *this);
+                vptr_ = std::exchange(that.vptr_, &detail::vtbl<I>);
+            }
+            poly(poly const& that)
+            {
+                that.vptr_->copy_(that, *this);
+                vptr_ = that.vptr_;
+            }
+            ~poly()
+            {
+                vptr_->destroy_(*this);
+            }
+            poly& operator=(poly that) noexcept
+            {
+                vptr_->destroy_(*this);
+                that.vptr_->move_(that, *this);
+                vptr_ = std::exchange(that.vptr_, &detail::vtbl<I>);
+                return *this;
+            }
 
             template <
                 class T,
-                class U = std::decay_t<T>,
+                class U = meta::_t<std::decay<T>>,
                 if_not_self<U> = 0,
                 class = detail::members_of<I, U>>
             /* implicit */ poly(T &&t)
-              : detail::poly_base<I>{detail::in_place, static_cast<T&&>(t)}
-            {}
-
-            poly& operator=(poly&& that) = default;
-            poly& operator=(poly const& that) = default;
+            {
+                if constexpr (detail::in_situ_v<U>)
+                    ::new(static_cast<void*>(&buff_)) U(static_cast<T&&>(t));
+                else
+                    pobj_ = new U(static_cast<T&&>(t));
+                vptr_ = &detail::vtbl<I, U>;
+            }
 
             template <
                 class T,
-                class U = std::decay_t<T>,
+                class U = meta::_t<std::decay<T>>,
                 if_not_self<U> = 0,
                 class = detail::members_of<I, U>>
             poly& operator=(T&& t)
@@ -589,14 +606,28 @@ namespace ranges
                 return *this;
             }
 
-            std::type_info const& type() const noexcept
-            {
-                return this->poly::storage::type();
-            }
-
             bool empty() const noexcept
             {
-                return this->poly::storage::empty();
+                return vptr_->state_ == detail::state::empty;
+            }
+
+            void swap(poly& that) noexcept
+            {
+                switch (vptr_->state_)
+                {
+                case detail::state::empty:
+                    *this = std::move(that);
+                    break;            
+                case detail::state::on_heap:
+                    if (detail::state::on_heap == that.vptr_->state_)
+                    {
+                        std::swap(pobj_, that.pobj_);
+                        std::swap(vptr_, that.vptr_);
+                    }
+                    else // fall through
+                case detail::state::in_situ:
+                    std::swap(*this, that);
+                }
             }
 
             explicit operator bool() const noexcept
@@ -608,11 +639,6 @@ namespace ranges
             {
                 return empty();
             }
-
-            void swap(poly& that) noexcept
-            {
-                this->poly::storage::swap(that);
-            }
         };
 
         template <class I>
@@ -621,28 +647,8 @@ namespace ranges
             left.swap(right);
         }
 
-        template <class Base>
-        struct extends
-          : private Base
-        {
-            extends() = default;
-            using Base::Base;
-            explicit extends(Base&& b)
-              : Base(std::move(b))
-            {}
-            explicit extends(Base const & b)
-              : Base(b)
-            {}
-        private:
-            friend detail::call_helper;
-            template <class> friend struct poly;
-        };
-
-        namespace
-        {
-            template <class Sig>
-            inline constexpr detail::sig_t<Sig> const sig = {};
-        }
+        template <class Sig>
+        inline constexpr detail::sig_t<Sig> const sig = {};
     }
 }
 
