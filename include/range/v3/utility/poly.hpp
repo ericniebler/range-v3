@@ -42,7 +42,7 @@ namespace ranges
                 static decltype(auto) call(This&& _this, As&&...args)
                 {
                     return static_cast<This&&>(_this)
-                        .template call<N>(static_cast<As&&>(args)...);
+                        .template poly_call_<N>(static_cast<As&&>(args)...);
                 }
             };
         }
@@ -75,7 +75,7 @@ namespace ranges
         };
 
         template <class...I>
-        struct extends
+        struct extends : private I...
         {
             using subsumptions = meta::list<I...>;
         };
@@ -110,7 +110,11 @@ namespace ranges
             };
 
             template <class I>
-            using subsumptions_of = meta::push_back<meta::_t<subsumptions_of_<I>>, TypeInfo>;
+            using subsumptions_of =
+                meta::reverse<
+                    meta::unique<
+                        meta::reverse<
+                            meta::push_back<meta::_t<subsumptions_of_<I>>, TypeInfo>>>>;
 
             struct bottom
             {
@@ -124,7 +128,7 @@ namespace ranges
             struct archetype_root
             {
                 template <std::size_t, class...As>
-                [[noreturn]] bottom call(As&&...) const
+                [[noreturn]] bottom poly_call_(As&&...) const
                 {
                     std::terminate();
                 }
@@ -296,13 +300,13 @@ namespace ranges
                 {
                     return ti == typeid(T)
                         ? std::addressof(t)
-                        : throw ::poly::bad_poly_cast();
+                        : throw ::ranges::bad_poly_cast();
                 }
                 static void const* ccast(T const& t, std::type_info const& ti)
                 {
                     return ti == typeid(T)
                         ? std::addressof(t)
-                        : throw ::poly::bad_poly_cast();
+                        : throw ::ranges::bad_poly_cast();
                 }
             };
 
@@ -313,61 +317,76 @@ namespace ranges
                 {
                     std::type_info const& type_info() const noexcept
                     {
-                        return ::poly::call<0>(*this);
+                        return ::ranges::call<0>(*this);
                     }
                     template <class T>
                     T& cast()
                     {
-                        return *static_cast<T*>(::poly::call<1>(*this, typeid(T)));
+                        return *static_cast<T*>(::ranges::call<1>(*this, typeid(T)));
                     }
                     template <class T>
                     T const& cast() const
                     {
-                        return *static_cast<T const*>(::poly::call<2>(*this, typeid(T)));
+                        return *static_cast<T const*>(::ranges::call<2>(*this, typeid(T)));
                     }
                 };
 
                 template <class T>
-                using members = ::poly::members<
+                using members = ::ranges::members<
                     &basic_thunks<T>::type,
                     &basic_thunks<T>::cast,
                     &basic_thunks<T>::ccast>;
             };
+
+            template <class>
+            struct vtable_;
+
+            template <class I>
+            using vtable = vtable_<subsumptions_of<I>>;
+
+            template <class I, class T = void>
+            inline constexpr vtable<I> const vtbl{meta::id<T>{}};
+
+            template <class I>
+            inline constexpr vtable<I> const vtbl<I, void>{};
 
             template <class I, class = members_of<I, interface_of<I>>>
             struct vtable_node;
 
             template <class I, auto...Arch>
             struct vtable_node<I, members<Arch...>>
+              : std::tuple<signature_of<Arch>...>
             {
             private:
-                using mbrs = std::tuple<signature_of<Arch>...>;
                 template <class T, auto...User>
-                static constexpr mbrs make(members<User...>)
+                static constexpr std::tuple<signature_of<Arch>...> make(members<User...>)
                 {
                     return {thunk<T, User>...};
                 }
-                static constexpr mbrs noop()
+                static constexpr std::tuple<signature_of<Arch>...> noop()
                 {
                     return {static_cast<signature_of<Arch>>(throw_)...};
                 }
+                template <class T>
+                static vtable<I> const* as_base_ptr_fn_()
+                {
+                    return &vtbl<I, T>;
+                }
             public:
                 constexpr vtable_node() noexcept
-                  : mbrs_(noop())
+                  : std::tuple<signature_of<Arch>...>(noop())
                 {}
                 template <class T>
                 explicit constexpr vtable_node(meta::id<T> t) noexcept
-                  : mbrs_(make<T>(members_of<I, T>{}))
+                  : std::tuple<signature_of<Arch>...>(make<T>(members_of<I, T>{}))
+                  , as_base_ptr_(&as_base_ptr_fn_<T>)
                 {}
-                mbrs mbrs_;
+                vtable<I> const* (*as_base_ptr_)() = nullptr;
             };
-
-            template <class>
-            struct vtable_;
 
             template <class...S>
             struct vtable_<meta::list<S...>>
-            : vtable_node<S>...
+              : vtable_node<S>...
             {
                 constexpr vtable_() noexcept
                   : vtable_node<S>{}...
@@ -391,18 +410,9 @@ namespace ranges
             };
 
             template <class I>
-            using vtable = vtable_<subsumptions_of<I>>;
-
-            template <class I, class T = void>
-            inline constexpr vtable<I> const vtbl{meta::id<T>{}};
-
-            template <class I>
-            inline constexpr vtable<I> const vtbl<I, void>{};
-
-            template <class I>
             decltype(auto) select(vtable_node<meta::id_t<I>> const& vtbl)
             {
-                return vtbl.mbrs_;
+                return vtbl;
             }
 
             template <class Poly, class I, class Tail>
@@ -414,13 +424,13 @@ namespace ranges
                 friend call_helper;
 
                 template <std::size_t K, typename...As>
-                decltype(auto) call(As&&...as)
+                decltype(auto) poly_call_(As&&...as)
                 {
                     auto& poly = static_cast<Poly&>(*this);
                     return std::get<K>(select<I>(*poly.vptr_))(poly, static_cast<As&&>(as)...);
                 }
                 template <std::size_t K, typename...As>
-                decltype(auto) call(As&&...as) const
+                decltype(auto) poly_call_(As&&...as) const
                 {
                     auto& poly = static_cast<Poly const&>(*this);
                     return std::get<K>(select<I>(*poly.vptr_))(poly, static_cast<As&&>(as)...);
@@ -548,14 +558,13 @@ namespace ranges
 
         template <class I>
         struct poly
-          : detail::poly_base<poly<I>, I>
-          , private detail::data
+          : detail::poly_base<poly<I>, I>, private detail::data
         {
         private:
-            template <class, class, class>
-            friend struct detail::poly_base_node;
+            template <class> friend struct poly;
+            template <class, class, class> friend struct detail::poly_base_node;
             template <class T>
-            using if_not_self = meta::if_<meta::not_<std::is_same<T, poly>>, int>;
+            using if_not_poly = meta::if_<meta::not_<meta::is<T, ::ranges::poly>>, int>;
             detail::vtable<I> const *vptr_ = &detail::vtbl<I>;
         public:
             poly() = default;
@@ -583,8 +592,8 @@ namespace ranges
 
             template <
                 class T,
-                class U = meta::_t<std::decay<T>>,
-                if_not_self<U> = 0,
+                class U = std::decay_t<T>,
+                if_not_poly<U> = 0,
                 class = detail::members_of<I, U>>
             /* implicit */ poly(T &&t)
             {
@@ -595,14 +604,31 @@ namespace ranges
                 vptr_ = &detail::vtbl<I, U>;
             }
 
+            template <class I2, meta::if_<std::is_base_of<I, I2>, int> = 0>
+            poly(poly<I2> that)
+            {
+                if (that.vptr_->state_ != detail::state::empty)
+                {
+                    that.vptr_->move_(that, *this);
+                    vptr_ = detail::select<I>(*that.vptr_).as_base_ptr_();
+                    that.vptr_ = &detail::vtbl<I2>;
+                }
+            }
+
             template <
                 class T,
-                class U = meta::_t<std::decay<T>>,
-                if_not_self<U> = 0,
+                class U = std::decay_t<T>,
+                if_not_poly<U> = 0,
                 class = detail::members_of<I, U>>
             poly& operator=(T&& t)
             {
                 *this = poly(static_cast<T&&>(t));
+                return *this;
+            }
+            template <class I2, meta::if_<std::is_base_of<I, I2>, int> = 0>
+            poly& operator=(poly<I2> that)
+            {
+                *this = poly(std::move(that));
                 return *this;
             }
 
