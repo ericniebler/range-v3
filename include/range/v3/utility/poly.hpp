@@ -350,7 +350,7 @@ namespace ranges
             template <class I>
             inline constexpr vtable<I> const vtbl<I, void>{};
 
-            template <class I, class = members_of<I, interface_of<I>>>
+            template <class I, class = members_of<I, archetype<I>>>
             struct vtable_node;
 
             template <class I, auto...Arch>
@@ -557,7 +557,7 @@ namespace ranges
         } // namespace detail
 
         template <class I>
-        struct poly
+        struct poly final
           : detail::poly_base<poly<I>, I>, private detail::data
         {
         private:
