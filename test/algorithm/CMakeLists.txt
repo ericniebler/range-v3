@@ -49,6 +49,9 @@ add_test(test.alg.find_first_of, alg.find_first_of)
 add_executable(alg.for_each for_each.cpp)
 add_test(test.alg.for_each, alg.for_each)
 
+add_executable(alg.for_each_n for_each_n.cpp)
+add_test(test.alg.for_each_n, alg.for_each_n)
+
 add_executable(alg.generate generate.cpp)
 add_test(test.alg.generate, alg.generate)
 

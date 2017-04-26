@@ -49,10 +49,11 @@ namespace
     };
 
     template<typename T>
-    auto twice(T t) -> decltype(ranges::view::concat(ranges::view::single(t), ranges::view::single(t)))
-    {
-        return ranges::view::concat(ranges::view::single(t), ranges::view::single(t));
-    }
+    constexpr auto twice(T t)
+    RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+    (
+        ranges::view::concat(ranges::view::single(t), ranges::view::single(t))
+    )
 
     // https://github.com/ericniebler/range-v3/issues/283
     void test_issue_283()

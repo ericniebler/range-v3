@@ -576,17 +576,20 @@ namespace meta
         template <typename T>
         struct id
         {
-            /// \cond
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
             // Redirect through decltype for compilers that have not
             // yet implemented CWG 1558:
             // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
             static id impl(void *);
-            /// \endcond
-
-            using type = T;
 
             template <typename... Ts>
             using invoke = _t<decltype(id::impl(static_cast<list<Ts...> *>(nullptr)))>;
+#else
+            template <typename...>
+            using invoke = T;
+#endif
+
+            using type = T;
         };
 
         /// An alias for type \p T. Useful in non-deduced contexts.
@@ -605,8 +608,16 @@ namespace meta
 
         /// An alias for `void`.
         /// \ingroup trait
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
+        // Redirect through decltype for compilers that have not
+        // yet implemented CWG 1558:
+        // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
         template <typename... Ts>
         using void_ = invoke<id<void>, Ts...>;
+#else
+        template <typename...>
+        using void_ = void;
+#endif
 
         /// \cond
         namespace detail
@@ -635,39 +646,23 @@ namespace meta
                 using type = std::true_type;
             };
 
-            struct defer_if_
-            {
-                template <template <typename...> class C, typename... Ts>
-                struct result
-                {
-                    using type = C<Ts...>;
-                };
-                template <template <typename...> class C, typename... Ts,
-                    typename = C<Ts...>>
-                result<C, Ts...> try_();
-                template <template <typename...> class C, typename... Ts>
-                nil_ try_() const;
-            };
-
-            struct defer_i_if_
-            {
-                template <typename T, template <T...> class C, T... Is>
-                struct result
-                {
-                    using type = C<Is...>;
-                };
-                template <typename T, template <T...> class C, T... Is,
-                    typename = C<Is...>>
-                result<T, C, Is...> try_();
-                template <typename T, template <T...> class C, T... Is>
-                nil_ try_() const;
-            };
+            template <template <typename...> class C, typename... Ts,
+                template <typename...> class D = C>
+            id<D<Ts...>> try_defer_(int);
+            template <template <typename...> class C, typename... Ts>
+            nil_ try_defer_(long);
 
             template <template <typename...> class C, typename... Ts>
-            using defer_ = decltype(defer_if_{}.try_<C, Ts...>());
+            using defer_ = decltype(detail::try_defer_<C, Ts...>(0));
+
+            template <typename T, template <T...> class C, T... Is,
+                template <T...> class D = C>
+            id<D<Is...>> try_defer_i_(int);
+            template <typename T, template <T...> class C, T... Is>
+            nil_ try_defer_i_(long);
 
             template <typename T, template <T...> class C, T... Is>
-            using defer_i_ = decltype(defer_i_if_{}.try_<T, C, Is...>());
+            using defer_i_ = decltype(detail::try_defer_i_<T, C, Is...>(0));
 
             template <typename T>
             using _t_t = _t<_t<T>>;
@@ -675,15 +670,14 @@ namespace meta
         /// \endcond
 
         /// An alias for `std::true_type` if `T::type` exists and names a type;
-        /// otherwise, it's an
-        /// alias for `std::false_type`.
+        /// otherwise, it's an alias for `std::false_type`.
         /// \ingroup trait
         template <typename T>
         using is_trait = _t<detail::is_trait_<T>>;
 
         /// An alias for `std::true_type` if `T::invoke` exists and names a class
-        /// template or
-        /// alias template; otherwise, it's an alias for `std::false_type`.
+        /// template or alias template; otherwise, it's an alias for
+        /// `std::false_type`.
         /// \ingroup trait
         template <typename T>
         using is_callable = _t<detail::is_callable_<T>>;
@@ -691,15 +685,12 @@ namespace meta
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer
         /// A wrapper that defers the instantiation of a template \p C with type
-        /// parameters \p Ts in
-        /// a \c lambda or \c let expression.
+        /// parameters \p Ts in a \c lambda or \c let expression.
         ///
         /// In the code below, the lambda would ideally be written as
         /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
-        /// expects its first
-        /// argument to be a list, not a placeholder. Instead, we express it using \c
-        /// defer as
-        /// follows:
+        /// expects its first argument to be a list, not a placeholder. Instead,
+        /// we express it using \c defer as follows:
         ///
         /// \code
         /// template<typename List>
@@ -716,8 +707,7 @@ namespace meta
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_i
         /// A wrapper that defers the instantiation of a template \p C with integral
-        /// constant
-        /// parameters \p Is in a \c lambda or \c let expression.
+        /// constant parameters \p Is in a \c lambda or \c let expression.
         /// \sa `defer`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
@@ -1125,31 +1115,38 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename... Bools>
-            struct _and_;
+            template <bool>
+            struct _and_
+            {
+                template <class = void>
+                using invoke = std::true_type;
+            };
 
             template <>
-            struct _and_<> : std::true_type
+            struct _and_<false>
             {
+                template <typename Bool_, typename... Bools>
+                using invoke = invoke<
+                    if_c<!Bool_::type::value,
+                         id<std::false_type>,
+                         _and_<0==sizeof...(Bools)>>, Bools...>;
             };
 
-            template <typename Bool_, typename... Bools>
-            struct _and_<Bool_, Bools...>
-                : if_c<!Bool_::type::value, std::false_type, _and_<Bools...>>
+            template <bool>
+            struct _or_
             {
+                template <class = void>
+                using invoke = std::false_type;
             };
-
-            template <typename... Bools>
-            struct _or_;
 
             template <>
-            struct _or_<> : std::false_type
+            struct _or_<false>
             {
-            };
-
-            template <typename Bool_, typename... Bools>
-            struct _or_<Bool_, Bools...> : if_c<Bool_::type::value, std::true_type, _or_<Bools...>>
-            {
+                template <typename Bool_, typename... Bools>
+                using invoke = invoke<
+                    if_c<Bool_::type::value,
+                         id<std::true_type>,
+                         _or_<0 == sizeof...(Bools)>>, Bools...>;
             };
         } // namespace detail
         /// \endcond
@@ -1189,8 +1186,9 @@ namespace meta
         /// \e with
         /// short-circuiting.
         /// \ingroup logical
+        // Make a trip through defer<> to avoid CWG1430
         template <typename... Bools>
-        using and_ = _t<detail::_and_<Bools...>>;
+        using and_ = _t<defer<detail::_and_<0 == sizeof...(Bools)>::template invoke, Bools...>>;
 
         /// Logically or together all the Boolean parameters
         /// \ingroup logical
@@ -1209,8 +1207,9 @@ namespace meta
         /// \e with
         /// short-circuiting.
         /// \ingroup logical
+        // Make a trip through defer<> to avoid CWG1430
         template <typename... Bools>
-        using or_ = _t<detail::_or_<Bools...>>;
+        using or_ = _t<defer<detail::_or_<0 == sizeof...(Bools)>:: template invoke, Bools...>>;
 
         namespace lazy
         {

@@ -16,7 +16,7 @@
 
 #define RANGE_V3_MAJOR 0
 #define RANGE_V3_MINOR 2
-#define RANGE_V3_PATCHLEVEL 2
+#define RANGE_V3_PATCHLEVEL 4
 
 #define RANGE_V3_VERSION (RANGE_V3_MAJOR * 10000 \
                         + RANGE_V3_MINOR * 100 \

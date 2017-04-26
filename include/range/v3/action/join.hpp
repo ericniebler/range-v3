@@ -43,15 +43,24 @@ namespace ranges
                         (bool) ranges::Container<range_value_type_t<Rng>>(),
                         range_value_type_t<Rng>,
                         std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
+
+                struct Joinable_
+                {
+                    template<typename Rng>
+                    auto requires_() -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::InputRange, Rng>(),
+                            concepts::model_of<concepts::InputRange, range_value_type_t<Rng>>(),
+                            concepts::model_of<concepts::SemiRegular, join_value_t<Rng>>()
+                        ));
+                };
+
             public:
                 template<typename Rng>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    InputRange<range_value_type_t<Rng>>,
-                    SemiRegular<join_value_t<Rng>>>;
+                using Joinable = concepts::models<Joinable_, Rng>;
 
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Concept<Rng>())>
+                    CONCEPT_REQUIRES_(Joinable<Rng>())>
                 join_value_t<Rng> operator()(Rng && rng) const
                 {
                     join_value_t<Rng> ret;
@@ -62,9 +71,9 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Concept<Rng>())>
-                void operator()(Rng &&, T &&) const
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!Joinable<Rng>())>
+                void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::join operates must be a model of the "

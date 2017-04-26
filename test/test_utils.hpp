@@ -26,24 +26,41 @@
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
-template<typename Rng, typename Rng2>
-void check_equal(Rng && actual, Rng2 && expected)
+struct check_equal_fn
 {
-    auto begin0 = ranges::begin(actual);
-    auto end0 = ranges::end(actual);
-    auto begin1 = ranges::begin(expected);
-    auto end1 = ranges::end(expected);
-    for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
-        CHECK(*begin0 == *begin1);
-    CHECK(begin0 == end0);
-    CHECK(begin1 == end1);
-}
+    template<typename T, typename U>
+    using BothRanges = meta::strict_and<ranges::InputRange<T>, ranges::InputRange<U>>;
 
-template<typename Val, typename Rng>
-void check_equal(Rng && actual, std::initializer_list<Val> && expected)
-{
-    check_equal(std::forward<Rng>(actual), expected);
-}
+    template<typename T, typename U,
+        CONCEPT_REQUIRES_(!BothRanges<T, U>())>
+    void operator()(T && actual, U && expected) const
+    {
+        CHECK((T &&) actual == (U &&) expected);
+    }
+
+    template<typename Rng1, typename Rng2,
+        CONCEPT_REQUIRES_(BothRanges<Rng1, Rng2>())>
+    void operator()(Rng1 && actual, Rng2 && expected) const
+    {
+        auto begin0 = ranges::begin(actual);
+        auto end0 = ranges::end(actual);
+        auto begin1 = ranges::begin(expected);
+        auto end1 = ranges::end(expected);
+        for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
+            (*this)(*begin0, *begin1);
+        CHECK(begin0 == end0);
+        CHECK(begin1 == end1);
+    }
+
+    template<typename Rng, typename Val,
+        CONCEPT_REQUIRES_(ranges::InputRange<Rng>())>
+    void operator()(Rng && actual, std::initializer_list<Val> && expected) const
+    {
+        (*this)(actual, expected);
+    }
+};
+
+RANGES_INLINE_VARIABLE(check_equal_fn, check_equal)
 
 template<typename Expected, typename Actual>
 void has_type(Actual &&)

@@ -497,55 +497,52 @@ namespace ranges
                 meta::compose<
                     meta::uncurry<meta::on<ReduceFn, meta::uncurry<MapFn>>>,
                     meta::quote<iter_args_lists_>>;
+
+            template<template <typename...> class InvocableConcept, typename C, typename ...Is>
+            using indirect_invocable_ = meta::and_<
+                meta::strict_and<Readable<Is>...>,
+                // C must satisfy the InvocableConcept with the values and references read from the Is.
+                meta::lazy::invoke<
+                    iter_map_reduce_fn_<
+                        meta::bind_front<meta::quote<InvocableConcept>, C&>,
+                        meta::quote<meta::strict_and>>,
+                    Is...>>;
+            
+            template<typename C, typename ...Is>
+            using common_result_indirect_invocable_ = meta::and_<
+                indirect_invocable_<Invocable, C, Is...>,
+                // In addition to C being invocable, the return types of the C invocations must all
+                // share a common reference type. (The lazy::invoke is so that this doesn't get
+                // evaluated unless C is truly callable as determined above.)
+                meta::lazy::invoke<
+                    iter_map_reduce_fn_<
+                        meta::bind_front<meta::quote<concepts::Invocable::result_t>, C&>,
+                        meta::quote<CommonReference>>,
+                    Is...>>;
         }
 
         template<typename C, typename ...Is>
         using IndirectInvocable = meta::and_<
-            CopyConstructible<uncvref_t<C>>,
-            meta::strict_and<Readable<Is>...>,
-            CopyConstructible<C>,
-            // C must be callable with the values and references read from the Is.
-            meta::lazy::invoke<
-                detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Invocable>, C&>,
-                    meta::quote<meta::strict_and>>,
-                Is...>,
-            // In addition, the return types of the C invocations tried above must all
-            // share a common reference type. (The lazy::invoke is so that this doesn't get
-            // evaluated unless C is truly callable as determined above.)
-            meta::lazy::invoke<
-                detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<concepts::Invocable::result_t>, C&>,
-                    meta::quote<CommonReference>>,
-                Is...>>;
+            detail::common_result_indirect_invocable_<C, Is...>,
+            CopyConstructible<C>>;
 
         template<typename C, typename ...Is>
-        using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
+        using MoveIndirectInvocable = meta::and_<
+            detail::common_result_indirect_invocable_<C, Is...>,
+            MoveConstructible<C>>;
 
         template<typename C, typename ...Is>
         using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
-            CopyConstructible<uncvref_t<C>>,
-            meta::strict_and<Readable<Is>...>,
-            CopyConstructible<C>,
-            meta::lazy::invoke<
-                detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Predicate>, C&>,
-                    meta::quote<meta::strict_and>>,
-                Is...>>;
+            detail::indirect_invocable_<Predicate, C, Is...>,
+            CopyConstructible<C>>;
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
-            CopyConstructible<uncvref_t<C>>,
-            meta::strict_and<Readable<I0>, Readable<I1>>,
-            CopyConstructible<C>,
-            meta::lazy::invoke<
-                detail::iter_map_reduce_fn_<
-                    meta::bind_front<meta::quote<Relation>, C&>,
-                    meta::quote<meta::strict_and>>,
-                I0, I1>>;
+            detail::indirect_invocable_<Relation, C, I0, I1>,
+            CopyConstructible<C>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // indirect_result_of

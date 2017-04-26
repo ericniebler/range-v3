@@ -140,15 +140,15 @@ int main()
 
         auto fun = overload(
             [](I i, I j)           { return std::tie(*i, *j); },
-            [](copy_tag, I, I) { return std::tuple<std::string, std::string>{}; },
-            [](move_tag, I i, I j) { return std::tuple<std::string&&, std::string&&>{
+            [](copy_tag, I, I)     { return std::tuple<std::string, std::string>{}; },
+            [](move_tag, I i, I j) { return common_tuple<std::string&&, std::string&&>{
                 std::move(*i), std::move(*j)}; } );
 
         auto rng = view::iter_transform(v0, v1, fun);
         using R = decltype(rng);
         CONCEPT_ASSERT(Same<range_value_type_t<R>, std::tuple<std::string, std::string>>());
         CONCEPT_ASSERT(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, std::tuple<std::string&&, std::string&&>>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, common_tuple<std::string&&, std::string&&>>());
 
         using T = std::tuple<std::string, std::string>;
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});

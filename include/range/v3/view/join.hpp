@@ -84,7 +84,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::join_cardinality<Rng>::value < 0 &&
                 range_cardinality<Rng>::value >= 0 && ForwardRange<Rng>() &&
                 SizedRange<range_reference_t<Rng>>())
-            size_type size() const
+            RANGES_CXX14_CONSTEXPR size_type size()
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0});
             }
