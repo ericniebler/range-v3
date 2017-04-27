@@ -57,7 +57,7 @@ namespace ranges
             {
                 // BUGBUG think about the use of coerce here.
                 using V = value_type_t<I>;
-                using X = concepts::Invocable::result_t<P, V>;
+                using X = concepts::Invocable::result_t<P&, V>;
                 coerce<V> v;
                 coerce<X> x;
 
