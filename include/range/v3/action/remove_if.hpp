@@ -66,7 +66,7 @@ namespace ranges
                 {
                     auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, ranges::end(rng));
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

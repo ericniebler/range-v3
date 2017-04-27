@@ -65,7 +65,7 @@ namespace ranges
                 {
                     I it = ranges::unique(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, end(rng));
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

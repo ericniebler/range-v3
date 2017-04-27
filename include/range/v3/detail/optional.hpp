@@ -47,7 +47,7 @@ namespace ranges
             template<typename...Args, CONCEPT_REQUIRES_(Constructible<T, Args...>())>
             explicit optional(in_place_t, Args &&...args)
                 noexcept(std::is_nothrow_constructible<T, Args...>::value)
-              : data_(emplaced_index<1>, static_cast<Args&&>(args)...)
+              : data_(emplaced_index<1>, RANGES_FORWARD(args)...)
             {}
             explicit operator bool() const noexcept
             {

@@ -38,7 +38,7 @@ namespace ranges
             {}
             template<typename ...Args>
             semiregular(in_place_t, Args &&...args)
-              : t_(in_place, static_cast<Args&&>(args)...)
+              : t_(in_place, RANGES_FORWARD(args)...)
             {}
             T & get()
             {
@@ -70,15 +70,15 @@ namespace ranges
             }
             template<typename...Args>
             auto operator()(Args &&...args) ->
-                decltype(std::declval<T &>()(static_cast<Args&&>(args)...))
+                decltype(std::declval<T &>()(RANGES_FORWARD(args)...))
             {
-                return get()(static_cast<Args&&>(args)...);
+                return get()(RANGES_FORWARD(args)...);
             }
             template<typename...Args>
             auto operator()(Args &&...args) const ->
-                decltype(std::declval<T const &>()(static_cast<Args&&>(args)...))
+                decltype(std::declval<T const &>()(RANGES_FORWARD(args)...))
             {
-                return get()(static_cast<Args&&>(args)...);
+                return get()(RANGES_FORWARD(args)...);
             }
         };
 

@@ -71,7 +71,7 @@ namespace ranges
                     RANGES_EXPECT(from <= to);
                     ranges::action::erase(rng, next(begin(rng), to), end(rng));
                     ranges::action::erase(rng, begin(rng), next(begin(rng), from));
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

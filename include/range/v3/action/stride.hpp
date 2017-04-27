@@ -81,7 +81,7 @@ namespace ranges
                         }
                         ranges::action::erase(rng, begin, end);
                     }
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

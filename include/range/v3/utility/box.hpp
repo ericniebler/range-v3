@@ -200,13 +200,13 @@ namespace ranges
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : value(static_cast<E&&>(e))
+              : value(RANGES_FORWARD(e))
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : value(static_cast<E&&>(e))
+              : value(RANGES_FORWARD(e))
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept
@@ -237,13 +237,13 @@ namespace ranges
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : Element(static_cast<E&&>(e))
+              : Element(RANGES_FORWARD(e))
             {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : Element(static_cast<E&&>(e))
+              : Element(RANGES_FORWARD(e))
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept

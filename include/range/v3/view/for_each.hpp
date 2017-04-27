@@ -68,7 +68,7 @@ namespace ranges
                 auto operator()(Rng && rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    join(transform(static_cast<Rng&&>(rng), std::move(fun)))
+                    join(transform(RANGES_FORWARD(rng), std::move(fun)))
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED
@@ -174,9 +174,9 @@ namespace ranges
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
                 Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())>
         auto operator >>= (Rng && rng, Fun fun) ->
-            decltype(view::for_each(static_cast<Rng&&>(rng), std::move(fun)))
+            decltype(view::for_each(RANGES_FORWARD(rng), std::move(fun)))
         {
-            return view::for_each(static_cast<Rng&&>(rng), std::move(fun));
+            return view::for_each(RANGES_FORWARD(rng), std::move(fun));
         }
         /// \endcond
     }

@@ -39,7 +39,7 @@ namespace ranges
                     static auto bind(Ts &&...ts)
                     RANGES_DECLTYPE_AUTO_RETURN
                     (
-                        A::bind(static_cast<Ts&&>(ts)...)
+                        A::bind(RANGES_FORWARD(ts)...)
                     )
                 };
             };
@@ -115,7 +115,7 @@ namespace ranges
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    invoke(action_, rng, static_cast<Rest&&>(rest)...)
+                    invoke(action_, rng, RANGES_FORWARD(rest)...)
                 )
 
                 // Currying overload.
@@ -123,8 +123,8 @@ namespace ranges
                 auto operator()(T && t, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_action(action_access::impl<A>::bind(action_, static_cast<T&&>(t),
-                        static_cast<Rest&&>(rest)...))
+                    make_action(action_access::impl<A>::bind(action_, RANGES_FORWARD(t),
+                        RANGES_FORWARD(rest)...))
                 )
             };
 

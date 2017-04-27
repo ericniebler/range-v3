@@ -53,7 +53,7 @@ namespace ranges
             tokenize_view(Rng rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
               : rng_(std::move(rng))
-              , rex_(static_cast<Regex&&>(rex))
+              , rex_(RANGES_FORWARD(rex))
               , subs_(std::move(subs))
               , flags_(flags)
             {}
@@ -95,7 +95,7 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex), sub,
+                    return {all(RANGES_FORWARD(rng)), RANGES_FORWARD(rex), sub,
                             flags};
                 }
 
@@ -110,7 +110,7 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
+                    return {all(RANGES_FORWARD(rng)), RANGES_FORWARD(rex),
                             std::move(subs), flags};
                 }
 
@@ -125,7 +125,7 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
+                    return {all(RANGES_FORWARD(rng)), RANGES_FORWARD(rex),
                             std::move(subs), flags};
                 }
 
@@ -175,29 +175,29 @@ namespace ranges
             public:
                 template<typename ...Args>
                 auto operator()(Args &&...args) const
-                    -> decltype(base()(static_cast<Args&&>(args)...))
+                    -> decltype(base()(RANGES_FORWARD(args)...))
                 {
-                    return base()(static_cast<Args&&>(args)...);
+                    return base()(RANGES_FORWARD(args)...);
                 }
 
                 template<typename Arg0, typename ...Args>
                 auto operator()(Arg0 && arg0, std::initializer_list<int> subs,
                     Args &&...args) const
-                    -> decltype(base()(static_cast<Arg0&&>(arg0), std::move(subs),
-                                       static_cast<Args&&>(args)...))
+                    -> decltype(base()(RANGES_FORWARD(arg0), std::move(subs),
+                                       RANGES_FORWARD(args)...))
                 {
-                    return base()(static_cast<Arg0&&>(arg0), std::move(subs),
-                                  static_cast<Args&&>(args)...);
+                    return base()(RANGES_FORWARD(arg0), std::move(subs),
+                                  RANGES_FORWARD(args)...);
                 }
 
                 template<typename Arg0, typename Arg1, typename ...Args>
                 auto operator()(Arg0 && arg0, Arg1 && arg1, std::initializer_list<int> subs,
                     Args &&...args) const
-                    -> decltype(base()(static_cast<Arg0&&>(arg0), static_cast<Arg1&&>(arg1),
-                                       std::move(subs), static_cast<Args&&>(args)...))
+                    -> decltype(base()(RANGES_FORWARD(arg0), RANGES_FORWARD(arg1),
+                                       std::move(subs), RANGES_FORWARD(args)...))
                 {
-                    return base()(static_cast<Arg0&&>(arg0), static_cast<Arg1&&>(arg1),
-                                  std::move(subs), static_cast<Args&&>(args)...);
+                    return base()(RANGES_FORWARD(arg0), RANGES_FORWARD(arg1),
+                                  std::move(subs), RANGES_FORWARD(args)...);
                 }
             };
 

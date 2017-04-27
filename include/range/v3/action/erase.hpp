@@ -50,17 +50,17 @@ namespace ranges
                 template<typename Rng, typename I,
                     CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>())>
                 auto operator()(Rng && rng, I it) const ->
-                    decltype(erase(static_cast<Rng&&>(rng), it))
+                    decltype(erase(RANGES_FORWARD(rng), it))
                 {
-                    return erase(static_cast<Rng&&>(rng), it);
+                    return erase(RANGES_FORWARD(rng), it);
                 }
                 template<typename Rng, typename I, typename S,
                     CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>() &&
                         Sentinel<S, I>())>
                 auto operator()(Rng && rng, I begin, S end) const ->
-                    decltype(erase(static_cast<Rng&&>(rng), begin, end))
+                    decltype(erase(RANGES_FORWARD(rng), begin, end))
                 {
-                    return erase(static_cast<Rng&&>(rng), begin, end);
+                    return erase(RANGES_FORWARD(rng), begin, end);
                 }
             };
         }

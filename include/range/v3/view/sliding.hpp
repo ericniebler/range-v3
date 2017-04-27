@@ -341,7 +341,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 sliding_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), n};
+                    return {all(RANGES_FORWARD(rng)), n};
                 }
 
                 // For the sake of better error messages:

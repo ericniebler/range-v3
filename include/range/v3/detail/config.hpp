@@ -103,6 +103,8 @@ namespace ranges
     decltype(__VA_ARGS__)                                       \
     /**/
 
+#define RANGES_FORWARD(x) static_cast<decltype(x)>(x) // See PR #616 from ericniebler/remove-std-forward
+
 // Non-portable forward declarations of standard containers
 #ifdef _LIBCPP_VERSION
 #define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD

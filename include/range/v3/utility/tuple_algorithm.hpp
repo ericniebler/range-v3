@@ -42,14 +42,14 @@ namespace ranges
             static auto impl(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                invoke(static_cast<Fun&&>(fun), std::get<Is>(static_cast<Tup&&>(tup))...)
+                invoke(RANGES_FORWARD(fun), std::get<Is>(RANGES_FORWARD(tup))...)
             )
         public:
             template<typename Fun, typename Tup>
             auto operator()(Fun &&fun, Tup &&tup) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                tuple_apply_fn::impl(static_cast<Fun&&>(fun), static_cast<Tup&&>(tup),
+                tuple_apply_fn::impl(RANGES_FORWARD(fun), RANGES_FORWARD(tup),
                     tuple_indices_t<Tup>{})
             )
         };
@@ -65,30 +65,30 @@ namespace ranges
             static auto impl1(Tup && tup, Fun &fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::tuple<decltype(fun(std::get<Is>(static_cast<Tup&&>(tup))))...>{
-                    fun(std::get<Is>(static_cast<Tup&&>(tup)))...}
+                std::tuple<decltype(fun(std::get<Is>(RANGES_FORWARD(tup))))...>{
+                    fun(std::get<Is>(RANGES_FORWARD(tup)))...}
             )
             template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
             static auto impl2(Tup0 && tup0, Tup1 && tup1, Fun &fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::tuple<decltype(fun(std::get<Is>(static_cast<Tup0&&>(tup0)),
-                                        std::get<Is>(static_cast<Tup1&&>(tup1))))...>{
-                    fun(std::get<Is>(static_cast<Tup0&&>(tup0)),
-                        std::get<Is>(static_cast<Tup1&&>(tup1)))...}
+                std::tuple<decltype(fun(std::get<Is>(RANGES_FORWARD(tup0)),
+                                        std::get<Is>(RANGES_FORWARD(tup1))))...>{
+                    fun(std::get<Is>(RANGES_FORWARD(tup0)),
+                        std::get<Is>(RANGES_FORWARD(tup1)))...}
             )
         public:
             template<typename Tup, typename Fun>
             auto operator()(Tup && tup, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                tuple_transform_fn::impl1(static_cast<Tup&&>(tup), fun, tuple_indices_t<Tup>{})
+                tuple_transform_fn::impl1(RANGES_FORWARD(tup), fun, tuple_indices_t<Tup>{})
             )
             template<typename Tup0, typename Tup1, typename Fun>
             auto operator()(Tup0 && tup0, Tup1 && tup1, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                tuple_transform_fn::impl2(static_cast<Tup0&&>(tup0), static_cast<Tup1&&>(tup1),
+                tuple_transform_fn::impl2(RANGES_FORWARD(tup0), RANGES_FORWARD(tup1),
                     fun, tuple_indices_t<Tup0>{})
             )
         };
@@ -110,21 +110,21 @@ namespace ranges
             static auto impl(Tup && tup, Val val, Fun &fun)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                Impl::template impl<Is...>(static_cast<Tup&&>(tup),
-                    fun(std::move(val), std::get<I0>(static_cast<Tup&&>(tup))), fun)
+                Impl::template impl<Is...>(RANGES_FORWARD(tup),
+                    fun(std::move(val), std::get<I0>(RANGES_FORWARD(tup))), fun)
             )
             template<typename Tup, typename Val, typename Fun, std::size_t...Is>
             static auto impl2(Tup && tup, Val val, Fun &fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                tuple_foldl_fn::impl<Is...>(static_cast<Tup&&>(tup), std::move(val), fun)
+                tuple_foldl_fn::impl<Is...>(RANGES_FORWARD(tup), std::move(val), fun)
             )
         public:
             template<typename Tup, typename Val, typename Fun>
             auto operator()(Tup && tup, Val val, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                tuple_foldl_fn::impl2(static_cast<Tup&&>(tup), std::move(val), fun,
+                tuple_foldl_fn::impl2(RANGES_FORWARD(tup), std::move(val), fun,
                     tuple_indices_t<Tup>{})
             )
         };
@@ -140,13 +140,13 @@ namespace ranges
             static void impl(Tup && tup, Fun &fun, meta::index_sequence<Is...>)
             {
                 (void)std::initializer_list<int>{
-                    ((void)fun(std::get<Is>(static_cast<Tup&&>(tup))), 42)...};
+                    ((void)fun(std::get<Is>(RANGES_FORWARD(tup))), 42)...};
             }
         public:
             template<typename Tup, typename Fun>
             Fun operator()(Tup && tup, Fun fun) const
             {
-                tuple_for_each_fn::impl(static_cast<Tup&&>(tup), fun, tuple_indices_t<Tup>{});
+                tuple_for_each_fn::impl(RANGES_FORWARD(tup), fun, tuple_indices_t<Tup>{});
                 return fun;
             }
         };
@@ -161,7 +161,7 @@ namespace ranges
             auto operator()(Ts &&...ts) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::make_tuple(static_cast<Ts&&>(ts)...)
+                std::make_tuple(RANGES_FORWARD(ts)...)
             )
         };
 

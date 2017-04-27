@@ -88,7 +88,7 @@ namespace ranges
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
-                    return impl(static_cast<Rng&&>(rng), ReserveConcept<Cont, Rng>());
+                    return impl(RANGES_FORWARD(rng), ReserveConcept<Cont, Rng>());
                 }
             };
         }
@@ -115,7 +115,7 @@ namespace ranges
             CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {
-            return static_cast<Rng&&>(rng) | ranges::to_<ContT>();
+            return RANGES_FORWARD(rng) | ranges::to_<ContT>();
         }
 
         /// \overload
@@ -139,7 +139,7 @@ namespace ranges
             CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {
-            return static_cast<Rng&&>(rng) | ranges::to_<Cont>();
+            return RANGES_FORWARD(rng) | ranges::to_<Cont>();
         }
 
         /// \overload

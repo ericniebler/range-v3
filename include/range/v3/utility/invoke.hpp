@@ -62,21 +62,21 @@ namespace ranges
                 std::true_type, detail::any, MemberFunctionPtr fn, First && first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (static_cast<First&&>(first).*fn)(static_cast<Rest&&>(rest)...)
+                (RANGES_FORWARD(first).*fn)(RANGES_FORWARD(rest)...)
             )
             template<typename MemberFunctionPtr, typename First, typename... Rest>
             static constexpr auto invoke_member_fn(
                 std::false_type, std::true_type, MemberFunctionPtr fn, First && first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (static_cast<First&&>(first).get().*fn)(static_cast<Rest&&>(rest)...)
+                (RANGES_FORWARD(first).get().*fn)(RANGES_FORWARD(rest)...)
             )
             template<typename MemberFunctionPtr, typename First, typename... Rest>
             static constexpr auto invoke_member_fn(
                 std::false_type, std::false_type, MemberFunctionPtr fn, First && first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                ((*static_cast<First&&>(first)).*fn)(static_cast<Rest&&>(rest)...)
+                ((*RANGES_FORWARD(first)).*fn)(RANGES_FORWARD(rest)...)
             )
 
             template<typename MemberDataPtr, typename First>
@@ -84,21 +84,21 @@ namespace ranges
                 std::true_type, detail::any, MemberDataPtr ptr, First && first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<First&&>(first).*ptr
+                RANGES_FORWARD(first).*ptr
             )
             template<typename MemberDataPtr, typename First>
             static constexpr auto invoke_member_data(
                 std::false_type, std::true_type, MemberDataPtr ptr, First && first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<First&&>(first).get().*ptr
+                RANGES_FORWARD(first).get().*ptr
             )
             template<typename MemberDataPtr, typename First>
             static constexpr auto invoke_member_data(
                 std::false_type, std::false_type, MemberDataPtr ptr, First && first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (*static_cast<First&&>(first)).*ptr
+                (*RANGES_FORWARD(first)).*ptr
             )
         public:
             template<typename F, typename Obj, typename First, typename... Rest,
@@ -108,7 +108,7 @@ namespace ranges
             (
                 invoke_member_fn(std::is_base_of<Obj, detail::decay_t<First>>{},
                     is_reference_wrapper_t<detail::decay_t<First>>{},
-                    ptr, static_cast<First&&>(first), static_cast<Rest&&>(rest)...)
+                    ptr, RANGES_FORWARD(first), RANGES_FORWARD(rest)...)
             )
             template<typename Data, typename Obj, typename First,
                 meta::if_c<!detail::is_function<Data>::value, int> = 0>
@@ -117,14 +117,14 @@ namespace ranges
             (
                 invoke_member_data(std::is_base_of<Obj, detail::decay_t<First>>{},
                     is_reference_wrapper_t<detail::decay_t<First>>{},
-                    ptr, static_cast<First&&>(first))
+                    ptr, RANGES_FORWARD(first))
             )
             template<typename F, typename... Args,
                 meta::if_c<!std::is_member_pointer<uncvref_t<F>>::value, int> = 0>
             constexpr auto operator()(F && fn, Args &&... args) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<F&&>(fn)(static_cast<Args&&>(args)...)
+                RANGES_FORWARD(fn)(RANGES_FORWARD(args)...)
             )
         };
         RANGES_INLINE_VARIABLE(invoke_fn, invoke)
@@ -160,7 +160,7 @@ namespace ranges
             RANGES_DECLTYPE_NOEXCEPT(
                 invoke(std::declval<reference>(), std::declval<Args>()...))
             {
-                return invoke(get(), static_cast<Args&&>(args)...);
+                return invoke(get(), RANGES_FORWARD(args)...);
             }
         };
 

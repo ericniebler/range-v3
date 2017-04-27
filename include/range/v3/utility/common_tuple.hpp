@@ -31,7 +31,7 @@ namespace ranges
             template<typename ...Us, typename Tup, std::size_t...Is>
             std::tuple<Us...> to_std_tuple(Tup && tup, meta::index_sequence<Is...>)
             {
-                return std::tuple<Us...>{std::get<Is>(static_cast<Tup&&>(tup))...};
+                return std::tuple<Us...>{std::get<Is>(RANGES_FORWARD(tup))...};
             }
         }
         /// \endcond
@@ -43,14 +43,14 @@ namespace ranges
         private:
             template<typename That, std::size_t...Is>
             common_tuple(That && that, meta::index_sequence<Is...>)
-              : std::tuple<Ts...>{std::get<Is>(static_cast<That&&>(that))...}
+              : std::tuple<Ts...>{std::get<Is>(RANGES_FORWARD(that))...}
             {}
             struct element_assign_
             {
                 template<typename T, typename U>
                 int operator()(T &t, U &&u) const
                 {
-                    t = static_cast<U&&>(u);
+                    t = RANGES_FORWARD(u);
                     return 0;
                 }
             };
@@ -65,7 +65,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us>()...>::value)>
             explicit common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
-              : std::tuple<Ts...>{static_cast<Us&&>(us)...}
+              : std::tuple<Ts...>{RANGES_FORWARD(us)...}
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)>
@@ -209,7 +209,7 @@ namespace ranges
                         unwrap_reference_t<Args>>::value...>::value)
             {
                 return common_tuple<bind_element_t<Args>...>{
-                    unwrap_reference(static_cast<Args&&>(args))...};
+                    unwrap_reference(RANGES_FORWARD(args))...};
             }
         };
 
@@ -239,7 +239,7 @@ namespace ranges
             common_pair(F2 &&f2, S2 &&s2)
                 noexcept(std::is_nothrow_constructible<F, F2>::value &&
                     std::is_nothrow_constructible<S, S2>::value)
-              : std::pair<F, S>{static_cast<F2&&>(f2), static_cast<S2&&>(s2)}
+              : std::pair<F, S>{RANGES_FORWARD(f2), RANGES_FORWARD(s2)}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 &>() && Constructible<S, S2 &>())>
@@ -426,8 +426,8 @@ namespace ranges
                     std::is_nothrow_constructible<F, unwrap_reference_t<Second>>::value)
             {
                 return {
-                    unwrap_reference(static_cast<First&&>(f)),
-                    unwrap_reference(static_cast<Second&&>(s))};
+                    unwrap_reference(RANGES_FORWARD(f)),
+                    unwrap_reference(RANGES_FORWARD(s))};
             }
         };
 
