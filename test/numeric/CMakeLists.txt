@@ -12,3 +12,6 @@ add_test(test.num.iota num.iota)
 
 add_executable(num.partial_sum partial_sum.cpp)
 add_test(test.num.partial_sum num.partial_sum)
+
+add_executable(num.inclusive_scan inclusive_scan.cpp)
+add_test(test.num.inclusive_scan num.inclusive_scan)
