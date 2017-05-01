@@ -53,7 +53,6 @@
 #include <mutex>
 #include <new>
 #include <random>
-#include <thread>
 #include <typeinfo>
 #include <utility>
 #include <meta/meta.hpp>
@@ -63,6 +62,10 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+
+#ifndef __MINGW32__
+#include <thread>
+#endif
 
 // Ugly platform-specific code for auto_seeded
 
@@ -210,10 +213,11 @@ namespace ranges
                     *it++ = randutils::hash(
                         static_cast<std::uint32_t(*)(std::uint64_t)>(&randutils::crushto32));
 
+#ifndef __MINGW32__
                     // Hash our thread id.  It seems to vary from run to run on OS X, not
                     // so much on Linux.
                     *it++ = randutils::hash(std::this_thread::get_id());
-
+#endif
                     // Hash of the ID of a type.  May or may not vary, depending on
                     // implementation.
                     *it++ = s2;
@@ -221,7 +225,7 @@ namespace ranges
                     // Platform-specific entropy
                     *it++ = randutils::crushto32(RANGES_CPU_ENTROPY);
 
-                    RANGES_ASSERT(static_cast<std::size_t>(it - seeds.begin()) == weird_seed_sources);
+                    RANGES_ASSERT(static_cast<std::size_t>(it - seeds.begin()) <= weird_seed_sources);
 
                     // Hopefully high-quality entropy from random_device.
                     std::random_device rd{};

@@ -265,7 +265,9 @@ int main()
         CONCEPT_ASSERT(ranges::Invocable<void(__stdcall*)()>());
         CONCEPT_ASSERT(ranges::Invocable<void(__fastcall*)()>());
         CONCEPT_ASSERT(ranges::Invocable<void(__thiscall*)()>());
+#ifndef __MINGW32__
         CONCEPT_ASSERT(ranges::Invocable<void(__vectorcall*)()>());
+#endif
     }
 #endif // _WIN32
 
