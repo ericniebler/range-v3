@@ -29,25 +29,11 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I, typename O, typename BOp = plus, typename P = ident,
-            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>,
-            typename Y = reference_t<X>>
-        using PartialSummable = meta::strict_and<
-            SemiRegular<detail::decay_t<Y>>,
-            InputIterator<I>,
-            OutputIterator<O, detail::decay_t<Y>&>,
-            IndirectRegularInvocable<BOp, detail::decay_t<Y>*, X>,
-            Assignable<detail::decay_t<Y>&, indirect_result_of_t<BOp&(detail::decay_t<Y>*, X)>>>;
-
-        struct partial_sum_fn
-        {
+        namespace detail {
             template<typename I, typename S, typename O, typename S2,
-                typename BOp = plus, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
-                    PartialSummable<I, O, BOp, P>())>
+                typename BOp, typename P>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
-            {
+            partial_sum_no_check(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) {
                 using X = projected<projected<I, coerce<value_type_t<I>>>, P>;
                 using Y = reference_t<X>;
                 coerce<value_type_t<I>> v;
@@ -69,14 +55,39 @@ namespace ranges
                 return {begin, result};
             }
 
+        }
+
+        template<typename I, typename O, typename BOp = plus, typename P = ident,
+            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>,
+            typename Y = reference_t<X>>
+        using PartialSummable = meta::strict_and<
+            SemiRegular<detail::decay_t<Y>>,
+            InputIterator<I>,
+            OutputIterator<O, detail::decay_t<Y>&>,
+            IndirectRegularInvocable<BOp, detail::decay_t<Y>*, X>,
+            Assignable<detail::decay_t<Y>&, indirect_result_of_t<BOp&(detail::decay_t<Y>*, X)>>>;
+
+        struct partial_sum_fn
+        {
+            template<typename I, typename S, typename O, typename S2,
+                typename BOp = plus, typename P = ident,
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
+                    PartialSummable<I, O, BOp, P>())>
+            tagged_pair<tag::in(I), tag::out(O)>
+            operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
+            {
+                return detail::partial_sum_no_check(std::move(begin), std::move(end), std::move(result),
+                    std::move(end_result), std::move(bop), std::move(proj));
+            }
+
             template<typename I, typename S, typename O, typename BOp = plus,
                 typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && PartialSummable<I, O, BOp, P>())>
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
-                return (*this)(std::move(begin), std::move(end), std::move(result), 
-                               unreachable{}, std::move(bop), std::move(proj));
+                return detail::partial_sum_no_check(std::move(begin), std::move(end), std::move(result),
+                    unreachable{}, std::move(bop), std::move(proj));
             }
 
             template<typename Rng, typename ORef, typename BOp = plus,
@@ -86,8 +97,8 @@ namespace ranges
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), static_cast<ORef&&>(result),
-                               std::move(bop), std::move(proj));
+                return detail::partial_sum_no_check(begin(rng), end(rng), static_cast<ORef&&>(result),
+                    unreachable{}, std::move(bop), std::move(proj));
             }
 
             template<typename Rng, typename ORng, typename BOp = plus,
@@ -99,8 +110,8 @@ namespace ranges
                 tag::out(safe_iterator_t<ORng>)>
             operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), begin(result), end(result),
-                               std::move(bop), std::move(proj));
+                return detail::partial_sum_no_check(begin(rng), end(rng), begin(result), end(result),
+                    std::move(bop), std::move(proj));
             }
         };
 
