@@ -27,76 +27,53 @@
 #include <range/v3/view/zip.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
+#include <array>
 
-struct S
+template<typename TIn, typename TOut, std::size_t N, typename Func>
+void test_one(std::array<TIn, N> const& in, std::array<TOut, N> const& expected, Func run) 
 {
-    int i;
-};
+    std::array<TOut, N> result{};
+    auto r = run(in, result);
+    CHECK(base(std::get<0>(r)) == in.data() + in.size());
+    CHECK(base(std::get<1>(r)) == result.data() + result.size());
+    ::check_equal(result, expected);
+}
 
 template<class InIter, class OutIter, class InSent = InIter> void test()
 {
     using ranges::partial_sum;
     using ranges::make_iterator_range;
-    { // iterator
-        int ir[] = {1, 3, 6, 10, 15};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ia[] = {1, 2, 3, 4, 5};
-        int ib[s] = {0};
-        auto r = partial_sum(InIter(ia), InSent(ia + s), OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
 
-    { // range + output iterator
-        int ir[] = {1, 3, 6, 10, 15};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ia[] = {1, 2, 3, 4, 5};
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto r = partial_sum(rng, OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    using ArrayT = std::array<int, 5>;
 
-    { // range + output range
-        int ir[] = {1, 3, 6, 10, 15};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ia[] = {1, 2, 3, 4, 5};
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto orng = make_iterator_range(OutIter(ib), OutIter(ib + s));
-        auto r = partial_sum(rng, orng);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    ArrayT const in{{1, 2, 3, 4, 5}};
+    ArrayT const expected{{1, 3, 6, 10, 15}};
 
-    {
-        int ia[] = {1, 2, 3, 4, 5};
-        int ir[] = {1, -1, -4, -8, -13};
-        const unsigned s = sizeof(ia) / sizeof(ia[0]);
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto orng = make_iterator_range(OutIter(ib), OutIter(ib + s));
-        auto r = partial_sum(rng, orng, std::minus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    // iterator
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
+        return partial_sum(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
+    });
+
+    // range + output iterator
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        return partial_sum(rng, OutIter(result.data()));
+    });
+
+    // range + output range
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+        return partial_sum(rng, orng);
+    });
+
+    // BinaryOp
+    test_one(in, ArrayT{{1, -1, -4, -8, -13}}, [](ArrayT const& in, ArrayT& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+        return partial_sum(rng, orng, std::minus<int>());
+    });
 }
 
 int main()
@@ -133,33 +110,20 @@ int main()
 
     using ranges::partial_sum;
 
-    { // Test projections
-        S ia[] = {{1}, {2}, {3}, {4}, {5}};
-        int ir[] = {1, 3, 6, 10, 15};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ib[s] = {0};
-        auto r = partial_sum(ranges::begin(ia), ranges::begin(ia) + s, ranges::begin(ib),
-                             std::plus<int>(), &S::i);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
 
-    { // Test BinaryOp
-        int ia[] = {1, 2, 3, 4, 5};
-        int ir[] = {1, 2, 6, 24, 120};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ib[s] = {0};
-        auto r = partial_sum(ia, ranges::begin(ib), std::multiplies<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
+    { // Test projections
+        struct S {
+            int i;
+        };
+
+        using SArrayT = std::array<S, 5>;
+        using ArrayT = std::array<int, 5>;
+
+        test_one(SArrayT{{{1}, {2}, {3}, {4}, {5}}}, ArrayT{{1, 3, 6, 10, 15}},
+            [](SArrayT const& in, ArrayT& result) {
+                return partial_sum(in.data(), in.data() + in.size(), result.data(),
+                    std::plus<int>(), &S::i);
+            });
     }
 
     { // Test calling it with an array
@@ -170,10 +134,7 @@ int main()
         auto r = partial_sum(ia, ib, std::multiplies<int>());
         CHECK(base(std::get<0>(r)) == ia + s);
         CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
+        ::check_equal(ib, ir);
     }
 
     { // Test calling it with proxy iterators
