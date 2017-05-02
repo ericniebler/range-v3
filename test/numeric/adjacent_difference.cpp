@@ -26,76 +26,50 @@
 #include <range/v3/numeric/adjacent_difference.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
+#include "../test_utils.hpp"
+#include <array>
 
-struct S
-{
-    int i;
-};
+template<typename TIn, typename TOut, std::size_t N, typename Func>
+void test_one(std::array<TIn, N> const& in, std::array<TOut, N> const& expected, Func run) {
+    std::array<TOut, N> result{};
+    auto r = run(in, result);
+    CHECK(base(std::get<0>(r)) == in.data() + in.size());
+    CHECK(base(std::get<1>(r)) == result.data() + result.size());
+    ::check_equal(result, expected);
+}
 
 template<class InIter, class OutIter, class InSent = InIter> void test()
 {
     using ranges::adjacent_difference;
     using ranges::make_iterator_range;
-    { // iterator
-        int ia[] = {15, 10, 6, 3, 1};
-        int ir[] = {15, -5, -4, -3, -2};
-        const unsigned s = sizeof(ia) / sizeof(ia[0]);
-        int ib[s] = {0};
-        auto r = adjacent_difference(InIter(ia), InSent(ia + s), OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
 
-    { // range + output iterator
-        int ia[] = {15, 10, 6, 3, 1};
-        int ir[] = {15, -5, -4, -3, -2};
-        const unsigned s = sizeof(ia) / sizeof(ia[0]);
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto r = adjacent_difference(rng, OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    std::array<int, 5> const in{{15, 10, 6, 3, 1}};
+    std::array<int, 5> const expected{{15, -5, -4, -3, -2}};
 
-    { // range + output range
-        int ia[] = {15, 10, 6, 3, 1};
-        int ir[] = {15, -5, -4, -3, -2};
-        const unsigned s = sizeof(ia) / sizeof(ia[0]);
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto orng = make_iterator_range(OutIter(ib), OutIter(ib + s));
-        auto r = adjacent_difference(rng, orng);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    // iterator
+    test_one(in, expected, [](auto const& in, auto& result) {
+        return adjacent_difference(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
+    });
 
-    {
-        int ia[] = {15, 10, 6, 3, 1};
-        int ir[] = {15, 25, 16, 9, 4};
-        const unsigned s = sizeof(ia) / sizeof(ia[0]);
-        int ib[s] = {0};
-        auto rng = make_iterator_range(InIter(ia), InSent(ia + s));
-        auto orng = make_iterator_range(OutIter(ib), OutIter(ib + s));
-        auto r = adjacent_difference(rng, orng, std::plus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+    // range + output iterator
+    test_one(in, expected, [](auto const& in, auto& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        return adjacent_difference(rng, OutIter(result.data()));
+    });
+
+    // range + output range
+    test_one(in, expected, [](auto const& in, auto& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+        return adjacent_difference(rng, orng);
+    });
+
+    // BinaryOp
+    test_one(in, std::array<int, 5>{{15, 25, 16, 9, 4}}, [](auto const& in, auto& result) {
+        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+        return adjacent_difference(rng, orng, std::plus<int>());
+    });
 }
 
 int main()
@@ -133,33 +107,16 @@ int main()
     using ranges::adjacent_difference;
 
     { // Test projections
-        S ia[] = {{15}, {10}, {6}, {3}, {1}};
-        int ir[] = {15, -5, -4, -3, -2};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ib[s] = {0};
-        auto r = adjacent_difference(ranges::begin(ia), ranges::begin(ia) + s,
-                                     ranges::begin(ib), std::minus<int>(), &S::i);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+        struct S {
+            int i;
+        };
 
-    { // Test BinaryOp
-        int ia[] = {15, 10, 6, 3, 1};
-        int ir[] = {15, 25, 16, 9, 4};
-        const unsigned s = sizeof(ir) / sizeof(ir[0]);
-        int ib[s] = {0};
-        auto r = adjacent_difference(ia, ranges::begin(ib), std::plus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
-        for(unsigned i = 0; i < s; ++i)
-        {
-            CHECK(ib[i] == ir[i]);
-        }
-    }
+        test_one(std::array<S, 5>{{{15}, {10}, {6}, {3}, {1}}}, std::array<int, 5>{{15, -5, -4, -3, -2}},
+            [](auto const& in, auto& result) {
+                return adjacent_difference(in.data(), in.data() + in.size(), result.data(),
+                    std::minus<int>(), &S::i);
+            });
+   }
 
     { // Test calling it with an array
         int ia[] = {15, 10, 6, 3, 1};
