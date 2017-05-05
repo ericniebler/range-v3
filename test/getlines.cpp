@@ -27,9 +27,10 @@ good men
 )";
 
     std::stringstream sin{text};
-    ::check_equal(getlines(sin), {"Now is", "the time", "for all", "good men"});
+    auto rng = getlines(sin);
+    ::check_equal(rng, {"Now is", "the time", "for all", "good men"});
 
-    using Rng = decltype(getlines(sin));
+    using Rng = decltype(rng);
     CONCEPT_ASSERT(InputView<Rng>());
     CONCEPT_ASSERT(!ForwardView<Rng>());
     CONCEPT_ASSERT(Same<range_rvalue_reference_t<Rng>, std::string &&>());

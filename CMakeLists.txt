@@ -73,6 +73,8 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers")
     endif()
+  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "7.0")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-noexcept-type")
   endif()
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -DNDEBUG")
@@ -87,7 +89,7 @@ range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   RELATIVE "${CMAKE_SOURCE_DIR}/include"
                   "${CMAKE_SOURCE_DIR}/include/*.hpp")
-				  
+
 # Add header files as sources to fix MSVS 2017 not finding source during debugging
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
                   "${CMAKE_SOURCE_DIR}/include/*.hpp")
