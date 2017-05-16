@@ -65,6 +65,10 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.5** May 16, 2017
+  - `view::chunk` works on Input ranges (from @CaseyCarter)
+  - `for_each_n` algorithm (from @khlebnikov)
+  - Portability fixes for MinGW, clang-3.6 and -3.7, and gcc-7; and cmake 3.0
 * **0.2.4** April 12, 2017
   Fix the following bug:
   - `action::stable_sort` of `vector` broken on Clang 3.8.1 since ~last Xmas (ericniebler/range-v3#632).
