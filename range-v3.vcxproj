@@ -1175,10 +1175,17 @@
     <ClInclude Include="test\test_utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".buckconfig" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include=".gitmodules" />
     <None Include=".travis.yml" />
+    <None Include="appveyor.yml" />
+    <None Include="BUCK" />
+    <None Include="BUILD.bazel" />
+    <None Include="cmake\TestHeaders.cmake" />
+    <None Include="conanfile.py" />
+    <None Include="CREDITS.md" />
     <None Include="doc\Doxyfile.in" />
     <None Include="doc\index.md" />
     <None Include="doc\std\D4128.md" />
@@ -1188,6 +1195,8 @@
     <None Include="install_libcxx.sh" />
     <None Include="README.md" />
     <None Include="TODO.md" />
+    <None Include="Version.cmake" />
+    <None Include="version.hpp.in" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

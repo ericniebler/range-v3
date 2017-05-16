@@ -70,6 +70,9 @@
     <Filter Include="Test Files\utility">
       <UniqueIdentifier>{e4938de7-8844-475f-a939-74820b27b469}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CMake Files">
+      <UniqueIdentifier>{011c8154-8006-4ae1-a1c7-4f163978d6e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="example\calendar.cpp">
@@ -1375,6 +1378,17 @@
     </None>
     <None Include="doc\std\show.cmd">
       <Filter>Doc Files\std</Filter>
+    </None>
+    <None Include=".buckconfig" />
+    <None Include="appveyor.yml" />
+    <None Include="BUCK" />
+    <None Include="BUILD.bazel" />
+    <None Include="conanfile.py" />
+    <None Include="CREDITS.md" />
+    <None Include="Version.cmake" />
+    <None Include="version.hpp.in" />
+    <None Include="cmake\TestHeaders.cmake">
+      <Filter>CMake Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
