@@ -104,7 +104,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
                         "The value passed to view::repeat must be SemiRegular; that is, it needs "
-                        "to be default constructable, copy and move constructable, and destructable.");
+                        "to be default constructible, copy and move constructible, and destructible.");
                 }
             #endif
             };
