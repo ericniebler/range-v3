@@ -54,15 +54,6 @@ namespace
 {
     std::mt19937 gen;
 
-    struct first
-    {
-        template<typename P>
-        int operator()(P const & p) const
-        {
-            return p.first;
-        }
-    };
-
     struct indirect_less
     {
         template<class P>

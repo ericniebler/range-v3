@@ -135,6 +135,26 @@ int main()
     test_iter<bidirectional_iterator<const int*>, sentinel<const int*>>();
     test_iter<random_access_iterator<const int*>, sentinel<const int*>>();
 
+    test_iter_comp<input_iterator<const int*> >();
+    test_iter_comp<forward_iterator<const int*> >();
+    test_iter_comp<bidirectional_iterator<const int*> >();
+    test_iter_comp<random_access_iterator<const int*> >();
+    test_iter_comp<const int*>();
+    test_iter_comp<input_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<forward_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
+
+    test_iter_comp<input_iterator<const int*> >();
+    test_iter_comp<forward_iterator<const int*> >();
+    test_iter_comp<bidirectional_iterator<const int*> >();
+    test_iter_comp<random_access_iterator<const int*> >();
+    test_iter_comp<const int*>();
+    test_iter_comp<input_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<forward_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
+
     // Works with projections?
     S s[] = {S{1,0},S{2,1},S{3,2},S{4,3},S{-4,4},S{40,5},S{-4,6},S{40,7},S{7,8},S{8,9},S{9,10}};
     auto res = ranges::minmax(s, std::less<int>{}, &S::value);
