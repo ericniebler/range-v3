@@ -45,8 +45,8 @@ int main()
             a-b,
             b-a);
 
-        counted_iterator<char*> c(0,0);
-        counted_iterator<char const*> d(0,0);
+        counted_iterator<char*> c(nullptr, 0);
+        counted_iterator<char const*> d(nullptr, 0);
         detail::ignore_unused(
             c-c,
             d-d,

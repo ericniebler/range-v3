@@ -226,6 +226,22 @@ int main()
     test_iter<bidirectional_iterator<const int*>, sentinel<const int*>>();
     test_iter<random_access_iterator<const int*>, sentinel<const int*>>();
 
+    test_iter_comp<forward_iterator<const int*> >();
+    test_iter_comp<bidirectional_iterator<const int*> >();
+    test_iter_comp<random_access_iterator<const int*> >();
+    test_iter_comp<const int*>();
+    test_iter_comp<forward_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
+
+    test_iter_comp<forward_iterator<const int*> >();
+    test_iter_comp<bidirectional_iterator<const int*> >();
+    test_iter_comp<random_access_iterator<const int*> >();
+    test_iter_comp<const int*>();
+    test_iter_comp<forward_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
+    test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
+
     // Works with projections?
     S s[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};
     std::pair<S const *, S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);
