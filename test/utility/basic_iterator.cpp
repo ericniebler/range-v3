@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <cstring>
+#include <sstream>
 #include <tuple>
 #include <range/v3/utility/basic_iterator.hpp>
 #include <range/v3/utility/common_tuple.hpp>
@@ -365,6 +366,103 @@ namespace test_forward_sized
     }
 }
 
+namespace test_post_increment
+{
+    template <typename T, typename charT, typename traits,
+        typename D = std::ptrdiff_t,
+        CONCEPT_REQUIRES_(ranges::SignedIntegral<D>() && ranges::SemiRegular<T>())>
+    struct istream_cursor
+    {
+        using difference_type = D;
+        using value_type = T;
+        using istream_type = std::basic_istream<charT, traits>;
+        using single_pass = std::true_type;
+
+        istream_type *stream_ = nullptr;
+        T value_ = {};
+
+        struct mixin : protected ranges::basic_mixin<istream_cursor>
+        {
+            using iterator_category = ranges::input_iterator_tag;
+            using value_type = istream_cursor::value_type;
+            using reference = const T&;
+            using pointer = const T*;
+            using char_type = charT;
+            using traits_type = traits;
+            using istream_type = istream_cursor::istream_type;
+
+            mixin() = default;
+            using ranges::basic_mixin<istream_cursor>::basic_mixin;
+            mixin(istream_type &sin)
+              : ranges::basic_mixin<istream_cursor>{istream_cursor{sin}}
+            {}
+            mixin(ranges::default_sentinel)
+              : ranges::basic_mixin<istream_cursor>{istream_cursor{
+                    ranges::default_sentinel{}}}
+            {}
+        };
+
+        constexpr istream_cursor()
+            noexcept(std::is_nothrow_default_constructible<T>::value) = default;
+        istream_cursor(istream_type& s)
+            noexcept(std::is_nothrow_default_constructible<T>::value)
+          : stream_{std::addressof(s)}
+        {
+            next();
+        }
+        constexpr istream_cursor(ranges::default_sentinel)
+            noexcept(std::is_nothrow_default_constructible<T>::value)
+          : istream_cursor{}
+        {}
+
+        const T& get() const noexcept
+        {
+            return value_;
+        }
+
+        void next()
+        {
+            RANGES_ASSERT(stream_);
+            *stream_ >> value_;
+            if (!*stream_) {
+                stream_ = nullptr;
+            }
+        }
+        istream_cursor post_increment()
+        {
+            auto tmp = *this;
+            next();
+            return tmp;
+        }
+
+        bool equal(const istream_cursor& that) const noexcept
+        {
+            return stream_ == that.stream_;
+        }
+        bool equal(ranges::default_sentinel) const noexcept
+        {
+            return stream_ == nullptr;
+        }
+    };
+
+    template<typename T, typename charT = char,
+        typename traits = std::char_traits<charT>, typename D = std::ptrdiff_t>
+    using istream_iterator = ranges::basic_iterator<istream_cursor<T, charT, traits, D>>;
+
+    void test()
+    {
+        std::istringstream ss{"0 1 2"};
+        using I = istream_iterator<int>;
+        I i{ss};
+        CONCEPT_ASSERT(std::is_same<I, decltype(i++)>::value);
+        CHECK(*i++ == 0);
+        CHECK(*i++ == 1);
+        CHECK(*i++ == 2);
+        CHECK(i == ranges::default_sentinel{});
+        CHECK(i == I{});
+    }
+}
+
 void test_box()
 {
     struct A : ranges::box<int> {};
@@ -394,6 +492,7 @@ int main()
     ::test_move_only::test();
     ::test_forward_sized::test();
     ::test_box();
+    ::test_post_increment::test();
 
     return ::test_result();
 }
