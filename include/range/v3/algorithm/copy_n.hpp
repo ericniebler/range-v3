@@ -48,8 +48,16 @@ namespace ranges
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
                 auto b = uncounted(begin);
-                for(; n != 0; ++b, ++out, --n)
+                if(n > 0) {
+                  while(true) {
                     *out = *b;
+                    ++out;
+                    if(--n > 0)
+                      ++b;
+                    else
+                      break;
+                  }
+                }
                 return {recounted(begin, b, norig), out};
             }
         };
