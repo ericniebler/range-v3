@@ -89,7 +89,7 @@ namespace ranges
                 delimit_view<all_t<Rng>, Val>
                 operator()(Rng && rng, Val value) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(value)};
+                    return {all(RANGES_FORWARD(rng)), std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Val,

@@ -86,7 +86,7 @@ namespace ranges
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), static_cast<ORef&&>(result),
+                return (*this)(begin(rng), end(rng), RANGES_FORWARD(result),
                                std::move(bop), std::move(proj));
             }
 

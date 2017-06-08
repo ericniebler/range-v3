@@ -29,7 +29,7 @@ namespace ranges
         constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
         make_tagged_tuple(Ts &&... ts)
         {
-            return tagged_tuple<Tags(bind_element_t<Ts>)...>{static_cast<Ts&&>(ts)...};
+            return tagged_tuple<Tags(bind_element_t<Ts>)...>{RANGES_FORWARD(ts)...};
         }
     }
 }

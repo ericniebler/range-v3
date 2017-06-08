@@ -50,7 +50,7 @@ namespace ranges
                     meta::if_<meta::strict_and<std::is_constructible<Ts, Args>...>, int> = 0>
                 constexpr compressed_tuple_(Args &&... args)
                     noexcept(meta::strict_and<std::is_nothrow_constructible<storage<Ts, Is, Ts...>, Args>...>::value)
-                  : storage<Ts, Is, Ts...>{static_cast<Args&&>(args)}...
+                  : storage<Ts, Is, Ts...>{RANGES_FORWARD(args)}...
                 {}
 
                 template<typename... Us,
@@ -101,7 +101,7 @@ namespace ranges
             template<typename... Args>
             constexpr auto operator()(Args &&... args) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
-                compressed_tuple<bind_element_t<Args>...>{static_cast<Args&&>(args)...}
+                compressed_tuple<bind_element_t<Args>...>{RANGES_FORWARD(args)...}
             )
         };
 
@@ -147,7 +147,7 @@ namespace ranges
             constexpr auto operator()(First && f, Second && s) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
                 compressed_pair<bind_element_t<First>, bind_element_t<Second>>{
-                    static_cast<First&&>(f), static_cast<Second&&>(s)
+                    RANGES_FORWARD(f), RANGES_FORWARD(s)
                 }
             )
         };

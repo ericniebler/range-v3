@@ -179,7 +179,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 reverse_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return reverse_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                    return reverse_view<all_t<Rng>>{all(RANGES_FORWARD(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting

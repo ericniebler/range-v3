@@ -89,7 +89,7 @@ namespace ranges
             T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), static_cast<I2Ref&&>(begin2), std::move(init),
+                return (*this)(begin(rng1), end(rng1), RANGES_FORWARD(begin2), std::move(init),
                     std::move(bop1), std::move(bop2),  std::move(proj1), std::move(proj2));
             }
 

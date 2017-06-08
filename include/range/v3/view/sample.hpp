@@ -213,7 +213,7 @@ namespace ranges
                     URNG &generator = detail::get_random_engine()) const
                 {
                     return sample_view<all_t<Rng>, URNG>{
-                        all(static_cast<Rng&&>(rng)), sample_size, generator
+                        all(RANGES_FORWARD(rng)), sample_size, generator
                     };
                 }
 

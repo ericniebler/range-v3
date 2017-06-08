@@ -52,7 +52,7 @@ namespace ranges
                     static auto bind(Ts &&...ts)
                     RANGES_DECLTYPE_AUTO_RETURN
                     (
-                        V::bind(static_cast<Ts&&>(ts)...)
+                        V::bind(RANGES_FORWARD(ts)...)
                     )
                 };
             };
@@ -91,7 +91,7 @@ namespace ranges
                 static auto pipe(Rng && rng, Vw && v)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    v.view_(static_cast<Rng&&>(rng))
+                    v.view_(RANGES_FORWARD(rng))
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -124,7 +124,7 @@ namespace ranges
                 auto operator()(Rng && rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    view_(static_cast<Rng&&>(rng), static_cast<Rest&&>(rest)...)
+                    view_(RANGES_FORWARD(rng), RANGES_FORWARD(rest)...)
                 )
 
                 // Currying overload.
@@ -133,7 +133,7 @@ namespace ranges
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_view(view_access::impl<V>::bind(view_,
-                        static_cast<Ts&&>(ts)...))
+                        RANGES_FORWARD(ts)...))
                 )
             };
             /// \endcond

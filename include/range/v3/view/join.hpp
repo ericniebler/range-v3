@@ -317,7 +317,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
                 join_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return join_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                    return join_view<all_t<Rng>>{all(RANGES_FORWARD(rng))};
                 }
                 template<typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>,
                     CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
@@ -327,7 +327,7 @@ namespace ranges
                         "To join a range of ranges with a value, the value type must be a model of "
                         "the SemiRegular concept; that is, it must have a default constructor, "
                         "copy and move constructors, and a destructor.");
-                    return {all(static_cast<Rng&&>(rng)), single(std::move(v))};
+                    return {all(RANGES_FORWARD(rng)), single(std::move(v))};
                 }
                 template<typename Rng, typename ValRng,
                     CONCEPT_REQUIRES_(JoinableRange_<Rng>() && ForwardRange<ValRng>())>
@@ -343,7 +343,7 @@ namespace ranges
                         "a common value type, and that value type must model the SemiRegular "
                         "concept; that is, it must have a default constructor, copy and move "
                         "constructors, and a destructor.");
-                    return {all(static_cast<Rng&&>(rng)), all(static_cast<ValRng&&>(val))};
+                    return {all(RANGES_FORWARD(rng)), all(RANGES_FORWARD(val))};
                 }
             private:
                friend view_access;

@@ -62,7 +62,7 @@ namespace ranges
                 Rng operator()(Rng && rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

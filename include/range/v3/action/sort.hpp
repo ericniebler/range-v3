@@ -63,7 +63,7 @@ namespace ranges
                 Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));
-                    return static_cast<Rng&&>(rng);
+                    return RANGES_FORWARD(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

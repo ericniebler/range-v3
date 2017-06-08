@@ -116,9 +116,9 @@ namespace ranges
                     typename = meta::if_c<!std::is_same<tagged, detail::decay_t<U>>::value>,
                     typename = decltype(std::declval<Base &>() = std::declval<U>())>
                 RANGES_CXX14_CONSTEXPR tagged &operator=(U && u)
-                    noexcept(noexcept(std::declval<Base &>() = static_cast<U&&>(u)))
+                    noexcept(noexcept(std::declval<Base &>() = RANGES_FORWARD(u)))
                 {
-                    static_cast<Base &>(*this) = static_cast<U&&>(u);
+                    static_cast<Base &>(*this) = RANGES_FORWARD(u);
                     return *this;
                 }
                 template<typename B = Base>
@@ -149,7 +149,7 @@ namespace ranges
         constexpr R make_tagged_pair(T1 && t1, T2 && t2)
             noexcept(std::is_nothrow_constructible<R, T1, T2>::value)
         {
-            return {static_cast<T1&&>(t1), static_cast<T2&&>(t2)};
+            return {RANGES_FORWARD(t1), RANGES_FORWARD(t2)};
         }
     }
 }

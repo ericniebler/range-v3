@@ -351,7 +351,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
+                    return {all(RANGES_FORWARD(rng)), std::move(fun)};
                 }
 
                 template<typename Rng1, typename Rng2, typename Fun,
@@ -359,7 +359,7 @@ namespace ranges
                 iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)), all(static_cast<Rng2&&>(rng2)), std::move(fun)};
+                    return {all(RANGES_FORWARD(rng1)), all(RANGES_FORWARD(rng2)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -455,7 +455,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
+                    return {all(RANGES_FORWARD(rng)), std::move(fun)};
                 }
 
                 template<typename Rng1, typename Rng2, typename Fun,
@@ -463,7 +463,7 @@ namespace ranges
                 transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)), all(static_cast<Rng2&&>(rng2)),
+                    return {all(RANGES_FORWARD(rng1)), all(RANGES_FORWARD(rng2)),
                         std::move(fun)};
                 }
 

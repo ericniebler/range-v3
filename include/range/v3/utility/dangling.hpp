@@ -113,7 +113,7 @@ namespace ranges
             template<typename T>
             constexpr meta::if_<detail::is_dangling<T>, dangling<>, T> operator()(T &&t) const
             {
-                return static_cast<T&&>(t);
+                return RANGES_FORWARD(t);
             }
             template<typename T, typename U>
             constexpr std::pair<result_t<T>, result_t<U>> operator()(std::pair<T, U> &p) const
@@ -173,7 +173,7 @@ namespace ranges
             template<typename T>
             constexpr T operator()(T && t) const
             {
-                return static_cast<T&&>(t);
+                return RANGES_FORWARD(t);
             }
             /// \overload
             template<typename T>
