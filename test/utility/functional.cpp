@@ -258,7 +258,7 @@ int main()
         CHECK(last_call == k);
     }
 
-#ifdef _WIN32
+#if defined(_MSC_VER)
     {
         // Ensure that Invocable accepts pointers to functions with non-default calling conventions.
         CONCEPT_ASSERT(ranges::Invocable<void(__cdecl*)()>());
