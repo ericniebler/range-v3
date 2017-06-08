@@ -27,6 +27,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/to_address.hpp>
 
 namespace ranges
 {
@@ -118,7 +119,7 @@ namespace ranges
             O uninitialized_copy(I first, S last, O out)
             {
                 for(; first != last; ++first, ++out)
-                    ::new((void *) std::addressof(*out)) value_type_t<O>(*first);
+                    ::new((void *) ranges::to_address(out)) value_type_t<O>(*first);
                 return out;
             }
 
