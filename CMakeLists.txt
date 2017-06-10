@@ -85,6 +85,17 @@ endif()
 range_v3_append_flag(RANGE_V3_HAS_MARCH_NATIVE "-march=native")
 range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 
+# Test for coroutine TS support
+include(CheckCXXSourceCompiles)
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
+set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
+check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
+
+if (RANGE_V3_HAS_FCOROUTINES_TS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
+endif()
+
 # Test all headers
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   RELATIVE "${CMAKE_SOURCE_DIR}/include"

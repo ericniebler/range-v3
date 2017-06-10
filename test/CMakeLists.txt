@@ -32,19 +32,22 @@ add_executable(distance distance.cpp)
 add_test(test.distance distance)
 
 add_executable(to_container to_container.cpp)
-add_test(test.to_container, to_container)
+add_test(test.to_container to_container)
 
 add_executable(getlines getlines.cpp)
-add_test(test.getlines, getlines)
+add_test(test.getlines getlines)
 
 add_executable(istream_range istream_range.cpp)
-add_test(test.istream_range, istream_range)
+add_test(test.istream_range istream_range)
 
 add_executable(bug474 bug474.cpp)
-add_test(test.bug474, bug474)
+add_test(test.bug474 bug474)
 
 add_executable(bug566 bug566.cpp)
-add_test(test.bug566, bug566)
+add_test(test.bug566 bug566)
 
 add_executable(span span.cpp)
-add_test(test.span, span)
+add_test(test.span span)
+
+add_executable(generator generator.cpp)
+add_test(test.generator generator)
