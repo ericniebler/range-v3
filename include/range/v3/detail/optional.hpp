@@ -86,6 +86,48 @@ namespace ranges
             }
         };
 
+        template<typename T>
+        struct optional<T &>
+        {
+        private:
+            T *data_ = nullptr;
+        public:
+            optional() = default;
+            constexpr optional(nullopt_t) noexcept
+              : optional()
+            {}
+            optional(T& t) noexcept
+              : data_(std::addressof(t))
+            {}
+            template<typename Arg, CONCEPT_REQUIRES_(Constructible<T &, Arg>())>
+            explicit optional(in_place_t, Arg &&arg)
+                noexcept(std::is_nothrow_constructible<T &, Arg>::value)
+              : data_(std::addressof(static_cast<T &>(static_cast<Arg &&>(arg))))
+            {}
+            explicit operator bool() const noexcept
+            {
+                return data_ != nullptr;
+            }
+            T &operator*() const noexcept
+            {
+                return *data_;
+            }
+            optional &operator=(T &t) noexcept
+            {
+                data_ = std::addressof(t);
+                return *this;
+            }
+            optional &operator=(nullopt_t) noexcept
+            {
+                reset();
+                return *this;
+            }
+            void reset() noexcept
+            {
+                data_ = nullptr;
+            }
+        };
+
         namespace detail
         {
             template<typename T, typename Tag = void, bool Enable = true>
