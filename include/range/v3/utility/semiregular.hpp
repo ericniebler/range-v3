@@ -83,6 +83,22 @@ namespace ranges
         };
 
         template<typename T>
+        struct semiregular<T &>
+          : private ranges::reference_wrapper<T>
+        {
+        public:
+            semiregular() = default;
+            template<typename Arg>
+            semiregular(in_place_t, Arg &&arg)
+              : ranges::reference_wrapper<T>(static_cast<T &>(static_cast<Arg&&>(arg)))
+            {}
+            using ranges::reference_wrapper<T>::reference_wrapper;
+            using ranges::reference_wrapper<T>::get;
+            using ranges::reference_wrapper<T>::operator T &;
+            using ranges::reference_wrapper<T>::operator();
+        };
+
+        template<typename T>
         using semiregular_t =
             meta::if_<
                 SemiRegular<T>,
