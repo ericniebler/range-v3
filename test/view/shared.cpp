@@ -30,49 +30,15 @@
 using namespace ranges;
 
 template<typename T>
-std::tuple<std::shared_ptr<T>, shared_view<T>, shared_view<T>>
-    make_from_shared_ptr()
+void check_shared_contents()
 {
-    // build two instances sharing the same base
-    auto base_ptr = std::make_shared<T>();
-    *base_ptr = {1, 1, 1, 2, 3, 4, 4};
-    auto view1 = view::shared(base_ptr);
-    auto view2 = view1;
-    CHECK(base_ptr.use_count() == 3);
-    return std::make_tuple(base_ptr, view1, view2);
-}
+    // build two instances sharing the same range
+    shared_view<T> view1 = view::shared(T{1, 1, 1, 2, 3, 4, 4});
+    shared_view<T> view2 = view1;
 
-template<typename T>
-std::tuple<shared_view<T>, shared_view<T>>
-    make_from_rvalue()
-{
-    // build two instances sharing the same base
-    auto view1 = view::shared(T{1, 1, 1, 2, 3, 4, 4});
-    auto view2 = view1;
-    CHECK(view1.get_shared().use_count() == 2);
-    return std::make_tuple(view1, view2);
-}
-
-template<typename T>
-void check_shared_contents_(shared_view<T> view1, shared_view<T> view2)
-{
     // check the length of the views
     CHECK(view1.size() == 7u);
     CHECK(view2.size() == 7u);
-
-    // try to mangle with the sharing objects and check shared_ptr use count
-    auto base = view1.get_shared();
-    CHECK(base.use_count() == 3);
-    view1 = view2;
-    CHECK(base.use_count() == 3);
-    view2 = view1;
-    CHECK(base.use_count() == 3);
-    view2 = shared_view<T>();
-    CHECK(base.use_count() == 2);
-    base = std::shared_ptr<T>();
-    CHECK(view1.get_shared().use_count() == 1);
-    view2 = view1;
-    CHECK(view1.get_shared().use_count() == 2);
 
     // check the stored numbers
     auto check_values = [](shared_view<T> & rng) {
@@ -83,68 +49,27 @@ void check_shared_contents_(shared_view<T> view1, shared_view<T> view2)
     };
     check_values(view1);
     check_values(view2);
-}
 
-template<typename T>
-void check_shared_contents()
-{
-    std::shared_ptr<T> base;
-    shared_view<T> view1, view2;
-
-    // build two views from a shared_ptr in an indepenent function
-    std::tie(base, view1, view2) = make_from_shared_ptr<T>();
-    CHECK(base.use_count() == 3);
-    base = std::shared_ptr<T>();
-    // check in an independent function
-    check_shared_contents_(std::move(view1), std::move(view2));
-
-    // build two views from an rvalue in an indepenent function
-    std::tie(view1, view2) = make_from_rvalue<T>();
-    // check in an independent function
-    check_shared_contents_(std::move(view1), std::move(view2));
+    // check that changes are shared
+    *(++begin(view1)) = 7;
+    CHECK(*(++begin(view2)) == 7);
+    *begin(view2) = 3;
+    CHECK(*begin(view1) == 3);
 }
 
 int main()
 {
+    // check shared random access range
     check_shared_contents<std::vector<int>>();
+    // check shared bidirectional range
     check_shared_contents<std::list<int>>();
-
-    {
-        //check whether it is possible to write through into the shared storage
-        auto base_vec_ptr = std::make_shared<std::vector<int>>();
-        *base_vec_ptr = {2, 1, 5, 3, 9};
-        auto vec_view = view::shared(base_vec_ptr) | view::remove_if([](int i){ return i > 4; });
-        RANGES_FOR(int &a, vec_view) { a = 0; } // zero out all the elements <= 4
-        ::check_equal(*base_vec_ptr, {0, 0, 5, 0, 9});
-    }
 
     {
         // check the piped construction from an rvalue
         std::vector<int> base_vec = {1, 2, 2, 8, 2, 7};
         auto vec_view = std::move(base_vec) | view::shared;
         CHECK(vec_view.size() == 6u);
-        CHECK(vec_view.get_shared().use_count() == 1);
         ::check_equal(vec_view, {1, 2, 2, 8, 2, 7});
-    }
-
-    {
-        // check the piped construction from a shared_ptr
-        auto base_vec_ptr = std::make_shared<std::vector<int>>();
-        *base_vec_ptr = {1, 2, 8, 8, 8};
-        auto vec_view = base_vec_ptr | view::shared;
-        CHECK(vec_view.size() == 5u);
-        CHECK(vec_view.get_shared().use_count() == 2);
-        ::check_equal(vec_view, {1, 2, 8, 8, 8});
-    }
-
-    {
-        // check the piped construction from an rvalue of a shared_ptr
-        auto base_vec_ptr = std::make_shared<std::vector<int>>();
-        *base_vec_ptr = {1, 2, 8, 8, 8};
-        auto vec_view = std::move(base_vec_ptr) | view::shared;
-        CHECK(vec_view.size() == 5u);
-        CHECK(vec_view.get_shared().use_count() == 1);
-        ::check_equal(vec_view, {1, 2, 8, 8, 8});
     }
 
     {
