@@ -41,43 +41,47 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            constexpr struct
+            struct equal_to_
             {
                 template<typename T, typename U>
                 bool operator()(T const &t, U const &u) const
                 {
                     return static_cast<bool>(t == u);
                 }
-            } equal_to {};
+            };
+            RANGES_INLINE_VARIABLE(equal_to_, equal_to)
 
-            constexpr struct
+            struct dec_
             {
                 template<typename T>
                 void operator()(T & t) const
                 {
                     --t;
                 }
-            } dec {};
+            };
+            RANGES_INLINE_VARIABLE(dec_, dec)
 
-            constexpr struct
+            struct inc_
             {
                 template<typename T>
                 void operator()(T & t) const
                 {
                     ++t;
                 }
-            } inc {};
+            };
+            RANGES_INLINE_VARIABLE(inc_, inc)
 
-            constexpr struct
+            struct _advance_
             {
                 template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
                 void operator()(I & i, difference_type_t<I> n) const
                 {
                     advance(i, n);
                 }
-            } advance_ {};
+            };
+            RANGES_INLINE_VARIABLE(_advance_, advance_)
 
-            constexpr struct
+            struct distance_to_
             {
                 template<typename T>
                 constexpr auto operator()(T const &t, T const &u) const ->
@@ -85,9 +89,10 @@ namespace ranges
                 {
                     return u - t;
                 }
-            } distance_to {};
+            };
+            RANGES_INLINE_VARIABLE(distance_to_, distance_to)
 
-            constexpr struct
+            struct _min_
             {
                 template<typename T, typename U>
                 constexpr auto operator()(T const &t, U const &u) const ->
@@ -95,9 +100,10 @@ namespace ranges
                 {
                     return t < u ? t : u;
                 }
-            } min_ {};
+            };
+            RANGES_INLINE_VARIABLE(_min_, min_)
 
-            constexpr struct
+            struct _max_
             {
                 template<typename T, typename U>
                 constexpr auto operator()(T const &t, U const &u) const ->
@@ -105,7 +111,8 @@ namespace ranges
                 {
                     return t < u ? u : t;
                 }
-            } max_ {};
+            };
+            RANGES_INLINE_VARIABLE(_max_, max_)
 
             template<typename State, typename Value>
             using zip_cardinality =

@@ -30,8 +30,13 @@ namespace ranges
         {
             template<typename T>
             struct movable_input_iterator
-              : std::iterator<std::input_iterator_tag, T, std::ptrdiff_t, T *, T &&>
             {
+                using iterator_category = std::input_iterator_tag;
+                using value_type = T;
+                using difference_type = std::ptrdiff_t;
+                using pointer = T *;
+                using reference = T &&;
+
                 movable_input_iterator() = default;
                 movable_input_iterator &operator++();
                 movable_input_iterator operator++(int);

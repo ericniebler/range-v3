@@ -418,7 +418,7 @@ namespace ranges
                 void operator()(Rng &&, T) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-                        "The first argument to view::chunk must satisfy the ForwardRange concept");
+                        "The first argument to view::chunk must satisfy the InputRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::chunk must satisfy the Integral concept");
                 }

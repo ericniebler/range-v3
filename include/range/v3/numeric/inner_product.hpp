@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
 {
@@ -47,21 +48,6 @@ namespace ranges
 
         struct inner_product_fn
         {
-            template<typename I1, typename S1, typename I2, typename T,
-                typename BOp1 = plus, typename BOp2 = multiplies,
-                typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S1, I1>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
-                )>
-            T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
-                BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
-            {
-                for(; begin1 != end1; ++begin1, ++begin2)
-                  init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
-                return init;
-            }
-
             template<typename I1, typename S1, typename I2, typename S2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident,
@@ -76,6 +62,20 @@ namespace ranges
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                   init = invoke(bop1, init, invoke(bop2, invoke(proj1, *begin1), invoke(proj2, *begin2)));
                 return init;
+            }
+
+            template<typename I1, typename S1, typename I2, typename T,
+                typename BOp1 = plus, typename BOp2 = multiplies,
+                typename P1 = ident, typename P2 = ident,
+                CONCEPT_REQUIRES_(
+                    Sentinel<S1, I1>() &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
+                )>
+            T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
+                BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            {
+                return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable{},
+                    std::move(init), std::move(bop1), std::move(bop2), std::move(proj1), std::move(proj2));
             }
 
             template<typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,

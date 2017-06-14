@@ -46,9 +46,9 @@ namespace
     {
         ::models<concepts::BoundedRange>(a);
     }
-    template<typename Adapted>
-    void test_bounded(Adapted&, std::false_type)
-    {}
+    // template<typename Adapted>
+    // void test_bounded(Adapted&, std::false_type)
+    // {}
 
     template<typename Adapted>
     void test_prev(Adapted& a, iterator_t<Adapted> const& it, std::true_type)

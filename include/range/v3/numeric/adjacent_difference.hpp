@@ -26,6 +26,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
 {
@@ -46,33 +47,6 @@ namespace ranges
 
         struct adjacent_difference_fn
         {
-            template<typename I, typename S, typename O, typename BOp = minus,
-                typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() &&
-                    AdjacentDifferentiable<I, O, BOp, P>())>
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
-            {
-                // BUGBUG think about the use of coerce here.
-                using V = value_type_t<I>;
-                using X = concepts::Invocable::result_t<P, V>;
-                coerce<V> v;
-                coerce<X> x;
-
-                if(begin != end)
-                {
-                    auto t1(x(invoke(proj, v(*begin))));
-                    *result = t1;
-                    for(++begin, ++result; begin != end; ++begin, ++result)
-                    {
-                        auto t2(x(invoke(proj, v(*begin))));
-                        *result = invoke(bop, t2, t1);
-                        t1 = std::move(t2);
-                    }
-                }
-                return {begin, result};
-            }
-
             template<typename I, typename S, typename O, typename S2,
                 typename BOp = minus, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
@@ -81,8 +55,9 @@ namespace ranges
             operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                        P proj = P{}) const
             {
+                // BUGBUG think about the use of coerce here.
                 using V = value_type_t<I>;
-                using X = concepts::Invocable::result_t<P, V>;
+                using X = concepts::Invocable::result_t<P&, V>;
                 coerce<V> v;
                 coerce<X> x;
 
@@ -99,6 +74,17 @@ namespace ranges
                     }
                 }
                 return {begin, result};
+            }
+
+            template<typename I, typename S, typename O, typename BOp = minus,
+                typename P = ident,
+                CONCEPT_REQUIRES_(Sentinel<S, I>() &&
+                    AdjacentDifferentiable<I, O, BOp, P>())>
+            tagged_pair<tag::in(I), tag::out(O)>
+            operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
+            {
+                return (*this)(std::move(begin), std::move(end), std::move(result),
+                               unreachable{}, std::move(bop), std::move(proj));
             }
 
             template<typename Rng, typename ORef, typename BOp = minus, typename P = ident,
