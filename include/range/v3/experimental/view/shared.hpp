@@ -24,6 +24,8 @@
 
 namespace ranges
 {
+namespace experimental
+{
     inline namespace v3
     {
         template<typename Rng>
@@ -125,6 +127,7 @@ namespace ranges
         } // namespace view
         /// @}
     } // namespace v3
+} // namespace experimental
 } // namespace ranges
 
 #endif // include guard

@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013,2014.
+//  Copyright Eric Niebler 2013-2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,14 +11,9 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_ALL_HPP
-#define RANGES_V3_ALL_HPP
+#ifndef RANGES_V3_EXPERIMENTAL_HPP
+#define RANGES_V3_EXPERIMENTAL_HPP
 
-#include <range/v3/core.hpp>
-#include <range/v3/algorithm.hpp>
-#include <range/v3/action.hpp>
-#include <range/v3/numeric.hpp>
-#include <range/v3/view.hpp>
-#include <range/v3/experimental.hpp>
+#include <range/v3/experimental/view/shared.hpp>
 
 #endif

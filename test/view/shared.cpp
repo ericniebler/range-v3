@@ -22,7 +22,7 @@
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/reverse.hpp>
-#include <range/v3/view/shared.hpp>
+#include <range/v3/experimental/view/shared.hpp>
 #include <range/v3/view/take.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -33,15 +33,15 @@ template<typename T>
 void check_shared_contents()
 {
     // build two instances sharing the same range
-    shared_view<T> view1 = view::shared(T{1, 1, 1, 2, 3, 4, 4});
-    shared_view<T> view2 = view1;
+    experimental::shared_view<T> view1 = experimental::view::shared(T{1, 1, 1, 2, 3, 4, 4});
+    experimental::shared_view<T> view2 = view1;
 
     // check the length of the views
     CHECK(view1.size() == 7u);
     CHECK(view2.size() == 7u);
 
     // check the stored numbers
-    auto check_values = [](shared_view<T> & rng) {
+    auto check_values = [](experimental::shared_view<T> & rng) {
       ::check_equal(view::cycle(rng) | view::take(10), {1, 1, 1, 2, 3, 4, 4, 1, 1, 1});
       ::check_equal(view::all(rng) | view::take(5), {1, 1, 1, 2, 3});
       ::check_equal(rng | view::take(5), {1, 1, 1, 2, 3});
@@ -67,14 +67,14 @@ int main()
     {
         // check the piped construction from an rvalue
         std::vector<int> base_vec = {1, 2, 2, 8, 2, 7};
-        auto vec_view = std::move(base_vec) | view::shared;
+        auto vec_view = std::move(base_vec) | experimental::view::shared;
         CHECK(vec_view.size() == 6u);
         ::check_equal(vec_view, {1, 2, 2, 8, 2, 7});
     }
 
     {
         // test bidirectional range
-        auto list_view = std::list<int>{1, 2, 3} | view::shared;
+        auto list_view = std::list<int>{1, 2, 3} | experimental::view::shared;
 
         CHECK(list_view.size() == 3u);
         has_type<int &>(*begin(list_view));
@@ -90,7 +90,7 @@ int main()
 
     {
         // test random access range
-        auto vec_view = std::vector<int>{1, 2, 3} | view::shared;
+        auto vec_view = std::vector<int>{1, 2, 3} | experimental::view::shared;
 
         CHECK(vec_view.size() == 3u);
         has_type<int &>(*begin(vec_view));
@@ -109,7 +109,7 @@ int main()
         auto vec_view =
             view::iota(1u)
           | view::transform(f)
-          | view::transform(view::shared)
+          | view::transform(experimental::view::shared)
           | view::join
           | view::take(10);
 
@@ -122,7 +122,7 @@ int main()
         auto vec_view =
             view::repeat(base_vec)
           | view::for_each([](std::vector<int> tmp) {
-                return yield_from(std::move(tmp) | view::shared | view::reverse);
+                return yield_from(std::move(tmp) | experimental::view::shared | view::reverse);
             })
           | view::take(7);
         ::check_equal(vec_view, {3, 2, 1, 3, 2, 1, 3});
@@ -134,7 +134,7 @@ int main()
         auto vec_view =
             view::repeat(base_vec)
           | view::for_each([](std::vector<int> tmp) {
-                return std::move(tmp) | view::shared | view::reverse;
+                return std::move(tmp) | experimental::view::shared | view::reverse;
             })
           | view::take(7);
         ::check_equal(vec_view, {3, 2, 1, 3, 2, 1, 3});
