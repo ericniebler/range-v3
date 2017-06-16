@@ -55,10 +55,6 @@ namespace ranges
                 {
                     return !*rng_->sin_;
                 }
-                std::string && move() const noexcept
-                {
-                    return detail::move(rng_->str_);
-                }
             };
             void next()
             {

@@ -90,16 +90,17 @@ namespace ranges
             using base_t::range;
             using base_t::size;
 
+            template<bool IsConst>
             class cursor
               : tagged_compressed_tuple<
-                    tag::range(sample_view const *),
-                    tag::current(iterator_t<Rng const>),
-                    tag::size(detail::size_tracker<Rng const>)>
+                    tag::range(meta::const_if_c<IsConst, sample_view> *),
+                    tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
+                    tag::size(detail::size_tracker<meta::const_if_c<IsConst, Rng>>)>
             {
                 using base_t = tagged_compressed_tuple<
-                    tag::range(sample_view const*),
-                    tag::current(iterator_t<Rng const>),
-                    tag::size(detail::size_tracker<Rng const>)>;
+                    tag::range(meta::const_if_c<IsConst, sample_view> *),
+                    tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
+                    tag::size(detail::size_tracker<meta::const_if_c<IsConst, Rng>>)>;
                 using base_t::current;
                 using base_t::range;
                 using base_t::size;
@@ -135,7 +136,7 @@ namespace ranges
                 using difference_type = D;
 
                 cursor() = default;
-                explicit cursor(sample_view const &rng)
+                explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
                 : base_t{&rng, ranges::begin(rng.range()), rng.range()}
                 {
                     auto n = pop_size();
@@ -164,9 +165,17 @@ namespace ranges
                 }
             };
 
-            cursor begin_cursor() const
+            cursor<false> begin_cursor()
             {
-                return cursor{*this};
+                return cursor<false>{*this};
+            }
+            template<class R = Rng, CONCEPT_REQUIRES_(meta::or_<
+                SizedRange<R const>,
+                SizedSentinel<sentinel_t<R const>, iterator_t<R const>>,
+                ForwardRange<R const>>::value)>
+            cursor<true> begin_cursor() const
+            {
+                return cursor<true>{*this};
             }
 
         public:

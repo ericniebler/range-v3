@@ -81,7 +81,7 @@ namespace ranges
             private:
                 friend struct cursor<IsConst>;
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
                 using concat_view_t = constify_if<concat_view>;
                 sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
             public:
@@ -97,7 +97,7 @@ namespace ranges
                 using difference_type = common_type_t<range_difference_type_t<Rngs>...>;
             private:
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
                 using concat_view_t = constify_if<concat_view>;
                 concat_view_t *rng_;
                 variant<iterator_t<constify_if<Rngs>>...> its_;

@@ -39,17 +39,15 @@ namespace ranges
             friend struct ranges::range_access;
             range_difference_type_t<Rng> n_ = 0;
 
-            template<bool IsConst, typename T>
-            using add_const_if = meta::if_c<IsConst, T const, T>;
             template<bool IsConst>
-            using CI = counted_iterator<iterator_t<add_const_if<IsConst, Rng>>>;
+            using CI = counted_iterator<iterator_t<meta::const_if_c<IsConst, Rng>>>;
             template<bool IsConst>
-            using S = sentinel_t<add_const_if<IsConst, Rng>>;
+            using S = sentinel_t<meta::const_if_c<IsConst, Rng>>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
             {
-                CI<IsConst> begin(add_const_if<IsConst, take_view> &rng) const
+                CI<IsConst> begin(meta::const_if_c<IsConst, take_view> &rng) const
                 {
                     return {ranges::begin(rng.base()), rng.n_};
                 }

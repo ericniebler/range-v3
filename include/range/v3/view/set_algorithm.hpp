@@ -96,7 +96,7 @@ namespace ranges
                 proj2_ref_ proj2_;
 
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
 
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
@@ -261,7 +261,7 @@ namespace ranges
                 proj2_ref_ proj2_;
 
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
 
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
@@ -425,7 +425,7 @@ namespace ranges
                 proj2_ref_ proj2_;
 
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
 
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
@@ -438,28 +438,33 @@ namespace ranges
 
                 enum class state_t
                 {
-                    FIRST, FIRST_INC_SECOND, SECOND, ONLY_FIRST, ONLY_SECOND
+                    FIRST, SECOND, ONLY_FIRST, ONLY_SECOND
                 } state;
 
-                state_t which_set() const
+                void satisfy()
                 {
-                    if(it1_ != end1_)
+                    if(it1_ == end1_)
                     {
-                        if(it2_ == end2_)
-                            return state_t::ONLY_FIRST;
-
-                        if(invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
-                            return state_t::SECOND;
-
-                        // take care of the case when iter_move is made from it1_
-                        // so we need to test in advance when we still have access to unmoved-from *it1_
-                        if(!invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
-                             return state_t::FIRST_INC_SECOND;
-
-                        return state_t::FIRST;
+                        state = state_t::ONLY_SECOND;
+                        return;
                     }
 
-                    return state_t::ONLY_SECOND;
+                    if(it2_ == end2_)
+                    {
+                        state = state_t::ONLY_FIRST;
+                        return;
+                    }
+
+                    if(invoke(pred_, invoke(proj2_, *it2_), invoke(proj1_, *it1_)))
+                    {
+                        state = state_t::SECOND;
+                        return;
+                    }
+
+                    if(!invoke(pred_, invoke(proj1_, *it1_), invoke(proj2_, *it2_)))
+                        ++it2_;
+
+                    state = state_t::FIRST;
                 }
 
             public:
@@ -475,9 +480,10 @@ namespace ranges
                                  iterator_t<R1> it1, sentinel_t<R1> end1,
                                  iterator_t<R2> it2, sentinel_t<R2> end2)
                   : pred_(std::move(pred)), proj1_(std::move(proj1)), proj2_(std::move(proj2)),
-                    it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2)),
-                    state(which_set())
-                {}
+                    it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2))
+                {
+                    satisfy();
+                }
                 reference_type read() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
@@ -492,28 +498,21 @@ namespace ranges
                     {
                         case state_t::FIRST:
                             ++it1_;
-                            state = which_set();
-                            break;
-
-                        case state_t::FIRST_INC_SECOND:
-                            ++it2_;
-                            ++it1_;
-                            state = which_set();
                             break;
 
                         case state_t::ONLY_FIRST:
                             ++it1_;
-                            break;
+                            return;
 
                         case state_t::SECOND:
                             ++it2_;
-                            state = which_set();
                             break;
 
                         case state_t::ONLY_SECOND:
                             ++it2_;
-                            break;
+                            return;
                     }
+                    satisfy();
                 }
                 bool equal(set_union_cursor const &that) const
                 {
@@ -640,7 +639,7 @@ namespace ranges
                 proj2_ref_ proj2_;
 
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
 
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
