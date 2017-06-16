@@ -26,5 +26,19 @@ int main()
     CHECK(&*begin(rng) == vp[0].get());
     ::check_equal(rng, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
+    {
+        int const some_ints[] = {0,1,2,3};
+        int const *some_int_pointers[] = {
+            some_ints + 0, some_ints + 1, some_ints + 2, some_ints + 3
+        };
+        auto make_range = [&]{
+            return debug_input_view<int const *>{some_int_pointers} | view::indirect;
+        };
+        auto rng = make_range();
+        ::check_equal(rng, some_ints);
+        rng = make_range();
+        CHECK(&*begin(rng) == some_ints + 0);
+    }
+
     return test_result();
 }

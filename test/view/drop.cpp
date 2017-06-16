@@ -109,5 +109,16 @@ int main()
             ::check_equal(skipped[7], {8});
         }
     }
+
+    {
+        static int const some_ints[] = {0,1,2,3};
+        auto rng = debug_input_view<int const>{some_ints} | view::drop(2);
+        using R = decltype(rng);
+        CONCEPT_ASSERT(InputView<R>());
+        CONCEPT_ASSERT(!ForwardRange<R>());
+        CONCEPT_ASSERT(Same<int const&, range_reference_t<R>>());
+        ::check_equal(rng, {2,3});
+    }
+
     return test_result();
 }

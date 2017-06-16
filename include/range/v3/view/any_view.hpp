@@ -14,17 +14,16 @@
 #ifndef RANGES_V3_VIEW_ANY_VIEW_HPP
 #define RANGES_V3_VIEW_ANY_VIEW_HPP
 
-#include <memory>
-#include <utility>
+#include <typeinfo>
 #include <type_traits>
-#include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/range_fwd.hpp>
+#include <utility>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/utility/polymorphic_cast.hpp>
+#include <range/v3/utility/memory.hpp>
 
 namespace ranges
 {
@@ -41,37 +40,44 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            struct any_object
-            {
-                virtual ~any_object() = default;
-            };
+            // workaround the fact that typeid ignores cv-qualifiers
+            template<typename> struct rtti_tag {};
 
-            template<class T>
-            struct object : any_object
+            struct any_ref
             {
-            private:
-                T obj;
-            public:
-                object() = default;
-                object(T o)
-                  : obj(std::move(o))
+                any_ref() = default;
+                template<class T>
+                constexpr any_ref(T &obj) noexcept
+                  : obj_{std::addressof(obj)}
+#ifndef NDEBUG
+                  , info_{&typeid(rtti_tag<T>)}
+#endif
                 {}
-                T &get() { return obj; }
-                T const &get() const { return obj; }
+                template<class T>
+                T &get() const noexcept
+                {
+                    RANGES_ASSERT(obj_ && info_ && *info_ == typeid(rtti_tag<T>));
+                    return *const_cast<T *>(static_cast<T const volatile *>(obj_));
+                }
+            private:
+                void const volatile *obj_ = nullptr;
+#ifndef NDEBUG
+                std::type_info const *info_ = nullptr;
+#endif
             };
 
             template<typename Ref, category Cat = category::input>
             struct any_cursor_interface
             {
                 virtual ~any_cursor_interface() = default;
-                virtual any_object const &iter() const = 0;
+                virtual any_ref iter() const = 0;
                 virtual Ref read() const = 0;
                 virtual bool equal(any_cursor_interface const &) const = 0;
                 virtual void next() = 0;
-                virtual any_cursor_interface *clone_() const = 0;
-                any_cursor_interface *clone() const
+                virtual std::unique_ptr<any_cursor_interface> clone_() const = 0;
+                std::unique_ptr<any_cursor_interface> clone() const
                 {
-                    return this->clone_();
+                    return clone_();
                 }
             };
 
@@ -79,9 +85,11 @@ namespace ranges
             struct any_cursor_interface<Ref, category::forward>
               : any_cursor_interface<Ref, category::input>
             {
-                any_cursor_interface *clone() const
+                std::unique_ptr<any_cursor_interface> clone() const
                 {
-                    return static_cast<any_cursor_interface *>(this->clone_());
+                    return std::unique_ptr<any_cursor_interface>{
+                        polymorphic_downcast<any_cursor_interface *>(
+                            this->clone_().release())};
                 }
             };
 
@@ -90,9 +98,11 @@ namespace ranges
               : any_cursor_interface<Ref, category::forward>
             {
                 virtual void prev() = 0;
-                any_cursor_interface *clone() const
+                std::unique_ptr<any_cursor_interface> clone() const
                 {
-                    return static_cast<any_cursor_interface *>(this->clone_());
+                    return std::unique_ptr<any_cursor_interface>{
+                        polymorphic_downcast<any_cursor_interface *>(
+                            this->clone_().release())};
                 }
             };
 
@@ -102,9 +112,11 @@ namespace ranges
             {
                 virtual void advance(std::ptrdiff_t) = 0;
                 virtual std::ptrdiff_t distance_to(any_cursor_interface const &) const = 0;
-                any_cursor_interface *clone() const
+                std::unique_ptr<any_cursor_interface> clone() const
                 {
-                    return static_cast<any_cursor_interface *>(this->clone_());
+                    return std::unique_ptr<any_cursor_interface>{
+                        polymorphic_downcast<any_cursor_interface *>(
+                            this->clone_().release())};
                 }
             };
 
@@ -116,18 +128,18 @@ namespace ranges
               : any_cursor_interface<Ref, Cat>
             {
             private:
-                template<typename S, typename II>
+                template<typename, typename>
                 friend struct any_sentinel_impl;
                 CONCEPT_ASSERT(ConvertibleTo<reference_t<I>, Ref>());
                 using Input = any_cursor_interface<Ref, category::input>;
-                object<I> it_;
+
+                I it_;
 
                 CONCEPT_REQUIRES(EqualityComparable<I>())
-                bool equal_(Input const &that) const
+                bool equal_(Input const &that_) const
                 {
-                    any_cursor_impl const *pthat =
-                        polymorphic_downcast<any_cursor_impl const *>(&that);
-                    return pthat->it_.get() == it_.get();
+                    auto &that = polymorphic_downcast<any_cursor_impl const &>(that_);
+                    return that.it_ == it_;
                 }
                 CONCEPT_REQUIRES(!EqualityComparable<I>())
                 bool equal_(Input const &) const
@@ -140,13 +152,13 @@ namespace ranges
                 any_cursor_impl(I it)
                   : it_{std::move(it)}
                 {}
-                object<I> const &iter() const // override
+                any_ref iter() const // override
                 {
                     return it_;
                 }
                 Ref read() const // override
                 {
-                    return *it_.get();
+                    return *it_;
                 }
                 bool equal(Input const &that) const // override
                 {
@@ -154,34 +166,33 @@ namespace ranges
                 }
                 void next() // override
                 {
-                    ++it_.get();
+                    ++it_;
                 }
-                any_cursor_impl *clone_() const // override
+                std::unique_ptr<Input> clone_() const // override
                 {
-                    return new any_cursor_impl{it_.get()};
+                    return detail::make_unique<any_cursor_impl>(it_);
                 }
                 void prev() // override (sometimes; it's complicated)
                 {
-                    --it_.get();
+                    --it_;
                 }
                 void advance(std::ptrdiff_t n) // override-ish
                 {
-                    it_.get() += n;
+                    it_ += n;
                 }
                 std::ptrdiff_t distance_to(
-                    any_cursor_interface<Ref, category::random_access> const &that) const // override-ish
+                    any_cursor_interface<Ref, Cat> const &that_) const // override-ish
                 {
-                    any_cursor_impl const *pthat =
-                        polymorphic_downcast<any_cursor_impl const *>(&that);
-                    return static_cast<std::ptrdiff_t>(pthat->it_.get() - it_.get());
+                    auto &that = polymorphic_downcast<any_cursor_impl const &>(that_);
+                    return static_cast<std::ptrdiff_t>(that.it_ - it_);
                 }
             };
 
             struct any_sentinel_interface
             {
                 virtual ~any_sentinel_interface() = default;
-                virtual bool equal(any_object const &) const = 0;
-                virtual any_sentinel_interface *clone() const = 0;
+                virtual bool equal(any_ref) const = 0;
+                virtual std::unique_ptr<any_sentinel_interface> clone() const = 0;
             };
 
             template<typename S, typename I>
@@ -195,14 +206,13 @@ namespace ranges
                 any_sentinel_impl(S s)
                   : s_(std::move(s))
                 {}
-                bool equal(any_object const &that) const override
+                bool equal(any_ref that_) const override
                 {
-                    object<I> const *pthat = polymorphic_downcast<object<I> const *>(&that);
-                    return s_ == pthat->get();
+                    return that_.get<I const>() == s_;
                 }
-                any_sentinel_impl *clone() const override
+                std::unique_ptr<any_sentinel_interface> clone() const override
                 {
-                    return new any_sentinel_impl{s_};
+                    return detail::make_unique<any_sentinel_impl>(s_);
                 }
             };
 
@@ -215,14 +225,15 @@ namespace ranges
                 template<typename, category>
                 friend struct any_cursor;
                 std::unique_ptr<any_sentinel_interface> ptr_;
+                template<class Rng>
+                using impl_t = any_sentinel_impl<sentinel_t<Rng>, iterator_t<Rng>>;
             public:
                 any_sentinel() = default;
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_sentinel>()),
                     CONCEPT_REQUIRES_(InputRange<Rng>())>
                 any_sentinel(Rng &&rng, end_tag)
-                  : ptr_{new any_sentinel_impl<sentinel_t<Rng>, iterator_t<Rng>>{
-                        end(rng)}}
+                  : ptr_{detail::make_unique<impl_t<Rng>>(end(rng))}
                 {}
                 any_sentinel(any_sentinel &&) = default;
                 any_sentinel(any_sentinel const &that)
@@ -231,7 +242,7 @@ namespace ranges
                 any_sentinel &operator=(any_sentinel &&) = default;
                 any_sentinel &operator=(any_sentinel const &that)
                 {
-                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
+                    ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
                     return *this;
                 }
             };
@@ -240,8 +251,10 @@ namespace ranges
             struct any_cursor
             {
             private:
-                friend struct any_sentinel;
+                friend any_sentinel;
                 std::unique_ptr<any_cursor_interface<Ref, Cat>> ptr_;
+                template<typename Rng>
+                using impl_t = any_cursor_impl<iterator_t<Rng>, Ref, Cat>;
             public:
                 using single_pass = meta::bool_<Cat == category::input>;
                 any_cursor() = default;
@@ -250,7 +263,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                       ConvertibleTo<range_reference_t<Rng>, Ref>())>
                 any_cursor(Rng &&rng, begin_tag)
-                  : ptr_{new any_cursor_impl<iterator_t<Rng>, Ref, Cat>{begin(rng)}}
+                  : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
                 {}
                 any_cursor(any_cursor &&) = default;
                 any_cursor(any_cursor const &that)
@@ -259,7 +272,7 @@ namespace ranges
                 any_cursor &operator=(any_cursor &&) = default;
                 any_cursor &operator=(any_cursor const &that)
                 {
-                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
+                    ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
                     return *this;
                 }
                 Ref read() const
@@ -308,12 +321,12 @@ namespace ranges
                 virtual ~any_view_interface() = default;
                 virtual any_cursor<Ref, Cat> begin_cursor() = 0;
                 virtual any_sentinel end_cursor() = 0;
-                virtual any_view_interface *clone() const = 0;
+                virtual std::unique_ptr<any_view_interface> clone() const = 0;
             };
 
-            template<typename Rng, typename Ref, category Cat>
+            template<typename Interface, typename Rng, typename Ref, category Cat>
             struct any_view_impl
-              : any_view_interface<Ref, Cat>
+              : Interface
             {
             private:
                 CONCEPT_ASSERT(ConvertibleTo<range_reference_t<Rng>, Ref>());
@@ -323,17 +336,17 @@ namespace ranges
                 any_view_impl(Rng rng)
                   : rng_(std::move(rng))
                 {}
-                any_cursor<Ref, Cat> begin_cursor() override
+                any_cursor<Ref, Cat> begin_cursor() // override
                 {
                     return {rng_, begin_tag{}};
                 }
-                any_sentinel end_cursor() override
+                any_sentinel end_cursor() // override
                 {
                     return {rng_, end_tag{}};
                 }
-                any_view_interface<Ref, Cat> *clone() const override
+                std::unique_ptr<Interface> clone() const // sometimes override
                 {
-                    return new any_view_impl{rng_};
+                    return detail::make_unique<any_view_impl>(rng_);
                 }
             };
 
@@ -352,7 +365,9 @@ namespace ranges
         {
         private:
             friend range_access;
+
             std::unique_ptr<detail::any_view_interface<Ref, Cat>> ptr_;
+
             detail::any_cursor<Ref, Cat> begin_cursor()
             {
                 return ptr_ ? ptr_->begin_cursor() : detail::value_init{};
@@ -362,9 +377,11 @@ namespace ranges
                 return ptr_ ? ptr_->end_cursor() : detail::value_init{};
             }
             template<typename Rng>
-            any_view(Rng && rng, std::true_type)
-              : ptr_{new detail::any_view_impl<view::all_t<Rng>, Ref, Cat>{
-                    view::all(static_cast<Rng&&>(rng))}}
+            using impl_t = detail::any_view_impl<
+                detail::any_view_interface<Ref, Cat>, view::all_t<Rng>, Ref, Cat>;
+            template<typename Rng>
+            any_view(Rng &&rng, std::true_type)
+              : ptr_{detail::make_unique<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
             template<typename Rng>
             any_view(Rng &&, std::false_type)
@@ -381,8 +398,8 @@ namespace ranges
                     meta::not_<Same<detail::decay_t<Rng>, any_view>>,
                     InputRange<Rng>,
                     meta::defer<CompatibleRange, Rng>>::value)>
-            any_view(Rng && rng)
-              : any_view(static_cast<Rng&&>(rng),
+            any_view(Rng &&rng)
+              : any_view(static_cast<Rng &&>(rng),
                   meta::bool_<detail::to_cat_(range_concept<Rng>{}) >= Cat>{})
             {}
             any_view(any_view &&) = default;
@@ -392,7 +409,7 @@ namespace ranges
             any_view &operator=(any_view &&) = default;
             any_view &operator=(any_view const &that)
             {
-                ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
+                ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
             }
         };
@@ -408,6 +425,56 @@ namespace ranges
 
         template<typename Ref>
         using any_random_access_view = any_view<Ref, category::random_access>;
+
+        /// \cond
+        namespace detail
+        {
+            template<typename Ref>
+            struct unique_any_view_interface
+            {
+                virtual ~unique_any_view_interface() = default;
+                virtual any_cursor<Ref, category::input> begin_cursor() = 0;
+                virtual any_sentinel end_cursor() = 0;
+            };
+        } // namespace detail
+        /// \endcond
+
+        template<typename Ref>
+        struct unique_any_view
+          : view_facade<unique_any_view<Ref>, unknown>
+        {
+        private:
+            friend range_access;
+
+            std::unique_ptr<detail::unique_any_view_interface<Ref>> ptr_;
+
+            detail::any_cursor<Ref, category::input> begin_cursor()
+            {
+                return ptr_ ? ptr_->begin_cursor() : detail::value_init{};
+            }
+            detail::any_sentinel end_cursor()
+            {
+                return ptr_ ? ptr_->end_cursor() : detail::value_init{};
+            }
+            template<typename Rng>
+            using impl_t = detail::any_view_impl<
+                detail::unique_any_view_interface<Ref>, view::all_t<Rng>, Ref, category::input>;
+            template<typename Rng>
+            using CompatibleRange = ConvertibleTo<range_reference_t<Rng>, Ref>;
+        public:
+            unique_any_view() = default;
+            template<typename Rng,
+                CONCEPT_REQUIRES_(meta::and_<
+                    meta::not_<Same<detail::decay_t<Rng>, unique_any_view>>,
+                    InputRange<Rng>,
+                    meta::defer<CompatibleRange, Rng>>::value)>
+            unique_any_view(Rng &&rng)
+              : ptr_{detail::make_unique<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
+            {}
+        };
+
+        template<typename Ref>
+        using unique_any_input_view = unique_any_view<Ref>;
     }
 }
 

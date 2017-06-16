@@ -224,5 +224,16 @@ int main()
         ranges::distance(view::zip(view::ints(0), rng) | view::bounded);
     }
 
+    {
+        int const i1[] = {0,1,2,3};
+        int const i2[] = {4,5,6,7};
+        auto rng = view::zip(
+            debug_input_view<int const>{i1},
+            debug_input_view<int const>{i2}
+        );
+        using P = std::pair<int, int>;
+        ::check_equal(rng, {P{0,4},P{1,5}, P{2,6}, P{3,7}});
+    }
+
     return test_result();
 }

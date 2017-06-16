@@ -26,15 +26,12 @@ int main()
 
     {
         any_view<int> ints = view::ints;
-        ::models<concepts::InputView>(aux::copy(ints));
-        ::models_not<concepts::ForwardView>(aux::copy(ints));
-        ::check_equal(ints | view::take(10), ten_ints);
-        ::check_equal(ints | view::take(10), ten_ints);
+        CONCEPT_ASSERT(InputView<decltype(ints)>());
+        CONCEPT_ASSERT(!ForwardView<decltype(ints)>());
+        ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
     {
         any_view<int> ints2 = view::ints | view::take(10);
-        ::models<concepts::InputView>(aux::copy(ints2));
-        ::models_not<concepts::ForwardView>(aux::copy(ints2));
         ::check_equal(ints2, ten_ints);
         ::check_equal(ints2, ten_ints);
     }
@@ -65,7 +62,8 @@ int main()
         ::check_equal(any_view<int>{vec}, ten_ints);
         ::check_equal(any_view<int>{ranges::detail::as_const(vec)}, ten_ints);
 
-        struct Int {
+        struct Int
+        {
             int i_;
 
             Int(int i) : i_{i} {}
@@ -73,6 +71,13 @@ int main()
         };
         auto vec2 = std::vector<Int>{begin(ten_ints), end(ten_ints)};
         ::check_equal(any_view<int>{vec2}, ten_ints);
+    }
+
+    {
+        auto v = unique_any_view<int>{debug_input_view<int const>{
+            ten_ints.begin(), std::ptrdiff_t(ten_ints.size())
+        }};
+        ::check_equal(v, ten_ints);
     }
 
     return test_result();

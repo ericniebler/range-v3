@@ -122,5 +122,10 @@ int main()
     ::models_not<concepts::SizedView>(aux::copy(rng9));
     check_equal(rng9, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::take(6);
+        ::check_equal(rng, {0, 1, 2, 3, 4, 5});
+    }
+
     return test_result();
 }

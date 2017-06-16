@@ -41,5 +41,16 @@ int main()
     rrgi = view::all(stdref);
     rrgi = view::all(static_cast<std::reference_wrapper<int[7]> const &>(stdref));
 
+    {
+        auto v = view::all(debug_input_view<int const>{rgi});
+        CHECK(v.size() == size(rgi));
+        CHECK(v.data_ == rgi);
+        auto v2 = view::all(view::all(view::all(std::move(v))));
+        CONCEPT_ASSERT(Same<decltype(v), decltype(v2)>());
+        CHECK(!v.valid_);
+        CHECK(v2.size() == size(rgi));
+        CHECK(v2.data_ == rgi);
+    }
+
     return test_result();
 }

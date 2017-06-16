@@ -154,5 +154,29 @@ int main()
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
     }
 
+    // move-only input view transform
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::transform(is_odd{});
+        ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
+    }
+
+    // two move-only input view transform
+    {
+        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+
+        auto r0 = debug_input_view<std::string>{v0.data(), distance(v0)};
+        auto r1 = debug_input_view<std::string>{v1.data(), distance(v1)};
+        auto rng = view::transform(std::move(r0), std::move(r1),
+            [](std::string &s0, std::string &s1){ return std::tie(s0, s1); });
+        using R = decltype(rng);
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, std::tuple<std::string &, std::string &>>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, std::tuple<std::string &, std::string &>>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, std::tuple<std::string &, std::string &>>());
+
+        using T = std::tuple<std::string, std::string>;
+        ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
+    }
+
     return test_result();
 }

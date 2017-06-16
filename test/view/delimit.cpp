@@ -36,5 +36,11 @@ int main()
     auto rng2 = view::delimit(vi.begin(), 8);
     ::check_equal(rng2, {0, 1, 2, 3, 4, 5, 6, 7});
 
+    {
+        int const some_ints[] = {1,2,3,0,4,5,6};
+        auto rng = debug_input_view<const int>{some_ints} | view::delimit(0);
+        ::check_equal(rng, {1,2,3});
+    }
+
     return test_result();
 }
