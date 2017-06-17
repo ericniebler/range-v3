@@ -38,12 +38,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename Rng>
-            using CanSizedSentinel = SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>;
-        }
-
         /// \addtogroup group-views
         /// @{
         template<typename Rng, bool = (bool) ForwardRange<Rng>()>
@@ -56,9 +50,11 @@ namespace ranges
         private:
             friend range_access;
 
+            using CanSizedSentinel = SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>;
+
             using offset_t =
                 meta::if_c<
-                    BidirectionalRange<Rng>() || detail::CanSizedSentinel<Rng>(),
+                    BidirectionalRange<Rng>() || CanSizedSentinel(),
                     range_difference_type_t<Rng>,
                     constant<range_difference_type_t<Rng>, 0>>;
 
@@ -109,7 +105,7 @@ namespace ranges
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
-                CONCEPT_REQUIRES(detail::CanSizedSentinel<Rng>())
+                CONCEPT_REQUIRES(CanSizedSentinel())
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &here,
                     iterator_t<Rng> const &there, adaptor const &that) const
@@ -261,32 +257,25 @@ namespace ranges
                         if(rng_->remainder() != 0 && rng_->it() == ranges::end(rng_->base()))
                             rng_->remainder() = 0;
                     }
-                    CONCEPT_REQUIRES(detail::CanSizedSentinel<Rng>())
+                    CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                     RANGES_CXX14_CONSTEXPR
                     range_difference_type_t<Rng> distance_to(default_sentinel) const
                     {
-                        return static_cast<range_difference_type_t<Rng>>(size_());
-                    }
-                    CONCEPT_REQUIRES(detail::CanSizedSentinel<Rng>())
-                    RANGES_CXX14_CONSTEXPR
-                    range_size_type_t<Rng> size_() const
-                    {
                         RANGES_EXPECT(rng_);
-                        return ranges::min(
-                            ranges::iter_size(rng_->it(), ranges::end(rng_->base())),
-                            static_cast<range_size_type_t<Rng>>(rng_->remainder())
-                        );
+                        auto const d = ranges::end(rng_->base()) - rng_->it();
+                        return ranges::min(d, rng_->remainder());
                     }
                 public:
                     inner_view() = default;
                     constexpr explicit inner_view(chunk_view &view) noexcept
                       : rng_{&view}
                     {}
-                    CONCEPT_REQUIRES(detail::CanSizedSentinel<Rng>())
+                    CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                     RANGES_CXX14_CONSTEXPR
                     range_size_type_t<Rng> size()
                     {
-                        return size_();
+                        auto const d = distance_to(default_sentinel{});
+                        return static_cast<range_size_type_t<Rng>>(d);
                     }
                 };
 
@@ -323,13 +312,12 @@ namespace ranges
                     ranges::advance(rng_->it(), rng_->remainder(), ranges::end(rng_->base()));
                     rng_->remainder() = rng_->n();
                 }
-                CONCEPT_REQUIRES(detail::CanSizedSentinel<Rng>())
+                CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> distance_to(default_sentinel) const
                 {
                     RANGES_EXPECT(rng_);
-                    auto const sz = ranges::iter_size(rng_->it(), ranges::end(rng_->base()));
-                    auto d = static_cast<range_difference_type_t<Rng>>(sz);
+                    auto d = ranges::end(rng_->base()) - rng_->it();
                     if(d < rng_->remainder())
                         return 1;
 

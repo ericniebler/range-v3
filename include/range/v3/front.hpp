@@ -18,7 +18,6 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -30,9 +29,8 @@ namespace ranges
         {
             /// \return `*begin(rng)`
             template<typename Rng,
-                CONCEPT_REQUIRES_(Range<Rng>())>
-            RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng> operator()(Rng &&rng) const
+                CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+            constexpr range_reference_t<Rng> operator()(Rng &&rng) const
             {
                 return *begin(rng);
             }

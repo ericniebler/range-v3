@@ -78,6 +78,10 @@ namespace ranges
             {
                 return {begin(), end()};
             }
+            constexpr bool empty() const
+            {
+                return begin() == end();
+            }
         };
 
         // Like iterator_range, but with a known size. The first and second members

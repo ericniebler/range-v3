@@ -14,31 +14,74 @@
 #ifndef RANGES_V3_EMPTY_HPP
 #define RANGES_V3_EMPTY_HPP
 
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-core
-        struct empty_fn
+        /// \cond
+        namespace _empty_
         {
-            /// \return `begin(rng) == end(rng)`
-            template<typename Rng,
-                CONCEPT_REQUIRES_(Range<Rng>())>
-            RANGES_CXX14_CONSTEXPR
-            bool operator()(Rng &&rng) const
+            struct fn
             {
-                return begin(rng) == end(rng);
-            }
-        };
+            private:
+                // Prefer member if it is valid.
+                template<typename R>
+                static constexpr auto impl_(R &r, detail::priority_tag<2>)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    bool(r.empty())
+                )
+
+                // Fall back to size == 0.
+                template<typename R>
+                static constexpr auto impl_(R &r, detail::priority_tag<1>)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    ranges::size(r) == 0
+                )
+
+                // Fall further back to begin == end.
+                template<typename R,
+                    CONCEPT_REQUIRES_(ForwardRange<R>())>
+                static constexpr bool impl_(R &r, detail::priority_tag<0>)
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    ranges::begin(r) == ranges::end(r)
+                )
+
+            public:
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fn::impl_(r, detail::priority_tag<2>{})
+                )
+
+                template<typename T, typename Fn = fn>
+                constexpr auto operator()(std::reference_wrapper<T> ref) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    Fn()(ref.get())
+                )
+
+                template<typename T, bool RValue, typename Fn = fn>
+                constexpr auto operator()(ranges::reference_wrapper<T, RValue> ref) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    Fn()(ref.get())
+                )
+            };
+        }
+        /// \endcond
 
         /// \ingroup group-core
-        /// \sa `empty_fn`
-        RANGES_INLINE_VARIABLE(empty_fn, empty)
+        /// \return true if and only if range contains no elements.
+        RANGES_INLINE_VARIABLE(_empty_::fn, empty)
     }
 }
 

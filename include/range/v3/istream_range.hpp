@@ -55,11 +55,6 @@ namespace ranges
                 {
                     return !*rng_->sin_;
                 }
-                Val && move() const noexcept
-                {
-                    return detail::move(rng_->cached());
-                }
-
             };
             void next()
             {
@@ -95,7 +90,7 @@ namespace ranges
         {
             CONCEPT_ASSERT_MSG(DefaultConstructible<Val>(),
                "Only DefaultConstructible types are extractable from streams.");
-            return istream_range<Val>{sin};
+            return {sin};
         }
     #else
         template<typename Val, CONCEPT_REQUIRES_(DefaultConstructible<Val>())>
@@ -103,7 +98,7 @@ namespace ranges
         {
             istream_range<Val> operator()(std::istream & sin) const
             {
-                return istream_range<Val>{sin};
+                return {sin};
             }
         };
 

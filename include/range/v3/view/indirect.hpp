@@ -81,8 +81,6 @@ namespace ranges
                 template<typename Rng>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    // Stricter than necessary because of the SemiRegular requirement,
-                    // but maybe that's ok?
                     Readable<range_value_type_t<Rng>>>;
 
                 template<typename Rng,

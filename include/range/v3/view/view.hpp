@@ -85,7 +85,7 @@ namespace ranges
                 template<typename Rng, typename ...Rest>
                 using ViewConcept = meta::and_<ViewableRange<Rng>, Invocable<View&, Rng, Rest...>>;
 
-                // Pipeing requires range arguments or lvalue containers.
+                // Piping requires range arguments or lvalue containers.
                 template<typename Rng, typename Vw,
                     CONCEPT_REQUIRES_(ViewConcept<Rng>())>
                 static auto pipe(Rng && rng, Vw && v)

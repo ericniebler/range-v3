@@ -424,11 +424,6 @@ namespace ranges
             struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
               : std::false_type
             {};
-
-            template<typename T, std::size_t N>
-            struct view_predicate_<T[N]>
-              : std::false_type
-            {};
         }
         /// \endcond
 

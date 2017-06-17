@@ -22,12 +22,9 @@
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/empty.hpp>
-#include <range/v3/front.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -54,28 +51,33 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using partial_sum_view_t = meta::invoke<meta::add_const_if_c<IsConst>, partial_sum_view>;
-                optional<range_value_type_t<Rng>> sum_;
+                using partial_sum_view_t = meta::const_if_c<IsConst, partial_sum_view>;
+                semiregular_t<range_value_type_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
             public:
                 using single_pass = partial_sum_view::single_pass;
                 adaptor() = default;
                 adaptor(partial_sum_view_t &rng)
-                  : sum_{}, rng_(&rng)
+                  : rng_(&rng)
                 {}
-                adaptor(partial_sum_view_t &rng, range_value_type_t<Rng> sum)
-                  : sum_(std::move(sum)), rng_(&rng)
-                {}
+                iterator_t<Rng> begin(partial_sum_view_t &)
+                {
+                    auto &base = rng_->base();
+                    auto it = ranges::begin(base);
+                    if (it != ranges::end(base))
+                        sum_ = *it;
+                    return it;
+                }
                 range_value_type_t<Rng> read(iterator_t<Rng>) const
                 {
-                    return *sum_;
+                    return sum_;
                 }
                 void next(iterator_t<Rng> &it)
                 {
-                    using R = range_common_reference_t<Rng>;
-                    if(++it != ranges::end(rng_->mutable_base()))
+                    if (++it != ranges::end(rng_->base()))
                     {
-                        sum_ = invoke(rng_->fun_, R(*sum_), R(*it));
+                        auto &current = static_cast<range_value_type_t<Rng> &>(sum_);
+                        sum_ = invoke(rng_->fun_, current, *it);
                     }
                 }
                 void prev() = delete;
@@ -83,29 +85,25 @@ namespace ranges
 
             adaptor<false> begin_adaptor()
             {
-                return empty(this->base()) ? adaptor<false>{*this} :
-                    adaptor<false>{*this, front(this->base())};
+                return {*this};
             }
             meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
             {
-                if(use_sentinel_t() || empty(this->base()))
-                    return {*this};
-                return {*this, front(this->base())};
+                return {*this};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>>())
+            CONCEPT_REQUIRES(Range<Rng const>() &&
+                Invocable<Fun const&, range_common_reference_t<Rng>,
+                    range_common_reference_t<Rng>>())
             adaptor<true> begin_adaptor() const
             {
-                return empty(this->base()) ? adaptor<true>{*this} :
-                    adaptor<true>{*this, front(this->base())};
+                return {*this};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>>())
+            CONCEPT_REQUIRES(Range<Rng const>() &&
+                Invocable<Fun const&, range_common_reference_t<Rng>,
+                    range_common_reference_t<Rng>>())
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
-                if(use_sentinel_t() || empty(this->base()))
-                    return {*this};
-                return {*this, front(this->base())};
+                return {*this};
             }
         public:
             partial_sum_view() = default;
