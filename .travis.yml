@@ -288,8 +288,8 @@ install:
   - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"; fi
-  - if [ "$HEADERS" == "On" ]; then HEADER_CHECK=1; else HEADER_CHECK=0; fi
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=$HEADER_CHECK
+  - if [ "$HEADERS" == "On" ]; then NO_HEADER_CHECK=0; else NO_HEADER_CHECK=1; fi
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=$NO_HEADER_CHECK
   - if [ "$BOOST" == "On" ]; then cmake .. -DRANGES_BUILD_CALENDAR_EXAMPLE=On -DBOOST_ROOT=${DEPS_DIR}/boost; fi
   - if [ "$CLANG_MODULES" == "On" ] && [ "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="/usr/include/c++/v1/module.modulemap"; fi
   - make -j2 VERBOSE=1
