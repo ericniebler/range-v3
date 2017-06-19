@@ -141,6 +141,10 @@ namespace ranges
 #define RANGES_CXX_INLINE_VARIABLES_11 0
 #define RANGES_CXX_INLINE_VARIABLES_14 0
 #define RANGES_CXX_INLINE_VARIABLES_17 201606
+#define RANGES_CXX_COROUTINES_11 0
+#define RANGES_CXX_COROUTINES_14 0
+#define RANGES_CXX_COROUTINES_17 0
+#define RANGES_CXX_COROUTINES_TS1 201703
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #if _MSC_VER >= 1900
@@ -332,6 +336,14 @@ namespace ranges
 #endif
 #else
 #define RANGES_DEPRECATED(MSG)
+#endif
+
+#ifndef RANGES_CXX_COROUTINES
+#ifdef __cpp_coroutines
+#define RANGES_CXX_COROUTINES __cpp_coroutines
+#else
+#define RANGES_CXX_COROUTINES RANGES_CXX_FEATURE(COROUTINES)
+#endif
 #endif
 
 // RANGES_CXX14_CONSTEXPR macro (see also BOOST_CXX14_CONSTEXPR)
