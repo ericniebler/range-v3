@@ -1349,9 +1349,6 @@
     <ClInclude Include="include\range\v3\detail\variant.hpp">
       <Filter>Header Files\range\v3\detail</Filter>
     </ClInclude>
-    <ClInclude Include="include\range\v3\detail\optional.hpp">
-      <Filter>Header Files\range\v3\detail</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

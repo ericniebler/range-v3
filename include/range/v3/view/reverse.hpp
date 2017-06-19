@@ -23,10 +23,10 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
