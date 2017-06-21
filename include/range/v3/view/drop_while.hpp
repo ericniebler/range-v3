@@ -22,8 +22,8 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>

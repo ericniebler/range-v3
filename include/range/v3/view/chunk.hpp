@@ -25,10 +25,10 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_adaptor.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
