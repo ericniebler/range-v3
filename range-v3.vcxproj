@@ -1054,7 +1054,6 @@
     <ClInclude Include="include\range\v3\begin_end.hpp" />
     <ClInclude Include="include\range\v3\core.hpp" />
     <ClInclude Include="include\range\v3\detail\config.hpp" />
-    <ClInclude Include="include\range\v3\detail\optional.hpp" />
     <ClInclude Include="include\range\v3\detail\variant.hpp" />
     <ClInclude Include="include\range\v3\distance.hpp" />
     <ClInclude Include="include\range\v3\empty.hpp" />

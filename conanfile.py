@@ -16,7 +16,7 @@ import platform
 
 class Rangev3Conan(ConanFile):
     name = "range-v3"
-    version = "0.2.5"
+    version = "0.2.6"
     license = "Boost Software License - Version 1.0 - August 17th, 2003"
     url = "https://github.com/ericniebler/range-v3"
     exports = "*"

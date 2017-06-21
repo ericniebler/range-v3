@@ -21,9 +21,9 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -116,83 +116,14 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // storage for the reference to the current element
-            template<typename Reference, typename = void>
-            struct generator_promise_storage
-            {
-                CONCEPT_ASSERT(CopyConstructible<Reference>());
-
-                Reference const &read() const noexcept
-                {
-                    RANGES_EXPECT(opt_);
-                    return *opt_;
-                }
-                template<typename Arg,
-                    CONCEPT_REQUIRES_(Assignable<Reference &, Arg>())>
-                void store(Arg &&arg)
-                {
-                    // ranges::optional is weird. For std::optional this would be:
-                    //   opt_ = std::forward<Arg>(arg);
-                    if (opt_) *opt_ = std::forward<Arg>(arg);
-                    else opt_ = std::forward<Arg>(arg);
-                }
-                template<typename Arg,
-                    CONCEPT_REQUIRES_(!Assignable<Reference &, Arg>() &&
-                        Constructible<Reference, Arg>())>
-                void store(Arg &&arg)
-                {
-                    // ranges::optional is weird. For std::optional this would be:
-                    //   opt_.emplace(std::forward<Arg>(arg));
-                    opt_ = std::forward<Arg>(arg);
-                }
-            private:
-                optional<Reference> opt_;
-            };
-
-            template<typename Reference>
-            struct generator_promise_storage<Reference, meta::if_<std::is_reference<Reference>>>
-            {
-                Reference read() const noexcept
-                {
-                    RANGES_EXPECT(ptr_);
-                    return static_cast<Reference>(*ptr_);
-                }
-                template<typename Arg>
-                void store(Arg &&arg) noexcept
-                {
-                    ptr_ = std::addressof(arg);
-                }
-            private:
-                meta::_t<std::remove_reference<Reference>> *ptr_ = nullptr;
-            };
-
-            template<typename Reference>
-            struct generator_promise_storage<Reference, meta::if_<SemiRegular<Reference>>>
-              : private box<Reference, generator_promise_storage<Reference>>
-            {
-                Reference const &read() const noexcept
-                {
-                    return get();
-                }
-                template<typename Arg>
-                void store(Arg &&arg)
-                {
-                    get() = std::forward<Arg>(arg);
-                }
-            private:
-                using box<Reference, generator_promise_storage<Reference>>::get;
-            };
-
             template<typename Reference>
             struct generator_promise
-              : private generator_promise_storage<Reference>
             {
-            private:
-                using base_t = generator_promise_storage<Reference>;
-            public:
                 std::exception_ptr except_ = nullptr;
 
-                using base_t::read;
+                CONCEPT_ASSERT(meta::or_<std::is_reference<Reference>,
+                    CopyConstructible<Reference>>());
+
                 generator_promise *get_return_object() noexcept
                 {
                     return this;
@@ -212,11 +143,13 @@ namespace ranges
                     except_ = std::current_exception();
                     RANGES_EXPECT(except_);
                 }
-                template<typename Arg, CONCEPT_REQUIRES_(ConvertibleTo<Arg, Reference>())>
+                template<typename Arg,
+                    CONCEPT_REQUIRES_(ConvertibleTo<Arg, Reference>() &&
+                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)>
                 std::experimental::suspend_always yield_value(Arg &&arg)
-                    noexcept(noexcept(std::declval<base_t &>().store(std::declval<Arg>())))
+                    noexcept(std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
                 {
-                    base_t::store(std::forward<Arg>(arg));
+                    ref_ = std::forward<Arg>(arg);
                     return {};
                 }
                 std::experimental::suspend_never
@@ -225,6 +158,13 @@ namespace ranges
                     RANGES_ENSURE_MSG(false, "Invalid size request for a non-sized generator");
                     return {};
                 }
+                meta::if_<std::is_reference<Reference>, Reference, Reference const &>
+                read() const noexcept
+                {
+                    return ref_;
+                }
+            private:
+                semiregular_t<Reference> ref_;
             };
 
             template<typename Reference>
