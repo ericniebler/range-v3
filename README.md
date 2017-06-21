@@ -65,6 +65,10 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.2.6** June 21, 2017
+  - Experimental coroutines with `ranges::experimental::generator` (from @CaseyCarter)
+  - `ranges::optional` now behaves like `std::optional` (from @CaseyCarter)
+  - Extensive bug fixes with Input ranges (from @CaseyCarter)
 * **0.2.5** May 16, 2017
   - `view::chunk` works on Input ranges (from @CaseyCarter)
   - `for_each_n` algorithm (from @khlebnikov)

@@ -127,11 +127,12 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3/version.hpp RANGE_V3_N
 if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   # Check that Version.cmake is the only changed file:
   execute_process(
-    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" status -s -uno
+    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" status --porcelain -uno
     OUTPUT_VARIABLE RANGE_V3_GIT_STATUS
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  if (NOT "x${RANGE_V3_GIT_STATUS}" STREQUAL "x M Version.cmake")
+  string(REPLACE "\n" ";"  RANGE_V3_GIT_STATUS ${RANGE_V3_GIT_STATUS})
+  if (NOT "x${RANGE_V3_GIT_STATUS}" STREQUAL "x M README.md; M Version.cmake")
     message(FATAL_ERROR "Cannot update version.hpp: range-v3 source directory has a dirty status")
   endif()
   file(
@@ -157,7 +158,7 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   endif()
-  message("Version updated to @{RANGE_V3_VERSION}. Don't forget to:")
+  message("Version updated to ${RANGE_V3_VERSION}. Don't forget to:")
   message("  git push origin <feature-branch>")
   message("and (after that is merged to master) then:")
   message("  conan upload range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
