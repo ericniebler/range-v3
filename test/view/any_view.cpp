@@ -74,7 +74,7 @@ int main()
     }
 
     {
-        auto v = unique_any_view<int>{debug_input_view<int const>{
+        auto v = any_view<int>{debug_input_view<int const>{
             ten_ints.begin(), std::ptrdiff_t(ten_ints.size())
         }};
         ::check_equal(v, ten_ints);
