@@ -16,19 +16,26 @@ namespace ranges
     inline namespace v3
     {
         template<typename Target, typename Source>
-        meta::if_<std::is_pointer<Target>, Target>
-        polymorphic_downcast(Source *x) noexcept
+        auto polymorphic_downcast(Source *x) noexcept ->
+            meta::if_<std::is_pointer<Target>,
+                decltype((static_cast<Target>(x), dynamic_cast<Target>(x)))>
         {
-            RANGES_ASSERT(dynamic_cast<Target>(x) == x);
-            return static_cast<Target>(x);
+            auto result = static_cast<Target>(x);
+            RANGES_ASSERT(dynamic_cast<Target>(x) == result);
+            return result;
         }
         template<typename Target, typename Source>
-        meta::if_<std::is_reference<Target>, Target>
-        polymorphic_downcast(Source &&x) noexcept
+        auto polymorphic_downcast(Source &&x) noexcept ->
+            meta::if_<std::is_reference<Target>,
+                decltype((static_cast<Target>(std::declval<Source>()),
+                    dynamic_cast<Target>(std::declval<Source>())))>
         {
-            using PTarget = meta::_t<std::add_pointer<Target>>;
-            auto ptr = polymorphic_downcast<PTarget>(std::addressof(x));
-            return static_cast<Target>(*ptr);
+            auto &&result = static_cast<Target>(static_cast<Source &&>(x));
+#ifndef NDEBUG
+            auto &&dresult = dynamic_cast<Target>(static_cast<Source &&>(x));
+            RANGES_ASSERT(std::addressof(dresult) == std::addressof(result));
+#endif
+            return static_cast<Target>(result);
         }
     }
 }

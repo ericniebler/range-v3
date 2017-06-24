@@ -19,6 +19,58 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+namespace
+{
+    template<typename S, typename T, typename = void>
+    struct can_convert_to : std::false_type {};
+    template<typename S, typename T>
+    struct can_convert_to<S, T, meta::void_<
+        decltype(ranges::polymorphic_downcast<T>(std::declval<S>()))>>
+      : std::true_type {};
+
+    void test_polymorphic_downcast()
+    {
+        struct A { virtual ~A() = default; };
+        struct B : A {};
+        struct unrelated {};
+        struct incomplete;
+
+        CONCEPT_ASSERT(can_convert_to<B *, void *>());
+        CONCEPT_ASSERT(can_convert_to<A *, void *>());
+        CONCEPT_ASSERT(can_convert_to<B *, A *>());
+        CONCEPT_ASSERT(can_convert_to<A *, B *>());
+        CONCEPT_ASSERT(!can_convert_to<int, int>());
+        CONCEPT_ASSERT(!can_convert_to<A const *, A *>());
+        CONCEPT_ASSERT(!can_convert_to<A *, unrelated *>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated *, A *>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete *, incomplete *>());
+
+        CONCEPT_ASSERT(can_convert_to<B &, A &>());
+        CONCEPT_ASSERT(can_convert_to<A &, B &>());
+        CONCEPT_ASSERT(!can_convert_to<A &, unrelated &>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &, A &>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &, incomplete &>());
+
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ > 4
+        CONCEPT_ASSERT(can_convert_to<B &&, A &&>());
+        CONCEPT_ASSERT(can_convert_to<B &, A &&>());
+#endif // old GCC dynamic_cast bug
+        CONCEPT_ASSERT(!can_convert_to<B &&, A &>());
+        CONCEPT_ASSERT(can_convert_to<A &&, B &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, B &>());
+        CONCEPT_ASSERT(can_convert_to<A &, B &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, unrelated &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, unrelated &>());
+        CONCEPT_ASSERT(!can_convert_to<A &, unrelated &&>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &&, A &&>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &&, A &>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &, A &&>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &&, incomplete &&>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &&, incomplete &>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &, incomplete &&>());
+    }
+} // unnamed namespace
+
 int main()
 {
     using namespace ranges;
@@ -79,6 +131,8 @@ int main()
         }};
         ::check_equal(v, ten_ints);
     }
+
+    test_polymorphic_downcast();
 
     return test_result();
 }
