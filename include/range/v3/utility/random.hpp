@@ -63,7 +63,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
-#ifndef __MINGW32__
+#if RANGES_CXX_THREAD >= RANGES_CXX_THREAD_11
 #include <thread>
 #endif
 
@@ -213,7 +213,7 @@ namespace ranges
                     *it++ = randutils::hash(
                         static_cast<std::uint32_t(*)(std::uint64_t)>(&randutils::crushto32));
 
-#ifndef __MINGW32__
+#if RANGES_CXX_THREAD >= RANGES_CXX_THREAD_11
                     // Hash our thread id.  It seems to vary from run to run on OS X, not
                     // so much on Linux.
                     *it++ = randutils::hash(std::this_thread::get_id());
