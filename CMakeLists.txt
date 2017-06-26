@@ -85,6 +85,12 @@ endif()
 range_v3_append_flag(RANGE_V3_HAS_MARCH_NATIVE "-march=native")
 range_v3_append_flag(RANGE_V3_HAS_MTUNE_NATIVE "-mtune=native")
 
+# Test for <thread>
+try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
+if(NOT RANGE_V3_TRY_THREAD)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRANGES_CXX_THREAD=0")
+endif()
+
 # Test for coroutine TS support
 include(CheckCXXSourceCompiles)
 

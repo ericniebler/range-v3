@@ -20,9 +20,9 @@ install:
   - mkdir build && cd build
   - ps: |
       if ($env:PLATFORM -eq "x64" -and $env:CONFIGURATION -eq "Debug") {
-        $env:NO_HEADER_CHECK=1
-      } else {
         $env:NO_HEADER_CHECK=0
+      } else {
+        $env:NO_HEADER_CHECK=1
       }
   - C:\cmake-3.7.2-win32-x86\bin\cmake .. -DRANGE_V3_NO_HEADER_CHECK=%NO_HEADER_CHECK% -T v140_clang_c2
 
