@@ -102,32 +102,40 @@ $(document).ready(function(){initNavTree('semiregular_8hpp.html','');});
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular.html">ranges::v3::semiregular&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular_3_01_t_01_6_01_4.html">ranges::v3::semiregular&lt; T &amp; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular_3_01_t_01_6_6_01_4.html">ranges::v3::semiregular&lt; T &amp;&amp; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:gac00314c62e05af2bd45c39b569886e1f"><td class="memTemplParams" colspan="2">
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac00314c62e05af2bd45c39b569886e1f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::movesemiregular_t</b> = <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; Movable&lt; T &gt;() &amp;&amp;DefaultConstructible&lt; T &gt;(), T, semiregular&lt; T &gt; &gt;</td></tr>
+<tr class="separator:gac00314c62e05af2bd45c39b569886e1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0020a637d8ef0b7ad734031bf90babff"><td class="memTemplParams" colspan="2">
 template&lt;typename T , bool IsConst = false&gt; </td></tr>
 <tr class="memitem:ga0020a637d8ef0b7ad734031bf90babff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_ref_or_val_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; SemiRegular&lt; T &gt;, <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; IsConst, T, reference_wrapper&lt; T &gt; &gt;, reference_wrapper&lt; <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; IsConst, semiregular&lt; T &gt; const, semiregular&lt; T &gt; &gt;&gt; &gt;</td></tr>
 <tr class="separator:ga0020a637d8ef0b7ad734031bf90babff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaefb4436249bf9728261d49ee41fbebb5"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaefb4436249bf9728261d49ee41fbebb5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; SemiRegular&lt; T &gt;, T, semiregular&lt; T &gt; &gt;</td></tr>
-<tr class="separator:gaefb4436249bf9728261d49ee41fbebb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; SemiRegular&lt; T &gt;, T, semiregular&lt; T &gt; &gt;</td></tr>
+<tr class="separator:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;t)</td></tr>
-<tr class="separator:ga63d0b7a22d91814395613e2239be77bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;t) noexcept(noexcept(decltype(t.get())(t.get()))) -&gt; decltype(t.get())</td></tr>
+<tr class="separator:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplItemLeft" align="right" valign="top">T const  &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; const &amp;t)</td></tr>
-<tr class="separator:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; const &amp;t) noexcept(noexcept(decltype(t.get())(t.get()))) -&gt; decltype(t.get())</td></tr>
+<tr class="separator:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga77b7cd1d786287e78da233f902a3a286"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;&amp;t)</td></tr>
-<tr class="separator:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga77b7cd1d786287e78da233f902a3a286"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;&amp;t) noexcept(noexcept(decltype(detail::move(t).get())(detail::move(t).get()))) -&gt; decltype(detail::move(t).get())</td></tr>
+<tr class="separator:ga77b7cd1d786287e78da233f902a3a286"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

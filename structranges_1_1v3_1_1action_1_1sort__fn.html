@@ -91,6 +91,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1action_1_1sort__
 <div class="header">
   <div class="summary">
 <a href="#related">Synopsis of methods</a> &#124;
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1action_1_1sort__fn-members.html">List of all members</a>  </div>
@@ -106,15 +107,15 @@ Synopsis of methods</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a19d2ae78e7ff7e57f812578d54dedd62"><td class="memTemplParams" colspan="2"><a id="a19d2ae78e7ff7e57f812578d54dedd62"></a>
+<tr class="memitem:a333498b2be05576865ab1a25b0028340"><td class="memTemplParams" colspan="2"><a id="a333498b2be05576865ab1a25b0028340"></a>
 template&lt;typename Rng , typename C  = ordered_less, typename P  = ident&gt; </td></tr>
-<tr class="memitem:a19d2ae78e7ff7e57f812578d54dedd62"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ForwardRange</a>&lt; Rng &gt;, Sortable&lt; iterator_t&lt; Rng &gt;, C, P &gt; &gt;</td></tr>
-<tr class="separator:a19d2ae78e7ff7e57f812578d54dedd62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a333498b2be05576865ab1a25b0028340"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Sortable</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; Sortable_, Rng, C, P &gt;</td></tr>
+<tr class="separator:a333498b2be05576865ab1a25b0028340"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad265b7bcbd84a77a05f1b794aafed4fa"><td class="memTemplParams" colspan="2"><a id="ad265b7bcbd84a77a05f1b794aafed4fa"></a>
-template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, requires  = (Concept&lt;Rng, C, P&gt;())&gt; </td></tr>
+template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, requires  = (Sortable&lt;Rng, C, P&gt;())&gt; </td></tr>
 <tr class="memitem:ad265b7bcbd84a77a05f1b794aafed4fa"><td class="memTemplItemLeft" align="right" valign="top">Rng&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred=C{}, P proj=P{}) const</td></tr>
 <tr class="separator:ad265b7bcbd84a77a05f1b794aafed4fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

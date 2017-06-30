@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['tag',['tag',['../structranges_1_1v3_1_1nullopt__t_1_1tag.html',1,'ranges::v3::nullopt_t']]],
   ['tagged',['tagged',['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html',1,'ranges::v3::tagged_detail']]],
   ['tagged_5fcompressed_5ftuple',['tagged_compressed_tuple',['../classtagged__compressed__tuple.html',1,'']]],
   ['tail_5ffn',['tail_fn',['../structranges_1_1v3_1_1view_1_1tail__fn.html',1,'ranges::v3::view']]],

@@ -36,8 +36,7 @@ var dir_50daf2a60bc85f4226ffbd3f03a0b5c9 =
       [ "split_fn", "structranges_1_1v3_1_1action_1_1split__fn.html", "structranges_1_1v3_1_1action_1_1split__fn" ]
     ] ],
     [ "stable_sort.hpp", "action_2stable__sort_8hpp.html", [
-      [ "stable_sort_fn", "structranges_1_1v3_1_1action_1_1stable__sort__fn.html", "structranges_1_1v3_1_1action_1_1stable__sort__fn" ],
-      [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1stable__sort__fn_1_1_concept_impl.html", "structranges_1_1v3_1_1action_1_1stable__sort__fn_1_1_concept_impl" ]
+      [ "stable_sort_fn", "structranges_1_1v3_1_1action_1_1stable__sort__fn.html", "structranges_1_1v3_1_1action_1_1stable__sort__fn" ]
     ] ],
     [ "stride.hpp", "action_2stride_8hpp.html", [
       [ "stride_fn", "structranges_1_1v3_1_1action_1_1stride__fn.html", "structranges_1_1v3_1_1action_1_1stride__fn" ],

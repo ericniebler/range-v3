@@ -20,6 +20,7 @@ var dir_3bcb3f19c2c8a89df408efd863ca1956 =
     [ "find_if.hpp", "find__if_8hpp.html", "find__if_8hpp" ],
     [ "find_if_not.hpp", "find__if__not_8hpp.html", "find__if__not_8hpp" ],
     [ "for_each.hpp", "algorithm_2for__each_8hpp.html", "algorithm_2for__each_8hpp" ],
+    [ "for_each_n.hpp", "for__each__n_8hpp.html", "for__each__n_8hpp" ],
     [ "generate.hpp", "algorithm_2generate_8hpp.html", "algorithm_2generate_8hpp" ],
     [ "generate_n.hpp", "algorithm_2generate__n_8hpp.html", "algorithm_2generate__n_8hpp" ],
     [ "heap_algorithm.hpp", "heap__algorithm_8hpp.html", "heap__algorithm_8hpp" ],

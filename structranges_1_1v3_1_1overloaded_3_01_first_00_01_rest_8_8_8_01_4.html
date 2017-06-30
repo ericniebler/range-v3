@@ -126,43 +126,10 @@ template&lt;typename... Args&gt; </td></tr>
 template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:a8cfb478cd199b75f885bf77dee930a87"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Args &amp;&amp;...args) const noexcept(noexcept(decltype(std::declval&lt; <a class="el" href="structranges_1_1v3_1_1overloaded.html">overloaded</a>&lt; Rest... &gt; const &amp;&gt;()(static_cast&lt; Args &amp;&amp;&gt;(args)...))(std::declval&lt; <a class="el" href="structranges_1_1v3_1_1overloaded.html">overloaded</a>&lt; Rest... &gt; const &amp;&gt;()(static_cast&lt; Args &amp;&amp;&gt;(args)...)))) -&gt; decltype(std::declval&lt; <a class="el" href="structranges_1_1v3_1_1overloaded.html">overloaded</a>&lt; Rest... &gt; const &amp;&gt;()(static_cast&lt; Args &amp;&amp;&gt;(args)...))</td></tr>
 <tr class="separator:a8cfb478cd199b75f885bf77dee930a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03a85cb0142df34297b067dd99540835"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1overloaded_3_01_first_00_01_rest_8_8_8_01_4.html#a03a85cb0142df34297b067dd99540835">overloaded</a> () noexcept(<a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; std::is_nothrow_default_constructible&lt; First &gt;, std::is_nothrow_default_constructible&lt; Rest &gt;... &gt;::value)</td></tr>
-<tr class="separator:a03a85cb0142df34297b067dd99540835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa50cd4c30ce47e96b8b6192f8950999"><td class="memItemLeft" align="right" valign="top"><a id="afa50cd4c30ce47e96b8b6192f8950999"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>overloaded</b> (First first, Rest... rest)</td></tr>
 <tr class="separator:afa50cd4c30ce47e96b8b6192f8950999"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a03a85cb0142df34297b067dd99540835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03a85cb0142df34297b067dd99540835">&#9670;&nbsp;</a></span>overloaded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename First , typename... Rest&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr <a class="el" href="structranges_1_1v3_1_1overloaded.html">ranges::v3::overloaded</a>&lt; First, Rest... &gt;::<a class="el" href="structranges_1_1v3_1_1overloaded.html">overloaded</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section pre"><dt>Precondition</dt><dd><a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff" title="Logically and together all the integral constant-wrapped Boolean parameters, with short-circuiting...">meta::and_</a>&lt; DefaultConstructible&lt;First&gt; DefaultConstructible&lt;Rest&gt;...&gt;()) </dd></dl>
-
-<p class="reference">References <a class="el" href="group__group-algorithms.html#gad3830f80a601a6a46958ca50ef2e34c5">ranges::v3::move</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

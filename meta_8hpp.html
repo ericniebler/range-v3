@@ -225,11 +225,11 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga6ed302ab53e237a7b26aa2275f715e4e"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fn &gt; </td></tr>
 <tr class="memitem:ga6ed302ab53e237a7b26aa2275f715e4e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__query.html#ga6ed302ab53e237a7b26aa2275f715e4e">meta::lazy::all_of</a> = defer&lt; all_of, List, <a class="el" href="class_fn.html">Fn</a> &gt;</td></tr>
 <tr class="separator:ga6ed302ab53e237a7b26aa2275f715e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga016d43686336906271e9579067bd54ff"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga17255b9230c6f2841bc24a06ad8375f8"><td class="memTemplParams" colspan="2">
 template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga016d43686336906271e9579067bd54ff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff">meta::and_</a> = _t&lt; detail::_and_&lt; Bools... &gt; &gt;</td></tr>
-<tr class="memdesc:ga016d43686336906271e9579067bd54ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
-<tr class="separator:ga016d43686336906271e9579067bd54ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17255b9230c6f2841bc24a06ad8375f8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a> = _t&lt; defer&lt; detail::_and_&lt; 0==sizeof...(Bools)&gt;::template invoke, Bools... &gt; &gt;</td></tr>
+<tr class="memdesc:ga17255b9230c6f2841bc24a06ad8375f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
+<tr class="separator:ga17255b9230c6f2841bc24a06ad8375f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#gadda663a0ff02c3b06aa6d9943cb6ec93">meta::lazy::and_</a> = defer&lt; and_, Bools... &gt;</td></tr>
 <tr class="separator:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -711,11 +711,11 @@ template&lt;typename... Fs&gt; </td></tr>
 <tr class="memitem:gadda7e30206b3d4655eadcd9bb0ea4c52"><td class="memTemplParams" colspan="2">template&lt;typename F , typename G &gt; </td></tr>
 <tr class="memitem:gadda7e30206b3d4655eadcd9bb0ea4c52"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__composition.html#gadda7e30206b3d4655eadcd9bb0ea4c52">meta::lazy::on</a> = defer&lt; on, F, G &gt;</td></tr>
 <tr class="separator:gadda7e30206b3d4655eadcd9bb0ea4c52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9900ad39c907e4cdc305ebf390cc867e"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga910651a3a621d5419cbbb4e8c71512a1"><td class="memTemplParams" colspan="2">
 template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga9900ad39c907e4cdc305ebf390cc867e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga9900ad39c907e4cdc305ebf390cc867e">meta::or_</a> = _t&lt; detail::_or_&lt; Bools... &gt; &gt;</td></tr>
-<tr class="memdesc:ga9900ad39c907e4cdc305ebf390cc867e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
-<tr class="separator:ga9900ad39c907e4cdc305ebf390cc867e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga910651a3a621d5419cbbb4e8c71512a1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga910651a3a621d5419cbbb4e8c71512a1">meta::or_</a> = _t&lt; defer&lt; detail::_or_&lt; 0==sizeof...(Bools)&gt;::template invoke, Bools... &gt; &gt;</td></tr>
+<tr class="memdesc:ga910651a3a621d5419cbbb4e8c71512a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
+<tr class="separator:ga910651a3a621d5419cbbb4e8c71512a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga0c3a4b02349080f4845f6ddd17590d71">meta::lazy::or_</a> = defer&lt; or_, Bools... &gt;</td></tr>
 <tr class="separator:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -926,11 +926,11 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa307978db0da638b8c87a4967bc4330c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemeta.html#aa307978db0da638b8c87a4967bc4330c">meta::vararg</a> = detail::vararg_&lt; T &gt;</td></tr>
 <tr class="memdesc:aa307978db0da638b8c87a4967bc4330c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For defining variadic placeholders. <br /></td></tr>
 <tr class="separator:aa307978db0da638b8c87a4967bc4330c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab0435264551a798d75699ed2bccdc854"><td class="memTemplParams" colspan="2">
-template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:gab0435264551a798d75699ed2bccdc854"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gab0435264551a798d75699ed2bccdc854">meta::void_</a> = invoke&lt; id&lt; void &gt;, Ts... &gt;</td></tr>
-<tr class="memdesc:gab0435264551a798d75699ed2bccdc854"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>void</code>. <br /></td></tr>
-<tr class="separator:gab0435264551a798d75699ed2bccdc854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea4e08158f9e882faf65f8f73b85d1c3"><td class="memTemplParams" colspan="2">
+template&lt;typename... &gt; </td></tr>
+<tr class="memitem:gaea4e08158f9e882faf65f8f73b85d1c3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gaea4e08158f9e882faf65f8f73b85d1c3">meta::void_</a> = void</td></tr>
+<tr class="memdesc:gaea4e08158f9e882faf65f8f73b85d1c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>void</code>. <br /></td></tr>
+<tr class="separator:gaea4e08158f9e882faf65f8f73b85d1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga559fdaee384c3d297b86ab217b26f601"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
 <tr class="memitem:ga559fdaee384c3d297b86ab217b26f601"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga559fdaee384c3d297b86ab217b26f601">meta::zip</a> = transpose&lt; ListOfLists &gt;</td></tr>
 <tr class="memdesc:ga559fdaee384c3d297b86ab217b26f601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code>, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>s.  <a href="group__transformation.html#ga559fdaee384c3d297b86ab217b26f601">More...</a><br /></td></tr>

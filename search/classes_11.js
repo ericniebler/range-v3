@@ -10,6 +10,8 @@ var searchData=
   ['search_5fn_5ffn',['search_n_fn',['../structranges_1_1v3_1_1search__n__fn.html',1,'ranges::v3']]],
   ['semicontainer',['SemiContainer',['../structranges_1_1v3_1_1concepts_1_1_semi_container.html',1,'ranges::v3::concepts']]],
   ['semiregular',['SemiRegular',['../structranges_1_1v3_1_1concepts_1_1_semi_regular.html',1,'ranges::v3::concepts::SemiRegular'],['../structranges_1_1v3_1_1semiregular.html',1,'ranges::v3::semiregular&lt; T &gt;']]],
+  ['semiregular_3c_20t_20_26_20_3e',['semiregular&lt; T &amp; &gt;',['../structranges_1_1v3_1_1semiregular_3_01_t_01_6_01_4.html',1,'ranges::v3']]],
+  ['semiregular_3c_20t_20_26_26_20_3e',['semiregular&lt; T &amp;&amp; &gt;',['../structranges_1_1v3_1_1semiregular_3_01_t_01_6_6_01_4.html',1,'ranges::v3']]],
   ['sentinel',['Sentinel',['../structranges_1_1v3_1_1concepts_1_1_sentinel.html',1,'ranges::v3::concepts']]],
   ['set_5fdifference_5ffn',['set_difference_fn',['../structranges_1_1v3_1_1set__difference__fn.html',1,'ranges::v3::set_difference_fn'],['../structranges_1_1v3_1_1view_1_1set__difference__fn.html',1,'ranges::v3::view::set_difference_fn']]],
   ['set_5fintersection_5fcursor',['set_intersection_cursor',['../structranges_1_1v3_1_1detail_1_1set__intersection__cursor.html',1,'ranges::v3::detail']]],

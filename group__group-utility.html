@@ -184,6 +184,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1ident.html">ranges::v3::ident</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1in__place__t.html">ranges::v3::in_place_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1indirect__fn.html">ranges::v3::indirect_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1indirected.html">ranges::v3::indirected&lt; Fn &gt;</a></td></tr>
@@ -302,6 +304,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular.html">ranges::v3::semiregular&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular_3_01_t_01_6_01_4.html">ranges::v3::semiregular&lt; T &amp; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1semiregular_3_01_t_01_6_6_01_4.html">ranges::v3::semiregular&lt; T &amp;&amp; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1static__const.html">ranges::v3::static_const&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1transformed.html">ranges::v3::transformed&lt; Fn1, Fn2 &gt;</a></td></tr>
@@ -340,6 +346,10 @@ template&lt;typename Pred &gt; </td></tr>
 <tr class="memitem:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
 <tr class="memitem:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7465bd869ea861f5f8789d36c7c47e36">ranges::v3::aux::move_t</a> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; std::is_reference&lt; R &gt;, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; R &gt; &gt; &amp;&amp;, detail::decay_t&lt; R &gt; &gt;</td></tr>
 <tr class="separator:ga7465bd869ea861f5f8789d36c7c47e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac00314c62e05af2bd45c39b569886e1f"><td class="memTemplParams" colspan="2"><a id="gac00314c62e05af2bd45c39b569886e1f"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac00314c62e05af2bd45c39b569886e1f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::movesemiregular_t</b> = <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Movable</a>&lt; T &gt;() &amp;&amp;<a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">DefaultConstructible</a>&lt; T &gt;(), T, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt; &gt;</td></tr>
+<tr class="separator:gac00314c62e05af2bd45c39b569886e1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaab5371edd53243858c10e58a1706db62"><td class="memTemplParams" colspan="2"><a id="gaab5371edd53243858c10e58a1706db62"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gaab5371edd53243858c10e58a1706db62"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ref_t</b> = decltype(ref(std::declval&lt; T &gt;()))</td></tr>
@@ -355,10 +365,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T , bool IsConst = false&gt; </td></tr>
 <tr class="memitem:ga0020a637d8ef0b7ad734031bf90babff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_ref_or_val_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; T &gt;, <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; IsConst, T, <a class="el" href="structranges_1_1v3_1_1reference__wrapper.html">reference_wrapper</a>&lt; T &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1reference__wrapper.html">reference_wrapper</a>&lt; <a class="el" href="group__logical.html#ga4a36f4a3352411242856ff61558f18a0">meta::if_c</a>&lt; IsConst, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt; const, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt; &gt;&gt; &gt;</td></tr>
 <tr class="separator:ga0020a637d8ef0b7ad734031bf90babff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaefb4436249bf9728261d49ee41fbebb5"><td class="memTemplParams" colspan="2"><a id="gaefb4436249bf9728261d49ee41fbebb5"></a>
+<tr class="memitem:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memTemplParams" colspan="2"><a id="ga4f4813d8ef3b16411ac216b5d8780417"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaefb4436249bf9728261d49ee41fbebb5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; T &gt;, T, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt; &gt;</td></tr>
-<tr class="separator:gaefb4436249bf9728261d49ee41fbebb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; T &gt;, T, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt; &gt;</td></tr>
+<tr class="separator:ga4f4813d8ef3b16411ac216b5d8780417"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3ba6994c2eecd20c19550a0480ca1706"><td class="memTemplParams" colspan="2"><a id="ga3ba6994c2eecd20c19550a0480ca1706"></a>
 template&lt;typename Tup &gt; </td></tr>
 <tr class="memitem:ga3ba6994c2eecd20c19550a0480ca1706"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tuple_indices_t</b> = <a class="el" href="group__integral.html#ga027c44ee54cc9486f9ce656f7c197c2f">meta::make_index_sequence</a>&lt; std::tuple_size&lt; typename std::remove_reference&lt; Tup &gt;::type &gt;::value &gt;</td></tr>
@@ -400,21 +410,21 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gae33385727aac511290a2230b290d4926"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; T &gt; &amp;&amp;value)</td></tr>
 <tr class="separator:gae33385727aac511290a2230b290d4926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplParams" colspan="2"><a id="ga63d0b7a22d91814395613e2239be77bb"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; &amp;t)</td></tr>
-<tr class="separator:ga63d0b7a22d91814395613e2239be77bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplParams" colspan="2"><a id="gaa469a619986c94c18b5fac6ffc38b4b0"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplItemLeft" align="right" valign="top">T const  &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; const &amp;t)</td></tr>
-<tr class="separator:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplParams" colspan="2"><a id="ga7ec2c66b74fde73e4192a69ffa01b1dd"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; &amp;&amp;t)</td></tr>
-<tr class="separator:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa0af0b9165f518251dfeba0495e08c93"><td class="memItemLeft" align="right" valign="top"><a id="gaa0af0b9165f518251dfeba0495e08c93"></a>
 constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::reference_wrapper&lt; T, RValue &gt;::get</b> () const noexcept</td></tr>
 <tr class="separator:gaa0af0b9165f518251dfeba0495e08c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memTemplParams" colspan="2"><a id="gad4a4c33a3fc8a79ce5acecb572f5770c"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; &amp;t) noexcept(noexcept(decltype(t.get())(t.get()))) -&gt; decltype(t.get())</td></tr>
+<tr class="separator:gad4a4c33a3fc8a79ce5acecb572f5770c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memTemplParams" colspan="2"><a id="gad46ad4e679ed7bed6442b4d41c9e65bd"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; const &amp;t) noexcept(noexcept(decltype(t.get())(t.get()))) -&gt; decltype(t.get())</td></tr>
+<tr class="separator:gad46ad4e679ed7bed6442b4d41c9e65bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga77b7cd1d786287e78da233f902a3a286"><td class="memTemplParams" colspan="2"><a id="ga77b7cd1d786287e78da233f902a3a286"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga77b7cd1d786287e78da233f902a3a286"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gadfb965e2b47e00d52a75819dc6ef783d">meta::id_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt; &amp;&amp;t) noexcept(noexcept(decltype(detail::move(t).get())(detail::move(t).get()))) -&gt; decltype(detail::move(t).get())</td></tr>
+<tr class="separator:ga77b7cd1d786287e78da233f902a3a286"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2c083d251eb0731ebd9227e2e8c4b46c"><td class="memTemplParams" colspan="2"><a id="ga2c083d251eb0731ebd9227e2e8c4b46c"></a>
 template&lt;typename Tag , typename Element , detail::box_compress BC&gt; </td></tr>
 <tr class="memitem:ga2c083d251eb0731ebd9227e2e8c4b46c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_element.html">Element</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="classranges_1_1v3_1_1box.html">box</a>&lt; <a class="el" href="class_element.html">Element</a>, Tag, BC &gt; &amp;b) noexcept</td></tr>
@@ -469,11 +479,11 @@ template&lt;typename I , typename S , requires  = (Sentinel&lt;S, I&gt;())&gt; <
 <tr class="memitem:ga595f619314aa843ceeb6ecafcd176912"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (<a class="el" href="structranges_1_1v3_1_1move__sentinel.html">move_sentinel</a>&lt; S &gt; const &amp;s, <a class="el" href="structranges_1_1v3_1_1move__iterator.html">move_iterator</a>&lt; S &gt; const &amp;i)</td></tr>
 <tr class="separator:ga595f619314aa843ceeb6ecafcd176912"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa11621adae0c13c5ebff90682c537cd0"><td class="memTemplParams" colspan="2"><a id="gaa11621adae0c13c5ebff90682c537cd0"></a>
-template&lt;typename F , typename Obj , typename First , typename... Rest, meta::if_c&lt; std::is_function&lt; F &gt;::value, int &gt;  = 0&gt; </td></tr>
+template&lt;typename F , typename Obj , typename First , typename... Rest, meta::if_c&lt; detail::is_function&lt; F &gt;::value, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:gaa11621adae0c13c5ebff90682c537cd0"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::invoke_fn::operator()</b> (F(Obj::*ptr), First &amp;&amp;first, Rest &amp;&amp;... rest) const noexcept(noexcept(decltype(invoke_member_fn(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;{}, is_reference_wrapper_t&lt; detail::decay_t&lt; First &gt;&gt;{}, ptr, static_cast&lt; First &amp;&amp;&gt;(first), static_cast&lt; Rest &amp;&amp;&gt;(rest)...))(invoke_member_fn(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;{}, is_reference_wrapper_t&lt; detail::decay_t&lt; First &gt;&gt;{}, ptr, static_cast&lt; First &amp;&amp;&gt;(first), static_cast&lt; Rest &amp;&amp;&gt;(rest)...)))) -&gt; decltype(invoke_member_fn(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;</td></tr>
 <tr class="separator:gaa11621adae0c13c5ebff90682c537cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga14f8542253fd4bbb9692834c1452cc67"><td class="memTemplParams" colspan="2"><a id="ga14f8542253fd4bbb9692834c1452cc67"></a>
-template&lt;typename Data , typename Obj , typename First , meta::if_c&lt;!std::is_function&lt; Data &gt;::value, int &gt;  = 0&gt; </td></tr>
+template&lt;typename Data , typename Obj , typename First , meta::if_c&lt;!detail::is_function&lt; Data &gt;::value, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ga14f8542253fd4bbb9692834c1452cc67"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::invoke_fn::operator()</b> (Data(Obj::*ptr), First &amp;&amp;first) const noexcept(noexcept(decltype(invoke_member_data(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;{}, is_reference_wrapper_t&lt; detail::decay_t&lt; First &gt;&gt;{}, ptr, static_cast&lt; First &amp;&amp;&gt;(first)))(invoke_member_data(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;{}, is_reference_wrapper_t&lt; detail::decay_t&lt; First &gt;&gt;{}, ptr, static_cast&lt; First &amp;&amp;&gt;(first))))) -&gt; decltype(invoke_member_data(std::is_base_of&lt; Obj, detail::decay_t&lt; First &gt;&gt;</td></tr>
 <tr class="separator:ga14f8542253fd4bbb9692834c1452cc67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8275b7ba12ce0a52cada2efc5e5a44ed"><td class="memTemplParams" colspan="2"><a id="ga8275b7ba12ce0a52cada2efc5e5a44ed"></a>
@@ -783,7 +793,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code>advance_fn</code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="group__group-views.html#gadc4b424b7e387ae26c0e07b65d10592b">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>, <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html#ac81027796d948b4823042842b7a9ef50">ranges::v3::chunk_view&lt; Rng &gt;::adaptor::advance()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ab0660781a5083d63c85561bd85e34f74">ranges::v3::basic_iterator&lt; Cur &gt;::operator+=()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a426d54f24dd0aab44fdd03c675b1ae1f">ranges::v3::basic_iterator&lt; Cur &gt;::operator-=()</a>, and <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html#ab93ef50a033b1caba3b3ebecbbf52550">ranges::v3::chunk_view&lt; Rng &gt;::adaptor::prev()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__group-views.html#gadc4b424b7e387ae26c0e07b65d10592b">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ab0660781a5083d63c85561bd85e34f74">ranges::v3::basic_iterator&lt; Cur &gt;::operator+=()</a>, and <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a426d54f24dd0aab44fdd03c675b1ae1f">ranges::v3::basic_iterator&lt; Cur &gt;::operator-=()</a>.</p>
 
 </div>
 </div>
@@ -1127,7 +1137,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1next__fn.html">next_fn</a></code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1tail__view.html#a37f1415912b35365d43811c97558fd45">ranges::v3::tail_view&lt; Rng &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a8ebf586f21c557948343479d9d606a46">ranges::v3::adjacent_find_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1unique__fn.html#a4d5102f6db6f72cee74ad9acdebcd5fc">ranges::v3::unique_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a933feb7fc14704daf10f064a928a381c">ranges::v3::basic_iterator&lt; Cur &gt;::operator++()</a>, <a class="el" href="structranges_1_1v3_1_1join__view_3_01_rng_00_01void_01_4.html#a918652fa46cc2c17bd86ad226d63cbf4">ranges::v3::join_view&lt; Rng, void &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1join__view.html#aa812cff6e1f49e089393d5be80ab9d0a">ranges::v3::join_view&lt; Rng, ValRng &gt;::size()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1tail__view.html#a37f1415912b35365d43811c97558fd45">ranges::v3::tail_view&lt; Rng &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a8ebf586f21c557948343479d9d606a46">ranges::v3::adjacent_find_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1unique__fn.html#a4d5102f6db6f72cee74ad9acdebcd5fc">ranges::v3::unique_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a933feb7fc14704daf10f064a928a381c">ranges::v3::basic_iterator&lt; Cur &gt;::operator++()</a>, <a class="el" href="structranges_1_1v3_1_1join__view_3_01_rng_00_01void_01_4.html#a911be7b6c0295466554a3d80c0ff7318">ranges::v3::join_view&lt; Rng, void &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1join__view.html#aa812cff6e1f49e089393d5be80ab9d0a">ranges::v3::join_view&lt; Rng, ValRng &gt;::size()</a>.</p>
 
 </div>
 </div>
@@ -1306,7 +1316,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__foldl__fn.html">tuple_foldl_fn</a></code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#adcbf9dc43bf8d2bf4db2ea4ad0b6699a">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, <a class="el" href="structranges_1_1v3_1_1concat__view.html#a4f28e12284d75040b31d172fd42481f9">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>, and <a class="el" href="classranges_1_1v3_1_1cartesian__product__view.html#af516801be69bae873af4fc43cdb84b54">ranges::v3::cartesian_product_view&lt; Views &gt;::size()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#adcbf9dc43bf8d2bf4db2ea4ad0b6699a">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, <a class="el" href="classranges_1_1v3_1_1cartesian__product__view.html#af516801be69bae873af4fc43cdb84b54">ranges::v3::cartesian_product_view&lt; Views &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#a3045de22d869fc60a92941a8fee9e205">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
 
 </div>
 </div>
@@ -1342,7 +1352,7 @@ template&lt;typename T &gt; </div>
 <p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__transform__fn.html">tuple_transform_fn</a></code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#adcbf9dc43bf8d2bf4db2ea4ad0b6699a">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#a4f28e12284d75040b31d172fd42481f9">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#adcbf9dc43bf8d2bf4db2ea4ad0b6699a">ranges::v3::iter_zip_with_view&lt; detail::indirect_zip_fn_, Rngs... &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#a3045de22d869fc60a92941a8fee9e205">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
 
 </div>
 </div>

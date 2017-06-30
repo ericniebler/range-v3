@@ -115,7 +115,7 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>action</b> (Action a)</td></tr>
 <tr class="separator:ac603c9a146ecb48ac21108a54b929cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5165ec957fcd266faab67123b3b067b5"><td class="memTemplParams" colspan="2"><a id="a5165ec957fcd266faab67123b3b067b5"></a>
-template&lt;typename Rng , typename... Rest, requires  = (Range&lt;Rng &amp;&gt;() &amp;&amp; Invocable&lt;Action const&amp;, Rng &amp;, Rest...&gt;())&gt; </td></tr>
+template&lt;typename Rng , typename... Rest, requires  = (ActionConcept&lt;Rng &amp;, Rest...&gt;())&gt; </td></tr>
 <tr class="memitem:a5165ec957fcd266faab67123b3b067b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, Rest &amp;&amp;... rest) const -&gt; decltype(invoke(action_, rng, static_cast&lt; Rest &amp;&amp;&gt;(rest)...))</td></tr>
 <tr class="separator:a5165ec957fcd266faab67123b3b067b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a691ccdd6bea9bb6a2b39d5bb76b997fe"><td class="memTemplParams" colspan="2"><a id="a691ccdd6bea9bb6a2b39d5bb76b997fe"></a>

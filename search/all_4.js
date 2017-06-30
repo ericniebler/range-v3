@@ -32,7 +32,7 @@ var searchData=
   ['distance_5fcompare',['distance_compare',['../group__group-core.html#gad16934d0fd0cfafd1c74e70349a7aa02',1,'ranges::v3']]],
   ['distance_5fcompare_5ffn',['distance_compare_fn',['../structranges_1_1v3_1_1distance__compare__fn.html',1,'ranges::v3']]],
   ['distance_5ffn',['distance_fn',['../structranges_1_1v3_1_1distance__fn.html',1,'ranges::v3']]],
-  ['distance_5fto',['distance_to',['../structranges_1_1v3_1_1chunk__view_1_1adaptor.html#a8135ffa8f96a7bb5465fdc83be5b3892',1,'ranges::v3::chunk_view::adaptor::distance_to()'],['../group__group-views.html#ga6c0504e4d48f1ea8c982c727319b8a4c',1,'ranges::v3::intersperse_view::cursor_adaptor::distance_to()']]],
+  ['distance_5fto',['distance_to',['../group__group-views.html#ga6c0504e4d48f1ea8c982c727319b8a4c',1,'ranges::v3::intersperse_view::cursor_adaptor']]],
   ['divides',['divides',['../group__math.html#ga4d16896fb397ec3ded21808fc2749b41',1,'meta::divides()'],['../group__lazy__math.html#gaf1da11678b66429e1e05b9b2360f7344',1,'meta::lazy::divides()']]],
   ['drop',['drop',['../group__group-actions.html#ga1e36152aecd17031d25fea4fe8da2b69',1,'ranges::v3::action::drop_fn::drop()'],['../group__transformation.html#ga296ab5ef9a04a0c2d41b2d18721e2d18',1,'meta::drop()'],['../group__lazy__transformation.html#ga8351de5a2ed6b151477685a27ca9253e',1,'meta::lazy::drop()']]],
   ['drop_2ehpp',['drop.hpp',['../action_2drop_8hpp.html',1,'(Global Namespace)'],['../view_2drop_8hpp.html',1,'(Global Namespace)']]],

@@ -82,6 +82,10 @@ var group__group_algorithms =
       [ "operator()", "structranges_1_1v3_1_1for__each__fn.html#add11f73a1f1a5bdb557193c405d1aeb2", null ],
       [ "operator()", "structranges_1_1v3_1_1for__each__fn.html#a3e635b60a53796adce0c37cc47f3312c", null ]
     ] ],
+    [ "for_each_n_fn", "structranges_1_1v3_1_1for__each__n__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1for__each__n__fn.html#ae9de502c9eccc88eea036ee2df3dbeeb", null ],
+      [ "operator()", "structranges_1_1v3_1_1for__each__n__fn.html#a56731e28f5b193b713db36bd96d4d71a", null ]
+    ] ],
     [ "generate_fn", "structranges_1_1v3_1_1generate__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1generate__fn.html#a098aded86afcbdf6c975f96fb3c74d71", null ],
       [ "operator()", "structranges_1_1v3_1_1generate__fn.html#a45748f91f64bec2e1345cdbd58f6c554", null ]
@@ -371,6 +375,7 @@ var group__group_algorithms =
     [ "find_if", "group__group-algorithms.html#gab464824a7f109d2558fdc6797a2f8f30", null ],
     [ "find_if_not", "group__group-algorithms.html#ga08bc30fd08f204302b337ce54b3b07fd", null ],
     [ "for_each", "group__group-algorithms.html#ga464fdff47a78da97a351e343718159af", null ],
+    [ "for_each_n", "group__group-algorithms.html#ga6bc0921e0b94f9369338a8b3ca7b6609", null ],
     [ "generate", "group__group-algorithms.html#ga17d54b71b63b41073240bc3c6a9e2153", null ],
     [ "generate_n", "group__group-algorithms.html#ga5a11415b8607bcfb76915043fb52b067", null ],
     [ "includes", "group__group-algorithms.html#ga171d9b16c205d86e45c3255ac01d7caa", null ],

@@ -24,7 +24,7 @@ var dir_7e8da53cb0bc1762e5680ccc5286e997 =
     [ "memory.hpp", "memory_8hpp.html", "memory_8hpp" ],
     [ "move.hpp", "utility_2move_8hpp.html", "utility_2move_8hpp" ],
     [ "nullptr_v.hpp", "nullptr__v_8hpp.html", "nullptr__v_8hpp" ],
-    [ "optional.hpp", "optional_8hpp.html", null ],
+    [ "optional.hpp", "optional_8hpp.html", "optional_8hpp" ],
     [ "random.hpp", "random_8hpp.html", "random_8hpp" ],
     [ "scope_exit.hpp", "scope__exit_8hpp.html", "scope__exit_8hpp" ],
     [ "semiregular.hpp", "semiregular_8hpp.html", "semiregular_8hpp" ],

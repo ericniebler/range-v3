@@ -89,10 +89,51 @@ $(document).ready(function(){initNavTree('optional_8hpp.html','');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">optional.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bad__optional__access.html">ranges::v3::bad_optional_access</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1in__place__t.html">ranges::v3::in_place_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1nullopt__t.html">ranges::v3::nullopt_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1nullopt__t_1_1tag.html">ranges::v3::nullopt_t::tag</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1optional.html">ranges::v3::optional&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1optional.html">ranges::v3::optional&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab168a475e34987234abcdf5a7482d4c7"><td class="memTemplParams" colspan="2"><a id="ab168a475e34987234abcdf5a7482d4c7"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ab168a475e34987234abcdf5a7482d4c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_optional</b> (T &amp;&amp;t) noexcept(noexcept(decltype(optional&lt; detail::decay_t&lt; T &gt;&gt;{static_cast&lt; T &amp;&amp;&gt;(t)})(optional&lt; detail::decay_t&lt; T &gt;&gt;{static_cast&lt; T &amp;&amp;&gt;(t)}))) -&gt; decltype(optional&lt; detail::decay_t&lt; T &gt;&gt;</td></tr>
+<tr class="separator:ab168a475e34987234abcdf5a7482d4c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e11090a2da382e87e58f9a206641c94"><td class="memTemplParams" colspan="2"><a id="a6e11090a2da382e87e58f9a206641c94"></a>
+template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:a6e11090a2da382e87e58f9a206641c94"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_optional</b> (Args &amp;&amp;... args) noexcept(noexcept(decltype(optional&lt; T &gt;{in_place, static_cast&lt; Args &amp;&amp;&gt;(args)...})(optional&lt; T &gt;{in_place, static_cast&lt; Args &amp;&amp;&gt;(args)...}))) -&gt; decltype(optional&lt; T &gt;</td></tr>
+<tr class="separator:a6e11090a2da382e87e58f9a206641c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0b5820b9597c3f1709d70ff86bde5ad"><td class="memTemplParams" colspan="2"><a id="ac0b5820b9597c3f1709d70ff86bde5ad"></a>
+template&lt;typename T , typename U , typename... Args&gt; </td></tr>
+<tr class="memitem:ac0b5820b9597c3f1709d70ff86bde5ad"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_optional</b> (std::initializer_list&lt; U &gt; il, Args &amp;&amp;... args) noexcept(noexcept(decltype(optional&lt; T &gt;{in_place, il, static_cast&lt; Args &amp;&amp;&gt;(args)...})(optional&lt; T &gt;{in_place, il, static_cast&lt; Args &amp;&amp;&gt;(args)...}))) -&gt; decltype(optional&lt; T &gt;</td></tr>
+<tr class="separator:ac0b5820b9597c3f1709d70ff86bde5ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a550aea94af40a144f30dbceedb579dd2"><td class="memItemLeft" align="right" valign="top"><a id="a550aea94af40a144f30dbceedb579dd2"></a>
+constexpr in_place_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::in_place</b> {}</td></tr>
+<tr class="separator:a550aea94af40a144f30dbceedb579dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

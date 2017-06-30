@@ -4,6 +4,7 @@ var searchData=
   ['back_5finsert_5fiterator',['back_insert_iterator',['../structranges_1_1v3_1_1back__insert__iterator.html',1,'ranges::v3']]],
   ['back_5finserter_5ffn',['back_inserter_fn',['../structranges_1_1v3_1_1back__inserter__fn.html',1,'ranges::v3']]],
   ['bad_5fany_5fcast',['bad_any_cast',['../structranges_1_1v3_1_1bad__any__cast.html',1,'ranges::v3']]],
+  ['bad_5foptional_5faccess',['bad_optional_access',['../structranges_1_1v3_1_1bad__optional__access.html',1,'ranges::v3']]],
   ['basic_5fcommon_5freference',['basic_common_reference',['../structranges_1_1v3_1_1basic__common__reference.html',1,'ranges::v3']]],
   ['basic_5fiterator',['basic_iterator',['../structranges_1_1v3_1_1basic__iterator.html',1,'ranges::v3']]],
   ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],

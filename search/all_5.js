@@ -1,9 +1,8 @@
 var searchData=
 [
   ['element',['Element',['../class_element.html',1,'']]],
-  ['empty',['empty',['../group__list.html#gada7280d87ece1a3dc6b203ee0e86e71c',1,'meta::empty()'],['../group__lazy__list.html#gae1510c54d075eb467afb4f93d8b3cd7c',1,'meta::lazy::empty()'],['../group__group-core.html#ga5b1e16eeda1eace75d315eea26562fe3',1,'ranges::v3::empty()']]],
+  ['empty',['empty',['../structranges_1_1v3_1_1view__interface.html#aa2935e0995569e1163d5447f2e012124',1,'ranges::v3::view_interface::empty()'],['../group__list.html#gada7280d87ece1a3dc6b203ee0e86e71c',1,'meta::empty()'],['../group__lazy__list.html#gae1510c54d075eb467afb4f93d8b3cd7c',1,'meta::lazy::empty()'],['../group__group-core.html#gaa6cc5a86498c23681ebc5276f432f862',1,'ranges::v3::empty()']]],
   ['empty_2ehpp',['empty.hpp',['../empty_8hpp.html',1,'(Global Namespace)'],['../view_2empty_8hpp.html',1,'(Global Namespace)']]],
-  ['empty_5ffn',['empty_fn',['../structranges_1_1v3_1_1empty__fn.html',1,'ranges::v3']]],
   ['empty_5fview',['empty_view',['../structranges_1_1v3_1_1empty__view.html',1,'ranges::v3']]],
   ['enable_5fview',['enable_view',['../structranges_1_1v3_1_1enable__view.html',1,'ranges::v3']]],
   ['end',['end',['../structranges_1_1v3_1_1tail__view.html#a5298f7cd108db089ead272446b820503',1,'ranges::v3::tail_view::end()'],['../structranges_1_1v3_1_1view__facade.html#ae461c1a6d58b7a1a50a7aca790c4d5df',1,'ranges::v3::view_facade::end()'],['../group__group-core.html#ga6e1ed0455c69f1a3536870eb05141260',1,'ranges::v3::end()']]],

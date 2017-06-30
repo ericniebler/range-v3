@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['tag',['tag',['../structranges_1_1v3_1_1nullopt__t_1_1tag.html',1,'ranges::v3::nullopt_t']]],
   ['tagged',['tagged',['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html',1,'ranges::v3::tagged_detail::tagged&lt; Base, Tags &gt;'],['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a8adf6535297981be1c2aef6f3ff43c80',1,'ranges::v3::tagged_detail::tagged::tagged(Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)'],['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a0290f2cb92d9ea5615c77b0aac11e0cf',1,'ranges::v3::tagged_detail::tagged::tagged(Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)']]],
   ['tagged_5fcompressed_5ftuple',['tagged_compressed_tuple',['../classtagged__compressed__tuple.html',1,'']]],
   ['tagged_5fpair_2ehpp',['tagged_pair.hpp',['../tagged__pair_8hpp.html',1,'']]],

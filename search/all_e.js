@@ -18,6 +18,7 @@ var searchData=
   ['nth_5felement',['nth_element',['../group__group-algorithms.html#gae78394b29cc6c1458b062d7a5d5ec8a7',1,'ranges::v3']]],
   ['nth_5felement_2ehpp',['nth_element.hpp',['../nth__element_8hpp.html',1,'']]],
   ['nth_5felement_5ffn',['nth_element_fn',['../structranges_1_1v3_1_1nth__element__fn.html',1,'ranges::v3']]],
+  ['nullopt_5ft',['nullopt_t',['../structranges_1_1v3_1_1nullopt__t.html',1,'ranges::v3']]],
   ['nullptr_5fv_2ehpp',['nullptr_v.hpp',['../nullptr__v_8hpp.html',1,'']]],
   ['numeric_2ehpp',['numeric.hpp',['../numeric_8hpp.html',1,'']]]
 ];

@@ -1,5 +1,6 @@
 var structranges_1_1v3_1_1iterator__range =
 [
+    [ "empty", "structranges_1_1v3_1_1iterator__range.html#a8149712882587c4647647cf87c266ebe", null ],
     [ "operator std::pair< X, Y >", "structranges_1_1v3_1_1iterator__range.html#a5d838e3c3659d0a9493ec731a68dfc3b", null ],
     [ "operator=", "structranges_1_1v3_1_1iterator__range.html#a7668bd1564b65d4b942afdb2b1f85aba", null ],
     [ "iterator", "structranges_1_1v3_1_1iterator__range.html#a51c2174885ebb97737f4ef3c5cfda430", null ],

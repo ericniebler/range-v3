@@ -124,8 +124,8 @@ Supported Compilers</h2>
 <hr/>
 <p> The code is known to work on the following compilers:</p>
 <ul>
-<li>clang 3.5.2</li>
-<li>GCC 4.9.4</li>
+<li>clang 3.6.2</li>
+<li>GCC 4.9.1</li>
 </ul>
 <h1><a class="anchor" id="tutorial-quick-start"></a>
 Quick Start</h1>
@@ -184,6 +184,8 @@ Range Views</h1>
 <dd>Type-erased range of elements with value type <code>T</code>; can store <em>any</em> range with this value type. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1bounded__fn.html"><code>view::bounded</code></a> </dt>
 <dd>Convert the source range to a <em>bounded</em> range, where the type of the <code>end</code> is the same as the <code>begin</code>. Useful for iterating over a range with C++'s range-based <code>for</code> loop. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1cartesian__product__fn.html"><code>view::cartesian_product</code></a> </dt>
+<dd>Enumerates the n-ary cartesian product of <code>n</code> ranges, i.e., generates all <code>n</code>-tuples <code>(e1, e2, ... , en)</code> where <code>e1</code> is an element of the first range, <code>e2</code> is an element of the second range, etc. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1chunk__fn.html"><code>view::chunk</code></a> </dt>
 <dd>Given a source range and an integer <em>N</em>, produce a range of contiguous ranges where each inner range has <em>N</em> contiguous elements. The final range may have fewer than <em>N</em> elements. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1concat__fn.html"><code>view::concat</code></a> </dt>
@@ -252,6 +254,8 @@ Range Views</h1>
 <dd>Given a value, create a range with exactly one element. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1slice__fn.html"><code>view::slice</code></a> </dt>
 <dd>Give a source range a lower bound (inclusive) and an upper bound (exclusive), create a new range that begins and ends at the specified offsets. Both the begin and the end can be integers relative to the front, or relative to the end with "`end-2`" syntax. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1sliding__fn.html"><code>view::sliding</code></a> </dt>
+<dd>Given a range and a count <code>n</code>, place a window over the first <code>n</code> elements of the underlying range. Return the contents of that window as the first element of the adapted range, then slide the window forward one element at a time until hitting the end of the underlying range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1split__fn.html"><code>view::split</code></a> </dt>
 <dd>Given a source range and a delimiter specifier, split the source range into a range of ranges using the delimiter specifier to find the boundaries. The delimiter specifier can be a value, a subrange, a predicate, or a function. The predicate should take an single argument of the range's reference type and return true if and only if the element is part of a delimiter. The function should accept current/end iterators into the source range and return <code>make_pair(true, iterator_past_the_delimiter)</code> if the current position is a boundary; otherwise, <code>make_pair(false, cur)</code>. The delimiter character(s) are excluded from the resulting range of ranges. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1stride__fn.html"><code>view::stride</code></a> </dt>

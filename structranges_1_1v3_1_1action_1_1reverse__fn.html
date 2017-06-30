@@ -91,6 +91,8 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1action_1_1revers
 <div class="header">
   <div class="summary">
 <a href="#related">Synopsis of methods</a> &#124;
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1action_1_1reverse__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -105,12 +107,19 @@ Synopsis of methods</h2></td></tr>
 <tr class="memitem:ga4c5cc0cc96a941b2fdc9fa5d744da163"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1action_1_1action.html">action</a>&lt; <a class="el" href="structranges_1_1v3_1_1action_1_1reverse__fn.html">reverse_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-actions.html#ga4c5cc0cc96a941b2fdc9fa5d744da163">reverse</a> {}</td></tr>
 <tr class="separator:ga4c5cc0cc96a941b2fdc9fa5d744da163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9a67f46de8ee960a62971352c526b9d3"><td class="memTemplParams" colspan="2"><a id="a9a67f46de8ee960a62971352c526b9d3"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a9a67f46de8ee960a62971352c526b9d3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Reversible</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; Reversible_, Rng &gt;</td></tr>
+<tr class="separator:a9a67f46de8ee960a62971352c526b9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3bbcfe1f0d27adc397f4accff0204c63"><td class="memTemplParams" colspan="2"><a id="a3bbcfe1f0d27adc397f4accff0204c63"></a>
-template&lt;typename Rng , typename I  = iterator_t&lt;Rng&gt;, requires  = (BidirectionalRange&lt;Rng&gt;() &amp;&amp; Permutable&lt;I&gt;())&gt; </td></tr>
-<tr class="memitem:a3bbcfe1f0d27adc397f4accff0204c63"><td class="memTemplItemLeft" align="right" valign="top">Rng&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const</td></tr>
-<tr class="separator:a3bbcfe1f0d27adc397f4accff0204c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f29f7e0b37292c8c41b09324ff4cec1"><td class="memTemplParams" colspan="2"><a id="a2f29f7e0b37292c8c41b09324ff4cec1"></a>
+template&lt;typename Rng , requires  = (Reversible&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a2f29f7e0b37292c8c41b09324ff4cec1"><td class="memTemplItemLeft" align="right" valign="top">Rng&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const</td></tr>
+<tr class="separator:a2f29f7e0b37292c8c41b09324ff4cec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

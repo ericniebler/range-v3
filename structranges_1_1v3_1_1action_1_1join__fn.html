@@ -91,6 +91,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1action_1_1join__
 <div class="header">
   <div class="summary">
 <a href="#related">Synopsis of methods</a> &#124;
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1action_1_1join__fn-members.html">List of all members</a>  </div>
@@ -106,15 +107,15 @@ Synopsis of methods</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:adfe2b22546b3aa9c6bde93ed408eb12e"><td class="memTemplParams" colspan="2"><a id="adfe2b22546b3aa9c6bde93ed408eb12e"></a>
+<tr class="memitem:a3fa76f353d4531bec803347463395a99"><td class="memTemplParams" colspan="2"><a id="a3fa76f353d4531bec803347463395a99"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:adfe2b22546b3aa9c6bde93ed408eb12e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga016d43686336906271e9579067bd54ff">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; join_value_t&lt; Rng &gt; &gt;&gt;</td></tr>
-<tr class="separator:adfe2b22546b3aa9c6bde93ed408eb12e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fa76f353d4531bec803347463395a99"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Joinable</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; Joinable_, Rng &gt;</td></tr>
+<tr class="separator:a3fa76f353d4531bec803347463395a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0d6b7047883b975b0bf4338df04cc28"><td class="memTemplParams" colspan="2"><a id="ae0d6b7047883b975b0bf4338df04cc28"></a>
-template&lt;typename Rng , requires  = (Concept&lt;Rng&gt;())&gt; </td></tr>
+template&lt;typename Rng , requires  = (Joinable&lt;Rng&gt;())&gt; </td></tr>
 <tr class="memitem:ae0d6b7047883b975b0bf4338df04cc28"><td class="memTemplItemLeft" align="right" valign="top">join_value_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const</td></tr>
 <tr class="separator:ae0d6b7047883b975b0bf4338df04cc28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
