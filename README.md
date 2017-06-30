@@ -65,6 +65,10 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.3.0** June 30, 2017
+  - Input views may now be move-only (from @CaseyCarter)
+  - Input `any_view`s are now *much* more efficicient (from @CaseyCarter)
+  - Better support for systems lacking a working `<thread>` header (from @CaseyCarter) 
 * **0.2.6** June 21, 2017
   - Experimental coroutines with `ranges::experimental::generator` (from @CaseyCarter)
   - `ranges::optional` now behaves like `std::optional` (from @CaseyCarter)
