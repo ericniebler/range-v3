@@ -23,10 +23,8 @@
 int main()
 {
     using namespace ranges;
-    std::vector<MoveOnlyString> vs;
-    vs.emplace_back("'allo");
-    vs.emplace_back("'allo");
-    vs.emplace_back("???");
+    static const char * const data[] = {"'allo", "'allo", "???"};
+    std::vector<MoveOnlyString> vs(begin(data), end(data));
 
     auto x = vs | view::move;
     CONCEPT_ASSERT(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
@@ -44,6 +42,15 @@ int main()
     static_assert(std::is_same<MoveOnlyString&&, decltype(*x.begin())>::value, "");
     ::check_equal(vs2, {"'allo", "'allo", "???"});
     ::check_equal(vs, {"", "", ""});
+
+    {
+        MoveOnlyString data[] = {"can", "you", "hear", "me", "now?"};
+        auto rng = debug_input_view<MoveOnlyString>{data} | view::move;
+        MoveOnlyString target[sizeof(data) / sizeof(data[0])];
+        copy(rng, target);
+        ::check_equal(data, {"", "", "", "", ""});
+        ::check_equal(target, {"can", "you", "hear", "me", "now?"});
+    }
 
     return test_result();
 }

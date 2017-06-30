@@ -142,5 +142,11 @@ int main()
         models_not<concepts::SizedRange>(some_strings | view::join);
     }
 
+    {
+        int const some_int_pairs[3][2] = {{0,1},{2,3},{4,5}};
+        auto rng = debug_input_view<int const[2]>{some_int_pairs} | view::join;
+        check_equal(rng, {0,1,2,3,4,5});
+    }
+
     return ::test_result();
 }

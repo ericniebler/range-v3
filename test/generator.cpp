@@ -191,25 +191,26 @@ int main()
 {
     using namespace ranges;
 
+    auto even = [](int i){ return i % 2 == 0; };
+
     {
         auto rng = ::iota_generator(0, 10);
         ::models<concepts::SizedRange>(rng);
         CHECK(size(rng) == 10u);
-        CHECK(equal(rng, {0,1,2,3,4,5,6,7,8,9}));
+        ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
         auto rng = ::coro(::coro(::coro(::iota_generator(0, 10))));
         ::has_type<decltype(::iota_generator(0, 10)) &>(rng);
         ::models<concepts::SizedRange>(rng);
         CHECK(size(rng) == 10u);
-        CHECK(equal(rng, {0,1,2,3,4,5,6,7,8,9}));
+        ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
-        auto even = [](int i){ return i % 2 == 0; };
         auto rng = ::coro(view::ints | view::filter(even) | view::take_exactly(10));
         ::models<concepts::SizedRange>(rng);
         CHECK(size(rng) == 10u);
-        CHECK(equal(rng, {0,2,4,6,8,10,12,14,16,18}));
+        ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
     }
     {
         auto const control = {1, 2, 3};
@@ -247,31 +248,28 @@ int main()
         auto rng = ::coro(vec);
         ::models<concepts::SizedRange>(rng);
         CHECK(size(rng) == 3u);
-        CHECK(equal(rng, {false,false,false}));
+        ::check_equal(rng, {false,false,false});
     }
-    CHECK(equal(f(42), g(42)));
-    CHECK(equal(f(42), h(42)));
 
-    // Since generator is a range, but not a view, it must be an lvalue to
-    // participate in view composition.
+    ::check_equal(f(42), g(42));
+    ::check_equal(f(42), h(42));
+
     {
-#if 0
         auto rng = h(20) | view::transform([](int &x) { return ++x; });
-#else
-        auto gen = h(20);
-        auto rng = gen | view::transform([](int &x) { return ++x; });
-#endif
         ::check_equal(rng, {1,3,5,7,9,11,13,15,17,19});
     }
 
     {
-        auto even = [](int i) { return i % 2 == 0; };
+        auto rng = f(20) | view::filter(even);
+        ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
+    }
+
+    {
         auto square = [](int i) { return i * i; };
 
         int const some_ints[] = {0,1,2,3,4,5,6,7};
-        auto rng1 = ::filter(view::all(some_ints), even);
-        auto rng2 = ::transform(view::all(rng1), square);
-        ::check_equal(rng2, {0,4,16,36});
+        auto rng = ::transform(::filter(debug_input_view<int const>{some_ints}, even), square);
+        ::check_equal(rng, {0,4,16,36});
     }
 
     std::cout << f(8) << '\n';

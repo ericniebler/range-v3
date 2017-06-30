@@ -105,5 +105,15 @@ int main()
         ::check_equal(rng2, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
     }
 
+    {
+        int const data[] = {1,2,3,4};
+        auto rng = debug_input_view<int const>{data} | view::bounded;
+        using Rng = decltype(rng);
+        CONCEPT_ASSERT(InputView<Rng>());
+        CONCEPT_ASSERT(!ForwardRange<Rng>());
+        CONCEPT_ASSERT(BoundedRange<Rng>());
+        ::check_equal(rng, {1,2,3,4});
+    }
+
     return ::test_result();
 }

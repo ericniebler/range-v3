@@ -204,12 +204,11 @@ namespace ranges
             ///
 
             struct View
-              : refines<Range>
+              : refines<Range, Movable, DefaultConstructible>
             {
                 template<typename T>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<SemiRegular, T>(),
                         concepts::is_true(detail::view_predicate_<T>())
                     ));
             };
@@ -223,7 +222,7 @@ namespace ranges
             {};
 
             struct ForwardView
-              : refines<InputView, ForwardRange>
+              : refines<InputView, ForwardRange, Copyable>
             {};
 
             struct BidirectionalView

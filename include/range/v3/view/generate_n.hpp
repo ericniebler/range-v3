@@ -38,19 +38,18 @@ namespace ranges
           : view_facade<generate_n_view<G>, finite>
         {
         private:
-            friend struct ranges::range_access;
+            friend range_access;
             using result_t = result_of_t<G&()>;
-            semiregular_t<G> gen_;
-            semiregular_t<result_t> val_;
+            movesemiregular_t<G> gen_;
+            movesemiregular_t<result_t> val_;
             std::size_t n_;
             struct cursor
             {
             private:
                 generate_n_view *rng_;
             public:
-                using single_pass = std::true_type;
                 cursor() = default;
-                cursor(generate_n_view &rng)
+                explicit cursor(generate_n_view &rng)
                   : rng_(&rng)
                 {}
                 bool equal(default_sentinel) const
@@ -74,7 +73,7 @@ namespace ranges
             }
             cursor begin_cursor()
             {
-                return {*this};
+                return cursor{*this};
             }
         public:
             generate_n_view() = default;

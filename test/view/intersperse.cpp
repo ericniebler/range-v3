@@ -148,5 +148,11 @@ int main()
         check_equal(r0, {1,42,2,42,3,42,4,42,5});
     }
 
+    {
+        int const some_ints[] = {1,2,3,4,5};
+        auto rng = debug_input_view<int const>{some_ints} | view::intersperse(42);
+        check_equal(rng, {1,42,2,42,3,42,4,42,5});
+    }
+
     return test_result();
 }

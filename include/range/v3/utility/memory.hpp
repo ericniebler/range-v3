@@ -23,10 +23,11 @@
 
 #include <memory>
 #include <type_traits>
-#include <range/v3/range_fwd.hpp>
 #include <meta/meta.hpp>
+#include <range/v3/detail/config.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/polymorphic_cast.hpp>
 
 namespace ranges
 {
@@ -44,6 +45,13 @@ namespace ranges
                         std::return_temporary_buffer(p);
                 }
             };
+
+            template<typename T, typename... Args,
+                CONCEPT_REQUIRES_(!std::is_array<T>::value)>
+            std::unique_ptr<T> make_unique(Args &&... args)
+            {
+                return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
+            }
         }
         /// \endcond
 

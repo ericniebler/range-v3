@@ -94,5 +94,12 @@ int main()
         CHECK(ranges::distance(ranges::begin(rng), ranges::end(rng)) == 30);
     }
 
+    {
+        int const data[] = {0,1,2,3};
+        auto dv = [&]{ return debug_input_view<int const>{data}; };
+        auto rng = view::concat(dv(), dv(), dv());
+        ::check_equal(rng, {0,1,2,3,0,1,2,3,0,1,2,3});
+    }
+
     return test_result();
 }

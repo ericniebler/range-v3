@@ -94,5 +94,13 @@ int main()
     CONCEPT_ASSERT(View<decltype(mutable_only)>());
     CONCEPT_ASSERT(!View<decltype(mutable_only) const>());
 
+    {
+        int const some_ints[] = {1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9};
+
+        auto rng = debug_input_view<int const>{some_ints} |
+            view::replace_if([](int i){ return i == 1; }, 42);
+        ::check_equal(rng, {42,2,3,4,5,6,7,8,9,42,2,3,4,5,6,7,8,9,42,2,3,4,5,6,7,8,9});
+    }
+
     return test_result();
 }

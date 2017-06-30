@@ -33,7 +33,7 @@ namespace ranges
         private:
             friend range_access;
             std::istream *sin_;
-            semiregular_t<Val> obj_;
+            movesemiregular_t<Val> obj_;
             struct cursor
             {
             private:

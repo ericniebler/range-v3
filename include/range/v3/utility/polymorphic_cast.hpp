@@ -5,6 +5,10 @@
 
 #ifndef RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP
 #define RANGES_V3_UTILITY_POLYMORPHIC_CAST_HPP
+
+#include <memory>
+#include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
@@ -12,10 +16,26 @@ namespace ranges
     inline namespace v3
     {
         template<typename Target, typename Source>
-        inline Target polymorphic_downcast(Source* x)
+        auto polymorphic_downcast(Source *x) noexcept ->
+            meta::if_<std::is_pointer<Target>,
+                decltype((static_cast<Target>(x), dynamic_cast<Target>(x)))>
         {
-            RANGES_ASSERT(dynamic_cast<Target>(x) == x);
-            return static_cast<Target>(x);
+            auto result = static_cast<Target>(x);
+            RANGES_ASSERT(dynamic_cast<Target>(x) == result);
+            return result;
+        }
+        template<typename Target, typename Source>
+        auto polymorphic_downcast(Source &&x) noexcept ->
+            meta::if_<std::is_reference<Target>,
+                decltype((static_cast<Target>(std::declval<Source>()),
+                    dynamic_cast<Target>(std::declval<Source>())))>
+        {
+            auto &&result = static_cast<Target>(static_cast<Source &&>(x));
+#ifndef NDEBUG
+            auto &&dresult = dynamic_cast<Target>(static_cast<Source &&>(x));
+            RANGES_ASSERT(std::addressof(dresult) == std::addressof(result));
+#endif
+            return static_cast<Target>(result);
         }
     }
 }

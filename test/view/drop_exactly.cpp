@@ -86,5 +86,13 @@ int main()
         (void)odds;
     }
 
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::drop_exactly(5);
+        using Rng = decltype(rng);
+        CONCEPT_ASSERT(InputView<Rng>());
+        CONCEPT_ASSERT(SizedRange<Rng>());
+        ::check_equal(rng, {5,6,7,8,9,10});
+    }
+
     return test_result();
 }
