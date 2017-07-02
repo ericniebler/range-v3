@@ -38,6 +38,38 @@ int main()
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("ranges::at")));
         }
+
+        try {
+            ranges::at(vi, -1);
+            CHECK(false);
+        } catch(std::out_of_range const& e) {
+            CHECK(ranges::equal(ranges::view::c_str(e.what()),
+                                ranges::view::c_str("ranges::at")));
+
+        }
+
+        auto viv = ranges::make_iterator_range( vi.begin(), vi.end() );
+        CHECK(viv.at(0) == 1);
+        CHECK(viv.at(1) == 2);
+        CHECK(viv.at(2) == 3);
+        CHECK(viv.at(3) == 4);
+
+        try {
+            viv.at(4);
+            CHECK(false);
+        } catch(std::out_of_range const& e) {
+            CHECK(ranges::equal(ranges::view::c_str(e.what()),
+                                ranges::view::c_str("view_interface::at")));
+        }
+
+        try {
+            viv.at(-1);
+            CHECK(false);
+        } catch(std::out_of_range const& e) {
+            CHECK(ranges::equal(ranges::view::c_str(e.what()),
+                                ranges::view::c_str("view_interface::at")));
+
+        }
     }
 
     {

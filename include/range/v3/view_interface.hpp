@@ -297,6 +297,17 @@ namespace ranges
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
+            /// Returns a reference to the element at specified location pos, with bounds checking.
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
+            auto at( range_difference_type_t<D> n) ->
+                decltype(std::declval<D &>().begin()[n])
+            {
+              if ( (n < 0) or (n >= derived().size()) ){
+                throw std::out_of_range("view_interface::at");
+              }
+              return derived()[n];
+            }
             /// Implicit conversion to something that looks like a container.
             template<typename Container, typename D = Derived,
                 typename = typename Container::allocator_type, // HACKHACK
