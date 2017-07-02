@@ -23,7 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/core.hpp>
-#include <range/v3/numeric/partial_sum.hpp>
+#include <range/v3/numeric/inclusive_scan.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 #include "../test_utils.hpp"
@@ -41,36 +41,69 @@ void test_one(std::array<TIn, N> const& in, std::array<TOut, N> const& expected,
 
 template<class InIter, class OutIter, class InSent = InIter> void test()
 {
-    using ranges::partial_sum;
+    using ranges::inclusive_scan;
     using ranges::make_iterator_range;
 
-    std::array<int, 5> const in{{1, 2, 3, 4, 5}};
-    std::array<int, 5> const expected{{1, 3, 6, 10, 15}};
+    { // No-init version
+        std::array<int, 5> const in{{1, 2, 3, 4, 5}};
+        std::array<int, 5> const expected{{1, 3, 6, 10, 15}};
 
-    // iterator
-    test_one(in, expected, [](auto const& in, auto& result) {
-        return partial_sum(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
-    });
+        // iterator
+        test_one(in, expected, [](auto const& in, auto& result) {
+            return inclusive_scan(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
+        });
 
-    // range + output iterator
-    test_one(in, expected, [](auto const& in, auto& result) {
-        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
-        return partial_sum(rng, OutIter(result.data()));
-    });
+        // range + output iterator
+        test_one(in, expected, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            return inclusive_scan(rng, OutIter(result.data()));
+        });
 
-    // range + output range
-    test_one(in, expected, [](auto const& in, auto& result) {
-        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
-        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
-        return partial_sum(rng, orng);
-    });
+        // range + output range
+        test_one(in, expected, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+            return inclusive_scan(rng, orng);
+        });
 
-    // BinaryOp
-    test_one(in, std::array<int, 5>{{1, -1, -4, -8, -13}}, [](auto const& in, auto& result) {
-        auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
-        auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
-        return partial_sum(rng, orng, std::minus<int>());
-    });
+        // BinaryOp
+        test_one(in, std::array<int, 5>{{1, -1, -4, -8, -13}}, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+            return inclusive_scan(rng, orng, std::minus<int>());
+        });
+    }
+
+    { // Init version
+        std::array<int, 5> const in{{1, 2, 3, 4, 5}};
+        std::array<int, 5> const expected{{10, 12, 15, 19, 24}};
+        int const init = 9;
+
+        // iterator
+        test_one(in, expected, [](auto const& in, auto& result) {
+            return inclusive_scan(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()), std::plus<int>{}, init);
+        });
+
+        // range + output iterator
+        test_one(in, expected, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            return inclusive_scan(rng, OutIter(result.data()), std::plus<int>{}, init);
+        });
+
+        // range + output range
+        test_one(in, expected, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+            return inclusive_scan(rng, orng, std::plus<int>{}, init);
+        });
+
+        // BinaryOp
+        test_one(in, std::array<int, 5>{{8, 6, 3, -1, -6}}, [](auto const& in, auto& result) {
+            auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
+            auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
+            return inclusive_scan(rng, orng, std::minus<int>(), init);
+        });
+    }
 }
 
 int main()
@@ -105,8 +138,7 @@ int main()
     test<const int *, random_access_iterator<int *>>();
     test<const int *, int *>();
 
-    using ranges::partial_sum;
-
+    using ranges::inclusive_scan;
 
     { // Test projections
         struct S {
@@ -115,8 +147,14 @@ int main()
 
         test_one(std::array<S, 5>{{{1}, {2}, {3}, {4}, {5}}}, std::array<int, 5>{{1, 3, 6, 10, 15}},
             [](auto const& in, auto& result) {
-                return partial_sum(in.data(), in.data() + in.size(), result.data(),
+                return inclusive_scan(in.data(), in.data() + in.size(), result.data(),
                     std::plus<int>(), &S::i);
+            });
+
+        test_one(std::array<S, 5>{{{1}, {2}, {3}, {4}, {5}}}, std::array<int, 5>{{10, 12, 15, 19, 24}},
+            [](auto const& in, auto& result) {
+                return inclusive_scan(in.data(), in.data() + in.size(), result.data(),
+                    std::plus<int>(), 9, &S::i);
             });
     }
 
@@ -125,7 +163,7 @@ int main()
         int ir[] = {1, 2, 6, 24, 120};
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ib[s] = {0};
-        auto r = partial_sum(ia, ib, std::multiplies<int>());
+        auto r = inclusive_scan(ia, ib, std::multiplies<int>());
         CHECK(base(std::get<0>(r)) == ia + s);
         CHECK(base(std::get<1>(r)) == ib + s);
         ::check_equal(ib, ir);
