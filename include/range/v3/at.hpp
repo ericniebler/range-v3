@@ -40,7 +40,7 @@ namespace ranges
             auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
                 decltype(begin(rng)[n])
             {
-                if( (n >= ranges::distance(rng)) or (n < 0) )
+              if( (n < 0) or (n >= ranges::distance(rng)) )
                 {
                     throw std::out_of_range("ranges::at");
                 }
