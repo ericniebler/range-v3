@@ -52,7 +52,7 @@ int main()
         CHECK(viv.at(1) == 2);
         CHECK(viv.at(2) == 3);
         CHECK(viv.at(3) == 4);
-
+        
         try {
             viv.at(4);
             CHECK(false);
@@ -63,6 +63,28 @@ int main()
 
         try {
             viv.at(-1);
+            CHECK(false);
+        } catch(std::out_of_range const& e) {
+            CHECK(ranges::equal(ranges::view::c_str(e.what()),
+                                ranges::view::c_str("view_interface::at")));
+        }
+
+        const auto cviv = viv;
+        CHECK(cviv.at(0) == 1);
+        CHECK(cviv.at(1) == 2);
+        CHECK(cviv.at(2) == 3);
+        CHECK(cviv.at(3) == 4);
+        
+        try {
+            cviv.at(4);
+            CHECK(false);
+        } catch(std::out_of_range const& e) {
+            CHECK(ranges::equal(ranges::view::c_str(e.what()),
+                                ranges::view::c_str("view_interface::at")));
+        }
+
+        try {
+            cviv.at(-1);
             CHECK(false);
         } catch(std::out_of_range const& e) {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
