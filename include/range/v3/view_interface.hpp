@@ -299,16 +299,16 @@ namespace ranges
             }
             /// Returns a reference to the element at specified location pos, with bounds checking.
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
-            auto at( range_difference_type_t<D> n) ->
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>() && SizedRange<D>())>
+            auto at(range_difference_type_t<D> n) ->
                 decltype(std::declval<D &>().begin()[n])
             {
-                using size_type = decltype( derived().size() );
-                if ( (n < 0) or
-                     (size_type(n) >= derived().size()) ){
+                using size_type = range_size_type_t<Derived>;
+                if (n < 0 || size_type(n) >= ranges::size(derived()))
+                {
                   throw std::out_of_range("view_interface::at");
                 }
-                return derived()[n];
+                return derived().begin()[n];
             }
             /// Implicit conversion to something that looks like a container.
             template<typename Container, typename D = Derived,

@@ -45,10 +45,9 @@ int main()
         } catch(std::out_of_range const& e) {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("ranges::at")));
-
         }
 
-        auto viv = ranges::make_iterator_range( vi.begin(), vi.end() );
+        auto viv = ranges::make_iterator_range(vi.begin(), vi.end());
         CHECK(viv.at(0) == 1);
         CHECK(viv.at(1) == 2);
         CHECK(viv.at(2) == 3);
@@ -68,7 +67,6 @@ int main()
         } catch(std::out_of_range const& e) {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("view_interface::at")));
-
         }
     }
 
