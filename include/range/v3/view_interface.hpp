@@ -303,12 +303,12 @@ namespace ranges
             auto at( range_difference_type_t<D> n) ->
                 decltype(std::declval<D &>().begin()[n])
             {
-              using size_type = decltype( derived().size() );
-              if ( (n < 0) or
-                   (size_type(n) >= derived().size()) ){
-                throw std::out_of_range("view_interface::at");
-              }
-              return derived()[n];
+                using size_type = decltype( derived().size() );
+                if ( (n < 0) or
+                     (size_type(n) >= derived().size()) ){
+                  throw std::out_of_range("view_interface::at");
+                }
+                return derived()[n];
             }
             /// Implicit conversion to something that looks like a container.
             template<typename Container, typename D = Derived,
