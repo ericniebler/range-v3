@@ -30,16 +30,14 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename O, typename BOp = plus, typename P = ident,
-            typename V = value_type_t<I>,
-            typename X = concepts::Invocable::result_t<P&, V>,
-            typename Y = concepts::Invocable::result_t<BOp&, X, X>>
+            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>,
+            typename Y = reference_t<X>>
         using PartialSummable = meta::strict_and<
+            SemiRegular<detail::decay_t<Y>>,
             InputIterator<I>,
-            OutputIterator<O, X>,
-            Invocable<P&, V>,
-            CopyConstructible<uncvref_t<X>>,
-            Invocable<BOp&, X, X>,
-            Assignable<uncvref_t<X>&, Y>>;
+            OutputIterator<O, detail::decay_t<Y>&>,
+            IndirectRegularInvocable<BOp, detail::decay_t<Y>*, X>,
+            Assignable<detail::decay_t<Y>&, indirect_result_of_t<BOp&(detail::decay_t<Y>*, X)>>>;
 
         struct partial_sum_fn
         {
@@ -50,19 +48,21 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
-                using V = value_type_t<I>;
-                using X = concepts::Invocable::result_t<P&, V>;
-                coerce<V> v;
-                coerce<X> x;
-
+                using X = projected<projected<I, coerce<value_type_t<I>>>, P>;
+                using Y = reference_t<X>;
+                coerce<value_type_t<I>> v;
                 if(begin != end && result != end_result)
                 {
-                    auto t(x(invoke(proj, v(*begin))));
+                    auto &&tmp1 = *begin;
+                    auto &&tmp2 = v((decltype(tmp1) &&) tmp1);
+                    detail::decay_t<Y> t(invoke(proj, (decltype(tmp2) &&) tmp2));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        t = invoke(bop, t, invoke(proj, *begin));
+                        auto &&tmp3 = *begin;
+                        auto &&tmp4 = v((decltype(tmp3) &&) tmp3);
+                        t = invoke(bop, t, invoke(proj, (decltype(tmp4) &&) tmp4));
                         *result = t;
                     }
                 }
