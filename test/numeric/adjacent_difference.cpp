@@ -43,29 +43,31 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
     using ranges::adjacent_difference;
     using ranges::make_iterator_range;
 
-    std::array<int, 5> const in{{15, 10, 6, 3, 1}};
-    std::array<int, 5> const expected{{15, -5, -4, -3, -2}};
+    using ArrayT = std::array<int, 5>;
+
+    ArrayT const in{{15, 10, 6, 3, 1}};
+    ArrayT const expected{{15, -5, -4, -3, -2}};
 
     // iterator
-    test_one(in, expected, [](auto const& in, auto& result) {
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
         return adjacent_difference(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
     });
 
     // range + output iterator
-    test_one(in, expected, [](auto const& in, auto& result) {
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
         auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
         return adjacent_difference(rng, OutIter(result.data()));
     });
 
     // range + output range
-    test_one(in, expected, [](auto const& in, auto& result) {
+    test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
         auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
         auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
         return adjacent_difference(rng, orng);
     });
 
     // BinaryOp
-    test_one(in, std::array<int, 5>{{15, 25, 16, 9, 4}}, [](auto const& in, auto& result) {
+    test_one(in, ArrayT{{15, 25, 16, 9, 4}}, [](ArrayT const& in, ArrayT& result) {
         auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
         auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
         return adjacent_difference(rng, orng, std::plus<int>());
@@ -111,8 +113,11 @@ int main()
             int i;
         };
 
-        test_one(std::array<S, 5>{{{15}, {10}, {6}, {3}, {1}}}, std::array<int, 5>{{15, -5, -4, -3, -2}},
-            [](auto const& in, auto& result) {
+        using SArrayT = std::array<S, 5>;
+        using ArrayT = std::array<int, 5>;
+
+        test_one(SArrayT{{{15}, {10}, {6}, {3}, {1}}}, ArrayT{{15, -5, -4, -3, -2}},
+            [](SArrayT const& in, ArrayT& result) {
                 return adjacent_difference(in.data(), in.data() + in.size(), result.data(),
                     std::minus<int>(), &S::i);
             });

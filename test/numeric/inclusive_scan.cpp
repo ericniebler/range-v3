@@ -44,30 +44,32 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
     using ranges::inclusive_scan;
     using ranges::make_iterator_range;
 
+    using ArrayT = std::array<int, 5>;
+
     { // No-init version
-        std::array<int, 5> const in{{1, 2, 3, 4, 5}};
-        std::array<int, 5> const expected{{1, 3, 6, 10, 15}};
+        ArrayT const in{{1, 2, 3, 4, 5}};
+        ArrayT const expected{{1, 3, 6, 10, 15}};
 
         // iterator
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             return inclusive_scan(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()));
         });
 
         // range + output iterator
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             return inclusive_scan(rng, OutIter(result.data()));
         });
 
         // range + output range
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
             return inclusive_scan(rng, orng);
         });
 
         // BinaryOp
-        test_one(in, std::array<int, 5>{{1, -1, -4, -8, -13}}, [](auto const& in, auto& result) {
+        test_one(in, ArrayT{{1, -1, -4, -8, -13}}, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
             return inclusive_scan(rng, orng, std::minus<int>());
@@ -75,30 +77,30 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
     }
 
     { // Init version
-        std::array<int, 5> const in{{1, 2, 3, 4, 5}};
-        std::array<int, 5> const expected{{10, 12, 15, 19, 24}};
+        ArrayT const in{{1, 2, 3, 4, 5}};
+        ArrayT const expected{{10, 12, 15, 19, 24}};
         int const init = 9;
 
         // iterator
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             return inclusive_scan(InIter(in.data()), InSent(in.data() + in.size()), OutIter(result.data()), std::plus<int>{}, init);
         });
 
         // range + output iterator
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             return inclusive_scan(rng, OutIter(result.data()), std::plus<int>{}, init);
         });
 
         // range + output range
-        test_one(in, expected, [](auto const& in, auto& result) {
+        test_one(in, expected, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
             return inclusive_scan(rng, orng, std::plus<int>{}, init);
         });
 
         // BinaryOp
-        test_one(in, std::array<int, 5>{{8, 6, 3, -1, -6}}, [](auto const& in, auto& result) {
+        test_one(in, ArrayT{{8, 6, 3, -1, -6}}, [](ArrayT const& in, ArrayT& result) {
             auto rng = make_iterator_range(InIter(in.data()), InSent(in.data() + in.size()));
             auto orng = make_iterator_range(OutIter(result.data()), OutIter(result.data() + result.size()));
             return inclusive_scan(rng, orng, std::minus<int>(), init);
@@ -145,14 +147,17 @@ int main()
             int i;
         };
 
-        test_one(std::array<S, 5>{{{1}, {2}, {3}, {4}, {5}}}, std::array<int, 5>{{1, 3, 6, 10, 15}},
-            [](auto const& in, auto& result) {
+        using SArrayT = std::array<S, 5>;
+        using ArrayT = std::array<int, 5>;
+
+        test_one(SArrayT{{{1}, {2}, {3}, {4}, {5}}}, ArrayT{{1, 3, 6, 10, 15}},
+            [](SArrayT const& in, ArrayT& result) {
                 return inclusive_scan(in.data(), in.data() + in.size(), result.data(),
                     std::plus<int>(), &S::i);
             });
 
-        test_one(std::array<S, 5>{{{1}, {2}, {3}, {4}, {5}}}, std::array<int, 5>{{10, 12, 15, 19, 24}},
-            [](auto const& in, auto& result) {
+        test_one(SArrayT{{{1}, {2}, {3}, {4}, {5}}}, ArrayT{{10, 12, 15, 19, 24}},
+            [](SArrayT const& in, ArrayT& result) {
                 return inclusive_scan(in.data(), in.data() + in.size(), result.data(),
                     std::plus<int>(), 9, &S::i);
             });
