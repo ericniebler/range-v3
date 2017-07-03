@@ -297,6 +297,32 @@ namespace ranges
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
+            /// Returns a reference to the element at specified location pos, with bounds checking.
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>() && SizedRange<D>())>
+            auto at(range_difference_type_t<D> n) ->
+                decltype(std::declval<D &>().begin()[n])
+            {
+                using size_type = range_size_type_t<Derived>;
+                if (n < 0 || size_type(n) >= ranges::size(derived()))
+                {
+                    throw std::out_of_range("view_interface::at");
+                }
+                return derived().begin()[n];
+            }
+            /// \overload
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>() && SizedRange<D const>())>
+            auto at(range_difference_type_t<D> n) const  ->
+                decltype(std::declval<D const &>().begin()[n])
+            {
+                using size_type = range_size_type_t<Derived>;
+                if (n < 0 || size_type(n) >= ranges::size(derived()))
+                {
+                    throw std::out_of_range("view_interface::at");
+                }
+                return derived().begin()[n];
+            }
             /// Implicit conversion to something that looks like a container.
             template<typename Container, typename D = Derived,
                 typename = typename Container::allocator_type, // HACKHACK
