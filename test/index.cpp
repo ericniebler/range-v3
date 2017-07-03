@@ -31,18 +31,24 @@ int main()
         CHECK(ranges::at(vi, 2) == 3);
         CHECK(ranges::at(vi, 3) == 4);
 
-        try {
+        try
+        {
             ranges::at(vi, 4);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("ranges::at")));
         }
 
-        try {
+        try
+        {
             ranges::at(vi, -1);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("ranges::at")));
         }
@@ -53,18 +59,24 @@ int main()
         CHECK(viv.at(2) == 3);
         CHECK(viv.at(3) == 4);
         
-        try {
+        try
+        {
             viv.at(4);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("view_interface::at")));
         }
 
-        try {
+        try
+        {
             viv.at(-1);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("view_interface::at")));
         }
@@ -75,18 +87,24 @@ int main()
         CHECK(cviv.at(2) == 3);
         CHECK(cviv.at(3) == 4);
         
-        try {
+        try
+        {
             cviv.at(4);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("view_interface::at")));
         }
 
-        try {
+        try
+        {
             cviv.at(-1);
             CHECK(false);
-        } catch(std::out_of_range const& e) {
+        }
+        catch(std::out_of_range const& e)
+        {
             CHECK(ranges::equal(ranges::view::c_str(e.what()),
                                 ranges::view::c_str("view_interface::at")));
         }
