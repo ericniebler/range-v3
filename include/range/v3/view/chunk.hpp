@@ -346,7 +346,7 @@ namespace ranges
         public:
             chunk_view() = default;
             RANGES_CXX14_CONSTEXPR
-            chunk_view(Rng &&rng, range_difference_type_t<Rng> n)
+            chunk_view(Rng rng, range_difference_type_t<Rng> n)
               : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng const>())

@@ -204,5 +204,13 @@ int main()
         ::check_equal(rng, expected);
     }
 
+    {
+        // Regression test for not-exactly #567 (https://github.com/ericniebler/range-v3/issues/567#issuecomment-315148392)
+        int some_ints[] = {0,1,2,3};
+        int const expected[][2] = {{0, 1}, {2, 3}};
+        auto rng = view::all(some_ints);
+        ::check_equal(rng | view::chunk(2), expected);
+    }
+
     return ::test_result();
 }

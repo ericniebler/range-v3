@@ -118,15 +118,12 @@ namespace ranges
                         meta::not_<std::is_same<Val, difference_t>>,
                         meta::_t<std::make_signed<difference_t>>,
                         meta::if_c<
-                            (bits < 8),
-                            std::int_fast8_t,
+                            (bits < 16),
+                            std::int_fast16_t,
                             meta::if_c<
-                                (bits < 16),
-                                std::int_fast16_t,
-                                meta::if_c<
-                                    (bits < 32),
-                                    std::int_fast32_t,
-                                    std::int_fast64_t> > > >;
+                                (bits < 32),
+                                std::int_fast32_t,
+                                std::int_fast64_t>>>;
             };
 
             template<typename Val>
@@ -171,7 +168,7 @@ namespace ranges
                 static_assert(sizeof(iota_difference_t<Val>) >= sizeof(Val),
                     "iota_difference_type must be at least as wide as the signed integer type; "
                     "otherwise the expression below might overflow when to - from would not.");
-                return static_cast<D>(to) - static_cast<D>(from);  
+                return static_cast<D>(to) - static_cast<D>(from);
             }
 
             template<typename Val, CONCEPT_REQUIRES_(UnsignedIntegral<Val>())>
@@ -543,7 +540,7 @@ namespace ranges
                 {
                     return iota_view<Val>{value};
                 }
-                
+
                 template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
