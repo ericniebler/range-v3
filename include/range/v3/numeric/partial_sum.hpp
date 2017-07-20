@@ -35,34 +35,30 @@ namespace ranges
         using PartialSummable = meta::strict_and<
             SemiRegular<detail::decay_t<Y>>,
             InputIterator<I>,
-            OutputIterator<O, detail::decay_t<Y>&>,
+            OutputIterator<O, detail::decay_t<Y> const &>,
             IndirectRegularInvocable<BOp, detail::decay_t<Y>*, X>,
             Assignable<detail::decay_t<Y>&, indirect_result_of_t<BOp&(detail::decay_t<Y>*, X)>>>;
 
         struct partial_sum_fn
         {
-            template<typename I, typename S, typename O, typename S2,
+            template<typename I, typename S1, typename O, typename S2,
                 typename BOp = plus, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
+                CONCEPT_REQUIRES_(Sentinel<S1, I>() && Sentinel<S2, O>() &&
                     PartialSummable<I, O, BOp, P>())>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
+            operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
                 using X = projected<projected<I, coerce<value_type_t<I>>>, P>;
                 using Y = reference_t<X>;
-                coerce<value_type_t<I>> v;
+                coerce<value_type_t<I>> val;
                 if(begin != end && result != end_result)
                 {
-                    auto &&tmp1 = *begin;
-                    auto &&tmp2 = v((decltype(tmp1) &&) tmp1);
-                    detail::decay_t<Y> t(invoke(proj, (decltype(tmp2) &&) tmp2));
+                    detail::decay_t<Y> t(invoke(proj, val(*begin)));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        auto &&tmp3 = *begin;
-                        auto &&tmp4 = v((decltype(tmp3) &&) tmp3);
-                        t = invoke(bop, t, invoke(proj, (decltype(tmp4) &&) tmp4));
+                        t = invoke(bop, t, invoke(proj, val(*begin)));
                         *result = t;
                     }
                 }
