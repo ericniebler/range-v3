@@ -29,15 +29,19 @@ namespace ranges
 {
     inline namespace v3
     {
+        // axiom: BOp is associative over values of I.
+        template<typename I, typename BOp>
+        using IndirectSemigroup = meta::strict_and<
+            Readable<I>,
+            Copyable<value_type_t<I>>,
+            IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>>;
+
         template<typename I, typename O, typename BOp = plus, typename P = ident,
-            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>,
-            typename Y = reference_t<X>>
+            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>>
         using PartialSummable = meta::strict_and<
-            SemiRegular<detail::decay_t<Y>>,
             InputIterator<I>,
-            OutputIterator<O, detail::decay_t<Y> const &>,
-            IndirectRegularInvocable<BOp, detail::decay_t<Y>*, X>,
-            Assignable<detail::decay_t<Y>&, indirect_result_of_t<BOp&(detail::decay_t<Y>*, X)>>>;
+            IndirectSemigroup<X, BOp>,
+            OutputIterator<O, value_type_t<X> const &>>;
 
         struct partial_sum_fn
         {
@@ -49,16 +53,16 @@ namespace ranges
             operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
                 using X = projected<projected<I, coerce<value_type_t<I>>>, P>;
-                using Y = reference_t<X>;
-                coerce<value_type_t<I>> val;
+                coerce<value_type_t<I>> val_i;
+                coerce<value_type_t<X>> val_x;
                 if(begin != end && result != end_result)
                 {
-                    detail::decay_t<Y> t(invoke(proj, val(*begin)));
+                    value_type_t<X> t(invoke(proj, val_i(*begin)));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        t = invoke(bop, t, invoke(proj, val(*begin)));
+                        t = val_x(invoke(bop, t, invoke(proj, val_i(*begin))));
                         *result = t;
                     }
                 }
