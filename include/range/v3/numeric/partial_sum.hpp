@@ -29,6 +29,19 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            template <class I>
+            struct as_value_type_t
+            {
+                coerce<value_type_t<I>> fn_;
+                template <class T>
+                auto operator()(T &&t) const -> decltype(fn_((T &&)t)) &;
+            };
+        }
+        /// \endcond
+
         // axiom: BOp is associative over values of I.
         template<typename I, typename BOp>
         using IndirectSemigroup = meta::strict_and<
@@ -37,7 +50,7 @@ namespace ranges
             IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>>;
 
         template<typename I, typename O, typename BOp = plus, typename P = ident,
-            typename X = projected<projected<I, coerce<value_type_t<I>>>, P>>
+            typename X = projected<projected<I, detail::as_value_type_t<I>>, P>>
         using PartialSummable = meta::strict_and<
             InputIterator<I>,
             IndirectSemigroup<X, BOp>,
@@ -52,17 +65,19 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
-                using X = projected<projected<I, coerce<value_type_t<I>>>, P>;
+                using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
                 coerce<value_type_t<I>> val_i;
                 coerce<value_type_t<X>> val_x;
                 if(begin != end && result != end_result)
                 {
-                    value_type_t<X> t(invoke(proj, val_i(*begin)));
+                    auto &&cur1 = val_i(*begin);
+                    value_type_t<X> t(invoke(proj, cur1));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        t = val_x(invoke(bop, t, invoke(proj, val_i(*begin))));
+                        auto &&cur2 = val_i(*begin);
+                        t = val_x(invoke(bop, t, invoke(proj, cur2)));
                         *result = t;
                     }
                 }
