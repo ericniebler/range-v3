@@ -32,13 +32,17 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template <class I>
-            struct as_value_type_t
+            // Only needed for type-checking purposes:
+            struct as_lvalue_fn
             {
-                coerce<value_type_t<I>> fn_;
-                template <class T>
-                auto operator()(T &&t) const -> decltype(fn_((T &&)t)) &;
+                template<typename T>
+                constexpr T &operator()(T &&t) const noexcept
+                {
+                    return t;
+                }
             };
+            template<typename I>
+            using as_value_type_t = composed<as_lvalue_fn, coerce<value_type_t<I>>>;
         }
         /// \endcond
 
