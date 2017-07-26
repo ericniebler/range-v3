@@ -29,40 +29,59 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            // Only needed for type-checking purposes:
+            struct as_lvalue_fn
+            {
+                template<typename T>
+                constexpr T &operator()(T &&t) const noexcept
+                {
+                    return t;
+                }
+            };
+            template<typename I>
+            using as_value_type_t = composed<as_lvalue_fn, coerce<value_type_t<I>>>;
+        }
+        /// \endcond
+
+        // axiom: BOp is associative over values of I.
+        template<typename I, typename BOp>
+        using IndirectSemigroup = meta::strict_and<
+            Readable<I>,
+            Copyable<value_type_t<I>>,
+            IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>>;
+
         template<typename I, typename O, typename BOp = plus, typename P = ident,
-            typename V = value_type_t<I>,
-            typename X = concepts::Invocable::result_t<P&, V>,
-            typename Y = concepts::Invocable::result_t<BOp&, X, X>>
+            typename X = projected<projected<I, detail::as_value_type_t<I>>, P>>
         using PartialSummable = meta::strict_and<
             InputIterator<I>,
-            OutputIterator<O, X>,
-            Invocable<P&, V>,
-            CopyConstructible<uncvref_t<X>>,
-            Invocable<BOp&, X, X>,
-            Assignable<uncvref_t<X>&, Y>>;
+            IndirectSemigroup<X, BOp>,
+            OutputIterator<O, value_type_t<X> const &>>;
 
         struct partial_sum_fn
         {
-            template<typename I, typename S, typename O, typename S2,
+            template<typename I, typename S1, typename O, typename S2,
                 typename BOp = plus, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
+                CONCEPT_REQUIRES_(Sentinel<S1, I>() && Sentinel<S2, O>() &&
                     PartialSummable<I, O, BOp, P>())>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
+            operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
-                using V = value_type_t<I>;
-                using X = concepts::Invocable::result_t<P&, V>;
-                coerce<V> v;
-                coerce<X> x;
-
+                using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
+                coerce<value_type_t<I>> val_i;
+                coerce<value_type_t<X>> val_x;
                 if(begin != end && result != end_result)
                 {
-                    auto t(x(invoke(proj, v(*begin))));
+                    auto &&cur1 = val_i(*begin);
+                    value_type_t<X> t(invoke(proj, cur1));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        t = invoke(bop, t, invoke(proj, *begin));
+                        auto &&cur2 = val_i(*begin);
+                        t = val_x(invoke(bop, t, invoke(proj, cur2)));
                         *result = t;
                     }
                 }

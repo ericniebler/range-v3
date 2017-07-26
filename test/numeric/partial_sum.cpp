@@ -24,6 +24,7 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/numeric/partial_sum.hpp>
+#include <range/v3/view/zip.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
@@ -172,6 +173,24 @@ int main()
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
+        }
+    }
+
+    { // Test calling it with proxy iterators
+        using namespace ranges;
+        int ia[] = {1, 2, 3, 4, 5};
+        int ib[] = {99, 99, 99, 99, 99};
+        int ir[] = {1, 2, 6, 24, 120};
+        const unsigned s = sizeof(ir) / sizeof(ir[0]);
+        int ic[s] = {0};
+        auto rng = view::zip(ia, ib);
+        using CR = iter_common_reference_t<iterator_t<decltype(rng)>>;
+        auto r = partial_sum(rng, ic, std::multiplies<int>(), [](CR p) {return p.first;});
+        CHECK(base(std::get<0>(r)) == ranges::begin(rng) + s);
+        CHECK(base(std::get<1>(r)) == ic + s);
+        for(unsigned i = 0; i < s; ++i)
+        {
+            CHECK(ic[i] == ir[i]);
         }
     }
 
