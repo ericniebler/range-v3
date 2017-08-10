@@ -44,6 +44,10 @@ namespace ranges
         struct random_access_iterator_tag
           : bidirectional_iterator_tag
         {};
+
+        struct contiguous_iterator_tag
+          : random_access_iterator_tag
+        {};
         /// @}
 
         /// \cond
@@ -107,7 +111,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T>
-            meta::if_<std::is_object<T>, ranges::random_access_iterator_tag>
+            meta::if_<std::is_object<T>, ranges::contiguous_iterator_tag>
             iterator_category_helper(T **);
 
             template<typename T>
@@ -370,6 +374,18 @@ namespace ranges
                         concepts::model_of<Same, reference_t<I>, decltype(i[i - i])>()
                     ));
             };
+
+            struct ContiguousIterator
+              : refines<RandomAccessIterator>
+            {
+                template<typename I>
+                auto requires_(I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<DerivedFrom, category_t<I>, ranges::contiguous_iterator_tag>(),
+                        concepts::is_true(std::is_lvalue_reference<reference_t<I>>{}),
+                        concepts::model_of<Same, value_t<I>, uncvref_t<reference_t<I>>>()
+                    ));
+            };
         }
 
         template<typename T>
@@ -431,12 +447,16 @@ namespace ranges
         template<typename I>
         using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, I>;
 
+        template<typename I>
+        using ContiguousIterator = concepts::models<concepts::ContiguousIterator, I>;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
         template<typename T>
         using iterator_concept =
             concepts::most_refined<
                 meta::list<
+                    concepts::ContiguousIterator,
                     concepts::RandomAccessIterator,
                     concepts::BidirectionalIterator,
                     concepts::ForwardIterator,
@@ -509,7 +529,7 @@ namespace ranges
                         meta::bind_front<meta::quote<InvocableConcept>, C&>,
                         meta::quote<meta::strict_and>>,
                     Is...>>;
-            
+
             template<typename C, typename ...Is>
             using common_result_indirect_invocable_ = meta::and_<
                 indirect_invocable_<Invocable, C, Is...>,

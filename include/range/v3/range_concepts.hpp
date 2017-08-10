@@ -163,13 +163,13 @@ namespace ranges
                 using data_reference_t = decltype(*data(std::declval<Rng&>()));
 
                 template<typename Rng>
-                using datum_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
+                using element_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
 
                 template<typename Rng>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Same, InputRange::value_t<Rng>,
-                            meta::_t<std::remove_cv<datum_t<Rng>>>>(),
+                            meta::_t<std::remove_cv<element_t<Rng>>>>(),
                         concepts::model_of<Same, data_reference_t<Rng>,
                             concepts::InputRange::reference_t<Rng>>()
                     ));
@@ -233,6 +233,10 @@ namespace ranges
               : refines<BidirectionalView, RandomAccessRange>
             {};
 
+            struct ContiguousView
+              : refines<RandomAccessView, ContiguousRange>
+            {};
+
             // Additional concepts for checking additional orthogonal properties
             struct BoundedView
               : refines<View, BoundedRange>
@@ -288,6 +292,9 @@ namespace ranges
         template<typename T>
         using RandomAccessView = concepts::models<concepts::RandomAccessView, T>;
 
+        template<typename T>
+        using ContiguousView = concepts::models<concepts::ContiguousView, T>;
+
         // Extra concepts:
         template<typename T>
         using BoundedView = concepts::models<concepts::BoundedView, T>;
@@ -301,6 +308,7 @@ namespace ranges
         using range_concept =
             concepts::most_refined<
                 meta::list<
+                    concepts::ContiguousRange,
                     concepts::RandomAccessRange,
                     concepts::BidirectionalRange,
                     concepts::ForwardRange,
