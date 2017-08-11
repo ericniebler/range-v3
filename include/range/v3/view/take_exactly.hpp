@@ -102,6 +102,7 @@ namespace ranges
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
+                    RANGES_EXPECT(!SizedRange<Rng>() || n <= ranges::distance(rng_));
                 }
                 iterator_t<Rng> begin()
                 {

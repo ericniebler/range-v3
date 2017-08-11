@@ -268,23 +268,52 @@ namespace ranges
             {};
 
         #if defined(__clang__) && !defined(_LIBCPP_VERSION)
-            template<typename T, typename Arg = T>
-            struct is_trivially_copy_assignable
-                : meta::bool_<__is_trivially_assignable(T &, Arg const&)>
-            {};
-            template<typename T, typename Arg = T>
-            struct is_trivially_move_assignable
-                : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
-            {};
+            template<typename T, typename... Args>
+            using is_trivially_constructible =
+                meta::bool_<__is_trivially_constructible(T, Args...)>;
+            template<typename T>
+            using is_trivially_default_constructible =
+                is_trivially_constructible<T>;
+            template<typename T>
+            using is_trivially_copy_constructible =
+                is_trivially_constructible<T, T const &>;
+            template<typename T>
+            using is_trivially_move_constructible =
+                is_trivially_constructible<T, T>;
+            template<typename T, typename U>
+            using is_trivially_assignable =
+                meta::bool_<__is_trivially_assignable(T, U)>;
+            template<typename T>
+            using is_trivially_copy_assignable =
+                is_trivially_assignable<T &, T const &>;
+            template<typename T>
+            using is_trivially_move_assignable =
+                is_trivially_assignable<T &, T>;
+            template<typename T>
+            using is_trivially_copyable =
+                meta::bool_<__is_trivially_copyable(T)>;
         #elif defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
             template<typename T>
+            using is_trivially_default_constructible = std::is_trivial<T>;
+            template<typename T>
+            using is_trivially_copy_constructible = std::is_trivial<T>;
+            template<typename T>
+            using is_trivially_move_constructible = std::is_trivial<T>;
+            template<typename T>
             using is_trivially_copy_assignable = std::is_trivial<T>;
-
             template<typename T>
             using is_trivially_move_assignable = std::is_trivial<T>;
+            template<typename T>
+            using is_trivially_copyable = std::is_trivial<T>;
         #else
+            template<typename T>
+            using is_trivially_default_constructible =
+                std::is_trivially_constructible<T>;
+            using std::is_trivially_copy_constructible;
+            using std::is_trivially_move_constructible;
             using std::is_trivially_copy_assignable;
             using std::is_trivially_move_assignable;
+            using std::is_trivially_copyable;
         #endif
 
         #if RANGES_CXX_LIB_IS_FINAL > 0

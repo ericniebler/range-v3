@@ -80,5 +80,11 @@ int main()
         (void)ranges::view::stride(n);
     }
 
+    {
+        int const some_ints[] = {0,1,2,3,4,5,6,7};
+        auto rng = debug_input_view<int const>{some_ints} | view::stride(2);
+        ::check_equal(rng, {0,2,4,6});
+    }
+
     return ::test_result();
 }

@@ -123,5 +123,11 @@ int main()
         ::check_equal(letters[{2,end-2}], {'c','d','e'});
     }
 
+    {
+        int const some_ints[] = {0,1,2,3,4,5,6,7,8,9};
+        auto rng = debug_input_view<int const>{some_ints} | view::slice(3,10);
+        ::check_equal(rng, {3, 4, 5, 6, 7, 8, 9});
+    }
+
     return test_result();
 }

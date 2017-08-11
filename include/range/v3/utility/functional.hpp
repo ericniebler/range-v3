@@ -137,8 +137,7 @@ namespace ranges
         template<typename T>
         struct convert_to
         {
-            template<typename U,
-                CONCEPT_REQUIRES_(std::is_constructible<T, U>::value)>
+            template<typename U>
             constexpr auto operator()(U && u) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (

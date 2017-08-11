@@ -58,5 +58,13 @@ int main()
         ::check_equal(view::keys(exs), {0, 1, 2});
     }
 
+    {
+        std::pair<int, int> const data[] = {{0, 2}, {1, 1}, {2, 0}};
+        auto key_range = debug_input_view<std::pair<int, int> const>{data} | view::keys;
+        check_equal(key_range, {0,1,2});
+        auto value_range = debug_input_view<std::pair<int, int> const>{data} | view::values;
+        check_equal(value_range, {2,1,0});
+    }
+
     return test_result();
 }

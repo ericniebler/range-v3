@@ -80,5 +80,11 @@ int main()
     models<concepts::RandomAccessIterator>(begin(rng4));
     ::check_equal(rng4, {0,1,2,3,4,42,6,7,8,9});
 
+    {
+        int const some_ints[] = {1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9};
+        auto rng = debug_input_view<int const>{some_ints} | view::replace(1, 42);
+        ::check_equal(rng, {42,2,3,4,5,6,7,8,9,42,2,3,4,5,6,7,8,9,42,2,3,4,5,6,7,8,9});
+    }
+
     return test_result();
 }

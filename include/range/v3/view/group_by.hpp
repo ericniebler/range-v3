@@ -27,7 +27,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/algorithm/adjacent_find.hpp>
+#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/take_while.hpp>
 
@@ -61,7 +61,7 @@ namespace ranges
                 sentinel_t<Rng> last_;
                 semiregular_ref_or_val_t<Fun, IsConst> fun_;
 
-                struct take_while_pred
+                struct pred
                 {
                     iterator_t<Rng> first_;
                     semiregular_ref_or_val_t<Fun, IsConst> fun_;
@@ -70,17 +70,13 @@ namespace ranges
                         return invoke(fun_, *first_, ref);
                     }
                 };
-                take_while_view<
-                    iterator_range<iterator_t<Rng>, sentinel_t<Rng>>,
-                    take_while_pred>
-                read() const
+                take_while_view<iterator_range<iterator_t<Rng>, sentinel_t<Rng>>, pred> read() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }
                 void next()
                 {
-                    cur_ =
-                        ranges::next(adjacent_find(cur_, last_, not_fn(std::ref(fun_))), 1, last_);
+                    cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
                 }
                 bool equal(default_sentinel) const
                 {

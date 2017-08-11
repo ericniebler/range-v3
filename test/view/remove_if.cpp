@@ -93,5 +93,10 @@ int main()
         ::check_equal(r2, {1,5});
     }
 
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::remove_if(is_even{});
+        ::check_equal(rng, {1,3,5,7,9});
+    }
+
     return test_result();
 }

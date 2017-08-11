@@ -693,7 +693,7 @@ namespace meta
         /// we express it using \c defer as follows:
         ///
         /// \code
-        /// template<typename List>
+        /// template <typename List>
         /// using reverse = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back,
         /// _a, _b>>>;
         /// \endcode
@@ -3204,7 +3204,7 @@ namespace meta
         /// A lexically scoped expression with local variables.
         ///
         /// \code
-        /// template<typename T, typename List>
+        /// template <typename T, typename List>
         /// using find_index_ = let<
         ///     var<_a, List>,
         ///     var<_b, lazy::find<_a, T>>,
@@ -3292,11 +3292,34 @@ namespace meta
         /// \cond
         ///////////////////////////////////////////////////////////////////////////////////////////
         // add_const_if
-        template <typename If>
-        using add_const_if = if_<If, quote_trait<std::add_const>, quote_trait<id>>;
-
+        namespace detail
+        {
+            template <bool>
+            struct add_const_if
+            {
+                template <typename T>
+                using invoke = T const;
+            };
+            template <>
+            struct add_const_if<false>
+            {
+                template <typename T>
+                using invoke = T;
+            };
+        } // namespace detail
         template <bool If>
-        using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
+        using add_const_if_c = detail::add_const_if<If>;
+        template <typename If>
+        using add_const_if = add_const_if_c<If::type::value>;
+        /// \endcond
+
+        /// \cond
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // const_if
+        template <bool If, typename T>
+        using const_if_c = invoke<add_const_if_c<If>, T>;
+        template <typename If, typename T>
+        using const_if = invoke<add_const_if<If>, T>;
         /// \endcond
 
         /// \cond

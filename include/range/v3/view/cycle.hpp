@@ -27,12 +27,12 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/detail/optional.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -60,7 +60,7 @@ namespace ranges
             {
             private:
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
                 using difference_type_ = range_difference_type_t<Rng>;
                 using iterator = iterator_t<constify_if<Rng>>;

@@ -39,18 +39,17 @@ namespace ranges
           : view_facade<generate_view<G>, infinite>
         {
         private:
-            friend struct ranges::range_access;
+            friend range_access;
             using result_t = result_of_t<G&()>;
-            semiregular_t<G> gen_;
-            semiregular_t<result_t> val_;
+            movesemiregular_t<G> gen_;
+            movesemiregular_t<result_t> val_;
             struct cursor
             {
             private:
                 generate_view *view_;
             public:
-                using single_pass = std::true_type;
                 cursor() = default;
-                cursor(generate_view &view)
+                explicit cursor(generate_view &view)
                   : view_(&view)
                 {}
                 result_t read() const
@@ -68,7 +67,7 @@ namespace ranges
             }
             cursor begin_cursor()
             {
-                return {*this};
+                return cursor{*this};
             }
             unreachable end_cursor() const
             {
@@ -92,7 +91,7 @@ namespace ranges
                 template<typename G>
                 using Concept = meta::and_<
                     Invocable<G&>,
-                    CopyConstructible<G>,
+                    MoveConstructible<G>,
                     std::is_object<detail::decay_t<result_of_t<G&()>>>,
                     Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>,
                     Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>>;
@@ -115,8 +114,8 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Invocable<G&>(),
                         "The function object G must be callable with no arguments.");
-                    CONCEPT_ASSERT_MSG(CopyConstructible<G>(),
-                        "The function object G must be CopyConstructible.");
+                    CONCEPT_ASSERT_MSG(MoveConstructible<G>(),
+                        "The function object G must be MoveConstructible.");
                     using T = result_of_t<G&()>;
                     using D = detail::decay_t<T>;
                     CONCEPT_ASSERT_MSG(std::is_object<D>(),

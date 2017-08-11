@@ -21,7 +21,7 @@ username = os.getenv("CONAN_USERNAME", "ericniebler")
 
 class Rangev3TestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    requires = "range-v3/0.3.0@%s/%s" % (username, channel)
+    requires = "range-v3/@RANGE_V3_VERSION@@%s/%s" % (username, channel)
     generators = "cmake"
 
     def build(self):

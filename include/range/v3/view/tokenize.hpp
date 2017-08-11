@@ -41,6 +41,10 @@ namespace ranges
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
+            CONCEPT_ASSERT(BidirectionalView<Rng>() && BoundedRange<Rng>());
+            CONCEPT_ASSERT(SemiRegular<Regex>());
+            CONCEPT_ASSERT(SemiRegular<SubMatchRange>());
+
             Rng rng_;
             Regex rex_;
             SubMatchRange subs_;
@@ -50,10 +54,10 @@ namespace ranges
                 std::regex_token_iterator<iterator_t<Rng>>;
 
             tokenize_view() = default;
-            tokenize_view(Rng rng, Regex && rex, SubMatchRange subs,
+            tokenize_view(Rng rng, Regex rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
               : rng_(std::move(rng))
-              , rex_(static_cast<Regex&&>(rex))
+              , rex_(std::move(rex))
               , subs_(std::move(subs))
               , flags_(flags)
             {}
@@ -85,7 +89,7 @@ namespace ranges
             struct tokenizer_impl_fn
             {
                 template<typename Rng, typename Regex>
-                tokenize_view<all_t<Rng>, Regex, int>
+                tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int>
                 operator()(Rng && rng, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
@@ -93,14 +97,14 @@ namespace ranges
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
-                        typename std::remove_reference<Regex>::type::value_type>::value,
+                        typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex), sub,
                             flags};
                 }
 
                 template<typename Rng, typename Regex>
-                tokenize_view<all_t<Rng>, Regex, std::vector<int>>
+                tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>
                 operator()(Rng && rng, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
@@ -108,14 +112,14 @@ namespace ranges
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
-                        typename std::remove_reference<Regex>::type::value_type>::value,
+                        typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
                             std::move(subs), flags};
                 }
 
                 template<typename Rng, typename Regex>
-                tokenize_view<all_t<Rng>, Regex, std::initializer_list<int>>
+                tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::initializer_list<int>>
                 operator()(Rng && rng, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
@@ -123,7 +127,7 @@ namespace ranges
                     CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
-                        typename std::remove_reference<Regex>::type::value_type>::value,
+                        typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
                             std::move(subs), flags};

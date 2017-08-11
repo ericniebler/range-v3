@@ -204,12 +204,11 @@ namespace ranges
             ///
 
             struct View
-              : refines<Range>
+              : refines<Range, Movable, DefaultConstructible>
             {
                 template<typename T>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<SemiRegular, T>(),
                         concepts::is_true(detail::view_predicate_<T>())
                     ));
             };
@@ -223,7 +222,7 @@ namespace ranges
             {};
 
             struct ForwardView
-              : refines<InputView, ForwardRange>
+              : refines<InputView, ForwardRange, Copyable>
             {};
 
             struct BidirectionalView
@@ -422,11 +421,6 @@ namespace ranges
 
             template<class Key, class Hash, class Pred, class Alloc>
             struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
-              : std::false_type
-            {};
-
-            template<typename T, std::size_t N>
-            struct view_predicate_<T[N]>
               : std::false_type
             {};
         }

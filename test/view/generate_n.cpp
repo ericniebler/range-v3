@@ -16,6 +16,17 @@
 
 namespace view = ranges::view;
 
+struct MoveOnlyFunction
+{
+    MoveOnlyString str_;
+    int i_;
+
+    char operator()()
+    {
+        return str_.sz_[i_++];
+    }
+};
+
 int main()
 {
     // Test for constant generator functions
@@ -35,6 +46,13 @@ int main()
         // The generator cannot be called when it's const-qualified, so "fib const"
         // does not model View.
         CONCEPT_ASSERT(!ranges::View<decltype(fib) const>());
+    }
+
+    // Test for move-only generator functions
+    {
+        auto rng = view::generate_n(MoveOnlyFunction{"Hello, world!", 0}, 5);
+        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        check_equal(rng, {'H', 'e', 'l', 'l', 'o'});
     }
 
     return test_result();

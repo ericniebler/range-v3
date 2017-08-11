@@ -75,7 +75,7 @@ namespace ranges
                     Range<Rng>,
                     meta::not_<std::is_reference<Rng>>>;
 
-                // Pipeing requires things are passed by value.
+                // Piping requires things are passed by value.
                 template<typename Rng, typename Act,
                     CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
                 static auto pipe(Rng && rng, Act && act)

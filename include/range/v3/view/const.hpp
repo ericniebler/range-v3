@@ -55,10 +55,10 @@ namespace ranges
                     return *it;
                 }
                 rvalue_reference_ iter_move(iterator_t<Rng> const &it) const
-                    noexcept(noexcept(ranges::iter_move(it)))
-                {
-                    return ranges::iter_move(it);
-                }
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    ranges::iter_move(it)
+                )
             };
             adaptor begin_adaptor() const
             {

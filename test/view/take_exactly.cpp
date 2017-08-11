@@ -72,5 +72,10 @@ int main()
     ::check_equal(rng5, {19, 18, 17, 16, 15, 14, 13, 12, 11, 10});
     CHECK(size(rng5) == 10u);
 
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::take_exactly(6);
+        ::check_equal(rng, {0, 1, 2, 3, 4, 5});
+    }
+
     return test_result();
 }

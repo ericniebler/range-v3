@@ -19,14 +19,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-struct is_odd
-{
-    bool operator()(int i) const
-    {
-        return (i % 2) == 1;
-    }
-};
-
 int main()
 {
     using namespace ranges;
@@ -58,6 +50,11 @@ int main()
     CHECK(cnt == 0);
     CONCEPT_ASSERT(View<decltype(mutable_rng)>());
     CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
+
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::partial_sum();
+        ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
+    }
 
     return test_result();
 }

@@ -77,5 +77,11 @@ int main()
     CHECK(&(*begin(rng4)).first == &rgi[0]);
     CHECK(rng4.size() == 4u);
 
+    {
+        auto rng = debug_input_view<int>{rgi} | view::const_;
+        CONCEPT_ASSERT(Same<int const&, range_reference_t<decltype(rng)>>());
+        ::check_equal(rng, rgi);
+    }
+
     return test_result();
 }

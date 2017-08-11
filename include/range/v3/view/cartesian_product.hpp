@@ -98,7 +98,7 @@ namespace ranges
             class cursor
             {
                 template<typename T>
-                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::const_if_c<IsConst, T>;
                 using pos_t = std::tuple<iterator_t<constify_if<Views>>...>;
                 constify_if<cartesian_product_view> *view_;
                 pos_t its_;

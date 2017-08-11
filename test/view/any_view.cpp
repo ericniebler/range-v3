@@ -19,6 +19,58 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+namespace
+{
+    template<typename S, typename T, typename = void>
+    struct can_convert_to : std::false_type {};
+    template<typename S, typename T>
+    struct can_convert_to<S, T, meta::void_<
+        decltype(ranges::polymorphic_downcast<T>(std::declval<S>()))>>
+      : std::true_type {};
+
+    void test_polymorphic_downcast()
+    {
+        struct A { virtual ~A() = default; };
+        struct B : A {};
+        struct unrelated {};
+        struct incomplete;
+
+        CONCEPT_ASSERT(can_convert_to<B *, void *>());
+        CONCEPT_ASSERT(can_convert_to<A *, void *>());
+        CONCEPT_ASSERT(can_convert_to<B *, A *>());
+        CONCEPT_ASSERT(can_convert_to<A *, B *>());
+        CONCEPT_ASSERT(!can_convert_to<int, int>());
+        CONCEPT_ASSERT(!can_convert_to<A const *, A *>());
+        CONCEPT_ASSERT(!can_convert_to<A *, unrelated *>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated *, A *>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete *, incomplete *>());
+
+        CONCEPT_ASSERT(can_convert_to<B &, A &>());
+        CONCEPT_ASSERT(can_convert_to<A &, B &>());
+        CONCEPT_ASSERT(!can_convert_to<A &, unrelated &>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &, A &>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &, incomplete &>());
+
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ > 4
+        CONCEPT_ASSERT(can_convert_to<B &&, A &&>());
+        CONCEPT_ASSERT(can_convert_to<B &, A &&>());
+#endif // old GCC dynamic_cast bug
+        CONCEPT_ASSERT(!can_convert_to<B &&, A &>());
+        CONCEPT_ASSERT(can_convert_to<A &&, B &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, B &>());
+        CONCEPT_ASSERT(can_convert_to<A &, B &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, unrelated &&>());
+        CONCEPT_ASSERT(!can_convert_to<A &&, unrelated &>());
+        CONCEPT_ASSERT(!can_convert_to<A &, unrelated &&>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &&, A &&>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &&, A &>());
+        CONCEPT_ASSERT(!can_convert_to<unrelated &, A &&>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &&, incomplete &&>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &&, incomplete &>());
+        CONCEPT_ASSERT(!can_convert_to<incomplete &, incomplete &&>());
+    }
+} // unnamed namespace
+
 int main()
 {
     using namespace ranges;
@@ -26,15 +78,12 @@ int main()
 
     {
         any_view<int> ints = view::ints;
-        ::models<concepts::InputView>(aux::copy(ints));
-        ::models_not<concepts::ForwardView>(aux::copy(ints));
-        ::check_equal(ints | view::take(10), ten_ints);
-        ::check_equal(ints | view::take(10), ten_ints);
+        CONCEPT_ASSERT(InputView<decltype(ints)>());
+        CONCEPT_ASSERT(!ForwardView<decltype(ints)>());
+        ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
     {
         any_view<int> ints2 = view::ints | view::take(10);
-        ::models<concepts::InputView>(aux::copy(ints2));
-        ::models_not<concepts::ForwardView>(aux::copy(ints2));
         ::check_equal(ints2, ten_ints);
         ::check_equal(ints2, ten_ints);
     }
@@ -65,7 +114,8 @@ int main()
         ::check_equal(any_view<int>{vec}, ten_ints);
         ::check_equal(any_view<int>{ranges::detail::as_const(vec)}, ten_ints);
 
-        struct Int {
+        struct Int
+        {
             int i_;
 
             Int(int i) : i_{i} {}
@@ -74,6 +124,15 @@ int main()
         auto vec2 = std::vector<Int>{begin(ten_ints), end(ten_ints)};
         ::check_equal(any_view<int>{vec2}, ten_ints);
     }
+
+    {
+        auto v = any_view<int>{debug_input_view<int const>{
+            ten_ints.begin(), std::ptrdiff_t(ten_ints.size())
+        }};
+        ::check_equal(v, ten_ints);
+    }
+
+    test_polymorphic_downcast();
 
     return test_result();
 }

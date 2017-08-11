@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include "./debug_view.hpp"
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 

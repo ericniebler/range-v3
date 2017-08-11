@@ -19,7 +19,6 @@
 #include <meta/meta.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/empty.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/size.hpp>
@@ -54,13 +53,19 @@ namespace ranges
             {
             private:
                 friend sentinel_adaptor;
-                bool toggl_;
+                bool toggl_ = false;
                 range_value_type_t<Rng> val_;
             public:
                 cursor_adaptor() = default;
-                cursor_adaptor(range_value_type_t<Rng> val, bool at_end)
-                  : toggl_(!at_end), val_(std::move(val))
+                explicit cursor_adaptor(range_value_type_t<Rng> val)
+                  : val_(std::move(val))
                 {}
+                iterator_t<Rng> begin(intersperse_view &view)
+                {
+                    auto first = ranges::begin(view.base());
+                    toggl_ = first != ranges::end(view.base());
+                    return std::move(first);
+                }
                 range_value_type_t<Rng> read(iterator_t<Rng> it) const
                 {
                     return toggl_ ? *it : val_;
@@ -113,17 +118,17 @@ namespace ranges
             };
             cursor_adaptor begin_adaptor() const
             {
-                return {val_, ranges::empty(this->mutable_base())};
+                return cursor_adaptor{val_};
             }
             CONCEPT_REQUIRES(BoundedRange<Rng>() && !SinglePass<iterator_t<Rng>>())
             cursor_adaptor end_adaptor() const
             {
-                return {val_, true};
+                return cursor_adaptor{val_};
             }
             CONCEPT_REQUIRES(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
             sentinel_adaptor end_adaptor() const
             {
-                return {};
+                return sentinel_adaptor{};
             }
         public:
             intersperse_view() = default;

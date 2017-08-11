@@ -34,16 +34,10 @@ namespace
         int const ints[] = {0,1,2,3,4};
         constexpr auto N = ranges::size(ints);
         constexpr auto K = 2;
-        auto base = [&]
-        {
-            auto first = input_iterator<int const*, true>(ranges::begin(ints));
-            auto last = input_iterator<int const*, true>(ranges::end(ints));
-            return make_iterator_range(first, last, N);
-        }();
-        auto make_range = [&]{ return view::chunk(decltype(base)(base), +K); };
+        auto make_range = [&]{ return debug_input_view<int const>{ints} | view::chunk(K); };
         auto rng = make_range();
         using Rng = decltype(rng);
-        CONCEPT_ASSERT(InputRange<Rng>());
+        CONCEPT_ASSERT(InputView<Rng>());
         CONCEPT_ASSERT(!ForwardRange<Rng>());
         CONCEPT_ASSERT(SizedRange<Rng>());
         CHECK(ranges::size(rng) == (N + K - 1) / K);
@@ -208,6 +202,14 @@ int main()
         CONCEPT_ASSERT(InputRange<range_reference_t<decltype(rng)>>());
         int const expected[][2] = {{1, 2}, {3, 4}, {5, 6}};
         ::check_equal(rng, expected);
+    }
+
+    {
+        // Regression test for not-exactly #567 (https://github.com/ericniebler/range-v3/issues/567#issuecomment-315148392)
+        int some_ints[] = {0,1,2,3};
+        int const expected[][2] = {{0, 1}, {2, 3}};
+        auto rng = view::all(some_ints);
+        ::check_equal(rng | view::chunk(2), expected);
     }
 
     return ::test_result();

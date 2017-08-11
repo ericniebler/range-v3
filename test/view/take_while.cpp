@@ -58,5 +58,12 @@ int main()
         ::check_equal(rng, {1,2,3,4});
     }
 
+    {
+        auto rng = debug_input_view<int const>{rgi} | view::take_while([](int i) {
+            return i != 5;
+        });
+        ::check_equal(rng, {0,1,2,3,4});
+    }
+
     return test_result();
 }
