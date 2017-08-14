@@ -28,7 +28,7 @@ int main()
 
     auto s2 = v | view::transform(view::all) | action::join;
     static_assert(std::is_same<decltype(s2), std::vector<char>>::value, "");
-    CHECK(equal(s, s2));
+    CHECK(std::string(s2.begin(), s2.end()) == "hello world");
 
     return ::test_result();
 }
