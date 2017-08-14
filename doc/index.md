@@ -271,7 +271,7 @@ With the type constraints expressed with the `CONCEPTS_REQUIRES_` macro, these t
 ## Range v3 and the Future
 
 Range v3 forms the basis for a proposal to add ranges to the standard library
-([N4128](www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That's the hope, anyway.
+([N4128](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That's the hope, anyway.
 
 Enjoy!
 
