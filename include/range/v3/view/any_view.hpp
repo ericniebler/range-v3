@@ -92,6 +92,9 @@ namespace ranges
             struct any_view_sentinel_impl
               : private box<sentinel_t<Rng>, any_view_sentinel_impl<Rng>>
             {
+            private:
+                using box_t = typename any_view_sentinel_impl::box;
+            public:
                 any_view_sentinel_impl() = default;
                 any_view_sentinel_impl(Rng &rng)
                     noexcept(noexcept(box_t(ranges::end(rng))))
@@ -105,8 +108,6 @@ namespace ranges
                 {
                     return box_t::get();
                 }
-            private:
-                using box_t = typename any_view_sentinel_impl::box;
             };
 
             template<typename Rng>
