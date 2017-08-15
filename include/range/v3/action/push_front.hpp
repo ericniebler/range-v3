@@ -83,7 +83,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
                     CONCEPT_REQUIRES_(!Concept<Rng, T>())>
-                void operator()(Rng &&, T &&) const
+                void operator()(Rng &&rng, T &&t) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::push_front operates must be a model of the "
@@ -94,6 +94,7 @@ namespace ranges
                         "The object to be inserted with action::push_front must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");
+                    push_front(rng, (T &&) t);
                 }
             #endif
             };
