@@ -393,12 +393,11 @@ namespace ranges
         struct ordered_less;
         struct ident;
 
-        enum cardinality
+        enum cardinality : std::ptrdiff_t
         {
             infinite = -3,
             unknown = -2,
-            finite = -1,
-            _max_ = INT_MAX
+            finite = -1
         };
 
         template<typename Rng, typename Void = void>
