@@ -107,10 +107,10 @@ namespace experimental
                         "The object on which view::shared operates must be a "
                         "model of the Range concept.");
                     CONCEPT_ASSERT_MSG(!View<Rng>(),
-                        "view::shared cannot be constructed from a view."
-                        " Please copy the original view instead.");
+                        "view::shared cannot be constructed from a view. "
+                        "Please copy the original view instead.");
                     CONCEPT_ASSERT_MSG(!std::is_reference<Rng>::value,
-                        "view::shared needs an rvalue reference"
+                        "view::shared needs an rvalue reference "
                         "to build a shared object.");
                 }
 #endif
