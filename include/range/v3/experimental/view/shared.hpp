@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_VIEW_SHARED_HPP
-#define RANGES_V3_VIEW_SHARED_HPP
+#ifndef RANGES_V3_EXPERIMENTAL_VIEW_SHARED_HPP
+#define RANGES_V3_EXPERIMENTAL_VIEW_SHARED_HPP
 
 #include <memory>
 #include <type_traits>
