@@ -103,6 +103,9 @@ add_test(test.view.set_symmetric_difference, view.set_symmetric_difference)
 add_executable(view.set_union set_union.cpp)
 add_test(test.view.set_union, view.set_union)
 
+add_executable(view.shared shared.cpp)
+add_test(test.view.shared, view.shared)
+
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 
