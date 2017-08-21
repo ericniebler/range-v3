@@ -60,23 +60,28 @@ namespace ranges
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
-                Cont impl(Rng && rng, std::false_type) const
+                Cont impl(Rng &&rng, std::false_type) const
                 {
                     using I = range_common_iterator_t<Rng>;
-                    return Cont(I{begin(rng)}, I{end(rng)});
+                    return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
                                       ReserveConcept<Cont, Rng>())>
-                Cont impl(Rng && rng, std::true_type) const
+                Cont impl(Rng &&rng, std::true_type) const
                 {
                     Cont c;
-                    using size_type = decltype(c.size());
-                    c.reserve(static_cast<size_type>(size(rng)));
+                    auto const size = ranges::size(rng);
+                    using size_type = decltype(c.max_size());
+                    using C = common_type_t<
+                        meta::_t<std::make_unsigned<decltype(size)>>,
+                        meta::_t<std::make_unsigned<size_type>>>;
+                    RANGES_EXPECT(static_cast<C>(size) <= static_cast<C>(c.max_size()));
+                    c.reserve(static_cast<size_type>(size));
                     using I = range_common_iterator_t<Rng>;
-                    c.assign(I{begin(rng)}, I{end(rng)});
+                    c.assign(I{ranges::begin(rng)}, I{ranges::end(rng)});
                     return c;
                 }
 
@@ -84,11 +89,11 @@ namespace ranges
                 template<typename Rng,
                     typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
                     CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
-                Cont operator()(Rng && rng) const
+                Cont operator()(Rng &&rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
-                    return impl(static_cast<Rng&&>(rng), ReserveConcept<Cont, Rng>());
+                    return impl(static_cast<Rng &&>(rng), ReserveConcept<Cont, Rng>());
                 }
             };
         }
