@@ -64,46 +64,51 @@ namespace ranges
                 return *end_;
             }
 
-            // A rather convoluted implementation to avoid the problem std::reverse_iterator
-            // has adapting iterators that return references to internal data.
             template<bool IsConst>
             struct adaptor : adaptor_base
             {
             private:
                 using reverse_view_t = meta::const_if_c<IsConst, reverse_view>;
+#ifndef NDEBUG
                 reverse_view_t *rng_;
+#endif
             public:
                 adaptor() = default;
                 adaptor(reverse_view_t &rng)
+#ifndef NDEBUG
                   : rng_(&rng)
-                {}
-                iterator_t<Rng> begin(reverse_view_t &rng) const
+#endif
                 {
-                    auto it = rng.get_end_(BoundedRange<Rng>());
-                    ranges::advance(it, -1, ranges::begin(rng.mutable_base()));
-                    return it;
+                    (void)rng;
                 }
-                iterator_t<Rng> end(reverse_view_t &rng) const
+                static iterator_t<Rng> begin(reverse_view_t &rng)
                 {
                     return rng.get_end_(BoundedRange<Rng>());
                 }
+                static iterator_t<Rng> end(reverse_view_t &rng)
+                {
+                    return ranges::begin(rng.base());
+                }
+                range_reference_t<Rng> read(iterator_t<Rng> it) const
+                {
+                    return *--it;
+                }
                 void next(iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance(it, -1, ranges::begin(rng_->mutable_base())))
-                        it = rng_->get_end_(BoundedRange<Rng>());
+                    RANGES_ASSERT(it != ranges::begin(rng_->base()));
+                    --it;
                 }
                 void prev(iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance(it, 1, ranges::end(rng_->mutable_base())))
-                        it = ranges::begin(rng_->mutable_base());
+                    RANGES_ASSERT(it != ranges::end(rng_->base()));
+                    ++it;
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
                 {
-                    if(n > 0)
-                        ranges::advance(it, -n + 1), this->next(it);
-                    else if(n < 0)
-                        this->prev(it), ranges::advance(it, -n - 1);
+                    RANGES_ASSERT(n <= it - ranges::begin(rng_->base()));
+                    RANGES_ASSERT(it - rng_->get_end_(BoundedRange<Rng>()) <= n);
+                    ranges::advance(it, -n);
                 }
                 CONCEPT_REQUIRES(
                     SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
@@ -111,12 +116,7 @@ namespace ranges
                 distance_to(iterator_t<Rng> const &here, iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                 {
-                    RANGES_EXPECT(rng_ == other_adapt.rng_);
-                    if(there == ranges::end(rng_->mutable_base()))
-                        return here == ranges::end(rng_->mutable_base())
-                            ? 0 : (here - ranges::begin(rng_->mutable_base())) + 1;
-                    else if(here == ranges::end(rng_->mutable_base()))
-                        return (ranges::begin(rng_->mutable_base()) - there) - 1;
+                    RANGES_ASSERT(rng_ == other_adapt.rng_); (void)other_adapt;
                     return here - there;
                 }
             };
@@ -156,8 +156,8 @@ namespace ranges
             explicit reverse_view(Rng rng)
               : reverse_view::view_adaptor{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>() ||
-                SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+            CONCEPT_REQUIRES(!SizedRange<Rng const>() && (SizedRange<Rng>() ||
+                SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>()))
             range_size_type_t<Rng> size()
             {
                 return this->size_(SizedRange<Rng>());
