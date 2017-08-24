@@ -30,7 +30,7 @@ namespace ranges
         {
             template<typename T,
                 CONCEPT_REQUIRES_(CoAwaitable<T>())>
-            concepts::CoAwaitable::value_t<T> sync_await(T&& t)
+            concepts::CoAwaitable::value_t<T> sync_wait(T&& t)
             {
                 struct _
                 {

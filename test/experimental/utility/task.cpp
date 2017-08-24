@@ -12,7 +12,7 @@
 #include <range/v3/detail/config.hpp>
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <range/v3/experimental/utility/task.hpp>
-#include <range/v3/experimental/utility/sync_await.hpp>
+#include <range/v3/experimental/utility/sync_wait.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 
@@ -34,7 +34,7 @@ void test_int()
     auto i = fun2();
     try
     {
-        int j = ranges::experimental::sync_await(std::move(i));
+        int j = ranges::experimental::sync_wait(std::move(i));
         CHECK(j == 43);
     }
     catch(...)
@@ -60,7 +60,7 @@ void test_void()
     auto v = fun4();
     try
     {
-        ranges::experimental::sync_await(std::move(v));
+        ranges::experimental::sync_wait(std::move(v));
         CHECK(count == 2);
     }
     catch(...)
@@ -83,7 +83,7 @@ void test_exception()
     auto e = fun6();
     try
     {
-        ranges::experimental::sync_await(std::move(e));
+        ranges::experimental::sync_wait(std::move(e));
         CHECK(false);
     }
     catch(int i)
@@ -153,9 +153,9 @@ int main()
     test_void();
     test_exception();
 
-    // This exercises the CoAwaitable concept and sync_await:
+    // This exercises the CoAwaitable concept and sync_wait:
     T::S s;
-    ranges::experimental::sync_await(s);
+    ranges::experimental::sync_wait(s);
 
     return ::test_result();
 }
