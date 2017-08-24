@@ -176,7 +176,6 @@ int main()
 }
 
 #else // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-#error here
 int main()
 {}
 #endif
