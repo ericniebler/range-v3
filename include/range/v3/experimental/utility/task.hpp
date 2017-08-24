@@ -52,15 +52,19 @@ namespace ranges
                         value,
                         error
                     };
+                    using value_type = meta::if_<
+                        std::is_reference<T>,
+                        reference_wrapper<meta::_t<std::remove_reference<T>>, std::is_rvalue_reference<T>::value>,
+                        T>;
                     which which_{which::none};
-                    meta::_t<std::aligned_union<0, T, std::exception_ptr>> buffer_;
+                    meta::_t<std::aligned_union<0, value_type, std::exception_ptr>> buffer_;
 
                     template<typename U,
-                        CONCEPT_REQUIRES_(Constructible<T, U>())>
+                        CONCEPT_REQUIRES_(Constructible<value_type, U>())>
                     void return_value(U &&value)
                     {
                         RANGES_EXPECT(which_ == which::none);
-                        ::new((void *)&buffer_) T(static_cast<U &&>(value));
+                        ::new((void *)&buffer_) value_type(static_cast<U &&>(value));
                         which_ = which::value;
                     }
                     void unhandled_exception()
@@ -74,7 +78,7 @@ namespace ranges
                         switch(which_)
                         {
                         case which::value:
-                            return *static_cast<T *>((void *)&buffer_);
+                            return *static_cast<value_type *>((void *)&buffer_);
                         case which::error:
                             std::rethrow_exception(
                                 *static_cast<std::exception_ptr *>((void *)&buffer_));
@@ -85,7 +89,7 @@ namespace ranges
                     ~promise_base()
                     {
                         if(which_ == which::value)
-                            static_cast<T *>((void *)&buffer_)->~T();
+                            static_cast<value_type *>((void *)&buffer_)->~value_type();
                         else if(which_ == which::error)
                             static_cast<std::exception_ptr *>((void *)&buffer_)->~exception_ptr();
                     }
@@ -113,6 +117,7 @@ namespace ranges
             template<typename T /* = void */>
             struct task
             {
+                static_assert(!std::is_function<T>::value, "can't create a task that returns a function type");
                 struct promise_type;
             private:
                 struct final_suspend_result
@@ -177,6 +182,86 @@ namespace ranges
                     return coro_.promise().await_resume();
                 }
             };
+
+            template<typename T>
+            struct task_iterator
+            {
+            private:
+                task<T> *task_ = nullptr;
+            public:
+                task_iterator() = default;
+                explicit task_iterator(task<T> &t) noexcept
+                  : task_(&t)
+                {}
+                task_iterator(task_iterator &&that) noexcept
+                  : task_(ranges::exchange(that.task_, nullptr))
+                {}
+                task_iterator &operator=(task_iterator &&that) noexcept
+                {
+                    task_ = ranges::exchange(that.task_, nullptr);
+                    return &this;
+                }
+                T operator*() const
+                {
+                    return task_->await_resume();
+                }
+                task<task_iterator &> operator++()
+                {
+                    task_ = nullptr;
+                    co_return *this;
+                }
+                task<> operator++(int)
+                {
+                    task_ = nullptr;
+                    co_return;
+                }
+                friend bool operator==(task_iterator const &x, task_iterator const &y)
+                {
+                    return x.task_ == y.task_;
+                }
+                friend bool operator!=(task_iterator const &x, task_iterator const &y)
+                {
+                    return !(x == y);
+                }
+            };
+
+            /// \cond
+            namespace detail
+            {
+                template<typename T>
+                struct task_begin
+                {
+                    task<T> &task_;
+
+                    bool await_ready()
+                    {
+                        return task_.await_ready();
+                    }
+                    void await_suspend(std::experimental::coroutine_handle<> waiter)
+                    {
+                        task_.await_suspend(waiter);
+                    }
+                    task_iterator<T> await_resume()
+                    {
+                        return task_iterator<T>(task_);
+                    }
+                };
+            }
+            /// \endcond
+
+            template<typename T,
+                CONCEPT_REQUIRES_(!std::is_void<T>::value)>
+            detail::task_begin<T> begin(task<T> &t) noexcept
+            {
+                return detail::task_begin<T>{t};
+            }
+
+            template<typename T,
+                CONCEPT_REQUIRES_(!std::is_void<T>::value)>
+            task_iterator<T> end(task<T> &) noexcept
+            {
+                return task_iterator<T>{};
+            }
         }
     }
 }

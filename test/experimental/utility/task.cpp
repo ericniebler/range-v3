@@ -29,6 +29,19 @@ ranges::experimental::task<int> fun2()
     co_return i + 1;
 }
 
+ranges::experimental::task<> test_task_as_range()
+{
+    auto e = fun2();
+    int count = 0;
+    // ranges::begin(e); // doesn't work yet
+    for co_await (int i : e)
+    {
+        ++count;
+        CHECK(i == 43);
+    }
+    CHECK(count == 1);
+}
+
 void test_int()
 {
     auto i = fun2();
@@ -152,6 +165,8 @@ int main()
     test_int();
     test_void();
     test_exception();
+
+    ranges::experimental::sync_wait(test_task_as_range());
 
     // This exercises the CoAwaitable concept and sync_wait:
     T::S s;
