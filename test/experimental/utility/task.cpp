@@ -16,6 +16,8 @@
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 
+using namespace std::experimental;
+
 ranges::experimental::task<int> fun1()
 {
     co_return 42;
@@ -94,15 +96,69 @@ void test_exception()
     }
 }
 
+namespace T
+{
+    struct S
+    {
+        struct promise_type
+        {
+            suspend_never initial_suspend() { return {}; }
+            suspend_never final_suspend() { return {}; }
+            void unhandled_exception() {}
+        };
+    };
+
+    suspend_never operator co_await(S &) { return {}; }
+}
+
+struct minig
+{
+    struct promise_type
+    {
+        int val;
+        minig get_return_object() { return { *this }; }
+        suspend_always initial_suspend() noexcept { return {}; }
+        suspend_always final_suspend() noexcept { return {}; }
+        void return_void() noexcept {}
+        void unhandled_exception() noexcept {}
+        suspend_always await_transform(int v) noexcept {
+            val = v;
+            return {};
+        }
+    };
+    using HDL = coroutine_handle<promise_type>;
+    HDL coro;
+    minig(promise_type &p) : coro(HDL::from_promise(p)) {}
+    minig(minig &&that) : coro(ranges::exchange(that.coro, nullptr)) {}
+    ~minig() { coro.destroy(); }
+    bool move_next()
+    {
+        coro.resume();
+        return !coro.done();
+    }
+    int current_value() { return coro.promise().val; }
+};
+
+minig f(int n)
+{
+    for (int i = 0; i < n; ++i)
+        co_await i; // Yes, really!
+}
+
+CONCEPT_ASSERT(ranges::CoAwaitable<int, minig>());
+
 int main()
 {
     test_int();
     test_void();
     test_exception();
 
+    // This exercises the CoAwaitable concept and sync_await:
+    T::S s;
+    ranges::experimental::sync_await(s);
+
     return ::test_result();
 }
-
 
 #else // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #error here

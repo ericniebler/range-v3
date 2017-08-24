@@ -28,8 +28,9 @@ namespace ranges
     {
         namespace experimental
         {
-            template<typename T>
-            T sync_await(task<T>&& t)
+            template<typename T,
+                CONCEPT_REQUIRES_(CoAwaitable<T>())>
+            concepts::CoAwaitable::value_t<T> sync_await(T&& t)
             {
                 struct _
                 {
@@ -75,15 +76,15 @@ namespace ranges
                             std::experimental::coroutine_handle<promise_type>::
                                 from_promise(*promise_).destroy();
                     }
-                    void loop()
+                    void wait()
                     {
                         std::unique_lock<std::mutex> lock(promise_->mtx_);
                         promise_->cnd_.wait(lock, [this] { return promise_->done_; });
                     }
                 };
 
-                [&]() -> _ { (void)co_await t; }().loop();
-                return std::move(t).await_resume();
+                [&]() -> _ { (void)co_await t; }().wait();
+                return as_awaitable(std::forward<T>(t)).await_resume();
             }
         }
     }

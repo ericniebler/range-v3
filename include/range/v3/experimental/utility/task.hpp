@@ -34,6 +34,7 @@ namespace ranges
     {
         namespace experimental
         {
+            /// \cond
             namespace detail
             {
                 [[noreturn]] inline void unreachable()
@@ -106,7 +107,8 @@ namespace ranges
                             std::rethrow_exception(eptr);
                     }
                 };
-            }
+            } // namespace detail
+            /// \endcond
 
             template<typename T /* = void */>
             struct task
@@ -152,6 +154,15 @@ namespace ranges
                         return final_suspend_result{this};
                     }
                 };
+
+                task(task &&that) noexcept
+                  : coro_(ranges::exchange(that.coro_, nullptr))
+                {}
+                ~task()
+                {
+                    if(coro_)
+                        coro_.destroy();
+                }
                 bool await_ready()
                 {
                     return coro_.done();
@@ -165,14 +176,6 @@ namespace ranges
                 {
                     return coro_.promise().await_resume();
                 }
-                ~task()
-                {
-                    if(coro_)
-                        coro_.destroy();
-                }
-                task(task &&that) noexcept
-                  : coro_(ranges::exchange(that.coro_, nullptr))
-                {}
             };
         }
     }
