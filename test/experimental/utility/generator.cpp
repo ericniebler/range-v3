@@ -25,8 +25,8 @@
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/experimental/utility/generator.hpp>
-#include "simple_test.hpp"
-#include "test_utils.hpp"
+#include "../../simple_test.hpp"
+#include "../../test_utils.hpp"
 
 template<bool Condition>
 using maybe_sized_generator = meta::if_c<Condition,
