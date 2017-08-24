@@ -19,6 +19,7 @@
 #include <utility>
 #include <experimental/coroutine>
 #include <meta/meta.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/box.hpp>
@@ -201,7 +202,7 @@ namespace ranges
 
         namespace experimental
         {
-            template<typename Reference, typename Value = uncvref_t<Reference>>
+            template<typename Reference, typename Value /* = uncvref_t<Reference> */>
             struct generator
               : view_facade<generator<Reference, Value>>
             {
@@ -259,7 +260,7 @@ namespace ranges
                 }
             };
 
-            template<typename Reference, typename Value = uncvref_t<Reference>>
+            template<typename Reference, typename Value /* = uncvref_t<Reference> */>
             struct sized_generator
               : generator<Reference, Value>
             {

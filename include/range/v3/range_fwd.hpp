@@ -812,6 +812,20 @@ namespace ranges
 
             struct zip_fn;
         }
+
+        namespace experimental
+        {
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+            template<typename T = void>
+            struct task;
+
+            template<typename Reference, typename Value = uncvref_t<Reference>>
+            struct generator;
+
+            template<typename Reference, typename Value = uncvref_t<Reference>>
+            struct sized_generator;
+#endif            
+        }
     }
 }
 
