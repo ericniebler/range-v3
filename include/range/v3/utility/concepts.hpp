@@ -131,56 +131,65 @@ namespace ranges
                 constexpr operator Head*() const { return nullptr; }
                 constexpr Head* operator()() const { return nullptr; }
             };
-
         }
         /// \endcond
 
+
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-        struct as_awaitable_fn
+        /// \cond
+        namespace detail
         {
-        private:
             template<typename T>
-            constexpr static auto impl2(T &&t, int)
+            constexpr auto as_awaitable_impl2(T &&t, int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<T &&>(t).operator co_await()
             )
             template<typename T>
-            constexpr static auto impl2(T &&t, long)
+            constexpr auto as_awaitable_impl2(T &&t, long)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 operator co_await(static_cast<T &&>(t))
             )
             template<typename T>
-            constexpr static auto impl2(T &&t, detail::any)
+            constexpr auto as_awaitable_impl2(T &&t, detail::any)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<T &&>(t)
             )
-            template<typename U, typename T>
-            constexpr static auto impl1(T &&t, int)
+            template<typename U, typename... Args, typename T,
+                typename Traits = std::experimental::coroutine_traits<U, Args...>>
+            constexpr auto as_awaitable_impl1(T &&t, int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                as_awaitable_fn::impl2(std::declval<typename U::promise_type &>().await_transform(
-                    static_cast<T &&>(t)), 42)
+                detail::as_awaitable_impl2(
+                    std::declval<typename Traits::promise_type &>().await_transform(
+                        static_cast<T &&>(t)), 42)
             )
-            template<typename U, typename T>
-            constexpr static auto impl1(T &&t, long)
+            template<typename U, typename... Args, typename T>
+            constexpr auto as_awaitable_impl1(T &&t, long)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                as_awaitable_fn::impl2(static_cast<T &&>(t), 42)
+                detail::as_awaitable_impl2(static_cast<T &&>(t), 42)
             )
-        public:
-            // Is T awaitable in the coroutine U?
-            template<typename T, typename U = uncvref_t<T>>
-            constexpr auto operator()(T &&t, meta::id<U> = {}) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                as_awaitable_fn::impl1<U>(static_cast<T &&>(t), 42)
-            )
-        };
+        }
+        /// \endcond
 
-        RANGES_INLINE_VARIABLE(as_awaitable_fn, as_awaitable)
+        // Is T awaitable?
+        template<typename T>
+        constexpr auto as_awaitable(T &&t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            detail::as_awaitable_impl2(static_cast<T &&>(t), 42)
+        )
+
+        // Is T awaitable in the context of [U, Args...]?
+        template<typename U, typename... Args, typename T>
+        constexpr auto as_awaitable(T &&t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            detail::as_awaitable_impl1<U, Args...>(static_cast<T &&>(t), 42)
+        )
 #endif
 
         /// \addtogroup group-concepts
@@ -627,43 +636,35 @@ namespace ranges
             {};
 
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-            struct CoPromise
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<DefaultConstructible, T>(),
-                        (t.initial_suspend(), 42),
-                        (t.unhandled_exception(), 42),
-                        (t.final_suspend(), 42)
-                        // And exactly one of return_value or return_void, but
-                        // can't portably detect return_value. :-(
-                    ));
-            };
-
             struct CoAwaitable
             {
-                template<typename U>
-                using promise_t = typename uncvref_t<U>::promise_type;
+            private:
+                template<typename... Args>
+                struct promise_type_
+                  : meta::id<void>
+                {};
+                template<typename R, typename... Args>
+                struct promise_type_<R, Args...>
+                  : meta::id<typename std::experimental::coroutine_traits<R, Args...>::promise_type>
+                {};
+            public:
+                template<typename... Args>
+                using promise_t = meta::_t<promise_type_<Args...>>;
 
-                template<typename T, typename U = uncvref_t<T>>
-                using awaitable_t = decltype(as_awaitable(std::declval<T &&>(), meta::id<U>{}));
+                template<typename T, typename... Args>
+                using awaitable_t = decltype(ranges::as_awaitable<Args...>(std::declval<T &&>()));
 
-                template<typename T, typename U = uncvref_t<T>>
-                using value_t = decltype(as_awaitable(std::declval<T &&>(), meta::id<U>{}).await_resume());
+                template<typename T, typename... Args>
+                using value_t = decltype(std::declval<awaitable_t<T, Args...>>().await_resume());
 
-                template<typename T, typename U>
-                auto requires_(awaitable_t<T, U> (&t)()) -> decltype(
+                template<typename T, typename... Args>
+                auto requires_(awaitable_t<T, Args...> (&t)()) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<CoPromise, promise_t<U>>(),
                         concepts::convertible_to<bool>(t().await_ready()),
                         // // TODO: Should return exactly void or bool:
-                        (t().await_suspend(std::experimental::coroutine_handle<promise_t<U>>{}), 42),
+                        (t().await_suspend(std::experimental::coroutine_handle<promise_t<Args...>>{}), 42),
                         (t().await_resume(), 42)
                     ));
-
-                template<typename T>
-                auto requires_() -> decltype(&CoAwaitable::requires_<T, uncvref_t<T>>);
             };
 #endif
         } // namespace concepts
@@ -748,11 +749,8 @@ namespace ranges
         using Regular = concepts::models<concepts::Regular, T>;
 
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-        template<typename T>
-        using CoPromise = concepts::models<concepts::CoPromise, T>;
-
-        template<typename T, typename U = uncvref_t<T>>
-        using CoAwaitable = concepts::models<concepts::CoAwaitable, T, U>;
+        template<typename T, typename... Args>
+        using CoAwaitable = concepts::models<concepts::CoAwaitable, T, Args...>;
 #endif
     }
 }

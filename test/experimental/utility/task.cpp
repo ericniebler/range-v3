@@ -158,6 +158,7 @@ minig f(int n)
         co_await i; // Yes, really!
 }
 
+CONCEPT_ASSERT(!ranges::CoAwaitable<int>());
 CONCEPT_ASSERT(ranges::CoAwaitable<int, minig>());
 
 int main()

@@ -67,7 +67,7 @@ namespace ranges
                         ::new((void *)&buffer_) value_type(static_cast<U &&>(value));
                         which_ = which::value;
                     }
-                    void unhandled_exception()
+                    void unhandled_exception() noexcept
                     {
                         RANGES_EXPECT(which_ == which::none);
                         ::new((void *)&buffer_) std::exception_ptr(std::current_exception());
@@ -188,6 +188,19 @@ namespace ranges
             {
             private:
                 task<T> *task_ = nullptr;
+                struct postinc
+                {
+                    bool await_ready() { return true; }
+                    void await_suspend(std::experimental::coroutine_handle<>) {}
+                    void await_resume() {}
+                };
+                struct preinc
+                {
+                    task_iterator &it_;
+                    bool await_ready() { return true; }
+                    void await_suspend(std::experimental::coroutine_handle<>) {}
+                    task_iterator &await_resume() { return it_; }
+                };
             public:
                 task_iterator() = default;
                 explicit task_iterator(task<T> &t) noexcept
@@ -199,21 +212,21 @@ namespace ranges
                 task_iterator &operator=(task_iterator &&that) noexcept
                 {
                     task_ = ranges::exchange(that.task_, nullptr);
-                    return &this;
+                    return *this;
                 }
                 T operator*() const
                 {
                     return task_->await_resume();
                 }
-                task<task_iterator &> operator++()
+                preinc operator++()
                 {
                     task_ = nullptr;
-                    co_return *this;
+                    return {*this};
                 }
-                task<> operator++(int)
+                postinc operator++(int)
                 {
                     task_ = nullptr;
-                    co_return;
+                    return {};
                 }
                 friend bool operator==(task_iterator const &x, task_iterator const &y)
                 {
