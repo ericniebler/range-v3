@@ -158,13 +158,13 @@ namespace ranges
                 static_cast<T &&>(t)
             )
             template<typename U, typename... Args, typename T,
-                typename Traits = std::experimental::coroutine_traits<U, Args...>>
-            constexpr auto as_awaitable_impl1(T &&t, int)
+                typename Traits = std::experimental::coroutine_traits<U, Args...>,
+                typename P = typename Traits::promise_type>
+            constexpr auto as_awaitable_impl1(T &&t, int, P p = P{})
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                detail::as_awaitable_impl2(
-                    std::declval<typename Traits::promise_type &>().await_transform(
-                        static_cast<T &&>(t)), 42)
+                // BUGBUG This is just *a* promise, it is not THE promise. Does it matter?
+                detail::as_awaitable_impl2(p.await_transform(static_cast<T &&>(t)), 42)
             )
             template<typename U, typename... Args, typename T>
             constexpr auto as_awaitable_impl1(T &&t, long)
