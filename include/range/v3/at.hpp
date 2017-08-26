@@ -38,13 +38,11 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && SizedRange<Rng>())>
             RANGES_CXX14_CONSTEXPR
             auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
-                decltype(begin(rng)[n])
+                decltype(ranges::begin(rng)[n])
             {
-                if(n < 0 || n >= ranges::distance(rng))
-                {
-                    throw std::out_of_range("ranges::at");
-                }
-                return begin(rng)[n];
+                // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
+                check_throw(rng, n);
+                return ranges::begin(rng)[n];
             }
             /// \return `begin(rng)[n]`
             template<typename Rng,
@@ -83,7 +81,15 @@ namespace ranges
                 CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<R>>(),
                     "ranges::at(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             }
-          /// \endcond
+
+        private:
+            template<class Rng>
+            RANGES_CXX14_CONSTEXPR
+            static void check_throw(Rng &&rng, range_difference_type_t<Rng> n)
+            {
+                (n < 0 || n >= ranges::distance(rng)) ? throw std::out_of_range("ranges::at") : void(0);
+            }
+            /// \endcond
         };
 
         /// Checked indexed range access.
