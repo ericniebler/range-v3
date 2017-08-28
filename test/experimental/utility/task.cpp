@@ -17,23 +17,36 @@
 #include "../../test_utils.hpp"
 
 using namespace std::experimental;
+using ranges::experimental::task;
+using ranges::experimental::sync_wait;
 
-ranges::experimental::task<int> fun1()
+// Concept checks:
+CONCEPT_ASSERT(!ranges::AsyncView<task<>>());
+CONCEPT_ASSERT(ranges::AsyncView<task<int>>());
+CONCEPT_ASSERT(ranges::AsyncView<task<int &>>());
+
+CONCEPT_ASSERT(
+    ranges::Same<
+        ranges::value_type_t<ranges::co_await_resume_t<ranges::iterator_t<task<int &>>>>,
+        int>());
+
+task<int> fun1()
 {
     co_return 42;
 }
 
-ranges::experimental::task<int> fun2()
+task<int> fun2()
 {
     int i = co_await fun1();
     co_return i + 1;
 }
 
-ranges::experimental::task<> test_task_as_range()
+task<> test_task_as_range()
 {
     auto e = fun2();
+    auto e2 = std::move(e);
+    e = std::move(e2);
     int count = 0;
-    // ranges::begin(e); // doesn't work yet
     for co_await (int i : e)
     {
         ++count;
@@ -47,7 +60,7 @@ void test_int()
     auto i = fun2();
     try
     {
-        int j = ranges::experimental::sync_wait(std::move(i));
+        int j = sync_wait(std::move(i));
         CHECK(j == 43);
     }
     catch(...)
@@ -57,12 +70,12 @@ void test_int()
 }
 
 int count = 0;
-ranges::experimental::task<> fun3()
+task<> fun3()
 {
     ++count;
     co_return;
 }
-ranges::experimental::task<> fun4()
+task<> fun4()
 {
     ++count;
     (void)co_await fun3();
@@ -73,7 +86,7 @@ void test_void()
     auto v = fun4();
     try
     {
-        ranges::experimental::sync_wait(std::move(v));
+        sync_wait(std::move(v));
         CHECK(count == 2);
     }
     catch(...)
@@ -82,11 +95,11 @@ void test_void()
     }
 }
 
-ranges::experimental::task<> fun5()
+task<> fun5()
 {
     throw 42;
 }
-ranges::experimental::task<> fun6()
+task<> fun6()
 {
     (void)co_await fun5();
 }
@@ -96,7 +109,7 @@ void test_exception()
     auto e = fun6();
     try
     {
-        ranges::experimental::sync_wait(std::move(e));
+        sync_wait(std::move(e));
         CHECK(false);
     }
     catch(int i)
@@ -167,11 +180,11 @@ int main()
     test_void();
     test_exception();
 
-    ranges::experimental::sync_wait(test_task_as_range());
+    sync_wait(test_task_as_range());
 
     // This exercises the CoAwaitable concept and sync_wait:
     T::S s;
-    ranges::experimental::sync_wait(s);
+    sync_wait(s);
 
     return ::test_result();
 }

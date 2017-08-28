@@ -163,7 +163,6 @@ namespace ranges
             constexpr auto as_awaitable_impl1(T &&t, int, P p = P{})
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                // BUGBUG This is just *a* promise, it is not THE promise. Does it matter?
                 detail::as_awaitable_impl2(p.await_transform(static_cast<T &&>(t)), 42)
             )
             template<typename U, typename... Args, typename T>
@@ -183,13 +182,15 @@ namespace ranges
             detail::as_awaitable_impl2(static_cast<T &&>(t), 42)
         )
 
-        // Is T awaitable in the context of [U, Args...]?
-        template<typename U, typename... Args, typename T>
-        constexpr auto as_awaitable(T &&t)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::as_awaitable_impl1<U, Args...>(static_cast<T &&>(t), 42)
-        )
+        /// \cond
+        template<typename R, typename... Args, typename T>
+        auto as_awaitable(T &&t) ->
+            decltype(detail::as_awaitable_impl1<R, Args...>(std::declval<T>(), 42));
+        /// \endcond
+
+        // Is T awaitable in the context of [R, Args...]?
+        template<typename T, typename... RAndArgs>
+        using as_awaitable_t = decltype(ranges::as_awaitable<RAndArgs...>(std::declval<T>()));
 #endif
 
         /// \addtogroup group-concepts
@@ -639,7 +640,7 @@ namespace ranges
             struct CoAwaitable
             {
             private:
-                template<typename... Args>
+                template<typename... RAndArgs>
                 struct promise_type_
                   : meta::id<void>
                 {};
@@ -648,24 +649,27 @@ namespace ranges
                   : meta::id<typename std::experimental::coroutine_traits<R, Args...>::promise_type>
                 {};
             public:
-                template<typename... Args>
-                using promise_t = meta::_t<promise_type_<Args...>>;
+                template<typename... RAndArgs>
+                using promise_t = meta::_t<promise_type_<RAndArgs...>>;
 
-                template<typename T, typename... Args>
-                using awaitable_t = decltype(ranges::as_awaitable<Args...>(std::declval<T &&>()));
+                template<typename T, typename... RAndArgs>
+                using await_resume_t =
+                    decltype(std::declval<ranges::as_awaitable_t<T, RAndArgs...>>().await_resume());
 
-                template<typename T, typename... Args>
-                using value_t = decltype(std::declval<awaitable_t<T, Args...>>().await_resume());
-
-                template<typename T, typename... Args>
-                auto requires_(awaitable_t<T, Args...> (&t)()) -> decltype(
+                template<typename T, typename... RAndArgs>
+                auto requires_(ranges::as_awaitable_t<T, RAndArgs...> (&t)()) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t().await_ready()),
                         // // TODO: Should return exactly void or bool:
-                        (t().await_suspend(std::experimental::coroutine_handle<promise_t<Args...>>{}), 42),
+                        (t().await_suspend(
+                            std::experimental::coroutine_handle<promise_t<RAndArgs...>>{}), 42),
                         (t().await_resume(), 42)
                     ));
             };
+
+            template<typename T, typename... RAndArgs,
+                meta::_t<std::enable_if<models<CoAwaitable, T, RAndArgs...>::value, int>> = 0>
+            CoAwaitable::await_resume_t<T, RAndArgs...> co_await_(T &&);
 #endif
         } // namespace concepts
 
@@ -751,6 +755,9 @@ namespace ranges
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
         template<typename T, typename... Args>
         using CoAwaitable = concepts::models<concepts::CoAwaitable, T, Args...>;
+
+        template<typename T, typename... RAndArgs>
+        using co_await_resume_t = concepts::CoAwaitable::await_resume_t<T, RAndArgs...>;
 #endif
     }
 }

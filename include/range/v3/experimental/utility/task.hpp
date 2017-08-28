@@ -168,6 +168,12 @@ namespace ranges
                     if(coro_)
                         coro_.destroy();
                 }
+                task &operator=(task &&that) noexcept
+                {
+                    if(auto old = ranges::exchange(coro_, ranges::exchange(that.coro_, nullptr)))
+                        old.destroy();
+                    return *this;
+                }
                 bool await_ready()
                 {
                     return coro_.done();
@@ -202,6 +208,8 @@ namespace ranges
                     task_iterator &await_resume() { return it_; }
                 };
             public:
+                using difference_type = std::ptrdiff_t;
+                using value_type = uncvref_t<T>;
                 task_iterator() = default;
                 explicit task_iterator(task<T> &t) noexcept
                   : task_(&t)

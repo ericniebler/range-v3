@@ -386,7 +386,30 @@ namespace ranges
                         concepts::model_of<Same, value_t<I>, uncvref_t<reference_t<I>>>()
                     ));
             };
-        }
+
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+            struct AsyncIterator
+              : refines<Readable>
+            {
+                // Associated types
+                template<typename I>
+                using difference_t = meta::_t<difference_type<I>>;
+
+                template<typename In>
+                auto requires_(In &in) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_integral<difference_t<In>>{}),
+                        concepts::model_of<Movable, In>(),
+                        concepts::same_type(concepts::co_await_(++in), in),
+                        concepts::model_of<CoAwaitable>(in++)
+                    ));
+            };
+
+            struct AsyncSentinel
+              : refines<Movable(_1), AsyncIterator(_2), WeaklyEqualityComparable>
+            {};
+#endif
+        } // namespace concepts
 
         template<typename T>
         using Readable = concepts::models<concepts::Readable, T>;
@@ -468,6 +491,14 @@ namespace ranges
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
         using SinglePass = meta::strict_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
+
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+        template<typename I>
+        using AsyncIterator = concepts::models<concepts::AsyncIterator, I>;
+
+        template<typename S, typename I>
+        using AsyncSentinel = concepts::models<concepts::AsyncSentinel, S, I>;
+#endif
 
         /// \cond
         namespace detail

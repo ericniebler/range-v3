@@ -70,6 +70,28 @@ namespace ranges
                     begin(r)
                 )
 
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+                // Not to spec: Asynchronous iterators are an extension
+                // Prefer member if it returns Iterator.
+                template<typename R,
+                    typename I = decltype(concepts::co_await_(std::declval<R &>().begin())),
+                    CONCEPT_REQUIRES_(AsyncIterator<uncvref_t<I>>())>
+                static constexpr auto impl_(R &r, int)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    r.begin()
+                )
+
+                // Use ADL if it returns Iterator.
+                template<typename R,
+                    typename I = decltype(concepts::co_await_(begin(std::declval<R &>()))),
+                    CONCEPT_REQUIRES_(AsyncIterator<uncvref_t<I>>())>
+                static constexpr auto impl_(R &r, long)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    begin(r)
+                )
+#endif
             public:
                 template<typename R>
                 constexpr auto operator()(R &r) const
@@ -151,6 +173,30 @@ namespace ranges
                     end(r)
                 )
 
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+                // Not to spec: Asynchronous iterators are an extension
+                // Prefer member if it returns Sentinel.
+                template<typename R,
+                    typename I = decltype(concepts::co_await_(ranges::begin(std::declval<R &>()))),
+                    typename S = decltype(std::declval<R &>().end()),
+                    CONCEPT_REQUIRES_(AsyncSentinel<uncvref_t<S>, uncvref_t<I>>())>
+                static constexpr S impl_(R &r, int)
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    r.end()
+                )
+
+                // Use ADL if it returns Sentinel.
+                template<typename R,
+                    typename I = decltype(concepts::co_await_(ranges::begin(std::declval<R &>()))),
+                    typename S = decltype(end(std::declval<R &>())),
+                    CONCEPT_REQUIRES_(AsyncSentinel<uncvref_t<S>, uncvref_t<I>>())>
+                static constexpr S impl_(R &r, long)
+                RANGES_AUTO_RETURN_NOEXCEPT
+                (
+                    end(r)
+                )
+#endif
             public:
                 template<typename R>
                 constexpr auto operator()(R &r) const
