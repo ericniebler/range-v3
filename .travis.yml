@@ -1,4 +1,4 @@
-﻿# Copyright Louis Dionne 2013-2016
+# Copyright Louis Dionne 2013-2016
 # Copyright Gonzalo BG 2014-2017
 # Copyright Julian Becker 2015
 # Copyright Manu Sánchez 2015
@@ -285,7 +285,6 @@ install:
   - cd build
   - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
   - if [ -n "$GCC_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined -fno-omit-frame-pointer"; fi
-  - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"; fi
   - if [ "$HEADERS" == "On" ]; then NO_HEADER_CHECK=0; else NO_HEADER_CHECK=1; fi
