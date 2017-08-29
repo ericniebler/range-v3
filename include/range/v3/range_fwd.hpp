@@ -481,14 +481,11 @@ namespace ranges
         template<typename I, typename S = I>
         struct sized_iterator_range;
 
-        template<typename T, bool RValue = false>
+        template<typename T>
         struct reference_wrapper;
 
         template<typename>
         struct is_reference_wrapper;
-
-        template<typename T>
-        using rvalue_reference_wrapper = reference_wrapper<T, true>;
 
         // Views
         //
