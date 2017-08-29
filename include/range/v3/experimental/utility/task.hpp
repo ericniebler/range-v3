@@ -52,10 +52,7 @@ namespace ranges
                         value,
                         error
                     };
-                    using value_type = meta::if_<
-                        std::is_reference<T>,
-                        reference_wrapper<meta::_t<std::remove_reference<T>>, std::is_rvalue_reference<T>::value>,
-                        T>;
+                    using value_type = meta::if_<std::is_reference<T>, reference_wrapper<T>, T>;
                     which which_{which::none};
                     meta::_t<std::aligned_union<0, value_type, std::exception_ptr>> buffer_;
 
@@ -73,7 +70,7 @@ namespace ranges
                         ::new((void *)&buffer_) std::exception_ptr(std::current_exception());
                         which_ = which::error;
                     }
-                    T await_resume()
+                    T await_resume() const
                     {
                         switch(which_)
                         {
@@ -99,13 +96,13 @@ namespace ranges
                 struct promise_base<void>
                 {
                     std::exception_ptr eptr;
-                    void return_void()
+                    void return_void() const noexcept
                     {}
-                    void unhandled_exception()
+                    void unhandled_exception() noexcept
                     {
                         eptr = std::current_exception();
                     }
-                    void await_resume()
+                    void await_resume() const
                     {
                         if(eptr)
                             std::rethrow_exception(eptr);
@@ -123,15 +120,15 @@ namespace ranges
                 struct final_suspend_result
                 {
                     promise_type *me_;
-                    bool await_ready()
+                    bool await_ready() const noexcept
                     {
                         return false;
                     }
-                    void await_suspend(std::experimental::coroutine_handle<>)
+                    void await_suspend(std::experimental::coroutine_handle<>) const noexcept
                     {
                         me_->waiter.resume();
                     }
-                    void await_resume()
+                    void await_resume() const noexcept
                     {}
                 };
 
@@ -145,16 +142,15 @@ namespace ranges
                   : detail::promise_base<T>
                 {
                     std::experimental::coroutine_handle<> waiter;
-
-                    task get_return_object()
+                    task get_return_object() noexcept
                     {
                         return task{*this};
                     }
-                    std::experimental::suspend_always initial_suspend()
+                    std::experimental::suspend_always initial_suspend() const noexcept
                     {
                         return {};
                     }
-                    final_suspend_result final_suspend()
+                    final_suspend_result final_suspend() noexcept
                     {
                         return final_suspend_result{this};
                     }
@@ -174,16 +170,16 @@ namespace ranges
                         old.destroy();
                     return *this;
                 }
-                bool await_ready()
+                bool await_ready() const noexcept
                 {
                     return coro_.done();
                 }
-                void await_suspend(std::experimental::coroutine_handle<> waiter)
+                void await_suspend(std::experimental::coroutine_handle<> waiter) noexcept
                 {
                     coro_.promise().waiter = waiter;
                     coro_.resume();
                 }
-                T await_resume()
+                T await_resume() const
                 {
                     return coro_.promise().await_resume();
                 }
@@ -196,16 +192,16 @@ namespace ranges
                 task<T> *task_ = nullptr;
                 struct postinc
                 {
-                    bool await_ready() { return true; }
-                    void await_suspend(std::experimental::coroutine_handle<>) {}
-                    void await_resume() {}
+                    bool await_ready() const noexcept { return true; }
+                    void await_suspend(std::experimental::coroutine_handle<>) const noexcept {}
+                    void await_resume() const noexcept {}
                 };
                 struct preinc
                 {
                     task_iterator &it_;
-                    bool await_ready() { return true; }
-                    void await_suspend(std::experimental::coroutine_handle<>) {}
-                    task_iterator &await_resume() { return it_; }
+                    bool await_ready() const noexcept { return true; }
+                    void await_suspend(std::experimental::coroutine_handle<>) const noexcept {}
+                    task_iterator &await_resume() const noexcept { return it_; }
                 };
             public:
                 using difference_type = std::ptrdiff_t;
@@ -214,33 +210,25 @@ namespace ranges
                 explicit task_iterator(task<T> &t) noexcept
                   : task_(&t)
                 {}
-                task_iterator(task_iterator &&that) noexcept
-                  : task_(ranges::exchange(that.task_, nullptr))
-                {}
-                task_iterator &operator=(task_iterator &&that) noexcept
-                {
-                    task_ = ranges::exchange(that.task_, nullptr);
-                    return *this;
-                }
                 T operator*() const
                 {
                     return task_->await_resume();
                 }
-                preinc operator++()
+                preinc operator++() noexcept
                 {
                     task_ = nullptr;
                     return {*this};
                 }
-                postinc operator++(int)
+                postinc operator++(int) noexcept
                 {
                     task_ = nullptr;
                     return {};
                 }
-                friend bool operator==(task_iterator const &x, task_iterator const &y)
+                friend bool operator==(task_iterator const &x, task_iterator const &y) noexcept
                 {
                     return x.task_ == y.task_;
                 }
-                friend bool operator!=(task_iterator const &x, task_iterator const &y)
+                friend bool operator!=(task_iterator const &x, task_iterator const &y) noexcept
                 {
                     return !(x == y);
                 }
@@ -253,16 +241,15 @@ namespace ranges
                 struct task_begin
                 {
                     task<T> &task_;
-
-                    bool await_ready()
+                    bool await_ready() const noexcept
                     {
                         return task_.await_ready();
                     }
-                    void await_suspend(std::experimental::coroutine_handle<> waiter)
+                    void await_suspend(std::experimental::coroutine_handle<> waiter) const noexcept
                     {
                         task_.await_suspend(waiter);
                     }
-                    task_iterator<T> await_resume()
+                    task_iterator<T> await_resume() const noexcept
                     {
                         return task_iterator<T>(task_);
                     }
