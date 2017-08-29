@@ -69,8 +69,8 @@ namespace ranges
                     Fn()(ref.get())
                 )
 
-                template<typename T, bool RValue, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T, RValue> ref) const
+                template<typename T, typename Fn = fn>
+                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     Fn()(ref.get())

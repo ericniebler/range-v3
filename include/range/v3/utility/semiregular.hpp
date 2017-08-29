@@ -161,34 +161,34 @@ namespace ranges
 
         template<typename T>
         struct semiregular<T &>
-          : private ranges::reference_wrapper<T>
+          : private ranges::reference_wrapper<T &>
         {
             semiregular() = default;
             template<typename Arg,
-                CONCEPT_REQUIRES_(Constructible<T &, Arg &>())>
+                CONCEPT_REQUIRES_(Constructible<ranges::reference_wrapper<T &>, Arg &>())>
             semiregular(in_place_t, Arg &arg)
-              : ranges::reference_wrapper<T>(static_cast<T &>(arg))
+              : ranges::reference_wrapper<T &>(arg)
             {}
-            using ranges::reference_wrapper<T>::reference_wrapper;
-            using ranges::reference_wrapper<T>::get;
-            using ranges::reference_wrapper<T>::operator T &;
-            using ranges::reference_wrapper<T>::operator();
+            using ranges::reference_wrapper<T &>::reference_wrapper;
+            using ranges::reference_wrapper<T &>::get;
+            using ranges::reference_wrapper<T &>::operator T &;
+            using ranges::reference_wrapper<T &>::operator();
         };
 
         template<typename T>
         struct semiregular<T &&>
-          : private ranges::reference_wrapper<T, true>
+          : private ranges::reference_wrapper<T &&>
         {
             semiregular() = default;
             template<typename Arg,
-                CONCEPT_REQUIRES_(Constructible<T &&, Arg>())>
+                CONCEPT_REQUIRES_(Constructible<ranges::reference_wrapper<T &&>, Arg>())>
             semiregular(in_place_t, Arg &&arg)
-              : ranges::reference_wrapper<T, true>(static_cast<T &&>(arg))
+              : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))
             {}
-            using ranges::reference_wrapper<T, true>::reference_wrapper;
-            using ranges::reference_wrapper<T, true>::get;
-            using ranges::reference_wrapper<T, true>::operator T &&;
-            using ranges::reference_wrapper<T, true>::operator();
+            using ranges::reference_wrapper<T &&>::reference_wrapper;
+            using ranges::reference_wrapper<T &&>::get;
+            using ranges::reference_wrapper<T &&>::operator T &&;
+            using ranges::reference_wrapper<T &&>::operator();
         };
 
         template<typename T>
