@@ -13,6 +13,7 @@
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <range/v3/experimental/utility/task.hpp>
 #include <range/v3/experimental/utility/sync_wait.hpp>
+#include <range/v3/experimental/utility/sync_wait_all.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 
@@ -30,13 +31,19 @@ CONCEPT_ASSERT(
         ranges::value_type_t<ranges::co_await_resume_t<ranges::iterator_t<task<int &>>>>,
         int>());
 
+#include <cstdio>
+
 task<int> fun1()
 {
+    std::printf("fun1\n");
+    std::fflush(stdout);
     co_return 42;
 }
 
 task<int> fun2()
 {
+    std::printf("fun2\n");
+    std::fflush(stdout);
     int i = co_await fun1();
     co_return i + 1;
 }
@@ -53,16 +60,16 @@ task<> test_task_as_range()
         CHECK(i == 43);
     }
     CHECK(count == 1);
-    // // task<> is a bit special: it can be enumerated multiple times since the value is still
-    // // sitting in the promise.
-    // using namespace ranges;
-    // iterator_range<iterator_t<task<int>>, sentinel_t<task<int>>> v {begin(e), end(e)};
-    // for co_await (int i : v)
-    // {
-    //     ++count;
-    //     CHECK(i == 43);
-    // }
-    // CHECK(count == 2);
+    // task<> is a bit special: it can be enumerated multiple times since the value is still
+    // sitting in the promise.
+    using namespace ranges;
+    iterator_range<iterator_t<task<int>>, sentinel_t<task<int>>> v {begin(e), end(e)};
+    for co_await (int i : v)
+    {
+        ++count;
+        CHECK(i == 43);
+    }
+    CHECK(count == 2);
 }
 
 void test_int()

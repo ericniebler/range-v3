@@ -70,10 +70,19 @@ namespace ranges
             /// \sa make_view_fn
             RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+            template<typename Rng>
+            using ViewableRange = meta::or_<
+                meta::and_<
+                    Range<Rng>,
+                    meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>,
+                AsyncView<uncvref_t<Rng>>>;
+#else
             template<typename Rng>
             using ViewableRange = meta::and_<
                 Range<Rng>,
                 meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
+#endif
 
             template<typename View>
             struct view : pipeable<view<View>>

@@ -56,7 +56,7 @@ namespace ranges
                     return {begin(t), end(t)};
                 }
 
-                /// If it's a view already, pass it though.
+                /// If it's a view already, pass it through.
                 template<typename T,
                     CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
                 static T from_range(T && t)
@@ -75,7 +75,8 @@ namespace ranges
                 static auto from_range(T && t) ->
                     decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
-                    static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
+                    static_assert(std::is_lvalue_reference<T>::value,
+                        "Cannot get a view of a temporary container");
                     return all_fn::from_container(t, SIC(), SIRC());
                 }
 
@@ -96,6 +97,16 @@ namespace ranges
                 {
                     return ranges::ref(ref.get());
                 }
+
+#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+                /// If it's an async view, pass it through.
+                template<typename T,
+                    CONCEPT_REQUIRES_(AsyncView<uncvref_t<T>>())>
+                T operator()(T && t) const
+                {
+                    return static_cast<T&&>(t);
+                }
+#endif
             };
 
             /// \relates all_fn

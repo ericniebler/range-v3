@@ -162,4 +162,18 @@ inline int test_result()
     (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__) \
     /**/
 
+#define CHECK_THROW(X, Y) \
+    try                                                                     \
+    {                                                                       \
+        X;                                                                  \
+        CHECK(false);                                                       \
+    }                                                                       \
+    catch(Y)                                                                \
+    {}                                                                      \
+    catch(...)                                                              \
+    {                                                                       \
+        CHECK(false);                                                       \
+    }                                                                       \
+    /**/
+
 #endif
