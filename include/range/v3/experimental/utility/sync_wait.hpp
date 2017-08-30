@@ -17,10 +17,12 @@
 #include <range/v3/detail/config.hpp>
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <mutex>
+#include <exception>
 #include <condition_variable>
 #include <experimental/coroutine>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/invoke.hpp> // for reference_wrapper
 
 namespace ranges
 {
@@ -28,6 +30,48 @@ namespace ranges
     {
         namespace experimental
         {
+            /// \cond
+            namespace detail
+            {
+                struct sync_wait_promise_base
+                {
+                    std::exception_ptr eptr_;
+                    void unhandled_exception() noexcept
+                    {
+                        eptr_ = std::current_exception();
+                    }
+                    void get() const
+                    {
+                        if(eptr_)
+                        {
+                            std::rethrow_exception(eptr_);
+                        }
+                    }
+                };
+                struct sync_wait_void_promise : sync_wait_promise_base
+                {
+                    void return_void() const noexcept
+                    {}
+                };
+                template<typename T>
+                struct sync_wait_value_promise : sync_wait_promise_base
+                {
+                    using value_type = meta::if_<std::is_reference<T>, reference_wrapper<T>, T>;
+                    alignas(value_type) char buffer_[sizeof(value_type)];
+                    template<typename U>
+                    void return_value(U &&u)
+                    {
+                        ::new((void*)&buffer_) value_type(static_cast<U &&>(u));
+                    }
+                    T &get()
+                    {
+                        this->sync_wait_promise_base::get();
+                        return *static_cast<value_type *>((void*)&buffer_);
+                    }
+                };
+            } // namespace detail
+            /// \endcond
+
             template<typename T,
                 CONCEPT_REQUIRES_(CoAwaitable<T>())>
             co_await_resume_t<T> sync_wait(T &&t)
@@ -37,6 +81,10 @@ namespace ranges
                     // In this awaitable's final_suspend, signal a condition variable. Then in
                     // the awaitable's wait() function, wait on the condition variable.
                     struct promise_type
+                      : meta::if_<
+                            std::is_void<co_await_resume_t<T>>,
+                            detail::sync_wait_void_promise,
+                            detail::sync_wait_value_promise<co_await_resume_t<T>>>
                     {
                         std::mutex mtx_;
                         std::condition_variable cnd_;
@@ -56,10 +104,6 @@ namespace ranges
                         {
                             return _{*this};
                         }
-                        void return_void() const noexcept
-                        {}
-                        void unhandled_exception() const noexcept
-                        {}
                     };
                     promise_type *promise_;
 
@@ -72,23 +116,25 @@ namespace ranges
                     ~_()
                     {
                         if(promise_)
+                        {
                             // Needed because final_suspend returns suspend_always:
                             std::experimental::coroutine_handle<promise_type>::
                                 from_promise(*promise_).destroy();
+                        }
                     }
-                    void wait() noexcept
+                    co_await_resume_t<T> wait()
                     {
                         std::unique_lock<std::mutex> lock(promise_->mtx_);
                         promise_->cnd_.wait(lock, [this] { return promise_->done_; });
+                        return promise_->get();
                     }
                 };
 
-                [](T &t) -> _ { (void)co_await t; }(t).wait();
-                return as_awaitable(static_cast<T &&>(t)).await_resume();
+                return [](T &t) -> _ { co_return co_await t; }(t).wait();
             }
-        }
-    }
-}
+        } // namespace experimental
+    } // namespace v3
+} // namespace ranges
 
 #endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #endif // RANGES_V3_EXPERIMENTAL_UTILITY_SYNC_AWAIT_HPP

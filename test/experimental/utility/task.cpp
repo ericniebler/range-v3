@@ -53,6 +53,16 @@ task<> test_task_as_range()
         CHECK(i == 43);
     }
     CHECK(count == 1);
+    // // task<> is a bit special: it can be enumerated multiple times since the value is still
+    // // sitting in the promise.
+    // using namespace ranges;
+    // iterator_range<iterator_t<task<int>>, sentinel_t<task<int>>> v {begin(e), end(e)};
+    // for co_await (int i : v)
+    // {
+    //     ++count;
+    //     CHECK(i == 43);
+    // }
+    // CHECK(count == 2);
 }
 
 void test_int()
@@ -174,11 +184,20 @@ minig f(int n)
 CONCEPT_ASSERT(!ranges::CoAwaitable<int>());
 CONCEPT_ASSERT(ranges::CoAwaitable<int, minig>());
 
+int global_int = 42;
+void test_by_reference()
+{
+    auto t = []() -> task<int &> { co_return global_int; }();
+    auto &iref = sync_wait(t);
+    CHECK(&iref == &global_int);
+}
+
 int main()
 {
     test_int();
     test_void();
     test_exception();
+    test_by_reference();
 
     sync_wait(test_task_as_range());
 
