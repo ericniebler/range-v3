@@ -328,6 +328,12 @@ namespace ranges
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
         template<typename T>
         using AsyncView = concepts::models<concepts::AsyncView, T>;
+
+        template<typename T>
+        using co_iterator_t = co_await_resume_t<concepts::AsyncView::iterator_t<T>>;
+
+        template<typename T>
+        using co_sentinel_t = concepts::AsyncView::sentinel_t<T>;
 #endif
 
         ////////////////////////////////////////////////////////////////////////////////////////////

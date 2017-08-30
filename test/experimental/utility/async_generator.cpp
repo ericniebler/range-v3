@@ -39,6 +39,9 @@
 #include "../../test_utils.hpp"
 #include "../../detail/single_consumer_event.hpp"
 
+#include <range/v3/view/filter.hpp>
+
+
 using ranges::experimental::sync_wait;
 using ranges::experimental::task;
 using ranges::experimental::async_generator;
@@ -330,6 +333,37 @@ void no_stack_overflow_for_many_sync_completions()
         unblocker(event));
 }
 
+
+// enumerate sequence of 1 value
+void test_filter()
+{
+    sync_wait([]() -> task<>
+    {
+        bool startedExecution = false;
+        auto makeGenerator = [&]() -> async_generator<std::uint32_t>
+        {
+            startedExecution = true;
+            co_yield 1;
+            co_yield 2;
+            co_yield 3;
+            co_yield 4;
+        };
+
+        auto gen = ranges::view::filter(makeGenerator(), [](std::uint32_t i){return i % 2 == 0;});
+
+        CHECK(!startedExecution);
+
+        auto it = co_await gen.begin();
+
+        CHECK(startedExecution);
+        CHECK(it != gen.end());
+        CHECK(*it == 2u);
+        CHECK(co_await ++it != gen.end());
+        CHECK(*it == 4u);
+        CHECK(co_await ++it == gen.end());
+    }());
+}
+
 int main()
 {
     ::default_ctor_async_generator_is_empty();
@@ -342,6 +376,7 @@ int main()
     ::exception_after_yield_rethrown_by_increment();
     ::no_stack_overflow_for_many_sync_completions();
     ::no_stack_overflow_for_many_sync_completions();
+    ::test_filter();
 
     return ::test_result();
 }

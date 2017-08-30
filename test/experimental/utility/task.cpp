@@ -31,19 +31,13 @@ CONCEPT_ASSERT(
         ranges::value_type_t<ranges::co_await_resume_t<ranges::iterator_t<task<int &>>>>,
         int>());
 
-#include <cstdio>
-
 task<int> fun1()
 {
-    std::printf("fun1\n");
-    std::fflush(stdout);
     co_return 42;
 }
 
 task<int> fun2()
 {
-    std::printf("fun2\n");
-    std::fflush(stdout);
     int i = co_await fun1();
     co_return i + 1;
 }

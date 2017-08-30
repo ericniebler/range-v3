@@ -24,9 +24,6 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/invoke.hpp> // for reference_wrapper
 
-// #include <cstdio>
-// #include <typeinfo>
-
 namespace ranges
 {
     inline namespace v3
@@ -70,8 +67,6 @@ namespace ranges
                     template<typename U>
                     void return_value(U &&u)
                     {
-                        // std::printf("In return_value (%s)\n", typeid(T).name());
-                        // std::fflush(stdout);
                         ::new((void*)&buffer_) value_type(static_cast<U &&>(u));
                     }
                     T &get()
@@ -109,27 +104,26 @@ namespace ranges
                         {
                             return wait_all_outer{*this};
                         }
-                    } *promise_;
+                    };
+                    std::experimental::coroutine_handle<promise_type> coro_;
 
                     explicit wait_all_outer(promise_type &p) noexcept
-                      : promise_(&p)
+                      : coro_(std::experimental::coroutine_handle<promise_type>::from_promise(p))
                     {}
                     wait_all_outer(wait_all_outer &&that) noexcept
-                      : promise_(ranges::exchange(that.promise_, nullptr))
+                      : coro_(ranges::exchange(that.coro_, nullptr))
                     {}
                     ~wait_all_outer()
                     {
-                        if(promise_)
-                        {
-                            std::experimental::coroutine_handle<promise_type>::
-                                from_promise(*promise_).destroy();
-                        }
+                        if(coro_)
+                            coro_.destroy();
                     }
                     std::tuple<wait_all_element_t<Ts>...> wait()
                     {
-                        std::unique_lock<std::mutex> lock(promise_->mtx_);
-                        promise_->cnd_.wait(lock, [this] { return promise_->count_ == 0; });
-                        return promise_->get();
+                        auto &promise = coro_.promise();
+                        std::unique_lock<std::mutex> lock(promise.mtx_);
+                        promise.cnd_.wait(lock, [&promise] { return promise.count_ == 0; });
+                        return promise.get();
                     }
                 };
 
@@ -146,22 +140,16 @@ namespace ranges
 
                         std::experimental::suspend_always initial_suspend() const noexcept
                         {
-                            // std::printf("wait_all_inner::promise_type::initial_suspend\n");
-                            // std::fflush(stdout);
                             return {};
                         }
                         std::experimental::suspend_always final_suspend() noexcept
                         {
-                            // std::printf("wait_all_inner::promise_type::final_suspend\n");
-                            // std::fflush(stdout);
                             { std::lock_guard<std::mutex> g(outer_->mtx_); --outer_->count_; }
                             outer_->cnd_.notify_all();
                             return {};
                         }
                         wait_all_inner get_return_object() noexcept
                         {
-                            // std::printf("wait_all_inner::promise_type::get_return_object\n");
-                            // std::fflush(stdout);
                             return wait_all_inner{*this};
                         }
                     };
@@ -180,24 +168,18 @@ namespace ranges
                     }
                     bool await_ready() const noexcept
                     {
-                        // std::printf("wait_all_inner::await_ready\n");
-                        // std::fflush(stdout);
                         RANGES_EXPECT(!coro_.done());
                         return false;
                     }
-                    bool await_suspend(std::experimental::coroutine_handle<
+                    void await_suspend(std::experimental::coroutine_handle<
                         typename wait_all_outer<Ts...>::promise_type> waiter) noexcept
                     {
-                        // std::printf("wait_all_inner::await_suspend\n");
-                        // std::fflush(stdout);
                         coro_.promise().outer_ = &waiter.promise();
                         coro_.resume();
-                        return false; // Why? Not sure yet.
+                        waiter.resume();
                     }
                     wait_all_element_t<T> await_resume() const
                     {
-                        // std::printf("wait_all_inner::await_resume\n");
-                        // std::fflush(stdout);
                         return coro_.promise().get();
                     }
                 };
@@ -210,9 +192,9 @@ namespace ranges
             {
                 return [](Ts &...us) -> detail::wait_all_outer<Ts...> {
                     co_return std::tuple<detail::wait_all_element_t<Ts>...>{
-                        (co_await ([](Ts &v) -> detail::wait_all_inner<Ts, Ts...> {
+                        co_await [](Ts &v) -> detail::wait_all_inner<Ts, Ts...> {
                             co_return co_await v;
-                        }(us)))...
+                        }(us)...
                     };
                 }(ts...).wait();
             }
