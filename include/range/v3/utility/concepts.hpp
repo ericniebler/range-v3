@@ -134,11 +134,22 @@ namespace ranges
         }
         /// \endcond
 
-
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
         /// \cond
         namespace detail
         {
+            template<typename T>
+            constexpr auto as_awaitable_impl2(T &&t, detail::any)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                static_cast<T &&>(t)
+            )
+            template<typename U, typename... Args, typename T>
+            constexpr auto as_awaitable_impl1(T &&t, long)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::as_awaitable_impl2(static_cast<T &&>(t), 42)
+            )
+        #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             template<typename T>
             constexpr auto as_awaitable_impl2(T &&t, int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -151,12 +162,6 @@ namespace ranges
             (
                 operator co_await(static_cast<T &&>(t))
             )
-            template<typename T>
-            constexpr auto as_awaitable_impl2(T &&t, detail::any)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                static_cast<T &&>(t)
-            )
             template<typename U, typename... Args, typename T,
                 typename Traits = std::experimental::coroutine_traits<U, Args...>,
                 typename P = typename Traits::promise_type>
@@ -165,12 +170,7 @@ namespace ranges
             (
                 detail::as_awaitable_impl2(p.await_transform(static_cast<T &&>(t)), 42)
             )
-            template<typename U, typename... Args, typename T>
-            constexpr auto as_awaitable_impl1(T &&t, long)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::as_awaitable_impl2(static_cast<T &&>(t), 42)
-            )
+        #endif
         }
         /// \endcond
 
@@ -191,7 +191,6 @@ namespace ranges
         // Is T awaitable in the context of [R, Args...]?
         template<typename T, typename... RAndArgs>
         using as_awaitable_t = decltype(ranges::as_awaitable<RAndArgs...>(std::declval<T>()));
-#endif
 
         /// \addtogroup group-concepts
         /// @{
@@ -636,9 +635,9 @@ namespace ranges
               : refines<SemiRegular, EqualityComparable>
             {};
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             struct CoAwaitable
             {
+        #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             private:
                 template<typename... RAndArgs>
                 struct promise_type_
@@ -665,12 +664,18 @@ namespace ranges
                             std::experimental::coroutine_handle<promise_t<RAndArgs...>>{}), 42),
                         (t().await_resume(), 42)
                     ));
+            #else
+                template<typename... RAndArgs>
+                using promise_t = meta::if_c<sizeof...(RAndArgs) == (std::size_t)-1>;
+
+                template<typename T, typename... RAndArgs>
+                using await_resume_t = meta::if_c<sizeof...(RAndArgs) == (std::size_t)-1>;
+            #endif
             };
 
             template<typename T, typename... RAndArgs,
                 meta::_t<std::enable_if<models<CoAwaitable, T, RAndArgs...>::value, int>> = 0>
             CoAwaitable::await_resume_t<T, RAndArgs...> co_await_(T &&);
-#endif
         } // namespace concepts
 
         template<typename ...Ts>
@@ -752,13 +757,11 @@ namespace ranges
         template<typename T>
         using Regular = concepts::models<concepts::Regular, T>;
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
         template<typename T, typename... Args>
         using CoAwaitable = concepts::models<concepts::CoAwaitable, T, Args...>;
 
         template<typename T, typename... RAndArgs>
         using co_await_resume_t = concepts::CoAwaitable::await_resume_t<T, RAndArgs...>;
-#endif
     }
 }
 

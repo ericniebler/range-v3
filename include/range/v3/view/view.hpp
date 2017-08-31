@@ -70,19 +70,12 @@ namespace ranges
             /// \sa make_view_fn
             RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             template<typename Rng>
             using ViewableRange = meta::or_<
                 meta::and_<
                     Range<Rng>,
                     meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>,
-                AsyncView<uncvref_t<Rng>>>;
-#else
-            template<typename Rng>
-            using ViewableRange = meta::and_<
-                Range<Rng>,
-                meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
-#endif
+                AsyncView<Rng>>;
 
             template<typename View>
             struct view : pipeable<view<View>>
@@ -109,13 +102,13 @@ namespace ranges
                     CONCEPT_REQUIRES_(!ViewConcept<Rng>())>
                 static void pipe(Rng &&, Vw &&)
                 {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "The type Rng must be a model of the Range concept.");
+                    CONCEPT_ASSERT_MSG(Range<Rng>() || AsyncView<Rng>(),
+                        "The type Rng must be a model of either the Range or the AsyncView concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
                     CONCEPT_ASSERT_MSG(Invocable<View&, Rng>(),
                         "This view is not callable with this range type.");
-                    static_assert(ranges::View<Rng>() || std::is_lvalue_reference<Rng>(),
+                    static_assert(AsyncView<Rng>() || ranges::View<Rng>() || std::is_lvalue_reference<Rng>(),
                         "You can't pipe an rvalue container into a view. First, save the container into "
                         "a named variable, and then pipe it to the view.");
                 }

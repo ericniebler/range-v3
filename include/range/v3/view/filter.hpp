@@ -52,35 +52,39 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), not_fn(std::move(pred))};
                 }
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+                // Asynchronously filter an async range:
+                template<typename Rng, typename Pred>
+                using AsyncConcept = meta::and_<
+                    AsyncView<Rng>,
+                    IndirectPredicate<Pred, co_iterator_t<Rng>>>;
+
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(AsyncView<Rng>() &&
-                        IndirectPredicate<Pred, co_iterator_t<Rng>>())>
+                    CONCEPT_REQUIRES_(AsyncConcept<Rng, Pred>())>
                 experimental::async_generator<reference_t<co_iterator_t<Rng>>>
-                operator()(Rng && rng, Pred pred) const
+                operator()(Rng rng, Pred pred) const
                 {
                     using reference_t = reference_t<co_iterator_t<Rng>>;
-                    for co_await (reference_t e : rng)
+                    for co_await(reference_t e : rng)
                     {
                         if(pred(e))
                             co_yield static_cast<reference_t &&>(e);
                     }
                 }
-#endif
-            // #ifndef RANGES_DOXYGEN_INVOKED
-            //     template<typename Rng, typename Pred,
-            //         CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
-            //     void operator()(Rng &&, Pred) const
-            //     {
-            //         CONCEPT_ASSERT_MSG(InputRange<Rng>(),
-            //             "The first argument to view::filter must be a model of the "
-            //             "InputRange concept");
-            //         CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
-            //             "The second argument to view::filter must be callable with "
-            //             "a value of the range, and the return type must be convertible "
-            //             "to bool");
-            //     }
-            // #endif
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                void operator()(Rng &&, Pred) const volatile
+                {
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>() || AsyncView<Rng>(),
+                        "The first argument to view::filter must be a model of either the "
+                        "InputRange or the AsyncView concept.");
+                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, xsync_iterator_t<Rng>>(),
+                        "The second argument to view::filter must be callable with "
+                        "a value of the range, and the return type must be convertible "
+                        "to bool.");
+                }
+            #endif
             };
 
             /// \relates filter_fn

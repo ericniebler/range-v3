@@ -387,7 +387,7 @@ namespace ranges
                     ));
             };
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+        #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             struct AsyncIterator
               : refines<Readable>
             {
@@ -408,7 +408,16 @@ namespace ranges
             struct AsyncSentinel
               : refines<Movable(_1), AsyncIterator(_2), WeaklyEqualityComparable>
             {};
-#endif
+        #else
+            struct AsyncIterator
+            {
+                template<typename I>
+                using difference_t = meta::_t<difference_type<I>>;
+            };
+
+            struct AsyncSentinel
+            {};
+        #endif
         } // namespace concepts
 
         template<typename T>
@@ -492,13 +501,11 @@ namespace ranges
         template<typename I>
         using SinglePass = meta::strict_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
         template<typename I>
         using AsyncIterator = concepts::models<concepts::AsyncIterator, I>;
 
         template<typename S, typename I>
         using AsyncSentinel = concepts::models<concepts::AsyncSentinel, S, I>;
-#endif
 
         /// \cond
         namespace detail

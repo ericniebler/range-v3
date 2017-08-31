@@ -68,6 +68,21 @@ namespace ranges
                 meta::if_<Range<Rng>, iterator_t<Rng>>,
                 dangling<iterator_t<Rng>>>;
 
+        template<typename T>
+        using co_iterator_t = co_await_resume_t<concepts::AsyncView::iterator_t<T>>;
+
+        template<typename T>
+        using co_sentinel_t = concepts::AsyncView::sentinel_t<T>;
+
+        /// \cond
+        // co_iterator_t<T> if T is an AsyncView; otherwise, iterator_t<T>
+        template<typename T>
+        using xsync_iterator_t =
+            meta::apply<
+                meta::if_<AsyncView<T>, meta::quote<co_iterator_t>, meta::quote<iterator_t>>,
+                T>;
+        /// \endcond
+
         /// \cond
         // Deprecated type aliases
         template<typename Rng>

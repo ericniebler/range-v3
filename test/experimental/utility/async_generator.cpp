@@ -310,7 +310,6 @@ void no_stack_overflow_for_many_sync_completions()
         {
             CHECK(i == expected++);
         }
-
         CHECK(expected == 1000000u);
     };
 
@@ -320,9 +319,7 @@ void no_stack_overflow_for_many_sync_completions()
         // iteraction before producer suspends and thus consumer suspends.
         // Then we resume producer in call to set() below and it continues processing remaining
         // 500'000 elements, this time with producer driving the interaction.
-
         event.set();
-
         co_return;
     };
 
@@ -333,9 +330,8 @@ void no_stack_overflow_for_many_sync_completions()
         unblocker(event));
 }
 
-
-// enumerate sequence of 1 value
-void test_filter()
+// test an async_generator piped to view::filter
+void test_async_filter_view()
 {
     sync_wait([]() -> task<>
     {
@@ -349,12 +345,12 @@ void test_filter()
             co_yield 4;
         };
 
-        auto gen = ranges::view::filter(makeGenerator(), [](std::uint32_t i){return i % 2 == 0;});
+        auto gen = makeGenerator()
+                 | ranges::view::filter([](std::uint32_t i){return i % 2 == 0;});
 
         CHECK(!startedExecution);
 
         auto it = co_await gen.begin();
-
         CHECK(startedExecution);
         CHECK(it != gen.end());
         CHECK(*it == 2u);
@@ -376,7 +372,7 @@ int main()
     ::exception_after_yield_rethrown_by_increment();
     ::no_stack_overflow_for_many_sync_completions();
     ::no_stack_overflow_for_many_sync_completions();
-    ::test_filter();
+    ::test_async_filter_view();
 
     return ::test_result();
 }
