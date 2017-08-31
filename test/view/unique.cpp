@@ -37,7 +37,7 @@ struct ci_char_traits : public std::char_traits<char>
     static bool lt(char c1, char c2) { return toupper(c1) <  toupper(c2); }
     static int compare(const char* s1, const char* s2, size_t n)
     {
-        for(; n-- != 0; ++s1, ++s2)
+        for(; n != 0; ++s1, ++s2, --n)
         {
             if(toupper(*s1) < toupper(*s2))
                 return -1;

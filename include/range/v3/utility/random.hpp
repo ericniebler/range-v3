@@ -133,6 +133,7 @@ namespace ranges
                 template<typename T,
                     CONCEPT_REQUIRES_(Integral<T>())>
                 RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
+                RANGES_INTENDED_MODULAR_ARITHMETIC
                 {
                     if(sizeof(T) <= 4)
                         return static_cast<std::uint32_t>(value);
@@ -151,6 +152,7 @@ namespace ranges
                 }
 
                 constexpr std::uint32_t fnv(std::uint32_t hash, const char* pos)
+                RANGES_INTENDED_MODULAR_ARITHMETIC
                 {
                     return *pos == '\0' ? hash : randutils::fnv(
                         (hash * 16777619U) ^ static_cast<unsigned char>(*pos), pos+1);
@@ -334,7 +336,7 @@ namespace ranges
                     void mix_entropy(I begin, S end)
                     {
                         auto hash_const = INIT_A;
-                        auto hash = [&](IntRep value)
+                        auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC
                         {
                             value ^= hash_const;
                             hash_const *= MULT_A;
@@ -342,7 +344,7 @@ namespace ranges
                             value ^= value >> XSHIFT;
                             return value;
                         };
-                        auto mix = [](IntRep x, IntRep y)
+                        auto mix = [](IntRep x, IntRep y) RANGES_INTENDED_MODULAR_ARITHMETIC
                         {
                             IntRep result = MIX_MULT_L*x - MIX_MULT_R*y;
                             result ^= result >> XSHIFT;
@@ -388,6 +390,7 @@ namespace ranges
                     template<typename I, typename S,
                         CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>())>
                     void generate(I dest_begin, S dest_end) const
+                    RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
                         auto src_begin = mixer_.begin();
                         auto src_end   = mixer_.end();
@@ -415,6 +418,7 @@ namespace ranges
                         CONCEPT_REQUIRES_(WeaklyIncrementable<O>() &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>())>
                     void param(O dest) const
+                    RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
                         const IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                         const IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
