@@ -41,8 +41,8 @@ namespace ranges
                 is_reference_wrapper<uncvref_t<T>>>
         {};
 
-        template<typename T, bool RValue>
-        struct is_reference_wrapper<reference_wrapper<T, RValue>>
+        template<typename T>
+        struct is_reference_wrapper<reference_wrapper<T>>
           : std::true_type
         {};
 
@@ -129,29 +129,73 @@ namespace ranges
         };
         RANGES_INLINE_VARIABLE(invoke_fn, invoke)
 
-        template<typename T, bool RValue /* = false*/>
-        struct reference_wrapper
+        /// \cond
+        namespace detail
+        {
+            template<typename T>
+            struct reference_wrapper_
+            {
+                T *t_ = nullptr;
+                constexpr reference_wrapper_() = default;
+                constexpr reference_wrapper_(T &t) noexcept
+                  : t_(std::addressof(t))
+                {}
+                constexpr reference_wrapper_(T &&) = delete;
+                constexpr T &get() const noexcept
+                {
+                    return *t_;
+                }
+            };
+            template<typename T>
+            struct reference_wrapper_<T &> : reference_wrapper_<T>
+            {
+                using reference_wrapper_<T>::reference_wrapper_;
+            };
+            template<typename T>
+            struct reference_wrapper_<T &&>
+            {
+                T *t_ = nullptr;
+                constexpr reference_wrapper_() = default;
+                constexpr reference_wrapper_(T &&t) noexcept
+                  : t_(std::addressof(t))
+                {}
+                constexpr T &&get() const noexcept
+                {
+                    return static_cast<T &&>(*t_);
+                }
+            };
+        }
+        /// \endcond
+
+        // Can be used to store rvalue references in addition to lvalue references.
+        // Also, see: https://cplusplus.github.io/LWG/lwg-active.html#2993
+        template<typename T>
+        struct reference_wrapper : private detail::reference_wrapper_<T>
         {
         private:
-            T *t_;
+            using base_ = detail::reference_wrapper_<T>;
         public:
-            using type = T;
-            using reference = meta::if_c<RValue, T &&, T &>;
+            using type = meta::_t<std::remove_reference<T>>;
+            using reference = meta::if_<std::is_reference<T>, T, T &>;
+
             constexpr reference_wrapper() = default;
-            constexpr reference_wrapper(reference t) noexcept
-              : t_(std::addressof(t))
+            template<typename U,
+                CONCEPT_REQUIRES_(Constructible<base_, U>() &&
+                    !Same<uncvref_t<U>, reference_wrapper>())>
+            constexpr reference_wrapper(U &&u)
+                noexcept(std::is_nothrow_constructible<base_, U>::value)
+              : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
             {}
-            reference_wrapper(meta::if_c<RValue, T &, T &&>) = delete;
             constexpr reference get() const noexcept
             {
-                return static_cast<reference>(*t_);
+                return this->base_::get();
             }
             constexpr operator reference() const noexcept
             {
                 return get();
             }
-            CONCEPT_REQUIRES(!RValue)
-            operator std::reference_wrapper<T> () const noexcept
+            CONCEPT_REQUIRES(!std::is_rvalue_reference<T>::value)
+            operator std::reference_wrapper<type> () const noexcept
             {
                 return {get()};
             }

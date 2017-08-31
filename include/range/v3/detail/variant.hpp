@@ -89,18 +89,6 @@ namespace ranges
         {
             using reference_wrapper<T>::reference_wrapper;
         };
-        template<typename T, std::size_t Index>
-        struct indexed_element<T &, Index>
-          : reference_wrapper<T>
-        {
-            using reference_wrapper<T>::reference_wrapper;
-        };
-        template<typename T, std::size_t Index>
-        struct indexed_element<T &&, Index>
-          : reference_wrapper<T, true>
-        {
-            using reference_wrapper<T, true>::reference_wrapper;
-        };
         template<std::size_t Index>
         struct indexed_element<void, Index>
         {
@@ -175,10 +163,10 @@ namespace ranges
 
             template<typename T, typename Index>
             struct indexed_datum<T &, Index>
-              : reference_wrapper<T>
+              : reference_wrapper<T &>
             {
                 indexed_datum() = delete;
-                using reference_wrapper<T>::reference_wrapper;
+                using reference_wrapper<T &>::reference_wrapper;
                 constexpr indexed_element<T &, Index::value> ref() const noexcept
                 {
                     return {this->get()};
@@ -186,10 +174,10 @@ namespace ranges
             };
             template<typename T, typename Index>
             struct indexed_datum<T &&, Index>
-              : reference_wrapper<T, true>
+              : reference_wrapper<T &&>
             {
                 indexed_datum() = delete;
-                using reference_wrapper<T, true>::reference_wrapper;
+                using reference_wrapper<T &&>::reference_wrapper;
                 constexpr indexed_element<T &&, Index::value> ref() const noexcept
                 {
                     return {this->get()};

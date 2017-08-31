@@ -24,8 +24,8 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/experimental/view/shared.hpp>
 #include <range/v3/view/take.hpp>
-#include "../simple_test.hpp"
-#include "../test_utils.hpp"
+#include "../../simple_test.hpp"
+#include "../../test_utils.hpp"
 
 using namespace ranges;
 

@@ -24,8 +24,8 @@
 
 CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int>, int&>());
 CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>());
-CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int, true>, int&>());
-CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int, true>, int&&>());
+CONCEPT_ASSERT(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>());
+CONCEPT_ASSERT(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>());
 
 namespace
 {

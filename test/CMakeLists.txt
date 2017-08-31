@@ -3,6 +3,7 @@ add_subdirectory(algorithm)
 add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
+add_subdirectory(experimental)
 
 add_executable(config config.cpp)
 add_test(test.config config)
@@ -48,6 +49,3 @@ add_test(test.bug566 bug566)
 
 add_executable(span span.cpp)
 add_test(test.span span)
-
-add_executable(generator generator.cpp)
-add_test(test.generator generator)
