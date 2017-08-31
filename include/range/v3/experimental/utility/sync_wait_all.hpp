@@ -63,11 +63,19 @@ namespace ranges
                   : sync_wait_all_promise_base
                 {
                     using value_type = meta::if_<std::is_reference<T>, reference_wrapper<T>, T>;
+                    bool is_set_{false};
                     alignas(value_type) char buffer_[sizeof(value_type)];
                     template<typename U>
                     void return_value(U &&u)
                     {
+                        RANGES_EXPECT(!is_set_);
                         ::new((void*)&buffer_) value_type(static_cast<U &&>(u));
+                        is_set_ = true;
+                    }
+                    ~sync_wait_all_value_promise()
+                    {
+                        if(is_set_)
+                            static_cast<value_type *>((void*)&buffer_)->~value_type();
                     }
                     T &&get()
                     {
