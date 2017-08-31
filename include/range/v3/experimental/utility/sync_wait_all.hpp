@@ -77,7 +77,7 @@ namespace ranges
                 };
 
                 template<typename T>
-                using wait_all_element_t =
+                using co_result_not_void_t =
                     meta::if_<std::is_void<co_result_t<T>>, void_, co_result_t<T>>;
 
                 template<typename... Ts>
@@ -86,7 +86,7 @@ namespace ranges
                     // In this awaitable's final_suspend, signal a condition variable. Then in
                     // the awaitable's wait() function, wait on the condition variable.
                     struct promise_type
-                      : detail::sync_wait_all_value_promise<std::tuple<wait_all_element_t<Ts>...>>
+                      : detail::sync_wait_all_value_promise<std::tuple<co_result_not_void_t<Ts>...>>
                     {
                         std::mutex mtx_;
                         std::condition_variable cnd_;
@@ -118,7 +118,7 @@ namespace ranges
                         if(coro_)
                             coro_.destroy();
                     }
-                    std::tuple<wait_all_element_t<Ts>...> wait()
+                    std::tuple<co_result_not_void_t<Ts>...> wait()
                     {
                         auto &promise = coro_.promise();
                         std::unique_lock<std::mutex> lock(promise.mtx_);
@@ -136,23 +136,37 @@ namespace ranges
                             sync_wait_all_void_promise,
                             sync_wait_all_value_promise<co_result_t<T>>>
                     {
-                        typename wait_all_outer<Ts...>::promise_type *outer_;
+                        using outer_promise_type = typename wait_all_outer<Ts...>::promise_type;
+
+                        struct final_suspend_result : std::experimental::suspend_always
+                        {
+                            outer_promise_type *outer_;
+                            final_suspend_result(outer_promise_type *outer) noexcept
+                              : outer_(outer)
+                            {}
+                            void await_suspend(std::experimental::coroutine_handle<>) const noexcept
+                            {
+                                { std::lock_guard<std::mutex> g(outer_->mtx_); --outer_->count_; }
+                                outer_->cnd_.notify_all();
+                            }
+                        };
+
+                        outer_promise_type *outer_;
 
                         std::experimental::suspend_always initial_suspend() const noexcept
                         {
                             return {};
                         }
-                        std::experimental::suspend_always final_suspend() noexcept
+                        final_suspend_result final_suspend() const noexcept
                         {
-                            { std::lock_guard<std::mutex> g(outer_->mtx_); --outer_->count_; }
-                            outer_->cnd_.notify_all();
-                            return {};
+                            return {outer_};
                         }
                         wait_all_inner get_return_object() noexcept
                         {
                             return wait_all_inner{*this};
                         }
                     };
+
                     std::experimental::coroutine_handle<promise_type> coro_;
 
                     explicit wait_all_inner(promise_type &p) noexcept
@@ -171,14 +185,14 @@ namespace ranges
                         RANGES_EXPECT(!coro_.done());
                         return false;
                     }
-                    void await_suspend(std::experimental::coroutine_handle<
+                    bool await_suspend(std::experimental::coroutine_handle<
                         typename wait_all_outer<Ts...>::promise_type> waiter) noexcept
                     {
                         coro_.promise().outer_ = &waiter.promise();
                         coro_.resume();
-                        waiter.resume();
+                        return false; // don't suspend, resume the waiting coroutine
                     }
-                    wait_all_element_t<T> await_resume() const
+                    co_result_not_void_t<T> await_resume() const
                     {
                         return coro_.promise().get();
                     }
@@ -186,12 +200,13 @@ namespace ranges
             } // namespace detail
             /// \endcond
 
-            template<typename... Ts,
+            // template <CoAwaitable ...Ts>
+            template<typename ...Ts,
                 CONCEPT_REQUIRES_(meta::and_<CoAwaitable<Ts>...>())>
-            std::tuple<detail::wait_all_element_t<Ts>...> sync_wait_all(Ts &&...ts)
+            std::tuple<detail::co_result_not_void_t<Ts>...> sync_wait_all(Ts &&...ts)
             {
                 return [](Ts &...us) -> detail::wait_all_outer<Ts...> {
-                    co_return std::tuple<detail::wait_all_element_t<Ts>...>{
+                    co_return std::tuple<detail::co_result_not_void_t<Ts>...>{
                         co_await [](Ts &v) -> detail::wait_all_inner<Ts, Ts...> {
                             co_return co_await v;
                         }(us)...
