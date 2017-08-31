@@ -131,12 +131,12 @@ namespace ranges
                 constexpr operator Head*() const { return nullptr; }
                 constexpr Head* operator()() const { return nullptr; }
             };
-        }
-        /// \endcond
 
-        /// \cond
-        namespace detail
-        {
+            template<typename...>
+            struct invalid
+            {
+            };
+
             template<typename T>
             constexpr auto as_awaitable_impl2(T &&t, detail::any)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -652,7 +652,7 @@ namespace ranges
                 using promise_t = meta::_t<promise_type_<RAndArgs...>>;
 
                 template<typename T, typename... RAndArgs>
-                using await_resume_t =
+                using result_t =
                     decltype(std::declval<ranges::as_awaitable_t<T, RAndArgs...>>().await_resume());
 
                 template<typename T, typename... RAndArgs>
@@ -666,16 +666,16 @@ namespace ranges
                     ));
             #else
                 template<typename... RAndArgs>
-                using promise_t = meta::if_c<sizeof...(RAndArgs) == (std::size_t)-1>;
+                using promise_t = meta::_t<detail::invalid<RAndArgs...>>;
 
                 template<typename T, typename... RAndArgs>
-                using await_resume_t = meta::if_c<sizeof...(RAndArgs) == (std::size_t)-1>;
+                using result_t = meta::_t<detail::invalid<T, RAndArgs...>>;
             #endif
             };
 
             template<typename T, typename... RAndArgs,
                 meta::_t<std::enable_if<models<CoAwaitable, T, RAndArgs...>::value, int>> = 0>
-            CoAwaitable::await_resume_t<T, RAndArgs...> co_await_(T &&);
+            CoAwaitable::result_t<T, RAndArgs...> co_await_(T &&);
         } // namespace concepts
 
         template<typename ...Ts>
@@ -761,7 +761,7 @@ namespace ranges
         using CoAwaitable = concepts::models<concepts::CoAwaitable, T, Args...>;
 
         template<typename T, typename... RAndArgs>
-        using co_await_resume_t = concepts::CoAwaitable::await_resume_t<T, RAndArgs...>;
+        using co_result_t = concepts::CoAwaitable::result_t<T, RAndArgs...>;
     }
 }
 

@@ -246,9 +246,7 @@ namespace ranges
               : refines<View, SizedRange>
             {};
 
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             struct AsyncView
-              : refines<Movable> //, DefaultConstructible> // ???
             {
                 // Associated types
                 template<typename T>
@@ -259,15 +257,18 @@ namespace ranges
 
                 template<typename T>
                 using difference_t =
-                    concepts::AsyncIterator::difference_t<co_await_resume_t<iterator_t<T>>>;
+                    concepts::AsyncIterator::difference_t<co_result_t<iterator_t<T>>>;
 
+            #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
                 template<typename T>
                 auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Movable, T>(),
+                        // concepts::model_of<DefaultConstructible, T>(), // ??
                         concepts::model_of<AsyncSentinel>(end(t), concepts::co_await_(begin(t)))
                     ));
+            #endif
             };
-#endif
         }
 
         template<typename T>

@@ -58,6 +58,7 @@ namespace ranges
                     AsyncView<Rng>,
                     IndirectPredicate<Pred, co_iterator_t<Rng>>>;
 
+            #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(AsyncConcept<Rng, Pred>())>
                 experimental::async_generator<reference_t<co_iterator_t<Rng>>>
@@ -70,11 +71,12 @@ namespace ranges
                             co_yield static_cast<reference_t &&>(e);
                     }
                 }
+            #endif
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
-                void operator()(Rng &&, Pred) const volatile
+                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>() && !AsyncConcept<Rng, Pred>())>
+                void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>() || AsyncView<Rng>(),
                         "The first argument to view::filter must be a model of either the "

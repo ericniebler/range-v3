@@ -78,7 +78,7 @@ namespace ranges
 
                 template<typename T>
                 using wait_all_element_t =
-                    meta::if_<std::is_void<co_await_resume_t<T>>, void_, co_await_resume_t<T>>;
+                    meta::if_<std::is_void<co_result_t<T>>, void_, co_result_t<T>>;
 
                 template<typename... Ts>
                 struct wait_all_outer
@@ -132,9 +132,9 @@ namespace ranges
                 {
                     struct promise_type
                       : meta::if_<
-                            std::is_void<co_await_resume_t<T>>,
+                            std::is_void<co_result_t<T>>,
                             sync_wait_all_void_promise,
-                            sync_wait_all_value_promise<co_await_resume_t<T>>>
+                            sync_wait_all_value_promise<co_result_t<T>>>
                     {
                         typename wait_all_outer<Ts...>::promise_type *outer_;
 

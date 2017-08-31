@@ -25,11 +25,7 @@ using ranges::experimental::sync_wait;
 CONCEPT_ASSERT(!ranges::AsyncView<task<>>());
 CONCEPT_ASSERT(ranges::AsyncView<task<int>>());
 CONCEPT_ASSERT(ranges::AsyncView<task<int &>>());
-
-CONCEPT_ASSERT(
-    ranges::Same<
-        ranges::value_type_t<ranges::co_await_resume_t<ranges::iterator_t<task<int &>>>>,
-        int>());
+CONCEPT_ASSERT(ranges::Same<ranges::value_type_t<ranges::co_iterator_t<task<int &>>>, int>());
 
 task<int> fun1()
 {

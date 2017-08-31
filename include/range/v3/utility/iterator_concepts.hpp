@@ -387,37 +387,28 @@ namespace ranges
                     ));
             };
 
-        #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             struct AsyncIterator
-              : refines<Readable>
             {
                 // Associated types
                 template<typename I>
                 using difference_t = meta::_t<difference_type<I>>;
 
+            #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
                 template<typename In>
                 auto requires_(In &in) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<difference_t<In>>{}),
+                        concepts::model_of<Readable, In>(),
                         concepts::model_of<Movable, In>(),
                         concepts::same_type(concepts::co_await_(++in), in),
                         concepts::model_of<CoAwaitable>(in++)
                     ));
+            #endif
             };
 
             struct AsyncSentinel
               : refines<Movable(_1), AsyncIterator(_2), WeaklyEqualityComparable>
             {};
-        #else
-            struct AsyncIterator
-            {
-                template<typename I>
-                using difference_t = meta::_t<difference_type<I>>;
-            };
-
-            struct AsyncSentinel
-            {};
-        #endif
         } // namespace concepts
 
         template<typename T>

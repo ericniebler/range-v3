@@ -68,9 +68,11 @@ namespace ranges
                 meta::if_<Range<Rng>, iterator_t<Rng>>,
                 dangling<iterator_t<Rng>>>;
 
+        // Not to spec: async iterators are an extension:
         template<typename T>
-        using co_iterator_t = co_await_resume_t<concepts::AsyncView::iterator_t<T>>;
+        using co_iterator_t = co_result_t<concepts::AsyncView::iterator_t<T>>;
 
+        // Not to spec: async iterators are an extension:
         template<typename T>
         using co_sentinel_t = concepts::AsyncView::sentinel_t<T>;
 

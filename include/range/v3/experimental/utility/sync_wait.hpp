@@ -74,7 +74,7 @@ namespace ranges
 
             template<typename T,
                 CONCEPT_REQUIRES_(CoAwaitable<T>())>
-            co_await_resume_t<T> sync_wait(T &&t)
+            co_result_t<T> sync_wait(T &&t)
             {
                 struct _
                 {
@@ -82,9 +82,9 @@ namespace ranges
                     // the awaitable's wait() function, wait on the condition variable.
                     struct promise_type
                       : meta::if_<
-                            std::is_void<co_await_resume_t<T>>,
+                            std::is_void<co_result_t<T>>,
                             detail::sync_wait_void_promise,
-                            detail::sync_wait_value_promise<co_await_resume_t<T>>>
+                            detail::sync_wait_value_promise<co_result_t<T>>>
                     {
                         std::mutex mtx_;
                         std::condition_variable cnd_;
@@ -122,7 +122,7 @@ namespace ranges
                                 from_promise(*promise_).destroy();
                         }
                     }
-                    co_await_resume_t<T> wait()
+                    co_result_t<T> wait()
                     {
                         std::unique_lock<std::mutex> lock(promise_->mtx_);
                         promise_->cnd_.wait(lock, [this] { return promise_->done_; });
