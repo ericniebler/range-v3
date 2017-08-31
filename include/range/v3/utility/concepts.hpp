@@ -635,7 +635,7 @@ namespace ranges
               : refines<SemiRegular, EqualityComparable>
             {};
 
-            struct CoAwaitable
+            struct Awaitable
             {
         #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
             private:
@@ -674,8 +674,8 @@ namespace ranges
             };
 
             template<typename T, typename... RAndArgs,
-                meta::_t<std::enable_if<models<CoAwaitable, T, RAndArgs...>::value, int>> = 0>
-            CoAwaitable::result_t<T, RAndArgs...> co_await_(T &&);
+                meta::_t<std::enable_if<models<Awaitable, T, RAndArgs...>::value, int>> = 0>
+            Awaitable::result_t<T, RAndArgs...> co_await_(T &&);
         } // namespace concepts
 
         template<typename ...Ts>
@@ -758,10 +758,10 @@ namespace ranges
         using Regular = concepts::models<concepts::Regular, T>;
 
         template<typename T, typename... Args>
-        using CoAwaitable = concepts::models<concepts::CoAwaitable, T, Args...>;
+        using Awaitable = concepts::models<concepts::Awaitable, T, Args...>;
 
         template<typename T, typename... RAndArgs>
-        using co_result_t = concepts::CoAwaitable::result_t<T, RAndArgs...>;
+        using co_result_t = concepts::Awaitable::result_t<T, RAndArgs...>;
     }
 }
 

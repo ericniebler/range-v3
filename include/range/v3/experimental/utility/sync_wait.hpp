@@ -43,9 +43,7 @@ namespace ranges
                     void get() const
                     {
                         if(eptr_)
-                        {
                             std::rethrow_exception(eptr_);
-                        }
                     }
                 };
                 struct sync_wait_void_promise : sync_wait_promise_base
@@ -63,17 +61,17 @@ namespace ranges
                     {
                         ::new((void*)&buffer_) value_type(static_cast<U &&>(u));
                     }
-                    T &get()
+                    T &&get()
                     {
                         this->sync_wait_promise_base::get();
-                        return *static_cast<value_type *>((void*)&buffer_);
+                        return static_cast<T &&>(*static_cast<value_type *>((void*)&buffer_));
                     }
                 };
             } // namespace detail
             /// \endcond
 
             template<typename T,
-                CONCEPT_REQUIRES_(CoAwaitable<T>())>
+                CONCEPT_REQUIRES_(Awaitable<T>())>
             co_result_t<T> sync_wait(T &&t)
             {
                 struct _
@@ -90,43 +88,50 @@ namespace ranges
                         std::condition_variable cnd_;
                         bool done_{false};
 
+                        struct final_suspend_result : std::experimental::suspend_always
+                        {
+                            promise_type *this_;
+                            final_suspend_result(promise_type *_this) noexcept
+                              : this_(_this)
+                            {}
+                            void await_suspend(std::experimental::coroutine_handle<>) const noexcept
+                            {
+                                { std::lock_guard<std::mutex> g(this_->mtx_); this_->done_ = true; }
+                                this_->cnd_.notify_all();
+                            }
+                        };
                         std::experimental::suspend_never initial_suspend() const noexcept
                         {
                             return {};
                         }
-                        std::experimental::suspend_always final_suspend() noexcept
+                        final_suspend_result final_suspend() noexcept
                         {
-                            { std::lock_guard<std::mutex> g(mtx_); done_ = true; }
-                            cnd_.notify_all();
-                            return {};
+                            return {this};
                         }
                         auto get_return_object() noexcept -> _
                         {
                             return _{*this};
                         }
                     };
-                    promise_type *promise_;
+                    std::experimental::coroutine_handle<promise_type> coro_;
 
                     explicit _(promise_type &p) noexcept
-                      : promise_(&p)
+                      : coro_(std::experimental::coroutine_handle<promise_type>::from_promise(p))
                     {}
                     _(_ &&that) noexcept
-                      : promise_(ranges::exchange(that.promise_, nullptr))
+                      : coro_(ranges::exchange(that.coro_, nullptr))
                     {}
                     ~_()
                     {
-                        if(promise_)
-                        {
-                            // Needed because final_suspend returns suspend_always:
-                            std::experimental::coroutine_handle<promise_type>::
-                                from_promise(*promise_).destroy();
-                        }
+                        if(coro_)
+                            coro_.destroy();
                     }
                     co_result_t<T> wait()
                     {
-                        std::unique_lock<std::mutex> lock(promise_->mtx_);
-                        promise_->cnd_.wait(lock, [this] { return promise_->done_; });
-                        return promise_->get();
+                        auto &promise = coro_.promise();
+                        std::unique_lock<std::mutex> lock(promise.mtx_);
+                        promise.cnd_.wait(lock, [&promise] { return promise.done_; });
+                        return promise.get();
                     }
                 };
 

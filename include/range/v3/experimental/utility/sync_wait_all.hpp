@@ -69,10 +69,10 @@ namespace ranges
                     {
                         ::new((void*)&buffer_) value_type(static_cast<U &&>(u));
                     }
-                    T &get()
+                    T &&get()
                     {
                         this->sync_wait_all_promise_base::get();
-                        return *static_cast<value_type *>((void*)&buffer_);
+                        return static_cast<T &&>(*static_cast<value_type *>((void*)&buffer_));
                     }
                 };
 
@@ -83,8 +83,8 @@ namespace ranges
                 template<typename... Ts>
                 struct wait_all_outer
                 {
-                    // In this awaitable's final_suspend, signal a condition variable. Then in
-                    // the awaitable's wait() function, wait on the condition variable.
+                    // In wait_all_inner's final_suspend, signal a condition variable. Then in
+                    // this awaitable's wait() function, wait on the condition variable.
                     struct promise_type
                       : detail::sync_wait_all_value_promise<std::tuple<co_result_not_void_t<Ts>...>>
                     {
@@ -200,9 +200,9 @@ namespace ranges
             } // namespace detail
             /// \endcond
 
-            // template <CoAwaitable ...Ts>
+            // template <Awaitable ...Ts>
             template<typename ...Ts,
-                CONCEPT_REQUIRES_(meta::and_<CoAwaitable<Ts>...>())>
+                CONCEPT_REQUIRES_(meta::and_<Awaitable<Ts>...>())>
             std::tuple<detail::co_result_not_void_t<Ts>...> sync_wait_all(Ts &&...ts)
             {
                 return [](Ts &...us) -> detail::wait_all_outer<Ts...> {

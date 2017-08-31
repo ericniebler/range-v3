@@ -401,7 +401,7 @@ namespace ranges
                         concepts::model_of<Readable, In>(),
                         concepts::model_of<Movable, In>(),
                         concepts::same_type(concepts::co_await_(++in), in),
-                        concepts::model_of<CoAwaitable>(in++)
+                        concepts::model_of<Awaitable>(in++)
                     ));
             #endif
             };

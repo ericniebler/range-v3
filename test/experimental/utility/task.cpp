@@ -178,8 +178,8 @@ minig f(int n)
         co_await i; // Yes, really!
 }
 
-CONCEPT_ASSERT(!ranges::CoAwaitable<int>());
-CONCEPT_ASSERT(ranges::CoAwaitable<int, minig>());
+CONCEPT_ASSERT(!ranges::Awaitable<int>());
+CONCEPT_ASSERT(ranges::Awaitable<int, minig>());
 
 int global_int = 42;
 void test_by_reference()
@@ -198,7 +198,7 @@ int main()
 
     sync_wait(test_task_as_range());
 
-    // This exercises the CoAwaitable concept and sync_wait:
+    // This exercises the Awaitable concept and sync_wait:
     T::S s;
     sync_wait(s);
 
