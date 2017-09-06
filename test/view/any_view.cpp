@@ -91,16 +91,21 @@ int main()
         static_assert((get_categories(ints) & category::sized) == category::none, "");
     }
     {
-#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         any_view ints = view::ints | view::take_exactly(5);
 #else
         any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
 #endif
-        CONCEPT_ASSERT(InputView<decltype(ints)>());
         CONCEPT_ASSERT(RandomAccessView<decltype(ints)>());
         CONCEPT_ASSERT(SizedView<decltype(ints)>());
         static_assert((get_categories(ints) & category::random_access) == category::random_access, "");
         static_assert((get_categories(ints) & category::sized) == category::sized, "");
+    }
+    {
+        any_view<int, category::bidirectional> ints = view::ints;
+        CONCEPT_ASSERT(BidirectionalView<decltype(ints)>());
+        CONCEPT_ASSERT(!RandomAccessView<decltype(ints)>());
+        static_assert((get_categories(ints) & category::random_access) == category::bidirectional, "");
     }
     {
         any_view<int> ints2 = view::ints | view::take(10);

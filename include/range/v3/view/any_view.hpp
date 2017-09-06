@@ -46,63 +46,58 @@ namespace ranges
          *  \relates ranges::v3::category
          *  \{
          */
-        constexpr category operator& (category lhs, category rhs)
+        constexpr category operator& (category lhs, category rhs) noexcept
         {
-            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) & static_cast<std::underlying_type_t<category>>(rhs));
+            return static_cast<category>(
+                static_cast<meta::_t<std::underlying_type<category>>>(lhs) &
+                static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator| (category lhs, category rhs)
+        constexpr category operator| (category lhs, category rhs) noexcept
         {
-            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) | static_cast<std::underlying_type_t<category>>(rhs));
+            return static_cast<category>(
+                static_cast<meta::_t<std::underlying_type<category>>>(lhs) |
+                static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator^ (category lhs, category rhs)
+        constexpr category operator^ (category lhs, category rhs) noexcept
         {
-            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) ^ static_cast<std::underlying_type_t<category>>(rhs));
+            return static_cast<category>(
+                static_cast<meta::_t<std::underlying_type<category>>>(lhs) ^
+                static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator~ (category lhs)
+        constexpr category operator~ (category lhs) noexcept
         {
-            return static_cast<category>(~static_cast<std::underlying_type_t<category>>(lhs));
+            return static_cast<category>(
+                ~static_cast<meta::_t<std::underlying_type<category>>>(lhs));
         }
 
-        constexpr category & operator&= (category & lhs, category rhs)
+        RANGES_CXX14_CONSTEXPR category & operator&= (category & lhs, category rhs) noexcept
         {
-            lhs = lhs & rhs;
-            return lhs;
+            return (lhs = lhs & rhs);
         }
 
-        constexpr category & operator|= (category & lhs, category rhs)
+        RANGES_CXX14_CONSTEXPR category & operator|= (category & lhs, category rhs) noexcept
         {
-            lhs = lhs | rhs;
-            return lhs;
+            return (lhs = lhs | rhs);
         }
 
-        constexpr category & operator^= (category & lhs, category rhs)
+        RANGES_CXX14_CONSTEXPR category & operator^= (category & lhs, category rhs) noexcept
         {
-            lhs = lhs ^ rhs;
-            return lhs;
+            return (lhs = lhs ^ rhs);
         }
         //!\}
 
         /// \brief For a given range, return a ranges::v3::category enum with the satisfied concepts.
         template<typename Rng>
-        constexpr category get_categories(Rng &&)
+        constexpr category get_categories(Rng &&) noexcept
         {
-            category ret{};
-
-            if (InputRange<Rng>())
-                ret |= category::input;
-            if (ForwardRange<Rng>())
-                ret |= category::forward;
-            if (BidirectionalRange<Rng>())
-                ret |= category::bidirectional;
-            if (RandomAccessRange<Rng>())
-                ret |= category::random_access;
-
-            if (SizedRange<Rng>())
-                ret |= category::sized;
-            return ret;
+            return (InputRange<Rng>()         ? category::input         : category::none) |
+                   (ForwardRange<Rng>()       ? category::forward       : category::none) |
+                   (BidirectionalRange<Rng>() ? category::bidirectional : category::none) |
+                   (RandomAccessRange<Rng>()  ? category::random_access : category::none) |
+                   (SizedRange<Rng>()         ? category::sized         : category::none);
         }
 
         /// \cond
@@ -255,17 +250,33 @@ namespace ranges
                 virtual void next() override { ++current(); }
             };
 
-            template<typename Ref, category Cat = category::forward>
-            struct any_cursor_interface
+            template<typename Ref, category Cat = category::forward, typename enable = void>
+            struct any_cursor_interface;
+
+            template<typename Ref, category Cat>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::forward>>>
             {
                 virtual ~any_cursor_interface() = default;
                 virtual any_ref iter() const = 0; // returns a const ref to the cursor's wrapped iterator
                 virtual Ref read() const = 0;
                 virtual bool equal(any_cursor_interface const &) const = 0;
                 virtual void next() = 0;
-                virtual std::enable_if_t<(Cat & category::bidirectional) == category::bidirectional, void> prev() = 0;
-                virtual std::enable_if_t<(Cat & category::random_access) == category::random_access, void> advance(std::ptrdiff_t) = 0;
-                virtual std::enable_if_t<(Cat & category::random_access) == category::random_access, std::ptrdiff_t> distance_to(any_cursor_interface const &) const = 0;
+            };
+
+
+            template<typename Ref, category Cat>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::bidirectional>>>
+              : any_cursor_interface<Ref, category::forward>
+            {
+                virtual void prev() = 0;
+            };
+
+            template<typename Ref, category Cat>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::random_access>>>
+              : any_cursor_interface<Ref, category::bidirectional>
+            {
+                virtual void advance(std::ptrdiff_t) = 0;
+                virtual std::ptrdiff_t distance_to(any_cursor_interface const &) const = 0;
             };
 
             template<typename Ref, category Cat>
@@ -284,7 +295,7 @@ namespace ranges
                   : it_{std::move(it)}
                 {}
             private:
-                using Forward = any_cursor_interface<Ref, Cat>;
+                using Forward = any_cursor_interface<Ref, category::forward>;
 
                 I it_;
 
@@ -470,7 +481,7 @@ namespace ranges
         struct any_view;
         // at least forward
         template<typename Ref, category Cat>
-        struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::forward>>
+        struct any_view<Ref, Cat, meta::_t<std::enable_if<(Cat & category::forward) == category::forward>>>
           : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
@@ -545,7 +556,7 @@ namespace ranges
 
         // input and not forward
         template<typename Ref, category Cat>
-        struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::input>>
+        struct any_view<Ref, Cat, meta::_t<std::enable_if<(Cat & category::forward) == category::input>>>
           : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
@@ -593,7 +604,7 @@ namespace ranges
             std::size_t size_;
         };
 
-#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         template <typename Rng>
         any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories(Rng{})>;
 #endif
