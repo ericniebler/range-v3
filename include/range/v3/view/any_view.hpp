@@ -34,10 +34,12 @@ namespace ranges
         /// \brief An enum that denotes the supported subset of range concepts supported by a range.
         enum class category
         {
+            none            = 0b00000000,  ///<\brief No concepts met.
             input           = 0b00000001,  ///<\brief Satisfies ranges::v3::concepts::InputRange
             forward         = 0b00000011,  ///<\brief Satisfies ranges::v3::concepts::ForwardRange
             bidirectional   = 0b00000111,  ///<\brief Satisfies ranges::v3::concepts::BidirectionalRange
-            random_access   = 0b00001111   ///<\brief Satisfies ranges::v3::concepts::RandomAccessRange
+            random_access   = 0b00001111,  ///<\brief Satisfies ranges::v3::concepts::RandomAccessRange
+            sized           = 0b00010000   ///<\brief Satisfies ranges::v3::concepts::SizedRange
         };
 
         /** \name Binary operators for ranges::v3::category
@@ -98,6 +100,8 @@ namespace ranges
             if (RandomAccessRange<Rng>())
                 ret |= category::random_access;
 
+            if (SizedRange<Rng>())
+                ret |= category::sized;
             return ret;
         }
 
@@ -438,6 +442,7 @@ namespace ranges
                   : range_box_t{std::move(rng)}
                   , sentinel_box_t{range_box_t::get()} // NB: initialization order dependence
                 {}
+
             private:
                 using range_box_t = box<Rng, any_view_impl>;
                 using sentinel_box_t = any_view_sentinel_impl<Rng>;
@@ -466,7 +471,7 @@ namespace ranges
         // at least forward
         template<typename Ref, category Cat>
         struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::forward>>
-          : view_facade<any_view<Ref, Cat>, unknown>
+          : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
             CONCEPT_ASSERT((Cat & category::forward) == category::forward);
@@ -476,11 +481,24 @@ namespace ranges
                 CONCEPT_REQUIRES_(meta::and_<
                     meta::not_<Same<detail::decay_t<Rng>, any_view>>,
                     InputRange<Rng>,
-                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value &&
+                    (Cat & category::sized) == category::none)>
             any_view(Rng &&rng)
               : any_view(static_cast<Rng &&>(rng),
                   meta::bool_<(get_categories(Rng{}) & Cat) == Cat>{})
             {}
+            template<typename Rng,
+                CONCEPT_REQUIRES_(meta::and_<
+                    meta::not_<Same<detail::decay_t<Rng>, any_view>>,
+                    InputRange<Rng>,
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value &&
+                    (Cat & category::sized) == category::sized)>
+            any_view(Rng &&rng)
+              : any_view(static_cast<Rng &&>(rng),
+                  meta::bool_<(get_categories(Rng{}) & Cat) == Cat>{})
+            {
+                size_ = ranges::size(rng);
+            }
             any_view(any_view &&) = default;
             any_view(any_view const &that)
               : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
@@ -491,6 +509,13 @@ namespace ranges
                 ptr_ = (that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
             }
+
+            CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
+            std::size_t size() const
+            {
+                return size_;
+            }
+
         private:
             template<typename Rng>
             using impl_t = detail::any_view_impl<view::all_t<Rng>, Ref, Cat>;
@@ -515,12 +540,13 @@ namespace ranges
             }
 
             std::unique_ptr<detail::any_cloneable_view_interface<Ref, Cat>> ptr_;
+            std::size_t size_;
         };
 
         // input and not forward
         template<typename Ref, category Cat>
         struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::input>>
-          : view_facade<any_view<Ref, Cat>, unknown>
+          : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
 
@@ -529,10 +555,27 @@ namespace ranges
                 CONCEPT_REQUIRES_(meta::and_<
                     meta::not_<Same<detail::decay_t<Rng>, any_view>>,
                     InputRange<Rng>,
-                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value &&
+                    (Cat & category::sized) == category::none)>
             any_view(Rng &&rng)
               : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
+            template<typename Rng,
+                CONCEPT_REQUIRES_(meta::and_<
+                    meta::not_<Same<detail::decay_t<Rng>, any_view>>,
+                    InputRange<Rng>,
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value &&
+                    (Cat & category::sized) == category::sized)>
+            any_view(Rng &&rng)
+              : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))},
+                size_{ranges::size(rng)}
+            {}
+
+            CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
+            std::size_t size() const
+            {
+                return size_;
+            }
         private:
             template<typename Rng>
             using impl_t = detail::any_input_view_impl<view::all_t<Rng>, Ref>;
@@ -547,6 +590,7 @@ namespace ranges
             }
 
             std::shared_ptr<detail::any_input_view_interface<Ref>> ptr_;
+            std::size_t size_;
         };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= 201606L

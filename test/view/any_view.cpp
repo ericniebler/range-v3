@@ -80,18 +80,28 @@ int main()
         any_view<int> ints = view::ints;
         CONCEPT_ASSERT(InputView<decltype(ints)>());
         CONCEPT_ASSERT(!ForwardView<decltype(ints)>());
-        static_assert((get_categories(view::ints) & category::random_access) == category::random_access, "");
-        static_assert((get_categories(ints) & category::random_access) == category::input, "");
         ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
-#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
     {
-        any_view ints = view::ints;
-        CONCEPT_ASSERT(RandomAccessView<decltype(ints)>());
-        static_assert((get_categories(ints) & category::random_access) == category::random_access, "");
-        ::check_equal(std::move(ints) | view::take(10), ten_ints);
+        any_view<int> ints = view::ints | view::take_exactly(5);
+        CONCEPT_ASSERT(InputView<decltype(ints)>());
+        CONCEPT_ASSERT(!RandomAccessView<decltype(ints)>());
+        CONCEPT_ASSERT(!SizedView<decltype(ints)>());
+        static_assert((get_categories(ints) & category::random_access) == category::input, "");
+        static_assert((get_categories(ints) & category::sized) == category::none, "");
     }
+    {
+#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
+        any_view ints = view::ints | view::take_exactly(5);
+#else
+        any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
 #endif
+        CONCEPT_ASSERT(InputView<decltype(ints)>());
+        CONCEPT_ASSERT(RandomAccessView<decltype(ints)>());
+        CONCEPT_ASSERT(SizedView<decltype(ints)>());
+        static_assert((get_categories(ints) & category::random_access) == category::random_access, "");
+        static_assert((get_categories(ints) & category::sized) == category::sized, "");
+    }
     {
         any_view<int> ints2 = view::ints | view::take(10);
         ::check_equal(ints2, ten_ints);
