@@ -80,15 +80,25 @@ int main()
         any_view<int> ints = view::ints;
         CONCEPT_ASSERT(InputView<decltype(ints)>());
         CONCEPT_ASSERT(!ForwardView<decltype(ints)>());
+        static_assert((get_categories(view::ints) & category::random_access) == category::random_access, "");
+        static_assert((get_categories(ints) & category::random_access) == category::input, "");
         ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
+#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
+    {
+        any_view ints = view::ints;
+        CONCEPT_ASSERT(RandomAccessView<decltype(ints)>());
+        static_assert((get_categories(ints) & category::random_access) == category::random_access, "");
+        ::check_equal(std::move(ints) | view::take(10), ten_ints);
+    }
+#endif
     {
         any_view<int> ints2 = view::ints | view::take(10);
         ::check_equal(ints2, ten_ints);
         ::check_equal(ints2, ten_ints);
     }
     {
-        any_random_access_view<int> ints3 = view::ints | view::take(10);
+        any_view<int, category::random_access> ints3 = view::ints | view::take(10);
         ::models<concepts::RandomAccessView>(aux::copy(ints3));
         ::check_equal(ints3, ten_ints);
         ::check_equal(ints3, ten_ints);
@@ -101,8 +111,8 @@ int main()
         CHECK(e.begin() == e.end());
     }
     {
-        iterator_t<any_random_access_view<int&>> i{},j{};
-        sentinel_t<any_random_access_view<int&>> k{};
+        iterator_t<any_view<int&, category::random_access>> i{},j{};
+        sentinel_t<any_view<int&, category::random_access>> k{};
         CHECK(i == j);
         CHECK(i == k);
         CHECK((i - j) == 0);

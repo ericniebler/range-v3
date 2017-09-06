@@ -31,13 +31,75 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \brief An enum that denotes the supported subset of range concepts supported by a range.
         enum class category
         {
-            input,
-            forward,
-            bidirectional,
-            random_access
+            input           = 0b00000001,  ///<\brief Satisfies ranges::v3::concepts::InputRange
+            forward         = 0b00000011,  ///<\brief Satisfies ranges::v3::concepts::ForwardRange
+            bidirectional   = 0b00000111,  ///<\brief Satisfies ranges::v3::concepts::BidirectionalRange
+            random_access   = 0b00001111   ///<\brief Satisfies ranges::v3::concepts::RandomAccessRange
         };
+
+        /** \name Binary operators for ranges::v3::category
+         *  \relates ranges::v3::category
+         *  \{
+         */
+        constexpr category operator& (category lhs, category rhs)
+        {
+            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) & static_cast<std::underlying_type_t<category>>(rhs));
+        }
+
+        constexpr category operator| (category lhs, category rhs)
+        {
+            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) | static_cast<std::underlying_type_t<category>>(rhs));
+        }
+
+        constexpr category operator^ (category lhs, category rhs)
+        {
+            return static_cast<category>(static_cast<std::underlying_type_t<category>>(lhs) ^ static_cast<std::underlying_type_t<category>>(rhs));
+        }
+
+        constexpr category operator~ (category lhs)
+        {
+            return static_cast<category>(~static_cast<std::underlying_type_t<category>>(lhs));
+        }
+
+        constexpr category & operator&= (category & lhs, category rhs)
+        {
+            lhs = lhs & rhs;
+            return lhs;
+        }
+
+        constexpr category & operator|= (category & lhs, category rhs)
+        {
+            lhs = lhs | rhs;
+            return lhs;
+        }
+
+        constexpr category & operator^= (category & lhs, category rhs)
+        {
+            lhs = lhs ^ rhs;
+            return lhs;
+        }
+        //!\}
+
+        /// \brief For a given range, return a ranges::v3::category enum with the satisfied concepts.
+        template<typename Rng>
+        constexpr category get_categories(Rng &&)
+        {
+            category ret{};
+
+            if (InputRange<Rng>())
+                ret |= category::input;
+            if (ForwardRange<Rng>())
+                ret |= category::forward;
+            if (BidirectionalRange<Rng>())
+                ret |= category::bidirectional;
+            if (RandomAccessRange<Rng>())
+                ret |= category::random_access;
+
+            return ret;
+        }
 
         /// \cond
         namespace detail
@@ -79,11 +141,6 @@ namespace ranges
                 cloneable &operator=(cloneable const &) = delete;
                 virtual std::unique_ptr<cloneable> clone() const = 0;
             };
-
-            constexpr category to_cat_(concepts::InputRange *) { return category::input; }
-            constexpr category to_cat_(concepts::ForwardRange *) { return category::forward; }
-            constexpr category to_cat_(concepts::BidirectionalRange *) { return category::bidirectional; }
-            constexpr category to_cat_(concepts::RandomAccessRange *) { return category::random_access; }
 
             template<typename Rng, typename Ref>
             using AnyCompatibleRange = ConvertibleTo<range_reference_t<Rng>, Ref>;
@@ -202,21 +259,9 @@ namespace ranges
                 virtual Ref read() const = 0;
                 virtual bool equal(any_cursor_interface const &) const = 0;
                 virtual void next() = 0;
-            };
-
-            template<typename Ref>
-            struct any_cursor_interface<Ref, category::bidirectional>
-              : any_cursor_interface<Ref, category::forward>
-            {
-                virtual void prev() = 0;
-            };
-
-            template<typename Ref>
-            struct any_cursor_interface<Ref, category::random_access>
-              : any_cursor_interface<Ref, category::bidirectional>
-            {
-                virtual void advance(std::ptrdiff_t) = 0;
-                virtual std::ptrdiff_t distance_to(any_cursor_interface const &) const = 0;
+                virtual std::enable_if_t<(Cat & category::bidirectional) == category::bidirectional, void> prev() = 0;
+                virtual std::enable_if_t<(Cat & category::random_access) == category::random_access, void> advance(std::ptrdiff_t) = 0;
+                virtual std::enable_if_t<(Cat & category::random_access) == category::random_access, std::ptrdiff_t> distance_to(any_cursor_interface const &) const = 0;
             };
 
             template<typename Ref, category Cat>
@@ -228,14 +273,14 @@ namespace ranges
               : any_cloneable_cursor_interface<Ref, Cat>
             {
                 CONCEPT_ASSERT(ConvertibleTo<reference_t<I>, Ref>());
-                CONCEPT_ASSERT(Cat >= category::forward);
+                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
 
                 any_cursor_impl() = default;
                 any_cursor_impl(I it)
                   : it_{std::move(it)}
                 {}
             private:
-                using Forward = any_cursor_interface<Ref, category::forward>;
+                using Forward = any_cursor_interface<Ref, Cat>;
 
                 I it_;
 
@@ -300,7 +345,7 @@ namespace ranges
             struct any_cursor
             {
             private:
-                CONCEPT_ASSERT(Cat >= category::forward);
+                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
 
                 std::unique_ptr<any_cloneable_cursor_interface<Ref, Cat>> ptr_;
 
@@ -345,19 +390,19 @@ namespace ranges
                     RANGES_EXPECT(ptr_);
                     ptr_->next();
                 }
-                CONCEPT_REQUIRES(Cat >= category::bidirectional)
+                CONCEPT_REQUIRES((Cat & category::bidirectional) == category::bidirectional)
                 void prev()
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->prev();
                 }
-                CONCEPT_REQUIRES(Cat >= category::random_access)
+                CONCEPT_REQUIRES((Cat & category::random_access) == category::random_access)
                 void advance(std::ptrdiff_t n)
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->advance(n);
                 }
-                CONCEPT_REQUIRES(Cat >= category::random_access)
+                CONCEPT_REQUIRES((Cat & category::random_access) == category::random_access)
                 std::ptrdiff_t distance_to(any_cursor const &that) const
                 {
                     RANGES_EXPECT(!ptr_ == !that.ptr_);
@@ -369,7 +414,7 @@ namespace ranges
             struct any_view_interface
               : fully_erased_view
             {
-                CONCEPT_ASSERT(Cat >= category::forward);
+                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
 
                 virtual ~any_view_interface() = default;
                 virtual any_cursor<Ref, Cat> begin_cursor() = 0;
@@ -385,7 +430,7 @@ namespace ranges
               , private box<Rng, any_view_impl<Rng, Ref, Cat>>
               , private any_view_sentinel_impl<Rng>
             {
-                CONCEPT_ASSERT(Cat >= category::forward);
+                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
                 CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
 
                 any_view_impl() = default;
@@ -416,12 +461,15 @@ namespace ranges
 
         /// \brief A type-erased view
         /// \ingroup group-views
-        template<typename Ref, category Cat = category::input>
-        struct any_view
+        template<typename Ref, category Cat = category::input, typename enable = void>
+        struct any_view;
+        // at least forward
+        template<typename Ref, category Cat>
+        struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::forward>>
           : view_facade<any_view<Ref, Cat>, unknown>
         {
             friend range_access;
-            CONCEPT_ASSERT(Cat >= category::forward);
+            CONCEPT_ASSERT((Cat & category::forward) == category::forward);
 
             any_view() = default;
             template<typename Rng,
@@ -431,7 +479,7 @@ namespace ranges
                     meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
             any_view(Rng &&rng)
               : any_view(static_cast<Rng &&>(rng),
-                  meta::bool_<detail::to_cat_(range_concept<Rng>{}) >= Cat>{})
+                  meta::bool_<(get_categories(Rng{}) & Cat) == Cat>{})
             {}
             any_view(any_view &&) = default;
             any_view(any_view const &that)
@@ -453,7 +501,7 @@ namespace ranges
             template<typename Rng>
             any_view(Rng &&, std::false_type)
             {
-                static_assert(detail::to_cat_(range_concept<Rng>{}) >= Cat,
+                static_assert((get_categories(Rng{}) & Cat) == Cat,
                     "The range passed to any_view() does not model the requested category");
             }
 
@@ -469,9 +517,10 @@ namespace ranges
             std::unique_ptr<detail::any_cloneable_view_interface<Ref, Cat>> ptr_;
         };
 
-        template<typename Ref>
-        struct any_view<Ref, category::input>
-          : view_facade<any_view<Ref, category::input>, unknown>
+        // input and not forward
+        template<typename Ref, category Cat>
+        struct any_view<Ref, Cat, std::enable_if_t<(Cat & category::forward) == category::input>>
+          : view_facade<any_view<Ref, Cat>, unknown>
         {
             friend range_access;
 
@@ -500,17 +549,26 @@ namespace ranges
             std::shared_ptr<detail::any_input_view_interface<Ref>> ptr_;
         };
 
-        template<typename Ref>
-        using any_input_view = any_view<Ref, category::input>;
+#if RANGES_CXX_DEDUCTION_GUIDES >= 201606L
+        template <typename Rng>
+        any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories(Rng{})>;
+#endif
 
         template<typename Ref>
-        using any_forward_view = any_view<Ref, category::forward>;
+        using any_input_view RANGES_DEPRECATED("Use any_view<Ref, category::input> instead.")
+            = any_view<Ref, category::input>;
 
         template<typename Ref>
-        using any_bidirectional_view = any_view<Ref, category::bidirectional>;
+        using any_forward_view RANGES_DEPRECATED("Use any_view<Ref, category::forward> instead.")
+            = any_view<Ref, category::forward>;
 
         template<typename Ref>
-        using any_random_access_view = any_view<Ref, category::random_access>;
+        using any_bidirectional_view RANGES_DEPRECATED("Use any_view<Ref, category::bidirectional> instead.")
+            = any_view<Ref, category::bidirectional>;
+
+        template<typename Ref>
+        using any_random_access_view RANGES_DEPRECATED("Use any_view<Ref, category::random_access> instead.")
+            = any_view<Ref, category::random_access>;
     }
 }
 
