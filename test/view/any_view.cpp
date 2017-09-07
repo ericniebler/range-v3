@@ -87,8 +87,8 @@ int main()
         CONCEPT_ASSERT(InputView<decltype(ints)>());
         CONCEPT_ASSERT(!RandomAccessView<decltype(ints)>());
         CONCEPT_ASSERT(!SizedView<decltype(ints)>());
-        static_assert((get_categories(ints) & category::random_access) == category::input, "");
-        static_assert((get_categories(ints) & category::sized) == category::none, "");
+        static_assert((get_categories<decltype(ints)>() & category::random_access) == category::input, "");
+        static_assert((get_categories<decltype(ints)>() & category::sized) == category::none, "");
     }
     {
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
@@ -98,14 +98,14 @@ int main()
 #endif
         CONCEPT_ASSERT(RandomAccessView<decltype(ints)>());
         CONCEPT_ASSERT(SizedView<decltype(ints)>());
-        static_assert((get_categories(ints) & category::random_access) == category::random_access, "");
-        static_assert((get_categories(ints) & category::sized) == category::sized, "");
+        static_assert((get_categories<decltype(ints)>() & category::random_access) == category::random_access, "");
+        static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
         any_view<int, category::bidirectional> ints = view::ints;
         CONCEPT_ASSERT(BidirectionalView<decltype(ints)>());
         CONCEPT_ASSERT(!RandomAccessView<decltype(ints)>());
-        static_assert((get_categories(ints) & category::random_access) == category::bidirectional, "");
+        static_assert((get_categories<decltype(ints)>() & category::random_access) == category::bidirectional, "");
     }
     {
         any_view<int> ints2 = view::ints | view::take(10);
