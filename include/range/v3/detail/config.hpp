@@ -446,6 +446,17 @@ namespace ranges
 #define RANGES_RE_ENABLE_WARNINGS
 #endif
 
+#if defined(__clang__)
+#if __has_attribute(no_sanitize)
+#define RANGES_INTENDED_MODULAR_ARITHMETIC \
+  __attribute__((__no_sanitize__("unsigned-integer-overflow")))
+#else
+#define RANGES_INTENDED_MODULAR_ARITHMETIC
+#endif
+#else
+#define RANGES_INTENDED_MODULAR_ARITHMETIC
+#endif
+
 namespace ranges {
     inline namespace v3 {
         namespace detail {
