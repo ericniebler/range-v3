@@ -16,9 +16,8 @@
 
 #include <range/v3/detail/config.hpp>
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-#include <mutex>
+#include <atomic>
 #include <exception>
-#include <condition_variable>
 #include <experimental/coroutine>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -96,9 +95,8 @@ namespace ranges
                     struct promise_type
                       : detail::sync_wait_all_value_promise<std::tuple<co_result_not_void_t<Ts>...>>
                     {
-                        std::mutex mtx_;
-                        std::condition_variable cnd_;
-                        std::size_t count_{sizeof...(Ts)};
+                        std::atomic<std::size_t> started_{sizeof...(Ts)};
+                        std::atomic<std::size_t> stopped_{sizeof...(Ts)};
 
                         std::experimental::suspend_never initial_suspend() const noexcept
                         {
@@ -113,10 +111,11 @@ namespace ranges
                             return wait_all_outer{*this};
                         }
                     };
-                    std::experimental::coroutine_handle<promise_type> coro_;
+                    using coro_handle_t = std::experimental::coroutine_handle<promise_type>;
+                    coro_handle_t coro_;
 
                     explicit wait_all_outer(promise_type &p) noexcept
-                      : coro_(std::experimental::coroutine_handle<promise_type>::from_promise(p))
+                      : coro_(coro_handle_t::from_promise(p))
                     {}
                     wait_all_outer(wait_all_outer &&that) noexcept
                       : coro_(ranges::exchange(that.coro_, nullptr))
@@ -129,8 +128,7 @@ namespace ranges
                     std::tuple<co_result_not_void_t<Ts>...> wait()
                     {
                         auto &promise = coro_.promise();
-                        std::unique_lock<std::mutex> lock(promise.mtx_);
-                        promise.cnd_.wait(lock, [&promise] { return promise.count_ == 0; });
+                        RANGES_EXPECT(promise.stopped_ == 0);
                         return promise.get();
                     }
                 };
@@ -138,28 +136,30 @@ namespace ranges
                 template<typename T, typename... Ts>
                 struct wait_all_inner
                 {
+                    using outer_promise_type = typename wait_all_outer<Ts...>::promise_type;
+                    using outer_coro_handler = std::experimental::coroutine_handle<outer_promise_type>;
+
                     struct promise_type
                       : meta::if_<
                             std::is_void<co_result_t<T>>,
                             sync_wait_all_void_promise,
                             sync_wait_all_value_promise<co_result_t<T>>>
                     {
-                        using outer_promise_type = typename wait_all_outer<Ts...>::promise_type;
-
                         struct final_suspend_result : std::experimental::suspend_always
                         {
-                            outer_promise_type *outer_;
-                            final_suspend_result(outer_promise_type *outer) noexcept
-                              : outer_(outer)
+                            outer_coro_handler outer_coro_;
+                            final_suspend_result(outer_coro_handler outer) noexcept
+                              : outer_coro_(outer)
                             {}
-                            void await_suspend(std::experimental::coroutine_handle<>) const noexcept
+                            void await_suspend(std::experimental::coroutine_handle<>) noexcept
                             {
-                                { std::lock_guard<std::mutex> g(outer_->mtx_); --outer_->count_; }
-                                outer_->cnd_.notify_all();
+                                // If we're the last inner coro to finish, restart the outer coro
+                                if (0 == --outer_coro_.promise().stopped_)
+                                    outer_coro_.resume();
                             }
                         };
 
-                        outer_promise_type *outer_;
+                        outer_coro_handler outer_coro_;
 
                         std::experimental::suspend_always initial_suspend() const noexcept
                         {
@@ -167,7 +167,7 @@ namespace ranges
                         }
                         final_suspend_result final_suspend() const noexcept
                         {
-                            return {outer_};
+                            return {outer_coro_};
                         }
                         wait_all_inner get_return_object() noexcept
                         {
@@ -175,10 +175,11 @@ namespace ranges
                         }
                     };
 
-                    std::experimental::coroutine_handle<promise_type> coro_;
+                    using coro_handle = std::experimental::coroutine_handle<promise_type>;
+                    coro_handle coro_;
 
                     explicit wait_all_inner(promise_type &p) noexcept
-                      : coro_(std::experimental::coroutine_handle<promise_type>::from_promise(p))
+                      : coro_(coro_handle::from_promise(p))
                     {}
                     wait_all_inner(wait_all_inner &&that) noexcept
                       : coro_(ranges::exchange(that.coro_, nullptr))
@@ -193,12 +194,13 @@ namespace ranges
                         RANGES_EXPECT(!coro_.done());
                         return false;
                     }
-                    bool await_suspend(std::experimental::coroutine_handle<
-                        typename wait_all_outer<Ts...>::promise_type> waiter) noexcept
+                    void await_suspend(outer_coro_handler outer_coro) noexcept
                     {
-                        coro_.promise().outer_ = &waiter.promise();
+                        coro_.promise().outer_coro_ = outer_coro;
                         coro_.resume();
-                        return false; // don't suspend, resume the waiting coroutine
+                        // Resume the outer coro N-1 times to get all the inner coros started
+                        if (0 != --outer_coro.promise().started_)
+                            outer_coro.resume();
                     }
                     co_result_not_void_t<T> await_resume() const
                     {
@@ -226,4 +228,4 @@ namespace ranges
 } // namespace ranges
 
 #endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-#endif // RANGES_V3_EXPERIMENTAL_UTILITY_SYNC_AWAIT_HPP
+#endif // RANGES_V3_EXPERIMENTAL_UTILITY_SYNC_WAIT_ALL_HPP

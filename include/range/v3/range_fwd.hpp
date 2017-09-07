@@ -823,6 +823,9 @@ namespace ranges
             struct sized_generator;
 #endif            
         }
+
+        struct monostate
+        {};
     }
 }
 

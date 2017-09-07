@@ -41,7 +41,6 @@
 
 #include <range/v3/view/filter.hpp>
 
-
 using ranges::experimental::sync_wait;
 using ranges::experimental::task;
 using ranges::experimental::async_generator;
@@ -214,10 +213,13 @@ void async_producer_with_async_consumer()
 
     auto produce = [&]() -> async_generator<std::uint32_t>
     {
+        //std::cout << "producer, awaiting p1" << std::endl;
         co_await p1;
         co_yield 1;
+        //std::cout << "producer, awaiting p2" << std::endl;
         co_await p2;
         co_yield 2;
+        //std::cout << "producer, awaiting p3" << std::endl;
         co_await p3;
     };
 
@@ -230,6 +232,7 @@ void async_producer_with_async_consumer()
         CHECK(*it == 1u);
         (void)co_await ++it;
         CHECK(*it == 2u);
+        //std::cout << "consumer, awaiting c1" << std::endl;
         co_await c1;
         (void)co_await ++it;
         CHECK(it == generator.end());
@@ -238,10 +241,14 @@ void async_producer_with_async_consumer()
 
     auto unblock = [&]() -> task<>
     {
+        //std::cout << "unblock, setting p1" << std::endl;
         p1.set();
+        //std::cout << "unblock, setting p2" << std::endl;
         p2.set();
+        //std::cout << "unblock, setting c1" << std::endl;
         c1.set();
         CHECK(!consumerFinished);
+        //std::cout << "unblock, setting p3" << std::endl;
         p3.set();
         CHECK(consumerFinished);
         co_return;

@@ -18,18 +18,10 @@ include(ranges_env)
 include(ranges_flags)
 include(CTest)
 
-enable_testing()
-
-include_directories(include)
-add_subdirectory(doc)
-add_subdirectory(test)
-add_subdirectory(example)
-add_subdirectory(perf)
-
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
 if(NOT RANGE_V3_TRY_THREAD)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRANGES_CXX_THREAD=0")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRANGES_CXX_THREAD=0")
 endif()
 
 # Test for coroutine TS support
@@ -40,8 +32,16 @@ set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
 
 if (RANGE_V3_HAS_FCOROUTINES_TS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
 endif()
+
+enable_testing()
+
+include_directories(include)
+add_subdirectory(doc)
+add_subdirectory(test)
+add_subdirectory(example)
+add_subdirectory(perf)
 
 # Test all headers
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
@@ -113,7 +113,6 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   message("  conan test_package")
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
-
 
 install(DIRECTORY include/ DESTINATION include
         FILES_MATCHING PATTERN "*.hpp")
