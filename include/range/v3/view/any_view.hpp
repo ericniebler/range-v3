@@ -27,6 +27,9 @@
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/view/all.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
+
 namespace ranges
 {
     inline namespace v3
@@ -39,6 +42,7 @@ namespace ranges
             forward         =  3,  ///<\brief Satisfies ranges::v3::concepts::ForwardRange
             bidirectional   =  7,  ///<\brief Satisfies ranges::v3::concepts::BidirectionalRange
             random_access   = 15,  ///<\brief Satisfies ranges::v3::concepts::RandomAccessRange
+            mask            = random_access, ///<\brief Mask away any properties other than iterator category
             sized           = 16,  ///<\brief Satisfies ranges::v3::concepts::SizedRange
         };
 
@@ -181,7 +185,7 @@ namespace ranges
                 }
             };
 
-            template<typename Ref>
+            template<typename Ref, bool Sized = false>
             struct any_input_view_interface
             {
                 virtual ~any_input_view_interface() = default;
@@ -189,6 +193,12 @@ namespace ranges
                 virtual bool done() const = 0;
                 virtual Ref read() const = 0;
                 virtual void next() = 0;
+            };
+            template<typename Ref>
+            struct any_input_view_interface<Ref, true>
+              : any_input_view_interface<Ref, false>
+            {
+                virtual std::size_t size() = 0;
             };
 
             template<typename Ref>
@@ -214,14 +224,15 @@ namespace ranges
                 any_input_view_interface<Ref> *view_ = nullptr;
             };
 
-            template<typename Rng, typename Ref>
+            template<typename Rng, typename Ref, bool Sized = false>
             struct any_input_view_impl
-              : any_input_view_interface<Ref>
+              : any_input_view_interface<Ref, Sized>
               , private tagged_compressed_tuple<tag::range(Rng),
                     tag::current(iterator_t<Rng>)>
               , private any_view_sentinel_impl<Rng>
             {
                 CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
+                CONCEPT_ASSERT(!Sized || SizedRange<Rng>());
 
                 explicit any_input_view_impl(Rng rng_)
                   : tagged_t{std::move(rng_), iterator_t<Rng>{}}
@@ -248,13 +259,17 @@ namespace ranges
                 }
                 virtual Ref read() const override { return *current(); }
                 virtual void next() override { ++current(); }
+                std::size_t size() // override-ish
+                {
+                    return static_cast<std::size_t>(ranges::size(range()));
+                }
             };
 
             template<typename Ref, category Cat = category::forward, typename enable = void>
             struct any_cursor_interface;
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::forward>>>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::forward>>>
             {
                 virtual ~any_cursor_interface() = default;
                 virtual any_ref iter() const = 0; // returns a const ref to the cursor's wrapped iterator
@@ -265,14 +280,14 @@ namespace ranges
 
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::bidirectional>>>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::bidirectional>>>
               : any_cursor_interface<Ref, category::forward>
             {
                 virtual void prev() = 0;
             };
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::random_access) == category::random_access>>>
+            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::random_access>>>
               : any_cursor_interface<Ref, category::bidirectional>
             {
                 virtual void advance(std::ptrdiff_t) = 0;
@@ -299,24 +314,24 @@ namespace ranges
 
                 I it_;
 
-                any_ref iter() const // override
+                any_ref iter() const override
                 {
                     return it_;
                 }
-                Ref read() const // override
+                Ref read() const override
                 {
                     return *it_;
                 }
-                bool equal(Forward const &that_) const // override
+                bool equal(Forward const &that_) const override
                 {
                     auto &that = polymorphic_downcast<any_cursor_impl const &>(that_);
                     return that.it_ == it_;
                 }
-                void next() // override
+                void next() override
                 {
                     ++it_;
                 }
-                std::unique_ptr<any_cloneable_cursor_interface<Ref, Cat>> clone() const // override
+                std::unique_ptr<any_cloneable_cursor_interface<Ref, Cat>> clone() const override
                 {
                     return detail::make_unique<any_cursor_impl>(it_);
                 }
@@ -425,7 +440,7 @@ namespace ranges
                 }
             };
 
-            template<typename Ref, category Cat>
+            template<typename Ref, category Cat, bool = (Cat & category::sized) == category::sized>
             struct any_view_interface
               : fully_erased_view
             {
@@ -433,6 +448,12 @@ namespace ranges
 
                 virtual ~any_view_interface() = default;
                 virtual any_cursor<Ref, Cat> begin_cursor() = 0;
+            };
+            template<typename Ref, category Cat>
+            struct any_view_interface<Ref, Cat, true>
+              : any_view_interface<Ref, Cat, false>
+            {
+                virtual std::size_t size() = 0;
             };
 
             template<typename Ref, category Cat>
@@ -447,6 +468,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT((Cat & category::forward) == category::forward);
                 CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
+                CONCEPT_ASSERT((Cat & category::sized) == category::none || SizedRange<Rng>());
 
                 any_view_impl() = default;
                 any_view_impl(Rng rng)
@@ -471,38 +493,10 @@ namespace ranges
                 {
                     return detail::make_unique<any_view_impl>(range_box_t::get());
                 }
-            };
-
-            template<bool is_sized>
-            struct any_view_size_base
-            {
-                any_view_size_base() = default;
-                any_view_size_base(any_view_size_base const &) = default;
-                any_view_size_base(any_view_size_base &&) = default;
-                any_view_size_base & operator=(any_view_size_base const &) = default;
-                any_view_size_base & operator=(any_view_size_base &&) = default;
-
-                template <typename Rng>
-                any_view_size_base(Rng &&)
-                {}
-            };
-
-            template<>
-            struct any_view_size_base<true>
-            {
-                any_view_size_base() = default;
-                any_view_size_base(any_view_size_base const &) = default;
-                any_view_size_base(any_view_size_base &&) = default;
-                any_view_size_base & operator=(any_view_size_base const &) = default;
-                any_view_size_base & operator=(any_view_size_base &&) = default;
-
-                template <typename Rng>
-                any_view_size_base(Rng &&rng)
-                    : size_{ranges::size(rng)}
-                {}
-
-            protected:
-                std::size_t size_ = 0;
+                std::size_t size() // override-ish
+                {
+                    return static_cast<std::size_t>(ranges::size(range_box_t::get()));
+                }
             };
         }
         /// \endcond
@@ -510,13 +504,8 @@ namespace ranges
         /// \brief A type-erased view
         /// \ingroup group-views
         template<typename Ref, category Cat = category::input, typename enable = void>
-        struct any_view;
-
-        // at least forward
-        template<typename Ref, category Cat>
-        struct any_view<Ref, Cat, meta::_t<std::enable_if<(Cat & category::forward) == category::forward>>>
-          : detail::any_view_size_base<(Cat & category::sized) == category::sized>,
-            view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
+        struct any_view
+          : view_facade<any_view<Ref, Cat>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
             CONCEPT_ASSERT((Cat & category::forward) == category::forward);
@@ -545,15 +534,14 @@ namespace ranges
             CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
             std::size_t size() const
             {
-                return this->size_;
+                return ptr_ ? ptr_->size() : 0;
             }
         private:
             template<typename Rng>
             using impl_t = detail::any_view_impl<view::all_t<Rng>, Ref, Cat>;
             template<typename Rng>
             any_view(Rng &&rng, std::true_type)
-              : detail::any_view_size_base<(Cat & category::sized) == category::sized>{rng},
-                ptr_{detail::make_unique<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
+              : ptr_{detail::make_unique<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
             template<typename Rng>
             any_view(Rng &&, std::false_type)
@@ -577,8 +565,7 @@ namespace ranges
         // input and not forward
         template<typename Ref, category Cat>
         struct any_view<Ref, Cat, meta::_t<std::enable_if<(Cat & category::forward) == category::input>>>
-          : detail::any_view_size_base<(Cat & category::sized) == category::sized>,
-            view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
+          : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
 
@@ -589,14 +576,13 @@ namespace ranges
                     InputRange<Rng>,
                     meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
             any_view(Rng &&rng)
-              : detail::any_view_size_base<(Cat & category::sized) == category::sized>{rng},
-                ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
+              : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
 
             CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
             std::size_t size() const
             {
-                return this->size_;
+                return ptr_ ? ptr_->size() : 0;
             }
         private:
             template<typename Rng>
@@ -615,8 +601,11 @@ namespace ranges
         };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-        template <typename Rng>
-        any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
+        template<typename Rng,
+            CONCEPT_REQUIRES_(View<Rng>()),
+            typename Ref = range_reference_t<Rng>,
+            category Cat = get_categories<Rng>()>
+        any_view(Rng &&) -> any_view<Ref, Cat>;
 #endif
 
         template<typename Ref>
@@ -634,9 +623,11 @@ namespace ranges
         template<typename Ref>
         using any_random_access_view RANGES_DEPRECATED("Use any_view<Ref, category::random_access> instead.")
             = any_view<Ref, category::random_access>;
-    }
-}
+    } // inline namespace v3
+} // namepace ranges
 
 RANGES_SATISFY_BOOST_RANGE(::ranges::v3::any_view)
+
+RANGES_DIAGNOSTIC_POP
 
 #endif
