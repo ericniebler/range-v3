@@ -198,7 +198,7 @@ namespace ranges
             struct any_input_view_interface<Ref, true>
               : any_input_view_interface<Ref, false>
             {
-                virtual std::size_t size() = 0;
+                virtual std::size_t size() const = 0;
             };
 
             template<typename Ref>
@@ -259,7 +259,7 @@ namespace ranges
                 }
                 virtual Ref read() const override { return *current(); }
                 virtual void next() override { ++current(); }
-                std::size_t size() // override-ish
+                std::size_t size() const // override-ish
                 {
                     return static_cast<std::size_t>(ranges::size(range()));
                 }
@@ -453,7 +453,7 @@ namespace ranges
             struct any_view_interface<Ref, Cat, true>
               : any_view_interface<Ref, Cat, false>
             {
-                virtual std::size_t size() = 0;
+                virtual std::size_t size() const = 0;
             };
 
             template<typename Ref, category Cat>
@@ -493,7 +493,7 @@ namespace ranges
                 {
                     return detail::make_unique<any_view_impl>(range_box_t::get());
                 }
-                std::size_t size() // override-ish
+                std::size_t size() const // override-ish
                 {
                     return static_cast<std::size_t>(ranges::size(range_box_t::get()));
                 }
