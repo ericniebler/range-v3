@@ -22,6 +22,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/invoke.hpp> // for reference_wrapper
+#include <range/v3/experimental/utility/sync_wait.hpp>
 
 namespace ranges
 {
@@ -95,7 +96,7 @@ namespace ranges
                     struct promise_type
                       : detail::sync_wait_all_value_promise<std::tuple<co_result_not_void_t<Ts>...>>
                     {
-                        std::atomic<std::size_t> started_{sizeof...(Ts)};
+                        std::size_t started_{sizeof...(Ts)};
                         std::atomic<std::size_t> stopped_{sizeof...(Ts)};
 
                         std::experimental::suspend_never initial_suspend() const noexcept
@@ -125,7 +126,15 @@ namespace ranges
                         if(coro_)
                             coro_.destroy();
                     }
-                    std::tuple<co_result_not_void_t<Ts>...> wait()
+                    bool await_ready() const noexcept
+                    {
+                        return coro_.done();
+                    }
+                    void await_suspend(std::experimental::coroutine_handle<>) noexcept
+                    {
+                        coro_.resume();
+                    }
+                    std::tuple<co_result_not_void_t<Ts>...> await_resume()
                     {
                         auto &promise = coro_.promise();
                         RANGES_EXPECT(promise.stopped_ == 0);
@@ -136,8 +145,8 @@ namespace ranges
                 template<typename T, typename... Ts>
                 struct wait_all_inner
                 {
-                    using outer_promise_type = typename wait_all_outer<Ts...>::promise_type;
-                    using outer_coro_handler = std::experimental::coroutine_handle<outer_promise_type>;
+                    using outer_promise_type_t = typename wait_all_outer<Ts...>::promise_type;
+                    using outer_coro_handle_t = std::experimental::coroutine_handle<outer_promise_type_t>;
 
                     struct promise_type
                       : meta::if_<
@@ -147,8 +156,8 @@ namespace ranges
                     {
                         struct final_suspend_result : std::experimental::suspend_always
                         {
-                            outer_coro_handler outer_coro_;
-                            final_suspend_result(outer_coro_handler outer) noexcept
+                            outer_coro_handle_t outer_coro_;
+                            final_suspend_result(outer_coro_handle_t outer) noexcept
                               : outer_coro_(outer)
                             {}
                             void await_suspend(std::experimental::coroutine_handle<>) noexcept
@@ -159,7 +168,7 @@ namespace ranges
                             }
                         };
 
-                        outer_coro_handler outer_coro_;
+                        outer_coro_handle_t outer_coro_;
 
                         std::experimental::suspend_always initial_suspend() const noexcept
                         {
@@ -194,15 +203,18 @@ namespace ranges
                         RANGES_EXPECT(!coro_.done());
                         return false;
                     }
-                    void await_suspend(outer_coro_handler outer_coro) noexcept
+                    bool await_suspend(outer_coro_handle_t outer_coro) noexcept
                     {
                         coro_.promise().outer_coro_ = outer_coro;
                         coro_.resume();
                         // Resume the outer coro N-1 times to get all the inner coros started
-                        if (0 != --outer_coro.promise().started_)
-                            outer_coro.resume();
+                        return 0 == --outer_coro.promise().started_;
                     }
-                    co_result_not_void_t<T> await_resume() const
+                    wait_all_inner await_resume()
+                    {
+                        return std::move(*this);
+                    }
+                    co_result_not_void_t<T> get() const
                     {
                         return coro_.promise().get();
                     }
@@ -215,13 +227,15 @@ namespace ranges
                 CONCEPT_REQUIRES_(meta::and_<Awaitable<Ts>...>())>
             std::tuple<detail::co_result_not_void_t<Ts>...> sync_wait_all(Ts &&...ts)
             {
-                return [](Ts &...us) -> detail::wait_all_outer<Ts...> {
-                    co_return std::tuple<detail::co_result_not_void_t<Ts>...>{
-                        co_await [](Ts &v) -> detail::wait_all_inner<Ts, Ts...> {
-                            co_return co_await v;
-                        }(us)...
-                    };
-                }(ts...).wait();
+                return sync_wait([](Ts &...us) -> detail::wait_all_outer<Ts...> {
+                    co_return [](detail::wait_all_inner<Ts, Ts...>... inners) {
+                        return std::tuple<detail::co_result_not_void_t<Ts>...>{
+                            std::move(inners).get()...
+                        };
+                    }(co_await [](Ts &v) -> detail::wait_all_inner<Ts, Ts...> {
+                        co_return co_await v;
+                    }(us)...);
+                }(ts...));
             }
         } // namespace experimental
     } // namespace v3
