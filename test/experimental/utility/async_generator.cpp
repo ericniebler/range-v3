@@ -34,7 +34,7 @@
 #include <range/v3/experimental/utility/async_generator.hpp>
 #include <range/v3/experimental/utility/task.hpp>
 #include <range/v3/experimental/utility/sync_wait.hpp>
-#include <range/v3/experimental/utility/sync_wait_all.hpp>
+#include <range/v3/experimental/utility/when_all.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 #include "../../detail/single_consumer_event.hpp"
@@ -44,7 +44,7 @@
 using ranges::experimental::sync_wait;
 using ranges::experimental::task;
 using ranges::experimental::async_generator;
-using ranges::experimental::sync_wait_all;
+using ranges::experimental::when_all;
 using ranges::experimental::detail::single_consumer_event;
 
 CONCEPT_ASSERT(ranges::AsyncIterator<async_generator<int>::iterator>());
@@ -254,7 +254,7 @@ void async_producer_with_async_consumer()
         co_return;
     };
 
-    sync_wait_all(consume(), unblock());
+    sync_wait(when_all(consume(), unblock()));
 }
 
 // exception thrown before first yield is rethrown from begin operation
@@ -332,9 +332,9 @@ void no_stack_overflow_for_many_sync_completions()
 
     single_consumer_event event;
 
-    sync_wait_all(
+    sync_wait(when_all(
         consumer(makeSequence(event)),
-        unblocker(event));
+        unblocker(event)));
 }
 
 // test an async_generator piped to view::filter

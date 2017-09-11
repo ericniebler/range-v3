@@ -13,7 +13,6 @@
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <range/v3/experimental/utility/task.hpp>
 #include <range/v3/experimental/utility/sync_wait.hpp>
-#include <range/v3/experimental/utility/sync_wait_all.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 
