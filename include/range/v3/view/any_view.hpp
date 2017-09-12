@@ -269,7 +269,7 @@ namespace ranges
             struct any_cursor_interface;
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::forward>>>
+            struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::forward>>
             {
                 virtual ~any_cursor_interface() = default;
                 virtual any_ref iter() const = 0; // returns a const ref to the cursor's wrapped iterator
@@ -280,14 +280,14 @@ namespace ranges
 
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::bidirectional>>>
+            struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::bidirectional>>
               : any_cursor_interface<Ref, category::forward>
             {
                 virtual void prev() = 0;
             };
 
             template<typename Ref, category Cat>
-            struct any_cursor_interface<Ref, Cat, meta::_t<std::enable_if<(Cat & category::mask) == category::random_access>>>
+            struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::random_access>>
               : any_cursor_interface<Ref, category::bidirectional>
             {
                 virtual void advance(std::ptrdiff_t) = 0;
@@ -564,7 +564,7 @@ namespace ranges
 
         // input and not forward
         template<typename Ref, category Cat>
-        struct any_view<Ref, Cat, meta::_t<std::enable_if<(Cat & category::forward) == category::input>>>
+        struct any_view<Ref, Cat, meta::if_c<(Cat & category::forward) == category::input>>
           : view_facade<any_view<Ref, Cat, void>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
