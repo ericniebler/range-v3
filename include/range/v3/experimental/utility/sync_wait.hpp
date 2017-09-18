@@ -97,19 +97,16 @@ namespace ranges
 
                                 struct final_suspend_result : std::experimental::suspend_always
                                 {
-                                    promise_type *this_;
-                                    final_suspend_result(promise_type *_this) noexcept
-                                      : this_(_this)
-                                    {
-                                    }
                                     void await_suspend(
-                                        std::experimental::coroutine_handle<>) const noexcept
+                                        std::experimental::coroutine_handle<promise_type> h)
+                                        const noexcept
                                     {
+                                        auto &promise = h.promise();
                                         {
-                                            std::lock_guard<std::mutex> g(this_->mtx_);
-                                            this_->done_ = true;
+                                            std::lock_guard<std::mutex> g(promise.mtx_);
+                                            promise.done_ = true;
                                         }
-                                        this_->cnd_.notify_all();
+                                        promise.cnd_.notify_all();
                                     }
                                 };
                                 std::experimental::suspend_never initial_suspend() const
@@ -119,7 +116,7 @@ namespace ranges
                                 }
                                 final_suspend_result final_suspend() noexcept
                                 {
-                                    return {this};
+                                    return {};
                                 }
                                 auto get_return_object() noexcept -> _
                                 {
@@ -134,7 +131,7 @@ namespace ranges
                             {
                             }
                             _(_ &&that) noexcept
-                              : coro_(ranges::exchange(that.coro_, nullptr))
+                              : coro_(ranges::exchange(that.coro_, {}))
                             {
                             }
                             ~_()

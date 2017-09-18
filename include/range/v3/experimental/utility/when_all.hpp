@@ -19,6 +19,7 @@
 #include <atomic>
 #include <exception>
 #include <experimental/coroutine>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/invoke.hpp> // for reference_wrapper
@@ -116,7 +117,7 @@ namespace ranges
                       : coro_(coro_handle_t::from_promise(p))
                     {}
                     when_all_awaitable(when_all_awaitable &&that) noexcept
-                      : coro_(ranges::exchange(that.coro_, nullptr))
+                      : coro_(ranges::exchange(that.coro_, {}))
                     {}
                     ~when_all_awaitable()
                     {
@@ -188,7 +189,7 @@ namespace ranges
                       : coro_(coro_handle::from_promise(p))
                     {}
                     when_all_inner(when_all_inner &&that) noexcept
-                      : coro_(ranges::exchange(that.coro_, nullptr))
+                      : coro_(ranges::exchange(that.coro_, {}))
                     {}
                     ~when_all_inner()
                     {
@@ -208,9 +209,9 @@ namespace ranges
                         coro_.resume();
                         return do_suspend;
                     }
-                    when_all_inner &await_resume()
+                    void *await_resume()
                     {
-                        return *this;
+                        return this;
                     }
                     co_result_not_void_t<T> get() const
                     {
@@ -224,11 +225,13 @@ namespace ranges
                     co_return co_await v;
                 }
 
-                template <class... Ts>
-                std::tuple<co_result_not_void_t<Ts>...>
-                do_when_all_collect(when_all_inner<Ts, Ts...> &... inners)
+                template <class... Ts, std::size_t... Is>
+                std::tuple<co_result_not_void_t<Ts>...> do_when_all_collect(
+                    std::initializer_list<void*> inners,
+                    meta::index_sequence<Is...>)
                 {
-                    return std::tuple<co_result_not_void_t<Ts>...>{inners.get()...};
+                    return std::tuple<co_result_not_void_t<Ts>...>{
+                        static_cast<when_all_inner<Ts, Ts...> *>(inners.begin()[Is])->get()...};
                 }
 
                 struct when_all_fn
@@ -239,7 +242,8 @@ namespace ranges
                     {
                         co_return
                             do_when_all_collect<Ts...>(
-                                co_await do_when_all_inner<Ts...>(us)...);
+                                {co_await do_when_all_inner<Ts...>(us)...},
+                                meta::make_index_sequence<sizeof...(Ts)>());
                     }
                 };
             } // namespace detail
