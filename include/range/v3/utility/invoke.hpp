@@ -103,7 +103,7 @@ namespace ranges
         public:
             template<typename F, typename Obj, typename First, typename... Rest,
                 meta::if_c<detail::is_function<F>::value, int> = 0>
-            constexpr auto operator()(F (Obj::*ptr), First && first, Rest &&... rest) const
+            constexpr auto operator()(F Obj::*ptr, First && first, Rest &&... rest) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 invoke_member_fn(std::is_base_of<Obj, detail::decay_t<First>>{},
@@ -112,7 +112,7 @@ namespace ranges
             )
             template<typename Data, typename Obj, typename First,
                 meta::if_c<!detail::is_function<Data>::value, int> = 0>
-            constexpr auto operator()(Data (Obj::*ptr), First && first) const
+            constexpr auto operator()(Data Obj::*ptr, First && first) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 invoke_member_data(std::is_base_of<Obj, detail::decay_t<First>>{},
