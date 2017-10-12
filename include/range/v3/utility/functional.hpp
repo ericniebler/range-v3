@@ -83,6 +83,7 @@ namespace ranges
         struct ident
         {
             template<typename T>
+            constexpr
             T && operator()(T && t) const noexcept
             {
                 return (T &&) t;
@@ -93,6 +94,7 @@ namespace ranges
         struct plus
         {
             template<typename T, typename U>
+            constexpr
             auto operator()(T && t, U && u) const ->
                 decltype((T &&) t + (U &&) u)
             {
@@ -104,6 +106,7 @@ namespace ranges
         struct minus
         {
             template<typename T, typename U>
+            constexpr
             auto operator()(T && t, U && u) const ->
                 decltype((T &&) t - (U &&) u)
             {
@@ -115,6 +118,7 @@ namespace ranges
         struct multiplies
         {
             template<typename T, typename U>
+            constexpr
             auto operator()(T && t, U && u) const ->
                 decltype((T &&) t * (U &&) u)
             {
@@ -126,6 +130,7 @@ namespace ranges
         struct bitwise_or
         {
             template<typename T, typename U>
+            constexpr
             auto operator()(T && t, U && u) const ->
                 decltype((T &&) t | (U &&) u)
             {
@@ -148,16 +153,19 @@ namespace ranges
         template<typename T>
         struct coerce
         {
+            constexpr
             T & operator()(T & t) const
             {
                 return t;
             }
             /// \overload
+            constexpr
             T const & operator()(T const & t) const
             {
                 return t;
             }
             /// \overload
+            constexpr
             T operator()(T && t) const
             {
                 return (T &&) t;
@@ -869,7 +877,7 @@ namespace ranges
           : ImplFn
         {
         private:
-            ImplFn const & base() const
+            constexpr ImplFn const & base() const
             {
                 return *this;
             }
@@ -877,6 +885,7 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename...Args>
+            constexpr
             auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::move(rng0), std::declval<Args>()...))
             {
@@ -884,6 +893,7 @@ namespace ranges
             }
             /// \overload
             template<typename Rng0, typename V1, typename...Args>
+            constexpr
             auto operator()(Rng0 && rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), std::move(rng1), std::declval<Args>()...))
             {
@@ -891,6 +901,7 @@ namespace ranges
             }
             /// \overload
             template<typename V0, typename V1, typename...Args>
+            constexpr
             auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::move(rng0), std::move(rng1), std::declval<Args>()...))
             {
