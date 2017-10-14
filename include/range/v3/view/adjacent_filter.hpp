@@ -39,24 +39,29 @@ namespace ranges
                 adjacent_filter_view<Rng, Pred>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+          , private box<semiregular_t<Pred>, adjacent_filter_view<Rng, Pred>>
         {
         private:
             friend range_access;
-            semiregular_t<Pred> pred_;
+
+            static constexpr bool const_iterable = Range<Rng const>() &&
+                IndirectInvocable<Pred const &, iterator_t<Rng>, iterator_t<Rng>>();
 
             struct adaptor : adaptor_base
             {
             private:
-                adjacent_filter_view const *rng_;
+                using adjacent_filter_view_t =
+                    meta::const_if_c<const_iterable, adjacent_filter_view>;
+                adjacent_filter_view_t *rng_;
             public:
                 adaptor() = default;
-                adaptor(adjacent_filter_view const &rng)
+                constexpr adaptor(adjacent_filter_view_t &rng) noexcept
                   : rng_(&rng)
                 {}
-                void next(iterator_t<Rng> &it) const
+                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
                 {
-                    auto const end = ranges::end(rng_->mutable_base());
-                    auto &pred = rng_->pred_;
+                    auto const end = ranges::end(rng_->base());
+                    auto &pred = rng_->adjacent_filter_view::box::get();
                     RANGES_EXPECT(it != end);
                     for(auto prev = it; ++it != end; prev = it)
                         if(invoke(pred, *prev, *it))
@@ -65,19 +70,34 @@ namespace ranges
                 void prev() = delete;
                 void distance_to() = delete;
             };
-            adaptor begin_adaptor() const
+            CONCEPT_REQUIRES(const_iterable)
+            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() const noexcept
             {
                 return {*this};
             }
-            adaptor end_adaptor() const
+            CONCEPT_REQUIRES(const_iterable)
+            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() const noexcept
+            {
+                return {*this};
+            }
+            CONCEPT_REQUIRES(!const_iterable)
+            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            {
+                return {*this};
+            }
+            CONCEPT_REQUIRES(!const_iterable)
+            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
             {
                 return {*this};
             }
         public:
             adjacent_filter_view() = default;
-            adjacent_filter_view(Rng rng, Pred pred)
+            RANGES_CXX14_CONSTEXPR adjacent_filter_view(Rng rng, Pred pred)
+                noexcept(std::is_nothrow_constructible<
+                    typename adjacent_filter_view::view_adaptor, Rng>::value &&
+                    std::is_nothrow_constructible<semiregular_t<Pred>, Pred>::value)
               : adjacent_filter_view::view_adaptor{std::move(rng)}
-              , pred_(std::move(pred))
+              , adjacent_filter_view::box(std::move(pred))
             {}
        };
 
@@ -88,28 +108,30 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename Pred>
+                RANGES_CXX14_CONSTEXPR
                 static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     make_pipeable(std::bind(adjacent_filter, std::placeholders::_1,
                         protect(std::move(pred))))
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = meta::and_<
+                using Constraint = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectPredicate<Pred, iterator_t<Rng>,
-                        iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
-                adjacent_filter_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) const
-                {
-                    return {all(static_cast<Rng&&>(rng)), std::move(pred)};
-                }
+                    CONCEPT_REQUIRES_(Constraint<Rng, Pred>())>
+                RANGES_CXX14_CONSTEXPR auto operator()(Rng && rng, Pred pred) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    adjacent_filter_view<all_t<Rng>, Pred>{
+                        all(static_cast<Rng &&>(rng)), std::move(pred)}
+                )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                    CONCEPT_REQUIRES_(!Constraint<Rng, Pred>())>
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
