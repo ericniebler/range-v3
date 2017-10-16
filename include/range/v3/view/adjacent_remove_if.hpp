@@ -16,12 +16,14 @@
 
 #include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
@@ -38,65 +40,108 @@ namespace ranges
                 adjacent_remove_if_view<Rng, Pred>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+          , private box<semiregular_t<Pred>, adjacent_remove_if_view<Rng, Pred>>
         {
+            adjacent_remove_if_view() = default;
+            constexpr adjacent_remove_if_view(Rng rng, Pred pred)
+                noexcept(
+                    std::is_nothrow_constructible<
+                        typename adjacent_remove_if_view::view_adaptor, Rng>::value &&
+                    std::is_nothrow_constructible<
+                        typename adjacent_remove_if_view::box, Pred>::value)
+              : adjacent_remove_if_view::view_adaptor{detail::move(rng)}
+              , adjacent_remove_if_view::box(detail::move(pred))
+            {}
         private:
             friend range_access;
-            semiregular_t<Pred> pred_;
-            detail::non_propagating_cache<iterator_t<Rng>> begin_;
 
             struct adaptor : adaptor_base
             {
             private:
                 adjacent_remove_if_view *rng_;
-                void satisfy(iterator_t<Rng> &it) const
-                {
-                    auto const end = ranges::end(rng_->mutable_base());
-                    auto &pred = rng_->pred_;
-                    if(it == end)
-                        return;
-                    auto next = it;
-                    for(; ++next != end; it = next)
-                        if(!invoke(pred, *it, *next))
-                            return;
-                }
             public:
                 adaptor() = default;
-                adaptor(adjacent_remove_if_view &rng)
+                constexpr adaptor(adjacent_remove_if_view &rng) noexcept
                   : rng_(&rng)
                 {}
-                iterator_t<Rng> begin(adjacent_remove_if_view &) const
+                RANGES_CXX14_CONSTEXPR static iterator_t<Rng> begin(adjacent_remove_if_view &rng)
+                    noexcept(std::is_nothrow_copy_constructible<iterator_t<Rng>>::value)
                 {
-                    auto &beg = rng_->begin_;
-                    if(!beg)
-                    {
-                        beg = ranges::begin(rng_->mutable_base());
-                        this->satisfy(*beg);
-                    }
-                    return *beg;
+                    return *rng.begin_;
                 }
-                void next(iterator_t<Rng> &it) const
+                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
+                    noexcept(noexcept((void)(it != ranges::end(std::declval<Rng &>())),
+                        std::declval<adjacent_remove_if_view &>().satisfy_forward(++it)))
                 {
-                    RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
-                    this->satisfy(++it);
+                    RANGES_ASSERT(it != ranges::end(rng_->base()));
+                    rng_->satisfy_forward(++it);
                 }
-                void prev() = delete;
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
+                    noexcept(noexcept(
+                        std::declval<adjacent_remove_if_view &>().satisfy_reverse(it)))
+                {
+                    rng_->satisfy_reverse(it);
+                }
+                void advance() = delete;
                 void distance_to() = delete;
             };
-            adaptor begin_adaptor()
+            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor()
+                noexcept(noexcept(std::declval<adjacent_remove_if_view &>().cache_begin()))
             {
+                cache_begin();
                 return {*this};
             }
-            adaptor end_adaptor()
+            CONCEPT_REQUIRES(BoundedRange<Rng>())
+            RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
+                noexcept(noexcept(std::declval<adjacent_remove_if_view &>().cache_begin()))
             {
+                if(BidirectionalRange<Rng>()) cache_begin();
                 return {*this};
             }
-        public:
-            adjacent_remove_if_view() = default;
-            adjacent_remove_if_view(Rng rng, Pred pred)
-              : adjacent_remove_if_view::view_adaptor{std::move(rng)}
-              , pred_(std::move(pred))
-            {}
-       };
+            CONCEPT_REQUIRES(!BoundedRange<Rng>())
+            RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor() noexcept
+            {
+                return {};
+            }
+
+            RANGES_CXX14_CONSTEXPR void satisfy_forward(iterator_t<Rng> &it)
+            {
+                auto const end = ranges::end(this->base());
+                if(it == end) return;
+                auto &pred = this->adjacent_remove_if_view::box::get();
+                for(auto next = it; ++next != end && invoke(pred, *it, *next); it = next)
+                    ;
+            }
+            RANGES_CXX14_CONSTEXPR void satisfy_reverse(iterator_t<Rng> &it)
+            {
+                auto const &first = *begin_;
+                RANGES_ASSERT(it != first); (void)first;
+                auto prev = it;
+                --it;
+                if(prev == ranges::end(this->base()))
+                {
+                    return;
+                }
+                auto &pred = this->adjacent_remove_if_view::box::get();
+                for(; invoke(pred, *it, *prev); prev = it, --it)
+                    RANGES_ASSERT(it != first);
+            }
+
+            void cache_begin()
+                noexcept(noexcept(ranges::begin(std::declval<Rng &>()),
+                    std::declval<adjacent_remove_if_view &>().
+                        satisfy_forward(std::declval<iterator_t<Rng> &>())) &&
+                    std::is_nothrow_assignable<
+                        detail::non_propagating_cache<iterator_t<Rng>> &, iterator_t<Rng>>::value)
+            {
+                if(begin_) return;
+                auto it = ranges::begin(this->base());
+                satisfy_forward(it);
+                begin_ = it;
+            }
+            detail::non_propagating_cache<iterator_t<Rng>> begin_;
+        };
 
         namespace view
         {
@@ -106,27 +151,28 @@ namespace ranges
                 friend view_access;
                 template<typename Pred>
                 static auto bind(adjacent_remove_if_fn adjacent_remove_if, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     make_pipeable(std::bind(adjacent_remove_if, std::placeholders::_1,
                         protect(std::move(pred))))
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = meta::and_<
+                using Constraint = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectPredicate<Pred, iterator_t<Rng>,
-                        iterator_t<Rng>>>;
+                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
-                adjacent_remove_if_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) const
-                {
-                    return {all(static_cast<Rng&&>(rng)), std::move(pred)};
-                }
+                    CONCEPT_REQUIRES_(Constraint<Rng, Pred>())>
+                RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    adjacent_remove_if_view<all_t<Rng>, Pred>{
+                        all(static_cast<Rng &&>(rng)), std::move(pred)}
+                )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                    CONCEPT_REQUIRES_(!Constraint<Rng, Pred>())>
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
