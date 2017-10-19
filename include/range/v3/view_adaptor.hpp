@@ -448,15 +448,16 @@ namespace ranges
             view_adaptor(view_adaptor const &) = default;
             view_adaptor &operator=(view_adaptor &&) = default;
             view_adaptor &operator=(view_adaptor const &) = default;
-            constexpr view_adaptor(BaseRng && rng)
-              : rng_(view::all(static_cast<BaseRng&&>(rng)))
+            constexpr view_adaptor(BaseRng &&rng)
+              : rng_(view::all(static_cast<BaseRng &&>(rng)))
             {}
-            base_range_t & base()
+            RANGES_CXX14_CONSTEXPR
+            base_range_t &base() noexcept
             {
                 return rng_;
             }
             /// \overload
-            base_range_t const & base() const
+            constexpr base_range_t const &base() const noexcept
             {
                 return rng_;
             }
