@@ -65,21 +65,16 @@ namespace ranges
                   : rng_(&rng)
                 {}
                 RANGES_CXX14_CONSTEXPR static iterator_t<Rng> begin(adjacent_remove_if_view &rng)
-                    noexcept(std::is_nothrow_copy_constructible<iterator_t<Rng>>::value)
                 {
                     return *rng.begin_;
                 }
                 RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
-                    noexcept(noexcept((void)(it != ranges::end(std::declval<Rng &>())),
-                        std::declval<adjacent_remove_if_view &>().satisfy_forward(++it)))
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
-                    noexcept(noexcept(
-                        std::declval<adjacent_remove_if_view &>().satisfy_reverse(it)))
                 {
                     rng_->satisfy_reverse(it);
                 }
@@ -87,14 +82,12 @@ namespace ranges
                 void distance_to() = delete;
             };
             RANGES_CXX14_CONSTEXPR adaptor begin_adaptor()
-                noexcept(noexcept(std::declval<adjacent_remove_if_view &>().cache_begin()))
             {
                 cache_begin();
                 return {*this};
             }
             CONCEPT_REQUIRES(BoundedRange<Rng>())
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
-                noexcept(noexcept(std::declval<adjacent_remove_if_view &>().cache_begin()))
             {
                 if(BidirectionalRange<Rng>()) cache_begin();
                 return {*this};
@@ -129,17 +122,13 @@ namespace ranges
             }
 
             void cache_begin()
-                noexcept(noexcept(ranges::begin(std::declval<Rng &>()),
-                    std::declval<adjacent_remove_if_view &>().
-                        satisfy_forward(std::declval<iterator_t<Rng> &>())) &&
-                    std::is_nothrow_assignable<
-                        detail::non_propagating_cache<iterator_t<Rng>> &, iterator_t<Rng>>::value)
             {
                 if(begin_) return;
                 auto it = ranges::begin(this->base());
                 satisfy_forward(it);
-                begin_ = it;
+                begin_.emplace(std::move(it));
             }
+
             detail::non_propagating_cache<iterator_t<Rng>> begin_;
         };
 

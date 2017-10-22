@@ -70,9 +70,7 @@ namespace ranges
                     return *rng.begin_;
                 }
                 RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
-                    noexcept(noexcept(
-                        (void)(it != ranges::end(std::declval<Rng &>())),
-                        std::declval<remove_if_view &>().satisfy_forward(++it)))
+                    noexcept(noexcept(std::declval<remove_if_view &>().satisfy_forward(++it)))
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
@@ -117,9 +115,9 @@ namespace ranges
                     ++it;
             }
             RANGES_CXX14_CONSTEXPR void satisfy_reverse(iterator_t<Rng> &it)
-                noexcept(noexcept((void)(--it != it),
-                    invoke(std::declval<Pred &>(), *it)))
+                noexcept(noexcept(invoke(std::declval<Pred &>(), *--it)))
             {
+                RANGES_ASSERT(begin_);
                 auto const &first = *begin_;
                 auto &pred = this->remove_if_view::box::get();
                 do
@@ -133,14 +131,14 @@ namespace ranges
                 noexcept(noexcept(ranges::begin(std::declval<Rng &>()),
                     std::declval<remove_if_view &>().
                         satisfy_forward(std::declval<iterator_t<Rng> &>())) &&
-                    std::is_nothrow_assignable<
-                        detail::non_propagating_cache<iterator_t<Rng>> &, iterator_t<Rng>>::value)
+                    std::is_nothrow_move_constructible<iterator_t<Rng>>::value)
             {
                 if(begin_) return;
                 auto it = ranges::begin(this->base());
                 satisfy_forward(it);
-                begin_ = std::move(it);
+                begin_.emplace(std::move(it));
             }
+
             detail::non_propagating_cache<iterator_t<Rng>> begin_;
         };
 
@@ -154,7 +152,8 @@ namespace ranges
                 static auto bind(remove_if_fn remove_if, Pred pred)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    make_pipeable(std::bind(remove_if, std::placeholders::_1, protect(std::move(pred))))
+                    make_pipeable(std::bind(remove_if, std::placeholders::_1,
+                        protect(std::move(pred))))
                 )
             public:
                 template<typename Rng, typename Pred>
@@ -167,7 +166,8 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    remove_if_view<all_t<Rng>, Pred>{all(static_cast<Rng &&>(rng)), std::move(pred)}
+                    remove_if_view<all_t<Rng>, Pred>{
+                        all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,
