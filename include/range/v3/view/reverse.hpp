@@ -74,18 +74,18 @@ namespace ranges
             {
                 return ranges::end(this->base());
             }
-            // BoundedRange == true
             RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::true_type)
                 noexcept(noexcept(ranges::end(std::declval<Rng &>())))
             {
+                CONCEPT_ASSERT(BoundedRange<Rng>());
                 return ranges::end(this->base());
             }
-            // BoundedRange == false
             RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::false_type)
-                noexcept(noexcept(ranges::next(
+                noexcept(noexcept(iterator_t<Rng>(ranges::next(
                     ranges::begin(std::declval<Rng &>()),
-                    ranges::end(std::declval<Rng &>()))))
+                    ranges::end(std::declval<Rng &>())))))
             {
+                CONCEPT_ASSERT(!BoundedRange<Rng>());
                 using cache_t = detail::non_propagating_cache<iterator_t<Rng>, reverse_view<Rng>>;
                 auto &end_ = static_cast<cache_t &>(*this);
                 if(!end_)
@@ -102,27 +102,27 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using reverse_view_t = meta::const_if_c<const_iterable, reverse_view>;
-                using base_range_t = meta::const_if_c<const_iterable, Rng>;
+                using Parent = meta::const_if_c<const_iterable, reverse_view>;
+                using Base = meta::const_if_c<const_iterable, Rng>;
 #ifndef NDEBUG
-                reverse_view_t *rng_;
+                Parent *rng_;
 #endif
             public:
                 adaptor() = default;
 #ifndef NDEBUG
-                constexpr adaptor(reverse_view_t &rng) noexcept
+                constexpr adaptor(Parent &rng) noexcept
                   : rng_(&rng)
                 {}
 #else
-                constexpr adaptor(reverse_view_t &) noexcept
+                constexpr adaptor(Parent &) noexcept
                 {}
 #endif
-                RANGES_CXX14_CONSTEXPR static auto begin(reverse_view_t &rng)
+                RANGES_CXX14_CONSTEXPR static auto begin(Parent &rng)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     rng.get_end()
                 )
-                RANGES_CXX14_CONSTEXPR static auto end(reverse_view_t &rng)
+                RANGES_CXX14_CONSTEXPR static auto end(Parent &rng)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::begin(rng.base())
@@ -133,15 +133,13 @@ namespace ranges
                     *--it
                 )
                 RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
-                    noexcept(noexcept(
-                        --it != ranges::begin(std::declval<base_range_t &>())))
+                    noexcept(noexcept(--it))
                 {
                     RANGES_ASSERT(it != ranges::begin(rng_->base()));
                     --it;
                 }
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
-                    noexcept(noexcept(
-                        ++it != ranges::begin(std::declval<base_range_t &>())))
+                    noexcept(noexcept(++it))
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     ++it;
@@ -149,10 +147,7 @@ namespace ranges
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 RANGES_CXX14_CONSTEXPR
                 void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
-                    noexcept(noexcept(
-                        void(it - ranges::begin(std::declval<base_range_t &>())),
-                        std::declval<reverse_view_t &>().get_end(),
-                        ranges::advance(it, -n)))
+                    noexcept(noexcept(ranges::advance(it, -n)))
                 {
                     RANGES_ASSERT(n <= it - ranges::begin(rng_->base()));
                     RANGES_ASSERT(it - rng_->get_end() <= n);
