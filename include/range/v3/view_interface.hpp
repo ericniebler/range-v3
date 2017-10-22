@@ -345,9 +345,9 @@ namespace ranges
             }
             /// \brief Print a range to an ostream
         private:
-            template<typename Rng,
+            template<typename Stream, typename Rng,
                 CONCEPT_REQUIRES_(Same<Derived, meta::_t<std::remove_cv<Rng>>>())>
-            static std::ostream &print_(std::ostream &sout, Rng &rng)
+            static Stream &print_(Stream &sout, Rng &rng)
             {
                 sout << '[';
                 auto it = ranges::begin(rng);
