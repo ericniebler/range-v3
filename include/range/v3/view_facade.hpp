@@ -32,11 +32,11 @@ namespace ranges
         {
             template<typename Derived>
             using begin_cursor_t =
-                decltype(range_access::begin_cursor(std::declval<Derived &>(), 42));
+                detail::decay_t<decltype(range_access::begin_cursor(std::declval<Derived &>(), 42))>;
 
             template<typename Derived>
             using end_cursor_t =
-                decltype(range_access::end_cursor(std::declval<Derived &>(), 42));
+                detail::decay_t<decltype(range_access::end_cursor(std::declval<Derived &>(), 42))>;
 
             template<typename Derived>
             using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;

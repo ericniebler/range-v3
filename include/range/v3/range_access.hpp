@@ -168,51 +168,51 @@ namespace ranges
             };
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng & rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng & rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<Rng const &>(rng).begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng & rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.end_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng & rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<Rng const &>(rng).end_cursor()
             )
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng & rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng & rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<Rng const &>(rng).begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng & rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.end_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng & rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<Rng const &>(rng).end_adaptor()
             )
@@ -333,19 +333,9 @@ namespace ranges
             }
 
         private:
-            template<typename RangeAdaptor>
-            static meta::id<typename RangeAdaptor::base_range_t> base_range_2_();
             template<typename RangeFacade>
             static meta::id<typename RangeFacade::view_facade_t> view_facade_2_();
         public:
-            template<typename RangeAdaptor>
-            struct base_range
-              : decltype(range_access::base_range_2_<RangeAdaptor>())
-            {};
-            template<typename RangeAdaptor>
-            struct base_range<RangeAdaptor const>
-              : std::add_const<meta::_t<base_range<RangeAdaptor>>>
-            {};
             template<typename RangeFacade>
             struct view_facade
               : decltype(range_access::view_facade_2_<RangeFacade>())
