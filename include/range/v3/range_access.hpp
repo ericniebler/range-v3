@@ -30,9 +30,7 @@ namespace ranges
         struct range_access
         {
             /// \cond
-
         private:
-
             template<typename T>
             static std::false_type single_pass_2_(long);
             template<typename T>
@@ -331,15 +329,6 @@ namespace ranges
             {
                 return std::move(it.pos());
             }
-
-        private:
-            template<typename RangeFacade>
-            static meta::id<typename RangeFacade::view_facade_t> view_facade_2_();
-        public:
-            template<typename RangeFacade>
-            struct view_facade
-              : decltype(range_access::view_facade_2_<RangeFacade>())
-            {};
             /// endcond
         };
         /// @}
