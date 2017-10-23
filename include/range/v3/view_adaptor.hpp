@@ -413,15 +413,15 @@ namespace ranges
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             RANGES_CXX14_CONSTEXPR auto begin_cursor()
-            RANGES_DECLTYPE_NOEXCEPT(begin_cursor_(std::declval<D &>()))
+            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D &>()))
             {
-                return begin_cursor_(derived());
+                return view_adaptor::begin_cursor_(derived());
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             RANGES_CXX14_CONSTEXPR auto begin_cursor() const
-            RANGES_DECLTYPE_NOEXCEPT(begin_cursor_(std::declval<D const &>()))
+            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D const &>()))
             {
-                return begin_cursor_(derived());
+                return view_adaptor::begin_cursor_(derived());
             }
 
             template<typename D>
@@ -436,15 +436,15 @@ namespace ranges
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             RANGES_CXX14_CONSTEXPR auto end_cursor()
-            RANGES_DECLTYPE_NOEXCEPT(end_cursor_(std::declval<D &>()))
+            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D &>()))
             {
-                return end_cursor_(derived());
+                return view_adaptor::end_cursor_(derived());
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             RANGES_CXX14_CONSTEXPR auto end_cursor() const
-            RANGES_DECLTYPE_NOEXCEPT(end_cursor_(std::declval<D const &>()))
+            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D const &>()))
             {
-                return end_cursor_(derived());
+                return view_adaptor::end_cursor_(derived());
             }
         protected:
             ~view_adaptor() = default;
