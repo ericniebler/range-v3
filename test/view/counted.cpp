@@ -68,7 +68,7 @@ int main()
         // Regression test: ensure that we can post-increment a counted_iterator<I>
         // when decltype(declval<I &>()++) is void.
         CONCEPT_ASSERT(ranges::InputIterator<fortytwo_erator>());
-        ranges::counted_iterator<fortytwo_erator> c{};
+        ranges::counted_iterator<fortytwo_erator> c{{}, 42};
         c++;
     }
 
