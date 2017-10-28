@@ -33,8 +33,22 @@ namespace ranges
             private:
                 CONCEPT_ASSERT(Iterator<I>());
                 template<typename, typename> friend struct counted_iterator;
+
                 I current_{};
                 difference_type_t<I> cnt_{0};
+
+                void post_increment_(std::true_type)
+                {
+                    CONCEPT_ASSERT(std::is_void<decltype(current_++)>());
+                    ++current_;
+                }
+                auto post_increment_(std::false_type) -> decltype(current_++)
+                {
+                    CONCEPT_ASSERT(!std::is_void<decltype(current_++)>());
+                    auto&& tmp = current_++;
+                    --cnt_;
+                    return static_cast<decltype(tmp) &&>(tmp);
+                }
             public:
                 using iterator_type = I;
                 using difference_type = difference_type_t<I>;
@@ -92,12 +106,10 @@ namespace ranges
                 }
 
                 CONCEPT_REQUIRES(!ForwardIterator<I>())
-                auto operator++(int) -> decltype(std::declval<I &>()++)
+                auto operator++(int) -> decltype(current_++)
                 {
                     RANGES_EXPECT(cnt_ > 0);
-                    auto&& tmp = current_++;
-                    --cnt_;
-                    return static_cast<decltype(tmp) &&>(tmp);
+                    return post_increment_(std::is_void<decltype(current_++)>());
                 }
 
                 CONCEPT_REQUIRES(ForwardIterator<I>())
