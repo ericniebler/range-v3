@@ -33,12 +33,12 @@ void
 test_iter()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {1, 2, 3, 3, 3, 4, 4};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     auto set_difference = ::make_testable_2<false, true>(ranges::set_difference);
 
@@ -52,7 +52,7 @@ test_iter()
         }
     );
     int irr[] = {6};
-    const int srr = sizeof(irr)/sizeof(irr[0]);
+    static const int srr = sizeof(irr)/sizeof(irr[0]);
     set_difference(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), OutIter(ic)).
         check([&](std::pair<Iter1, OutIter> res)
         {
@@ -69,12 +69,12 @@ void
 test_comp()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {1, 2, 3, 3, 3, 4, 4};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     auto set_difference = ::make_testable_2<false, true>(ranges::set_difference);
 
@@ -88,7 +88,7 @@ test_comp()
         }
     );
     int irr[] = {6};
-    const int srr = sizeof(irr)/sizeof(irr[0]);
+    static const int srr = sizeof(irr)/sizeof(irr[0]);
     set_difference(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), OutIter(ic), std::less<int>()).
         check([&](std::pair<Iter1, OutIter> res)
         {
@@ -284,12 +284,12 @@ int main()
     // Test projections
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        const int sa = sizeof(ia)/sizeof(ia[0]);
+        static const int sa = sizeof(ia)/sizeof(ia[0]);
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
-        const int sb = sizeof(ib)/sizeof(ib[0]);
+        static const int sb = sizeof(ib)/sizeof(ib[0]);
         U ic[20];
         int ir[] = {1, 2, 3, 3, 3, 4, 4};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         std::pair<S *, U *> res = ranges::set_difference(ia, ib, ic, std::less<int>(), &S::i, &T::j);
         CHECK((res.first - ia) == sa);
@@ -298,7 +298,7 @@ int main()
         ranges::fill(ic, U{0});
 
         int irr[] = {6};
-        const int srr = sizeof(irr)/sizeof(irr[0]);
+        static const int srr = sizeof(irr)/sizeof(irr[0]);
         std::pair<T *, U *> res2 = ranges::set_difference(ib, ia, ic, std::less<int>(), &T::j, &S::i);
         CHECK((res2.first - ib) == sb);
         CHECK((res2.second - ic) == srr);
@@ -308,12 +308,12 @@ int main()
     // Test rvalue ranges
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        const int sa = sizeof(ia)/sizeof(ia[0]);
+        static const int sa = sizeof(ia)/sizeof(ia[0]);
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
-        const int sb = sizeof(ib)/sizeof(ib[0]);
+        static const int sb = sizeof(ib)/sizeof(ib[0]);
         U ic[20];
         int ir[] = {1, 2, 3, 3, 3, 4, 4};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res = ranges::set_difference(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK((res.first.get_unsafe() - ia) == sa);
@@ -322,7 +322,7 @@ int main()
         ranges::fill(ic, U{0});
 
         int irr[] = {6};
-        const int srr = sizeof(irr)/sizeof(irr[0]);
+        static const int srr = sizeof(irr)/sizeof(irr[0]);
         auto res2 = ranges::set_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK((res2.first.get_unsafe() - ib) == sb);
         CHECK((res2.second - ic) == srr);
@@ -332,12 +332,12 @@ int main()
     // Test initializer list
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        const int sa = sizeof(ia)/sizeof(ia[0]);
+        static const int sa = sizeof(ia)/sizeof(ia[0]);
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
-        const int sb = sizeof(ib)/sizeof(ib[0]);
+        static const int sb = sizeof(ib)/sizeof(ib[0]);
         U ic[20];
         int ir[] = {1, 2, 3, 3, 3, 4, 4};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         std::pair<S *, U *> res = ranges::set_difference(
             ia,
@@ -350,7 +350,7 @@ int main()
         ranges::fill(ic, U{0});
 
         int irr[] = {6};
-        const int srr = sizeof(irr)/sizeof(irr[0]);
+        static const int srr = sizeof(irr)/sizeof(irr[0]);
         std::pair<T *, U *> res2 = ranges::set_difference(
             ib,
             {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}},

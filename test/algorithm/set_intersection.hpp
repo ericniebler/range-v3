@@ -33,12 +33,12 @@ void
 test()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {2, 4, 4};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     auto set_intersection = ::make_testable_2<true, true>(ranges::set_intersection);
 
@@ -255,7 +255,7 @@ int main()
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         U ic[20];
         int ir[] = {2, 4, 4};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         U * res = ranges::set_intersection(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK((res - ic) == sr);
@@ -266,7 +266,7 @@ int main()
     {
         U ic[20];
         int ir[] = {2, 4, 4};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         U * res = ranges::set_intersection(
             {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}},

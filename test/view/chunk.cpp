@@ -32,8 +32,8 @@ namespace
     void test_input_ranges()
     {
         int const ints[] = {0,1,2,3,4};
-        constexpr auto N = ranges::size(ints);
-        constexpr auto K = 2;
+        static constexpr auto N = ranges::size(ints);
+        static constexpr auto K = 2;
         auto make_range = [&]{ return debug_input_view<int const>{ints} | view::chunk(K); };
         auto rng = make_range();
         using Rng = decltype(rng);
