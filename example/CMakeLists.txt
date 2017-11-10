@@ -1,6 +1,15 @@
 add_executable(comprehensions comprehensions.cpp)
 add_test(test.example.comprehensions, comprehensions)
 
+add_executable(hello hello.cpp)
+add_test(test.example.hello, hello)
+
+add_executable(count count.cpp)
+add_test(test.example.count, count)
+
+add_executable(count_if count_if.cpp)
+add_test(test.example.count_if, count_if)
+
 # add_executable(fibonacci fibonacci.cpp)
 # add_test(test.example.fibonacci, fibonacci)
 

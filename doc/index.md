@@ -509,3 +509,17 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
 <DT>`action::unique`</DT>
   <DD>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements.</DD>
 </DL>
+
+\section example-section Examples
+
+\subsection example-hello hello ranges
+
+\snippet hello.cpp hello
+
+\subsection example-count count
+
+\snippet count.cpp count
+
+\subsection example-count_if count_if
+
+\snippet count_if.cpp count_if
