@@ -9,7 +9,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-// 
+//
 
 ///[hello]
 #include <range/v3/all.hpp>  //get everything

@@ -330,7 +330,7 @@ two overloads are guaranteed to not be ambiguous.
 
 Range v3 forms the basis for a proposal to add ranges to the standard library
 ([N4128](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)),
-and is also be the basis for a Technical Specification on Ranges. The Technical 
+and is also be the basis for a Technical Specification on Ranges. The Technical
 Specification contains many of Range v3's concept definitions (translated into
 the actual syntax of C++20 Concepts) in addition to constrained versions of the
 STL algorithms overloaded both for iterator/sentinel pairs and for ranges. The
