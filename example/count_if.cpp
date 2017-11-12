@@ -11,7 +11,6 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-
 ///[count_if]
 // This example counts element of a range that match a supplied predicate.
 // output
@@ -29,7 +28,7 @@ auto is_six = [](int i) -> bool { return i == 6; };
 int main() {
 
   std::vector<int> v { 6, 2, 3, 4, 5, 6 };
-  int c = ranges::count_if( v, is_six );
+  auto c = ranges::count_if( v, is_six );
   cout << "vector:   " << c << "\n"; //2
 
   std::array<int, 6> a { 6, 2, 3, 4, 5, 6 };

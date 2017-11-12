@@ -13,8 +13,6 @@
 
 ///[hello]
 #include <range/v3/all.hpp>  //get everything
-namespace rng = ranges::v3;  //easy access
-
 #include <iostream>
 #include <string>
 using std::cout;
