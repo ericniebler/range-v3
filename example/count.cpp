@@ -9,12 +9,12 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-// 
+//
 
 
 ///[count]
-// This example demonstrates counting the number of 
-// elements that match a given value. 
+// This example demonstrates counting the number of
+// elements that match a given value.
 // output...
 // vector:   2
 // array:    2
