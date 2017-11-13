@@ -1,3 +1,5 @@
+include(../cmake/ranges_diagnostics.cmake)
+
 add_subdirectory(action)
 add_subdirectory(algorithm)
 add_subdirectory(numeric)
