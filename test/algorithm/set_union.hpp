@@ -33,12 +33,12 @@ void
 test()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 6};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     using R = std::tuple<Iter1, Iter2, OutIter>;
     auto set_union = make_testable_2(ranges::set_union);
@@ -242,7 +242,7 @@ int main()
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         U ic[20];
         int ir[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 6};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         using R = std::tuple<S *, T*, U*>;
         R res = ranges::set_union(ia, ib, ic, std::less<int>(), &S::i, &T::j);
@@ -262,7 +262,7 @@ int main()
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         U ic[20];
         int ir[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 6};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res = ranges::set_union(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK(std::get<0>(res).get_unsafe() == ranges::end(ia));

@@ -34,7 +34,7 @@ int main()
             get<0>(v);
             CHECK(false);
         }
-        catch(bad_variant_access)
+        catch(const bad_variant_access&)
         {}
         catch(...)
         {
@@ -66,7 +66,7 @@ int main()
             get<0>(v);
             CHECK(false);
         }
-        catch(bad_variant_access)
+        catch(const bad_variant_access&)
         {}
         catch(...)
         {

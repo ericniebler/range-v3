@@ -64,7 +64,7 @@ namespace ranges
         namespace adl_move_detail
         {
             template<typename T,
-                typename = decltype(iter_move(std::declval<T &&>()))>
+                typename = decltype(iter_move(std::declval<T>()))>
             std::true_type try_adl_iter_move_(int);
 
             template<typename T>

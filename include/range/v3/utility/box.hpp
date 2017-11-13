@@ -15,7 +15,6 @@
 #ifndef RANGES_V3_UTILITY_BOX_HPP
 #define RANGES_V3_UTILITY_BOX_HPP
 
-#include <atomic>
 #include <utility>
 #include <cstdlib>
 #include <type_traits>
@@ -56,49 +55,6 @@ namespace ranges
                 return *this;
             }
             constexpr operator T &() const &
-            {
-                return value;
-            }
-        };
-
-        template<typename T>
-        struct mutable_<std::atomic<T>>
-        {
-            mutable std::atomic<T> value;
-            mutable_() = default;
-            mutable_(mutable_ const &that)
-              : value(static_cast<T>(that.value))
-            {}
-            constexpr explicit mutable_(T &&t)
-              : value(detail::move(t))
-            {}
-            constexpr explicit mutable_(T const &t)
-              : value(t)
-            {}
-            mutable_ const &operator=(mutable_ const &that) const
-            {
-                value = static_cast<T>(that.value);
-                return *this;
-            }
-            mutable_ const &operator=(T &&t) const
-            {
-                value = std::move(t);
-                return *this;
-            }
-            mutable_ const &operator=(T const &t) const
-            {
-                value = t;
-                return *this;
-            }
-            operator T() const
-            {
-                return value;
-            }
-            T exchange(T desired)
-            {
-                return value.exchange(desired);
-            }
-            operator std::atomic<T> &() const &
             {
                 return value;
             }

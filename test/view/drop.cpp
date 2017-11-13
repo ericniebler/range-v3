@@ -120,5 +120,17 @@ int main()
         ::check_equal(rng, {2,3});
     }
 
+    {
+        // regression test for #728
+        auto rng1 = view::iota(1) | view::chunk(6) | view::take(3);
+        int i = 2;
+        RANGES_FOR(auto o1, rng1)
+        {
+            auto rng2 = o1 | view::drop(1);
+            ::check_equal(rng2, {i, i+1, i+2, i+3, i+4});
+            i += 6;
+        }
+    }
+
     return test_result();
 }

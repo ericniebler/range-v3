@@ -33,18 +33,19 @@ void
 test_iter()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     auto set_symmetric_difference = ::make_testable_2(ranges::set_symmetric_difference);
 
     set_symmetric_difference(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb), OutIter(ic)).
         check([&](std::tuple<Iter1, Iter2, OutIter> res)
         {
+            //(void)(::test_impl::S{__FILE__, __LINE__, ""} ->* (base(std::get<2>(res)) - ic) == sr);
             CHECK((base(std::get<2>(res)) - ic) == sr);
             CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
             ranges::fill(ic, 0);
@@ -66,12 +67,12 @@ void
 test_comp()
 {
     int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
-    const int sa = sizeof(ia)/sizeof(ia[0]);
+    static const int sa = sizeof(ia)/sizeof(ia[0]);
     int ib[] = {2, 4, 4, 6};
-    const int sb = sizeof(ib)/sizeof(ib[0]);
+    static const int sb = sizeof(ib)/sizeof(ib[0]);
     int ic[20];
     int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
-    const int sr = sizeof(ir)/sizeof(ir[0]);
+    static const int sr = sizeof(ir)/sizeof(ir[0]);
 
     auto set_symmetric_difference = ::make_testable_2(ranges::set_symmetric_difference);
 
@@ -282,7 +283,7 @@ int main()
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         U ic[20];
         int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         std::tuple<S *, T *, U *> res1 =
             ranges::set_symmetric_difference(ia, ib, ic, std::less<int>(), &S::i, &T::j);
@@ -302,7 +303,7 @@ int main()
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         U ic[20];
         int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
-        const int sr = sizeof(ir)/sizeof(ir[0]);
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res1 =
             ranges::set_symmetric_difference(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);

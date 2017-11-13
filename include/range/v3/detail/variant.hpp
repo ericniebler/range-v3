@@ -306,7 +306,7 @@ namespace ranges
             template<typename Fun, typename Proj = indexed_element_fn>
             constexpr int variant_visit_(std::size_t, variant_nil, Fun, Proj = {})
             {
-                return 0;
+                return (RANGES_EXPECT(false), 0);
             }
             template<typename Data, typename Fun, typename Proj = indexed_element_fn>
             constexpr int variant_visit_(std::size_t n, Data &self, Fun fun, Proj proj = {})

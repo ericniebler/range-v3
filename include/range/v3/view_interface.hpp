@@ -15,14 +15,15 @@
 
 #include <iosfwd>
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/empty.hpp>
+#include <range/v3/range_concepts.hpp>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/to_container.hpp>
+#include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/common_iterator.hpp>
 
 namespace ranges
 {
@@ -65,13 +66,13 @@ namespace ranges
           : basic_view<Cardinality>
         {
         protected:
-            Derived & derived()
+            RANGES_CXX14_CONSTEXPR Derived &derived() noexcept
             {
                 CONCEPT_ASSERT(DerivedFrom<Derived, view_interface>());
                 return static_cast<Derived &>(*this);
             }
             /// \overload
-            Derived const & derived() const
+            constexpr Derived const &derived() const noexcept
             {
                 CONCEPT_ASSERT(DerivedFrom<Derived, view_interface>());
                 return static_cast<Derived const &>(*this);
@@ -85,32 +86,35 @@ namespace ranges
             view_interface &operator=(view_interface const &) = default;
             // A few ways of testing whether a range can be empty:
             CONCEPT_REQUIRES(Cardinality >= 0)
-            constexpr bool empty() const
+            constexpr bool empty() const noexcept
             {
                 return Cardinality == 0;
             }
-            template<class D = Derived,
+            template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Cardinality < 0 && ForwardRange<D const>())>
             constexpr bool empty() const
+                noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
+                    ranges::end(std::declval<D const &>()))))
             {
-                return derived().begin() == derived().end();
+                return ranges::begin(derived()) == ranges::end(derived());
             }
-            template<class D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && (Cardinality >= 0 || ForwardRange<D const>()))>
-            constexpr bool operator!() const
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            constexpr auto operator!() const
+            RANGES_DECLTYPE_NOEXCEPT(ranges::empty(std::declval<D const &>()))
             {
-                return empty();
+                return ranges::empty(derived());
             }
-            template<class D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && (Cardinality >= 0 || ForwardRange<D const>()))>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>()),
+                typename = decltype(ranges::empty(std::declval<D const &>()))>
             constexpr explicit operator bool() const
+                noexcept(noexcept(ranges::empty(std::declval<D const &>())))
             {
-                return !empty();
+                return !ranges::empty(derived());
             }
             /// Access the size of the range, if it can be determined:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Cardinality >= 0)>
-            constexpr range_size_type_t<D> size() const
+            constexpr range_size_type_t<D> size() const noexcept
             {
                 return (range_size_type_t<D>)Cardinality;
             }
@@ -340,43 +344,46 @@ namespace ranges
                 return ranges::to_<Container>(derived());
             }
             /// \brief Print a range to an ostream
-            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
-            friend Stream &operator<<(Stream &sout, Derived &rng)
+        private:
+            template<typename Stream, typename Rng,
+                CONCEPT_REQUIRES_(Same<Derived, meta::_t<std::remove_cv<Rng>>>())>
+            static Stream &print_(Stream &sout, Rng &rng)
             {
+                sout << '[';
                 auto it = ranges::begin(rng);
                 auto const e = ranges::end(rng);
-                if(it == e)
-                    return sout << "[]";
-                sout << '[' << *it;
-                while(++it != e)
-                    sout << ',' << *it;
-                sout << ']';
-                return sout;
-            }
-            /// \overload
-            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>,
-                typename D = Derived, CONCEPT_REQUIRES_(InputRange<D const>())>
-            friend Stream &operator<<(Stream &sout, Derived const &rng)
-            {
-                auto it = ranges::begin(rng);
-                auto const e = ranges::end(rng);
-                if(it == e)
+                if(it != e)
                 {
-                    sout << "[]";
-                    return sout;
+                    for(;;)
+                    {
+                        sout << *it;
+                        if(++it == e) break;
+                        sout << ',';
+                    }
                 }
-                sout << '[' << *it;
-                while(++it != e)
-                    sout << ',' << *it;
                 sout << ']';
                 return sout;
             }
-            /// \overload
-            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
-            friend Stream &operator<<(Stream &sout, Derived &&rng)
+
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
+            friend std::ostream &operator<<(std::ostream &sout, Derived const &rng)
             {
-                sout << rng;
-                return sout;
+                return view_interface::print_(sout, rng);
+            }
+            /// \overload
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && !Range<D const>() && InputRange<D>())>
+            friend std::ostream &operator<<(std::ostream &sout, Derived &rng)
+            {
+                return view_interface::print_(sout, rng);
+            }
+            /// \overload
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && !Range<D const>() && InputRange<D>())>
+            friend std::ostream &operator<<(std::ostream &sout, Derived &&rng)
+            {
+                return view_interface::print_(sout, rng);
             }
         };
         /// @}

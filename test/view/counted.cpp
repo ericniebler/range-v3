@@ -16,6 +16,16 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+struct fortytwo_erator {
+    using difference_type = int;
+    using iterator_category = ranges::input_iterator_tag;
+    using value_type = int;
+    fortytwo_erator() = default;
+    int operator*() const { return 42; }
+    fortytwo_erator& operator++() { return *this; }
+    void operator++(int) {}
+};
+
 int main()
 {
     using namespace ranges;
@@ -52,6 +62,14 @@ int main()
             d-d,
             c-d,
             d-c);
+    }
+
+    {
+        // Regression test: ensure that we can post-increment a counted_iterator<I>
+        // when decltype(declval<I &>()++) is void.
+        CONCEPT_ASSERT(ranges::InputIterator<fortytwo_erator>());
+        ranges::counted_iterator<fortytwo_erator> c{{}, 42};
+        c++;
     }
 
     return ::test_result();
