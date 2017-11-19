@@ -20,42 +20,11 @@ endmacro()
 message("[range-v3]: C++ std=${RANGES_CXX_STD}")
 ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
 
-# Enable all warnings and make them errors:
+# Enable "normal" warnings and make them errors:
 ranges_append_flag(RANGES_HAS_WERROR -Werror)
 ranges_append_flag(RANGES_HAS_WX -WX)
 ranges_append_flag(RANGES_HAS_WALL -Wall)
 ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
-ranges_append_flag(RANGES_HAS_WEVERYTHING -Weverything)
-ranges_append_flag(RANGES_HAS_PEDANTIC -pedantic)
-ranges_append_flag(RANGES_HAS_PEDANTIC_ERRORS -pedantic-errors)
-
-# Selectively disable those warnings that are not worth it:
-ranges_append_flag(RANGES_HAS_WNO_CXX98_COMPAT -Wno-c++98-compat)
-ranges_append_flag(RANGES_HAS_WNO_CXX98_COMPAT_PEDANTIC -Wno-c++98-compat-pedantic)
-ranges_append_flag(RANGES_HAS_WNO_WEAK_VTABLES -Wno-weak-vtables)
-ranges_append_flag(RANGES_HAS_WNO_PADDED -Wno-padded)
-ranges_append_flag(RANGES_HAS_WNO_MISSING_PROTOTYPES -Wno-missing-prototypes)
-ranges_append_flag(RANGES_HAS_WNO_MISSING_VARIABLE_DECLARATIONS -Wno-missing-variable-declarations)
-ranges_append_flag(RANGES_HAS_WNO_DOCUMENTATION -Wno-documentation)
-ranges_append_flag(RANGES_HAS_WNO_DOCUMENTATION_UNKNOWN_COMMAND -Wno-documentation-unknown-command)
-ranges_append_flag(RANGES_HAS_WNO_OLD_STYLE_CAST -Wno-old-style-cast)
-ranges_append_flag(RANGES_HAS_WNO_SHADOW -Wno-shadow)
-
-if (RANGES_ENV_MACOSX)
-  ranges_append_flag(RANGES_HAS_WNO_GLOBAL_CONSTRUCTORS -Wno-global-constructors)
-  ranges_append_flag(RANGES_HAS_WNO_EXIT_TIME_DESTRUCTORS -Wno-exit-time-destructors)
-endif()
-
-if (RANGES_CXX_COMPILER_GCC)
-  if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
-    ranges_append_flag(RANGES_HAS_WNO_STRICT_OVERFLOW -Wno-strict-overflow)
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
-      ranges_append_flag(RANGES_HAS_WNO_MISSING_FIELD_INITIALIZERS -Wno-missing-field-initializers)
-    endif()
-  elseif ((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "7.0") OR (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "7.0"))
-    ranges_append_flag(RANGES_HAS_WNO_NOEXCEPT_TYPE -Wno-noexcept-type)
-  endif()
-endif()
 
 if (RANGES_ENV_LINUX AND RANGES_CXX_COMPILER_CLANG)
   # On linux libc++ re-exports the system math headers. The ones from libstdc++
