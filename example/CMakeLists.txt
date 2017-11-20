@@ -1,8 +1,20 @@
+# examples use a less draconian set of compiler warnings
+ranges_append_flag(RANGES_HAS_WNO_MISSING_BRACES -Wno-missing-braces)
+
 add_executable(comprehensions comprehensions.cpp)
-add_test(test.example.comprehensions, comprehensions)
+add_test(example.comprehensions, comprehensions)
+
+add_executable(hello hello.cpp)
+add_test(example.hello, hello)
+
+add_executable(count count.cpp)
+add_test(example.count, count)
+
+add_executable(count_if count_if.cpp)
+add_test(example.count_if, count_if)
 
 # add_executable(fibonacci fibonacci.cpp)
-# add_test(test.example.fibonacci, fibonacci)
+# add_test(example.fibonacci, fibonacci)
 
 # Guarded with a variable because the calendar example causes gcc to puke.
 if(RANGES_BUILD_CALENDAR_EXAMPLE)

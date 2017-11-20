@@ -330,7 +330,7 @@ two overloads are guaranteed to not be ambiguous.
 
 Range v3 forms the basis for a proposal to add ranges to the standard library
 ([N4128](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)),
-and is also be the basis for a Technical Specification on Ranges. The Technical 
+and is also be the basis for a Technical Specification on Ranges. The Technical
 Specification contains many of Range v3's concept definitions (translated into
 the actual syntax of C++20 Concepts) in addition to constrained versions of the
 STL algorithms overloaded both for iterator/sentinel pairs and for ranges. The
@@ -509,3 +509,17 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
 <DT>`action::unique`</DT>
   <DD>Removes adjacent elements of the source that compare equal. If the source is sorted, removes all duplicate elements.</DD>
 </DL>
+
+\section example-section Examples
+
+\subsection example-hello hello ranges
+
+\snippet hello.cpp hello
+
+\subsection example-count count
+
+\snippet count.cpp count
+
+\subsection example-count_if count_if
+
+\snippet count_if.cpp count_if
