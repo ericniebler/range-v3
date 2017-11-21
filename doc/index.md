@@ -523,3 +523,23 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
 \subsection example-count_if count_if
 
 \snippet count_if.cpp count_if
+
+\subsection example-any-all-none any_of, all_of, none_of
+
+\snippet any_all_none_of.cpp any_all_none_of
+
+\subsection example-find find, find_if, find_if_not on sequence containers
+
+\snippet find.cpp find
+
+\subsection example-for_each-seq for_each on sequence containers
+
+\snippet for_each_sequence.cpp for_each_sequence
+
+\subsection example-for_each-assoc for_each on associative containers
+
+\snippet for_each_assoc.cpp for_each_assoc
+
+\subsection example-is_sorted is_sorted
+
+\snippet is_sorted.cpp is_sorted
