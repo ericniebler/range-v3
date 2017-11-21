@@ -14,19 +14,19 @@ add_executable(count_if count_if.cpp)
 add_test(example.count_if, count_if)
 
 add_executable(any_all_none_of any_all_none_of.cpp)
-add_test(test.example.any_all_none_of, any_all_none_of)
+add_test(example.any_all_none_of, any_all_none_of)
 
 add_executable(for_each_sequence for_each_sequence.cpp)
-add_test(test.example.for_each_sequence, for_each_sequence)
+add_test(example.for_each_sequence, for_each_sequence)
 
 add_executable(for_each_assoc for_each_assoc.cpp)
-add_test(test.example.for_each_assoc, for_each_assoc)
+add_test(example.for_each_assoc, for_each_assoc)
 
 add_executable(is_sorted is_sorted.cpp)
-add_test(test.example.is_sorted, is_sorted)
+add_test(example.is_sorted, is_sorted)
 
 add_executable(find find.cpp)
-add_test(test.example.find, find)
+add_test(example.find, find)
 
 
 # add_executable(fibonacci fibonacci.cpp)
