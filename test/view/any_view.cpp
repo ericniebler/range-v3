@@ -92,11 +92,15 @@ int main()
     }
     {
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+#if defined(__clang__) && __clang_major__ < 6
 // Workaround https://bugs.llvm.org/show_bug.cgi?id=33314
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
+#endif
         any_view ints = view::ints | view::take_exactly(5);
+#if defined(__clang__) && __clang_major__ < 6
 RANGES_DIAGNOSTIC_POP
+#endif
 #else
         any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
 #endif
