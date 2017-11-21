@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view__interface.
 <area href="structranges_1_1v3_1_1basic__view.html" alt="ranges::v3::basic_view&lt; Cardinality &gt;" shape="rect" coords="180,56,531,80"/>
 <area href="structranges_1_1v3_1_1view__base.html" alt="ranges::v3::view_base" shape="rect" coords="180,0,531,24"/>
 <area href="structranges_1_1v3_1_1tail__view.html" alt="ranges::v3::tail_view&lt; Rng &gt;" shape="rect" coords="0,168,351,192"/>
-<area href="structranges_1_1v3_1_1view__facade.html" alt="ranges::v3::view_facade&lt; Derived, Cardinality &gt;" shape="rect" coords="361,168,712,192"/>
+<area href="structranges_1_1v3_1_1view__facade.html" title="A utility for constructing a view from a (derived) type that implements begin and end cursors..." alt="ranges::v3::view_facade&lt; Derived, Cardinality &gt;" shape="rect" coords="361,168,712,192"/>
 <area href="classranges_1_1v3_1_1cartesian__product__view.html" alt="ranges::v3::cartesian_product_view&lt; Views &gt;" shape="rect" coords="180,224,531,248"/>
 <area href="structranges_1_1v3_1_1view__adaptor.html" alt="ranges::v3::view_adaptor&lt; Derived, BaseRng, Cardinality &gt;" shape="rect" coords="541,224,892,248"/>
 <area href="structranges_1_1v3_1_1intersperse__view.html" alt="ranges::v3::intersperse_view&lt; Rng &gt;" shape="rect" coords="541,280,892,304"/>
@@ -118,20 +118,27 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view__interface.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:acc9b9c393df898452fe4a122cd4f6a40"><td class="memTemplParams" colspan="2"><a id="acc9b9c393df898452fe4a122cd4f6a40"></a>
-template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&gt; </td></tr>
-<tr class="memitem:acc9b9c393df898452fe4a122cd4f6a40"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#acc9b9c393df898452fe4a122cd4f6a40">operator&lt;&lt;</a> (Stream &amp;sout, Derived &amp;rng)</td></tr>
-<tr class="memdesc:acc9b9c393df898452fe4a122cd4f6a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a range to an ostream. <br /></td></tr>
-<tr class="separator:acc9b9c393df898452fe4a122cd4f6a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b6a32c8b6c2ae912e735c8d027b6eec"><td class="memTemplParams" colspan="2">template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, requires  = (InputRange&lt;D const&gt;())&gt; </td></tr>
-<tr class="memitem:a0b6a32c8b6c2ae912e735c8d027b6eec"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a0b6a32c8b6c2ae912e735c8d027b6eec">operator&lt;&lt;</a> (Stream &amp;sout, Derived const &amp;rng)</td></tr>
-<tr class="separator:a0b6a32c8b6c2ae912e735c8d027b6eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1483593aff628d3c6a7bee911ea14621"><td class="memTemplParams" colspan="2">template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&gt; </td></tr>
-<tr class="memitem:a1483593aff628d3c6a7bee911ea14621"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a1483593aff628d3c6a7bee911ea14621">operator&lt;&lt;</a> (Stream &amp;sout, Derived &amp;&amp;rng)</td></tr>
-<tr class="separator:a1483593aff628d3c6a7bee911ea14621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8a601b5c384b3fbb4e72c1bd0993c32"><td class="memTemplParams" colspan="2"><a id="ac8a601b5c384b3fbb4e72c1bd0993c32"></a>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; InputRange&lt;D const&gt;())&gt; </td></tr>
+<tr class="memitem:ac8a601b5c384b3fbb4e72c1bd0993c32"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;sout, Derived const &amp;rng)</td></tr>
+<tr class="separator:ac8a601b5c384b3fbb4e72c1bd0993c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f80fdc7ed6163924798451c8833f62e"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; !Range&lt;D const&gt;() &amp;&amp; InputRange&lt;D&gt;())&gt; </td></tr>
+<tr class="memitem:a0f80fdc7ed6163924798451c8833f62e"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a0f80fdc7ed6163924798451c8833f62e">operator&lt;&lt;</a> (std::ostream &amp;sout, Derived &amp;rng)</td></tr>
+<tr class="separator:a0f80fdc7ed6163924798451c8833f62e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5ae30b8d08c9c3f9228858371838743"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; !Range&lt;D const&gt;() &amp;&amp; InputRange&lt;D&gt;())&gt; </td></tr>
+<tr class="memitem:af5ae30b8d08c9c3f9228858371838743"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#af5ae30b8d08c9c3f9228858371838743">operator&lt;&lt;</a> (std::ostream &amp;sout, Derived &amp;&amp;rng)</td></tr>
+<tr class="separator:af5ae30b8d08c9c3f9228858371838743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:af36d50218195bff104ca8fffa198f75c"><td class="memTemplParams" colspan="2"><a id="af36d50218195bff104ca8fffa198f75c"></a>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; RandomAccessRange&lt;D&gt;() &amp;&amp; SizedRange&lt;D&gt;())&gt; </td></tr>
+<tr class="memitem:af36d50218195bff104ca8fffa198f75c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#af36d50218195bff104ca8fffa198f75c">at</a> (range_difference_type_t&lt; D &gt; n) -&gt; decltype(std::declval&lt; D &amp;&gt;().begin()[n])</td></tr>
+<tr class="memdesc:af36d50218195bff104ca8fffa198f75c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the element at specified location pos, with bounds checking. <br /></td></tr>
+<tr class="separator:af36d50218195bff104ca8fffa198f75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7f2af48264c6754ddb89bae3b0f8dc9"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; RandomAccessRange&lt;D const&gt;() &amp;&amp; SizedRange&lt;D const&gt;())&gt; </td></tr>
+<tr class="memitem:ad7f2af48264c6754ddb89bae3b0f8dc9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#ad7f2af48264c6754ddb89bae3b0f8dc9">at</a> (range_difference_type_t&lt; D &gt; n) const -&gt; decltype(std::declval&lt; D const &amp;&gt;().begin()[n])</td></tr>
+<tr class="separator:ad7f2af48264c6754ddb89bae3b0f8dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63803c5324ee40459599def14354adb8"><td class="memTemplParams" colspan="2"><a id="a63803c5324ee40459599def14354adb8"></a>
 template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; BoundedRange&lt;D&gt;() &amp;&amp; BidirectionalRange&lt;D&gt;())&gt; </td></tr>
 <tr class="memitem:a63803c5324ee40459599def14354adb8"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a63803c5324ee40459599def14354adb8">back</a> ()</td></tr>
@@ -140,12 +147,12 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 <tr class="memitem:a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; BoundedRange&lt;D const&gt;() &amp;&amp; BidirectionalRange&lt;D const&gt;())&gt; </td></tr>
 <tr class="memitem:a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D const  &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf">back</a> () const</td></tr>
 <tr class="separator:a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2935e0995569e1163d5447f2e012124"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#aa2935e0995569e1163d5447f2e012124">empty</a> () const</td></tr>
-<tr class="separator:aa2935e0995569e1163d5447f2e012124"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae847d3881675903f01d4c5cb10a031dc"><td class="memTemplParams" colspan="2"><a id="ae847d3881675903f01d4c5cb10a031dc"></a>
-template&lt;class D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp; ForwardRange&lt;D const&gt;())&gt; </td></tr>
-<tr class="memitem:ae847d3881675903f01d4c5cb10a031dc"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>empty</b> () const</td></tr>
-<tr class="separator:ae847d3881675903f01d4c5cb10a031dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cbccea8eefcd83a72fa96963471bfba"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a4cbccea8eefcd83a72fa96963471bfba">empty</a> () const noexcept</td></tr>
+<tr class="separator:a4cbccea8eefcd83a72fa96963471bfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ec8561231de1d02cd8c6f8e17bee7d6"><td class="memTemplParams" colspan="2"><a id="a5ec8561231de1d02cd8c6f8e17bee7d6"></a>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp; ForwardRange&lt;D const&gt;())&gt; </td></tr>
+<tr class="memitem:a5ec8561231de1d02cd8c6f8e17bee7d6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>empty</b> () const noexcept(noexcept(bool(ranges::begin(std::declval&lt; D const &amp;&gt;())==ranges::end(std::declval&lt; D const &amp;&gt;()))))</td></tr>
+<tr class="separator:a5ec8561231de1d02cd8c6f8e17bee7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47ed8cb05655b871a52f68d7c5b1b966"><td class="memTemplParams" colspan="2"><a id="a47ed8cb05655b871a52f68d7c5b1b966"></a>
 template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; ForwardRange&lt;D&gt;())&gt; </td></tr>
 <tr class="memitem:a47ed8cb05655b871a52f68d7c5b1b966"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a47ed8cb05655b871a52f68d7c5b1b966">front</a> ()</td></tr>
@@ -154,10 +161,10 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 <tr class="memitem:a58408b4d8a87e157669697157f542dc1"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; ForwardRange&lt;D const&gt;())&gt; </td></tr>
 <tr class="memitem:a58408b4d8a87e157669697157f542dc1"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D const  &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a58408b4d8a87e157669697157f542dc1">front</a> () const</td></tr>
 <tr class="separator:a58408b4d8a87e157669697157f542dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae553c0df1ae698955b271560f582a763"><td class="memTemplParams" colspan="2"><a id="ae553c0df1ae698955b271560f582a763"></a>
-template&lt;class D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; (Cardinality &gt;= 0 || ForwardRange&lt;D const&gt;()))&gt; </td></tr>
-<tr class="memitem:ae553c0df1ae698955b271560f582a763"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator bool</b> () const</td></tr>
-<tr class="separator:ae553c0df1ae698955b271560f582a763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2da484aa0e2557d338a6ebb9b788f857"><td class="memTemplParams" colspan="2"><a id="a2da484aa0e2557d338a6ebb9b788f857"></a>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;()), typename  = decltype(ranges::empty(std::declval&lt;D const &amp;&gt;()))&gt; </td></tr>
+<tr class="memitem:a2da484aa0e2557d338a6ebb9b788f857"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator bool</b> () const noexcept(noexcept(ranges::empty(std::declval&lt; D const &amp;&gt;())))</td></tr>
+<tr class="separator:a2da484aa0e2557d338a6ebb9b788f857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71b6117455b9654476e7edf061bde336"><td class="memTemplParams" colspan="2"><a id="a71b6117455b9654476e7edf061bde336"></a>
 template&lt;typename Container , typename D  = Derived, typename  = typename Container::allocator_type, requires  = (detail::ConvertibleToContainer&lt;D, Container&gt;())&gt; </td></tr>
 <tr class="memitem:a71b6117455b9654476e7edf061bde336"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a71b6117455b9654476e7edf061bde336">operator Container</a> ()</td></tr>
@@ -166,10 +173,10 @@ template&lt;typename Container , typename D  = Derived, typename  = typename Con
 <tr class="memitem:add7570852935e6b2866a34a7062b4ffa"><td class="memTemplParams" colspan="2">template&lt;typename Container , typename D  = Derived, typename  = typename Container::allocator_type, requires  = (detail::ConvertibleToContainer&lt;D const, Container&gt;())&gt; </td></tr>
 <tr class="memitem:add7570852935e6b2866a34a7062b4ffa"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#add7570852935e6b2866a34a7062b4ffa">operator Container</a> () const</td></tr>
 <tr class="separator:add7570852935e6b2866a34a7062b4ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87bd2521bb622a1ad2a482b71f236c3f"><td class="memTemplParams" colspan="2"><a id="a87bd2521bb622a1ad2a482b71f236c3f"></a>
-template&lt;class D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; (Cardinality &gt;= 0 || ForwardRange&lt;D const&gt;()))&gt; </td></tr>
-<tr class="memitem:a87bd2521bb622a1ad2a482b71f236c3f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator!</b> () const</td></tr>
-<tr class="separator:a87bd2521bb622a1ad2a482b71f236c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a615b9b77b1727867eff1cd8bee376472"><td class="memTemplParams" colspan="2"><a id="a615b9b77b1727867eff1cd8bee376472"></a>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;())&gt; </td></tr>
+<tr class="memitem:a615b9b77b1727867eff1cd8bee376472"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator!</b> () const noexcept(noexcept(decltype(ranges::empty(std::declval&lt; D const &amp;&gt;()))(ranges::empty(std::declval&lt; D const &amp;&gt;())))) -&gt; decltype(ranges::empty(std::declval&lt; D const &amp;&gt;()))</td></tr>
+<tr class="separator:a615b9b77b1727867eff1cd8bee376472"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a361e6a4af49a3d41fd07eb83a7a5af25"><td class="memItemLeft" align="right" valign="top"><a id="a361e6a4af49a3d41fd07eb83a7a5af25"></a>
 <a class="el" href="structranges_1_1v3_1_1view__interface.html">view_interface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1view__interface.html">view_interface</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a361e6a4af49a3d41fd07eb83a7a5af25"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,11 +238,11 @@ template&lt;typename D  = Derived, typename Slice  = view::slice_fn, requires  =
 <tr class="memitem:adc5317c07b0d91272b3d95649f79c339"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, typename Slice  = view::slice_fn, requires  = (Same&lt;D, Derived&gt;())&gt; </td></tr>
 <tr class="memitem:adc5317c07b0d91272b3d95649f79c339"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#adc5317c07b0d91272b3d95649f79c339">operator[]</a> (detail::slice_bounds&lt; detail::from_end_&lt; range_difference_type_t&lt; D &gt;&gt;, end_fn &gt; offs) &amp;&amp;-&gt; decltype(std::declval&lt; Slice &gt;()(std::declval&lt; D &gt;(), offs.from, offs.to))</td></tr>
 <tr class="separator:adc5317c07b0d91272b3d95649f79c339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplParams" colspan="2"><a id="afc48e8f4937ce470cfef9fcb10db2c03"></a>
+<tr class="memitem:a27a8406a17066f4b44e0983a96150481"><td class="memTemplParams" colspan="2"><a id="a27a8406a17066f4b44e0983a96150481"></a>
 template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &gt;= 0)&gt; </td></tr>
-<tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#afc48e8f4937ce470cfef9fcb10db2c03">size</a> () const</td></tr>
-<tr class="memdesc:afc48e8f4937ce470cfef9fcb10db2c03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the size of the range, if it can be determined: <br /></td></tr>
-<tr class="separator:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27a8406a17066f4b44e0983a96150481"><td class="memTemplItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a27a8406a17066f4b44e0983a96150481">size</a> () const noexcept</td></tr>
+<tr class="memdesc:a27a8406a17066f4b44e0983a96150481"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the size of the range, if it can be determined: <br /></td></tr>
+<tr class="separator:a27a8406a17066f4b44e0983a96150481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplParams" colspan="2"><a id="afc48e8f4937ce470cfef9fcb10db2c03"></a>
 template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; Cardinality &lt; 0 &amp;&amp;                    SizedSentinel&lt;sentinel_t&lt;D const&gt;, iterator_t&lt;D const&gt;&gt;() &amp;&amp;                    ForwardRange&lt;D const&gt;())&gt; </td></tr>
 <tr class="memitem:afc48e8f4937ce470cfef9fcb10db2c03"><td class="memTemplItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>size</b> () const</td></tr>
@@ -249,36 +256,36 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3f6fe5147354e1b4702ff8446eac3df6"><td class="memItemLeft" align="right" valign="top"><a id="a3f6fe5147354e1b4702ff8446eac3df6"></a>
-Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>derived</b> ()</td></tr>
-<tr class="separator:a3f6fe5147354e1b4702ff8446eac3df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a972d2b0dfe8367628d3e2c6b131926e7"><td class="memItemLeft" align="right" valign="top">Derived const  &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#a972d2b0dfe8367628d3e2c6b131926e7">derived</a> () const</td></tr>
-<tr class="separator:a972d2b0dfe8367628d3e2c6b131926e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ef52a602d5bad152addaf2787690ea"><td class="memItemLeft" align="right" valign="top"><a id="ae9ef52a602d5bad152addaf2787690ea"></a>
+Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>derived</b> () noexcept</td></tr>
+<tr class="separator:ae9ef52a602d5bad152addaf2787690ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc6a110cf96c48a5ed4d10beb49676f5"><td class="memItemLeft" align="right" valign="top">constexpr Derived const  &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__interface.html#afc6a110cf96c48a5ed4d10beb49676f5">derived</a> () const noexcept</td></tr>
+<tr class="separator:afc6a110cf96c48a5ed4d10beb49676f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Methods</h2>
-<a id="a0b6a32c8b6c2ae912e735c8d027b6eec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b6a32c8b6c2ae912e735c8d027b6eec">&#9670;&nbsp;</a></span>operator<< <span class="overload">[1/2]</span></h2>
+<a id="a0f80fdc7ed6163924798451c8833f62e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f80fdc7ed6163924798451c8833f62e">&#9670;&nbsp;</a></span>operator<< <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Derived, cardinality Cardinality&gt; </div>
 <div class="memtemplate">
-template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, requires  = (InputRange&lt;D const&gt;())&gt; </div>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; !Range&lt;D const&gt;() &amp;&amp; InputRange&lt;D&gt;())&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Stream&amp; operator&lt;&lt; </td>
+          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
           <td>(</td>
-          <td class="paramtype">Stream &amp;&#160;</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
           <td class="paramname"><em>sout</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Derived const &amp;&#160;</td>
+          <td class="paramtype">Derived &amp;&#160;</td>
           <td class="paramname"><em>rng</em>&#160;</td>
         </tr>
         <tr>
@@ -297,23 +304,23 @@ template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;,
 
 </div>
 </div>
-<a id="a1483593aff628d3c6a7bee911ea14621"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1483593aff628d3c6a7bee911ea14621">&#9670;&nbsp;</a></span>operator<< <span class="overload">[2/2]</span></h2>
+<a id="af5ae30b8d08c9c3f9228858371838743"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5ae30b8d08c9c3f9228858371838743">&#9670;&nbsp;</a></span>operator<< <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Derived, cardinality Cardinality&gt; </div>
 <div class="memtemplate">
-template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&gt; </div>
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; !Range&lt;D const&gt;() &amp;&amp; InputRange&lt;D&gt;())&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Stream&amp; operator&lt;&lt; </td>
+          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
           <td>(</td>
-          <td class="paramtype">Stream &amp;&#160;</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
           <td class="paramname"><em>sout</em>, </td>
         </tr>
         <tr>
@@ -339,6 +346,30 @@ template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad7f2af48264c6754ddb89bae3b0f8dc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7f2af48264c6754ddb89bae3b0f8dc9">&#9670;&nbsp;</a></span>at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Derived, cardinality Cardinality&gt; </div>
+<div class="memtemplate">
+template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&amp; RandomAccessRange&lt;D const&gt;() &amp;&amp; SizedRange&lt;D const&gt;())&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structranges_1_1v3_1_1view__interface.html">ranges::v3::view_interface</a>&lt; Derived, Cardinality &gt;::at </td>
+          <td>(</td>
+          <td class="paramtype">range_difference_type_t&lt; D &gt;&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const -&gt; decltype(std::declval&lt;D const &amp;&gt;().begin()[n])
+            </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
 <a id="a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d9a8d3c3ad11cb5f8a18d10bcb6ddcf">&#9670;&nbsp;</a></span>back()</h2>
 
@@ -361,8 +392,8 @@ template&lt;typename D  = Derived, requires  = (Same&lt;D, Derived&gt;() &amp;&a
 
 </div>
 </div>
-<a id="a972d2b0dfe8367628d3e2c6b131926e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a972d2b0dfe8367628d3e2c6b131926e7">&#9670;&nbsp;</a></span>derived()</h2>
+<a id="afc6a110cf96c48a5ed4d10beb49676f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc6a110cf96c48a5ed4d10beb49676f5">&#9670;&nbsp;</a></span>derived()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -373,7 +404,7 @@ template&lt;typename Derived, cardinality Cardinality&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Derived const&amp; <a class="el" href="structranges_1_1v3_1_1view__interface.html">ranges::v3::view_interface</a>&lt; Derived, Cardinality &gt;::derived </td>
+          <td class="memname">constexpr Derived const&amp; <a class="el" href="structranges_1_1v3_1_1view__interface.html">ranges::v3::view_interface</a>&lt; Derived, Cardinality &gt;::derived </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -381,7 +412,7 @@ template&lt;typename Derived, cardinality Cardinality&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -389,13 +420,16 @@ template&lt;typename Derived, cardinality Cardinality&gt; </div>
 
 </div>
 </div>
-<a id="aa2935e0995569e1163d5447f2e012124"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2935e0995569e1163d5447f2e012124">&#9670;&nbsp;</a></span>empty()</h2>
+<a id="a4cbccea8eefcd83a72fa96963471bfba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cbccea8eefcd83a72fa96963471bfba">&#9670;&nbsp;</a></span>empty()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Derived, cardinality Cardinality&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">constexpr bool <a class="el" href="structranges_1_1v3_1_1view__interface.html">ranges::v3::view_interface</a>&lt; Derived, Cardinality &gt;::empty </td>
@@ -404,10 +438,15 @@ template&lt;typename Derived, cardinality Cardinality&gt; </div>
           <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <dl class="section pre"><dt>Precondition</dt><dd>Cardinality &gt;= 0 </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="group__group-views.html#gadc4b424b7e387ae26c0e07b65d10592b">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__group-views.html#ga59cb9288269faf247174930e0e349478">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>.</p>
 
 </div>
 </div>

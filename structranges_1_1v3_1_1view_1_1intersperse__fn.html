@@ -107,17 +107,17 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ga69c3f78b918aa232ab231208104199c8"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gaeb1035b5291bf1861c0109b050bd6545"><td class="memTemplParams" colspan="2">
 template&lt;typename Rng , typename T  = range_value_type_t&lt;Rng&gt;&gt; </td></tr>
-<tr class="memitem:ga69c3f78b918aa232ab231208104199c8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; T, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; range_reference_t&lt; Rng &gt;, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; range_value_type_t&lt; Rng &gt; &gt;&gt;</td></tr>
-<tr class="separator:ga69c3f78b918aa232ab231208104199c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb1035b5291bf1861c0109b050bd6545"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Constraint</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; T, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; range_reference_t&lt; Rng &gt;, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; range_value_type_t&lt; Rng &gt; &gt;&gt;</td></tr>
+<tr class="separator:gaeb1035b5291bf1861c0109b050bd6545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gab4a87026f78794a7e87050684db49364"><td class="memTemplParams" colspan="2">
-template&lt;typename Rng , requires  = (Concept&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:gab4a87026f78794a7e87050684db49364"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_value_type_t&lt; Rng &gt; val) const</td></tr>
-<tr class="separator:gab4a87026f78794a7e87050684db49364"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3dc0c20fead9b03363b91ee235842126"><td class="memTemplParams" colspan="2">
+template&lt;typename Rng , requires  = (Constraint&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:ga3dc0c20fead9b03363b91ee235842126"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_value_type_t&lt; Rng &gt; val) const noexcept(noexcept(decltype(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng)), std::move(val)})(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng)), std::move(val)}))) -&gt; decltype(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:ga3dc0c20fead9b03363b91ee235842126"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -109,6 +109,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_contiguous_range.html">ranges::v3::concepts::ContiguousRange</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_contiguous_view.html">ranges::v3::concepts::ContiguousView</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_forward_range.html">ranges::v3::concepts::ForwardRange</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_forward_view.html">ranges::v3::concepts::ForwardView</a></td></tr>
@@ -188,6 +190,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:ga3df81a76414150ffcbd118e6ef2278b2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ContiguousRange</b> = concepts::models&lt; concepts::ContiguousRange, Rng &gt;</td></tr>
 <tr class="separator:ga3df81a76414150ffcbd118e6ef2278b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga172daf9e100b775af1ebf3bddda9203f"><td class="memTemplParams" colspan="2">
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga172daf9e100b775af1ebf3bddda9203f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ContiguousView</b> = concepts::models&lt; concepts::ContiguousView, T &gt;</td></tr>
+<tr class="separator:ga172daf9e100b775af1ebf3bddda9203f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab18edf7d1e16b1429cd3ddb2878b09f6"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gab18edf7d1e16b1429cd3ddb2878b09f6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ForwardRange</b> = concepts::models&lt; concepts::ForwardRange, T &gt;</td></tr>
@@ -228,10 +234,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Range</b> = concepts::models&lt; concepts::Range, T &gt;</td></tr>
 <tr class="separator:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1cab90b12f3f7ff96ffbae45df1fbea6"><td class="memTemplParams" colspan="2">
+<tr class="memitem:gadd526cfd5569eef55f0a1d0d919908e2"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga1cab90b12f3f7ff96ffbae45df1fbea6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::range_concept</b> = concepts::most_refined&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; concepts::RandomAccessRange, concepts::BidirectionalRange, concepts::ForwardRange, concepts::InputRange &gt;, T &gt;</td></tr>
-<tr class="separator:ga1cab90b12f3f7ff96ffbae45df1fbea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd526cfd5569eef55f0a1d0d919908e2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::range_concept</b> = concepts::most_refined&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; concepts::ContiguousRange, concepts::RandomAccessRange, concepts::BidirectionalRange, concepts::ForwardRange, concepts::InputRange &gt;, T &gt;</td></tr>
+<tr class="separator:gadd526cfd5569eef55f0a1d0d919908e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6f9712a148cf33c75cb009bbcf8f81e0"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga6f9712a148cf33c75cb009bbcf8f81e0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::range_concept_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; range_concept&lt; T &gt; &gt;</td></tr>

@@ -28,16 +28,14 @@ var range__fwd_8hpp =
     [ "replace_view", "range__fwd_8hpp.html#a25dbc0914aed5db9fbd0f68062f03006", null ],
     [ "result_of_t", "range__fwd_8hpp.html#a90f24ba2157bc04b5158e27ec1d40fd3", null ],
     [ "reverse_iterator", "range__fwd_8hpp.html#ac9c4434a4051131d64832f74a87efaf8", null ],
-    [ "rvalue_reference_wrapper", "range__fwd_8hpp.html#aee8b43d02406488b4f67484c7d99e91c", null ],
     [ "take_exactly_view", "range__fwd_8hpp.html#gaee4076d16c12c015a0211d5dd97bd281", null ],
     [ "uncvref_t", "range__fwd_8hpp.html#aab8548af9a8d6b582bbda363ccbde366", null ],
     [ "unique_view", "range__fwd_8hpp.html#a501681e747c02893f636ff596e2261c5", null ],
     [ "values_view", "range__fwd_8hpp.html#a04681ce34bca9d0c55232b76bde0ca23", null ],
-    [ "cardinality", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189d", [
-      [ "infinite", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189daf1e27636efc1132fbbfcc2d4b0520619", null ],
-      [ "unknown", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189da36e9dc6f31acc4a0555baa88981b3bee", null ],
-      [ "finite", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189da6de11c1e7694c8648372c668aa96693b", null ],
-      [ "_max_", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189dab6f25ce486355c1c8c59119749fab47f", null ]
+    [ "cardinality", "range__fwd_8hpp.html#af665ea854f8d7c7f5a29e00bf6543313", [
+      [ "infinite", "range__fwd_8hpp.html#af665ea854f8d7c7f5a29e00bf6543313af1e27636efc1132fbbfcc2d4b0520619", null ],
+      [ "unknown", "range__fwd_8hpp.html#af665ea854f8d7c7f5a29e00bf6543313a36e9dc6f31acc4a0555baa88981b3bee", null ],
+      [ "finite", "range__fwd_8hpp.html#af665ea854f8d7c7f5a29e00bf6543313a6de11c1e7694c8648372c668aa96693b", null ]
     ] ],
     [ "istream", "range__fwd_8hpp.html#ga21dccd922318b53ab5fc375ba0b161ef", null ]
 ];

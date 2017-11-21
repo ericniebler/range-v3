@@ -6,6 +6,7 @@ var searchData=
   ['search_5fn_2ehpp',['search_n.hpp',['../search__n_8hpp.html',1,'']]],
   ['semiregular_2ehpp',['semiregular.hpp',['../semiregular_8hpp.html',1,'']]],
   ['set_5falgorithm_2ehpp',['set_algorithm.hpp',['../algorithm_2set__algorithm_8hpp.html',1,'(Global Namespace)'],['../view_2set__algorithm_8hpp.html',1,'(Global Namespace)']]],
+  ['shared_2ehpp',['shared.hpp',['../shared_8hpp.html',1,'']]],
   ['shuffle_2ehpp',['shuffle.hpp',['../action_2shuffle_8hpp.html',1,'(Global Namespace)'],['../algorithm_2shuffle_8hpp.html',1,'(Global Namespace)']]],
   ['single_2ehpp',['single.hpp',['../single_8hpp.html',1,'']]],
   ['size_2ehpp',['size.hpp',['../size_8hpp.html',1,'']]],

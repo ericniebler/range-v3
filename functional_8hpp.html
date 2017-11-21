@@ -103,7 +103,7 @@ $(document).ready(function(){initNavTree('functional_8hpp.html','');});
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bind__element.html">ranges::v3::bind_element&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html">ranges::v3::bind_element&lt; reference_wrapper&lt; T, RValue &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html">ranges::v3::bind_element&lt; reference_wrapper&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html">ranges::v3::bind_element&lt; std::reference_wrapper&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,8 +185,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1ref__fn.html">ranges::v3::ref_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1rref__fn.html">ranges::v3::rref_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1transformed.html">ranges::v3::transformed&lt; Fn1, Fn2 &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unwrap__reference__fn.html">ranges::v3::unwrap_reference_fn</a></td></tr>
@@ -220,10 +218,6 @@ template&lt;typename Fun , typename... Args&gt; </td></tr>
 template&lt;typename Fun , typename T , typename U  = T&gt; </td></tr>
 <tr class="memitem:gae57131d9623483dd07240e547ac6bf7b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Relation</b> = concepts::models&lt; concepts::Relation, Fun, T, U &gt;</td></tr>
 <tr class="separator:gae57131d9623483dd07240e547ac6bf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga483bb0929a2a7b7a794c63387ff5ff43"><td class="memTemplParams" colspan="2">
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga483bb0929a2a7b7a794c63387ff5ff43"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::rref_t</b> = decltype(rref(std::declval&lt; T &gt;()))</td></tr>
-<tr class="separator:ga483bb0929a2a7b7a794c63387ff5ff43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6a060e5743cd7f42249ab97b17a4b441"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga6a060e5743cd7f42249ab97b17a4b441"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unwrap_reference_t</b> = decltype(unwrap_reference(std::declval&lt; T &gt;()))</td></tr>
@@ -270,8 +264,6 @@ constexpr dereference_fn&#160;</td><td class="memItemRight" valign="bottom"><b>r
 <tr class="separator:ga64c3de8c98a3647d8dd38ecc290bbfaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memItemLeft" align="right" valign="top">constexpr ref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gad3ba36f66e2dbc2468ec9a466dbc7e34">ranges::v3::ref</a> {}</td></tr>
 <tr class="separator:gad3ba36f66e2dbc2468ec9a466dbc7e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7dab19fb704dc640477cf57ded30b59f"><td class="memItemLeft" align="right" valign="top">constexpr rref_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga7dab19fb704dc640477cf57ded30b59f">ranges::v3::rref</a> {}</td></tr>
-<tr class="separator:ga7dab19fb704dc640477cf57ded30b59f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa6bceaad1449d5660daa86733cf4790a"><td class="memItemLeft" align="right" valign="top">constexpr unwrap_reference_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa6bceaad1449d5660daa86733cf4790a">ranges::v3::unwrap_reference</a> {}</td></tr>
 <tr class="separator:gaa6bceaad1449d5660daa86733cf4790a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

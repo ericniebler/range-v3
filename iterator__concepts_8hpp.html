@@ -103,6 +103,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_bidirectional_iterator.html">ranges::v3::concepts::BidirectionalIterator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_contiguous_iterator.html">ranges::v3::concepts::ContiguousIterator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_forward_iterator.html">ranges::v3::concepts::ForwardIterator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_incrementable.html">ranges::v3::concepts::Incrementable</a></td></tr>
@@ -134,6 +136,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html">ranges::v3::concepts::WeaklyIncrementable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_writable.html">ranges::v3::concepts::Writable</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1contiguous__iterator__tag.html">ranges::v3::contiguous_iterator_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1difference__type_3_01detail_1_1projected___3_01_i_00_01_proj_01_4_01_4.html">ranges::v3::difference_type&lt; detail::projected_&lt; I, Proj &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,6 +174,10 @@ template&lt;typename C , typename ... Is&gt; </td></tr>
 template&lt;typename I1 , typename I2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident&gt; </td></tr>
 <tr class="memitem:gac300a8c3be17dd00a149adaccbea0035"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Comparable</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; AsymmetricallyComparable&lt; I1, I2, C, P1, P2 &gt;, IndirectRelation&lt; C, projected&lt; I1, P1 &gt;, projected&lt; I2, P2 &gt; &gt;&gt;</td></tr>
 <tr class="separator:gac300a8c3be17dd00a149adaccbea0035"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25f036846ba3adc774b98e6b62b324a5"><td class="memTemplParams" colspan="2">
+template&lt;typename I &gt; </td></tr>
+<tr class="memitem:ga25f036846ba3adc774b98e6b62b324a5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ContiguousIterator</b> = concepts::models&lt; concepts::ContiguousIterator, I &gt;</td></tr>
+<tr class="separator:ga25f036846ba3adc774b98e6b62b324a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga47c5bf756bf02c625660553b43ee3988"><td class="memTemplParams" colspan="2">
 template&lt;typename I , typename T &gt; </td></tr>
 <tr class="memitem:ga47c5bf756bf02c625660553b43ee3988"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ExclusivelyWritable_</b> = <a class="el" href="group__invocation.html#gaa20b4002ec6b258dec0b11affe7d9cdc">meta::invoke</a>&lt; detail::exclusively_writable_&lt; I &gt;, T &gt;</td></tr>
@@ -238,10 +246,10 @@ template&lt;typename MapFn , typename ReduceFn &gt; </td></tr>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga5543c379b5aadf28d5126de981178488"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Iterator</b> = concepts::models&lt; concepts::Iterator, I &gt;</td></tr>
 <tr class="separator:ga5543c379b5aadf28d5126de981178488"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad0440fa5774d3ff846679c3c33a2eb95"><td class="memTemplParams" colspan="2">
+<tr class="memitem:ga1e5ea980aa9a678d799f7ccfee64a128"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gad0440fa5774d3ff846679c3c33a2eb95"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::iterator_concept</b> = concepts::most_refined&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; concepts::RandomAccessIterator, concepts::BidirectionalIterator, concepts::ForwardIterator, concepts::InputIterator &gt;, T &gt;</td></tr>
-<tr class="separator:gad0440fa5774d3ff846679c3c33a2eb95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1e5ea980aa9a678d799f7ccfee64a128"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::iterator_concept</b> = concepts::most_refined&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; concepts::ContiguousIterator, concepts::RandomAccessIterator, concepts::BidirectionalIterator, concepts::ForwardIterator, concepts::InputIterator &gt;, T &gt;</td></tr>
+<tr class="separator:ga1e5ea980aa9a678d799f7ccfee64a128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a5af213487a24848f90cc7855da5ad0"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga0a5af213487a24848f90cc7855da5ad0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::iterator_concept_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; iterator_concept&lt; T &gt; &gt;</td></tr>

@@ -111,30 +111,30 @@ template&lt;typename Rng , typename Rng2 , requires  = (Range&lt;Rng&gt;() &amp;
 template&lt;typename Rng , typename T , requires  = (Range&lt;Rng&gt;())&gt; </td></tr>
 <tr class="memitem:a4ba091692578212b30b19e2807f3a813"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), rng2))</td></tr>
 <tr class="separator:a4ba091692578212b30b19e2807f3a813"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ee98acbd30c00e5642d642edd4bb328"><td class="memTemplParams" colspan="2"><a id="a8ee98acbd30c00e5642d642edd4bb328"></a>
-template&lt;typename Rng , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
-<tr class="memitem:a8ee98acbd30c00e5642d642edd4bb328"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), i, j))</td></tr>
-<tr class="separator:a8ee98acbd30c00e5642d642edd4bb328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memTemplParams" colspan="2"><a id="aaed66d88374cc4b8c5e860f28f1dc559"></a>
+<tr class="memitem:a0ddbd435e218cc9fcab0110893788fd3"><td class="memTemplParams" colspan="2"><a id="a0ddbd435e218cc9fcab0110893788fd3"></a>
+template&lt;typename Rng , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp; !Range&lt;S&gt;())&gt; </td></tr>
+<tr class="memitem:a0ddbd435e218cc9fcab0110893788fd3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(i), std::move(j)))</td></tr>
+<tr class="separator:a0ddbd435e218cc9fcab0110893788fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b69d04d34519d64dc8c927c607a3fb2"><td class="memTemplParams" colspan="2"><a id="a1b69d04d34519d64dc8c927c607a3fb2"></a>
 template&lt;typename Rng , typename I , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp;                        Constructible&lt;range_value_type_t&lt;Rng&gt;, T&gt;())&gt; </td></tr>
-<tr class="memitem:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
-<tr class="separator:aaed66d88374cc4b8c5e860f28f1dc559"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memTemplParams" colspan="2"><a id="ab3cabf12e984723fea48f8cb28fe4ac2"></a>
+<tr class="memitem:a1b69d04d34519d64dc8c927c607a3fb2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(p), static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
+<tr class="separator:a1b69d04d34519d64dc8c927c607a3fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dd8141811faf317d9a6de28c1e018bd"><td class="memTemplParams" colspan="2"><a id="a0dd8141811faf317d9a6de28c1e018bd"></a>
 template&lt;typename Rng , typename I , typename Rng2 , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Range&lt;Rng2&gt;())&gt; </td></tr>
-<tr class="memitem:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, static_cast&lt; Rng2 &amp;&amp;&gt;(rng2)))</td></tr>
-<tr class="separator:ab3cabf12e984723fea48f8cb28fe4ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6462a8dd7ec14b0881197543bd8520bf"><td class="memTemplParams" colspan="2"><a id="a6462a8dd7ec14b0881197543bd8520bf"></a>
+<tr class="memitem:a0dd8141811faf317d9a6de28c1e018bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, Rng2 &amp;&amp;rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(p), static_cast&lt; Rng2 &amp;&amp;&gt;(rng2)))</td></tr>
+<tr class="separator:a0dd8141811faf317d9a6de28c1e018bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54d865eb24b72f8513bc25f6bef51151"><td class="memTemplParams" colspan="2"><a id="a54d865eb24b72f8513bc25f6bef51151"></a>
 template&lt;typename Rng , typename I , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;())&gt; </td></tr>
-<tr class="memitem:a6462a8dd7ec14b0881197543bd8520bf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, rng2))</td></tr>
-<tr class="separator:a6462a8dd7ec14b0881197543bd8520bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memTemplParams" colspan="2"><a id="affda3e09b6f60255b9e09556fdd8a2e9"></a>
+<tr class="memitem:a54d865eb24b72f8513bc25f6bef51151"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, std::initializer_list&lt; T &gt; rng2) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(p), rng2))</td></tr>
+<tr class="separator:a54d865eb24b72f8513bc25f6bef51151"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a163e6efaaded372362c50e47780a6ca2"><td class="memTemplParams" colspan="2"><a id="a163e6efaaded372362c50e47780a6ca2"></a>
 template&lt;typename Rng , typename I , typename N , typename T , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;I&gt;() &amp;&amp; Integral&lt;N&gt;()                        &amp;&amp; Constructible&lt;range_value_type_t&lt;Rng&gt;, T&gt;())&gt; </td></tr>
-<tr class="memitem:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, N n, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, n, static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
-<tr class="separator:affda3e09b6f60255b9e09556fdd8a2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memTemplParams" colspan="2"><a id="a6d99291b5a3667a2e8a197e656c5a3d4"></a>
-template&lt;typename Rng , typename P , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
-<tr class="memitem:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, P p, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), p, i, j))</td></tr>
-<tr class="separator:a6d99291b5a3667a2e8a197e656c5a3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a163e6efaaded372362c50e47780a6ca2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I p, N n, T &amp;&amp;t) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(p), n, static_cast&lt; T &amp;&amp;&gt;(t)))</td></tr>
+<tr class="separator:a163e6efaaded372362c50e47780a6ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24f9b407c0e09352eb3205116b62bc4c"><td class="memTemplParams" colspan="2"><a id="a24f9b407c0e09352eb3205116b62bc4c"></a>
+template&lt;typename Rng , typename P , typename I , typename S , requires  = (Range&lt;Rng&gt;() &amp;&amp; Iterator&lt;P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                                      !Range&lt;S&gt;())&gt; </td></tr>
+<tr class="memitem:a24f9b407c0e09352eb3205116b62bc4c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, P p, I i, S j) const -&gt; decltype(insert(static_cast&lt; Rng &amp;&amp;&gt;(rng), std::move(p), std::move(i), std::move(j)))</td></tr>
+<tr class="separator:a24f9b407c0e09352eb3205116b62bc4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

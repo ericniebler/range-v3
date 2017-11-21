@@ -92,7 +92,7 @@ var searchData=
   ['is_5fpipeable',['is_pipeable',['../structranges_1_1v3_1_1is__pipeable.html',1,'ranges::v3']]],
   ['is_5fpipeable_3c_20t_20_26_20_3e',['is_pipeable&lt; T &amp; &gt;',['../structranges_1_1v3_1_1is__pipeable_3_01_t_01_6_01_4.html',1,'ranges::v3']]],
   ['is_5freference_5fwrapper',['is_reference_wrapper',['../structranges_1_1v3_1_1is__reference__wrapper.html',1,'ranges::v3']]],
-  ['is_5freference_5fwrapper_3c_20reference_5fwrapper_3c_20t_2c_20rvalue_20_3e_20_3e',['is_reference_wrapper&lt; reference_wrapper&lt; T, RValue &gt; &gt;',['../structranges_1_1v3_1_1is__reference__wrapper_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html',1,'ranges::v3']]],
+  ['is_5freference_5fwrapper_3c_20reference_5fwrapper_3c_20t_20_3e_20_3e',['is_reference_wrapper&lt; reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1is__reference__wrapper_3_01reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
   ['is_5freference_5fwrapper_3c_20std_3a_3areference_5fwrapper_3c_20t_20_3e_20_3e',['is_reference_wrapper&lt; std::reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1is__reference__wrapper_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
   ['is_5fsorted',['is_sorted',['../group__group-algorithms.html#ga0732f80413cd845b6f4d8a3e79a30a72',1,'ranges::v3']]],
   ['is_5fsorted_2ehpp',['is_sorted.hpp',['../is__sorted_8hpp.html',1,'']]],

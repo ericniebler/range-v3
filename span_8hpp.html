@@ -100,49 +100,41 @@ $(document).ready(function(){initNavTree('span_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1span.html">ranges::v3::span&lt; T, N &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1span.html">ranges::v3::span&lt; T, N &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab4e69dd0cc583af54d392f492721c8c5"><td class="memTemplParams" colspan="2"><a id="ab4e69dd0cc583af54d392f492721c8c5"></a>
-template&lt;class T , std::ptrdiff_t N&gt; </td></tr>
+template&lt;typename T , detail::span_index_t N&gt; </td></tr>
 <tr class="memitem:ab4e69dd0cc583af54d392f492721c8c5"><td class="memTemplItemLeft" align="right" valign="top">span&lt; unsigned char const, detail::byte_size&lt; T &gt;N)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::as_bytes</b> (span&lt; T, N &gt; s) noexcept</td></tr>
 <tr class="separator:ab4e69dd0cc583af54d392f492721c8c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52c3d168d783dec35169d90c476f56ad"><td class="memTemplParams" colspan="2"><a id="a52c3d168d783dec35169d90c476f56ad"></a>
-template&lt;class T , std::ptrdiff_t N&gt; </td></tr>
+template&lt;typename T , detail::span_index_t N&gt; </td></tr>
 <tr class="memitem:a52c3d168d783dec35169d90c476f56ad"><td class="memTemplItemLeft" align="right" valign="top">span&lt; unsigned char, detail::byte_size&lt; T &gt;N)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::as_writeable_bytes</b> (span&lt; T, N &gt; s) noexcept</td></tr>
 <tr class="separator:a52c3d168d783dec35169d90c476f56ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae110167d47a38dee7b9f967fec5b8cd3"><td class="memTemplParams" colspan="2"><a id="ae110167d47a38dee7b9f967fec5b8cd3"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (EqualityComparable&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:ae110167d47a38dee7b9f967fec5b8cd3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:ae110167d47a38dee7b9f967fec5b8cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4324dfebb2ef502ef6dd25a28b3cd7ac"><td class="memTemplParams" colspan="2"><a id="a4324dfebb2ef502ef6dd25a28b3cd7ac"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (TotallyOrdered&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:a4324dfebb2ef502ef6dd25a28b3cd7ac"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&lt;</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:a4324dfebb2ef502ef6dd25a28b3cd7ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3aa4fb776e6d8d96100b1f2a3dcfe152"><td class="memTemplParams" colspan="2"><a id="a3aa4fb776e6d8d96100b1f2a3dcfe152"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (TotallyOrdered&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:a3aa4fb776e6d8d96100b1f2a3dcfe152"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&lt;=</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:a3aa4fb776e6d8d96100b1f2a3dcfe152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba8c5a7201e147a718b53e9d41cce4e4"><td class="memTemplParams" colspan="2"><a id="aba8c5a7201e147a718b53e9d41cce4e4"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (EqualityComparable&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:aba8c5a7201e147a718b53e9d41cce4e4"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:aba8c5a7201e147a718b53e9d41cce4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addd7708b5d410e4da829d964d6dad9fe"><td class="memTemplParams" colspan="2"><a id="addd7708b5d410e4da829d964d6dad9fe"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (TotallyOrdered&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:addd7708b5d410e4da829d964d6dad9fe"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&gt;</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:addd7708b5d410e4da829d964d6dad9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4126d332ee15ae5c65b0739b4209d840"><td class="memTemplParams" colspan="2"><a id="a4126d332ee15ae5c65b0739b4209d840"></a>
-template&lt;class T , class U , std::ptrdiff_t N, requires  = (TotallyOrdered&lt;T, U&gt;())&gt; </td></tr>
-<tr class="memitem:a4126d332ee15ae5c65b0739b4209d840"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&gt;=</b> (span&lt; T, N &gt; const &amp;l, span&lt; U, N &gt; const &amp;r)</td></tr>
-<tr class="separator:a4126d332ee15ae5c65b0739b4209d840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd9e7df94c1dde18fff436f91528b586"><td class="memTemplParams" colspan="2"><a id="abd9e7df94c1dde18fff436f91528b586"></a>
+template&lt;typename ElementType &gt; </td></tr>
+<tr class="memitem:abd9e7df94c1dde18fff436f91528b586"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; ElementType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (ElementType *ptr, detail::span_index_t count) noexcept</td></tr>
+<tr class="separator:abd9e7df94c1dde18fff436f91528b586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6dc4381a110f197aed2f981b453835"><td class="memTemplParams" colspan="2"><a id="aeb6dc4381a110f197aed2f981b453835"></a>
+template&lt;typename ElementType &gt; </td></tr>
+<tr class="memitem:aeb6dc4381a110f197aed2f981b453835"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; ElementType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (ElementType *first, ElementType *last) noexcept</td></tr>
+<tr class="separator:aeb6dc4381a110f197aed2f981b453835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memTemplParams" colspan="2"><a id="ac67f56f5e1810d4a9a49f3ad5b8781ca"></a>
+template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &lt; cardinality{})&gt; </td></tr>
+<tr class="memitem:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; concepts::ContiguousRange::element_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (Rng &amp;&amp;rng) noexcept(noexcept(ranges::data(rng), ranges::size(rng)))</td></tr>
+<tr class="separator:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe454cc8a7db3d24885617199789d01a"><td class="memTemplParams" colspan="2"><a id="afe454cc8a7db3d24885617199789d01a"></a>
+template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &gt;= cardinality{})&gt; </td></tr>
+<tr class="memitem:afe454cc8a7db3d24885617199789d01a"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; concepts::ContiguousRange::element_t&lt; Rng &gt;, static_cast&lt; detail::span_index_t &gt;range_cardinality&lt; Rng &gt;::value)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (Rng &amp;&amp;rng) noexcept(noexcept(ranges::data(rng)))</td></tr>
+<tr class="separator:afe454cc8a7db3d24885617199789d01a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a79cbf56d83f85efb1ca4e0da6650c73d"><td class="memItemLeft" align="right" valign="top"><a id="a79cbf56d83f85efb1ca4e0da6650c73d"></a>
-constexpr std::ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::dynamic_extent</b> = -1</td></tr>
-<tr class="separator:a79cbf56d83f85efb1ca4e0da6650c73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a259a49f32695ec7d60026f409ea4278d"><td class="memItemLeft" align="right" valign="top"><a id="a259a49f32695ec7d60026f409ea4278d"></a>
+constexpr detail::span_index_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::dynamic_extent</b> = -1</td></tr>
+<tr class="separator:a259a49f32695ec7d60026f409ea4278d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

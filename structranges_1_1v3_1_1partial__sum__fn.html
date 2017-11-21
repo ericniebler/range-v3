@@ -99,10 +99,10 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1partial__sum__fn
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a68d7bf242905b1715419324764d7772e"><td class="memTemplParams" colspan="2"><a id="a68d7bf242905b1715419324764d7772e"></a>
-template&lt;typename I , typename S , typename O , typename S2 , typename BOp  = plus, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; Sentinel&lt;S2, O&gt;() &amp;&amp;                    PartialSummable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
-<tr class="memitem:a68d7bf242905b1715419324764d7772e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, S2 end_result, BOp bop=BOp{}, P proj=P{}) const</td></tr>
-<tr class="separator:a68d7bf242905b1715419324764d7772e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4efc4c68b7fec5b2833edea66c9756ae"><td class="memTemplParams" colspan="2"><a id="a4efc4c68b7fec5b2833edea66c9756ae"></a>
+template&lt;typename I , typename S1 , typename O , typename S2 , typename BOp  = plus, typename P  = ident, requires  = (Sentinel&lt;S1, I&gt;() &amp;&amp; Sentinel&lt;S2, O&gt;() &amp;&amp;                    PartialSummable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
+<tr class="memitem:a4efc4c68b7fec5b2833edea66c9756ae"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S1 end, O result, S2 end_result, BOp bop=BOp{}, P proj=P{}) const</td></tr>
+<tr class="separator:a4efc4c68b7fec5b2833edea66c9756ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed004e941df4f7d24b218a47dd218bc9"><td class="memTemplParams" colspan="2"><a id="aed004e941df4f7d24b218a47dd218bc9"></a>
 template&lt;typename I , typename S , typename O , typename BOp  = plus, typename P  = ident, requires  = (Sentinel&lt;S, I&gt;() &amp;&amp; PartialSummable&lt;I, O, BOp, P&gt;())&gt; </td></tr>
 <tr class="memitem:aed004e941df4f7d24b218a47dd218bc9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O result, BOp bop=BOp{}, P proj=P{}) const</td></tr>

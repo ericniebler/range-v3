@@ -115,10 +115,10 @@ Public Types</h2></td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:accecb775b4ec001ff0645151ce0dbeab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>data_reference_t</b> = decltype(*data(std::declval&lt; Rng &amp; &gt;()))</td></tr>
 <tr class="separator:accecb775b4ec001ff0645151ce0dbeab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b8567e4eb8d28983e8c3576fbb65948"><td class="memTemplParams" colspan="2"><a id="a1b8567e4eb8d28983e8c3576fbb65948"></a>
+<tr class="memitem:a3e1e64b95f08cce1abe870942dfccbed"><td class="memTemplParams" colspan="2"><a id="a3e1e64b95f08cce1abe870942dfccbed"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:a1b8567e4eb8d28983e8c3576fbb65948"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>datum_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; data_reference_t&lt; Rng &gt; &gt;&gt;</td></tr>
-<tr class="separator:a1b8567e4eb8d28983e8c3576fbb65948"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1e64b95f08cce1abe870942dfccbed"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>element_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_reference&lt; data_reference_t&lt; Rng &gt; &gt;&gt;</td></tr>
+<tr class="separator:a3e1e64b95f08cce1abe870942dfccbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; RandomAccessRange &gt;</a></td></tr>
 <tr class="memitem:gaa96b304cf52a0749cadd35e3ea66498d inherit pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td class="memItemLeft" align="right" valign="top"><a id="gaa96b304cf52a0749cadd35e3ea66498d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>base_concepts_t</b> = <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; Concepts... &gt;</td></tr>
@@ -126,10 +126,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>base_concepts_t</b> 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adccb79cea1915a6d218756e2f89c732c"><td class="memTemplParams" colspan="2"><a id="adccb79cea1915a6d218756e2f89c732c"></a>
+<tr class="memitem:aac028fee732fd66bced9fe551666e704"><td class="memTemplParams" colspan="2"><a id="aac028fee732fd66bced9fe551666e704"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:adccb79cea1915a6d218756e2f89c732c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, InputRange::value_t&lt; Rng &gt;, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; datum_t&lt; Rng &gt;&gt;&gt;&gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, data_reference_t&lt; Rng &gt;, concepts::InputRange::reference_t&lt; Rng &gt;&gt;()))</td></tr>
-<tr class="separator:adccb79cea1915a6d218756e2f89c732c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac028fee732fd66bced9fe551666e704"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, InputRange::value_t&lt; Rng &gt;, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; element_t&lt; Rng &gt;&gt;&gt;&gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, data_reference_t&lt; Rng &gt;, concepts::InputRange::reference_t&lt; Rng &gt;&gt;()))</td></tr>
+<tr class="separator:aac028fee732fd66bced9fe551666e704"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; RandomAccessRange &gt;</a></td></tr>
 <tr class="memitem:ga81079dc5b7490dac2a8fe8a8d53c998d inherit pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td class="memItemLeft" align="right" valign="top"><a id="ga81079dc5b7490dac2a8fe8a8d53c998d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>requires_</b> ()</td></tr>

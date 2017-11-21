@@ -105,10 +105,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a8dea444a0e4e348368370dc4ca064a85"><td class="memTemplParams" colspan="2"><a id="a8dea444a0e4e348368370dc4ca064a85"></a>
-template&lt;typename I , typename O , typename BOp  = plus, typename P  = ident, typename V  = value_type_t&lt;I&gt;, typename X  = concepts::Invocable::result_t&lt;P&amp;, V&gt;, typename Y  = concepts::Invocable::result_t&lt;BOp&amp;, X, X&gt;&gt; </td></tr>
-<tr class="memitem:a8dea444a0e4e348368370dc4ca064a85"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartialSummable</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; InputIterator&lt; I &gt;, OutputIterator&lt; O, X &gt;, Invocable&lt; P &amp;, V &gt;, CopyConstructible&lt; uncvref_t&lt; X &gt; &gt;, Invocable&lt; BOp &amp;, X, X &gt;, Assignable&lt; uncvref_t&lt; X &gt; &amp;, Y &gt; &gt;</td></tr>
-<tr class="separator:a8dea444a0e4e348368370dc4ca064a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66e8212891b7254132e886c6dd7b1c28"><td class="memTemplParams" colspan="2"><a id="a66e8212891b7254132e886c6dd7b1c28"></a>
+template&lt;typename I , typename BOp &gt; </td></tr>
+<tr class="memitem:a66e8212891b7254132e886c6dd7b1c28"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::IndirectSemigroup</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; Readable&lt; I &gt;, Copyable&lt; value_type_t&lt; I &gt; &gt;, IndirectRegularInvocable&lt; composed&lt; coerce&lt; value_type_t&lt; I &gt; &gt;, BOp &gt;, value_type_t&lt; I &gt; *, I &gt; &gt;</td></tr>
+<tr class="separator:a66e8212891b7254132e886c6dd7b1c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ea938a0826847d4e196bdb86c06521"><td class="memTemplParams" colspan="2"><a id="ac2ea938a0826847d4e196bdb86c06521"></a>
+template&lt;typename I , typename O , typename BOp  = plus, typename P  = ident, typename X  = projected&lt;projected&lt;I, detail::as_value_type_t&lt;I&gt;&gt;, P&gt;&gt; </td></tr>
+<tr class="memitem:ac2ea938a0826847d4e196bdb86c06521"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartialSummable</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; InputIterator&lt; I &gt;, IndirectSemigroup&lt; X, BOp &gt;, OutputIterator&lt; O, value_type_t&lt; X &gt; const &amp; &gt; &gt;</td></tr>
+<tr class="separator:ac2ea938a0826847d4e196bdb86c06521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

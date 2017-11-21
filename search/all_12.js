@@ -253,7 +253,7 @@ var searchData=
   ['refines_3c_20bidirectionalrange_20_3e',['refines&lt; BidirectionalRange &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20bidirectionalview_2c_20randomaccessrange_20_3e',['refines&lt; BidirectionalView, RandomAccessRange &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20constructible_20_3e',['refines&lt; Constructible &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
-  ['refines_3c_20container_20_3e',['refines&lt; Container &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
+  ['refines_3c_20container_2c_20sizedrange_20_3e',['refines&lt; Container, SizedRange &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20copyable_2c_20defaultconstructible_20_3e',['refines&lt; Copyable, DefaultConstructible &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20destructible_28_5f1_29_3e',['refines&lt; Destructible(_1)&gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20equalitycomparable_2c_20weaklyordered_20_3e',['refines&lt; EqualityComparable, WeaklyOrdered &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
@@ -273,7 +273,9 @@ var searchData=
   ['refines_3c_20iterator_2c_20readable_20_3e',['refines&lt; Iterator, Readable &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20movable_2c_20copyconstructible_20_3e',['refines&lt; Movable, CopyConstructible &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20moveconstructible_20_3e',['refines&lt; MoveConstructible &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
+  ['refines_3c_20randomaccessiterator_20_3e',['refines&lt; RandomAccessIterator &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20randomaccessrange_20_3e',['refines&lt; RandomAccessRange &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
+  ['refines_3c_20randomaccessview_2c_20contiguousrange_20_3e',['refines&lt; RandomAccessView, ContiguousRange &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20range_20_3e',['refines&lt; Range &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20range_28_5f1_29_3e',['refines&lt; Range(_1)&gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
   ['refines_3c_20range_2c_20movable_2c_20defaultconstructible_20_3e',['refines&lt; Range, Movable, DefaultConstructible &gt;',['../structranges_1_1v3_1_1concepts_1_1refines.html',1,'ranges::v3::concepts']]],
@@ -349,7 +351,5 @@ var searchData=
   ['rotate_5fcopy_2ehpp',['rotate_copy.hpp',['../rotate__copy_8hpp.html',1,'']]],
   ['rotate_5fcopy_5ffn',['rotate_copy_fn',['../structranges_1_1v3_1_1rotate__copy__fn.html',1,'ranges::v3']]],
   ['rotate_5ffn',['rotate_fn',['../structranges_1_1v3_1_1rotate__fn.html',1,'ranges::v3']]],
-  ['rref',['rref',['../group__group-utility.html#ga7dab19fb704dc640477cf57ded30b59f',1,'ranges::v3']]],
-  ['rref_5ffn',['rref_fn',['../structranges_1_1v3_1_1rref__fn.html',1,'ranges::v3']]],
   ['runtime',['Runtime',['../group__runtime.html',1,'']]]
 ];

@@ -107,17 +107,17 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a42d13e4f0167b0c44aeb85cc85212232"><td class="memTemplParams" colspan="2"><a id="a42d13e4f0167b0c44aeb85cc85212232"></a>
+<tr class="memitem:a009f91e5b3ed4d0abc585455dca53c94"><td class="memTemplParams" colspan="2"><a id="a009f91e5b3ed4d0abc585455dca53c94"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:a42d13e4f0167b0c44aeb85cc85212232"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">BidirectionalRange</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:a42d13e4f0167b0c44aeb85cc85212232"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a009f91e5b3ed4d0abc585455dca53c94"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Constraint</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">BidirectionalRange</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:a009f91e5b3ed4d0abc585455dca53c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeb3425097978560a4a8d8215446cdce1"><td class="memTemplParams" colspan="2"><a id="aeb3425097978560a4a8d8215446cdce1"></a>
-template&lt;typename Rng , requires  = (Concept&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:aeb3425097978560a4a8d8215446cdce1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1reverse__view.html">reverse_view</a>&lt; all_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const</td></tr>
-<tr class="separator:aeb3425097978560a4a8d8215446cdce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97f00f078f72cf3af466c0c1694ed2ff"><td class="memTemplParams" colspan="2"><a id="a97f00f078f72cf3af466c0c1694ed2ff"></a>
+template&lt;typename Rng , requires  = (Constraint&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a97f00f078f72cf3af466c0c1694ed2ff"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const noexcept(noexcept(decltype(<a class="el" href="structranges_1_1v3_1_1reverse__view.html">reverse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng))})(<a class="el" href="structranges_1_1v3_1_1reverse__view.html">reverse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng))}))) -&gt; decltype(<a class="el" href="structranges_1_1v3_1_1reverse__view.html">reverse_view</a>&lt; all_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:a97f00f078f72cf3af466c0c1694ed2ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

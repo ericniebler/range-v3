@@ -1,6 +1,7 @@
 var iterator__concepts_8hpp =
 [
     [ "BidirectionalIterator", "structranges_1_1v3_1_1concepts_1_1_bidirectional_iterator.html", "structranges_1_1v3_1_1concepts_1_1_bidirectional_iterator" ],
+    [ "ContiguousIterator", "structranges_1_1v3_1_1concepts_1_1_contiguous_iterator.html", "structranges_1_1v3_1_1concepts_1_1_contiguous_iterator" ],
     [ "ForwardIterator", "structranges_1_1v3_1_1concepts_1_1_forward_iterator.html", "structranges_1_1v3_1_1concepts_1_1_forward_iterator" ],
     [ "Incrementable", "structranges_1_1v3_1_1concepts_1_1_incrementable.html", "structranges_1_1v3_1_1concepts_1_1_incrementable" ],
     [ "IndirectlyCopyable", "structranges_1_1v3_1_1concepts_1_1_indirectly_copyable.html", "structranges_1_1v3_1_1concepts_1_1_indirectly_copyable" ],
@@ -22,6 +23,7 @@ var iterator__concepts_8hpp =
     [ "BinarySearchable", "iterator__concepts_8hpp.html#ga319ac5e7518649cbcb20b8ce003d8c16", null ],
     [ "common_result_indirect_invocable_", "iterator__concepts_8hpp.html#a2ba14151688d759de6c21e48f9ff0262", null ],
     [ "Comparable", "iterator__concepts_8hpp.html#gac300a8c3be17dd00a149adaccbea0035", null ],
+    [ "ContiguousIterator", "iterator__concepts_8hpp.html#ga25f036846ba3adc774b98e6b62b324a5", null ],
     [ "ExclusivelyWritable_", "iterator__concepts_8hpp.html#ga47c5bf756bf02c625660553b43ee3988", null ],
     [ "ForwardIterator", "iterator__concepts_8hpp.html#gaaa5458c7f564ff55d21e9dcd4ded4f65", null ],
     [ "Incrementable", "iterator__concepts_8hpp.html#ga0709a43969023fbcf3dd5a64d88b8130", null ],
@@ -39,7 +41,7 @@ var iterator__concepts_8hpp =
     [ "iter_args_lists_", "iterator__concepts_8hpp.html#a4bea354ed367b3c264b2f481ad3a2da8", null ],
     [ "iter_map_reduce_fn_", "iterator__concepts_8hpp.html#a6e49ff894154684f176350125c3a10c4", null ],
     [ "Iterator", "iterator__concepts_8hpp.html#ga5543c379b5aadf28d5126de981178488", null ],
-    [ "iterator_concept", "iterator__concepts_8hpp.html#gad0440fa5774d3ff846679c3c33a2eb95", null ],
+    [ "iterator_concept", "iterator__concepts_8hpp.html#ga1e5ea980aa9a678d799f7ccfee64a128", null ],
     [ "iterator_concept_t", "iterator__concepts_8hpp.html#ga0a5af213487a24848f90cc7855da5ad0", null ],
     [ "IteratorRange", "iterator__concepts_8hpp.html#ga7c1cc4bdabdfd1624262bbc0d61b28d2", null ],
     [ "Mergeable", "iterator__concepts_8hpp.html#ga747034d48931b22aa3cbf4a546c82cfa", null ],

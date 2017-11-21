@@ -1,6 +1,5 @@
 var view__adaptor_8hpp =
 [
     [ "adaptor_cursor_t", "view__adaptor_8hpp.html#ga46692547ad423aa8509578c5f6481b88", null ],
-    [ "adaptor_sentinel_t", "view__adaptor_8hpp.html#ga98bd8f2754da7970487f88689b18fb06", null ],
-    [ "base_range_t", "view__adaptor_8hpp.html#gae7ae9c0b97811d3761e2cdf8f903b9e4", null ]
+    [ "adaptor_sentinel_t", "view__adaptor_8hpp.html#ga98bd8f2754da7970487f88689b18fb06", null ]
 ];

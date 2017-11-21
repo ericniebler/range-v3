@@ -12,7 +12,6 @@ var functional_8hpp =
     [ "ref_t", "functional_8hpp.html#gaab5371edd53243858c10e58a1706db62", null ],
     [ "RegularInvocable", "functional_8hpp.html#ga688188e6a117801fb2ac1b83dba64b1b", null ],
     [ "Relation", "functional_8hpp.html#gae57131d9623483dd07240e547ac6bf7b", null ],
-    [ "rref_t", "functional_8hpp.html#ga483bb0929a2a7b7a794c63387ff5ff43", null ],
     [ "unwrap_reference_t", "functional_8hpp.html#ga6a060e5743cd7f42249ab97b17a4b441", null ],
     [ "bind_forward", "functional_8hpp.html#ga6e02c818ad4d5430f129e1c9fd972b29", null ],
     [ "bind_forward", "functional_8hpp.html#ga2e97de15d43ecc8788f50e3fc1ab469d", null ],
@@ -27,6 +26,5 @@ var functional_8hpp =
     [ "overload", "functional_8hpp.html#gab204304447e26278830f46f14f48bdb5", null ],
     [ "protect", "functional_8hpp.html#ga64c3de8c98a3647d8dd38ecc290bbfaf", null ],
     [ "ref", "functional_8hpp.html#gad3ba36f66e2dbc2468ec9a466dbc7e34", null ],
-    [ "rref", "functional_8hpp.html#ga7dab19fb704dc640477cf57ded30b59f", null ],
     [ "unwrap_reference", "functional_8hpp.html#gaa6bceaad1449d5660daa86733cf4790a", null ]
 ];

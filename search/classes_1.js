@@ -20,7 +20,7 @@ var searchData=
   ['binary_5fsearch_5ffn',['binary_search_fn',['../structranges_1_1v3_1_1binary__search__fn.html',1,'ranges::v3']]],
   ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
   ['bind_5felement',['bind_element',['../structranges_1_1v3_1_1bind__element.html',1,'ranges::v3']]],
-  ['bind_5felement_3c_20reference_5fwrapper_3c_20t_2c_20rvalue_20_3e_20_3e',['bind_element&lt; reference_wrapper&lt; T, RValue &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html',1,'ranges::v3']]],
+  ['bind_5felement_3c_20reference_5fwrapper_3c_20t_20_3e_20_3e',['bind_element&lt; reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
   ['bind_5felement_3c_20std_3a_3areference_5fwrapper_3c_20t_20_3e_20_3e',['bind_element&lt; std::reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
   ['bind_5ffront',['bind_front',['../structmeta_1_1bind__front.html',1,'meta']]],
   ['bitwise_5for',['bitwise_or',['../structranges_1_1v3_1_1bitwise__or.html',1,'ranges::v3']]],
@@ -34,5 +34,8 @@ var searchData=
   ['box_3c_20element_2c_20tag_2c_20detail_3a_3abox_5fcompress_3a_3aebo_20_3e',['box&lt; Element, Tag, detail::box_compress::ebo &gt;',['../classranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01detail_1_1box__compress_1_1ebo_01_4.html',1,'ranges::v3']]],
   ['box_3c_20fn_2c_20indirected_3c_20fn_20_3e_20_3e',['box&lt; Fn, indirected&lt; Fn &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20offset_5ft_20_3e',['box&lt; offset_t &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20semiregular_5ft_3c_20pred_20_3e_20_3e',['box&lt; semiregular_t&lt; Pred &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20semiregular_5ft_3c_20pred_20_3e_2c_20adjacent_5ffilter_5fview_3c_20rng_2c_20pred_20_3e_20_3e',['box&lt; semiregular_t&lt; Pred &gt;, adjacent_filter_view&lt; Rng, Pred &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20semiregular_5ft_3c_20pred_20_3e_2c_20adjacent_5fremove_5fif_5fview_3c_20rng_2c_20pred_20_3e_20_3e',['box&lt; semiregular_t&lt; Pred &gt;, adjacent_remove_if_view&lt; Rng, Pred &gt; &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20t_20_3e',['box&lt; T &gt;',['../classranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

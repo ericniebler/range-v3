@@ -102,9 +102,9 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1at__fn.html','')
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; SizedRange&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#a28c106fd71d5e560493c1cd2e1d24deb">operator()</a> (Rng &amp;&amp;rng, range_difference_type_t&lt; Rng &gt; n) const -&gt; decltype(begin(rng)[n])</td></tr>
-<tr class="separator:a28c106fd71d5e560493c1cd2e1d24deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89e2186abc3c7bdb48a7258d846004a0"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; SizedRange&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:a89e2186abc3c7bdb48a7258d846004a0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#a89e2186abc3c7bdb48a7258d846004a0">operator()</a> (Rng &amp;&amp;rng, range_difference_type_t&lt; Rng &gt; n) const -&gt; decltype(ranges::begin(rng)[n])</td></tr>
+<tr class="separator:a89e2186abc3c7bdb48a7258d846004a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp; !SizedRange&lt;Rng&gt;())&gt; </td></tr>
 <tr class="memitem:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#ae50b4b10b2ab6160ca9425cd461fbe07">operator()</a> (Rng &amp;&amp;rng, range_difference_type_t&lt; Rng &gt; n) const noexcept(noexcept(decltype(index(std::forward&lt; Rng &gt;(rng), n))(index(std::forward&lt; Rng &gt;(rng), n)))) -&gt; decltype(index(std::forward&lt; Rng &gt;(rng), n))</td></tr>
 <tr class="separator:ae50b4b10b2ab6160ca9425cd461fbe07"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,8 +122,8 @@ Rng &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>rng</b></td
 <tr class="separator:a3e58049bc55d1113277783312ffa4c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a28c106fd71d5e560493c1cd2e1d24deb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28c106fd71d5e560493c1cd2e1d24deb">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/3]</span></h2>
+<a id="a89e2186abc3c7bdb48a7258d846004a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89e2186abc3c7bdb48a7258d846004a0">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -145,14 +145,14 @@ template&lt;typename Rng , requires  = (RandomAccessRange&lt;Rng&gt;() &amp;&amp
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const -&gt; decltype(begin(rng)[n])
+          <td></td><td> const -&gt; decltype(ranges::begin(rng)[n])
             </td>
         </tr>
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>begin(rng)[n]</code> </dd></dl>
 
-<p class="reference">References <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>, and <a class="el" href="group__group-core.html#gae77f7b6b33494f548b1bba9cf7a30985">ranges::v3::distance</a>.</p>
+<p class="reference">References <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>.</p>
 
 </div>
 </div>

@@ -1,10 +1,11 @@
 var structranges_1_1v3_1_1any__view =
 [
-    [ "operator=", "structranges_1_1v3_1_1any__view.html#a4665b892da29e7fb27f821b48fc3e9a7", null ],
-    [ "operator=", "structranges_1_1v3_1_1any__view.html#a9c43fb998267b973a1d440ad5ce4dfa5", null ],
-    [ "range_access", "structranges_1_1v3_1_1any__view.html#ae84660a94461c1ef37a9c65a57849851", null ],
-    [ "any_view", "structranges_1_1v3_1_1any__view.html#ac84689dcc3d20f2b168170e8022ad75b", null ],
-    [ "any_view", "structranges_1_1v3_1_1any__view.html#a2ec1259abd1e27618549b9f86a646415", null ],
-    [ "any_view", "structranges_1_1v3_1_1any__view.html#af5f98a80a5e3d309d7c8297333e9d370", null ],
-    [ "any_view", "structranges_1_1v3_1_1any__view.html#ab2cf1cccac93a0dddf89f1ebd6348f84", null ]
+    [ "operator=", "structranges_1_1v3_1_1any__view.html#ae2a29fbf0c532be233e12002d3e74e4c", null ],
+    [ "operator=", "structranges_1_1v3_1_1any__view.html#a747499805fea98731b4553c015cb1dbb", null ],
+    [ "size", "structranges_1_1v3_1_1any__view.html#a90a711655b23809d114df4f1b01e9f7d", null ],
+    [ "range_access", "structranges_1_1v3_1_1any__view.html#a0677dae38c77d2bcaf1ac90b3edaa3db", null ],
+    [ "any_view", "structranges_1_1v3_1_1any__view.html#a4ef62371a9842aee854b5f8de4480c01", null ],
+    [ "any_view", "structranges_1_1v3_1_1any__view.html#a1d91aa38765820eb97ec5769e61e32f5", null ],
+    [ "any_view", "structranges_1_1v3_1_1any__view.html#a2bffd5135c29c05735d7a08f8dc17c34", null ],
+    [ "any_view", "structranges_1_1v3_1_1any__view.html#ad3ee1f2ae02167f55c5fa918f08ea10f", null ]
 ];

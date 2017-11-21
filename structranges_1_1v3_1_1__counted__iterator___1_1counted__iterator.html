@@ -151,8 +151,8 @@ template&lt;typename I2  = I, requires  = (Readable&lt;I2 const&gt;())&gt; </td>
 <tr class="memitem:aeabc7cbb5ac78a73d0897666bc4c9951"><td class="memItemLeft" align="right" valign="top"><a id="aeabc7cbb5ac78a73d0897666bc4c9951"></a>
 <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html">counted_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> ()</td></tr>
 <tr class="separator:aeabc7cbb5ac78a73d0897666bc4c9951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f15aaafca831f128ce03f5242c38430"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a6f15aaafca831f128ce03f5242c38430">operator++</a> (<a class="el" href="classint.html">int</a>) -&gt; decltype(std::declval&lt; I &amp;&gt;()++)</td></tr>
-<tr class="separator:a6f15aaafca831f128ce03f5242c38430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a811f38e9e714c3ade71dd7e07c335247"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a811f38e9e714c3ade71dd7e07c335247">operator++</a> (<a class="el" href="classint.html">int</a>) -&gt; decltype(current_++)</td></tr>
+<tr class="separator:a811f38e9e714c3ade71dd7e07c335247"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37d39ce18b009d493ee0f42abbd503ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html">counted_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a37d39ce18b009d493ee0f42abbd503ea">operator++</a> (<a class="el" href="classint.html">int</a>)</td></tr>
 <tr class="separator:a37d39ce18b009d493ee0f42abbd503ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ecb8d4d0f6dcc466709e43dfdbffe8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html">counted_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a2ecb8d4d0f6dcc466709e43dfdbffe8f">operator+=</a> (difference_type n)</td></tr>
@@ -224,8 +224,8 @@ template&lt;typename I , typename &gt; </div>
 
 </div>
 </div>
-<a id="a6f15aaafca831f128ce03f5242c38430"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f15aaafca831f128ce03f5242c38430">&#9670;&nbsp;</a></span>operator++() <span class="overload">[1/2]</span></h2>
+<a id="a811f38e9e714c3ade71dd7e07c335247"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a811f38e9e714c3ade71dd7e07c335247">&#9670;&nbsp;</a></span>operator++() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +237,7 @@ template&lt;typename I , typename &gt; </div>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classint.html">int</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td> -&gt; decltype(std::declval&lt;I &amp;&gt;()++)
+          <td> -&gt; decltype(current_++)
                 </td>
         </tr>
       </table>

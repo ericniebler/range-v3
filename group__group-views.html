@@ -127,7 +127,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__remove__if__view.html">ranges::v3::adjacent_remove_if_view&lt; Rng, Pred &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any__view.html">ranges::v3::any_view&lt; Ref, Cat &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any__view.html">ranges::v3::any_view&lt; Ref, Cat, enable &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type-erased view.  <a href="structranges_1_1v3_1_1any__view.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bounded__view.html">ranges::v3::bounded_view&lt; Rng &gt;</a></td></tr>
@@ -257,10 +257,10 @@ Typedefs</h2></td></tr>
 template&lt;typename G &gt; </td></tr>
 <tr class="memitem:ga20baf5b66688c43da94c53562e00e2b7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::generate_fn::Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; G &amp; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">MoveConstructible</a>&lt; G &gt;, std::is_object&lt; detail::decay_t&lt; result_of_t&lt; G &amp;()&gt; &gt;&gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Constructible</a>&lt; detail::decay_t&lt; result_of_t&lt; G &amp;()&gt; &gt;, result_of_t&lt; G &amp;()&gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Assignable</a>&lt; detail::decay_t&lt; result_of_t&lt; G &amp;()&gt; &gt; &amp;, result_of_t&lt; G &amp;()&gt; &gt;&gt;</td></tr>
 <tr class="separator:ga20baf5b66688c43da94c53562e00e2b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga69c3f78b918aa232ab231208104199c8"><td class="memTemplParams" colspan="2"><a id="ga69c3f78b918aa232ab231208104199c8"></a>
+<tr class="memitem:gaeb1035b5291bf1861c0109b050bd6545"><td class="memTemplParams" colspan="2"><a id="gaeb1035b5291bf1861c0109b050bd6545"></a>
 template&lt;typename Rng , typename T  = range_value_type_t&lt;Rng&gt;&gt; </td></tr>
-<tr class="memitem:ga69c3f78b918aa232ab231208104199c8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::intersperse_fn::Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; T, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; range_reference_t&lt; Rng &gt;, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; range_value_type_t&lt; Rng &gt; &gt;&gt;</td></tr>
-<tr class="separator:ga69c3f78b918aa232ab231208104199c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb1035b5291bf1861c0109b050bd6545"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::intersperse_fn::Constraint</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; T, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; range_reference_t&lt; Rng &gt;, range_value_type_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; range_value_type_t&lt; Rng &gt; &gt;&gt;</td></tr>
+<tr class="separator:gaeb1035b5291bf1861c0109b050bd6545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee4076d16c12c015a0211d5dd97bd281"><td class="memTemplParams" colspan="2"><a id="gaee4076d16c12c015a0211d5dd97bd281"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:gaee4076d16c12c015a0211d5dd97bd281"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::take_exactly_view</b> = detail::take_exactly_view_&lt; Rng &gt;</td></tr>
@@ -290,11 +290,12 @@ template&lt;typename Rng &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gadc4b424b7e387ae26c0e07b65d10592b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gadc4b424b7e387ae26c0e07b65d10592b">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance</a> (iterator_t&lt; Rng &gt; &amp;it, range_difference_type_t&lt; Rng &gt; n)</td></tr>
-<tr class="separator:gadc4b424b7e387ae26c0e07b65d10592b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac7c409938c8b66034837ad17a3bd127a"><td class="memItemLeft" align="right" valign="top"><a id="gac7c409938c8b66034837ad17a3bd127a"></a>
-iterator_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::begin</b> (<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a> &amp;view)</td></tr>
-<tr class="separator:gac7c409938c8b66034837ad17a3bd127a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59cb9288269faf247174930e0e349478"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga59cb9288269faf247174930e0e349478">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance</a> (iterator_t&lt; Rng &gt; &amp;it, range_difference_type_t&lt; Rng &gt; n) noexcept(noexcept(ranges::advance(it, n)))</td></tr>
+<tr class="separator:ga59cb9288269faf247174930e0e349478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a31483412144efbe31df59648da70a0"><td class="memTemplParams" colspan="2"><a id="ga7a31483412144efbe31df59648da70a0"></a>
+template&lt;typename View &gt; </td></tr>
+<tr class="memitem:ga7a31483412144efbe31df59648da70a0"><td class="memTemplItemLeft" align="right" valign="top">iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::begin</b> (<a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">View</a> &amp;view) noexcept(std::is_nothrow_move_constructible&lt; iterator_t&lt; Rng &gt;&gt;::value &amp;&amp;noexcept(ranges::begin(view.base()) !=ranges::end(view.base())))</td></tr>
+<tr class="separator:ga7a31483412144efbe31df59648da70a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae13f1fffdafc11b934fb49d9d2cae9fe"><td class="memTemplParams" colspan="2"><a id="gae13f1fffdafc11b934fb49d9d2cae9fe"></a>
 template&lt;typename... Ts, typename V  = View&gt; </td></tr>
 <tr class="memitem:gae13f1fffdafc11b934fb49d9d2cae9fe"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::view_access::impl&lt; View &gt;::bind</b> (Ts &amp;&amp;...ts) -&gt; decltype(V::bind(static_cast&lt; Ts &amp;&amp;&gt;(ts)...))</td></tr>
@@ -305,32 +306,31 @@ result_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3:
 <tr class="memitem:ga656956e3cfdf1b3ab3223ccd65c0e202"><td class="memItemLeft" align="right" valign="top"><a id="ga656956e3cfdf1b3ab3223ccd65c0e202"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor::cursor</b> (<a class="el" href="structranges_1_1v3_1_1generate__view.html">generate_view</a> &amp;view)</td></tr>
 <tr class="separator:ga656956e3cfdf1b3ab3223ccd65c0e202"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1340f1410b02effe6a92cd6723c34d25"><td class="memItemLeft" align="right" valign="top"><a id="ga1340f1410b02effe6a92cd6723c34d25"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::cursor_adaptor</b> (range_value_type_t&lt; Rng &gt; val)</td></tr>
-<tr class="separator:ga1340f1410b02effe6a92cd6723c34d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6c0504e4d48f1ea8c982c727319b8a4c"><td class="memItemLeft" align="right" valign="top">range_difference_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6c0504e4d48f1ea8c982c727319b8a4c">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::distance_to</a> (iterator_t&lt; Rng &gt; it, iterator_t&lt; Rng &gt; other_it, cursor_adaptor const &amp;other) const</td></tr>
-<tr class="separator:ga6c0504e4d48f1ea8c982c727319b8a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe053a255f9e46e6d9e8a3b112884b3b"><td class="memItemLeft" align="right" valign="top"><a id="gabe053a255f9e46e6d9e8a3b112884b3b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::sentinel_adaptor::empty</b> (iterator_t&lt; Rng &gt; it, cursor_adaptor const &amp;, sentinel_t&lt; Rng &gt; sent) const</td></tr>
-<tr class="separator:gabe053a255f9e46e6d9e8a3b112884b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4cfdba18f8cd2d137ba270fd39556ca8"><td class="memItemLeft" align="right" valign="top"><a id="ga4cfdba18f8cd2d137ba270fd39556ca8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::equal</b> (iterator_t&lt; Rng &gt; it0, iterator_t&lt; Rng &gt; it1, cursor_adaptor const &amp;other) const</td></tr>
-<tr class="separator:ga4cfdba18f8cd2d137ba270fd39556ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a4675eee34f60525dc03cb7d0fe3e52"><td class="memItemLeft" align="right" valign="top"><a id="ga7a4675eee34f60525dc03cb7d0fe3e52"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::cursor_adaptor</b> (<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a> const &amp;view) noexcept(std::is_nothrow_copy_constructible&lt; range_value_type_t&lt; Rng &gt;&gt;::value)</td></tr>
+<tr class="separator:ga7a4675eee34f60525dc03cb7d0fe3e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32cc0000eb946a4f8de9d43dfe3a05ed"><td class="memItemLeft" align="right" valign="top">constexpr range_difference_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga32cc0000eb946a4f8de9d43dfe3a05ed">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::distance_to</a> (iterator_t&lt; Rng &gt; const &amp;it, iterator_t&lt; Rng &gt; const &amp;other_it, cursor_adaptor const &amp;other) const noexcept(noexcept(other_it - it))</td></tr>
+<tr class="separator:ga32cc0000eb946a4f8de9d43dfe3a05ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab985223a90a644665ea2b2e7f62bc0d1"><td class="memItemLeft" align="right" valign="top"><a id="gab985223a90a644665ea2b2e7f62bc0d1"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::sentinel_adaptor::empty</b> (iterator_t&lt; Rng &gt; const &amp;it, cursor_adaptor const &amp;, sentinel_t&lt; Rng &gt; const &amp;sent) noexcept(noexcept(decltype(it==sent)(it==sent)))</td></tr>
+<tr class="separator:gab985223a90a644665ea2b2e7f62bc0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafde1fc2968ed1c0a30146a7231bb64fc"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gafde1fc2968ed1c0a30146a7231bb64fc">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::equal</a> (iterator_t&lt; Rng &gt; const &amp;it0, iterator_t&lt; Rng &gt; const &amp;it1, cursor_adaptor const &amp;other) const noexcept(noexcept(it0==it1))</td></tr>
+<tr class="separator:gafde1fc2968ed1c0a30146a7231bb64fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0933f8e94c22c3f5a58e83c66d7d39e8"><td class="memItemLeft" align="right" valign="top"><a id="ga0933f8e94c22c3f5a58e83c66d7d39e8"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::generate_view</b> (G g)</td></tr>
 <tr class="separator:ga0933f8e94c22c3f5a58e83c66d7d39e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaff3cbf5bb76db71f5385b2764aadf83e"><td class="memItemLeft" align="right" valign="top"><a id="gaff3cbf5bb76db71f5385b2764aadf83e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::intersperse_view</b> (Rng rng, range_value_type_t&lt; Rng &gt; val)</td></tr>
-<tr class="separator:gaff3cbf5bb76db71f5385b2764aadf83e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac470a62163cb57ace02a4b6de3ef37ba"><td class="memItemLeft" align="right" valign="top"><a id="gac470a62163cb57ace02a4b6de3ef37ba"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::intersperse_view</b> (Rng rng, range_value_type_t&lt; Rng &gt; val) noexcept(std::is_nothrow_constructible&lt; typename intersperse_view::view_adaptor, Rng &gt;::value &amp;&amp;std::is_nothrow_move_constructible&lt; range_value_type_t&lt; Rng &gt;&gt;::value)</td></tr>
+<tr class="separator:gac470a62163cb57ace02a4b6de3ef37ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga912068fac355bf26524a0eefd8175634"><td class="memItemLeft" align="right" valign="top"><a id="ga912068fac355bf26524a0eefd8175634"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::view::linear_distribute_view&lt; T &gt;::linear_distribute_view</b> (T from, T to__, std::ptrdiff_t n) noexcept</td></tr>
 <tr class="separator:ga912068fac355bf26524a0eefd8175634"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga79ca54c01fec2d7f7c046d32e769b746"><td class="memItemLeft" align="right" valign="top"><a id="ga79ca54c01fec2d7f7c046d32e769b746"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor::next</b> ()</td></tr>
 <tr class="separator:ga79ca54c01fec2d7f7c046d32e769b746"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae212d55aa264c8aa5a4d7a39246977c6"><td class="memItemLeft" align="right" valign="top"><a id="gae212d55aa264c8aa5a4d7a39246977c6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::next</b> (iterator_t&lt; Rng &gt; &amp;it)</td></tr>
-<tr class="separator:gae212d55aa264c8aa5a4d7a39246977c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab326de459e524c4808c26b4f89107d08"><td class="memItemLeft" align="right" valign="top"><a id="gab326de459e524c4808c26b4f89107d08"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::next</b> (iterator_t&lt; Rng &gt; &amp;it) noexcept(noexcept(++it))</td></tr>
+<tr class="separator:gab326de459e524c4808c26b4f89107d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga96596e78df2a3810a3cf10a089cd0c02"><td class="memTemplParams" colspan="2"><a id="ga96596e78df2a3810a3cf10a089cd0c02"></a>
 template&lt;typename Fun &gt; </td></tr>
 <tr class="memitem:ga96596e78df2a3810a3cf10a089cd0c02"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&lt; Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::make_view_fn::operator()</b> (Fun fun) const</td></tr>
@@ -359,23 +359,25 @@ template&lt;typename Rng , typename... Rest, requires  = (ViewConcept&lt;Rng, Re
 template&lt;typename... Ts, typename V  = View&gt; </td></tr>
 <tr class="memitem:gaa5fcb86a2f2c0d3bc725d7ff23e53235"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::view&lt; View &gt;::operator()</b> (Ts &amp;&amp;... ts) const -&gt; decltype(make_view(<a class="el" href="structranges_1_1v3_1_1view_1_1view__access_1_1impl.html">view_access::impl</a>&lt; V &gt;::bind(view_, static_cast&lt; Ts &amp;&amp;&gt;(ts)...)))</td></tr>
 <tr class="separator:gaa5fcb86a2f2c0d3bc725d7ff23e53235"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab4a87026f78794a7e87050684db49364"><td class="memTemplParams" colspan="2"><a id="gab4a87026f78794a7e87050684db49364"></a>
-template&lt;typename Rng , requires  = (Concept&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:gab4a87026f78794a7e87050684db49364"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::intersperse_fn::operator()</b> (Rng &amp;&amp;rng, range_value_type_t&lt; Rng &gt; val) const</td></tr>
-<tr class="separator:gab4a87026f78794a7e87050684db49364"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga31fc7ebc5dc312ddb9132f3476125b8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga31fc7ebc5dc312ddb9132f3476125b8e">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::prev</a> (iterator_t&lt; Rng &gt; &amp;it)</td></tr>
-<tr class="separator:ga31fc7ebc5dc312ddb9132f3476125b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3dc0c20fead9b03363b91ee235842126"><td class="memTemplParams" colspan="2"><a id="ga3dc0c20fead9b03363b91ee235842126"></a>
+template&lt;typename Rng , requires  = (Constraint&lt;Rng&gt;())&gt; </td></tr>
+<tr class="memitem:ga3dc0c20fead9b03363b91ee235842126"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::intersperse_fn::operator()</b> (Rng &amp;&amp;rng, range_value_type_t&lt; Rng &gt; val) const noexcept(noexcept(decltype(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng)), std::move(val)})(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;{all(static_cast&lt; Rng &amp;&amp;&gt;(rng)), std::move(val)}))) -&gt; decltype(<a class="el" href="structranges_1_1v3_1_1intersperse__view.html">intersperse_view</a>&lt; all_t&lt; Rng &gt;&gt;</td></tr>
+<tr class="separator:ga3dc0c20fead9b03363b91ee235842126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeda943b575b98a90bf9258883d1f085f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaeda943b575b98a90bf9258883d1f085f">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::prev</a> (iterator_t&lt; Rng &gt; &amp;it) noexcept(noexcept(--it))</td></tr>
+<tr class="separator:gaeda943b575b98a90bf9258883d1f085f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2a43760d577464a57f5ce77146d041d3"><td class="memItemLeft" align="right" valign="top"><a id="ga2a43760d577464a57f5ce77146d041d3"></a>
 result_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor::read</b> () const</td></tr>
 <tr class="separator:ga2a43760d577464a57f5ce77146d041d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga842586135e02204e8cbed8fe633723d8"><td class="memItemLeft" align="right" valign="top"><a id="ga842586135e02204e8cbed8fe633723d8"></a>
-range_value_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::read</b> (iterator_t&lt; Rng &gt; it) const</td></tr>
-<tr class="separator:ga842586135e02204e8cbed8fe633723d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0a6d6177dc364a55c6f3bdc935e6209a"><td class="memItemLeft" align="right" valign="top"><a id="ga0a6d6177dc364a55c6f3bdc935e6209a"></a>
+constexpr range_value_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::read</b> (iterator_t&lt; Rng &gt; const &amp;it) const noexcept(noexcept(range_value_type_t&lt; Rng &gt;(*it)) &amp;&amp;std::is_nothrow_copy_constructible&lt; range_value_type_t&lt; Rng &gt;&gt;::value)</td></tr>
+<tr class="separator:ga0a6d6177dc364a55c6f3bdc935e6209a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b3419fe9911627120a4f0935a7acaf2"><td class="memItemLeft" align="right" valign="top">constexpr range_size_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga4b3419fe9911627120a4f0935a7acaf2">ranges::v3::intersperse_view&lt; Rng &gt;::size</a> () const noexcept(noexcept(ranges::size(std::declval&lt; Rng const &amp;&gt;())))</td></tr>
+<tr class="separator:ga4b3419fe9911627120a4f0935a7acaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6fa34000f3af531d3f5b58b2a86628f5"><td class="memItemLeft" align="right" valign="top">range_size_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6fa34000f3af531d3f5b58b2a86628f5">ranges::v3::intersperse_view&lt; Rng &gt;::size</a> () noexcept(noexcept(ranges::size(std::declval&lt; Rng &amp;&gt;())))</td></tr>
+<tr class="separator:ga6fa34000f3af531d3f5b58b2a86628f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga92bc7f72baee879a5530869aeb30215b"><td class="memItemLeft" align="right" valign="top"><a id="ga92bc7f72baee879a5530869aeb30215b"></a>
 constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::view::linear_distribute_view&lt; T &gt;::size</b> () const noexcept</td></tr>
 <tr class="separator:ga92bc7f72baee879a5530869aeb30215b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga57058febd95be101173859e51ec80c63"><td class="memItemLeft" align="right" valign="top">range_size_type_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga57058febd95be101173859e51ec80c63">ranges::v3::intersperse_view&lt; Rng &gt;::size</a> () const</td></tr>
-<tr class="separator:ga57058febd95be101173859e51ec80c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3b6f0165030d33f9b4e032a90453e181"><td class="memItemLeft" align="right" valign="top"><a id="ga3b6f0165030d33f9b4e032a90453e181"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::view::view&lt; View &gt;::view</b> (<a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">View</a> a)</td></tr>
 <tr class="separator:ga3b6f0165030d33f9b4e032a90453e181"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -522,6 +524,9 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&
 <tr class="memitem:gad45968db49aeb62b063c1d3930c7823b"><td class="memItemLeft" align="right" valign="top"><a id="gad45968db49aeb62b063c1d3930c7823b"></a>
 constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&lt; <a class="el" href="structranges_1_1v3_1_1view_1_1set__union__fn.html">set_union_fn</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>set_union</b> {}</td></tr>
 <tr class="separator:gad45968db49aeb62b063c1d3930c7823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga36f11014145a8a566055713a11a30071"><td class="memItemLeft" align="right" valign="top"><a id="ga36f11014145a8a566055713a11a30071"></a>
+constexpr shared_fn&#160;</td><td class="memItemRight" valign="bottom"><b>shared</b> {}</td></tr>
+<tr class="separator:ga36f11014145a8a566055713a11a30071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa83e29f21f6c87865dbe7738bbc55ead"><td class="memItemLeft" align="right" valign="top"><a id="gaa83e29f21f6c87865dbe7738bbc55ead"></a>
 constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1single__fn.html">single_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>single</b> {}</td></tr>
 <tr class="separator:gaa83e29f21f6c87865dbe7738bbc55ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -581,13 +586,16 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1zip__with__fn.html">
 <tr class="separator:ga01ed77dc8b1bbb9db8f96f3a19fa8c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gadc4b424b7e387ae26c0e07b65d10592b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadc4b424b7e387ae26c0e07b65d10592b">&#9670;&nbsp;</a></span>advance()</h2>
+<a id="ga59cb9288269faf247174930e0e349478"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga59cb9288269faf247174930e0e349478">&#9670;&nbsp;</a></span>advance()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::cursor_adaptor::advance </td>
@@ -607,33 +615,41 @@ template&lt;typename Rng &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
 <dl class="section pre"><dt>Precondition</dt><dd>RandomAccessRange&lt;Rng&gt;() </dd></dl>
 
-<p class="reference">References <a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a>, and <a class="el" href="structranges_1_1v3_1_1view__interface.html#aa2935e0995569e1163d5447f2e012124">ranges::v3::view_interface&lt; Derived, Cardinality &gt;::empty()</a>.</p>
+<p class="reference">References <a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a>, and <a class="el" href="structranges_1_1v3_1_1view__interface.html#a4cbccea8eefcd83a72fa96963471bfba">ranges::v3::view_interface&lt; Derived, Cardinality &gt;::empty()</a>.</p>
 
 </div>
 </div>
-<a id="ga6c0504e4d48f1ea8c982c727319b8a4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6c0504e4d48f1ea8c982c727319b8a4c">&#9670;&nbsp;</a></span>distance_to()</h2>
+<a id="ga32cc0000eb946a4f8de9d43dfe3a05ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga32cc0000eb946a4f8de9d43dfe3a05ed">&#9670;&nbsp;</a></span>distance_to()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">range_difference_type_t&lt;Rng&gt; <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::cursor_adaptor::distance_to </td>
+          <td class="memname">constexpr range_difference_type_t&lt;Rng&gt; <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::cursor_adaptor::distance_to </td>
           <td>(</td>
-          <td class="paramtype">iterator_t&lt; Rng &gt;&#160;</td>
+          <td class="paramtype">iterator_t&lt; Rng &gt; const &amp;&#160;</td>
           <td class="paramname"><em>it</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">iterator_t&lt; Rng &gt;&#160;</td>
+          <td class="paramtype">iterator_t&lt; Rng &gt; const &amp;&#160;</td>
           <td class="paramname"><em>other_it</em>, </td>
         </tr>
         <tr>
@@ -648,6 +664,11 @@ template&lt;typename Rng &gt; </div>
           <td></td><td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
@@ -655,13 +676,65 @@ template&lt;typename Rng &gt; </div>
 
 </div>
 </div>
-<a id="ga31fc7ebc5dc312ddb9132f3476125b8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga31fc7ebc5dc312ddb9132f3476125b8e">&#9670;&nbsp;</a></span>prev()</h2>
+<a id="gafde1fc2968ed1c0a30146a7231bb64fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafde1fc2968ed1c0a30146a7231bb64fc">&#9670;&nbsp;</a></span>equal()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::cursor_adaptor::equal </td>
+          <td>(</td>
+          <td class="paramtype">iterator_t&lt; Rng &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>it0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">iterator_t&lt; Rng &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>it1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cursor_adaptor const &amp;&#160;</td>
+          <td class="paramname"><em>other</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
+<dl class="section pre"><dt>Precondition</dt><dd>Sentinel&lt;iterator_t&lt;Rng&gt; iterator_t&lt;Rng&gt;&gt;()) </dd></dl>
+
+<p class="reference">References <a class="el" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">ranges::v3::next</a>.</p>
+
+</div>
+</div>
+<a id="gaeda943b575b98a90bf9258883d1f085f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeda943b575b98a90bf9258883d1f085f">&#9670;&nbsp;</a></span>prev()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::cursor_adaptor::prev </td>
@@ -671,6 +744,11 @@ template&lt;typename Rng &gt; </div>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
@@ -678,25 +756,65 @@ template&lt;typename Rng &gt; </div>
 
 </div>
 </div>
-<a id="ga57058febd95be101173859e51ec80c63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga57058febd95be101173859e51ec80c63">&#9670;&nbsp;</a></span>size()</h2>
+<a id="ga4b3419fe9911627120a4f0935a7acaf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4b3419fe9911627120a4f0935a7acaf2">&#9670;&nbsp;</a></span>size() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">range_size_type_t&lt;Rng&gt; <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::size </td>
+          <td class="memname">constexpr range_size_type_t&lt;Rng&gt; <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::size </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
-<dl class="section pre"><dt>Precondition</dt><dd>SizedRange&lt;Rng&gt;() </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>SizedRange&lt;Rng const&gt;() </dd></dl>
+
+</div>
+</div>
+<a id="ga6fa34000f3af531d3f5b58b2a86628f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6fa34000f3af531d3f5b58b2a86628f5">&#9670;&nbsp;</a></span>size() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">range_size_type_t&lt;Rng&gt; <a class="el" href="structranges_1_1v3_1_1intersperse__view.html">ranges::v3::intersperse_view</a>&lt; Rng &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="intersperse_8hpp.html">range/v3/view/intersperse.hpp</a>&gt;</code></p>
+<dl class="section pre"><dt>Precondition</dt><dd>!SizedRange&lt;Rng const&gt;=""&gt;() &amp;&amp; SizedRange&lt;Rng&gt;() </dd></dl>
+
+<p class="reference">References <a class="el" href="structranges_1_1v3_1_1view__facade.html#a7277f3974b58fdb75804d833aa1e000f">ranges::v3::view_facade&lt; Derived, Cardinality &gt;::begin()</a>, <a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a>, and <a class="el" href="group__group-core.html#ga6e1ed0455c69f1a3536870eb05141260">ranges::v3::end</a>.</p>
 
 </div>
 </div>
