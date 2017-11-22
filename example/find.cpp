@@ -8,7 +8,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-// 
+//
 
 ///[find]
 // vector:   *i: 6
@@ -30,7 +30,6 @@
 #include <iostream>
 using std::cout;
 
-auto print = [] (int i) { cout << i << " "; };
 auto is_six = [](int i) -> bool { return i == 6; };
 
 int main() {
@@ -44,26 +43,26 @@ int main() {
   }
   {
     auto i = ranges::find( v, 10 ); //1 2 3 4 5 6
-    if (i == ranges::end(v) ) { 
-      cout << "didn't find 10" << "\n"; 
-    } 
+    if (i == ranges::end(v) ) {
+      cout << "didn't find 10" << "\n";
+    }
   }
   {
-    auto i = ranges::find_if( v, is_six ); 
-    if (i != ranges::end(v) ) { 
+    auto i = ranges::find_if( v, is_six );
+    if (i != ranges::end(v) ) {
       cout << "*i: " << *i << "\n";
     }
   }
   {
-    auto i = ranges::find_if_not( v, is_six ); 
-    if (i != ranges::end(v) ) { 
+    auto i = ranges::find_if_not( v, is_six );
+    if (i != ranges::end(v) ) {
       cout << "*i: " << *i << "\n";
     }
   }
   {
     auto i = ranges::find( v, 6 );
     i++;
-    if (i != ranges::end(v) ) { 
+    if (i != ranges::end(v) ) {
       cout << "*i after ++ (2 expected): " << *i;
     }
   }
@@ -72,7 +71,7 @@ int main() {
 
   std::array<int, 6> a { 6, 2, 3, 4, 5, 1 };
   {
-    auto i = ranges::find( a, 6 ); 
+    auto i = ranges::find( a, 6 );
     if (i != ranges::end(a)) {
       cout << "*i: " << *i;
     }
@@ -81,7 +80,7 @@ int main() {
 
   std::list<int> li { 6, 2, 3, 4, 5, 1 };
   {
-    auto i = ranges::find( li, 6 ); 
+    auto i = ranges::find( li, 6 );
     if (i != ranges::end(li)) {
       cout << "*i: " << *i;
     }
@@ -97,10 +96,10 @@ int main() {
     }
   }
   cout << "\n" << "deque:    ";
-  
+
   std::deque<int> d { 6 , 2, 3, 4, 5, 1 };
   {
-    auto i = ranges::find( d, 6 ); 
+    auto i = ranges::find( d, 6 );
     if (i != ranges::end(d)) {
       cout << "*i: " << *i;
     }

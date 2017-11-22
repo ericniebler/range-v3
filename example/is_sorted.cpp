@@ -8,7 +8,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-// 
+//
 
 ///[is_sorted]
 // Check if a container is sorted
@@ -27,7 +27,7 @@ int main() {
   cout << "vector:   ";
   std::vector<int> v { 1, 2, 3, 4, 5, 6 };
   if (ranges::is_sorted( v )) { cout << "true\n"; };
-  
+
   cout << "array:    ";
   std::array<int, 6> a { 6, 2, 3, 4, 5, 6 };
   if (!ranges::is_sorted( a )) { cout << "false\n"; };

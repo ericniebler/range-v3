@@ -9,17 +9,17 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 // Project home: https://github.com/ericniebler/range-v3
-// 
+//
 
 ///[for_each_assoc]
 // for_each with associative containers
 // output
-//set:           1 2 3 4 5 6 
-//map:           one:1 three:3 two:2 
-//unordered_map: three:3 one:1 two:2 
-//unordered_set: 6 5 4 3 2 1 
+//set:           1 2 3 4 5 6
+//map:           one:1 three:3 two:2
+//unordered_map: three:3 one:1 two:2
+//unordered_set: 6 5 4 3 2 1
 
-#include <range/v3/algorithm/for_each.hpp>  
+#include <range/v3/algorithm/for_each.hpp>
 #include <iostream>
 #include <string>
 #include <set>
@@ -34,7 +34,7 @@ auto print =  [] (int i) { cout << i << " "; };
 auto printm = [] (std::pair<string, int> p) { cout << p.first << ":" << p.second << " "; };
 
 int main() {
-  
+
   cout  << "set:           ";
   std::set<int> si { 1, 2, 3, 4, 5, 6 };
   ranges::for_each( si, print );
