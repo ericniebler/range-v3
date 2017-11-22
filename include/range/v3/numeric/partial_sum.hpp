@@ -94,7 +94,7 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
-                return (*this)(std::move(begin), std::move(end), std::move(result), 
+                return (*this)(std::move(begin), std::move(end), std::move(result),
                                unreachable{}, std::move(bop), std::move(proj));
             }
 

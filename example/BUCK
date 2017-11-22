@@ -1,5 +1,5 @@
 cxx_binary(
-  name = 'comprehensions', 
+  name = 'comprehensions',
   srcs = [
     'comprehensions.cpp',
   ],
@@ -12,7 +12,7 @@ cxx_binary(
 )
 
 cxx_binary(
-  name = 'fibonacci', 
+  name = 'fibonacci',
   srcs = [
     'fibonacci.cpp',
   ],
