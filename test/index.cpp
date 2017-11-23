@@ -58,7 +58,7 @@ int main()
         CHECK(viv.at(1) == 2);
         CHECK(viv.at(2) == 3);
         CHECK(viv.at(3) == 4);
-        
+
         try
         {
             viv.at(4);
@@ -86,7 +86,7 @@ int main()
         CHECK(cviv.at(1) == 2);
         CHECK(cviv.at(2) == 3);
         CHECK(cviv.at(3) == 4);
-        
+
         try
         {
             cviv.at(4);
@@ -119,7 +119,7 @@ int main()
     }
 
     #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
-    {  
+    {
         constexpr int vi[4] = {1, 2, 3, 4};
         constexpr int vi0 = ranges::index(vi, 0);
         static_assert(vi0 == 1, "");

@@ -82,7 +82,7 @@ SOFTWARE.
 
 ==============================================================================
 
-Copyright (c) 2009-2014 by the contributors listed in CREDITS.TXT 
+Copyright (c) 2009-2014 by the contributors listed in CREDITS.TXT
   http://llvm.org/svn/llvm-project/libcxx/trunk/CREDITS.TXT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
