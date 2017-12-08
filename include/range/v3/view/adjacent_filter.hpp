@@ -35,9 +35,13 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Pred>
+            using AdjacentFilterConstraint2 =
+                IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>;
+
+            template<typename Rng, typename Pred>
             using AdjacentFilterConstraint = meta::and_<
                 ForwardRange<Rng>,
-                IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>>;
+                meta::defer<AdjacentFilterConstraint2, Rng, Pred>>;
         }
         /// \endcond
 

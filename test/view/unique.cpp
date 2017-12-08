@@ -14,6 +14,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/view/delimit.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/unique.hpp>
@@ -85,6 +86,21 @@ int main()
         models<concepts::BidirectionalView>(aux::copy(fs));
         ::check_equal(fs, {"hello","bye"});
         ::check_equal(view::reverse(fs), {"bye","hello"});
+    }
+
+    {
+        int const rgi[] = {1, 1, 1, 2, 3, 4, 4, 42, 7};
+        auto rng0 = view::delimit(rgi, 42) | view::reverse;
+        // rng0 is mutable-only...
+        CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
+        CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
+        // ...and composable with unique_view
+        auto rng = rng0 | view::unique;
+        models<concepts::BidirectionalView>(aux::copy(rng));
+        models_not<concepts::RandomAccessRange>(rng);
+        models<concepts::BoundedRange>(rng);
+        models_not<concepts::SizedRange>(rng);
+        ::check_equal(rng, {4, 3, 2, 1});
     }
 
     return test_result();
