@@ -417,7 +417,8 @@ namespace ranges
             {
                 return view_adaptor::begin_cursor_(derived());
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             RANGES_CXX14_CONSTEXPR auto begin_cursor() const
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D const &>()))
             {
@@ -440,7 +441,8 @@ namespace ranges
             {
                 return view_adaptor::end_cursor_(derived());
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             RANGES_CXX14_CONSTEXPR auto end_cursor() const
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D const &>()))
             {
