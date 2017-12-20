@@ -96,7 +96,7 @@ int main()
     {
         using P = std::pair<int,std::string>;
         P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-        auto i = ranges::replace_if(ranges::view::all(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
+        auto i = ranges::replace_if(ranges::make_iterator_range(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
             &std::pair<int,std::string>::first);
         CHECK(ia[0] == P{0,"0"});
         CHECK(ia[1] == P{1,"1"});

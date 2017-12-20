@@ -32,7 +32,7 @@ int main()
     models<concepts::SizedView>(aux::copy(rng0));
     models<concepts::RandomAccessIterator>(begin(rng0));
     ::check_equal(rng0, {0, 1, 2, 3, 4, 5});
-    CHECK(size(rng0) == 6u);
+    CHECK(size(rng0) == 6);
 
     auto rng0b = rgi | view::take(20);
     has_type<int &>(*begin(rng0b));
@@ -40,7 +40,7 @@ int main()
     models<concepts::SizedView>(aux::copy(rng0b));
     models<concepts::RandomAccessIterator>(begin(rng0b));
     ::check_equal(rng0b, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-    CHECK(size(rng0b) == 11u);
+    CHECK(size(rng0b) == 11);
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));

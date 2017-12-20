@@ -17,14 +17,12 @@
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
-struct empty
-{};
+using namespace ranges;
 
 int main()
 {
     std::vector<int> vi{1,2,3,4};
 
-    using namespace ranges;
     iterator_range<std::vector<int>::iterator> r0 {vi.begin(), vi.end()};
     ::models<concepts::SizedView>(aux::copy(r0));
     CHECK(r0.size() == 4u);

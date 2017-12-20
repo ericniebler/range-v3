@@ -74,7 +74,7 @@ namespace ranges
             };
 
             template<typename T>
-            using PairLike = meta::and_<
+            using HasFirstAndSecond = meta::and_<
                 Invocable<get_first const&, T>, Invocable<get_second const&, T>>;
         }
         /// \endcond
@@ -88,7 +88,7 @@ namespace ranges
                 template<typename Rng>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    detail::PairLike<range_reference_t<Rng>>>;
+                    detail::HasFirstAndSecond<range_reference_t<Rng>>>;
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
@@ -103,7 +103,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The argument of view::keys must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(detail::HasFirstAndSecond<range_reference_t<Rng>>(),
                         "The value type of the range passed to view::keys must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }
@@ -115,7 +115,7 @@ namespace ranges
                 template<typename Rng>
                 using Concept = meta::and_<
                     InputRange<Rng>,
-                    detail::PairLike<range_reference_t<Rng>>>;
+                    detail::HasFirstAndSecond<range_reference_t<Rng>>>;
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
@@ -130,7 +130,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The argument of view::values must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(detail::HasFirstAndSecond<range_reference_t<Rng>>(),
                         "The value type of the range passed to view::values must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }

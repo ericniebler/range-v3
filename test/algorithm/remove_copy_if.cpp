@@ -157,7 +157,7 @@ int main()
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr unsigned sa = ranges::size(ia);
         S ib[sa];
-        auto r = ranges::remove_copy_if(ranges::view::all(ia), ib, [](int i){return i == 2;}, &S::i);
+        auto r = ranges::remove_copy_if(ranges::make_iterator_range(ia), ib, [](int i){return i == 2;}, &S::i);
         CHECK(r.first.get_unsafe() == ia + sa);
         CHECK(r.second == ib + sa-3);
         CHECK(ib[0].i == 0);

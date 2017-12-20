@@ -21,7 +21,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -29,6 +28,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/drop_exactly.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -208,7 +208,7 @@ namespace ranges
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
-                static iterator_range<iterator_t<Rng>>
+                static subrange<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     concepts::RandomAccessRange *, concepts::BoundedRange * = nullptr)
                 {

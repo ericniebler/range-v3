@@ -19,7 +19,6 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
@@ -31,8 +30,9 @@
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/view/view.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -85,11 +85,11 @@ namespace ranges
                 {}
                 RANGES_CXX14_CONSTEXPR
                 auto read(iterator_t<Rng> it) const ->
-                    decltype(view::take(make_iterator_range(std::move(it), end_), n_))
+                    decltype(view::take(make_subrange(std::move(it), end_), n_))
                 {
                     RANGES_EXPECT(it != end_);
                     RANGES_EXPECT(0 == offset());
-                    return view::take(make_iterator_range(std::move(it), end_), n_);
+                    return view::take(make_subrange(std::move(it), end_), n_);
                 }
                 RANGES_CXX14_CONSTEXPR
                 void next(iterator_t<Rng> &it)

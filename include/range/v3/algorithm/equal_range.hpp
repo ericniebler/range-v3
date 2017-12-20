@@ -14,18 +14,18 @@
 #ifndef RANGES_V3_ALGORITHM_EQUAL_RANGE_HPP
 #define RANGES_V3_ALGORITHM_EQUAL_RANGE_HPP
 
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/aux_/equal_range_n.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -39,7 +39,7 @@ namespace ranges
                 typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && !SizedSentinel<S, I>() &&
                     BinarySearchable<I, V, C, P>())>
-            iterator_range<I>
+            subrange<I>
             operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
             {
                 // Probe exponentially for either end-of-range, an iterator that
@@ -86,7 +86,7 @@ namespace ranges
             template<typename I, typename S, typename V,
                 typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(SizedSentinel<S, I>() && BinarySearchable<I, V, C, P>())>
-            iterator_range<I>
+            subrange<I>
             operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
             {
                 auto const len = distance(begin, end);
@@ -98,7 +98,7 @@ namespace ranges
                 typename P = ident, typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && !SizedRange<Rng>() &&
                     BinarySearchable<I, V, C, P>())>
-            meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
+            safe_subrange_t<Rng>
             operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
@@ -107,7 +107,7 @@ namespace ranges
             template<typename Rng, typename V, typename C = ordered_less,
                 typename P = ident, typename I = iterator_t<Rng>,
                 CONCEPT_REQUIRES_(SizedRange<Rng>() && BinarySearchable<I, V, C, P>())>
-            meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
+            safe_subrange_t<Rng>
             operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
             {
                 auto const len = distance(rng);

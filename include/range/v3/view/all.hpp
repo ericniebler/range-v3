@@ -93,24 +93,10 @@ namespace ranges
             {
                 return ranges::data(*rng_);
             }
-
-            template<class I, class S,
-                CONCEPT_REQUIRES_(ConvertibleTo<iterator_t<Rng>, I>() &&
-                    ConvertibleTo<sentinel_t<Rng>, S>())>
-            operator iterator_range<I, S>() const
-            {
-                return iterator_range<I, S>{begin(), end()};
-            }
-
-            template<class I, class S,
-                CONCEPT_REQUIRES_(SizedRange<Rng>() &&
-                    ConvertibleTo<iterator_t<Rng>, I>() &&
-                    ConvertibleTo<sentinel_t<Rng>, S>())>
-            operator sized_iterator_range<I, S>() const
-            {
-                return sized_iterator_range<I, S>{begin(), end(), size()};
-            }
         };
+
+        template<typename R>
+        struct is_referenceable_range<ref_view<R>> : std::true_type {};
 
         namespace view
         {
@@ -125,16 +111,16 @@ namespace ranges
                     return static_cast<T &&>(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(View<T>())>
-                constexpr T operator()(std::reference_wrapper<T> ref) const
-                    noexcept(std::is_nothrow_constructible<T, T &>::value)
+                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                constexpr uncvref_t<T> operator()(std::reference_wrapper<T> ref) const
+                    noexcept(std::is_nothrow_constructible<uncvref_t<T>, T &>::value)
                 {
                     return ref.get();
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(View<T>())>
-                constexpr T operator()(ranges::reference_wrapper<T> ref) const
-                    noexcept(std::is_nothrow_constructible<T, T &>::value)
+                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                constexpr uncvref_t<T> operator()(ranges::reference_wrapper<T> ref) const
+                    noexcept(std::is_nothrow_constructible<uncvref_t<T>, T &>::value)
                 {
                     return ref.get();
                 }
@@ -150,14 +136,14 @@ namespace ranges
                     return ref_view<meta::_t<std::remove_reference<T>>>{t};
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Range<T>() && !View<T>())>
+                    CONCEPT_REQUIRES_(Range<T>() && !View<uncvref_t<T>>())>
                 constexpr ref_view<T>
                 operator()(std::reference_wrapper<T> ref) const noexcept
                 {
                     return ref_view<T>(ref.get());
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(Range<T>() && !View<T>())>
+                    CONCEPT_REQUIRES_(Range<T>() && !View<uncvref_t<T>>())>
                 constexpr ref_view<T>
                 operator()(ranges::reference_wrapper<T> ref) const noexcept
                 {

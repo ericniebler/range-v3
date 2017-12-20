@@ -63,14 +63,14 @@ int main()
     CHECK(ranges::upper_bound(a, 1, less(), &std::pair<int, int>::first) == &a[4]);
     CHECK(ranges::upper_bound(c, 1, less(), &std::pair<int, int>::first) == &c[4]);
 
-    CHECK(ranges::upper_bound(ranges::view::all(a), a[2]).get_unsafe() == &a[3]);
-    CHECK(ranges::upper_bound(ranges::view::all(c), c[3]).get_unsafe() == &c[4]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(a), a[2]).get_unsafe() == &a[3]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(c), c[3]).get_unsafe() == &c[4]);
 
-    CHECK(ranges::upper_bound(ranges::view::all(a), a[4], less()).get_unsafe() == &a[5]);
-    CHECK(ranges::upper_bound(ranges::view::all(c), c[5], less()).get_unsafe() == &c[6]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(a), a[4], less()).get_unsafe() == &a[5]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(c), c[5], less()).get_unsafe() == &c[6]);
 
-    CHECK(ranges::upper_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first).get_unsafe() == &a[4]);
-    CHECK(ranges::upper_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first).get_unsafe() == &c[4]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(a), 1, less(), &std::pair<int, int>::first).get_unsafe() == &a[4]);
+    CHECK(ranges::upper_bound(ranges::make_iterator_range(c), 1, less(), &std::pair<int, int>::first).get_unsafe() == &c[4]);
 
     return test_result();
 }

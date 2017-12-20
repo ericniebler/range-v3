@@ -274,6 +274,10 @@ namespace ranges
         template<typename T>
         using SizedRange = concepts::models<concepts::SizedRange, T>;
 
+        template<typename Rng>
+        using ReferenceableRange =
+            meta::and_<Range<Rng>, is_referenceable_range<Rng>>;
+
         template<typename T>
         using View = concepts::models<concepts::View, T>;
 

@@ -115,7 +115,7 @@ void test_rvalue()
     const S ia[] = {S{1}, S{2}, S{3}, S{4}, S{6}, S{8}, S{5}, S{7}};
     S r1[10] = {S{0}};
     S r2[10] = {S{0}};
-    auto p = ranges::partition_copy(ranges::view::all(ia), r1, r2, is_odd(), &S::i);
+    auto p = ranges::partition_copy(ranges::make_iterator_range(ia), r1, r2, is_odd(), &S::i);
     CHECK(std::get<0>(p).get_unsafe() == std::end(ia));
     CHECK(std::get<1>(p) == r1 + 4);
     CHECK(r1[0].i == 1);

@@ -203,7 +203,7 @@ int main()
     {
         int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
         int ie[] = {1, 2, 3};
-        CHECK(ranges::search(ranges::view::all(ib), ie).get_unsafe() == ib+4);
+        CHECK(ranges::search(ranges::make_iterator_range(ib), ie).get_unsafe() == ib+4);
     }
 
     return ::test_result();

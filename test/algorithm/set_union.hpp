@@ -264,14 +264,14 @@ int main()
         int ir[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 6};
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
-        auto res = ranges::set_union(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        auto res = ranges::set_union(ranges::make_iterator_range(ia), ranges::make_iterator_range(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK(std::get<0>(res).get_unsafe() == ranges::end(ia));
         CHECK(std::get<1>(res).get_unsafe() == ranges::end(ib));
         CHECK((std::get<2>(res) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, std::get<2>(res), ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
-        auto res2 = ranges::set_union(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
+        auto res2 = ranges::set_union(ranges::make_iterator_range(ib), ranges::make_iterator_range(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK(std::get<0>(res2).get_unsafe() == ranges::end(ib));
         CHECK(std::get<1>(res2).get_unsafe() == ranges::end(ia));
         CHECK((std::get<2>(res2) - ic) == sr);

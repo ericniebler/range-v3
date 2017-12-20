@@ -115,6 +115,9 @@ add_test(test.view.split, view.split)
 add_executable(view.stride stride.cpp)
 add_test(test.view.stride, view.stride)
 
+add_executable(view.subrange subrange.cpp)
+add_test(test.view.subrange view.subrange)
+
 add_executable(view.tail tail.cpp)
 add_test(test.view.tail, view.tail)
 

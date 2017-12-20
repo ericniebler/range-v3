@@ -305,7 +305,7 @@ int main()
     {
         int rgi[] = {0,1,2,3,4,5};
         int rgo[6] = {0};
-        auto r = ranges::rotate_copy(ranges::view::all(rgi), rgi+2, rgo);
+        auto r = ranges::rotate_copy(ranges::make_iterator_range(rgi), rgi+2, rgo);
         CHECK(r.first.get_unsafe() == ranges::end(rgi));
         CHECK(r.second == ranges::end(rgo));
         CHECK(rgo[0] == 2);
