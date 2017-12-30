@@ -38,25 +38,25 @@ int main() {
 
   std::vector<int> v { 6, 2, 6, 4, 6, 1 };
   {
-    auto i = ranges::find( v, 6 ); //1 2 3 4 5 6
-    cout << "*i: " << *i << "\n";
+    auto i = ranges::find( v, 6 ); // 1 2 3 4 5 6
+    cout << "*i: " << *i << '\n';
   }
   {
-    auto i = ranges::find( v, 10 ); //1 2 3 4 5 6
+    auto i = ranges::find( v, 10 ); // 1 2 3 4 5 6
     if (i == ranges::end(v) ) {
-      cout << "didn't find 10" << "\n";
+      cout << "didn't find 10\n";
     }
   }
   {
     auto i = ranges::find_if( v, is_six );
     if (i != ranges::end(v) ) {
-      cout << "*i: " << *i << "\n";
+      cout << "*i: " << *i << '\n';
     }
   }
   {
     auto i = ranges::find_if_not( v, is_six );
     if (i != ranges::end(v) ) {
-      cout << "*i: " << *i << "\n";
+      cout << "*i: " << *i << '\n';
     }
   }
   {
@@ -67,7 +67,7 @@ int main() {
     }
   }
 
-  cout << "\n" << "array:    ";
+  cout << "\narray:    ";
 
   std::array<int, 6> a { 6, 2, 3, 4, 5, 1 };
   {
@@ -76,7 +76,7 @@ int main() {
       cout << "*i: " << *i;
     }
   }
-  cout << "\n" << "list:     ";
+  cout << "\nlist:     ";
 
   std::list<int> li { 6, 2, 3, 4, 5, 1 };
   {
@@ -86,7 +86,7 @@ int main() {
     }
   }
 
-  cout << "\n" << "fwd_list: ";
+  cout << "\nfwd_list: ";
 
   std::forward_list<int> fl { 6, 2, 3, 4, 5, 1 };
   {
@@ -95,7 +95,7 @@ int main() {
       cout << "*i: " << *i;
     }
   }
-  cout << "\n" << "deque:    ";
+  cout << "\ndeque:    ";
 
   std::deque<int> d { 6 , 2, 3, 4, 5, 1 };
   {
@@ -104,6 +104,6 @@ int main() {
       cout << "*i: " << *i;
     }
   }
-  cout << "\n";
+  cout << '\n';
 }
 ///[find]

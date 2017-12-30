@@ -16,7 +16,7 @@
 // vector:   true
 // array:    false
 
-#include <range/v3/algorithm/is_sorted.hpp>   //specific includes
+#include <range/v3/algorithm/is_sorted.hpp>   // specific includes
 #include <vector>
 #include <array>
 #include <iostream>
@@ -24,13 +24,11 @@ using std::cout;
 
 int main() {
 
-  cout << "vector:   ";
+  cout << std::boolalpha;
   std::vector<int> v { 1, 2, 3, 4, 5, 6 };
-  if (ranges::is_sorted( v )) { cout << "true\n"; };
+  cout << "vector:   " << ranges::is_sorted( v ) << '\n';
 
-  cout << "array:    ";
   std::array<int, 6> a { 6, 2, 3, 4, 5, 6 };
-  if (!ranges::is_sorted( a )) { cout << "false\n"; };
+  cout << "array:    " << ranges::is_sorted( a ) << '\n';
 }
 ///[is_sorted]
-

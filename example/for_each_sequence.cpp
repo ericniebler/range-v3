@@ -11,15 +11,15 @@
 //
 
 ///[for_each_sequence]
-//Use the for_each to print from various containers
-//output
-//vector:   1 2 3 4 5 6
-//array:    1 2 3 4 5 6
-//list:     1 2 3 4 5 6
-//fwd_list: 1 2 3 4 5 6
-//deque:    1 2 3 4 5 6
+// Use the for_each to print from various containers
+// output
+// vector:   1 2 3 4 5 6
+// array:    1 2 3 4 5 6
+// list:     1 2 3 4 5 6
+// fwd_list: 1 2 3 4 5 6
+// deque:    1 2 3 4 5 6
 
-#include <range/v3/algorithm/for_each.hpp>   //specific includes
+#include <range/v3/algorithm/for_each.hpp>   // specific includes
 #include <vector>
 #include <deque>
 #include <list>
@@ -30,29 +30,29 @@
 #include <iostream>
 using std::cout;
 
-auto print = [] (int i) { cout << i << " "; };
+auto print = [] (int i) { cout << i << ' '; };
 
 int main() {
 
   cout  << "vector:   ";
   std::vector<int> v { 1, 2, 3, 4, 5, 6 };
-  ranges::for_each( v, print ); //1 2 3 4 5 6
+  ranges::for_each( v, print ); // 1 2 3 4 5 6
 
-  cout << "\n" << "array:    ";
+  cout << "\narray:    ";
   std::array<int, 6> a { 1, 2, 3, 4, 5, 6 };
   ranges::for_each( a, print );
 
-  cout << "\n" << "list:     ";
+  cout << "\nlist:     ";
   std::list<int> ll { 1, 2, 3, 4, 5, 6 };
   ranges::for_each( ll, print );
 
-  cout << "\n" << "fwd_list: ";
+  cout << "\nfwd_list: ";
   std::forward_list<int> fl { 1, 2, 3, 4, 5, 6 };
   ranges::for_each( fl, print );
 
-  cout << "\n" << "deque:    ";
+  cout << "\ndeque:    ";
   std::deque<int> d { 1, 2, 3, 4, 5, 6 };
   ranges::for_each( d, print );
-  cout << "\n";
+  cout << '\n';
 }
 ///[for_each_sequence]
