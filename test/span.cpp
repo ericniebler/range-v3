@@ -493,9 +493,11 @@ void test_case_copy_move_and_assignment()
 void test_case_class_template_argument_deduction()
 {
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+#if defined(__clang__) && __clang_major__ < 6
 // Workaround https://bugs.llvm.org/show_bug.cgi?id=33314
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
+#endif
     {
         int arr[] = {1, 2, 3, 4, 5};
         {
@@ -533,8 +535,10 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
             CONCEPT_ASSERT(std::is_same<span<int>, decltype(s)>::value);
         }
     }
+#if defined(__clang__) && __clang_major__ < 6
 RANGES_DIAGNOSTIC_POP
-#endif
+#endif // clang bug workaround
+#endif // use deduction guides
 }
 
 void test_case_first()

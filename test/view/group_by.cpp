@@ -93,7 +93,7 @@ int main()
         check_equal(*next(rng0.begin()), {3, 4, 5});
         check_equal(*next(rng0.begin(), 2), {6, 7, 8});
         check_equal(*next(rng0.begin(), 3), {9});
-        CHECK(distance(rng0) == 4);        
+        CHECK(distance(rng0) == 4);
     }
     return test_result();
 }
