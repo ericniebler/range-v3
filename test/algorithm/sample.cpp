@@ -1,6 +1,6 @@
 // Range v3 lbrary
 //
-//  Copyright Eric Niebler 2014
+//  Copyright Eric Niebler 2014-present
 //  Copyright Casey Carter 2016
 //
 //  Use, modification and distrbution is subject to the
