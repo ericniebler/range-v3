@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceRoot}/../range-build"
+    },
+    "tasks": [
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug ../range-v3",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "make -j8",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
