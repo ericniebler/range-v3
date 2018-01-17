@@ -35,8 +35,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename Gen,
-                    CONCEPT_REQUIRES_(UniformRandomNumberGenerator<Gen>())>
+                CONCEPT_template(typename Gen)(
+                    requires UniformRandomNumberGenerator<Gen>())
                 static auto bind(shuffle_fn shuffle, Gen && gen)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -61,8 +61,8 @@ namespace ranges
                 template<typename Rng, typename Gen>
                 using Concept = concepts::models<ConceptImpl, Rng, Gen>;
 
-                template<typename Rng, typename Gen,
-                    CONCEPT_REQUIRES_(Concept<Rng, Gen>())>
+                CONCEPT_template(typename Rng, typename Gen)(
+                    requires Concept<Rng, Gen>())
                 Rng operator()(Rng && rng, Gen && gen) const
                 {
                     ranges::shuffle(rng, static_cast<Gen&&>(gen));
@@ -70,8 +70,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Gen,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Gen>())>
+                CONCEPT_template(typename Rng, typename Gen)(
+                    requires !Concept<Rng, Gen>())
                 void operator()(Rng &&, Gen &&) const
                 {
                     CONCEPT_ASSERT_MSG(RandomAccessRange<Rng>(),

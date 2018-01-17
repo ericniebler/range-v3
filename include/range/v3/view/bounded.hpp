@@ -68,12 +68,14 @@ namespace ranges
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
+            CONCEPT_template(typename R = Rng const)(
+                requires Range<R &>())
             sentinel_t<R> end_(std::false_type) const
             {
                 return ranges::end(rng_);
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
+            CONCEPT_template(typename R = Rng const)(
+                requires Range<R &>())
             iterator_t<R> end_(std::true_type) const
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
@@ -106,12 +108,14 @@ namespace ranges
                 return ranges::size(rng_);
             }
 
-            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
+            CONCEPT_template(typename R = Rng const)(
+                requires Range<R &>())
             detail::bounded_iterator_t<R> begin() const
             {
                 return detail::bounded_iterator_t<R>{ranges::begin(rng_)};
             }
-            template<typename R = Rng const, CONCEPT_REQUIRES_(Range<R &>())>
+            CONCEPT_template(typename R = Rng const)(
+                requires Range<R &>())
             detail::bounded_iterator_t<R> end() const
             {
                 return detail::bounded_iterator_t<R>{end_(detail::RA_and_Sized<R>{})};
@@ -127,21 +131,21 @@ namespace ranges
         {
             struct bounded_fn
             {
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>() && !BoundedRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Range<Rng>() && !BoundedRange<Rng>())
                 bounded_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return bounded_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>() && BoundedRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Range<Rng>() && BoundedRange<Rng>())
                 all_t<Rng> operator()(Rng && rng) const
                 {
                     return all(static_cast<Rng&&>(rng));
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Range<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Range<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),

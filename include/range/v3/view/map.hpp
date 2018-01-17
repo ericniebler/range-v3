@@ -37,8 +37,8 @@ namespace ranges
                 return t;
             }
 
-            template<typename T,
-                CONCEPT_REQUIRES_(MoveConstructible<T>())>
+            CONCEPT_template(typename T)(
+                requires MoveConstructible<T>())
             RANGES_CXX14_CONSTEXPR T
             get_first_second_helper(T& t, std::false_type)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
@@ -90,15 +90,15 @@ namespace ranges
                     InputRange<Rng>,
                     detail::PairLike<range_reference_t<Rng>>>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Concept<Rng>())
                 keys_range_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return {all(static_cast<Rng&&>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Concept<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
@@ -117,15 +117,15 @@ namespace ranges
                     InputRange<Rng>,
                     detail::PairLike<range_reference_t<Rng>>>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Concept<Rng>())
                 values_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return {all(static_cast<Rng&&>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Concept<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

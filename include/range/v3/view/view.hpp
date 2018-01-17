@@ -86,8 +86,8 @@ namespace ranges
                 using ViewConcept = meta::and_<ViewableRange<Rng>, Invocable<View&, Rng, Rest...>>;
 
                 // Piping requires range arguments or lvalue containers.
-                template<typename Rng, typename Vw,
-                    CONCEPT_REQUIRES_(ViewConcept<Rng>())>
+                CONCEPT_template(typename Rng, typename Vw)(
+                    requires ViewConcept<Rng>())
                 static auto pipe(Rng && rng, Vw && v)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -96,8 +96,8 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
-                template<typename Rng, typename Vw,
-                    CONCEPT_REQUIRES_(!ViewConcept<Rng>())>
+                CONCEPT_template(typename Rng, typename Vw)(
+                    requires !ViewConcept<Rng>())
                 static void pipe(Rng &&, Vw &&)
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
@@ -119,8 +119,8 @@ namespace ranges
                 {}
 
                 // Calling directly requires View arguments or lvalue containers.
-                template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(ViewConcept<Rng, Rest...>())>
+                CONCEPT_template(typename Rng, typename...Rest)(
+                    requires ViewConcept<Rng, Rest...>())
                 auto operator()(Rng && rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (

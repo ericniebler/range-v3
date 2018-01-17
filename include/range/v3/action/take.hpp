@@ -36,7 +36,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires Integral<Int>())
                 static auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -60,8 +61,8 @@ namespace ranges
                 template<typename Rng, typename T>
                 using Concept = concepts::models<ConceptImpl, Rng, T>;
 
-                template<typename Rng, typename D = range_difference_type_t<Rng>,
-                    CONCEPT_REQUIRES_(Concept<Rng, D>())>
+                CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
+                    requires Concept<Rng, D>())
                 Rng operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
@@ -70,8 +71,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !Concept<Rng, T>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

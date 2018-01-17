@@ -32,9 +32,9 @@ namespace ranges
         /// @{
         struct any_of_fn
         {
-            template<typename I, typename S, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectPredicate<F, projected<I, P> >())>
+            CONCEPT_template(typename I, typename S, typename F, typename P = ident)(
+                requires InputIterator<I>() && Sentinel<S, I>() &&
+                    IndirectPredicate<F, projected<I, P> >())
             bool
             operator()(I first, S last, F pred, P proj = P{}) const
             {
@@ -44,9 +44,9 @@ namespace ranges
                 return false;
             }
 
-            template<typename Rng, typename F, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<F, projected<I, P> >())>
+            CONCEPT_template(typename Rng, typename F, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires InputRange<Rng>() && IndirectPredicate<F, projected<I, P> >())
             bool
             operator()(Rng &&rng, F pred, P proj = P{}) const
             {

@@ -35,7 +35,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Range<C>())>
+                CONCEPT_template(typename C, typename P = ident)(
+                    requires !Range<C>())
                 static auto bind(sort_fn sort, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -58,8 +59,8 @@ namespace ranges
                 template<typename Rng, typename C = ordered_less, typename P = ident>
                 using Sortable = concepts::models<Sortable_, Rng, C, P>;
 
-                template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(Sortable<Rng, C, P>())>
+                CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
+                    requires Sortable<Rng, C, P>())
                 Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));
@@ -67,8 +68,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(!Sortable<Rng, C, P>())>
+                CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
+                    requires !Sortable<Rng, C, P>())
                 void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

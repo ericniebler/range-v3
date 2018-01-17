@@ -86,7 +86,8 @@ namespace ranges
             return {sin};
         }
     #else
-        template<typename Val, CONCEPT_REQUIRES_(DefaultConstructible<Val>())>
+        CONCEPT_template(typename Val)(
+            requires DefaultConstructible<Val>())
         struct istream_fn
         {
             istream_range<Val> operator()(std::istream & sin) const

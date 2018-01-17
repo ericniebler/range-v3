@@ -189,7 +189,8 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename T, CONCEPT_REQUIRES_(Copyable<T>())>
+                CONCEPT_template(typename T)(
+                    requires Copyable<T>())
                 static auto bind(intersperse_fn intersperse, T t)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -203,8 +204,8 @@ namespace ranges
                     ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>,
                     SemiRegular<range_value_type_t<Rng>>>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Constraint<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Constraint<Rng>())
                 constexpr auto operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -212,8 +213,8 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Constraint<Rng, T>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !Constraint<Rng, T>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

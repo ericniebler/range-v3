@@ -134,24 +134,24 @@ namespace ranges
             template<typename Val>
             using iota_difference_t = meta::_t<iota_difference<Val>>;
 
-            template<typename To, typename From,
-                CONCEPT_REQUIRES_(SizedIncrementableSentinel<To, From>())>
+            CONCEPT_template(typename To, typename From)(
+                requires SizedIncrementableSentinel<To, From>())
             auto iota_minus_(To const &to, From const &from)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 to - from
             )
 
-            template<typename Val,
-                CONCEPT_REQUIRES_(SignedIntegral<Val>())>
+            CONCEPT_template(typename Val)(
+                requires SignedIntegral<Val>())
             iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
             {
                 using D = iota_difference_t<Val>;
                 return (D) v0 - (D) v1;
             }
 
-            template<typename Val,
-                CONCEPT_REQUIRES_(UnsignedIntegral<Val>())>
+            CONCEPT_template(typename Val)(
+                requires UnsignedIntegral<Val>())
             iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
             {
                 using D = iota_difference_t<Val>;
@@ -160,7 +160,9 @@ namespace ranges
                     :  static_cast<D>(v0 - v1);
             }
 
-            template<typename Val, CONCEPT_REQUIRES_(SignedIntegral<Val>())>
+            CONCEPT_template(typename Val)(
+
+                requires SignedIntegral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
@@ -171,7 +173,9 @@ namespace ranges
                 return static_cast<D>(to) - static_cast<D>(from);
             }
 
-            template<typename Val, CONCEPT_REQUIRES_(UnsignedIntegral<Val>())>
+            CONCEPT_template(typename Val)(
+
+                requires UnsignedIntegral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
@@ -198,7 +202,9 @@ namespace ranges
                 return static_cast<D>(Val(to - from));
             }
 
-            template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
+            CONCEPT_template(typename Val)(
+
+                requires Integral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
@@ -415,8 +421,8 @@ namespace ranges
                     return {std::move(from), std::move(to)};
                 }
             public:
-                template<typename From,
-                    CONCEPT_REQUIRES_(WeaklyIncrementable<From>())>
+                CONCEPT_template(typename From)(
+                    requires WeaklyIncrementable<From>())
                 iota_view<From> operator()(From value) const
                 {
                     return iota_view<From>{std::move(value)};
@@ -431,8 +437,8 @@ namespace ranges
                 operator()(From from, To to) const;
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename From,
-                    CONCEPT_REQUIRES_(!WeaklyIncrementable<From>())>
+                CONCEPT_template(typename From)(
+                    requires !WeaklyIncrementable<From>())
                 void operator()(From) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<From>(),
@@ -440,9 +446,9 @@ namespace ranges
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
                 }
-                template<typename From, typename To,
-                    CONCEPT_REQUIRES_(!(WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>()))>
+                CONCEPT_template(typename From, typename To)(
+                    requires !(WeaklyIncrementable<From>() &&
+                        WeaklyEqualityComparable<From, To>()))
                 void operator()(From, To) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<From>(),
@@ -490,9 +496,9 @@ namespace ranges
                     return {std::move(from), std::move(to)};
                 }
             public:
-                template<typename From, typename To,
-                    CONCEPT_REQUIRES_(WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>())>
+                CONCEPT_template(typename From, typename To)(
+                    requires WeaklyIncrementable<From>() &&
+                        WeaklyEqualityComparable<From, To>())
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
                     detail::take_exactly_view_<iota_view<From>, true>,
@@ -505,9 +511,9 @@ namespace ranges
                         incrementable_concept<From>{});
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename From, typename To,
-                    CONCEPT_REQUIRES_(!(WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>()))>
+                CONCEPT_template(typename From, typename To)(
+                    requires !(WeaklyIncrementable<From>() &&
+                        WeaklyEqualityComparable<From, To>()))
                 void operator()(From, To) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<From>(),
@@ -534,14 +540,16 @@ namespace ranges
             {
                 ints_fn() = default;
 
-                template<typename Val,
-                    CONCEPT_REQUIRES_(Integral<Val>())>
+                CONCEPT_template(typename Val)(
+                    requires Integral<Val>())
                 iota_view<Val> operator()(Val value) const
                 {
                     return iota_view<Val>{value};
                 }
 
-                template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
+                CONCEPT_template(typename Val)(
+
+                    requires Integral<Val>())
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -550,15 +558,15 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Val,
-                    CONCEPT_REQUIRES_(!Integral<Val>())>
+                CONCEPT_template(typename Val)(
+                    requires !Integral<Val>())
                 void operator()(Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),
                         "The object passed to view::ints must be Integral");
                 }
-                template<typename Val,
-                    CONCEPT_REQUIRES_(!Integral<Val>())>
+                CONCEPT_template(typename Val)(
+                    requires !Integral<Val>())
                 void operator()(Val, Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),
@@ -569,16 +577,16 @@ namespace ranges
 
             struct closed_ints_fn
             {
-                template<typename Val,
-                    CONCEPT_REQUIRES_(Integral<Val>())>
+                CONCEPT_template(typename Val)(
+                    requires Integral<Val>())
                 RANGES_DEPRECATED("view::closed_ints is deprecated; use view::closed_indices instead!")
                 detail::take_exactly_view_<iota_view<Val>, true> operator()(Val from, Val to) const
                 {
                     return {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Val,
-                    CONCEPT_REQUIRES_(!Integral<Val>())>
+                CONCEPT_template(typename Val)(
+                    requires !Integral<Val>())
                 void operator()(Val, Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),

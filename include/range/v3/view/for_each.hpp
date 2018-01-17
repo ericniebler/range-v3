@@ -63,8 +63,8 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = concepts::models<Concept_, Rng, Fun>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires Concept<Rng, Fun>())
                 auto operator()(Rng && rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -72,8 +72,8 @@ namespace ranges
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires !Concept<Rng, Fun>())
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
@@ -101,16 +101,16 @@ namespace ranges
 
         struct yield_fn
         {
-            template<typename V,
-                CONCEPT_REQUIRES_(CopyConstructible<V>())>
+            CONCEPT_template(typename V)(
+                requires CopyConstructible<V>())
             single_view<V> operator()(V v) const
             {
                 return view::single(std::move(v));
             }
 
         #ifndef RANGES_DOXYGEN_INVOKED
-            template<typename Arg, typename Val = detail::decay_t<Arg>,
-                CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && Constructible<Val, Arg>()))>
+            CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
+                requires !(CopyConstructible<Val>() && Constructible<Val, Arg>()))
             void operator()(Arg &&) const
             {
                 CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
@@ -129,7 +129,8 @@ namespace ranges
 
         struct yield_from_fn
         {
-            template<typename Rng, CONCEPT_REQUIRES_(View<Rng>())>
+            CONCEPT_template(typename Rng)(
+                requires View<Rng>())
             Rng operator()(Rng rng) const
             {
                 return rng;
@@ -169,10 +170,10 @@ namespace ranges
         /// @}
 
         /// \cond
-        template<typename Rng, typename Fun,
-            CONCEPT_REQUIRES_(Range<Rng>() && CopyConstructible<Fun>() &&
+        CONCEPT_template(typename Rng, typename Fun)(
+            requires Range<Rng>() && CopyConstructible<Fun>() &&
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
-                Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())>
+                Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(static_cast<Rng&&>(rng), std::move(fun)))
         {

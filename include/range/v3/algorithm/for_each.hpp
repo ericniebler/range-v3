@@ -32,9 +32,9 @@ namespace ranges
         /// @{
         struct for_each_fn
         {
-            template<typename I, typename S, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    MoveIndirectInvocable<F, projected<I, P>>())>
+            CONCEPT_template(typename I, typename S, typename F, typename P = ident)(
+                requires InputIterator<I>() && Sentinel<S, I>() &&
+                    MoveIndirectInvocable<F, projected<I, P>>())
             tagged_pair<tag::in(I), tag::fun(F)>
             operator()(I begin, S end, F fun, P proj = P{}) const
             {
@@ -45,9 +45,9 @@ namespace ranges
                 return {detail::move(begin), detail::move(fun)};
             }
 
-            template<typename Rng, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>())>
+            CONCEPT_template(typename Rng, typename F, typename P = ident)(
+                requires InputRange<Rng>() &&
+                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>())
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
             operator()(Rng &&rng, F fun, P proj = P{}) const
             {

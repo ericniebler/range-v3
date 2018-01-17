@@ -206,8 +206,8 @@ namespace ranges
                         ForwardRange<Rng>>>;
 
                 friend view_access;
-                template<typename Size, typename URNG = detail::default_random_engine,
-                    CONCEPT_REQUIRES_(Integral<Size>(), UniformRandomNumberGenerator<URNG>())>
+                CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(
+                    requires Integral<Size>(), UniformRandomNumberGenerator<URNG>())
                 static auto bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -215,8 +215,8 @@ namespace ranges
                 )
 
             public:
-                template<typename Rng, typename URNG = detail::default_random_engine,
-                    CONCEPT_REQUIRES_(Constraint<Rng, URNG>())>
+                CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
+                    requires Constraint<Rng, URNG>())
                 sample_view<all_t<Rng>, URNG> operator()(
                     Rng && rng, range_difference_type_t<Rng> sample_size,
                     URNG &generator = detail::get_random_engine()) const
@@ -227,8 +227,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename URNG = detail::default_random_engine,
-                    CONCEPT_REQUIRES_(!Constraint<Rng, URNG>())>
+                CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
+                    requires !Constraint<Rng, URNG>())
                 void operator()(Rng &&, URNG && = URNG{}) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

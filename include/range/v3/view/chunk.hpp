@@ -374,16 +374,16 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Int,
-                    CONCEPT_REQUIRES_(Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires Integral<Int>())
                 static auto bind(chunk_fn chunk, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(chunk, std::placeholders::_1, n))
                 )
             public:
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
@@ -392,8 +392,8 @@ namespace ranges
                 // For the sake of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
-                template<typename Int,
-                    CONCEPT_REQUIRES_(!Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires !Integral<Int>())
                 static detail::null_pipe bind(chunk_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
@@ -401,8 +401,8 @@ namespace ranges
                     return {};
                 }
             public:
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!(InputRange<Rng>() && Integral<T>()))>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !(InputRange<Rng>() && Integral<T>()))
                 void operator()(Rng &&, T) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

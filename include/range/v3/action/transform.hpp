@@ -35,7 +35,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename F, typename P = ident, CONCEPT_REQUIRES_(!Range<F>())>
+                CONCEPT_template(typename F, typename P = ident)(
+                    requires !Range<F>())
                 static auto bind(transform_fn transform, F fun, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -57,8 +58,8 @@ namespace ranges
                 template<typename Rng, typename F, typename P = ident>
                 using Concept = concepts::models<ConceptImpl, Rng, F, P>;
 
-                template<typename Rng, typename F, typename P = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng, F, P>())>
+                CONCEPT_template(typename Rng, typename F, typename P = ident)(
+                    requires Concept<Rng, F, P>())
                 Rng operator()(Rng && rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
@@ -66,8 +67,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename F, typename P = ident,
-                    CONCEPT_REQUIRES_(!Concept<Rng, F, P>())>
+                CONCEPT_template(typename Rng, typename F, typename P = ident)(
+                    requires !Concept<Rng, F, P>())
                 void operator()(Rng &&, F &&, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

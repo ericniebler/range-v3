@@ -36,7 +36,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+                CONCEPT_template(typename D)(
+                    requires Integral<D>())
                 static auto bind(slice_fn slice, D from, D to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -61,10 +62,10 @@ namespace ranges
                 using Concept = concepts::models<ConceptImpl, Rng, T, U>;
 
                 // TODO support slice from end.
-                template<typename Rng,
+                CONCEPT_template(typename Rng,
                     typename I = iterator_t<Rng>,
-                    typename D = range_difference_type_t<Rng>,
-                    CONCEPT_REQUIRES_(Concept<Rng, D, D>())>
+                    typename D = range_difference_type_t<Rng>)(
+                    requires Concept<Rng, D, D>())
                 Rng operator()(Rng && rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const
                 {
@@ -75,8 +76,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T, typename U,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T, U>())>
+                CONCEPT_template(typename Rng, typename T, typename U)(
+                    requires !Concept<Rng, T, U>())
                 void operator()(Rng &&, T &&, U &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

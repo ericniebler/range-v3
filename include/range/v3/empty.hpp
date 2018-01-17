@@ -46,8 +46,8 @@ namespace ranges
                 )
 
                 // Fall further back to begin == end.
-                template<typename R,
-                    CONCEPT_REQUIRES_(ForwardRange<R>())>
+                CONCEPT_template(typename R)(
+                    requires ForwardRange<R>())
                 static constexpr bool impl_(R &r, detail::priority_tag<0>)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (

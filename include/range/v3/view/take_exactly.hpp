@@ -64,8 +64,8 @@ namespace ranges
                 {
                     return {ranges::begin(rng_), n_};
                 }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
+                CONCEPT_template(typename BaseRng = Rng)(
+                    requires Range<BaseRng const>())
                 counted_iterator<iterator_t<BaseRng const>> begin() const
                 {
                     return {ranges::begin(rng_), n_};
@@ -112,14 +112,14 @@ namespace ranges
                 {
                     return next(ranges::begin(rng_), n_);
                 }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
+                CONCEPT_template(typename BaseRng = Rng)(
+                    requires Range<BaseRng const>())
                 iterator_t<BaseRng const> begin() const
                 {
                     return ranges::begin(rng_);
                 }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
+                CONCEPT_template(typename BaseRng = Rng)(
+                    requires Range<BaseRng const>())
                 iterator_t<BaseRng const> end() const
                 {
                     return next(ranges::begin(rng_), n_);
@@ -158,24 +158,24 @@ namespace ranges
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {begin(rng), next(begin(rng), n)};
                 }
 
-                template<typename Int,
-                    CONCEPT_REQUIRES_(Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires Integral<Int>())
                 static auto bind(take_exactly_fn take_exactly, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(take_exactly, std::placeholders::_1, n))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int,
-                    CONCEPT_REQUIRES_(!Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires !Integral<Int>())
                 static detail::null_pipe bind(take_exactly_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
@@ -185,8 +185,8 @@ namespace ranges
             #endif
 
             public:
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -194,8 +194,8 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !InputRange<Rng>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<T>(),

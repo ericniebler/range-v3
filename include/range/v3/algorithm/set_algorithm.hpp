@@ -44,10 +44,10 @@ namespace ranges
         /// @{
         struct includes_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                requires Comparable<I1, I2, C, P1, P2>() &&
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -61,12 +61,12 @@ namespace ranges
                 return true;
             }
 
-            template<typename Rng1, typename Rng2, typename C = ordered_less,
+            CONCEPT_template(typename Rng1, typename Rng2, typename C = ordered_less,
                 typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
+                typename I2 = iterator_t<Rng2>)(
+                requires Comparable<I1, I2, C, P1, P2>() &&
+                    Range<Rng1>() && Range<Rng2>())
             bool operator()(Rng1 && rng1, Rng2 && rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -81,10 +81,10 @@ namespace ranges
 
         struct set_union_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename O,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -115,12 +115,12 @@ namespace ranges
                     tmp.second);
             }
 
-            template<typename Rng1, typename Rng2, typename O,
+            CONCEPT_template(typename Rng1, typename Rng2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
+                typename I2 = iterator_t<Rng2>)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Range<Rng1>() && Range<Rng2>())
             tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -136,10 +136,10 @@ namespace ranges
 
         struct set_intersection_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename O,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())
             O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -161,12 +161,12 @@ namespace ranges
                 return out;
             }
 
-            template<typename Rng1, typename Rng2, typename O,
+            CONCEPT_template(typename Rng1, typename Rng2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
+                typename I2 = iterator_t<Rng2>)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Range<Rng1>() && Range<Rng2>())
             O operator()(Rng1 && rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -182,10 +182,10 @@ namespace ranges
 
         struct set_difference_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename O,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())
             tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -209,12 +209,12 @@ namespace ranges
                 return {begin1, out};
             }
 
-            template<typename Rng1, typename Rng2, typename O,
+            CONCEPT_template(typename Rng1, typename Rng2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
+                typename I2 = iterator_t<Rng2>)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Range<Rng1>() && Range<Rng2>())
             tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::out(O)> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -230,10 +230,10 @@ namespace ranges
 
         struct set_symmetric_difference_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename O,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -266,12 +266,12 @@ namespace ranges
                 return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{begin1, tmp.first, tmp.second};
             }
 
-            template<typename Rng1, typename Rng2, typename O,
+            CONCEPT_template(typename Rng1, typename Rng2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Range<Rng1>() && Range<Rng2>())>
+                typename I2 = iterator_t<Rng2>)(
+                requires Mergeable<I1, I2, O, C, P1, P2>() &&
+                    Range<Rng1>() && Range<Rng2>())
             tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const

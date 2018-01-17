@@ -88,14 +88,14 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
+            CONCEPT_template(typename BaseRng = Rng)(
+                requires RandomAccessRange<BaseRng const>())
             iterator_t<BaseRng const> begin() const
             {
                 return this->get_begin_(std::true_type{}, std::true_type{});
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
+            CONCEPT_template(typename BaseRng = Rng)(
+                requires RandomAccessRange<BaseRng const>())
             sentinel_t<BaseRng const> end() const
             {
                 return ranges::end(rng_);
@@ -130,16 +130,16 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Int,
-                    CONCEPT_REQUIRES_(Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires Integral<Int>())
                 static auto bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(drop, std::placeholders::_1, n))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int,
-                    CONCEPT_REQUIRES_(!Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires !Integral<Int>())
                 static detail::null_pipe bind(drop_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
@@ -153,23 +153,24 @@ namespace ranges
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
-                template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {next(begin(rng), n), end(rng)};
                 }
             public:
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     drop_fn::invoke_(static_cast<Rng&&>(rng), n, range_concept<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!(InputRange<Rng>() && Integral<T>()))>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !(InputRange<Rng>() && Integral<T>()))
                 void operator()(Rng &&, T) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

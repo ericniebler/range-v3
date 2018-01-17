@@ -86,10 +86,10 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Val1, typename Val2,
+                CONCEPT_template(typename Val1, typename Val2,
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
-                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>,
-                    CONCEPT_REQUIRES_(Same<V1, V2>())>
+                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
+                    requires Same<V1, V2>())
                 static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -98,10 +98,10 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                template<typename Val1, typename Val2,
+                CONCEPT_template(typename Val1, typename Val2,
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
-                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>,
-                    CONCEPT_REQUIRES_(!Same<V1, V2>())>
+                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
+                    requires !Same<V1, V2>())
                 static detail::null_pipe bind(replace_fn, Val1, Val2)
                 {
                     CONCEPT_ASSERT_MSG(Same<V1, V2>(),
@@ -121,8 +121,8 @@ namespace ranges
                     CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>>;
 
-                template<typename Rng, typename Val1, typename Val2,
-                    CONCEPT_REQUIRES_(Concept<Rng, Val1, Val2>())>
+                CONCEPT_template(typename Rng, typename Val1, typename Val2)(
+                    requires Concept<Rng, Val1, Val2>())
                 replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
                 operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
@@ -132,8 +132,8 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                template<typename Rng, typename Val1, typename Val2,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Val1, Val2>())>
+                CONCEPT_template(typename Rng, typename Val1, typename Val2)(
+                    requires !Concept<Rng, Val1, Val2>())
                 void operator()(Rng &&, Val1 &&, Val2 &&) const
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;

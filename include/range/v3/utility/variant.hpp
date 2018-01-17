@@ -64,9 +64,9 @@ namespace ranges
                 }
                 // \pre Requires distance(first, last) <= N
                 // \pre Requires DefaultConstructible<T>() || distance(first, last) == N
-                template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() && InputIterator<I>() &&
-                        Constructible<T, reference_t<I>>())>
+                CONCEPT_template(typename I, typename S)(
+                    requires Sentinel<S, I>() && InputIterator<I>() &&
+                        Constructible<T, reference_t<I>>())
                 indexed_datum(I first, S last)
                 {
                     T *p = detail::uninitialized_copy(first, last, data_);
@@ -74,8 +74,8 @@ namespace ranges
                 }
                 // \pre Requires distance(r) <= N
                 // \pre Requires DefaultConstructible<T>() || distance(r) == N
-                template<typename R,
-                    CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>>())>
+                CONCEPT_template(typename R)(
+                    requires InputRange<R>() && Constructible<T, range_reference_t<R>>())
                 explicit indexed_datum(R &&r)
                   : indexed_datum{ranges::begin(r), ranges::end(r)}
                 {}
@@ -92,9 +92,9 @@ namespace ranges
                     return *this;
                 }
                 // \pre Requires ranges::distance(r) <= N
-                template<typename R,
-                    CONCEPT_REQUIRES_(InputRange<R>() &&
-                        Assignable<T &, range_reference_t<R>>())>
+                CONCEPT_template(typename R)(
+                    requires InputRange<R>() &&
+                        Assignable<T &, range_reference_t<R>>())
                 indexed_datum &operator=(R &&r)
                 {
                     ranges::copy(r, data_);

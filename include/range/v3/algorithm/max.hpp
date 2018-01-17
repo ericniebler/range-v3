@@ -32,10 +32,10 @@ namespace ranges
         /// @{
         struct max_fn
         {
-            template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>, typename V = value_type_t<I>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
-                    IndirectRelation<C, projected<I, P>>())>
+            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+                typename I = iterator_t<Rng>, typename V = value_type_t<I>)(
+                requires InputRange<Rng>() && Copyable<V>() &&
+                    IndirectRelation<C, projected<I, P>>())
             RANGES_CXX14_CONSTEXPR V operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 auto begin = ranges::begin(rng);
@@ -51,9 +51,8 @@ namespace ranges
                 return result;
             }
 
-            template<typename T, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    IndirectRelation<C, projected<const T *, P>>())>
+            CONCEPT_template(typename T, typename C = ordered_less, typename P = ident)(
+                requires IndirectRelation<C, projected<const T *, P>>())
             constexpr T const &operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
             {
                 return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;

@@ -178,8 +178,8 @@ namespace ranges
                     }
                     ranges::advance(it, delta);
                 }
-                template<class Other,
-                    CONCEPT_REQUIRES_(SizedSentinel<Other, iterator_t<Rng>>())>
+                CONCEPT_template(class Other)(
+                    requires SizedSentinel<Other, iterator_t<Rng>>())
                 RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> distance_to(
                     iterator_t<Rng> const &here, Other const &there) const
                     noexcept(noexcept(there - here))
@@ -303,7 +303,8 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Difference, CONCEPT_REQUIRES_(Integral<Difference>())>
+                CONCEPT_template(typename Difference)(
+                    requires Integral<Difference>())
                 RANGES_CXX14_CONSTEXPR
                 static auto bind(stride_fn stride, Difference step)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -311,7 +312,8 @@ namespace ranges
                     make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)))
                 )
             public:
-                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 constexpr auto operator()(Rng &&rng, range_difference_type_t<Rng> step) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -321,7 +323,8 @@ namespace ranges
                 // For the purpose of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
-                template<typename Difference, CONCEPT_REQUIRES_(!Integral<Difference>())>
+                CONCEPT_template(typename Difference)(
+                    requires !Integral<Difference>())
                 static detail::null_pipe bind(stride_fn, const Difference &)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Difference>(),
@@ -331,8 +334,8 @@ namespace ranges
                     return {};
                 }
             public:
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !InputRange<Rng>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

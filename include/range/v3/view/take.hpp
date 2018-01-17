@@ -70,14 +70,14 @@ namespace ranges
             {
                 return {};
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Range<BaseRng const>())>
+            CONCEPT_template(typename BaseRng = Rng)(
+                requires Range<BaseRng const>())
             adaptor<true> begin_adaptor()
             {
                 return {};
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Range<BaseRng const>())>
+            CONCEPT_template(typename BaseRng = Rng)(
+                requires Range<BaseRng const>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {};
@@ -98,15 +98,15 @@ namespace ranges
             private:
                 friend view_access;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!SizedRange<Rng>() && !is_infinite<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !SizedRange<Rng>() && !is_infinite<Rng>())
                 static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(SizedRange<Rng>() || is_infinite<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires SizedRange<Rng>() || is_infinite<Rng>())
                 static auto invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -115,7 +115,9 @@ namespace ranges
                         is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
 
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                CONCEPT_template(typename Int)(
+
+                    requires Integral<Int>())
                 static auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -123,7 +125,8 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int, CONCEPT_REQUIRES_(!Integral<Int>())>
+                CONCEPT_template(typename Int)(
+                    requires !Integral<Int>())
                 static detail::null_pipe bind(take_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
@@ -133,7 +136,8 @@ namespace ranges
             #endif
 
             public:
-                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -141,7 +145,8 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputRange<Rng>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !InputRange<Rng>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

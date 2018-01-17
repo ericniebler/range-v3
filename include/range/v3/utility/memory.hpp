@@ -46,8 +46,8 @@ namespace ranges
                 }
             };
 
-            template<typename T, typename... Args,
-                CONCEPT_REQUIRES_(!std::is_array<T>::value)>
+            CONCEPT_template(typename T, typename... Args)(
+                requires !std::is_array<T>::value)
             std::unique_ptr<T> make_unique(Args &&... args)
             {
                 return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
@@ -152,8 +152,8 @@ namespace ranges
             }
         };
 
-        template<typename I,
-            CONCEPT_REQUIRES_(Iterator<I>())>
+        CONCEPT_template(typename I)(
+            requires Iterator<I>())
         iterator_wrapper<I> iter_ref(I &i)
         {
             return i;

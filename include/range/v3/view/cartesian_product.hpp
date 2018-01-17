@@ -48,7 +48,8 @@ namespace ranges
 
             struct cartesian_size_fn
             {
-                template<typename Rng, CONCEPT_REQUIRES_(SizedRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires SizedRange<Rng>())
                 auto operator()(std::size_t s, Rng &&rng)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -341,15 +342,15 @@ namespace ranges
                 template<typename... Rngs>
                 using Constraint = meta::strict_and<ForwardRange<Rngs>...>;
 
-                template<typename... Rngs,
-                    CONCEPT_REQUIRES_(Constraint<Rngs...>())>
+                CONCEPT_template(typename... Rngs)(
+                    requires Constraint<Rngs...>())
                 constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
                 }
 
-                template<typename... Rngs,
-                    CONCEPT_REQUIRES_(!Constraint<Rngs...>())>
+                CONCEPT_template(typename... Rngs)(
+                    requires !Constraint<Rngs...>())
                 void operator()(Rngs &&...) const
                 {
                     static_assert(meta::strict_and<ForwardRange<Rngs>...>(),

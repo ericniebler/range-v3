@@ -94,17 +94,17 @@ namespace ranges
                 }
             }
         public:
-            template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
+                requires Partitionable<I, C, P>() && Sentinel<S, I>())
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
                     std::move(proj), iterator_concept<I>());
             }
 
-            template<typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Range<Rng>())>
+            CONCEPT_template(typename Rng, typename C, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires Partitionable<I, C, P>() && Range<Rng>())
             safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),

@@ -213,7 +213,9 @@ namespace ranges
                 template<typename Rng>
                 using Constraint = BidirectionalRange<Rng>;
 
-                template<typename Rng, CONCEPT_REQUIRES_(Constraint<Rng>())>
+                CONCEPT_template(typename Rng)(
+
+                    requires Constraint<Rng>())
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 5
                 // Avoid GCC5 bug that ODR-uses std::declval?!?
                 RANGES_CXX14_CONSTEXPR
@@ -227,7 +229,8 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                template<typename Rng, CONCEPT_REQUIRES_(!Constraint<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Constraint<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),

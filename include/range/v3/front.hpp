@@ -28,8 +28,8 @@ namespace ranges
         struct front_fn
         {
             /// \return `*begin(rng)`
-            template<typename Rng,
-                CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+            CONCEPT_template(typename Rng)(
+                requires ForwardRange<Rng>())
             constexpr range_reference_t<Rng> operator()(Rng &&rng) const
             {
                 return *begin(rng);

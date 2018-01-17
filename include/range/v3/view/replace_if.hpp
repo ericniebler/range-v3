@@ -59,8 +59,8 @@ namespace ranges
                     RANGES_EXPECT(false);
                 }
 
-                template<typename I,
-                    CONCEPT_REQUIRES_(!Invocable<Pred const&, reference_t<I>>())>
+                CONCEPT_template(typename I)(
+                    requires !Invocable<Pred const&, reference_t<I>>())
                 common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i)
                 {
@@ -69,8 +69,8 @@ namespace ranges
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                template<typename I,
-                    CONCEPT_REQUIRES_(Invocable<Pred const&, reference_t<I>>())>
+                CONCEPT_template(typename I)(
+                    requires Invocable<Pred const&, reference_t<I>>())
                 common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i) const
                 {
@@ -80,8 +80,8 @@ namespace ranges
                     return (decltype(x) &&) x;
                 }
 
-                template<typename I,
-                    CONCEPT_REQUIRES_(!Invocable<Pred const&, rvalue_reference_t<I>>())>
+                CONCEPT_template(typename I)(
+                    requires !Invocable<Pred const&, rvalue_reference_t<I>>())
                 common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i)
                 {
@@ -90,8 +90,8 @@ namespace ranges
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                template<typename I,
-                    CONCEPT_REQUIRES_(Invocable<Pred const&, rvalue_reference_t<I>>())>
+                CONCEPT_template(typename I)(
+                    requires Invocable<Pred const&, rvalue_reference_t<I>>())
                 common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
                 {
@@ -128,8 +128,8 @@ namespace ranges
                     CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>>;
 
-                template<typename Rng, typename Pred, typename Val,
-                    CONCEPT_REQUIRES_(Concept<Rng, Pred, Val>())>
+                CONCEPT_template(typename Rng, typename Pred, typename Val)(
+                    requires Concept<Rng, Pred, Val>())
                 replace_if_view<all_t<Rng>, Pred, Val>
                 operator()(Rng && rng, Pred pred, Val new_value) const
                 {
@@ -137,8 +137,8 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                template<typename Rng, typename Pred, typename Val,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Pred, Val>())>
+                CONCEPT_template(typename Rng, typename Pred, typename Val)(
+                    requires !Concept<Rng, Pred, Val>())
                 void operator()(Rng &&, Pred, Val) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

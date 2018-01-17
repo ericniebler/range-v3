@@ -511,11 +511,11 @@ namespace ranges
             CONCEPT_ASSERT((Cat & category::forward) == category::forward);
 
             any_view() = default;
-            template<typename Rng,
-                CONCEPT_REQUIRES_(meta::and_<
+            CONCEPT_template(typename Rng)(
+                requires meta::and_<
                     meta::not_<Same<detail::decay_t<Rng>, any_view>>,
                     InputRange<Rng>,
-                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)
             any_view(Rng &&rng)
               : any_view(static_cast<Rng &&>(rng),
                   meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
@@ -570,11 +570,11 @@ namespace ranges
             friend range_access;
 
             any_view() = default;
-            template<typename Rng,
-                CONCEPT_REQUIRES_(meta::and_<
+            CONCEPT_template(typename Rng)(
+                requires meta::and_<
                     meta::not_<Same<detail::decay_t<Rng>, any_view>>,
                     InputRange<Rng>,
-                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)>
+                    meta::defer<detail::AnyCompatibleRange, Rng, Ref>>::value)
             any_view(Rng &&rng)
               : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
@@ -601,11 +601,9 @@ namespace ranges
         };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-        template<typename Rng,
-            CONCEPT_REQUIRES_(View<Rng>()),
-            typename Ref = range_reference_t<Rng>,
-            category Cat = get_categories<Rng>()>
-        any_view(Rng &&) -> any_view<Ref, Cat>;
+        CONCEPTS_template(typename Rng)(
+            requires View<Rng>())
+        any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif
 
         template<typename Ref>

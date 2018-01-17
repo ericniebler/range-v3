@@ -190,8 +190,8 @@ namespace ranges
             }
 
         public:
-            template<typename I, typename S,
-                CONCEPT_REQUIRES_(Permutable<I>() && Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S)(
+                requires Permutable<I>() && Sentinel<S, I>())
             iterator_range<I> operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)
@@ -206,8 +206,8 @@ namespace ranges
                 return rotate_fn::rotate_(begin, middle, end, iterator_concept<I>{});
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Range<Rng>() && Permutable<I>())>
+            CONCEPT_template(typename Rng, typename I = iterator_t<Rng>)(
+                requires Range<Rng>() && Permutable<I>())
             meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
             operator()(Rng &&rng, I middle) const
             {

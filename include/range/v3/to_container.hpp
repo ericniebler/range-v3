@@ -57,19 +57,19 @@ namespace ranges
                         ReserveAndAssignable<C, range_common_iterator_t<R>>,
                         SizedRange<R>>;
 
-                template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                CONCEPT_template(typename Rng,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
+                    requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
                 Cont impl(Rng &&rng, std::false_type) const
                 {
                     using I = range_common_iterator_t<Rng>;
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
-                template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
-                                      ReserveConcept<Cont, Rng>())>
+                CONCEPT_template(typename Rng,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
+                    requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
+                                      ReserveConcept<Cont, Rng>())
                 Cont impl(Rng &&rng, std::true_type) const
                 {
                     Cont c;
@@ -86,9 +86,9 @@ namespace ranges
                 }
 
             public:
-                template<typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>,
-                    CONCEPT_REQUIRES_(InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                CONCEPT_template(typename Rng,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
+                    requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
                 Cont operator()(Rng &&rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -115,18 +115,18 @@ namespace ranges
         }
 
         /// \overload
-        template<template<typename...> class ContT, typename Rng,
-            typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>,
-            CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+        CONCEPT_template(template<typename...> class ContT, typename Rng,
+            typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>)(
+            requires Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
         Cont to_(Rng && rng)
         {
             return static_cast<Rng&&>(rng) | ranges::to_<ContT>();
         }
 
         /// \overload
-        template<template<typename...> class ContT, typename T,
-            typename Cont = meta::invoke<meta::quote<ContT>, T>,
-            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())>
+        CONCEPT_template(template<typename...> class ContT, typename T,
+            typename Cont = meta::invoke<meta::quote<ContT>, T>)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())
         Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<ContT>();
@@ -140,16 +140,16 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Cont, typename Rng,
-            CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+        CONCEPT_template(typename Cont, typename Rng)(
+            requires Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
         Cont to_(Rng && rng)
         {
             return static_cast<Rng&&>(rng) | ranges::to_<Cont>();
         }
 
         /// \overload
-        template<typename Cont, typename T,
-            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())>
+        CONCEPT_template(typename Cont, typename T)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())
         Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<Cont>();

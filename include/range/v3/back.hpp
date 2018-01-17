@@ -29,8 +29,8 @@ namespace ranges
         struct back_fn
         {
             /// \return `*prev(end(rng))`
-            template<typename Rng,
-                CONCEPT_REQUIRES_(BoundedRange<Rng>() && BidirectionalRange<Rng>())>
+            CONCEPT_template(typename Rng)(
+                requires BoundedRange<Rng>() && BidirectionalRange<Rng>())
             RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng> operator()(Rng &&rng) const
             {

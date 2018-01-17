@@ -73,7 +73,8 @@ namespace ranges
 
             struct _advance_
             {
-                template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
+                CONCEPT_template(typename I)(
+                    requires Iterator<I>())
                 void operator()(I & i, difference_type_t<I> n) const
                 {
                     advance(i, n);
@@ -327,8 +328,8 @@ namespace ranges
                     Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
                     Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
 
-                template<typename...Rngs, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
+                CONCEPT_template(typename...Rngs, typename Fun)(
+                    requires Concept<Fun, Rngs...>())
                 iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
@@ -338,8 +339,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Fun, typename...Rngs,
-                    CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                CONCEPT_template(typename Fun, typename...Rngs)(
+                    requires !Concept<Fun, Rngs...>())
                 void operator()(Fun, Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
@@ -376,8 +377,8 @@ namespace ranges
                     CopyConstructible<Fun>,
                     Invocable<Fun&, range_reference_t<Rngs> &&...>>;
 
-                template<typename...Rngs, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
+                CONCEPT_template(typename...Rngs, typename Fun)(
+                    requires Concept<Fun, Rngs...>())
                 zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
@@ -387,8 +388,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Fun, typename...Rngs,
-                    CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                CONCEPT_template(typename Fun, typename...Rngs)(
+                    requires !Concept<Fun, Rngs...>())
                 void operator()(Fun, Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),

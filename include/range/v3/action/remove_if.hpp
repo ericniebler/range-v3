@@ -37,7 +37,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Range<C>())>
+                CONCEPT_template(typename C, typename P = ident)(
+                    requires !Range<C>())
                 static auto bind(remove_if_fn remove_if, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -60,8 +61,8 @@ namespace ranges
                 template<typename Rng, typename C, typename P = ident>
                 using Concept = concepts::models<ConceptImpl, Rng, C, P>;
 
-                template<typename Rng, typename C, typename P = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
+                CONCEPT_template(typename Rng, typename C, typename P = ident)(
+                    requires Concept<Rng, C, P>())
                 Rng operator()(Rng && rng, C pred, P proj = P{}) const
                 {
                     auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
@@ -70,8 +71,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename C, typename P = ident,
-                    CONCEPT_REQUIRES_(!Concept<Rng, C, P>())>
+                CONCEPT_template(typename Rng, typename C, typename P = ident)(
+                    requires !Concept<Rng, C, P>())
                 void operator()(Rng &&, C &&, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

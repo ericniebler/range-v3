@@ -76,8 +76,8 @@ namespace ranges
                     meta::not_<std::is_reference<Rng>>>;
 
                 // Piping requires things are passed by value.
-                template<typename Rng, typename Act,
-                    CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
+                CONCEPT_template(typename Rng, typename Act)(
+                    requires ActionPipeConcept<Rng>())
                 static auto pipe(Rng && rng, Act && act)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -86,8 +86,8 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
-                template<typename Rng, typename Act,
-                    CONCEPT_REQUIRES_(!ActionPipeConcept<Rng>())>
+                CONCEPT_template(typename Rng, typename Act)(
+                    requires !ActionPipeConcept<Rng>())
                 static void pipe(Rng &&, Act &&)
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
@@ -110,8 +110,8 @@ namespace ranges
                 {}
 
                 // Calling directly requires things are passed by reference.
-                template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(ActionConcept<Rng &, Rest...>())>
+                CONCEPT_template(typename Rng, typename...Rest)(
+                    requires ActionConcept<Rng &, Rest...>())
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -128,11 +128,11 @@ namespace ranges
                 )
             };
 
-            template<typename Rng, typename Action,
-                CONCEPT_REQUIRES_(is_pipeable<Action>() && Range<Rng &>() &&
+            CONCEPT_template(typename Rng, typename Action)(
+                requires is_pipeable<Action>() && Range<Rng &>() &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
-                        result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())>
+                        result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())
             Rng & operator|=(Rng & rng, Action && action)
             {
                 ref(rng) | action;

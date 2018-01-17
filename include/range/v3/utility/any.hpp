@@ -108,8 +108,8 @@ namespace ranges
             std::unique_ptr<interface> ptr_;
         public:
             any() noexcept = default;
-            template<typename TRef, typename T = detail::decay_t<TRef>,
-                CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
+            CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
+                requires Copyable<T>() && !Same<T, any>())
             any(TRef &&t)
               : ptr_(new impl<T>(static_cast<TRef&&>(t)))
             {}
@@ -123,8 +123,8 @@ namespace ranges
                 ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
             }
-            template<typename TRef, typename T = detail::decay_t<TRef>,
-                CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
+            CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
+                requires Copyable<T>() && !Same<T, any>())
             any &operator=(TRef &&t)
             {
                 any{static_cast<TRef&&>(t)}.swap(*this);

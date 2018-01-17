@@ -59,8 +59,8 @@ namespace ranges
                 template<typename Rng>
                 using Joinable = concepts::models<Joinable_, Rng>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Joinable<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Joinable<Rng>())
                 join_value_t<Rng> operator()(Rng && rng) const
                 {
                     join_value_t<Rng> ret;
@@ -71,8 +71,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Joinable<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Joinable<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

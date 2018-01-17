@@ -38,14 +38,16 @@ namespace ranges
                     ForwardRange<Rng>,
                     EqualityComparable<range_value_type_t<Rng>>>;
 
-                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+
+                    requires Concept<Rng>())
                 unique_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return {all(static_cast<Rng&&>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Concept<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

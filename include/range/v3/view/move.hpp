@@ -81,15 +81,15 @@ namespace ranges
         {
             struct move_fn
             {
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 move_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return move_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !InputRange<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

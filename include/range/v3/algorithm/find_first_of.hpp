@@ -36,10 +36,10 @@ namespace ranges
             // losing information. E.g., if begin0 == end0, we can return begin0 immediately.
             // If we returned pair<I0,I1>, we would need to do an O(N) scan to find the
             // end position.
-            template<typename I0, typename S0, typename I1, typename S1,
-                     typename R = equal_to, typename P0 = ident, typename P1 = ident,
-                     CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
-                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
+            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+                     typename R = equal_to, typename P0 = ident, typename P1 = ident)(
+                     requires Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
+                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())
             I0 operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred = R{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
@@ -50,12 +50,12 @@ namespace ranges
                 return begin0;
             }
 
-            template<typename Rng0, typename Rng1, typename R = equal_to,
+            CONCEPT_template(typename Rng0, typename Rng1, typename R = equal_to,
                      typename P0 = ident, typename P1 = ident,
                      typename I0 = iterator_t<Rng0>,
-                     typename I1 = iterator_t<Rng1>,
-                     CONCEPT_REQUIRES_(Range<Rng0>() && Range<Rng1>() &&
-                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
+                     typename I1 = iterator_t<Rng1>)(
+                     requires Range<Rng0>() && Range<Rng1>() &&
+                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())
             safe_iterator_t<Rng0> operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {

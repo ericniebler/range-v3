@@ -62,10 +62,10 @@ namespace ranges
 
         struct partial_sum_fn
         {
-            template<typename I, typename S1, typename O, typename S2,
-                typename BOp = plus, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S1, I>() && Sentinel<S2, O>() &&
-                    PartialSummable<I, O, BOp, P>())>
+            CONCEPT_template(typename I, typename S1, typename O, typename S2,
+                typename BOp = plus, typename P = ident)(
+                requires Sentinel<S1, I>() && Sentinel<S2, O>() &&
+                    PartialSummable<I, O, BOp, P>())
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
@@ -88,9 +88,9 @@ namespace ranges
                 return {begin, result};
             }
 
-            template<typename I, typename S, typename O, typename BOp = plus,
-                typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && PartialSummable<I, O, BOp, P>())>
+            CONCEPT_template(typename I, typename S, typename O, typename BOp = plus,
+                typename P = ident)(
+                requires Sentinel<S, I>() && PartialSummable<I, O, BOp, P>())
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
@@ -98,10 +98,10 @@ namespace ranges
                                unreachable{}, std::move(bop), std::move(proj));
             }
 
-            template<typename Rng, typename ORef, typename BOp = plus,
+            CONCEPT_template(typename Rng, typename ORef, typename BOp = plus,
                 typename P = ident, typename I = iterator_t<Rng>,
-                typename O = uncvref_t<ORef>,
-                CONCEPT_REQUIRES_(Range<Rng>() && PartialSummable<I, O, BOp, P>())>
+                typename O = uncvref_t<ORef>)(
+                requires Range<Rng>() && PartialSummable<I, O, BOp, P>())
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng && rng, ORef && result, BOp bop = BOp{}, P proj = P{}) const
             {
@@ -109,11 +109,11 @@ namespace ranges
                                std::move(bop), std::move(proj));
             }
 
-            template<typename Rng, typename ORng, typename BOp = plus,
+            CONCEPT_template(typename Rng, typename ORng, typename BOp = plus,
                 typename P = ident, typename I = iterator_t<Rng>,
-                typename O = iterator_t<ORng>,
-                CONCEPT_REQUIRES_(Range<Rng>() && Range<ORng>() &&
-                    PartialSummable<I, O, BOp, P>())>
+                typename O = iterator_t<ORng>)(
+                requires Range<Rng>() && Range<ORng>() &&
+                    PartialSummable<I, O, BOp, P>())
             tagged_pair<tag::in(safe_iterator_t<Rng>),
                 tag::out(safe_iterator_t<ORng>)>
             operator()(Rng && rng, ORng && result, BOp bop = BOp{}, P proj = P{}) const

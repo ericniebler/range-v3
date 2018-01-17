@@ -24,6 +24,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/detail/config.hpp>
 
 namespace ranges
 {
@@ -656,8 +657,8 @@ namespace ranges
     }
 }
 
-#define CONCEPT_PP_CAT_(X, Y) X ## Y
-#define CONCEPT_PP_CAT(X, Y)  CONCEPT_PP_CAT_(X, Y)
+#define CONCEPT_PP_CAT_(X, ...) X ## __VA_ARGS__
+#define CONCEPT_PP_CAT(X, ...)  CONCEPT_PP_CAT_(X, __VA_ARGS__)
 
 /// \addtogroup group-concepts
 /// @{
@@ -686,6 +687,88 @@ namespace ranges
 /// @}
 
 #define CONCEPT_ASSERT_MSG static_assert
+
+
+
+#if RANGES_CXX_VA_OPT
+
+#define RANGES_template(...) \
+    template<__VA_ARGS__ __VA_OPT__(, ) RANGES_REQUIRES /**/
+
+#else // RANGES_VA_OPT
+
+// binary intermediate split macro.
+//
+// An "intermediate" is a single macro argument
+// that expands to more than one argument before
+// it can be passed to another macro.  E.g.
+//
+// #define IM x, y
+//
+// CONCEPT_PP_SPLIT(0, IM) // x
+// CONCEPT_PP_SPLIT(1, IM) // y
+
+#define CONCEPT_PP_SPLIT(i, ...) CONCEPT_PP_CAT_(CONCEPT_PP_SPLIT_, i)(__VA_ARGS__)
+#define CONCEPT_PP_SPLIT_0(a, ...) a
+#define CONCEPT_PP_SPLIT_1(a, ...) __VA_ARGS__
+
+// parenthetic expression detection on
+// parenthetic expressions of any arity
+// (hence the name 'variadic').  E.g.
+//
+// CONCEPT_PP_IS_VARIADIC(+)         // 0
+// CONCEPT_PP_IS_VARIADIC(())        // 1
+// CONCEPT_PP_IS_VARIADIC(text)      // 0
+// CONCEPT_PP_IS_VARIADIC((a, b, c)) // 1
+
+#define CONCEPT_PP_IS_VARIADIC(...)                                               \
+    CONCEPT_PP_SPLIT(                                                             \
+        0, CONCEPT_PP_CAT(CONCEPT_PP_IS_VARIADIC_R_, CONCEPT_PP_IS_VARIADIC_C __VA_ARGS__)) \
+    /**/
+#define CONCEPT_PP_IS_VARIADIC_C(...) 1
+#define CONCEPT_PP_IS_VARIADIC_R_1 1,
+#define CONCEPT_PP_IS_VARIADIC_R_CONCEPT_PP_IS_VARIADIC_C 0,
+
+// lazy 'if' construct.
+// 'bit' must be 0 or 1 (i.e. Boolean).  E.g.
+//
+// CONCEPT_PP_IIF(0)(T, F) // F
+// CONCEPT_PP_IIF(1)(T, F) // T
+
+#define CONCEPT_PP_IIF(bit) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, bit)
+#define CONCEPT_PP_IIF_0(t, ...) __VA_ARGS__
+#define CONCEPT_PP_IIF_1(t, ...) t
+
+// emptiness detection macro...
+
+#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION(...)      \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_VARIADIC(__VA_ARGS__)) \
+    (0, CONCEPT_PP_IS_VARIADIC(CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__()))
+    /**/
+#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C() ()
+
+#define CONCEPT_PP_EMPTY()
+#define CONCEPT_PP_COMMA() ,
+#define CONCEPT_PP_COMMA_IIF(X) CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
+
+#define CONCEPT_template(...)               \
+    template<__VA_ARGS__ CONCEPT_PP_COMMA_IIF( \
+        CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__)) CONCEPT_PP_REQUIRES
+    /**/
+#endif // CONCEPT_PP_VA_OPT_SUPPORTED
+
+#define CONCEPT_PP_REQUIRES(...) \
+    CONCEPT_PP_REQUIRES_2(CONCEPT_PP_CAT(CONCEPT_PP_IMPL_, __VA_ARGS__))
+#define CONCEPT_PP_IMPL_requires
+#define CONCEPT_PP_REQUIRES_2(...)                                              \
+    int _coronet_requires_ = 0,                                                 \
+    typename std::enable_if<(_coronet_requires_ == 0 && (__VA_ARGS__))>::type* = nullptr >
+
+#define CONCEPT_requires(...)               \
+    CONCEPT_template()(requires __VA_ARGS__)
+    /**/
+
+
 /// @}
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

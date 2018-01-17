@@ -31,9 +31,9 @@ namespace ranges
         /// @{
         struct count_if_fn
         {
-            template<typename I, typename S, typename R, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectPredicate<R, projected<I, P> >())>
+            CONCEPT_template(typename I, typename S, typename R, typename P = ident)(
+                requires InputIterator<I>() && Sentinel<S, I>() &&
+                    IndirectPredicate<R, projected<I, P> >())
             difference_type_t<I>
             operator()(I begin, S end, R pred, P proj = P{}) const
             {
@@ -44,9 +44,9 @@ namespace ranges
                 return n;
             }
 
-            template<typename Rng, typename R, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectPredicate<R, projected<I, P> >())>
+            CONCEPT_template(typename Rng, typename R, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires InputRange<Rng>() && IndirectPredicate<R, projected<I, P> >())
             difference_type_t<I>
             operator()(Rng &&rng, R pred, P proj = P{}) const
             {

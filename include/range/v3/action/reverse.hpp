@@ -49,8 +49,8 @@ namespace ranges
                 template<typename Rng>
                 using Reversible = concepts::models<Reversible_, Rng>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Reversible<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Reversible<Rng>())
                 Rng operator()(Rng && rng) const
                 {
                     ranges::reverse(rng);
@@ -58,8 +58,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                         CONCEPT_REQUIRES_(!Reversible<Rng>())>
+                CONCEPT_template(typename Rng)(
+                         requires !Reversible<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),

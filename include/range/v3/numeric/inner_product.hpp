@@ -48,14 +48,12 @@ namespace ranges
 
         struct inner_product_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename T,
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
-                typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S1, I1>() &&
+                typename P1 = ident, typename P2 = ident)(
+                requires Sentinel<S1, I1>() &&
                     Sentinel<S2, I2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
-                )>
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
             T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -64,13 +62,11 @@ namespace ranges
                 return init;
             }
 
-            template<typename I1, typename S1, typename I2, typename T,
+            CONCEPT_template(typename I1, typename S1, typename I2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
-                typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S1, I1>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
-                )>
+                typename P1 = ident, typename P2 = ident)(
+                requires Sentinel<S1, I1>() &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
             T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -78,14 +74,12 @@ namespace ranges
                     std::move(init), std::move(bop1), std::move(bop2), std::move(proj1), std::move(proj2));
             }
 
-            template<typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
+            CONCEPT_template(typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = uncvref_t<I2Ref>,
-                CONCEPT_REQUIRES_(
-                    Range<Rng1>() && Iterator<I2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
-                )>
+                typename I2 = uncvref_t<I2Ref>)(
+                requires Range<Rng1>() && Iterator<I2>() &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
             T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -93,15 +87,13 @@ namespace ranges
                     std::move(bop1), std::move(bop2),  std::move(proj1), std::move(proj2));
             }
 
-            template<typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
+            CONCEPT_template(typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(
-                    Range<Rng1>() &&
+                typename I2 = iterator_t<Rng2>)(
+                requires Range<Rng1>() &&
                     Range<Rng2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
-                )>
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
             T operator()(Rng1 && rng1, Rng2 && rng2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

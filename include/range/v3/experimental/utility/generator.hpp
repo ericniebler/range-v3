@@ -143,9 +143,9 @@ namespace ranges
                     except_ = std::current_exception();
                     RANGES_EXPECT(except_);
                 }
-                template<typename Arg,
-                    CONCEPT_REQUIRES_(ConvertibleTo<Arg, Reference>() &&
-                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)>
+                CONCEPT_template(typename Arg)(
+                    requires ConvertibleTo<Arg, Reference>() &&
+                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
                 std::experimental::suspend_always yield_value(Arg &&arg)
                     noexcept(std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
                 {

@@ -37,8 +37,8 @@ namespace ranges
             struct indirect_zip_fn_
             {
                 // tuple value
-                template<typename ...Its,
-                    CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                CONCEPT_template(typename ...Its)(
+                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
                 [[noreturn]] auto operator()(copy_tag, Its...) const ->
                     std::tuple<value_type_t<Its>...>
                 {
@@ -46,8 +46,8 @@ namespace ranges
                 }
 
                 // tuple reference
-                template<typename ...Its,
-                    CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                CONCEPT_template(typename ...Its)(
+                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
                 auto operator()(Its const &...its) const
                     noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -56,8 +56,8 @@ namespace ranges
                 )
 
                 // tuple rvalue reference
-                template<typename ...Its,
-                    CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                CONCEPT_template(typename ...Its)(
+                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
                 auto operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
                         noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value)
@@ -67,8 +67,8 @@ namespace ranges
                 )
 
                 // pair value
-                template<typename It1, typename It2,
-                    CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                CONCEPT_template(typename It1, typename It2)(
+                    requires Readable<It1>() && Readable<It2>())
                 [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
                     std::pair<value_type_t<It1>, value_type_t<It2>>
                 {
@@ -76,8 +76,8 @@ namespace ranges
                 }
 
                 // pair reference
-                template<typename It1, typename It2,
-                    CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                CONCEPT_template(typename It1, typename It2)(
+                    requires Readable<It1>() && Readable<It2>())
                 auto operator()(It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(reference_t<It1>(*it1)) &&
                              noexcept(reference_t<It2>(*it2)))
@@ -87,8 +87,8 @@ namespace ranges
                 )
 
                 // pair rvalue reference
-                template<typename It1, typename It2,
-                    CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                CONCEPT_template(typename It1, typename It2)(
+                    requires Readable<It1>() && Readable<It2>())
                 auto operator()(move_tag, It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
                              noexcept(rvalue_reference_t<It2>(iter_move(it2))))
@@ -121,8 +121,8 @@ namespace ranges
                 template<typename ...Rngs>
                 using Concept = meta::and_<InputRange<Rngs>...>;
 
-                template<typename...Rngs,
-                    CONCEPT_REQUIRES_(Concept<Rngs...>())>
+                CONCEPT_template(typename...Rngs)(
+                    requires Concept<Rngs...>())
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_<Range<Rngs>...>());
@@ -130,8 +130,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename...Rngs,
-                    CONCEPT_REQUIRES_(!Concept<Rngs...>())>
+                CONCEPT_template(typename...Rngs)(
+                    requires !Concept<Rngs...>())
                 void operator()(Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),

@@ -28,8 +28,8 @@ namespace ranges
         /// @{
         struct fill_fn
         {
-            template<typename O, typename S, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V const &>() && Sentinel<S, O>())>
+            CONCEPT_template(typename O, typename S, typename V)(
+                requires OutputIterator<O, V const &>() && Sentinel<S, O>())
             O operator()(O begin, S end, V const & val) const
             {
                 for(; begin != end; ++begin)
@@ -37,9 +37,9 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename V,
-                typename O = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputRange<Rng, V const &>())>
+            CONCEPT_template(typename Rng, typename V,
+                typename O = iterator_t<Rng>)(
+                requires OutputRange<Rng, V const &>())
             safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
             {
                 return (*this)(begin(rng), end(rng), val);

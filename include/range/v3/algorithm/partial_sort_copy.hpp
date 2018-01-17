@@ -43,10 +43,10 @@ namespace ranges
         /// @{
         struct partial_sort_copy_fn
         {
-            template<typename I, typename SI, typename O, typename SO, typename C = ordered_less,
-                typename PI = ident, typename PO = ident,
-                CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
-                    Sentinel<SI, I>() && Sentinel<SO, O>())>
+            CONCEPT_template(typename I, typename SI, typename O, typename SO, typename C = ordered_less,
+                typename PI = ident, typename PO = ident)(
+                requires PartialSortCopyConcept<I, O, C, PI, PO>() &&
+                    Sentinel<SI, I>() && Sentinel<SO, O>())
             O operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const
             {
@@ -71,12 +71,12 @@ namespace ranges
                 return r;
             }
 
-            template<typename InRng, typename OutRng, typename C = ordered_less,
+            CONCEPT_template(typename InRng, typename OutRng, typename C = ordered_less,
                 typename PI = ident, typename PO = ident,
                 typename I = iterator_t<InRng>,
-                typename O = iterator_t<OutRng>,
-                CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
-                    Range<InRng>() && Range<OutRng>())>
+                typename O = iterator_t<OutRng>)(
+                requires PartialSortCopyConcept<I, O, C, PI, PO>() &&
+                    Range<InRng>() && Range<OutRng>())
             safe_iterator_t<OutRng>
             operator()(InRng && in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const

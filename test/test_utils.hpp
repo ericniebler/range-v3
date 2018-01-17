@@ -32,15 +32,15 @@ struct check_equal_fn
     template<typename T, typename U>
     using BothRanges = meta::strict_and<ranges::InputRange<T>, ranges::InputRange<U>>;
 
-    template<typename T, typename U,
-        CONCEPT_REQUIRES_(!BothRanges<T, U>())>
+    CONCEPT_template(typename T, typename U)(
+        requires !BothRanges<T, U>())
     void operator()(T && actual, U && expected) const
     {
         CHECK((T &&) actual == (U &&) expected);
     }
 
-    template<typename Rng1, typename Rng2,
-        CONCEPT_REQUIRES_(BothRanges<Rng1, Rng2>())>
+    CONCEPT_template(typename Rng1, typename Rng2)(
+        requires BothRanges<Rng1, Rng2>())
     void operator()(Rng1 && actual, Rng2 && expected) const
     {
         auto begin0 = ranges::begin(actual);
@@ -53,8 +53,8 @@ struct check_equal_fn
         CHECK(begin1 == end1);
     }
 
-    template<typename Rng, typename Val,
-        CONCEPT_REQUIRES_(ranges::InputRange<Rng>())>
+    CONCEPT_template(typename Rng, typename Val)(
+        requires ranges::InputRange<Rng>())
     void operator()(Rng && actual, std::initializer_list<Val> && expected) const
     {
         (*this)(actual, expected);

@@ -115,39 +115,46 @@ namespace ranges
             (
                 ranges::end(rng.base())
             )
-            template<typename I, CONCEPT_REQUIRES_(EqualityComparable<I>())>
+            CONCEPT_template(typename I)(
+                requires EqualityComparable<I>())
             static bool equal(I const &it0, I const &it1)
             {
                 return it0 == it1;
             }
-            template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
+            CONCEPT_template(typename I)(
+                requires Iterator<I>())
             static reference_t<I> read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
                 noexcept(noexcept(reference_t<I>(*it)))
             {
                 return *it;
             }
-            template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
+            CONCEPT_template(typename I)(
+                requires Iterator<I>())
             static void next(I &it)
             {
                 ++it;
             }
-            template<typename I, CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
+            CONCEPT_template(typename I)(
+                requires BidirectionalIterator<I>())
             static void prev(I &it)
             {
                 --it;
             }
-            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            CONCEPT_template(typename I)(
+                requires RandomAccessIterator<I>())
             static void advance(I &it, difference_type_t<I> n)
             {
                 it += n;
             }
-            template<typename I, CONCEPT_REQUIRES_(SizedSentinel<I, I>())>
+            CONCEPT_template(typename I)(
+                requires SizedSentinel<I, I>())
             static difference_type_t<I> distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
-            template<typename I, typename S, CONCEPT_REQUIRES_(Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S)(
+                requires Sentinel<S, I>())
             static constexpr bool empty(I const &it, S const &end)
             {
                 return it == end;
@@ -411,14 +418,15 @@ namespace ranges
                 auto pos = adapt.begin(d);
                 return {std::move(pos), std::move(adapt)};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>())
             RANGES_CXX14_CONSTEXPR auto begin_cursor()
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D &>()))
             {
                 return view_adaptor::begin_cursor_(derived());
             }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>() && Range<base_range_t const>())
             RANGES_CXX14_CONSTEXPR auto begin_cursor() const
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D const &>()))
             {
@@ -435,14 +443,15 @@ namespace ranges
                 auto pos = adapt.end(d);
                 return {std::move(pos), std::move(adapt)};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>())
             RANGES_CXX14_CONSTEXPR auto end_cursor()
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D &>()))
             {
                 return view_adaptor::end_cursor_(derived());
             }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>() && Range<base_range_t const>())
             RANGES_CXX14_CONSTEXPR auto end_cursor() const
             RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D const &>()))
             {

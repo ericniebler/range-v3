@@ -194,9 +194,9 @@ namespace ranges
                     InputRange<Rng2>,
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>>;
 
-                template<typename Rng1, typename Rng2,
-                    typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng1, Rng2, C, P1, P2>())>
+                CONCEPT_template(typename Rng1, typename Rng2,
+                    typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                    requires Concept<Rng1, Rng2, C, P1, P2>())
                 set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -209,11 +209,11 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng1, typename Rng2,
+                CONCEPT_template(typename Rng1, typename Rng2,
                     typename C, typename P1, typename P2,
                     typename I1 = iterator_t<Rng1>,
-                    typename I2 = iterator_t<Rng2>,
-                    CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
+                    typename I2 = iterator_t<Rng2>)(
+                    requires !Concept<Rng1, Rng2, C, P1, P2>())
                 void operator()(Rng1 &&, Rng2 &&, C, P1, P2) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
@@ -356,9 +356,9 @@ namespace ranges
                     InputRange<Rng1>, InputRange<Rng2>,
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
-                template<typename Rng1, typename Rng2,
-                    typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng1, Rng2, C, P1, P2>())>
+                CONCEPT_template(typename Rng1, typename Rng2,
+                    typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                    requires Concept<Rng1, Rng2, C, P1, P2>())
                 set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -371,11 +371,11 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng1, typename Rng2,
+                CONCEPT_template(typename Rng1, typename Rng2,
                     typename C, typename P1, typename P2,
                     typename I1 = iterator_t<Rng1>,
-                    typename I2 = iterator_t<Rng2>,
-                    CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
+                    typename I2 = iterator_t<Rng2>)(
+                    requires !Concept<Rng1, Rng2, C, P1, P2>())
                 void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
@@ -565,9 +565,9 @@ namespace ranges
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
-                template<typename Rng1, typename Rng2,
-                    typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng1, Rng2, C, P1, P2>())>
+                CONCEPT_template(typename Rng1, typename Rng2,
+                    typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                    requires Concept<Rng1, Rng2, C, P1, P2>())
                 set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -580,11 +580,11 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng1, typename Rng2,
+                CONCEPT_template(typename Rng1, typename Rng2,
                     typename C, typename P1, typename P2,
                     typename I1 = iterator_t<Rng1>,
-                    typename I2 = iterator_t<Rng2>,
-                    CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
+                    typename I2 = iterator_t<Rng2>)(
+                    requires !Concept<Rng1, Rng2, C, P1, P2>())
                 void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
@@ -785,9 +785,9 @@ namespace ranges
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
-                template<typename Rng1, typename Rng2,
-                    typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                    CONCEPT_REQUIRES_(Concept<Rng1, Rng2, C, P1, P2>())>
+                CONCEPT_template(typename Rng1, typename Rng2,
+                    typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
+                    requires Concept<Rng1, Rng2, C, P1, P2>())
                 set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 && rng1, Rng2 && rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -800,11 +800,11 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng1, typename Rng2,
+                CONCEPT_template(typename Rng1, typename Rng2,
                     typename C, typename P1, typename P2,
                     typename I1 = iterator_t<Rng1>,
-                    typename I2 = iterator_t<Rng2>,
-                    CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
+                    typename I2 = iterator_t<Rng2>)(
+                    requires !Concept<Rng1, Rng2, C, P1, P2>())
                 void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {

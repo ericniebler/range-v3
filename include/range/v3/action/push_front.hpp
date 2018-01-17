@@ -29,16 +29,16 @@ namespace ranges
         /// \cond
         namespace adl_push_front_detail
         {
-            template<typename Cont, typename T,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())>
+            CONCEPT_template(typename Cont, typename T)(
+                requires LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())
             auto push_front(Cont && cont, T && t) ->
                 decltype((void)unwrap_reference(cont).push_front(static_cast<T&&>(t)))
             {
                 unwrap_reference(cont).push_front(static_cast<T&&>(t));
             }
 
-            template<typename Cont, typename Rng,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Range<Rng>())>
+            CONCEPT_template(typename Cont, typename Rng)(
+                requires LvalueContainerLike<Cont>() && Range<Rng>())
             auto push_front(Cont && cont, Rng && rng) ->
                 decltype((void)ranges::insert(cont, begin(cont), static_cast<Rng&&>(rng)))
             {
@@ -72,8 +72,8 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = concepts::models<ConceptImpl, Rng, Fun>;
 
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Concept<Rng, T>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires Concept<Rng, T>())
                 Rng operator()(Rng && rng, T && t) const
                 {
                     push_front(rng, static_cast<T&&>(t));
@@ -81,8 +81,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !Concept<Rng, T>())
                 void operator()(Rng &&rng, T &&t) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

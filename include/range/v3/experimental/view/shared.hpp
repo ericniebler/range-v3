@@ -77,8 +77,8 @@ namespace ranges
                 {
                 public:
 #ifndef RANGES_DOXYGEN_INVOKED
-                    template<typename Rng,
-                        CONCEPT_REQUIRES_(!Range<Rng>())>
+                    CONCEPT_template(typename Rng)(
+                        requires !Range<Rng>())
                     void operator()(std::shared_ptr<Rng>) const
                     {
                         CONCEPT_ASSERT_MSG(Range<Rng>(),
@@ -87,20 +87,20 @@ namespace ranges
                     }
 #endif
 
-                    template<typename Rng,
-                        CONCEPT_REQUIRES_(Range<Rng>()
+                    CONCEPT_template(typename Rng)(
+                        requires Range<Rng>()
                                           && !View<Rng>()
-                                          && !std::is_reference<Rng>::value)>
+                                          && !std::is_reference<Rng>::value)
                     shared_view<Rng> operator()(Rng && t) const
                     {
                         return shared_view<Rng>{std::move(t)};
                     }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                    template<typename Rng,
-                        CONCEPT_REQUIRES_(!Range<Rng>()
+                    CONCEPT_template(typename Rng)(
+                        requires !Range<Rng>()
                                           || View<Rng>()
-                                          || std::is_reference<Rng>::value)>
+                                          || std::is_reference<Rng>::value)
                     void operator()(Rng &&) const
                     {
                         CONCEPT_ASSERT_MSG(Range<Rng>(),

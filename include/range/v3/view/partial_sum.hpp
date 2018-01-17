@@ -141,15 +141,15 @@ namespace ranges
                             range_common_reference_t<Rng> &&)>,
                         range_value_type_t<Rng>>>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires Concept<Rng, Fun>())
                 partial_sum_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires !Concept<Rng, Fun>())
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

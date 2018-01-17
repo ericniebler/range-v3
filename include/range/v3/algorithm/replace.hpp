@@ -38,8 +38,8 @@ namespace ranges
         /// @{
         struct replace_fn
         {
-            template<typename I, typename S, typename T0, typename T1, typename P = ident,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S, typename T0, typename T1, typename P = ident)(
+                requires Replaceable<I, T0, T1, P>() && Sentinel<S, I>())
             I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {
                 for(; begin != end; ++begin)
@@ -48,9 +48,9 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename T0, typename T1, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Range<Rng>())>
+            CONCEPT_template(typename Rng, typename T0, typename T1, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires Replaceable<I, T0, T1, P>() && Range<Rng>())
             safe_iterator_t<Rng>
             operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {

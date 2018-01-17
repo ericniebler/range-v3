@@ -96,15 +96,15 @@ namespace ranges
                     Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>,
                     Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>>;
 
-                template<typename G,
-                    CONCEPT_REQUIRES_(Concept<G>())>
+                CONCEPT_template(typename G)(
+                    requires Concept<G>())
                 generate_view<G> operator()(G g) const
                 {
                     return generate_view<G>{std::move(g)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename G,
-                    CONCEPT_REQUIRES_(!Concept<G>())>
+                CONCEPT_template(typename G)(
+                    requires !Concept<G>())
                 void operator()(G) const
                 {
                     check<G>();

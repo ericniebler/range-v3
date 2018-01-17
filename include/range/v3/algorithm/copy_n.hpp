@@ -36,12 +36,9 @@ namespace ranges
         /// @{
         struct copy_n_fn
         {
-            template<typename I, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    InputIterator<I>() &&
-                    WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O>()
-                )>
+            CONCEPT_template(typename I, typename O, typename P = ident)(
+                requires InputIterator<I>() && WeaklyIncrementable<O>() &&
+                    IndirectlyCopyable<I, O>())
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, difference_type_t<I> n, O out) const
             {

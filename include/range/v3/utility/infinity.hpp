@@ -35,26 +35,26 @@ namespace ranges
             return false;
         }
 
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
+        CONCEPT_template(typename Integer)(
+            requires Integral<Integer>())
         constexpr bool operator==(Integer, infinity)
         {
             return false;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
+        CONCEPT_template(typename Integer)(
+            requires Integral<Integer>())
         constexpr bool operator==(infinity, Integer)
         {
             return false;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
+        CONCEPT_template(typename Integer)(
+            requires Integral<Integer>())
         constexpr bool operator!=(Integer, infinity)
         {
             return true;
         }
-        template<typename Integer,
-            CONCEPT_REQUIRES_(Integral<Integer>())>
+        CONCEPT_template(typename Integer)(
+            requires Integral<Integer>())
         constexpr bool operator!=(infinity, Integer)
         {
             return true;

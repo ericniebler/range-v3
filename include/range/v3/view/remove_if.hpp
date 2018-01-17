@@ -161,8 +161,8 @@ namespace ranges
                     InputRange<Rng>,
                     IndirectPredicate<Pred, iterator_t<Rng>>>;
 
-                template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(Constraint<Rng, Pred>())>
+                CONCEPT_template(typename Rng, typename Pred)(
+                    requires Constraint<Rng, Pred>())
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -170,8 +170,8 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(!Constraint<Rng, Pred>())>
+                CONCEPT_template(typename Rng, typename Pred)(
+                    requires !Constraint<Rng, Pred>())
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

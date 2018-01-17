@@ -91,16 +91,16 @@ namespace ranges
                     InputRange<Rng>,
                     Readable<range_value_type_t<Rng>>>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Constraint<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Constraint<Rng>())
                 constexpr auto operator()(Rng &&rng) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Constraint<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Constraint<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

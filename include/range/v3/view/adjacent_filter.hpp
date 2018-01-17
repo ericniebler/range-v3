@@ -144,8 +144,8 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(detail::AdjacentFilterConstraint<Rng, Pred>())>
+                CONCEPT_template(typename Rng, typename Pred)(
+                    requires detail::AdjacentFilterConstraint<Rng, Pred>())
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng && rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -153,8 +153,8 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(!detail::AdjacentFilterConstraint<Rng, Pred>())>
+                CONCEPT_template(typename Rng, typename Pred)(
+                    requires !detail::AdjacentFilterConstraint<Rng, Pred>())
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

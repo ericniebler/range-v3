@@ -30,10 +30,10 @@ namespace ranges
         /// @{
         struct lexicographical_compare_fn
         {
-            template<typename I0, typename S0, typename I1, typename S1,
-                typename C = ordered_less, typename P0 = ident, typename P1 = ident,
-                CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
-                    Comparable<I0, I1, C, P0, P1>())>
+            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+                typename C = ordered_less, typename P0 = ident, typename P1 = ident)(
+                requires Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
+                    Comparable<I0, I1, C, P0, P1>())
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
@@ -47,12 +47,12 @@ namespace ranges
                 return false;
             }
 
-            template<typename Rng0, typename Rng1, typename C = ordered_less,
+            CONCEPT_template(typename Rng0, typename Rng1, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
-                typename I1 = iterator_t<Rng1>,
-                CONCEPT_REQUIRES_(InputRange<Rng0>() && InputRange<Rng1>() &&
-                    Comparable<I0, I1, C, P0, P1>())>
+                typename I1 = iterator_t<Rng1>)(
+                requires InputRange<Rng0>() && InputRange<Rng1>() &&
+                    Comparable<I0, I1, C, P0, P1>())
             bool operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {

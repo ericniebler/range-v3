@@ -117,8 +117,8 @@ namespace ranges
                 }
             }
         public:
-            template<typename I, typename S, typename V, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S, typename V, typename C = equal_to, typename P = ident)(
+                requires Searchnable<I, V, C, P>() && Sentinel<S, I>())
             I operator()(I begin, S end, difference_type_t<I> count, V const &val,
                 C pred = C{}, P proj = P{}) const
             {
@@ -132,9 +132,9 @@ namespace ranges
                         proj);
             }
 
-            template<typename Rng, typename V, typename C = equal_to, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Range<Rng>())>
+            CONCEPT_template(typename Rng, typename V, typename C = equal_to, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires Searchnable<I, V, C, P>() && Range<Rng>())
             safe_iterator_t<Rng>
             operator()(Rng &&rng, difference_type_t<I> count, V const &val, C pred = C{},
                 P proj = P{}) const

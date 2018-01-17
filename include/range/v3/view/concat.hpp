@@ -119,8 +119,8 @@ namespace ranges
                 struct next_fun
                 {
                     cursor *pos;
-                    template<typename I, std::size_t N,
-                        CONCEPT_REQUIRES_(Iterator<I>())>
+                    CONCEPT_template(typename I, std::size_t N)(
+                        requires Iterator<I>())
                     void operator()(indexed_element<I, N> it) const
                     {
                         RANGES_ASSERT(it.get() != end(std::get<N>(pos->rng_->rngs_)));
@@ -131,15 +131,15 @@ namespace ranges
                 struct prev_fun
                 {
                     cursor *pos;
-                    template<typename I,
-                        CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
+                    CONCEPT_template(typename I)(
+                        requires BidirectionalIterator<I>())
                     void operator()(indexed_element<I, 0> it) const
                     {
                         RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                         --it.get();
                     }
-                    template<typename I, std::size_t N,
-                        CONCEPT_REQUIRES_(N != 0 && BidirectionalIterator<I>())>
+                    CONCEPT_template(typename I, std::size_t N)(
+                        requires N != 0 && BidirectionalIterator<I>())
                     void operator()(indexed_element<I, N> it) const
                     {
                         if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
@@ -157,14 +157,14 @@ namespace ranges
                 {
                     cursor *pos;
                     difference_type n;
-                    template<typename I,
-                        CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+                    CONCEPT_template(typename I)(
+                        requires RandomAccessIterator<I>())
                     void operator()(indexed_element<I, cranges - 1> it) const
                     {
                         ranges::advance(it.get(), n);
                     }
-                    template<typename I, std::size_t N,
-                        CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+                    CONCEPT_template(typename I, std::size_t N)(
+                        requires RandomAccessIterator<I>())
                     void operator()(indexed_element<I, N> it) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
@@ -182,14 +182,14 @@ namespace ranges
                 {
                     cursor *pos;
                     difference_type n;
-                    template<typename I,
-                        CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+                    CONCEPT_template(typename I)(
+                        requires RandomAccessIterator<I>())
                     void operator()(indexed_element<I, 0> it) const
                     {
                         ranges::advance(it.get(), n);
                     }
-                    template<typename I, std::size_t N,
-                        CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+                    CONCEPT_template(typename I, std::size_t N)(
+                        requires RandomAccessIterator<I>())
                     void operator()(indexed_element<I, N> it) const
                     {
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));

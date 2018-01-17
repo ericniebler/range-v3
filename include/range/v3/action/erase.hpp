@@ -27,17 +27,17 @@ namespace ranges
         /// \cond
         namespace adl_erase_detail
         {
-            template<typename Cont, typename I,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && ForwardIterator<I>())>
+            CONCEPT_template(typename Cont, typename I)(
+                requires LvalueContainerLike<Cont>() && ForwardIterator<I>())
             auto erase(Cont && cont, I it) ->
                 decltype(unwrap_reference(cont).erase(it))
             {
                 return unwrap_reference(cont).erase(it);
             }
 
-            template<typename Cont, typename I, typename S,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && ForwardIterator<I>() &&
-                    Sentinel<S, I>())>
+            CONCEPT_template(typename Cont, typename I, typename S)(
+                requires LvalueContainerLike<Cont>() && ForwardIterator<I>() &&
+                    Sentinel<S, I>())
             auto erase(Cont && cont, I begin, S end) ->
                 decltype(unwrap_reference(cont).erase(begin, end))
             {
@@ -47,16 +47,16 @@ namespace ranges
             struct erase_fn
             {
                 // TODO associative erase by key
-                template<typename Rng, typename I,
-                    CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>())>
+                CONCEPT_template(typename Rng, typename I)(
+                    requires Range<Rng>() && ForwardIterator<I>())
                 auto operator()(Rng && rng, I it) const ->
                     decltype(erase(static_cast<Rng&&>(rng), it))
                 {
                     return erase(static_cast<Rng&&>(rng), it);
                 }
-                template<typename Rng, typename I, typename S,
-                    CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>() &&
-                        Sentinel<S, I>())>
+                CONCEPT_template(typename Rng, typename I, typename S)(
+                    requires Range<Rng>() && ForwardIterator<I>() &&
+                        Sentinel<S, I>())
                 auto operator()(Rng && rng, I begin, S end) const ->
                     decltype(erase(static_cast<Rng&&>(rng), begin, end))
                 {

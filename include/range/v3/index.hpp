@@ -47,8 +47,8 @@ namespace ranges
         struct index_fn
         {
             /// \return `begin(rng)[n]`
-            template<typename Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>())>
+            CONCEPT_template(typename Rng)(
+                requires RandomAccessRange<Rng>())
             RANGES_CXX14_CONSTEXPR
             auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 noexcept(noexcept(ranges::begin(rng)[n]) &&
@@ -60,11 +60,11 @@ namespace ranges
                 return ranges::begin(rng)[n];
             }
             /// \return `begin(rng)[n]`
-            template<typename Rng, typename T, typename Self = index_fn,
-                     typename D = range_difference_type_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() &&
+            CONCEPT_template(typename Rng, typename T, typename Self = index_fn,
+                     typename D = range_difference_type_t<Rng>)(
+                requires RandomAccessRange<Rng>() &&
                                   !Same<uncvref_t<T>, D>() &&
-                                  ConvertibleTo<T, D>())>
+                                  ConvertibleTo<T, D>())
             RANGES_CXX14_CONSTEXPR
             auto operator()(Rng &&rng, T &&t) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -73,8 +73,8 @@ namespace ranges
             )
 
             /// \cond
-            template<typename R, typename T,
-                CONCEPT_REQUIRES_(!index_detail::Concept<R, T>())>
+            CONCEPT_template(typename R, typename T)(
+                requires !index_detail::Concept<R, T>())
             void operator()(R&&, T&&) const
             {
                 CONCEPT_ASSERT_MSG(RandomAccessRange<R>(),

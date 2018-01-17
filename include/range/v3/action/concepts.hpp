@@ -122,13 +122,16 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            CONCEPT_template(typename T)(
+                requires Container<T>())
             std::true_type is_lvalue_container_like(T &);
 
-            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            CONCEPT_template(typename T)(
+                requires Container<T>())
             meta::not_<std::is_rvalue_reference<T>> is_lvalue_container_like(reference_wrapper<T>);
 
-            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            CONCEPT_template(typename T)(
+                requires Container<T>())
             std::true_type is_lvalue_container_like(std::reference_wrapper<T>);
         }
         /// \endcond

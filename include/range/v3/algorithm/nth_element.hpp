@@ -45,9 +45,9 @@ namespace ranges
         {
             // stable, 2-3 compares, 0-2 swaps
 
-            template<typename I, typename C, typename P,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() &&
-                    IndirectRelation<C, projected<I, P>>())>
+            CONCEPT_template(typename I, typename C, typename P)(
+                requires ForwardIterator<I>() &&
+                    IndirectRelation<C, projected<I, P>>())
             unsigned sort3(I x, I y, I z, C &pred, P &proj)
             {
                 unsigned r = 0;
@@ -81,9 +81,9 @@ namespace ranges
                 return r;
             }                                                             // x <= y && y <= z
 
-            template<typename I, typename C, typename P,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() &&
-                    IndirectRelation<C, projected<I, P>>())>
+            CONCEPT_template(typename I, typename C, typename P)(
+                requires BidirectionalIterator<I>() &&
+                    IndirectRelation<C, projected<I, P>>())
             void selection_sort(I begin, I end, C &pred, P &proj)
             {
                 RANGES_EXPECT(begin != end);
@@ -101,8 +101,8 @@ namespace ranges
         /// @{
         struct nth_element_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
+            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+                requires RandomAccessIterator<I>() && Sortable<I, C, P>())
             I operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const
             {
                 I end = ranges::next(nth, end_), end_orig = end;
@@ -290,12 +290,10 @@ namespace ranges
                 return end_orig;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(
-                    RandomAccessRange<Rng>() &&
-                    Sortable<I, C, P>()
-                )>
+            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires RandomAccessRange<Rng>() &&
+                    Sortable<I, C, P>())
             safe_iterator_t<Rng>
             operator()(Rng &&rng, I nth, C pred = C{}, P proj = P{}) const
             {

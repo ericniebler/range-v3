@@ -41,8 +41,8 @@ namespace ranges
         /// @{
         struct reverse_copy_fn
         {
-            template<typename I, typename S, typename O,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && ReverseCopyable<I, O>())>
+            CONCEPT_template(typename I, typename S, typename O)(
+                requires Sentinel<S, I>() && ReverseCopyable<I, O>())
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
                 I end = ranges::next(begin, end_), res = end;
@@ -51,9 +51,9 @@ namespace ranges
                 return {res, out};
             }
 
-            template<typename Rng, typename O,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Range<Rng>() && ReverseCopyable<I, O>())>
+            CONCEPT_template(typename Rng, typename O,
+                typename I = iterator_t<Rng>)(
+                requires Range<Rng>() && ReverseCopyable<I, O>())
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

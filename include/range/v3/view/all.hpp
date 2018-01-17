@@ -57,8 +57,8 @@ namespace ranges
                 }
 
                 /// If it's a view already, pass it though.
-                template<typename T,
-                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                CONCEPT_template(typename T)(
+                    requires View<uncvref_t<T>>())
                 static T from_range(T && t)
                 {
                     return static_cast<T&&>(t);
@@ -82,16 +82,16 @@ namespace ranges
                 // TODO handle char const * by turning it into a delimited range?
 
             public:
-                template<typename T,
-                    CONCEPT_REQUIRES_(Range<T>())>
+                CONCEPT_template(typename T)(
+                    requires Range<T>())
                 auto operator()(T && t) const ->
                     decltype(all_fn::from_range(static_cast<T&&>(t)))
                 {
                     return all_fn::from_range(static_cast<T&&>(t));
                 }
 
-                template<typename T,
-                    CONCEPT_REQUIRES_(Range<T &>())>
+                CONCEPT_template(typename T)(
+                    requires Range<T &>())
                 ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());

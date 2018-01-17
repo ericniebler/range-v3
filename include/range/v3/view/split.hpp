@@ -224,34 +224,34 @@ namespace ranges
                     ForwardRange<Sub>,
                     EqualityComparable<range_value_type_t<Rng>, range_value_type_t<Sub>>>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(FunctionConcept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires FunctionConcept<Rng, Fun>())
                 split_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(PredicateConcept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires PredicateConcept<Rng, Fun>())
                 split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(ElementConcept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires ElementConcept<Rng>())
                 split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng && rng, range_value_type_t<Rng> val) const
                 {
                     return {all(static_cast<Rng&&>(rng)), {std::move(val)}};
                 }
-                template<typename Rng, typename Sub,
-                    CONCEPT_REQUIRES_(SubRangeConcept<Rng, Sub>())>
+                CONCEPT_template(typename Rng, typename Sub)(
+                    requires SubRangeConcept<Rng, Sub>())
                 split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng && rng, Sub && sub) const
                 {
                     return {all(static_cast<Rng&&>(rng)), {static_cast<Sub&&>(sub)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!ConvertibleTo<T, range_value_type_t<Rng>>())>
+                CONCEPT_template(typename Rng, typename T)(
+                    requires !ConvertibleTo<T, range_value_type_t<Rng>>())
                 void operator()(Rng &&, T &&) const volatile
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

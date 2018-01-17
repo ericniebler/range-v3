@@ -129,16 +129,16 @@ namespace ranges
                     ForwardRange<Rng>,
                     IndirectRelation<Fun, iterator_t<Rng>>>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires Concept<Rng, Fun>())
                 group_by_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires !Concept<Rng, Fun>())
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

@@ -44,9 +44,9 @@ namespace ranges
 
         struct partition_point_fn
         {
-            template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() &&
-                    Sentinel<S, I>() && !SizedSentinel<S, I>())>
+            CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
+                requires PartitionPointable<I, C, P>() &&
+                    Sentinel<S, I>() && !SizedSentinel<S, I>())
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 // Probe exponentially for either end-of-range or an iterator
@@ -67,9 +67,9 @@ namespace ranges
                 }
             }
 
-            template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() &&
-                    SizedSentinel<S, I>())>
+            CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
+                requires PartitionPointable<I, C, P>() &&
+                    SizedSentinel<S, I>())
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 auto len = distance(begin, std::move(end));
@@ -77,19 +77,19 @@ namespace ranges
                     std::move(begin), len, std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Range<Rng>() && !SizedRange<Rng>() &&
-                    PartitionPointable<I, C, P>())>
+            CONCEPT_template(typename Rng, typename C, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires Range<Rng>() && !SizedRange<Rng>() &&
+                    PartitionPointable<I, C, P>())
             safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
             {
                 return (*this)(
                     begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(SizedRange<Rng>() && PartitionPointable<I, C, P>())>
+            CONCEPT_template(typename Rng, typename C, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires SizedRange<Rng>() && PartitionPointable<I, C, P>())
             safe_iterator_t<Rng> operator()(Rng && rng, C pred, P proj = P{}) const
             {
                 auto len = distance(rng);

@@ -61,14 +61,14 @@ namespace ranges
                     RANGES_EXPECT(n >= 0);
                 }
 
-                template<typename I2,
-                    CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
+                CONCEPT_template(typename I2)(
+                    requires ConvertibleTo<I2, I>())
                 counted_iterator(const counted_iterator<I2>& i)
                   : current_(i.current_), cnt_(i.cnt_)
                 {}
 
-                template<typename I2,
-                    CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
+                CONCEPT_template(typename I2)(
+                    requires ConvertibleTo<I2, I>())
                 counted_iterator& operator=(const counted_iterator<I2>& i)
                 {
                     current_ = i.current_;
@@ -90,7 +90,8 @@ namespace ranges
                 (
                     *current_
                 )
-                template<typename I2 = I, CONCEPT_REQUIRES_(Readable<I2 const>())>
+                CONCEPT_template(typename I2 = I)(
+                    requires Readable<I2 const>())
                 reference_t<I> operator*() const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -185,8 +186,8 @@ namespace ranges
                     ranges::iter_move(i.current_)
                 )
 
-                template<typename I2,
-                    CONCEPT_REQUIRES_(IndirectlySwappable<I2, I>())>
+                CONCEPT_template(typename I2)(
+                    requires IndirectlySwappable<I2, I>())
                 friend void iter_swap(
                     const counted_iterator& x, counted_iterator<I2> const &y)
                 RANGES_AUTO_RETURN_NOEXCEPT
@@ -201,8 +202,8 @@ namespace ranges
                 }
             };
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator==(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return x.count() == y.count();
@@ -220,8 +221,8 @@ namespace ranges
                 return x.count() == 0;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator!=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return !(x == y);
@@ -239,36 +240,36 @@ namespace ranges
                 return !(x == y);
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator<(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return y.count() < x.count();
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator<=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return !(y < x);
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator>(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return y < x;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             bool operator>=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
                 return !(x < y);
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
+            CONCEPT_template(typename I1, typename I2)(
+                requires Common<I1, I2>())
             difference_type_t<I2>
             operator-(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
             {
@@ -289,8 +290,8 @@ namespace ranges
                 return y.count();
             }
 
-            template<typename I,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            CONCEPT_template(typename I)(
+                requires RandomAccessIterator<I>())
             counted_iterator<I>
             operator+(difference_type_t<I> n, const counted_iterator<I>& x)
             {
@@ -347,8 +348,8 @@ namespace ranges
         using counted_iterator =
             _counted_iterator_::counted_iterator<I, meta::if_<Iterator<I>>>;
 
-        template<typename I,
-            CONCEPT_REQUIRES_(Iterator<I>())>
+        CONCEPT_template(typename I)(
+            requires Iterator<I>())
         counted_iterator<I> make_counted_iterator(I i, difference_type_t<I> n)
         {
             return {std::move(i), n};

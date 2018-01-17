@@ -44,10 +44,10 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Integral.
-                template<typename R,
+                CONCEPT_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(std::declval<R &>().size())),
-                    CONCEPT_REQUIRES_(Integral<N>())>
+                    typename N = decltype(aux::copy(std::declval<R &>().size())))(
+                    requires Integral<N>())
                 static constexpr N impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -55,18 +55,18 @@ namespace ranges
                 )
 
                 // Use ADL if it returns Integral.
-                template<typename R,
+                CONCEPT_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(size(std::declval<R &>()))),
-                    CONCEPT_REQUIRES_(Integral<N>())>
+                    typename N = decltype(aux::copy(size(std::declval<R &>()))))(
+                    requires Integral<N>())
                 static constexpr N impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     size(r)
                 )
 
-                template<typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())),
-                    CONCEPT_REQUIRES_(ForwardIterator<I>())>
+                CONCEPT_template(typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())))(
+                    requires ForwardIterator<I>())
                 static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (

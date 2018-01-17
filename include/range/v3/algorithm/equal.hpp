@@ -46,12 +46,9 @@ namespace ranges
             }
 
         public:
-            template<typename I0, typename S0, typename I1,
-                typename C = equal_to, typename P0 = ident, typename P1 = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S0, I0>() &&
-                    Comparable<I0, I1, C, P0, P1>()
-                )>
+            CONCEPT_template(typename I0, typename S0, typename I1,
+                typename C = equal_to, typename P0 = ident, typename P1 = ident)(
+                requires Sentinel<S0, I0>() && Comparable<I0, I1, C, P0, P1>())
             RANGES_CXX14_CONSTEXPR
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{},
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
@@ -62,12 +59,10 @@ namespace ranges
                 return true;
             }
 
-            template<typename I0, typename S0, typename I1, typename S1,
-                typename C = equal_to, typename P0 = ident, typename P1 = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
-                    Comparable<I0, I1, C, P0, P1>()
-                )>
+            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+                typename C = equal_to, typename P0 = ident, typename P1 = ident)(
+                requires Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
+                    Comparable<I0, I1, C, P0, P1>())
             RANGES_CXX14_CONSTEXPR
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
@@ -79,14 +74,12 @@ namespace ranges
                     std::move(end1), std::move(pred), std::move(proj0), std::move(proj1));
             }
 
-            template<typename Rng0, typename I1Ref,
+            CONCEPT_template(typename Rng0, typename I1Ref,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
-                typename I1 = uncvref_t<I1Ref>,
-                CONCEPT_REQUIRES_(
-                    Range<Rng0>() && Iterator<I1>() &&
-                    Comparable<I0, I1, C, P0, P1>()
-                )>
+                typename I1 = uncvref_t<I1Ref>)(
+                requires Range<Rng0>() && Iterator<I1>() &&
+                    Comparable<I0, I1, C, P0, P1>())
             RANGES_CXX14_CONSTEXPR
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
@@ -95,14 +88,12 @@ namespace ranges
                     std::move(proj0), std::move(proj1));
             }
 
-            template<typename Rng0, typename Rng1,
+            CONCEPT_template(typename Rng0, typename Rng1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
-                typename I1 = iterator_t<Rng1>,
-                CONCEPT_REQUIRES_(
-                    Range<Rng0>() && Range<Rng1>() &&
-                    Comparable<I0, I1, C, P0, P1>()
-                )>
+                typename I1 = iterator_t<Rng1>)(
+                requires Range<Rng0>() && Range<Rng1>() &&
+                    Comparable<I0, I1, C, P0, P1>())
             RANGES_CXX14_CONSTEXPR
             bool operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const

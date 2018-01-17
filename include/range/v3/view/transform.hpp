@@ -347,15 +347,15 @@ namespace ranges
                     Invocable<Fun&, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>>,
                     Invocable<Fun&, move_tag, iterator_t<Rng1>, iterator_t<Rng2>>>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires Concept<Rng, Fun>())
                 iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
-                template<typename Rng1, typename Rng2, typename Fun,
-                    CONCEPT_REQUIRES_(Concept2<Rng1, Rng2, Fun>())>
+                CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
+                    requires Concept2<Rng1, Rng2, Fun>())
                 iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
@@ -363,8 +363,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires !Concept<Rng, Fun>())
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
@@ -387,8 +387,8 @@ namespace ranges
                         "move_tag and an argument of the range's iterator type.");
                 }
 
-                template<typename Rng1, typename Rng2, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept2<Rng1, Rng2, Fun>())>
+                CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
+                    requires !Concept2<Rng1, Rng2, Fun>())
                 void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
@@ -451,15 +451,15 @@ namespace ranges
                     meta::not_<Same<void, concepts::Invocable::result_t<
                         Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>>>;
 
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires Concept<Rng, Fun>())
                 transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
 
-                template<typename Rng1, typename Rng2, typename Fun,
-                    CONCEPT_REQUIRES_(Concept2<Rng1, Rng2, Fun>())>
+                CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
+                    requires Concept2<Rng1, Rng2, Fun>())
                 transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
                 {
@@ -468,8 +468,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                CONCEPT_template(typename Rng, typename Fun)(
+                    requires !Concept<Rng, Fun>())
                 void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
@@ -489,8 +489,8 @@ namespace ranges
                         "with an argument of the range's reference type.");
                 }
 
-                template<typename Rng1, typename Rng2, typename Fun,
-                    CONCEPT_REQUIRES_(!Concept2<Rng1, Rng2, Fun>())>
+                CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
+                    requires !Concept2<Rng1, Rng2, Fun>())
                 void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),

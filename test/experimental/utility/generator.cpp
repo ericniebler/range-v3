@@ -47,8 +47,8 @@ private:
         ranges::range_reference_t<V>,
         ranges::range_value_type_t<V>>;
 
-    template<typename V,
-        CONCEPT_REQUIRES_(Constraint<V>() && ranges::View<V>())>
+    CONCEPT_template(typename V)(
+        requires Constraint<V>() && ranges::View<V>())
     static generator_for<V> impl(V v)
     {
         if /* constexpr */ (ranges::SizedRange<V>())
@@ -59,11 +59,11 @@ private:
             co_yield *first;
     }
 public:
-    template<typename Rng,
-        CONCEPT_REQUIRES_(meta::and_<
+    CONCEPT_template(typename Rng)(
+        requires meta::and_<
             meta::not_<meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>>,
             meta::not_<meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>>,
-            Constraint<Rng>>::value)>
+            Constraint<Rng>>::value)
     generator_for<ranges::view::all_t<Rng>> operator()(Rng &&rng) const
     {
         return impl(ranges::view::all(static_cast<Rng &&>(rng)));
@@ -104,25 +104,27 @@ ranges::experimental::sized_generator<int &> h(int const n)
         co_yield i;
 }
 
-template<class T, CONCEPT_REQUIRES_(ranges::WeaklyIncrementable<T>())>
+CONCEPT_template(class T)(
+
+    requires ranges::WeaklyIncrementable<T>())
 ranges::experimental::generator<T> iota_generator(T t)
 {
     for (;; ++t)
         co_yield t;
 }
 
-template<class T, class S,
-    CONCEPT_REQUIRES_(ranges::WeaklyIncrementable<T>() &&
+CONCEPT_template(class T, class S)(
+    requires ranges::WeaklyIncrementable<T>() &&
         ranges::WeaklyEqualityComparable<T, S>() &&
-        !ranges::SizedIncrementableSentinel<S, T>())>
+        !ranges::SizedIncrementableSentinel<S, T>())
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
         co_yield t;
 }
 
-template<class T, class S,
-    CONCEPT_REQUIRES_(ranges::SizedIncrementableSentinel<S, T>())>
+CONCEPT_template(class T, class S)(
+    requires ranges::SizedIncrementableSentinel<S, T>())
 ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 {
     co_await static_cast<ranges::experimental::generator_size>(s - t);
@@ -130,9 +132,9 @@ ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
         co_yield t;
 }
 
-template<class V, class F,
-    CONCEPT_REQUIRES_(ranges::InputView<V>() &&
-        ranges::IndirectPredicate<F, ranges::iterator_t<V>>())>
+CONCEPT_template(class V, class F)(
+    requires ranges::InputView<V>() &&
+        ranges::IndirectPredicate<F, ranges::iterator_t<V>>())
 ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_type_t<V>>
 filter(V view, F f)
 {
@@ -143,9 +145,9 @@ filter(V view, F f)
     }
 }
 
-template<class V, class F,
-    CONCEPT_REQUIRES_(ranges::InputView<V>() &&
-        ranges::IndirectInvocable<F, ranges::iterator_t<V>>())>
+CONCEPT_template(class V, class F)(
+    requires ranges::InputView<V>() &&
+        ranges::IndirectInvocable<F, ranges::iterator_t<V>>())
 meta::invoke<
     maybe_sized_generator<(bool) ranges::SizedRange<V>()>,
     ranges::indirect_result_of_t<F &(ranges::iterator_t<V>)>>

@@ -91,8 +91,8 @@ namespace ranges
             /// If `n == 1` returns `to`.
             struct linear_distribute_fn
             {
-                template<typename T,
-                    CONCEPT_REQUIRES_(std::is_arithmetic<T>())>
+                CONCEPT_template(typename T)(
+                    requires std::is_arithmetic<T>())
                 constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -100,8 +100,8 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename T,
-                    CONCEPT_REQUIRES_(!std::is_arithmetic<T>())>
+                CONCEPT_template(typename T)(
+                    requires !std::is_arithmetic<T>())
                 void operator()(T, T, std::ptrdiff_t) const
                 {
                     CONCEPT_ASSERT_MSG(std::is_arithmetic<T>(),

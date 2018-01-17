@@ -31,9 +31,9 @@ namespace ranges
         /// @{
         struct count_fn
         {
-            template<typename I, typename S, typename V, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>())>
+            CONCEPT_template(typename I, typename S, typename V, typename P = ident)(
+                requires InputIterator<I>() && Sentinel<S, I>() &&
+                    IndirectRelation<equal_to, projected<I, P>, V const *>())
             difference_type_t<I>
             operator()(I begin, S end, V const & val, P proj = P{}) const
             {
@@ -44,10 +44,10 @@ namespace ranges
                 return n;
             }
 
-            template<typename Rng, typename V, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>())>
+            CONCEPT_template(typename Rng, typename V, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires InputRange<Rng>() &&
+                    IndirectRelation<equal_to, projected<I, P>, V const *>())
             difference_type_t<I>
             operator()(Rng &&rng, V const & val, P proj = P{}) const
             {

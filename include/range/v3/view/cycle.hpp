@@ -177,14 +177,16 @@ namespace ranges
 
             public:
                 /// \pre <tt>!empty(rng)</tt>
-                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires Concept<Rng>())
                 cycled_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Concept<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

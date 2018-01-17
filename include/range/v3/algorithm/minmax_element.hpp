@@ -36,9 +36,9 @@ namespace ranges
         /// @{
         struct minmax_element_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() &&
-                    IndirectRelation<C, projected<I, P>>())>
+            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+                requires ForwardIterator<I>() && Sentinel<S, I>() &&
+                    IndirectRelation<C, projected<I, P>>())
             tagged_pair<tag::min(I), tag::max(I)>
             operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
@@ -81,10 +81,10 @@ namespace ranges
                 return result;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                    IndirectRelation<C, projected<I, P>>())>
+            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+                typename I = iterator_t<Rng>)(
+                requires ForwardRange<Rng>() &&
+                    IndirectRelation<C, projected<I, P>>())
             meta::if_<std::is_lvalue_reference<Rng>,
                 tagged_pair<tag::min(I), tag::max(I)>,
                 dangling<tagged_pair<tag::min(I), tag::max(I)>>>

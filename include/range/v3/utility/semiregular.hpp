@@ -164,8 +164,8 @@ namespace ranges
           : private ranges::reference_wrapper<T &>
         {
             semiregular() = default;
-            template<typename Arg,
-                CONCEPT_REQUIRES_(Constructible<ranges::reference_wrapper<T &>, Arg &>())>
+            CONCEPT_template(typename Arg)(
+                requires Constructible<ranges::reference_wrapper<T &>, Arg &>())
             semiregular(in_place_t, Arg &arg)
               : ranges::reference_wrapper<T &>(arg)
             {}
@@ -180,8 +180,8 @@ namespace ranges
           : private ranges::reference_wrapper<T &&>
         {
             semiregular() = default;
-            template<typename Arg,
-                CONCEPT_REQUIRES_(Constructible<ranges::reference_wrapper<T &&>, Arg>())>
+            CONCEPT_template(typename Arg)(
+                requires Constructible<ranges::reference_wrapper<T &&>, Arg>())
             semiregular(in_place_t, Arg &&arg)
               : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))
             {}

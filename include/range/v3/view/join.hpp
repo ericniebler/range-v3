@@ -313,14 +313,14 @@ namespace ranges
                             meta::quote<range_reference_t>>,
                         Rng>>;
 
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires JoinableRange_<Rng>())
                 join_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return join_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
-                template<typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>,
-                    CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
+                CONCEPT_template(typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>)(
+                    requires JoinableRange_<Rng>())
                 join_view<all_t<Rng>, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
@@ -329,8 +329,8 @@ namespace ranges
                         "copy and move constructors, and a destructor.");
                     return {all(static_cast<Rng&&>(rng)), single(std::move(v))};
                 }
-                template<typename Rng, typename ValRng,
-                    CONCEPT_REQUIRES_(JoinableRange_<Rng>() && ForwardRange<ValRng>())>
+                CONCEPT_template(typename Rng, typename ValRng)(
+                    requires JoinableRange_<Rng>() && ForwardRange<ValRng>())
                 join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng && rng, ValRng && val) const
                 {
                     CONCEPT_ASSERT_MSG(Common<range_value_type_t<ValRng>,
@@ -347,7 +347,8 @@ namespace ranges
                 }
             private:
                friend view_access;
-               template<typename T, CONCEPT_REQUIRES_(!JoinableRange_<T>())>
+               CONCEPT_template(typename T)(
+                   requires !JoinableRange_<T>())
                static auto bind(join_fn join, T && t)
                RANGES_DECLTYPE_AUTO_RETURN
                (

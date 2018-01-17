@@ -435,6 +435,13 @@ namespace ranges
 #endif // __cpp_deduction_guides
 #endif // RANGES_CXX_DEDUCTION_GUIDES
 
+// __VA_OPT__
+#ifndef RANGES_CXX_VA_OPT
+#define RANGES_CXX_THIRD_ARG_(A, B, C, ...) C
+#define RANGES_CXX_VA_OPT_I_(...) RANGES_CXX_THIRD_ARG_(__VA_OPT__(, ), 1, 0, ?)
+#define RANGES_CXX_VA_OPT RANGES_CXX_VA_OPT_I_(?)
+#endif // RANGES_CXX_VA_OPT
+
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \
     RANGES_DIAGNOSTIC_PUSH                      \

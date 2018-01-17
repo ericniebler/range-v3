@@ -104,7 +104,8 @@ namespace ranges
         {
             struct tail_fn
             {
-                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires InputRange<Rng>())
                 meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>
                 operator()(Rng && rng) const
                 {
@@ -112,7 +113,8 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, CONCEPT_REQUIRES_(!InputRange<Rng>())>
+                CONCEPT_template(typename Rng)(
+                    requires !InputRange<Rng>())
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),

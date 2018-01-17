@@ -54,26 +54,26 @@ namespace ranges
             constexpr iterator_range(I begin, S end)
               : base_t{detail::move(begin), detail::move(end)}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Constructible<I, X>() && Constructible<S, Y>())
             constexpr iterator_range(iterator_range<X, Y> rng)
               : base_t{detail::move(rng.begin()), detail::move(rng.end())}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Constructible<I, X>() && Constructible<S, Y>())
             explicit constexpr iterator_range(std::pair<X, Y> rng)
               : base_t{detail::move(rng.first), detail::move(rng.second)}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Assignable<I &, X>() && Assignable<S &, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Assignable<I &, X>() && Assignable<S &, Y>())
             iterator_range &operator=(iterator_range<X, Y> rng)
             {
                 begin() = detail::move(rng).begin();
                 end() = detail::move(rng).end();
                 return *this;
             }
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())
             constexpr operator std::pair<X, Y>() const
             {
                 return {begin(), end()};
@@ -115,23 +115,23 @@ namespace ranges
                     static_cast<size_type_t<I>>(ranges::distance(rng_)) == size_);
             #endif
             }
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Constructible<I, X>() && Constructible<S, Y>())
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type_t<I> size)
               : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Constructible<I, X>() && Constructible<S, Y>())
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, size_type_t<I> size)
               : sized_iterator_range{detail::move(rng).first(), detail::move(rng).second, size}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Constructible<I, X>() && Constructible<S, Y>())
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
               : sized_iterator_range{detail::move(rng).rng_.first(), detail::move(rng).rng_.second, rng.size_}
             {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Assignable<I &, X>() && Assignable<S &, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires Assignable<I &, X>() && Assignable<S &, Y>())
             sized_iterator_range &operator=(sized_iterator_range<X, Y> rng)
             {
                 rng_ = detail::move(rng).rng_;
@@ -150,14 +150,14 @@ namespace ranges
             {
                 return size_;
             }
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())
             constexpr operator std::pair<X, Y>() const
             {
                 return rng_;
             }
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())>
+            CONCEPT_template(typename X, typename Y)(
+                requires ConvertibleTo<I, X>() && ConvertibleTo<S, Y>())
             constexpr operator iterator_range<X, Y>() const
             {
                 return rng_;
@@ -171,8 +171,8 @@ namespace ranges
         struct make_iterator_range_fn
         {
             /// \return `{begin, end}`
-            template<typename I, typename S,
-                CONCEPT_REQUIRES_(Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S)(
+                requires Sentinel<S, I>())
             constexpr iterator_range<I, S> operator()(I begin, S end) const
             {
                 CONCEPT_ASSERT(Sentinel<S, I>());
@@ -180,8 +180,8 @@ namespace ranges
             }
 
             /// \return `{begin, end, size}`
-            template<typename I, typename S,
-                CONCEPT_REQUIRES_(Sentinel<S, I>())>
+            CONCEPT_template(typename I, typename S)(
+                requires Sentinel<S, I>())
             constexpr sized_iterator_range<I, S> operator()(I begin, S end, size_type_t<I> size) const
             {
                 CONCEPT_ASSERT(Sentinel<S, I>());
@@ -194,8 +194,8 @@ namespace ranges
         RANGES_INLINE_VARIABLE(make_iterator_range_fn, make_iterator_range)
 
         /// Tuple-like access for `sized_iterator_range`
-        template<std::size_t N, typename I, typename S,
-            CONCEPT_REQUIRES_(N < 2)>
+        CONCEPT_template(std::size_t N, typename I, typename S)(
+            requires N < 2)
         constexpr auto get(sized_iterator_range<I, S> const &p)
         RANGES_DECLTYPE_AUTO_RETURN
         (
@@ -203,8 +203,8 @@ namespace ranges
         )
 
         /// \overload
-        template<std::size_t N, typename I, typename S,
-            CONCEPT_REQUIRES_(N == 2)>
+        CONCEPT_template(std::size_t N, typename I, typename S)(
+            requires N == 2)
         constexpr size_type_t<I> get(sized_iterator_range<I, S> const &p)
         {
             return p.size();

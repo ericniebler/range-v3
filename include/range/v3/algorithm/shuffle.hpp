@@ -33,12 +33,12 @@ namespace ranges
         /// @{
         struct shuffle_fn
         {
-            template<typename I, typename S, typename Gen = detail::default_random_engine&,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() &&
+            CONCEPT_template(typename I, typename S, typename Gen = detail::default_random_engine&)(
+                requires RandomAccessIterator<I>() && Sentinel<S, I>() &&
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        difference_type_t<I>>())>
+                        difference_type_t<I>>())
             I operator()(I const begin, S const end,
                 Gen && gen = detail::get_random_engine()) const
             {
@@ -55,12 +55,12 @@ namespace ranges
                 return mid;
             }
 
-            template<typename Rng, typename Gen = detail::default_random_engine&,
-                typename I = iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
+            CONCEPT_template(typename Rng, typename Gen = detail::default_random_engine&,
+                typename I = iterator_t<Rng>)(
+                requires RandomAccessRange<Rng>() && Permutable<I>() &&
                     UniformRandomNumberGenerator<Gen>() && ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        difference_type_t<I>>())>
+                        difference_type_t<I>>())
             safe_iterator_t<Rng>
             operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             {

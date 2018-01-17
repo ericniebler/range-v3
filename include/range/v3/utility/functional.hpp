@@ -38,8 +38,8 @@ namespace ranges
         /// @{
         struct equal_to
         {
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(EqualityComparable<T, U>())>
+            CONCEPT_template(typename T, typename U)(
+                requires EqualityComparable<T, U>())
             constexpr bool operator()(T && t, U && u) const
             {
                 return (T &&) t == (U &&) u;
@@ -49,8 +49,8 @@ namespace ranges
 
         struct not_equal_to
         {
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(EqualityComparable<T, U>())>
+            CONCEPT_template(typename T, typename U)(
+                requires EqualityComparable<T, U>())
             constexpr bool operator()(T && t, U && u) const
             {
                 return (T &&) t != (U &&) u;
@@ -60,8 +60,8 @@ namespace ranges
 
         struct less
         {
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(WeaklyOrdered<T, U>())>
+            CONCEPT_template(typename T, typename U)(
+                requires WeaklyOrdered<T, U>())
             constexpr bool operator()(T && t, U && u) const
             {
                 return (T &&) t < (U &&) u;
@@ -71,8 +71,8 @@ namespace ranges
 
         struct ordered_less
         {
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(TotallyOrdered<T, U>())>
+            CONCEPT_template(typename T, typename U)(
+                requires TotallyOrdered<T, U>())
             constexpr bool operator()(T && t, U && u) const
             {
                 return (T &&) t < (U &&) u;
@@ -285,9 +285,9 @@ namespace ranges
             constexpr logical_negate_()
                 noexcept(std::is_nothrow_default_constructible<FD>::value)
             {}
-            template<typename T,
-                typename U = meta::if_c<!Same<detail::decay_t<T>, logical_negate_>(), T>,
-                CONCEPT_REQUIRES_(Constructible<FD, U>())>
+            CONCEPT_template(typename T,
+                typename U = meta::if_c<!Same<detail::decay_t<T>, logical_negate_>(), T>)(
+                requires Constructible<FD, U>())
             explicit constexpr logical_negate_(T && pred)
               : pred_(static_cast<T &&>(pred))
             {}
@@ -295,8 +295,8 @@ namespace ranges
 // HACKHACKHACK GCC 4.8 is extremely confused about && and const&& qualifiers.
 // Luckily they are rare - we'll simply break them.
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD &, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD &, Args...>())
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args)
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
@@ -304,8 +304,8 @@ namespace ranges
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
             /// \overload
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD const &, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD const &, Args...>())
             constexpr auto operator()(Args &&...args) const
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
@@ -313,8 +313,8 @@ namespace ranges
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
 #else // ^^^ GCC <= 4.8 / GCC > 4.8 vvvv
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD &, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD &, Args...>())
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
@@ -322,8 +322,8 @@ namespace ranges
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
             /// \overload
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD const &, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD const &, Args...>())
             constexpr auto operator()(Args &&...args) const &
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
@@ -331,8 +331,8 @@ namespace ranges
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
             /// \overload
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD, Args...>())
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD>(), static_cast<Args &&>(args)...))
@@ -340,8 +340,8 @@ namespace ranges
                 return !invoke(static_cast<FD &&>(pred_), static_cast<Args &&>(args)...);
             }
             /// \overload
-            template<typename ...Args,
-                CONCEPT_REQUIRES_(Predicate<FD const, Args...>())>
+            CONCEPT_template(typename ...Args)(
+                requires Predicate<FD const, Args...>())
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) const &&
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const>(), static_cast<Args &&>(args)...))
@@ -356,8 +356,8 @@ namespace ranges
 
         struct not_fn_fn
         {
-            template<typename Pred, typename FD = detail::decay_t<Pred>,
-                CONCEPT_REQUIRES_(MoveConstructible<FD>() && Constructible<FD, Pred>())>
+            CONCEPT_template(typename Pred, typename FD = detail::decay_t<Pred>)(
+                requires MoveConstructible<FD>() && Constructible<FD, Pred>())
             constexpr logical_negate_<FD> operator()(Pred && pred) const
             {
                 return logical_negate_<FD>{(Pred &&) pred};
@@ -722,8 +722,8 @@ namespace ranges
         };
 
         // Evaluate the pipe with an argument
-        template<typename Arg, typename Pipe,
-            CONCEPT_REQUIRES_(!is_pipeable<Arg>() && is_pipeable<Pipe>())>
+        CONCEPT_template(typename Arg, typename Pipe)(
+            requires !is_pipeable<Arg>() && is_pipeable<Pipe>())
         auto operator|(Arg && arg, Pipe pipe)
         RANGES_DECLTYPE_AUTO_RETURN
         (
@@ -731,8 +731,8 @@ namespace ranges
         )
 
         // Compose two pipes
-        template<typename Pipe0, typename Pipe1,
-            CONCEPT_REQUIRES_(is_pipeable<Pipe0>() && is_pipeable<Pipe1>())>
+        CONCEPT_template(typename Pipe0, typename Pipe1)(
+            requires is_pipeable<Pipe0>() && is_pipeable<Pipe1>())
         auto operator|(Pipe0 pipe0, Pipe1 pipe1)
         RANGES_DECLTYPE_AUTO_RETURN
         (
@@ -764,7 +764,8 @@ namespace ranges
 
         struct ref_fn : pipeable<ref_fn>
         {
-            template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper_t<T>())>
+            CONCEPT_template(typename T)(
+                requires !is_reference_wrapper_t<T>())
             reference_wrapper<T> operator()(T &t) const
             {
                 return {t};
@@ -792,7 +793,8 @@ namespace ranges
 
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {
-            template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper<T>())>
+            CONCEPT_template(typename T)(
+                requires !is_reference_wrapper<T>())
             T &&operator()(T &&t) const noexcept
             {
                 return static_cast<T&&>(t);
@@ -851,13 +853,15 @@ namespace ranges
 
         struct protect_fn
         {
-            template<typename F, CONCEPT_REQUIRES_(std::is_bind_expression<uncvref_t<F>>())>
+            CONCEPT_template(typename F)(
+                requires std::is_bind_expression<uncvref_t<F>>())
             detail::protect<uncvref_t<F>> operator()(F && f) const
             {
                 return {static_cast<F&&>(f)};
             }
             /// \overload
-            template<typename F, CONCEPT_REQUIRES_(!std::is_bind_expression<uncvref_t<F>>())>
+            CONCEPT_template(typename F)(
+                requires !std::is_bind_expression<uncvref_t<F>>())
             F operator()(F && f) const
             {
                 return static_cast<F&&>(f);

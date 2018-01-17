@@ -33,8 +33,8 @@ namespace ranges
         {
             struct partition_point_n_fn
             {
-                template<typename I, typename C, typename P = ident,
-                    CONCEPT_REQUIRES_(PartitionPointable<I, C, P>())>
+                CONCEPT_template(typename I, typename C, typename P = ident)(
+                    requires PartitionPointable<I, C, P>())
                 I operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const
                 {
                     if(0 < d)

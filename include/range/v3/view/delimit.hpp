@@ -84,16 +84,16 @@ namespace ranges
                     Range<Rng>,
                     EqualityComparable<Val, range_common_reference_t<Rng>>>;
 
-                template<typename Rng, typename Val,
-                    CONCEPT_REQUIRES_(Concept<Rng, Val>())>
+                CONCEPT_template(typename Rng, typename Val)(
+                    requires Concept<Rng, Val>())
                 delimit_view<all_t<Rng>, Val>
                 operator()(Rng && rng, Val value) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Val,
-                    CONCEPT_REQUIRES_(!Concept<Rng, Val>())>
+                CONCEPT_template(typename Rng, typename Val)(
+                    requires !Concept<Rng, Val>())
                 void
                 operator()(Rng &&, Val) const
                 {
@@ -110,8 +110,8 @@ namespace ranges
             {
                 using view<delimit_impl_fn>::operator();
 
-                template<typename I, typename Val,
-                    CONCEPT_REQUIRES_(InputIterator<I>())>
+                CONCEPT_template(typename I, typename Val)(
+                    requires InputIterator<I>())
                 delimit_view<iterator_range<I, unreachable>, Val>
                 operator()(I begin, Val value) const
                 {
