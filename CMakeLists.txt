@@ -131,6 +131,16 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+  VERSION ${RANGE_V3_VERSION}
+  COMPATIBILITY ExactVersion
+)
+
 install(TARGETS meta range-v3 EXPORT range-v3-targets DESTINATION lib)
 install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake/range-v3)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+  DESTINATION lib/cmake/range-v3)
 install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")
