@@ -19,6 +19,7 @@ target_link_libraries(utility.iterator range-v3)
 add_test(test.utility.iterator utility.iterator)
 
 add_executable(utility.common_iterator common_iterator.cpp)
+target_link_libraries(utility.common_iterator range-v3)
 add_test(test.utility.common_iterator utility.common_iterator)
 
 add_executable(utility.reverse_iterator reverse_iterator.cpp)
@@ -38,4 +39,5 @@ target_link_libraries(utility.meta range-v3)
 add_test(test.utility.meta utility.meta)
 
 add_executable(utility.scope_exit scope_exit.cpp)
+target_link_libraries(utility.scope_exit range-v3)
 add_test(test.utility.scope_exit utility.scope_exit)

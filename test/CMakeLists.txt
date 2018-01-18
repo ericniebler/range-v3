@@ -28,6 +28,7 @@ target_link_libraries(view_adaptor range-v3)
 add_test(test.view_adaptor view_adaptor)
 
 add_executable(index index.cpp)
+target_link_libraries(index range-v3)
 add_test(test.index index)
 
 add_executable(iterator_range iterator_range.cpp)

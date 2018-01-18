@@ -15,6 +15,7 @@ target_link_libraries(act.insert range-v3)
 add_test(test.act.insert act.insert)
 
 add_executable(act.join join.cpp)
+target_link_libraries(act.join range-v3)
 add_test(test.act.join act.join)
 
 add_executable(act.push_front push_front.cpp)
@@ -30,6 +31,7 @@ target_link_libraries(act.remove_if range-v3)
 add_test(test.act.remove_if act.remove_if)
 
 add_executable(act.reverse reverse.cpp)
+target_link_libraries(act.reverse range-v3)
 add_test(test.act.reverse act.reverse)
 
 add_executable(act.shuffle shuffle.cpp)
@@ -49,6 +51,7 @@ target_link_libraries(act.split range-v3)
 add_test(test.act.split act.split)
 
 add_executable(act.stable_sort stable_sort.cpp)
+target_link_libraries(act.stable_sort range-v3)
 add_test(test.act.stable_sort act.stable_sort)
 
 add_executable(act.stride stride.cpp)

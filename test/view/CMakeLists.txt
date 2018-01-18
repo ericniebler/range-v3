@@ -15,6 +15,7 @@ target_link_libraries(view.bounded range-v3)
 add_test(test.view.bounded, view.bounded)
 
 add_executable(view.cartesian_product cartesian_product.cpp)
+target_link_libraries(view.cartesian_product range-v3)
 add_test(test.view.cartesian_product, view.cartesian_product)
 
 add_executable(view.chunk chunk.cpp)
@@ -82,6 +83,7 @@ target_link_libraries(view.join range-v3)
 add_test(test.view.join, view.join)
 
 add_executable(view.linear_distribute linear_distribute.cpp)
+target_link_libraries(view.linear_distribute range-v3)
 add_test(test.view.linear_distribute, view.linear_distribute)
 
 add_executable(view.map keys_value.cpp)
@@ -141,6 +143,7 @@ target_link_libraries(view.slice range-v3)
 add_test(test.view.slice, view.slice)
 
 add_executable(view.sliding sliding.cpp)
+target_link_libraries(view.sliding range-v3)
 add_test(test.view.sliding, view.sliding)
 
 add_executable(view.split split.cpp)
@@ -152,6 +155,7 @@ target_link_libraries(view.stride range-v3)
 add_test(test.view.stride, view.stride)
 
 add_executable(view.tail tail.cpp)
+target_link_libraries(view.tail range-v3)
 add_test(test.view.tail, view.tail)
 
 add_executable(view.take take.cpp)
