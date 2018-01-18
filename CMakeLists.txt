@@ -20,11 +20,28 @@ include(CTest)
 
 enable_testing()
 
-include_directories(include)
+add_library(meta INTERFACE)
+target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:/include>)
+
+add_library(range-v3 INTERFACE)
+target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:/include>)
+target_link_libraries(range-v3 INTERFACE meta)
+
 add_subdirectory(doc)
-add_subdirectory(test)
-add_subdirectory(example)
-add_subdirectory(perf)
+
+if(NOT RANGE_V3_NO_TESTING)
+  add_subdirectory(test)
+endif()
+
+if(NOT RANGE_V3_NO_EXAMPLE)
+  add_subdirectory(example)
+endif()
+
+if(NOT RANGE_V3_NO_PERF)
+  add_subdirectory(perf)
+endif()
 
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
@@ -114,6 +131,6 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
-
-install(DIRECTORY include/ DESTINATION include
-        FILES_MATCHING PATTERN "*.hpp")
+install(TARGETS meta range-v3 EXPORT range-v3-targets DESTINATION lib)
+install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake/range-v3)
+install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")
