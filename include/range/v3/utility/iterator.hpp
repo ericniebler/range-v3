@@ -187,7 +187,7 @@ namespace ranges
             D advance_fn::bounded_(I &it, D n, S bound, concepts::SizedSentinel*,
                 Concept)
             {
-                RANGES_EXPECT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
                 D d = bound - it;
                 RANGES_EXPECT(0 <= n ? 0 <= d : 0 >= d);
                 if(0 <= n ? n >= d : n <= d)
@@ -282,7 +282,7 @@ namespace ranges
             {
                 I end = ranges::next(begin, end_);
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
                 return {n + d, end};
             }
             template<typename I, typename S, typename D>
@@ -290,7 +290,7 @@ namespace ranges
             std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedSentinel*) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
                 return {n + d, ranges::next(begin, end)};
             }
         public:
@@ -322,7 +322,7 @@ namespace ranges
             D impl_i(I begin, S end, D d, concepts::SizedSentinel*) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT((Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
                 return n + d;
             }
         public:
@@ -831,37 +831,37 @@ namespace ranges
         };
 
         CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparable<I1, I2>())
+            requires EqualityComparableWith<I1, I2>())
         bool operator==(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() == y.base();
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparable<I1, I2>())
+            requires EqualityComparableWith<I1, I2>())
         bool operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(x == y);
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires TotallyOrdered<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>())
         bool operator<(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() < y.base();
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires TotallyOrdered<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>())
         bool operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(y < x);
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires TotallyOrdered<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>())
         bool operator>(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return y < x;
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires TotallyOrdered<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>())
         bool operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(x < y);

@@ -333,7 +333,7 @@ namespace ranges
             {
                 using iterator_category =
                     meta::if_c<
-                        ForwardIterator<I>() &&
+                        (bool)ForwardIterator<I>() &&
                             std::is_reference<reference_t<I>>::value,
                         std::forward_iterator_tag,
                         std::input_iterator_tag>;

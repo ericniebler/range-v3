@@ -190,7 +190,7 @@ namespace ranges
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
-                !EqualityComparable<I1, I2>())
+                !EqualityComparableWith<I1, I2>())
         bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
@@ -200,7 +200,7 @@ namespace ranges
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
-                EqualityComparable<I1, I2>())
+                EqualityComparableWith<I1, I2>())
         bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?

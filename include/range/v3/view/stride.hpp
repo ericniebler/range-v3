@@ -244,27 +244,27 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // BoundedView, adapt it anyway.
-            CONCEPT_REQUIRES(const_iterable && BoundedRange<Rng>())
+            CONCEPT_REQUIRES(IsTrue<const_iterable>() && BoundedRange<Rng>())
             constexpr adaptor end_adaptor() const
                 noexcept(std::is_nothrow_constructible<adaptor, stride_view const &>::value &&
                     std::is_nothrow_move_constructible<adaptor>::value)
             {
                 return adaptor{*this};
             }
-            CONCEPT_REQUIRES(!const_iterable && BoundedRange<Rng>())
+            CONCEPT_REQUIRES(IsTrue<!const_iterable>() && BoundedRange<Rng>())
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
                 noexcept(std::is_nothrow_constructible<adaptor, stride_view &>::value &&
                     std::is_nothrow_move_constructible<adaptor>::value)
             {
                 return adaptor{*this};
             }
-            CONCEPT_REQUIRES(const_iterable && !BoundedRange<Rng>())
+            CONCEPT_REQUIRES(IsTrue<const_iterable>() && !BoundedRange<Rng>())
             constexpr adaptor_base end_adaptor() const
                 noexcept(std::is_nothrow_constructible<adaptor_base, stride_view const &>::value)
             {
                 return {};
             }
-            CONCEPT_REQUIRES(!const_iterable && !BoundedRange<Rng>())
+            CONCEPT_REQUIRES(IsTrue<!const_iterable>() && !BoundedRange<Rng>())
             RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor()
                 noexcept(std::is_nothrow_constructible<adaptor_base, stride_view &>::value)
             {

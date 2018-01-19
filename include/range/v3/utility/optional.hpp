@@ -187,7 +187,7 @@ namespace ranges
                     {
                         return RANGES_EXPECT(engaged_), std::addressof(data_);
                     }
-                    CONCEPT_REQUIRES(MoveConstructible<T>() && Swappable<T &>())
+                    CONCEPT_REQUIRES(MoveConstructible<T>() && Swappable<T>())
                     RANGES_CXX14_CONSTEXPR void swap(optional_base &that)
                         noexcept(std::is_nothrow_move_constructible<T>::value &&
                             is_nothrow_swappable<T>::value)
@@ -286,7 +286,7 @@ namespace ranges
                     {
                         ptr_ = nullptr;
                     }
-                    CONCEPT_REQUIRES(Swappable<T &>())
+                    CONCEPT_REQUIRES(Swappable<T>())
                     RANGES_CXX14_CONSTEXPR void swap(optional_base &that)
                         noexcept(is_nothrow_swappable<T &>::value)
                     {
@@ -482,50 +482,46 @@ namespace ranges
             {}
 
             CONCEPT_template(typename U = T)(
-                requires meta::and_<
-                    meta::not_<Same<detail::decay_t<U>, in_place_t>>,
-                    meta::not_<Same<detail::decay_t<U>, optional>>,
-                    Constructible<T, U>,
-                    ConvertibleTo<U, T>>::value)
+                requires !Same<detail::decay_t<U>, in_place_t>() &&
+                    !Same<detail::decay_t<U>, optional>() &&
+                    Constructible<T, U>() &&
+                    ConvertibleTo<U, T>())
             constexpr optional(U &&v)
               : base_t(in_place, static_cast<U &&>(v))
             {}
             CONCEPT_template(typename U = T)(
-                requires meta::and_<
-                    meta::not_<Same<detail::decay_t<U>, in_place_t>>,
-                    meta::not_<Same<detail::decay_t<U>, optional>>,
-                    Constructible<T, U>,
-                    meta::not_<ConvertibleTo<U, T>>>::value)
+                requires !Same<detail::decay_t<U>, in_place_t>(),
+                    !Same<detail::decay_t<U>, optional>(),
+                    Constructible<T, U>(),
+                    !ConvertibleTo<U, T>())
             explicit constexpr optional(U &&v)
               : base_t(in_place, static_cast<U &&>(v))
             {}
 
             template<typename U>
-            using ShouldConvert = meta::not_<meta::or_<
-                Constructible<T, optional<U> &       >,
-                Constructible<T, optional<U> &&      >,
-                Constructible<T, optional<U> const & >,
-                Constructible<T, optional<U> const &&>,
-                ConvertibleTo<optional<U> &,        T>,
-                ConvertibleTo<optional<U> &&,       T>,
-                ConvertibleTo<optional<U> const &,  T>,
-                ConvertibleTo<optional<U> const &&, T>>>;
+            using ShouldConvert = CONCEPT_alias(!(
+                Constructible<T, optional<U> &       >() ||
+                Constructible<T, optional<U> &&      >() ||
+                Constructible<T, optional<U> const & >() ||
+                Constructible<T, optional<U> const &&>() ||
+                ConvertibleTo<optional<U> &,        T>() ||
+                ConvertibleTo<optional<U> &&,       T>() ||
+                ConvertibleTo<optional<U> const &,  T>() ||
+                ConvertibleTo<optional<U> const &&, T>()));
 
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvert<U>,
-                    Constructible<T, U const &>,
-                    ConvertibleTo<U const &, T>>::value)
+                requires ShouldConvert<U>() &&
+                    Constructible<T, U const &>() &&
+                    ConvertibleTo<U const &, T>())
             optional(optional<U> const &that)
             {
                 if (that.has_value())
                     base_t::construct_from(*that);
             }
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvert<U>,
-                    Constructible<T, U const &>,
-                    meta::not_<ConvertibleTo<U const &, T>>>::value)
+                requires ShouldConvert<U>() &&
+                    Constructible<T, U const &>() &&
+                    !ConvertibleTo<U const &, T>())
             explicit optional(optional<U> const &that)
             {
                 if (that.has_value())
@@ -533,20 +529,18 @@ namespace ranges
             }
 
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvert<U>,
-                    Constructible<T, U>,
-                    ConvertibleTo<U, T>>::value)
+                requires ShouldConvert<U>() &&
+                    Constructible<T, U>() &&
+                    ConvertibleTo<U, T>())
             optional(optional<U> &&that)
             {
                 if (that.has_value())
                     base_t::construct_from(detail::move(*that));
             }
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvert<U>,
-                    Constructible<T, U>,
-                    meta::not_<ConvertibleTo<U, T>>>::value)
+                requires ShouldConvert<U>() &&
+                    Constructible<T, U>() &&
+                    !ConvertibleTo<U, T>())
             explicit optional(optional<U> &&that)
             {
                 if (that.has_value())
@@ -564,11 +558,10 @@ namespace ranges
             optional &operator=(optional &&) = default;
 
             CONCEPT_template(typename U = T)(
-                requires meta::and_<
-                    meta::bool_<!std::is_same<optional, detail::decay_t<U>>::value &&
-                        !(std::is_scalar<T>::value && std::is_same<T, detail::decay_t<U>>::value)>,
-                    Constructible<T, U>,
-                    Assignable<T &, U>>::value)
+                requires !Same<optional, detail::decay_t<U>>() &&
+                    !(IsTrue<std::is_scalar<T>>() && Same<T, detail::decay_t<U>>()) &&
+                    Constructible<T, U>() &&
+                    Assignable<T &, U>())
             RANGES_CXX14_CONSTEXPR
             optional &operator=(U &&u)
                 noexcept(std::is_nothrow_constructible<T, U>::value &&
@@ -590,10 +583,9 @@ namespace ranges
                   Assignable<T &, optional<U> const &&>()));
 
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvertAssign<U>,
-                    Constructible<T, const U &>,
-                    Assignable<T &, const U &>>::value)
+                requires ShouldConvertAssign<U>() &&
+                    Constructible<T, const U &>() &&
+                    Assignable<T &, const U &>())
             RANGES_CXX14_CONSTEXPR
             optional &operator=(optional<U> const &that)
             {
@@ -602,10 +594,9 @@ namespace ranges
             }
 
             CONCEPT_template(typename U)(
-                requires meta::and_<
-                    ShouldConvertAssign<U>,
-                    Constructible<T, U>,
-                    Assignable<T &, U>>::value)
+                requires ShouldConvertAssign<U>() &&
+                    Constructible<T, U>() &&
+                    Assignable<T &, U>())
             RANGES_CXX14_CONSTEXPR
             optional &operator=(optional<U> &&that)
             {

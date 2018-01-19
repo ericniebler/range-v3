@@ -30,9 +30,8 @@ namespace ranges
         namespace index_detail
         {
             template<typename Rng, typename T>
-            struct CompatibleDifferenceType
-              : ConvertibleTo<T, range_difference_type_t<Rng>>
-            {};
+            using CompatibleDifferenceType = CONCEPT_alias(
+                ConvertibleTo<T, range_difference_type_t<Rng>>());
 
             template<typename Rng, typename T>
             using Concept = CONCEPT_alias(
@@ -55,7 +54,7 @@ namespace ranges
               ->
                 decltype(ranges::begin(rng)[n])
             {
-                RANGES_EXPECT(!SizedRange<Rng>() || n < ranges::distance(rng));
+                RANGES_EXPECT(!(bool)SizedRange<Rng>() || n < ranges::distance(rng));
                 return ranges::begin(rng)[n];
             }
             /// \return `begin(rng)[n]`

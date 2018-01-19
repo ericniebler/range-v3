@@ -404,7 +404,7 @@ namespace ranges
               : meta::_t<meta::if_<
                     meta::is_trait<enable_view<T>>,
                     enable_view<T>,
-                    meta::bool_<view_like<T>() || DerivedFrom<T, view_base>()>>>
+                    meta::bool_<view_like<T>() || (bool)DerivedFrom<T, view_base>()>>>
             {};
 
             template<typename T>

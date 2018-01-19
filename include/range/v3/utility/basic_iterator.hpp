@@ -422,21 +422,21 @@ namespace ranges
             }
 
             CONCEPT_REQUIRES(detail::ReadableCursor<Cur>() &&
-                !detail::is_writable_cursor<Cur>())
+                IsTrue<!detail::is_writable_cursor<Cur>::value>())
             constexpr const_reference_t operator*() const
             noexcept(noexcept(range_access::read(std::declval<Cur const &>())))
             {
                 return range_access::read(pos());
             }
             CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
-                detail::is_writable_cursor<Cur>())
+                IsTrue<detail::is_writable_cursor<Cur>::value>())
             RANGES_CXX14_CONSTEXPR reference_t operator*()
             noexcept(noexcept(reference_t{std::declval<Cur &>()}))
             {
                 return reference_t{pos()};
             }
             CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
-                detail::is_writable_cursor<Cur const>())
+                IsTrue<detail::is_writable_cursor<Cur const>>())
             constexpr const_reference_t operator*() const
             noexcept(noexcept(
                 const_reference_t{std::declval<Cur const &>()}))
@@ -463,7 +463,7 @@ namespace ranges
             CONCEPT_template(typename C = Cur)(
                 requires !detail::HasCursorArrow<Cur>() &&
                     detail::ReadableCursor<Cur>() &&
-                    std::is_lvalue_reference<const_reference_t>::value &&
+                    IsTrue<std::is_lvalue_reference<const_reference_t>>() &&
                     Same<typename detail::iterator_associated_types_base<C>::value_type,
                         uncvref_t<const_reference_t>>())
             constexpr meta::_t<std::add_pointer<const_reference_t>>

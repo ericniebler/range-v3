@@ -191,12 +191,12 @@ namespace ranges
             return a.base() OP b;\
         }\
         /**/
-        LOGICAL_OP(==, EqualityComparable)
-        LOGICAL_OP(!=, EqualityComparable)
-        LOGICAL_OP(<, TotallyOrdered)
-        LOGICAL_OP(<=, TotallyOrdered)
-        LOGICAL_OP(>, TotallyOrdered)
-        LOGICAL_OP(>=, TotallyOrdered)
+        LOGICAL_OP(==, EqualityComparableWith)
+        LOGICAL_OP(!=, EqualityComparableWith)
+        LOGICAL_OP(<, StrictTotallyOrderedWith)
+        LOGICAL_OP(<=, StrictTotallyOrderedWith)
+        LOGICAL_OP(>, StrictTotallyOrderedWith)
+        LOGICAL_OP(>=, StrictTotallyOrderedWith)
 #undef LOGICAL_OP
 
         struct make_common_tuple_fn
@@ -355,37 +355,37 @@ namespace ranges
 
         // Logical operators
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())
+            requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
         bool operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())
+            requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
         bool operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())
+            requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
         bool operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())
+            requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
         bool operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())
+            requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
         bool operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())
+            requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
         bool operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
@@ -410,10 +410,10 @@ namespace ranges
             return RET;\
         }\
         /**/
-        LOGICAL_OP(!=, EqualityComparable, !(a == b))
-        LOGICAL_OP(<=, TotallyOrdered, !(b < a))
-        LOGICAL_OP(>, TotallyOrdered, (b < a))
-        LOGICAL_OP(>=, TotallyOrdered, !(a < b))
+        LOGICAL_OP(!=, EqualityComparableWith, !(a == b))
+        LOGICAL_OP(<=, StrictTotallyOrderedWith, !(b < a))
+        LOGICAL_OP(>, StrictTotallyOrderedWith, (b < a))
+        LOGICAL_OP(>=, StrictTotallyOrderedWith, !(a < b))
 #undef LOGICAL_OP
 
         struct make_common_pair_fn

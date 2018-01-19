@@ -51,7 +51,7 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<WeaklyEqualityComparable, T, U>(),
+                        concepts::model_of<WeaklyEqualityComparableWith, T, U>(),
                         concepts::model_of<Integral>(t - u),
                         concepts::model_of<Integral>(u - t)
                     ));
@@ -161,7 +161,6 @@ namespace ranges
             }
 
             CONCEPT_template(typename Val)(
-
                 requires SignedIntegral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
@@ -174,7 +173,6 @@ namespace ranges
             }
 
             CONCEPT_template(typename Val)(
-
                 requires UnsignedIntegral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
@@ -423,7 +421,7 @@ namespace ranges
                 }
                 template<typename From, typename To>
                 meta::if_c<
-                    WeaklyIncrementable<From>() && WeaklyEqualityComparable<From, To>(),
+                    WeaklyIncrementable<From>() && WeaklyEqualityComparableWith<From, To>(),
                     meta::if_<
                         meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
                         detail::take_exactly_view_<iota_view<From>, true>,
@@ -442,15 +440,15 @@ namespace ranges
                 }
                 CONCEPT_template(typename From, typename To)(
                     requires !(WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>()))
+                        WeaklyEqualityComparableWith<From, To>()))
                 void operator()(From, To) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<From>(),
                         "The object passed to view::iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
-                    CONCEPT_ASSERT_MSG(WeaklyEqualityComparable<From, To>(),
-                        "The two arguments passed to view::iota must be WeaklyEqualityComparable "
+                    CONCEPT_ASSERT_MSG(WeaklyEqualityComparableWith<From, To>(),
+                        "The two arguments passed to view::iota must be WeaklyEqualityComparableWith "
                         "with == and !=");
                 }
             #endif
@@ -458,7 +456,7 @@ namespace ranges
 
             template<typename From, typename To>
             meta::if_c<
-                WeaklyIncrementable<From>() && WeaklyEqualityComparable<From, To>(),
+                WeaklyIncrementable<From>() && WeaklyEqualityComparableWith<From, To>(),
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
                     detail::take_exactly_view_<iota_view<From>, true>,
@@ -492,7 +490,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename From, typename To)(
                     requires WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>())
+                        WeaklyEqualityComparableWith<From, To>())
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
                     detail::take_exactly_view_<iota_view<From>, true>,
@@ -507,16 +505,16 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename From, typename To)(
                     requires !(WeaklyIncrementable<From>() &&
-                        WeaklyEqualityComparable<From, To>()))
+                        WeaklyEqualityComparableWith<From, To>()))
                 void operator()(From, To) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<From>(),
                         "The object passed to view::closed_iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
-                    CONCEPT_ASSERT_MSG(WeaklyEqualityComparable<From, To>(),
+                    CONCEPT_ASSERT_MSG(WeaklyEqualityComparableWith<From, To>(),
                         "The two arguments passed to view::closed_iota must be "
-                        "WeaklyEqualityComparable with == and !=");
+                        "WeaklyEqualityComparableWith with == and !=");
                 }
             #endif
             };
@@ -542,7 +540,6 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename Val)(
-
                     requires Integral<Val>())
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT

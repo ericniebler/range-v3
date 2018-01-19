@@ -40,8 +40,8 @@ int main()
     CHECK(a == 42);
     CHECK(b == 0);
 
-    CONCEPT_ASSERT(!ranges::Swappable<std::pair<int,int>&&,std::pair<int,int>&&>());
-    CONCEPT_ASSERT(ranges::Swappable<std::pair<int&,int&>&&,std::pair<int&,int&>&&>());
+    CONCEPT_ASSERT(!ranges::SwappableWith<std::pair<int,int>&&,std::pair<int,int>&&>());
+    CONCEPT_ASSERT(ranges::SwappableWith<std::pair<int&,int&>&&,std::pair<int&,int&>&&>());
 
     int c=24,d=82;
     ranges::swap(std::tie(a,b),std::tie(c,d));

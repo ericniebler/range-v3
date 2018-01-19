@@ -101,8 +101,10 @@
     CONCEPT_PP_REQUIRES_2(CONCEPT_PP_CAT(CONCEPT_PP_IMPL_, __VA_ARGS__))
 #define CONCEPT_PP_IMPL_requires
 #define CONCEPT_PP_REQUIRES_2(...)                                              \
-    int _concepts_requires_ = __LINE__,                                                 \
-    typename std::enable_if<(_concepts_requires_ == __LINE__ && (__VA_ARGS__))>::type* = nullptr >
+    int _concepts_requires_ = __LINE__,                                         \
+    typename std::enable_if<                                                    \
+        (_concepts_requires_ == __LINE__ &&                                     \
+            static_cast<bool>(__VA_ARGS__))>::type* = nullptr >
 
 #define CONCEPT_requires(...)               \
     CONCEPT_template()(requires __VA_ARGS__)
@@ -201,12 +203,50 @@ namespace ranges
                 constexpr operator Head*() const { return nullptr; }
                 constexpr Head* operator()() const { return nullptr; }
             };
+
+            template<bool If>
+            struct eval_if
+            {
+                template<typename Else>
+                constexpr bool operator()(bool then_, Else) const noexcept
+                {
+                    return then_;
+                }
+            };
+
+            template<>
+            struct eval_if<false>
+            {
+                template<typename Else>
+                constexpr bool operator()(bool, Else else_) const noexcept
+                {
+                    return static_cast<bool>(else_);
+                }
+            };
         }
         /// \endcond
 
         /// \addtogroup group-concepts
         /// @{
         ///
+        template<bool B>
+        constexpr concepts::bool_<meta::bool_<B>> IsTrue() noexcept
+        {
+            return {};
+        }
+
+        template<typename T>
+        constexpr concepts::bool_<T> IsTrue() noexcept
+        {
+            return {};
+        }
+
+        template<template<typename...> class T, typename... Args>
+        constexpr concepts::bool_<meta::defer<T, Args...>> IsTrue() noexcept
+        {
+            return {};
+        }
+
         namespace concepts
         {
             using detail::void_;
@@ -252,17 +292,9 @@ namespace ranges
             template<typename T, typename U>
             struct and_
             {
-                CONCEPT_template(typename T_ = T)(
-                    requires !static_cast<bool>(T_()))
                 constexpr explicit operator bool() const noexcept
                 {
-                    return false;
-                }
-                CONCEPT_template(typename T_ = T)(
-                    requires static_cast<bool>(T_()))
-                constexpr explicit operator bool() const noexcept
-                {
-                    return static_cast<bool>(U());
+                    return detail::eval_if<!static_cast<bool>(T())>()(false, U());
                 }
                 constexpr bool operator()() const noexcept
                 {
@@ -273,17 +305,9 @@ namespace ranges
             template<typename T, typename U>
             struct or_
             {
-                CONCEPT_template(typename T_ = T)(
-                    requires static_cast<bool>(T_()))
                 constexpr explicit operator bool() const noexcept
                 {
-                    return true;
-                }
-                CONCEPT_template(typename T_ = T)(
-                    requires !static_cast<bool>(T_()))
-                constexpr explicit operator bool() const noexcept
-                {
-                    return static_cast<bool>(U());
+                    return detail::eval_if<static_cast<bool>(T())>()(true, U());
                 }
                 constexpr bool operator()() const noexcept
                 {
@@ -310,8 +334,31 @@ namespace ranges
                 return {};
             }
 
+            template<typename...> struct undef;
+            template<typename T, typename U>
+            constexpr undef<T, U> operator&&(bool_<T>, U)
+            {
+                return {};
+            }
+            template<typename T, typename U>
+            constexpr undef<T, U> operator&&(T, bool_<U>)
+            {
+                return {};
+            }
+
             template<typename T, typename U>
             constexpr bool_<or_<T, U>> operator||(bool_<T>, bool_<U>)
+            {
+                return {};
+            }
+
+            template<typename T, typename U>
+            constexpr undef<T, U> operator||(bool_<T>, U)
+            {
+                return {};
+            }
+            template<typename T, typename U>
+            constexpr undef<T, U> operator||(T, bool_<U>)
             {
                 return {};
             }
@@ -356,22 +403,6 @@ namespace ranges
             };
 
             /// \cond
-               template<typename Concept, typename... Ts,
-                    typename = decltype(detail::gcc_bugs_bugs_bugs(&Concept::template requires_<Ts...>))>
-                constexpr bool models_impl(int) noexcept
-                {
-                    return meta::value_of<
-                        meta::apply<
-                            meta::quote<meta::lazy::and_>,
-                            meta::transform<
-                                detail::base_concepts_of_t<Concept>,
-                                meta::bind_back<meta::quote<concepts::models>, Ts...>>>>();
-                }
-                template<typename, typename...>
-                constexpr bool models_impl(long) noexcept
-                {
-                    return false;
-                }
             /// \endcond
 
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,9 +410,20 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models_
             {
+               template<typename C = Concept,
+                    typename = decltype(detail::gcc_bugs_bugs_bugs(&C::template requires_<Ts...>))>
                 constexpr explicit operator bool() const noexcept
                 {
-                    return models_impl<Concept, Ts...>(42);
+                    return meta::value_of<
+                        meta::apply<
+                            meta::quote<meta::lazy::and_>,
+                            meta::transform<
+                                detail::base_concepts_of_t<C>,
+                                meta::bind_back<meta::quote<concepts::models>, Ts...>>>>();
+                }
+                constexpr explicit operator bool() const volatile noexcept
+                {
+                    return false;
                 }
                 constexpr bool operator()() const noexcept
                 {
@@ -556,27 +598,30 @@ namespace ranges
             struct Swappable
             {
                 template<typename T>
-                auto requires_(T &&t) -> decltype(
+                auto requires_(T &t) -> decltype(
                     concepts::valid_expr(
-                        ((void)ranges::swap((T &&) t, (T &&) t), 42)
+                        ((void)ranges::swap(t, t), 42)
                     ));
+            };
 
+            struct SwappableWith
+            {
                 template<typename T, typename U>
                 auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Swappable, T>(),
-                        concepts::model_of<Swappable, U>(),
                         concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        ((void)ranges::swap((T &&) t, (U &&) u), 42),
-                        ((void)ranges::swap((U &&) u, (T &&) t), 42)
+                        ((void)ranges::swap((T &&) t, (T &&) t), 42),
+                        ((void)ranges::swap((U &&) u, (U &&) u), 42),
+                        ((void)ranges::swap((U &&) u, (T &&) t), 42),
+                        ((void)ranges::swap((T &&) t, (U &&) u), 42)
                     ));
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Comparison concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
-            struct WeaklyEqualityComparable
+            struct WeaklyEqualityComparableWith
             {
                 template<typename T, typename U>
                 auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
@@ -594,10 +639,12 @@ namespace ranges
                 template<typename T>
                 auto requires_(detail::as_cref_t<T> t) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<bool>(t == t),
-                        concepts::convertible_to<bool>(t != t)
+                        concepts::model_of<WeaklyEqualityComparableWith, T, T>()
                     ));
+            };
 
+            struct EqualityComparableWith
+            {
                 template<typename T, typename U>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
@@ -614,33 +661,38 @@ namespace ranges
                         concepts::is_false(std::is_same<T, U>{}),
                         concepts::model_of<EqualityComparable, T>(),
                         concepts::model_of<EqualityComparable, U>(),
-                        concepts::model_of<WeaklyEqualityComparable, T, U>(),
                         concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::model_of<EqualityComparable, C>()
+                        concepts::model_of<EqualityComparable, C>(),
+                        concepts::model_of<WeaklyEqualityComparableWith, T, U>()
                     ));
             };
 
-            struct WeaklyOrdered
+            struct StrictTotallyOrdered
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(detail::as_cref_t<T> t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<EqualityComparable, T>(),
                         concepts::convertible_to<bool>(t < t),
                         concepts::convertible_to<bool>(t > t),
                         concepts::convertible_to<bool>(t <= t),
                         concepts::convertible_to<bool>(t >= t)
                     ));
+            };
 
+            struct StrictTotallyOrderedWith
+            {
                 template<typename T, typename U,
                     typename C = common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
                 auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<WeaklyOrdered, T>(),
-                        concepts::model_of<WeaklyOrdered, U>(),
+                        concepts::model_of<StrictTotallyOrdered, T>(),
+                        concepts::model_of<StrictTotallyOrdered, U>(),
                         concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::model_of<WeaklyOrdered, C>(),
+                        concepts::model_of<StrictTotallyOrdered, C>(),
+                        concepts::model_of<EqualityComparableWith, T, U>(),
                         concepts::convertible_to<bool>(t < u),
                         concepts::convertible_to<bool>(u < t),
                         concepts::convertible_to<bool>(t > u),
@@ -649,20 +701,6 @@ namespace ranges
                         concepts::convertible_to<bool>(u <= t),
                         concepts::convertible_to<bool>(t >= u),
                         concepts::convertible_to<bool>(u >= t)
-                    ));
-            };
-
-            struct TotallyOrdered
-              : refines<EqualityComparable, WeaklyOrdered>
-            {
-                template<typename T>
-                void requires_();
-
-                template<typename T, typename U>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<TotallyOrdered, T>(),
-                        concepts::model_of<TotallyOrdered, U>()
                     ));
             };
 
@@ -729,7 +767,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::is_true(std::is_object<T>{}),
                         concepts::model_of<Assignable, T &, T>(),
-                        concepts::model_of<Swappable, T &>()
+                        concepts::model_of<Swappable, T>()
                     ));
             };
 
@@ -757,18 +795,6 @@ namespace ranges
             struct Regular
               : refines<SemiRegular, EqualityComparable>
             {};
-        }
-
-        template<bool B>
-        constexpr concepts::bool_<meta::bool_<B>> IsTrue()
-        {
-            return {};
-        }
-
-        template<typename T>
-        constexpr concepts::bool_<T> IsTrue()
-        {
-            return {};
         }
 
         template<typename ...Ts>
@@ -830,16 +856,33 @@ namespace ranges
         using Copyable = concepts::models<concepts::Copyable, T>;
 
         template<typename T, typename U>
-        using WeaklyEqualityComparable = concepts::models<concepts::WeaklyEqualityComparable, T, U>;
+        using WeaklyEqualityComparableWith = concepts::models<concepts::WeaklyEqualityComparableWith, T, U>;
+
+        template<typename T, typename U>
+        using WeaklyEqualityComparable
+            RANGES_DEPRECATED("This concept has been renamed WeaklyEqualityComparableWith") =
+                WeaklyEqualityComparableWith<T, U>;
+
+        template<typename T>
+        using EqualityComparable = concepts::models<concepts::EqualityComparable, T>;
+
+        template<typename T, typename U>
+        using EqualityComparableWith = concepts::models<concepts::EqualityComparableWith, T, U>;
+
+        template<typename T>
+        using StrictTotallyOrdered = concepts::models<concepts::StrictTotallyOrdered, T>;
+
+        template<typename T, typename U>
+        using StrictTotallyOrderedWith = concepts::models<concepts::StrictTotallyOrderedWith, T, U>;
 
         template<typename T, typename U = T>
-        using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
-
-        template<typename T, typename U = T>
-        using WeaklyOrdered = concepts::models<concepts::WeaklyOrdered, T, U>;
-
-        template<typename T, typename U = T>
-        using TotallyOrdered = concepts::models<concepts::TotallyOrdered, T, U>;
+        using TotallyOrdered
+            RANGES_DEPRECATED("This concept has been split into StrictTotallyOrdered and "
+                "StrictTotallyOrderedWith") =
+                    meta::if_<
+                        std::is_same<T, U>,
+                        concepts::models<concepts::StrictTotallyOrdered, T>,
+                        concepts::models<concepts::StrictTotallyOrderedWith, T, U>>;
 
         template<typename T>
         using SemiRegular = concepts::models<concepts::SemiRegular, T>;
@@ -847,8 +890,11 @@ namespace ranges
         template<typename T>
         using Regular = concepts::models<concepts::Regular, T>;
 
-        template<typename T, typename U = T>
-        using Swappable = concepts::models<concepts::Swappable, T, U>;
+        template<typename T>
+        using Swappable = concepts::models<concepts::Swappable, T>;
+
+        template<typename T, typename U>
+        using SwappableWith = concepts::models<concepts::SwappableWith, T, U>;
     }
 }
 
@@ -857,7 +903,8 @@ namespace ranges
 #define CONCEPT_REQUIRES_(...)                                                      \
     int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
     typename std::enable_if<                                                        \
-        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),      \
+        CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43 ||                       \
+            static_cast<bool>(__VA_ARGS__),                                         \
         int                                                                         \
     >::type = 0                                                                     \
     /**/
@@ -866,7 +913,8 @@ namespace ranges
     template<                                                                       \
         int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                      \
         typename std::enable_if<                                                    \
-            (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),  \
+            CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43 ||                   \
+                static_cast<bool>(__VA_ARGS__),                                     \
             int                                                                     \
         >::type = 0>                                                                \
     /**/

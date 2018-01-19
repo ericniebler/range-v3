@@ -102,7 +102,7 @@ namespace ranges
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
-                    RANGES_EXPECT(!SizedRange<Rng>() || n <= ranges::distance(rng_));
+                    RANGES_EXPECT(!(bool)SizedRange<Rng>() || n <= ranges::distance(rng_));
                 }
                 iterator_t<Rng> begin()
                 {
@@ -159,7 +159,7 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())
+                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {

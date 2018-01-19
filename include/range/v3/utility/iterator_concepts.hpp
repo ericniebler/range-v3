@@ -293,7 +293,7 @@ namespace ranges
             };
 
             struct Sentinel
-              : refines<SemiRegular(_1), Iterator(_2), WeaklyEqualityComparable>
+              : refines<SemiRegular(_1), Iterator(_2), WeaklyEqualityComparableWith>
             {};
 
             struct SizedSentinel
@@ -360,7 +360,7 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, TotallyOrdered, SizedSentinel(_1, _1)>
+              : refines<BidirectionalIterator, StrictTotallyOrdered, SizedSentinel(_1, _1)>
             {
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -511,7 +511,7 @@ namespace ranges
             template<typename T, typename U, typename... Rest>
             struct variadic_common_reference_<T, U, Rest...>
               : CONCEPT_alias(CommonReference<T, U>() &&
-                    variadic_common_reference_<common_reference_t<T, U>, Rest...>())
+                    IsTrue<variadic_common_reference_<common_reference_t<T, U>, Rest...>>())
             {};
 
             // Return the value and reference types of an iterator in a list.

@@ -257,7 +257,7 @@ namespace ranges
                 meta::if_<
                     meta::and_c<
                         meta::and_c<(bool) BoundedRange<Rngs>()...>::value,
-                        !SinglePass<iterator_t<Rngs>>()...>,
+                        (bool)!SinglePass<iterator_t<Rngs>>()...>,
                     cursor,
                     sentinel>;
 

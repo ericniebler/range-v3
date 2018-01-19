@@ -82,7 +82,7 @@ namespace ranges
                 template<typename Rng, typename Val>
                 using Concept = CONCEPT_alias(
                     Range<Rng>() &&
-                    EqualityComparable<Val, range_common_reference_t<Rng>>());
+                    EqualityComparableWith<Val, range_common_reference_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Val)(
                     requires Concept<Rng, Val>())
@@ -99,8 +99,8 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "Rng must model the Range concept");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<Val, range_common_reference_t<Rng>>(),
-                        "The delimiting value type must be EqualityComparable to the "
+                    CONCEPT_ASSERT_MSG(EqualityComparableWith<Val, range_common_reference_t<Rng>>(),
+                        "The delimiting value type must be EqualityComparableWith to the "
                         "range's common reference type.");
                 }
             #endif

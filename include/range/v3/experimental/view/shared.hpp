@@ -90,7 +90,7 @@ namespace ranges
                     CONCEPT_template(typename Rng)(
                         requires Range<Rng>()
                                           && !View<Rng>()
-                                          && !std::is_reference<Rng>::value)
+                                          && !IsTrue<std::is_reference<Rng>>())
                     shared_view<Rng> operator()(Rng && t) const
                     {
                         return shared_view<Rng>{std::move(t)};
@@ -100,7 +100,7 @@ namespace ranges
                     CONCEPT_template(typename Rng)(
                         requires !Range<Rng>()
                                           || View<Rng>()
-                                          || std::is_reference<Rng>::value)
+                                          || IsTrue<std::is_reference<Rng>>())
                     void operator()(Rng &&) const
                     {
                         CONCEPT_ASSERT_MSG(Range<Rng>(),

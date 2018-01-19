@@ -116,7 +116,7 @@ namespace ranges
                 using Concept = CONCEPT_alias(
                     InputRange<Rng>() &&
                     Same<V1, V2>() &&
-                    EqualityComparable<V1, range_value_type_t<Rng>>() &&
+                    EqualityComparableWith<V1, range_value_type_t<Rng>>() &&
                     Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>() &&
                     CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>() &&
                     CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>());
@@ -143,8 +143,8 @@ namespace ranges
                         "InputRange concept.");
                     CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<V1, range_value_type_t<Rng>>(),
-                        "The values passed to view::replace must be EqualityComparable "
+                    CONCEPT_ASSERT_MSG(EqualityComparableWith<V1, range_value_type_t<Rng>>(),
+                        "The values passed to view::replace must be EqualityComparableWith "
                         "to the range's value type.");
                     CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
                             range_value_type_t<Rng>>(),

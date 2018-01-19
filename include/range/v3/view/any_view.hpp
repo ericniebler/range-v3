@@ -232,7 +232,7 @@ namespace ranges
               , private any_view_sentinel_impl<Rng>
             {
                 CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_ASSERT(!Sized || SizedRange<Rng>());
+                CONCEPT_ASSERT(!Sized || (bool)SizedRange<Rng>());
 
                 explicit any_input_view_impl(Rng rng_)
                   : tagged_t{std::move(rng_), iterator_t<Rng>{}}
@@ -467,7 +467,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT((Cat & category::forward) == category::forward);
                 CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_ASSERT((Cat & category::sized) == category::none || SizedRange<Rng>());
+                CONCEPT_ASSERT((Cat & category::sized) == category::none || (bool)SizedRange<Rng>());
 
                 any_view_impl() = default;
                 any_view_impl(Rng rng)

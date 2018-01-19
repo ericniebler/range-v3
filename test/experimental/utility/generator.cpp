@@ -116,7 +116,7 @@ ranges::experimental::generator<T> iota_generator(T t)
 
 CONCEPT_template(class T, class S)(
     requires ranges::WeaklyIncrementable<T>() &&
-        ranges::WeaklyEqualityComparable<T, S>() &&
+        ranges::WeaklyEqualityComparableWith<T, S>() &&
         !ranges::SizedIncrementableSentinel<S, T>())
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {

@@ -129,7 +129,7 @@ namespace ranges
             };
 
             CONCEPT_template(typename Rng, typename Action)(
-                requires is_pipeable<Action>() && Range<Rng &>() &&
+                requires IsTrue<is_pipeable<Action>>() && Range<Rng &>() &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
                         result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())

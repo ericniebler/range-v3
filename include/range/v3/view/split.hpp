@@ -183,7 +183,7 @@ namespace ranges
                     operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
                     {
                         RANGES_EXPECT(cur != end);
-                        if(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() &&
+                        if((bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() &&
                             distance(cur, end) < len_)
                             return {false, cur};
                         auto pat_cur = ranges::begin(sub_);
@@ -222,7 +222,7 @@ namespace ranges
                 using SubRangeConcept = CONCEPT_alias(
                     ForwardRange<Rng>() &&
                     ForwardRange<Sub>() &&
-                    EqualityComparable<range_value_type_t<Rng>, range_value_type_t<Sub>>());
+                    EqualityComparableWith<range_value_type_t<Rng>, range_value_type_t<Sub>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires FunctionConcept<Rng, Fun>())
@@ -261,7 +261,7 @@ namespace ranges
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "
-                        "(2) A ForwardRange whose value type is EqualityComparable to the input "
+                        "(2) A ForwardRange whose value type is EqualityComparableWith to the input "
                         "range's value type, "
                         "(3) A Predicate that is callable with one argument of the range's reference "
                         "type, or "

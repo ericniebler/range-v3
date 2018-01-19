@@ -225,22 +225,22 @@ static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
 
 static_assert(ranges::Swappable<int &>(), "");
-static_assert(!ranges::Swappable<int>(), "");
+static_assert(ranges::Swappable<int>(), "");
 static_assert(!ranges::Swappable<int const &>(), "");
 static_assert(ranges::Swappable<IntSwappable>(), "");
-static_assert(ranges::Swappable<IntSwappable, int &>(), "");
-static_assert(!ranges::Swappable<IntSwappable, int const &>(), "");
+static_assert(ranges::SwappableWith<IntSwappable, int &>(), "");
+static_assert(!ranges::SwappableWith<IntSwappable, int const &>(), "");
 
-static_assert(ranges::WeaklyOrdered<int>(), "");
+static_assert(ranges::StrictTotallyOrdered<int>(), "");
 static_assert(ranges::Common<int, IntComparable>(), "");
 static_assert(ranges::CommonReference<int &, IntComparable &>(), "");
-static_assert(ranges::WeaklyOrdered<int, IntComparable>(), "");
-static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
-static_assert(ranges::WeaklyEqualityComparable<int, int>(), "");
+static_assert(ranges::StrictTotallyOrderedWith<int, IntComparable>(), "");
+static_assert(ranges::StrictTotallyOrderedWith<IntComparable, int>(), "");
+static_assert(ranges::WeaklyEqualityComparableWith<int, int>(), "");
 static_assert(ranges::EqualityComparable<int>(), "");
-static_assert(ranges::EqualityComparable<int, int>(), "");
-static_assert(ranges::EqualityComparable<int, IntComparable>(), "");
-static_assert(ranges::EqualityComparable<int &, IntComparable &>(), "");
+static_assert(ranges::EqualityComparableWith<int, int>(), "");
+static_assert(ranges::EqualityComparableWith<int, IntComparable>(), "");
+static_assert(ranges::EqualityComparableWith<int &, IntComparable &>(), "");
 
 static_assert(
     std::is_same<

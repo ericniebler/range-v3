@@ -65,7 +65,7 @@ namespace ranges
             iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputRange *,
                 std::false_type)
             {
-                RANGES_EXPECT(i >= 0 || SizedRange<Rng>() || ForwardRange<Rng>());
+                RANGES_EXPECT(i >= 0 || (bool)SizedRange<Rng>() || (bool)ForwardRange<Rng>());
                 if(0 > i)
                     return next(ranges::begin(rng), distance(rng) + i);
                 return next(ranges::begin(rng), i);
@@ -208,7 +208,7 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), from, count};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())
+                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     concepts::RandomAccessRange *, concepts::BoundedRange * = nullptr)

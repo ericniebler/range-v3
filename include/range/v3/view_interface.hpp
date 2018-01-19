@@ -91,7 +91,7 @@ namespace ranges
                 return Cardinality == 0;
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && Cardinality < 0 && ForwardRange<D const>())
+                requires Same<D, Derived>() && IsTrue<Cardinality < 0>() && ForwardRange<D const>())
             constexpr bool empty() const
                 noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
                     ranges::end(std::declval<D const &>()))))
@@ -115,13 +115,13 @@ namespace ranges
             }
             /// Access the size of the range, if it can be determined:
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && Cardinality >= 0)
+                requires Same<D, Derived>() && IsTrue<Cardinality >= 0>())
             constexpr range_size_type_t<D> size() const noexcept
             {
                 return (range_size_type_t<D>)Cardinality;
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && Cardinality < 0 &&
+                requires Same<D, Derived>() && IsTrue<Cardinality < 0>() &&
                     SizedSentinel<sentinel_t<D const>, iterator_t<D const>>() &&
                     ForwardRange<D const>())
             constexpr range_size_type_t<D> size() const

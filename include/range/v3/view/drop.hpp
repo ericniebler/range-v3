@@ -154,7 +154,7 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())
+                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {

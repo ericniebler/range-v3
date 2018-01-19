@@ -408,7 +408,7 @@ namespace ranges
 
             template<typename Cur>
             struct is_writable_cursor_<Cur, true>
-              : WritableCursor<Cur, range_access::cursor_value_t<Cur>>
+              : meta::bool_<(bool) WritableCursor<Cur, range_access::cursor_value_t<Cur>>()>
             {};
 
             template<typename Cur>

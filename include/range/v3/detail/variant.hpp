@@ -677,7 +677,7 @@ namespace ranges
         };
 
         CONCEPT_template(typename...Ts, typename...Us)(
-            requires meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)
+            requires meta::and_c<(bool)EqualityComparableWith<Ts, Us>()...>::value)
         bool operator==(variant<Ts...> const &lhs, variant<Us...> const &rhs)
         {
             return (!lhs.valid() && !rhs.valid()) ||
@@ -689,7 +689,7 @@ namespace ranges
         }
 
         CONCEPT_template(typename...Ts, typename...Us)(
-            requires meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)
+            requires meta::and_c<(bool)EqualityComparableWith<Ts, Us>()...>::value)
         bool operator!=(variant<Ts...> const &lhs, variant<Us...> const &rhs)
         {
             return !(lhs == rhs);
