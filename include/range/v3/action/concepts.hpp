@@ -55,25 +55,21 @@ namespace ranges
             struct SemiContainer
               : refines<ForwardRange>
             {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<DefaultConstructible, uncvref_t<T>>(),
-                        concepts::model_of<Movable, uncvref_t<T>>(),
-                        concepts::is_false(is_view<T>())
-                    ));
+                CONCEPT_template(typename T)(
+                    requires ranges::DefaultConstructible<uncvref_t<T>>() &&
+                        ranges::Movable<uncvref_t<T>>() &&
+                        !ranges::View<T>())
+                void requires_();
             };
 
             // std::vector is a Container, std::array is not
             struct Container
               : refines<SemiContainer>
             {
-                template<typename T,
-                    typename I = detail::movable_input_iterator<range_value_type_t<T>>>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Constructible, uncvref_t<T>, I, I>()
-                    ));
+                CONCEPT_template(typename T,
+                    typename I = detail::movable_input_iterator<range_value_type_t<T>>)(
+                    requires ranges::Constructible<uncvref_t<T>, I, I>())
+                void requires_();
             };
         }
 

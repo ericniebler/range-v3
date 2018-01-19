@@ -499,6 +499,21 @@ namespace ranges
 
         namespace detail
         {
+            template<typename... Ts>
+            struct variadic_common_reference_
+            {};
+
+            template<typename T, typename U>
+            struct variadic_common_reference_<T, U>
+              : CONCEPT_alias(CommonReference<T, U>())
+            {};
+
+            template<typename T, typename U, typename... Rest>
+            struct variadic_common_reference_<T, U, Rest...>
+              : CONCEPT_alias(CommonReference<T, U>() &&
+                    variadic_common_reference_<common_reference_t<T, U>, Rest...>())
+            {};
+
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
@@ -539,7 +554,7 @@ namespace ranges
                 meta::lazy::invoke<
                     iter_map_reduce_fn_<
                         meta::bind_front<meta::quote<concepts::Invocable::result_t>, C&>,
-                        meta::quote<CommonReference>>,
+                        meta::quote<variadic_common_reference_>>,
                     Is...>>;
         }
 

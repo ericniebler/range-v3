@@ -485,14 +485,6 @@ namespace ranges
                         concepts::model_of<ConvertibleTo, T, reference_t<T, U>>(),
                         concepts::model_of<ConvertibleTo, U, reference_t<T, U>>()
                     ));
-
-                template<typename T, typename U, typename...Rest,
-                    typename Self = CommonReference>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Self, T, U>(),
-                        concepts::model_of<Self, reference_t<T, U>, Rest...>()
-                    ));
             };
 
             struct Common
@@ -500,16 +492,14 @@ namespace ranges
                 template<typename T, typename U, typename...Rest>
                 using value_t = common_type_t<T, U, Rest...>;
 
-                template<typename T, typename U>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_same<uncvref_t<T>, uncvref_t<U>>{})
-                    ));
+                CONCEPT_template(typename T, typename U)(
+                    requires models<Same, uncvref_t<T>, uncvref_t<U>>())
+                void requires_();
 
-                template<typename T, typename U>
+                CONCEPT_template(typename T, typename U)(
+                    requires !models<Same, uncvref_t<T>, uncvref_t<U>>())
                 auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::is_false(std::is_same<uncvref_t<T>, uncvref_t<U>>{}),
                         concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
                         concepts::model_of<ConvertibleTo, T, value_t<T, U>>(),
                         concepts::model_of<ConvertibleTo, U, value_t<T, U>>(),
@@ -519,14 +509,6 @@ namespace ranges
                             CommonReference,
                             value_t<T, U> &,
                             common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
-                    ));
-
-                template<typename T, typename U, typename...Rest,
-                    typename Common_ = Common>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Common_, T, U>(),
-                        concepts::model_of<Common_, value_t<T, U>, Rest...>()
                     ));
             };
 
@@ -806,13 +788,13 @@ namespace ranges
         template<typename T, typename U>
         using DerivedFrom = concepts::models<concepts::DerivedFrom, T, U>;
 
-        template<typename T, typename U, typename...Rest>
+        template<typename T, typename U>
         using CommonReference =
-            concepts::models<concepts::CommonReference, T, U, Rest...>;
+            concepts::models<concepts::CommonReference, T, U>;
 
-        template<typename T, typename U, typename...Rest>
+        template<typename T, typename U>
         using Common =
-            concepts::models<concepts::Common, T, U, Rest...>;
+            concepts::models<concepts::Common, T, U>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;
