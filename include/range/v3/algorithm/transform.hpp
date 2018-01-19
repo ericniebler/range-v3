@@ -35,21 +35,21 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename F, typename P = ident>
-        using Transformable1 = meta::strict_and<
-            InputIterator<I>,
-            WeaklyIncrementable<O>,
-            CopyConstructible<F>,
-            Writable<O, indirect_result_of_t<F&(projected<I, P>)>>>;
+        using Transformable1 = CONCEPT_alias(
+            InputIterator<I>() &&
+            WeaklyIncrementable<O>() &&
+            CopyConstructible<F>() &&
+            Writable<O, indirect_result_of_t<F&(projected<I, P>)>>());
 
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident>
-        using Transformable2 = meta::strict_and<
-            InputIterator<I0>,
-            InputIterator<I1>,
-            WeaklyIncrementable<O>,
-            CopyConstructible<F>,
-            Writable<O, indirect_result_of_t<F&(projected<I0, P0>, projected<I1, P1>)>>>;
+        using Transformable2 = CONCEPT_alias(
+            InputIterator<I0>() &&
+            InputIterator<I1>() &&
+            WeaklyIncrementable<O>() &&
+            CopyConstructible<F>() &&
+            Writable<O, indirect_result_of_t<F&(projected<I0, P0>, projected<I1, P1>)>>());
 
         /// \addtogroup group-algorithms
         /// @{

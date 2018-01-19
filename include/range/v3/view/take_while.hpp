@@ -104,10 +104,10 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    Predicate<Pred&, iterator_t<Rng>>,
-                    CopyConstructible<Pred>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    Predicate<Pred&, iterator_t<Rng>>() &&
+                    CopyConstructible<Pred>());
 
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires Concept<Rng, Pred>())
@@ -146,9 +146,9 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    IndirectPredicate<Pred, iterator_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    IndirectPredicate<Pred, iterator_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires Concept<Rng, Pred>())

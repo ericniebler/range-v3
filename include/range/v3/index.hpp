@@ -30,14 +30,13 @@ namespace ranges
         namespace index_detail
         {
             template<typename Rng, typename T>
-            using Concept = meta::and_<
-                RandomAccessRange<Rng>,
-                // Only evaluate this one if the previous one succeeded
-                meta::lazy::invoke<
-                    meta::compose<
-                        meta::bind_front<meta::quote<ConvertibleTo>, T>,
-                        meta::quote<range_difference_type_t>>,
-                    Rng>>;
+            struct CompatibleDifferenceType
+              : ConvertibleTo<T, range_difference_type_t<Rng>>
+            {};
+
+            template<typename Rng, typename T>
+            using Concept = CONCEPT_alias(
+                RandomAccessRange<Rng>() && CompatibleDifferenceType<Rng, T>());
         }  // namespace index_detail
         /// \endcond
 

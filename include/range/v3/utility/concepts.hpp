@@ -26,6 +26,92 @@
 #include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/detail/config.hpp>
 
+
+#define CONCEPT_PP_CAT_(X, ...) X ## __VA_ARGS__
+#define CONCEPT_PP_CAT(X, ...)  CONCEPT_PP_CAT_(X, __VA_ARGS__)
+
+#if RANGES_CXX_VA_OPT
+
+#define RANGES_template(...) \
+    template<__VA_ARGS__ __VA_OPT__(, ) RANGES_REQUIRES /**/
+
+#else // RANGES_VA_OPT
+
+// binary intermediate split macro.
+//
+// An "intermediate" is a single macro argument
+// that expands to more than one argument before
+// it can be passed to another macro.  E.g.
+//
+// #define IM x, y
+//
+// CONCEPT_PP_SPLIT(0, IM) // x
+// CONCEPT_PP_SPLIT(1, IM) // y
+
+#define CONCEPT_PP_SPLIT(i, ...) CONCEPT_PP_CAT_(CONCEPT_PP_SPLIT_, i)(__VA_ARGS__)
+#define CONCEPT_PP_SPLIT_0(a, ...) a
+#define CONCEPT_PP_SPLIT_1(a, ...) __VA_ARGS__
+
+// parenthetic expression detection on
+// parenthetic expressions of any arity
+// (hence the name 'variadic').  E.g.
+//
+// CONCEPT_PP_IS_VARIADIC(+)         // 0
+// CONCEPT_PP_IS_VARIADIC(())        // 1
+// CONCEPT_PP_IS_VARIADIC(text)      // 0
+// CONCEPT_PP_IS_VARIADIC((a, b, c)) // 1
+
+#define CONCEPT_PP_IS_VARIADIC(...)                                               \
+    CONCEPT_PP_SPLIT(                                                             \
+        0, CONCEPT_PP_CAT(CONCEPT_PP_IS_VARIADIC_R_, CONCEPT_PP_IS_VARIADIC_C __VA_ARGS__)) \
+    /**/
+#define CONCEPT_PP_IS_VARIADIC_C(...) 1
+#define CONCEPT_PP_IS_VARIADIC_R_1 1,
+#define CONCEPT_PP_IS_VARIADIC_R_CONCEPT_PP_IS_VARIADIC_C 0,
+
+// lazy 'if' construct.
+// 'bit' must be 0 or 1 (i.e. Boolean).  E.g.
+//
+// CONCEPT_PP_IIF(0)(T, F) // F
+// CONCEPT_PP_IIF(1)(T, F) // T
+
+#define CONCEPT_PP_IIF(bit) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, bit)
+#define CONCEPT_PP_IIF_0(t, ...) __VA_ARGS__
+#define CONCEPT_PP_IIF_1(t, ...) t
+
+// emptiness detection macro...
+
+#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION(...)      \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_VARIADIC(__VA_ARGS__)) \
+    (0, CONCEPT_PP_IS_VARIADIC(CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__()))
+    /**/
+#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C() ()
+
+#define CONCEPT_PP_EMPTY()
+#define CONCEPT_PP_COMMA() ,
+#define CONCEPT_PP_COMMA_IIF(X) CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
+
+#define CONCEPT_template(...)               \
+    template<__VA_ARGS__ CONCEPT_PP_COMMA_IIF( \
+        CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__)) CONCEPT_PP_REQUIRES
+    /**/
+#endif // CONCEPT_PP_VA_OPT_SUPPORTED
+
+#define CONCEPT_PP_REQUIRES(...) \
+    CONCEPT_PP_REQUIRES_2(CONCEPT_PP_CAT(CONCEPT_PP_IMPL_, __VA_ARGS__))
+#define CONCEPT_PP_IMPL_requires
+#define CONCEPT_PP_REQUIRES_2(...)                                              \
+    int _concepts_requires_ = __LINE__,                                                 \
+    typename std::enable_if<(_concepts_requires_ == __LINE__ && (__VA_ARGS__))>::type* = nullptr >
+
+#define CONCEPT_requires(...)               \
+    CONCEPT_template()(requires __VA_ARGS__)
+    /**/
+
+#define CONCEPT_alias(...) decltype(::ranges::concepts::alias(__VA_ARGS__))
+
+
+
 namespace ranges
 {
     inline namespace v3
@@ -61,14 +147,14 @@ namespace ranges
             {
                 template<typename Bool_>
                 auto operator()(Bool_) const ->
-                    meta::if_c<Bool_::value, int>;
+                    meta::if_c<(bool)Bool_(), int>;
             } is_true {};
 
             constexpr struct is_false_t
             {
                 template<typename Bool_>
                 auto operator()(Bool_) const ->
-                    meta::if_c<!Bool_::value, int>;
+                    meta::if_c<!(bool)Bool_(), int>;
             } is_false {};
 
             template<typename Concept>
@@ -103,19 +189,6 @@ namespace ranges
 
             template<typename T>
             T gcc_bugs_bugs_bugs(T);
-
-            template<typename...Ts>
-            auto models_(any) ->
-                std::false_type;
-
-            template<typename...Ts, typename Concept,
-                typename = decltype(gcc_bugs_bugs_bugs(&Concept::template requires_<Ts...>))>
-            auto models_(Concept *) ->
-                meta::apply<
-                    meta::quote<meta::lazy::strict_and>,
-                    meta::transform<
-                        base_concepts_of_t<Concept>,
-                        meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
 
             template<typename List>
             struct most_refined_
@@ -154,6 +227,107 @@ namespace ranges
             using _8 = std::integral_constant<int, 7>;
             using _9 = std::integral_constant<int, 8>;
 
+            // For short-cirtuit evaluation of requirements:
+            template<class T>
+            struct bool_
+            {
+                using type = bool_;
+                using value_type = bool;
+                constexpr /*implicit*/ operator bool() const noexcept
+                {
+                    return static_cast<bool>(T());
+                }
+                constexpr bool operator()() const noexcept
+                {
+                    return static_cast<bool>(*this);
+                }
+                CONCEPT_template(bool B, typename T_ = T)(
+                    requires B == static_cast<bool>(T_()))
+                constexpr /*implicit*/ operator std::integral_constant<bool, B>() const noexcept
+                {
+                    return {};
+                }
+            };
+
+            template<typename T, typename U>
+            struct and_
+            {
+                CONCEPT_template(typename T_ = T)(
+                    requires !static_cast<bool>(T_()))
+                constexpr explicit operator bool() const noexcept
+                {
+                    return false;
+                }
+                CONCEPT_template(typename T_ = T)(
+                    requires static_cast<bool>(T_()))
+                constexpr explicit operator bool() const noexcept
+                {
+                    return static_cast<bool>(U());
+                }
+                constexpr bool operator()() const noexcept
+                {
+                    return static_cast<bool>(*this);
+                }
+            };
+
+            template<typename T, typename U>
+            struct or_
+            {
+                CONCEPT_template(typename T_ = T)(
+                    requires static_cast<bool>(T_()))
+                constexpr explicit operator bool() const noexcept
+                {
+                    return true;
+                }
+                CONCEPT_template(typename T_ = T)(
+                    requires !static_cast<bool>(T_()))
+                constexpr explicit operator bool() const noexcept
+                {
+                    return static_cast<bool>(U());
+                }
+                constexpr bool operator()() const noexcept
+                {
+                    return static_cast<bool>(*this);
+                }
+            };
+
+            template<typename T>
+            struct not_
+            {
+                constexpr explicit operator bool() const noexcept
+                {
+                    return !static_cast<bool>(T());
+                }
+                constexpr bool operator()() const noexcept
+                {
+                    return static_cast<bool>(*this);
+                }
+            };
+
+            template<typename T, typename U>
+            constexpr bool_<and_<T, U>> operator&&(bool_<T>, bool_<U>)
+            {
+                return {};
+            }
+
+            template<typename T, typename U>
+            constexpr bool_<or_<T, U>> operator||(bool_<T>, bool_<U>)
+            {
+                return {};
+            }
+
+            template<typename T>
+            constexpr bool_<not_<T>> operator!(bool_<T>)
+            {
+                return {};
+            }
+
+            template<typename T>
+            bool_<T> alias(bool_<T>);
+
+            template<bool B>
+            bool_<meta::bool_<B>> alias(meta::bool_<B>);
+
             template<typename Ret, typename T>
             Ret returns_(T const &);
 
@@ -181,27 +355,54 @@ namespace ranges
                 void requires_();
             };
 
+            /// \cond
+               template<typename Concept, typename... Ts,
+                    typename = decltype(detail::gcc_bugs_bugs_bugs(&Concept::template requires_<Ts...>))>
+                constexpr bool models_impl(int) noexcept
+                {
+                    return meta::value_of<
+                        meta::apply<
+                            meta::quote<meta::lazy::and_>,
+                            meta::transform<
+                                detail::base_concepts_of_t<Concept>,
+                                meta::bind_back<meta::quote<concepts::models>, Ts...>>>>();
+                }
+                template<typename, typename...>
+                constexpr bool models_impl(long) noexcept
+                {
+                    return false;
+                }
+            /// \endcond
+
             ////////////////////////////////////////////////////////////////////////////////////////////
             // models
             template<typename Concept, typename...Ts>
-            struct models
-              : meta::bool_<meta::_t<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))>::value>
-            {};
+            struct models_
+            {
+                constexpr explicit operator bool() const noexcept
+                {
+                    return models_impl<Concept, Ts...>(42);
+                }
+                constexpr bool operator()() const noexcept
+                {
+                    return static_cast<bool>(*this);
+                }
+            };
 
             template<typename Concept, typename...Args, typename...Ts>
-            struct models<Concept(Args...), Ts...>
-              : models<Concept, meta::at<meta::list<Ts...>, Args>...>
+            struct models_<Concept(Args...), Ts...>
+              : models_<Concept, meta::at<meta::list<Ts...>, Args>...>
             {};
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // model_of
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
+                meta::if_c<(bool)concepts::models<Concept, Ts...>(), int>;
 
             template<typename Concept, typename ...Ts>
             auto model_of() ->
-                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
+                meta::if_c<(bool)concepts::models<Concept, Ts...>(), int>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // most_refined
@@ -228,7 +429,7 @@ namespace ranges
                 template<typename T, typename ...Us>
                 struct same<T, Us...> : meta::and_c<std::is_same<T, Us>::value...> {};
                 template<typename ...Ts>
-                using same_t = meta::_t<same<Ts...>>;
+                using same_t = bool_<meta::_t<same<Ts...>>>;
 
                 template<typename ...Ts>
                 auto requires_() -> decltype(
@@ -286,11 +487,11 @@ namespace ranges
                     ));
 
                 template<typename T, typename U, typename...Rest,
-                    typename CommonReference_ = CommonReference>
+                    typename Self = CommonReference>
                 auto requires_() -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<CommonReference_, T, U>(),
-                        concepts::model_of<CommonReference_, reference_t<T, U>, Rest...>()
+                        concepts::model_of<Self, T, U>(),
+                        concepts::model_of<Self, reference_t<T, U>, Rest...>()
                     ));
             };
 
@@ -576,6 +777,18 @@ namespace ranges
             {};
         }
 
+        template<bool B>
+        constexpr concepts::bool_<meta::bool_<B>> IsTrue()
+        {
+            return {};
+        }
+
+        template<typename T>
+        constexpr concepts::bool_<T> IsTrue()
+        {
+            return {};
+        }
+
         template<typename ...Ts>
         using Same = concepts::Same::same_t<Ts...>; // This handles void better than using the Same concept
 
@@ -657,9 +870,6 @@ namespace ranges
     }
 }
 
-#define CONCEPT_PP_CAT_(X, ...) X ## __VA_ARGS__
-#define CONCEPT_PP_CAT(X, ...)  CONCEPT_PP_CAT_(X, __VA_ARGS__)
-
 /// \addtogroup group-concepts
 /// @{
 #define CONCEPT_REQUIRES_(...)                                                      \
@@ -688,85 +898,6 @@ namespace ranges
 
 #define CONCEPT_ASSERT_MSG static_assert
 
-
-
-#if RANGES_CXX_VA_OPT
-
-#define RANGES_template(...) \
-    template<__VA_ARGS__ __VA_OPT__(, ) RANGES_REQUIRES /**/
-
-#else // RANGES_VA_OPT
-
-// binary intermediate split macro.
-//
-// An "intermediate" is a single macro argument
-// that expands to more than one argument before
-// it can be passed to another macro.  E.g.
-//
-// #define IM x, y
-//
-// CONCEPT_PP_SPLIT(0, IM) // x
-// CONCEPT_PP_SPLIT(1, IM) // y
-
-#define CONCEPT_PP_SPLIT(i, ...) CONCEPT_PP_CAT_(CONCEPT_PP_SPLIT_, i)(__VA_ARGS__)
-#define CONCEPT_PP_SPLIT_0(a, ...) a
-#define CONCEPT_PP_SPLIT_1(a, ...) __VA_ARGS__
-
-// parenthetic expression detection on
-// parenthetic expressions of any arity
-// (hence the name 'variadic').  E.g.
-//
-// CONCEPT_PP_IS_VARIADIC(+)         // 0
-// CONCEPT_PP_IS_VARIADIC(())        // 1
-// CONCEPT_PP_IS_VARIADIC(text)      // 0
-// CONCEPT_PP_IS_VARIADIC((a, b, c)) // 1
-
-#define CONCEPT_PP_IS_VARIADIC(...)                                               \
-    CONCEPT_PP_SPLIT(                                                             \
-        0, CONCEPT_PP_CAT(CONCEPT_PP_IS_VARIADIC_R_, CONCEPT_PP_IS_VARIADIC_C __VA_ARGS__)) \
-    /**/
-#define CONCEPT_PP_IS_VARIADIC_C(...) 1
-#define CONCEPT_PP_IS_VARIADIC_R_1 1,
-#define CONCEPT_PP_IS_VARIADIC_R_CONCEPT_PP_IS_VARIADIC_C 0,
-
-// lazy 'if' construct.
-// 'bit' must be 0 or 1 (i.e. Boolean).  E.g.
-//
-// CONCEPT_PP_IIF(0)(T, F) // F
-// CONCEPT_PP_IIF(1)(T, F) // T
-
-#define CONCEPT_PP_IIF(bit) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, bit)
-#define CONCEPT_PP_IIF_0(t, ...) __VA_ARGS__
-#define CONCEPT_PP_IIF_1(t, ...) t
-
-// emptiness detection macro...
-
-#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION(...)      \
-    CONCEPT_PP_IIF(CONCEPT_PP_IS_VARIADIC(__VA_ARGS__)) \
-    (0, CONCEPT_PP_IS_VARIADIC(CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__()))
-    /**/
-#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C() ()
-
-#define CONCEPT_PP_EMPTY()
-#define CONCEPT_PP_COMMA() ,
-#define CONCEPT_PP_COMMA_IIF(X) CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
-
-#define CONCEPT_template(...)               \
-    template<__VA_ARGS__ CONCEPT_PP_COMMA_IIF( \
-        CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__)) CONCEPT_PP_REQUIRES
-    /**/
-#endif // CONCEPT_PP_VA_OPT_SUPPORTED
-
-#define CONCEPT_PP_REQUIRES(...) \
-    CONCEPT_PP_REQUIRES_2(CONCEPT_PP_CAT(CONCEPT_PP_IMPL_, __VA_ARGS__))
-#define CONCEPT_PP_IMPL_requires
-#define CONCEPT_PP_REQUIRES_2(...)                                              \
-    int _coronet_requires_ = 0,                                                 \
-    typename std::enable_if<(_coronet_requires_ == 0 && (__VA_ARGS__))>::type* = nullptr >
-
-#define CONCEPT_requires(...)               \
-    CONCEPT_template()(requires __VA_ARGS__)
-    /**/
 
 
 /// @}

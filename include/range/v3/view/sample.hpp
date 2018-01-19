@@ -32,7 +32,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool = SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>::value>
+            template<typename Rng, bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>()>
             class size_tracker
             {
                 range_difference_type_t<Rng> size_;
@@ -169,10 +169,10 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            template<class R = Rng, CONCEPT_REQUIRES_(meta::or_<
-                SizedRange<R const>,
-                SizedSentinel<sentinel_t<R const>, iterator_t<R const>>,
-                ForwardRange<R const>>::value)>
+            CONCEPT_template(class R = Rng)(
+                requires SizedRange<R const>() ||
+                    SizedSentinel<sentinel_t<R const>, iterator_t<R const>>() ||
+                    ForwardRange<R const>())
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};
@@ -195,15 +195,15 @@ namespace ranges
             class sample_fn
             {
                 template<typename Rng, typename URNG>
-                using Constraint = meta::and_<
-                    InputRange<Rng>, UniformRandomNumberGenerator<URNG>,
+                using Constraint = CONCEPT_alias(
+                    InputRange<Rng>() && UniformRandomNumberGenerator<URNG>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<URNG>,
-                        range_difference_type_t<Rng>>,
-                    meta::or_<
-                        SizedRange<Rng>,
-                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
-                        ForwardRange<Rng>>>;
+                        range_difference_type_t<Rng>>() && (
+                            SizedRange<Rng>() ||
+                            SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() ||
+                            ForwardRange<Rng>()
+                        ));
 
                 friend view_access;
                 CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(

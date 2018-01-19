@@ -133,13 +133,14 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>,
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>() &&
                     ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
+                        result_of_t<Fun&(
+                            range_common_reference_t<Rng> &&,
                             range_common_reference_t<Rng> &&)>,
-                        range_value_type_t<Rng>>>;
+                        range_value_type_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())

@@ -383,10 +383,9 @@ namespace ranges
                 using impl_t = any_cursor_impl<iterator_t<Rng>, Ref, Cat>;
             public:
                 any_cursor() = default;
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_cursor>()),
-                    CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                                      AnyCompatibleRange<Rng, Ref>())>
+                CONCEPT_template(typename Rng)(
+                    requires !Same<detail::decay_t<Rng>, any_cursor>() &&
+                        ForwardRange<Rng>() && AnyCompatibleRange<Rng, Ref>())
                 explicit any_cursor(Rng &&rng)
                   : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
                 {}
@@ -601,7 +600,7 @@ namespace ranges
         };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
-        CONCEPTS_template(typename Rng)(
+        CONCEPT_template(typename Rng)(
             requires View<Rng>())
         any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif

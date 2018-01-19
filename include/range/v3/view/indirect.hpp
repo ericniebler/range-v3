@@ -87,9 +87,9 @@ namespace ranges
             struct indirect_fn
             {
                 template<typename Rng>
-                using Constraint = meta::and_<
-                    InputRange<Rng>,
-                    Readable<range_value_type_t<Rng>>>;
+                using Constraint = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    Readable<range_value_type_t<Rng>>());
 
                 CONCEPT_template(typename Rng)(
                     requires Constraint<Rng>())

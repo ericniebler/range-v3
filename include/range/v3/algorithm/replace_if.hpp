@@ -29,10 +29,10 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename T, typename P = ident>
-        using ReplaceIfable = meta::strict_and<
-            InputIterator<I>,
-            IndirectPredicate<C, projected<I, P>>,
-            Writable<I, T const &>>;
+        using ReplaceIfable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectPredicate<C, projected<I, P>>() &&
+            Writable<I, T const &>());
 
         /// \addtogroup group-algorithms
         /// @{

@@ -105,8 +105,9 @@ namespace ranges
             {
                 return ranges::empty(derived());
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>()),
-                typename = decltype(ranges::empty(std::declval<D const &>()))>
+            CONCEPT_template(typename D = Derived,
+                typename = decltype(ranges::empty(std::declval<D const &>())))(
+                requires Same<D, Derived>())
             constexpr explicit operator bool() const
                 noexcept(noexcept(ranges::empty(std::declval<D const &>())))
             {

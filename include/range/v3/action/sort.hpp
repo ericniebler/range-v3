@@ -44,20 +44,16 @@ namespace ranges
                         protect(std::move(proj)))
                 )
 
-                struct Sortable_
+                struct SortableConcept
                 {
-                    template<typename Rng, typename C = ordered_less, typename P = ident,
-                        typename I = iterator_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::is_true(ranges::Sortable<I, C, P>())
-                        ));
+                    CONCEPT_template(typename Rng, typename C, typename P)(
+                        requires ForwardRange<Rng>() && Sortable<iterator_t<Rng>, C, P>())
+                    void requires_();
                 };
 
             public:
                 template<typename Rng, typename C = ordered_less, typename P = ident>
-                using Sortable = concepts::models<Sortable_, Rng, C, P>;
+                using Sortable = concepts::models<SortableConcept, Rng, C, P>;
 
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires Sortable<Rng, C, P>())

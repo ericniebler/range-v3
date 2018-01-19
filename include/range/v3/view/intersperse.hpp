@@ -198,11 +198,11 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename T = range_value_type_t<Rng>>
-                using Constraint = meta::and_<
-                    InputRange<Rng>,
-                    ConvertibleTo<T, range_value_type_t<Rng>>,
-                    ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>,
-                    SemiRegular<range_value_type_t<Rng>>>;
+                using Constraint = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    ConvertibleTo<T, range_value_type_t<Rng>>() &&
+                    ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>() &&
+                    SemiRegular<range_value_type_t<Rng>>());
 
                 CONCEPT_template(typename Rng)(
                     requires Constraint<Rng>())

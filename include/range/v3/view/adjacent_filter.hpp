@@ -34,14 +34,16 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, typename Pred>
-            using AdjacentFilterConstraint2 =
-                IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>;
+            struct AdjacentFilterConcept
+            {
+                CONCEPT_template(typename Rng, typename Pred)(
+                    requires ForwardRange<Rng>() &&
+                        IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>())
+                void requires_();
+            };
 
             template<typename Rng, typename Pred>
-            using AdjacentFilterConstraint = meta::and_<
-                ForwardRange<Rng>,
-                meta::defer<AdjacentFilterConstraint2, Rng, Pred>>;
+            using AdjacentFilter = concepts::models<AdjacentFilterConcept, Rng, Pred>;
         }
         /// \endcond
 
@@ -59,7 +61,7 @@ namespace ranges
             friend range_access;
 
             static constexpr bool const_iterable =
-                detail::AdjacentFilterConstraint<Rng const, Pred const>();
+                detail::AdjacentFilter<Rng const, Pred const>();
 
             struct adaptor : adaptor_base
             {
@@ -145,7 +147,7 @@ namespace ranges
                 )
             public:
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires detail::AdjacentFilterConstraint<Rng, Pred>())
+                    requires detail::AdjacentFilter<Rng, Pred>())
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng && rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -154,7 +156,7 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires !detail::AdjacentFilterConstraint<Rng, Pred>())
+                    requires !detail::AdjacentFilter<Rng, Pred>())
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

@@ -203,7 +203,6 @@ namespace ranges
             }
 
             CONCEPT_template(typename Val)(
-
                 requires Integral<Val>())
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
@@ -215,26 +214,21 @@ namespace ranges
                 return dist + D(1);
             }
 
-            template<typename Val,
-                typename C = common_type_t<Val, iota_difference_t<Val>>>
-            auto iota_plus_(Val const &v, iota_difference_t<Val> n, std::true_type)
+            CONCEPT_template(typename Val,
+                typename C = common_type_t<Val, iota_difference_t<Val>>)(
+                requires Integral<Val>())
+            auto iota_plus(Val const &v, iota_difference_t<Val> n)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 static_cast<Val>(static_cast<C>(v) + static_cast<C>(n))
             )
 
-            template<typename Val>
-            auto iota_plus_(Val const &v, iota_difference_t<Val> n, std::false_type)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                v + n
-            )
-
-            template<typename Val>
+            CONCEPT_template(typename Val)(
+                requires !Integral<Val>())
             auto iota_plus(Val const &v, iota_difference_t<Val> n)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                detail::iota_plus_(v, n, Integral<Val>{})
+                v + n
             )
         }
         /// \endcond

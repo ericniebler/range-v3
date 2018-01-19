@@ -193,9 +193,8 @@ namespace ranges
         private:
             friend range_access;
             using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
-            using single_pass = meta::or_<
-                range_access::single_pass_t<Adapt>,
-                SinglePass<BaseIter>>;
+            using single_pass = meta::bool_<
+                range_access::single_pass_t<Adapt>() || SinglePass<BaseIter>()>;
             struct mixin
               : basic_mixin<adaptor_cursor>
             {

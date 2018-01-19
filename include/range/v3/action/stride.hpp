@@ -43,26 +43,21 @@ namespace ranges
                     std::bind(stride, std::placeholders::_1, step)
                 )
             public:
-                struct ConceptImpl
+                struct StrideConcept
                 {
-                    template<typename Rng, typename T,
-                        typename I = iterator_t<Rng>,
-                        typename S = sentinel_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>(),
-                            concepts::is_true(Permutable<I>())
-                        ));
+                    CONCEPT_template(typename Rng, typename T)(
+                        requires ForwardRange<Rng>() &&
+                            ErasableRange<Rng, iterator_t<Rng>>() &&
+                            ConvertibleTo<T, range_difference_type_t<Rng>>() &&
+                            Permutable<iterator_t<Rng>>())
+                    void requires_();
                 };
 
                 template<typename Rng, typename T>
-                using Concept = concepts::models<ConceptImpl, Rng, T>;
+                using Stride = concepts::models<StrideConcept, Rng, T>;
 
                 CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
-                    requires Concept<Rng, D>())
+                    requires Stride<Rng, D>())
                 Rng operator()(Rng && rng, range_difference_type_t<Rng> const step) const
                 {
                     using I = iterator_t<Rng>;
@@ -87,7 +82,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Concept<Rng, T>())
+                    requires !Stride<Rng, T>())
                 void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),

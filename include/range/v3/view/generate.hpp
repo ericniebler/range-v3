@@ -89,12 +89,12 @@ namespace ranges
             struct generate_fn
             {
                 template<typename G>
-                using Concept = meta::and_<
-                    Invocable<G&>,
-                    MoveConstructible<G>,
-                    std::is_object<detail::decay_t<result_of_t<G&()>>>,
-                    Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>,
-                    Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>>;
+                using Concept = CONCEPT_alias(
+                    Invocable<G&>() &&
+                    MoveConstructible<G>() &&
+                    IsTrue<std::is_object<detail::decay_t<result_of_t<G&()>>>>() &&
+                    Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>() &&
+                    Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>());
 
                 CONCEPT_template(typename G)(
                     requires Concept<G>())

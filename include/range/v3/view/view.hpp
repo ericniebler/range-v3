@@ -71,9 +71,9 @@ namespace ranges
             RANGES_INLINE_VARIABLE(make_view_fn, make_view)
 
             template<typename Rng>
-            using ViewableRange = meta::and_<
-                Range<Rng>,
-                meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
+            using ViewableRange = CONCEPT_alias(
+                Range<Rng>() &&
+                IsTrue<std::is_lvalue_reference<Rng>>() || View<uncvref_t<Rng>>());
 
             template<typename View>
             struct view : pipeable<view<View>>
@@ -83,7 +83,8 @@ namespace ranges
                 friend pipeable_access;
 
                 template<typename Rng, typename ...Rest>
-                using ViewConcept = meta::and_<ViewableRange<Rng>, Invocable<View&, Rng, Rest...>>;
+                using ViewConcept = CONCEPT_alias(
+                    ViewableRange<Rng>() && Invocable<View&, Rng, Rest...>());
 
                 // Piping requires range arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename Vw)(

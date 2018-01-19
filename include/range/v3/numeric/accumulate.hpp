@@ -27,10 +27,10 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename T, typename Op = plus, typename P = ident>
-        using Accumulateable = meta::strict_and<
-            InputIterator<I>,
-            IndirectInvocable<Op, T *, projected<I, P>>,
-            Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>>;
+        using Accumulateable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectInvocable<Op, T *, projected<I, P>>() &&
+            Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>());
 
         struct accumulate_fn
         {

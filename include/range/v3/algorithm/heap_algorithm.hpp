@@ -40,9 +40,9 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C = ordered_less, typename P = ident>
-        using IsHeapable = meta::strict_and<
-            RandomAccessIterator<I>,
-            IndirectRelation<C, projected<I, P>>>;
+        using IsHeapable = CONCEPT_alias(
+            RandomAccessIterator<I>() &&
+            IndirectRelation<C, projected<I, P>>());
 
         /// \cond
         namespace detail

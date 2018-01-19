@@ -68,30 +68,30 @@ namespace ranges
                     meta::quote<detail::product_cardinality>>::value>
         {
             friend range_access;
-            CONCEPT_ASSERT(meta::strict_and<ForwardView<Views>...>::value);
-            using CanConst = meta::strict_and<
-                Range<Views const>...>;
+            CONCEPT_ASSERT(meta::and_c<(bool)ForwardView<Views>()...>::value);
+            using CanConst = meta::and_c<
+                (bool)Range<Views const>()...>;
             template<bool IsConst>
-            using CanSize = meta::strict_and<
-                SizedRange<meta::if_c<IsConst, Views const, Views>>...>;
+            using CanSize = meta::and_c<
+                (bool)SizedRange<meta::const_if_c<IsConst, Views>>()...>;
             template<bool IsConst>
-            using CanDistance = meta::strict_and<
-                CanSize<IsConst>,
-                SizedSentinel<
-                    iterator_t<meta::if_c<IsConst, Views const, Views>>,
-                    iterator_t<meta::if_c<IsConst, Views const, Views>>>...>;
+            using CanDistance = meta::and_c<
+                CanSize<IsConst>::value,
+                (bool)SizedSentinel<
+                    iterator_t<meta::const_if_c<IsConst, Views>>,
+                    iterator_t<meta::const_if_c<IsConst, Views>>>()...>;
             template<bool IsConst>
-            using CanRandom = meta::strict_and<
-                CanDistance<IsConst>,
-                RandomAccessIterator<iterator_t<
-                    meta::if_c<IsConst, Views const, Views>>>...>;
+            using CanRandom = meta::and_c<
+                CanDistance<IsConst>::value,
+                (bool)RandomAccessIterator<iterator_t<
+                    meta::const_if_c<IsConst, Views>>>()...>;
             template<bool IsConst>
-            using CanBidi = meta::strict_or<
-                CanRandom<IsConst>,
-                meta::strict_and<
-                    BoundedRange<meta::if_c<IsConst, Views const, Views>>...,
-                    BidirectionalIterator<iterator_t<
-                        meta::if_c<IsConst, Views const, Views>>>...>>;
+            using CanBidi = meta::or_c<
+                CanRandom<IsConst>::value,
+                meta::and_c<
+                    ((bool)BoundedRange<meta::const_if_c<IsConst, Views>>())...,
+                    ((bool)BidirectionalIterator<iterator_t<
+                        meta::const_if_c<IsConst, Views>>>())...>::value>;
 
             std::tuple<Views...> views_;
 
@@ -340,7 +340,7 @@ namespace ranges
             struct cartesian_product_fn
             {
                 template<typename... Rngs>
-                using Constraint = meta::strict_and<ForwardRange<Rngs>...>;
+                using Constraint = meta::and_c<(bool)ForwardRange<Rngs>()...>;
 
                 CONCEPT_template(typename... Rngs)(
                     requires Constraint<Rngs...>())

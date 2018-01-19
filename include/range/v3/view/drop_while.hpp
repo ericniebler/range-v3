@@ -89,9 +89,9 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    IndirectPredicate<Pred, iterator_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    IndirectPredicate<Pred, iterator_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires Concept<Rng, Pred>())

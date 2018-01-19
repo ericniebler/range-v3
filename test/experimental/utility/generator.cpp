@@ -37,9 +37,10 @@ struct coro_fn
 {
 private:
     template<typename Rng>
-    using Constraint = meta::and_<ranges::InputRange<Rng>,
-        meta::or_<std::is_reference<ranges::range_reference_t<Rng>>,
-            ranges::CopyConstructible<ranges::range_reference_t<Rng>>>>;
+    using Constraint = CONCEPT_alias(
+        ranges::InputRange<Rng>() &&
+        (IsTrue<std::is_reference<ranges::range_reference_t<Rng>>>() ||
+            ranges::CopyConstructible<ranges::range_reference_t<Rng>>()));
 
     template<typename V>
     using generator_for = meta::invoke<

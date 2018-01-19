@@ -131,30 +131,33 @@ namespace ranges
             {}
 
             template<typename Rng>
-            using CompatibleRange =
-                meta::and_<meta::bool_<!Same<span, uncvref_t<Rng>>()>,
-                    SizedRange<Rng>, ContiguousRange<Rng>,
-                    std::is_convertible<concepts::ContiguousRange::element_t<Rng>(*)[], T(*)[]>>;
-            template<typename Rng>
-            using DynamicConversion = meta::bool_<
-                N == dynamic_extent || (range_cardinality<Rng>::value < cardinality{})>;
+            using CompatibleRange = decltype(
+                !Same<span, uncvref_t<Rng>>() && SizedRange<Rng>() && ContiguousRange<Rng>() &&
+                    IsTrue<std::is_convertible<
+                        concepts::ContiguousRange::element_t<Rng>(*)[],
+                        T(*)[]>>());
 
-            template<typename Rng,
-                // This multiple-CONCEPT_REQUIRES_ form works around a gcc 4.9 bug.
-                CONCEPT_REQUIRES_(CompatibleRange<Rng>()),
-                CONCEPT_REQUIRES_(DynamicConversion<Rng>())>
+            template<typename Rng>
+            struct DynamicConversion
+              : CONCEPT_alias(IsTrue<N == dynamic_extent ||
+                    range_cardinality<Rng>::value < cardinality{}>())
+            {};
+
+            CONCEPT_template(typename Rng)(
+                requires CompatibleRange<Rng>() && DynamicConversion<Rng>())
             constexpr span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
               : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
             {}
 
             template<typename Rng>
-            using StaticConversion = meta::bool_<
-                N != dynamic_extent && range_cardinality<Rng>::value == N>;
+            struct StaticConversion
+              : CONCEPT_alias(IsTrue<N != dynamic_extent &&
+                    range_cardinality<Rng>::value == N>())
+            {};
 
-            template<typename Rng,
-                CONCEPT_REQUIRES_(CompatibleRange<Rng>()),
-                CONCEPT_REQUIRES_(StaticConversion<Rng>())>
+            CONCEPT_template(typename Rng)(
+                requires CompatibleRange<Rng>() && StaticConversion<Rng>())
             constexpr span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng)))
               : span{ranges::data(rng), N}

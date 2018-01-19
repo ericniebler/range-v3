@@ -582,13 +582,12 @@ namespace ranges
             }
 
             template<typename U>
-            using ShouldConvertAssign = meta::and_<
-                ShouldConvert<U>,
-                meta::not_<meta::or_<
-                    Assignable<T &, optional<U> &>,
-                    Assignable<T &, optional<U> &&>,
-                    Assignable<T &, optional<U> const &>,
-                    Assignable<T &, optional<U> const &&>>>>;
+            using ShouldConvertAssign = CONCEPT_alias(
+                ShouldConvert<U>() &&
+                !(Assignable<T &, optional<U> &>() ||
+                  Assignable<T &, optional<U> &&>() ||
+                  Assignable<T &, optional<U> const &>() ||
+                  Assignable<T &, optional<U> const &&>()));
 
             CONCEPT_template(typename U)(
                 requires meta::and_<

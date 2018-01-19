@@ -331,21 +331,21 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, iterator_t<Rng>>,
-                    Invocable<Fun&, copy_tag, iterator_t<Rng>>,
-                    Invocable<Fun&, move_tag, iterator_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, iterator_t<Rng>>() &&
+                    Invocable<Fun&, copy_tag, iterator_t<Rng>>() &&
+                    Invocable<Fun&, move_tag, iterator_t<Rng>>());
 
                 template<typename Rng1, typename Rng2, typename Fun>
-                using Concept2 = meta::and_<
-                    InputRange<Rng1>,
-                    InputRange<Rng2>,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, iterator_t<Rng1>, iterator_t<Rng2>>,
-                    Invocable<Fun&, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>>,
-                    Invocable<Fun&, move_tag, iterator_t<Rng1>, iterator_t<Rng2>>>;
+                using Concept2 = CONCEPT_alias(
+                    InputRange<Rng1>() &&
+                    InputRange<Rng2>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, iterator_t<Rng1>, iterator_t<Rng2>>() &&
+                    Invocable<Fun&, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>>() &&
+                    Invocable<Fun&, move_tag, iterator_t<Rng1>, iterator_t<Rng2>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())
@@ -435,21 +435,21 @@ namespace ranges
                 // Don't forget to update view::for_each whenever this set
                 // of concepts changes
                 template<typename Rng, typename Fun>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, range_reference_t<Rng>>,
-                    meta::not_<Same<void, concepts::Invocable::result_t<
-                        Fun&, range_reference_t<Rng>>>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, range_reference_t<Rng>>() &&
+                    !Same<void, concepts::Invocable::result_t<
+                        Fun&, range_reference_t<Rng>>>());
 
                 template<typename Rng1, typename Rng2, typename Fun>
-                using Concept2 = meta::and_<
-                    InputRange<Rng1>,
-                    InputRange<Rng2>,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>,
-                    meta::not_<Same<void, concepts::Invocable::result_t<
-                        Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>>>;
+                using Concept2 = CONCEPT_alias(
+                    InputRange<Rng1>() &&
+                    InputRange<Rng2>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
+                    !Same<void, concepts::Invocable::result_t<
+                        Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())

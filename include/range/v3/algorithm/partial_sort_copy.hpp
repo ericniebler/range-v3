@@ -32,12 +32,12 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = ordered_less, typename PI = ident,
             typename PO = ident>
-        using PartialSortCopyConcept = meta::strict_and<
-            InputIterator<I>,
-            RandomAccessIterator<O>,
-            IndirectlyCopyable<I, O>,
-            IndirectRelation<C, projected<I, PI>, projected<O, PO>>,
-            Sortable<O, C, PO>>;
+        using PartialSortCopyConcept = CONCEPT_alias(
+            InputIterator<I>() &&
+            RandomAccessIterator<O>() &&
+            IndirectlyCopyable<I, O>() &&
+            IndirectRelation<C, projected<I, PI>, projected<O, PO>>() &&
+            Sortable<O, C, PO>());
 
         /// \addtogroup group-algorithms
         /// @{

@@ -74,8 +74,9 @@ namespace ranges
             };
 
             template<typename T>
-            using PairLike = meta::and_<
-                Invocable<get_first const&, T>, Invocable<get_second const&, T>>;
+            using PairLike = CONCEPT_alias(
+                Invocable<get_first const&, T>() &&
+                Invocable<get_second const&, T>());
         }
         /// \endcond
 
@@ -86,9 +87,9 @@ namespace ranges
             struct keys_fn
             {
                 template<typename Rng>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    detail::PairLike<range_reference_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    detail::PairLike<range_reference_t<Rng>>());
 
                 CONCEPT_template(typename Rng)(
                     requires Concept<Rng>())
@@ -113,9 +114,9 @@ namespace ranges
             struct values_fn
             {
                 template<typename Rng>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    detail::PairLike<range_reference_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    detail::PairLike<range_reference_t<Rng>>());
 
                 CONCEPT_template(typename Rng)(
                     requires Concept<Rng>())

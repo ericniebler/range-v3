@@ -48,14 +48,11 @@ namespace ranges
             public:
                 struct ConceptImpl
                 {
-                    template<typename Rng, typename C, typename P = ident,
-                        typename I = iterator_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::is_true(RemovableIf<I, C, P>())
-                        ));
+                    CONCEPT_template(typename Rng, typename C, typename P = ident,
+                        typename I = iterator_t<Rng>)(
+                        requires ForwardRange<Rng>() && ErasableRange<Rng, I, I>() &&
+                            RemovableIf<I, C, P>())
+                    void requires_();
                 };
 
                 template<typename Rng, typename C, typename P = ident>

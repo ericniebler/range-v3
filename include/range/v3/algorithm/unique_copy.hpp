@@ -31,15 +31,14 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = equal_to, typename P = ident>
-        using UniqueCopyable = meta::strict_and<
-            InputIterator<I>,
-            IndirectRelation<C, projected<I, P>>,
-            WeaklyIncrementable<O>,
-            IndirectlyCopyable<I, O>,
-            meta::strict_or<
-                ForwardIterator<I>,
-                ForwardIterator<O>,
-                IndirectlyCopyableStorable<I, O>>>;
+        using UniqueCopyable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectRelation<C, projected<I, P>>() &&
+            WeaklyIncrementable<O>() &&
+            IndirectlyCopyable<I, O>() && (
+                ForwardIterator<I>() ||
+                ForwardIterator<O>() ||
+                IndirectlyCopyableStorable<I, O>()));
 
         /// \addtogroup group-algorithms
         /// @{

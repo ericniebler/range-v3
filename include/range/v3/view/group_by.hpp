@@ -125,9 +125,9 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = meta::and_<
-                    ForwardRange<Rng>,
-                    IndirectRelation<Fun, iterator_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    IndirectRelation<Fun, iterator_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())

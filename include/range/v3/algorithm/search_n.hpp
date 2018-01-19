@@ -40,9 +40,9 @@ namespace ranges
     {
         /// ingroup group-concepts
         template<typename I, typename V, typename C = equal_to, typename P = ident>
-        using Searchnable = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectRelation<C, projected<I, P>, V const *>>;
+        using Searchnable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectRelation<C, projected<I, P>, V const *>());
 
         /// \addtogroup group-algorithms
         /// @{

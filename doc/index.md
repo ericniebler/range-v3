@@ -304,8 +304,8 @@ For instance, if you would like to write a function that takes an
 iterator/sentinel pair, you can write it like this:
 
 ~~~~~~~{.cpp}
-    template<class Iter, class Sent, class Comp = /*...some_default..*/,
-        CONCEPT_REQUIRES_(Sentinel<Sent, Iter>())>
+    CONCEPT_template(class Iter, class Sent, class Comp = /*...some_default..*/)
+        (requires Sentinel<Sent, Iter>())
     void my_algorithm(Iter first, Sent last, Comp comp = Comp{})
     {
         // ...
@@ -315,8 +315,8 @@ iterator/sentinel pair, you can write it like this:
 You can then add an overload that take a Range:
 
 ~~~~~~~{.cpp}
-    template<class Rng, class Comp = /*...some_default..*/,
-        CONCEPT_REQUIRES_(Range<Rng>())>
+    CONCEPT_template(class Rng, class Comp = /*...some_default..*/)
+        (requires Range<Rng>())
     void my_algorithm(Rng && rng, Comp comp = Comp{})
     {
         return my_algorithm(ranges::begin(rng), ranges::end(rng));

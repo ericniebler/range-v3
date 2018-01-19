@@ -147,9 +147,9 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Constraint = meta::and_<
-                    ForwardRange<Rng>,
-                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>>;
+                using Constraint = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires Constraint<Rng, Pred>())

@@ -48,17 +48,17 @@ namespace ranges
 
         // axiom: BOp is associative over values of I.
         template<typename I, typename BOp>
-        using IndirectSemigroup = meta::strict_and<
-            Readable<I>,
-            Copyable<value_type_t<I>>,
-            IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>>;
+        using IndirectSemigroup = CONCEPT_alias(
+            Readable<I>() &&
+            Copyable<value_type_t<I>>() &&
+            IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>());
 
         template<typename I, typename O, typename BOp = plus, typename P = ident,
             typename X = projected<projected<I, detail::as_value_type_t<I>>, P>>
-        using PartialSummable = meta::strict_and<
-            InputIterator<I>,
-            IndirectSemigroup<X, BOp>,
-            OutputIterator<O, value_type_t<X> const &>>;
+        using PartialSummable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectSemigroup<X, BOp>() &&
+            OutputIterator<O, value_type_t<X> const &>());
 
         struct partial_sum_fn
         {

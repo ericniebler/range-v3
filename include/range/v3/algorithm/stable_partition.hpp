@@ -45,10 +45,10 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using StablePartitionable = meta::strict_and<
-            ForwardIterator<I>,
-            Permutable<I>,
-            IndirectPredicate<C, projected<I, P>>>;
+        using StablePartitionable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            Permutable<I>() &&
+            IndirectPredicate<C, projected<I, P>>());
 
         /// \addtogroup group-algorithms
         /// @{

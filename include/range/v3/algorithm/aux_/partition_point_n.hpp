@@ -25,9 +25,9 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using PartitionPointable = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectPredicate<C, projected<I, P>>>;
+        using PartitionPointable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectPredicate<C, projected<I, P>>());
 
         namespace aux
         {

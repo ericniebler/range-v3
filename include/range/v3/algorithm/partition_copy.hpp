@@ -34,13 +34,13 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O0, typename O1, typename C, typename P = ident>
-        using PartitionCopyable = meta::strict_and<
-            InputIterator<I>,
-            WeaklyIncrementable<O0>,
-            WeaklyIncrementable<O1>,
-            IndirectlyCopyable<I, O0>,
-            IndirectlyCopyable<I, O1>,
-            IndirectPredicate<C, projected<I, P>>>;
+        using PartitionCopyable = CONCEPT_alias(
+            InputIterator<I>() &&
+            WeaklyIncrementable<O0>() &&
+            WeaklyIncrementable<O1>() &&
+            IndirectlyCopyable<I, O0>() &&
+            IndirectlyCopyable<I, O1>() &&
+            IndirectPredicate<C, projected<I, P>>());
 
         /// \addtogroup group-algorithms
         /// @{

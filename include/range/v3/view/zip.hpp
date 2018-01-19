@@ -119,7 +119,8 @@ namespace ranges
             struct zip_fn
             {
                 template<typename ...Rngs>
-                using Concept = meta::and_<InputRange<Rngs>...>;
+                using Concept = CONCEPT_alias(
+                    IsTrue<meta::strict_and<InputRange<Rngs>...>>());
 
                 CONCEPT_template(typename...Rngs)(
                     requires Concept<Rngs...>())

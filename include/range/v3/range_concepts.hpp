@@ -431,18 +431,22 @@ namespace ranges
             struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
               : std::false_type
             {};
+
+            template<typename T>
+            struct is_view_
+              : meta::bool_<(bool)View<T>()>
+            {};
         }
         /// \endcond
 
         /// \addtogroup group-concepts
         /// @{
 
-        // Specialize this if the default is wrong.
         template<typename T>
         using is_view
             RANGES_DEPRECATED("If you need to override the logic of the View concept, please use ranges::enable_view."
                               "Otherwise, please use the View concept directly.") =
-                View<T>;
+                detail::is_view_<T>;
 
         /// @}
     }

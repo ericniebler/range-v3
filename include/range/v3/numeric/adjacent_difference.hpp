@@ -36,14 +36,14 @@ namespace ranges
             typename V = value_type_t<I>,
             typename X = concepts::Invocable::result_t<P&, V>,
             typename Y = concepts::Invocable::result_t<BOp&, X, X>>
-        using AdjacentDifferentiable = meta::strict_and<
-            InputIterator<I>,
-            OutputIterator<O, X>,
-            OutputIterator<O, Y>,
-            Invocable<P&, V>,
-            Invocable<BOp&, X, X>,
-            CopyConstructible<uncvref_t<X>>,
-            Movable<uncvref_t<X>>>;
+        using AdjacentDifferentiable = CONCEPT_alias(
+            InputIterator<I>() &&
+            OutputIterator<O, X>() &&
+            OutputIterator<O, Y>() &&
+            Invocable<P&, V>() &&
+            Invocable<BOp&, X, X>() &&
+            CopyConstructible<uncvref_t<X>>() &&
+            Movable<uncvref_t<X>>());
 
         struct adjacent_difference_fn
         {

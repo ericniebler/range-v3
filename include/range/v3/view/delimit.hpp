@@ -80,9 +80,9 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Val>
-                using Concept = meta::and_<
-                    Range<Rng>,
-                    EqualityComparable<Val, range_common_reference_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    Range<Rng>() &&
+                    EqualityComparable<Val, range_common_reference_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Val)(
                     requires Concept<Rng, Val>())

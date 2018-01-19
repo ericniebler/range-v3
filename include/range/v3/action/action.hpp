@@ -65,15 +65,15 @@ namespace ranges
                 friend pipeable_access;
 
                 template<typename Rng, typename...Rest>
-                using ActionConcept = meta::and_<
-                    Range<Rng>,
-                    Invocable<Action const&, Rng, Rest...>>;
+                using ActionConcept = CONCEPT_alias(
+                    Range<Rng>() &&
+                    Invocable<Action const&, Rng, Rest...>());
 
                 template<typename Rng>
-                using ActionPipeConcept = meta::and_<
-                    Invocable<Action&, Rng>,
-                    Range<Rng>,
-                    meta::not_<std::is_reference<Rng>>>;
+                using ActionPipeConcept = CONCEPT_alias(
+                    Range<Rng>() &&
+                    Invocable<Action&, Rng>() &&
+                    !IsTrue<std::is_reference<Rng>>());
 
                 // Piping requires things are passed by value.
                 CONCEPT_template(typename Rng, typename Act)(

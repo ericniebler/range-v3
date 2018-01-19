@@ -189,10 +189,10 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = meta::and_<
-                    InputRange<Rng1>,
-                    InputRange<Rng2>,
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng1>() &&
+                    InputRange<Rng2>() &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
 
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
@@ -352,10 +352,10 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = meta::and_<
-                    InputRange<Rng1>, InputRange<Rng2>,
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
-                >;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng1>() && InputRange<Rng2>() &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
@@ -558,13 +558,13 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = meta::and_<
-                    InputRange<Rng1>, InputRange<Rng2>,
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>,
-                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
-                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
-                >;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng1>() && InputRange<Rng2>() &&
+                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
+                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
+                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
@@ -778,13 +778,13 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = meta::and_<
-                    InputRange<Rng1>, InputRange<Rng2>,
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>,
-                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
-                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>
-                >;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng1>() && InputRange<Rng2>() &&
+                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
+                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
+                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())

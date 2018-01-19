@@ -31,11 +31,11 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C, typename P = ident>
-        using RemoveCopyableIf = meta::strict_and<
-            InputIterator<I>,
-            WeaklyIncrementable<O>,
-            IndirectPredicate<C, projected<I, P>>,
-            IndirectlyCopyable<I, O>>;
+        using RemoveCopyableIf = CONCEPT_alias(
+            InputIterator<I>() &&
+            WeaklyIncrementable<O>() &&
+            IndirectPredicate<C, projected<I, P>>() &&
+            IndirectlyCopyable<I, O>());
 
         /// \addtogroup group-algorithms
         /// @{

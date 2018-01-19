@@ -31,13 +31,13 @@ namespace ranges
             template<typename Pred, typename Val>
             struct upper_bound_predicate
             {
-                Pred& pred_;
-                Val& val_;
+                Pred* pred_;
+                Val* val_;
 
                 template<typename T>
                 bool operator()(T&& t) const
                 {
-                    return !invoke(pred_, val_, static_cast<T&&>(t));
+                    return !invoke(*pred_, *val_, static_cast<T&&>(t));
                 }
             };
 
@@ -45,7 +45,7 @@ namespace ranges
             upper_bound_predicate<Pred, Val>
             make_upper_bound_predicate(Pred& pred, Val& val)
             {
-                return {pred, val};
+                return {&pred, &val};
             }
         }
         /// \endcond

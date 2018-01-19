@@ -39,11 +39,11 @@ namespace ranges
         class sample_fn
         {
             template<typename I, typename S, typename O, typename Gen>
-            using Constraint = meta::strict_and<
-                InputIterator<I>, Sentinel<S, I>, WeaklyIncrementable<O>,
-                IndirectlyCopyable<I, O>, UniformRandomNumberGenerator<Gen>,
+            using Constraint = CONCEPT_alias(
+                InputIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
+                IndirectlyCopyable<I, O>() && UniformRandomNumberGenerator<Gen>() &&
                 ConvertibleTo<concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                    difference_type_t<I>>>;
+                    difference_type_t<I>>());
 
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(

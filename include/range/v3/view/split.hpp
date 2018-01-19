@@ -199,30 +199,30 @@ namespace ranges
                 };
             public:
                 template<typename Rng, typename Fun>
-                using FunctionConcept = meta::and_<
-                    ForwardRange<Rng>,
-                    Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
-                    CopyConstructible<Fun>,
+                using FunctionConcept = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>>() &&
+                    CopyConstructible<Fun>() &&
                     ConvertibleTo<
                         result_of_t<Fun&(iterator_t<Rng>, sentinel_t<Rng>)>,
-                        std::pair<bool, iterator_t<Rng>>>>;
+                        std::pair<bool, iterator_t<Rng>>>());
 
                 template<typename Rng, typename Fun>
-                using PredicateConcept = meta::and_<
-                    ForwardRange<Rng>,
-                    Predicate<Fun const&, range_reference_t<Rng>>,
-                    CopyConstructible<Fun>>;
+                using PredicateConcept = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    Predicate<Fun const&, range_reference_t<Rng>>() &&
+                    CopyConstructible<Fun>());
 
                 template<typename Rng>
-                using ElementConcept = meta::and_<
-                    ForwardRange<Rng>,
-                    Regular<range_value_type_t<Rng>>>;
+                using ElementConcept = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    Regular<range_value_type_t<Rng>>());
 
                 template<typename Rng, typename Sub>
-                using SubRangeConcept = meta::and_<
-                    ForwardRange<Rng>,
-                    ForwardRange<Sub>,
-                    EqualityComparable<range_value_type_t<Rng>, range_value_type_t<Sub>>>;
+                using SubRangeConcept = CONCEPT_alias(
+                    ForwardRange<Rng>() &&
+                    ForwardRange<Sub>() &&
+                    EqualityComparable<range_value_type_t<Rng>, range_value_type_t<Sub>>());
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires FunctionConcept<Rng, Fun>())

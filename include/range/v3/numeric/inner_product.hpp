@@ -37,14 +37,14 @@ namespace ranges
                 typename X2 = concepts::Invocable::result_t<P2&, V2>,
                 typename Y2 = concepts::Invocable::result_t<BOp2&, X1, X2>,
                 typename Y1 = concepts::Invocable::result_t<BOp1&, T, Y2>>
-        using InnerProductable = meta::strict_and<
-            InputIterator<I1>,
-            InputIterator<I2>,
-            Invocable<P1&, V1>,
-            Invocable<P2&, V2>,
-            Invocable<BOp2&, X1, X2>,
-            Invocable<BOp1&, T, Y2>,
-            Assignable<T&, Y2>>;
+        using InnerProductable = CONCEPT_alias(
+            InputIterator<I1>() &&
+            InputIterator<I2>() &&
+            Invocable<P1&, V1>() &&
+            Invocable<P2&, V2>() &&
+            Invocable<BOp2&, X1, X2>() &&
+            Invocable<BOp1&, T, Y2>() &&
+            Assignable<T&, Y2>());
 
         struct inner_product_fn
         {

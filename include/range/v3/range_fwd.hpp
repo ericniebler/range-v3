@@ -374,8 +374,12 @@ namespace ranges
 
         namespace concepts
         {
+            template<typename>
+            struct bool_;
             template<typename Concept, typename...Ts>
-            struct models;
+            struct models_;
+            template<typename Concept, typename...Ts>
+            using models = bool_<models_<Concept, Ts...>>;
         }
 
         struct begin_tag {};

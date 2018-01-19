@@ -113,13 +113,13 @@ namespace ranges
                 template<typename Rng, typename Val1, typename Val2,
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>>
-                using Concept = meta::and_<
-                    InputRange<Rng>,
-                    Same<V1, V2>,
-                    EqualityComparable<V1, range_value_type_t<Rng>>,
-                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>,
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>,
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>>;
+                using Concept = CONCEPT_alias(
+                    InputRange<Rng>() &&
+                    Same<V1, V2>() &&
+                    EqualityComparable<V1, range_value_type_t<Rng>>() &&
+                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>() &&
+                    CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>() &&
+                    CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>());
 
                 CONCEPT_template(typename Rng, typename Val1, typename Val2)(
                     requires Concept<Rng, Val1, Val2>())

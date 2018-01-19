@@ -321,12 +321,12 @@ namespace ranges
             struct iter_zip_with_fn
             {
                 template<typename Fun, typename ...Rngs>
-                using Concept = meta::and_<
-                    meta::and_<InputRange<Rngs>...>,
-                    CopyConstructible<Fun>(),
-                    Invocable<Fun&, iterator_t<Rngs>...>,
-                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
-                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
+                using Concept = CONCEPT_alias(
+                    IsTrue<meta::and_<InputRange<Rngs>...>>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, iterator_t<Rngs>...>() &&
+                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...>() &&
+                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>());
 
                 CONCEPT_template(typename...Rngs, typename Fun)(
                     requires Concept<Fun, Rngs...>())
@@ -372,10 +372,10 @@ namespace ranges
             struct zip_with_fn
             {
                 template<typename Fun, typename ...Rngs>
-                using Concept = meta::and_<
-                    meta::and_<InputRange<Rngs>...>,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, range_reference_t<Rngs> &&...>>;
+                using Concept = CONCEPT_alias(
+                    IsTrue<meta::and_<InputRange<Rngs>...>>() &&
+                    CopyConstructible<Fun>() &&
+                    Invocable<Fun&, range_reference_t<Rngs> &&...>());
 
                 CONCEPT_template(typename...Rngs, typename Fun)(
                     requires Concept<Fun, Rngs...>())

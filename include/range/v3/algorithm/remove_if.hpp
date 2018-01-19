@@ -31,10 +31,10 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using RemovableIf = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectPredicate<C, projected<I, P>>,
-            Permutable<I>>;
+        using RemovableIf = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectPredicate<C, projected<I, P>>() &&
+            Permutable<I>());
 
         /// \addtogroup group-algorithms
         /// @{

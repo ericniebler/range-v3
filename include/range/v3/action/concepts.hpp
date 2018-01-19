@@ -117,7 +117,7 @@ namespace ranges
 
         template<typename C>
         using RandomAccessReservable =
-            meta::strict_and<Reservable<C>, RandomAccessRange<C>>;
+            CONCEPT_alias(Reservable<C>() && RandomAccessRange<C>());
 
         /// \cond
         namespace detail

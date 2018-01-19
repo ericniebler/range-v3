@@ -29,10 +29,10 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename T0, typename T1, typename P = ident>
-        using Replaceable = meta::strict_and<
-            InputIterator<I>,
-            IndirectRelation<equal_to, projected<I, P>, T0 const *>,
-            Writable<I, T1 const &>>;
+        using Replaceable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectRelation<equal_to, projected<I, P>, T0 const *>() &&
+            Writable<I, T1 const &>());
 
         /// \addtogroup group-algorithms
         /// @{

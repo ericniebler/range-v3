@@ -66,17 +66,14 @@ namespace ranges
 
                 /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
-                template<typename T,
-                    CONCEPT_REQUIRES_(!View<uncvref_t<T>>()),
-                    typename I = iterator_t<T>,
-                    typename S = sentinel_t<T>,
-                    typename SIC = sized_range_concept<T>,
-                    typename SIRC = sized_sentinel_concept<S, I>>
+                CONCEPT_template(typename T,
+                    typename SIRC = sized_sentinel_concept<sentinel_t<T>, iterator_t<T>>)(
+                    requires !View<uncvref_t<T>>())
                 static auto from_range(T && t) ->
-                    decltype(all_fn::from_container(t, SIC(), SIRC()))
+                    decltype(all_fn::from_container(t, sized_range_concept<T>(), SIRC()))
                 {
                     static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
-                    return all_fn::from_container(t, SIC(), SIRC());
+                    return all_fn::from_container(t, sized_range_concept<T>(), SIRC());
                 }
 
                 // TODO handle char const * by turning it into a delimited range?

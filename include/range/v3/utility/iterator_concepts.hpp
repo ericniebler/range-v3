@@ -467,7 +467,7 @@ namespace ranges
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = meta::strict_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
+        using SinglePass = CONCEPT_alias(Iterator<I>() && !ForwardIterator<I>());
 
         /// \cond
         namespace detail
@@ -544,27 +544,27 @@ namespace ranges
         }
 
         template<typename C, typename ...Is>
-        using IndirectInvocable = meta::and_<
-            detail::common_result_indirect_invocable_<C, Is...>,
-            CopyConstructible<C>>;
+        using IndirectInvocable = CONCEPT_alias(
+            IsTrue<detail::common_result_indirect_invocable_<C, Is...>>() &&
+            CopyConstructible<C>());
 
         template<typename C, typename ...Is>
-        using MoveIndirectInvocable = meta::and_<
-            detail::common_result_indirect_invocable_<C, Is...>,
-            MoveConstructible<C>>;
+        using MoveIndirectInvocable = CONCEPT_alias(
+            IsTrue<detail::common_result_indirect_invocable_<C, Is...>>() &&
+            MoveConstructible<C>());
 
         template<typename C, typename ...Is>
         using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
 
         template<typename C, typename ...Is>
-        using IndirectPredicate = meta::and_<
-            detail::indirect_invocable_<Predicate, C, Is...>,
-            CopyConstructible<C>>;
+        using IndirectPredicate = CONCEPT_alias(
+            IsTrue<detail::indirect_invocable_<Predicate, C, Is...>>() &&
+            CopyConstructible<C>());
 
         template<typename C, typename I0, typename I1 = I0>
-        using IndirectRelation = meta::and_<
-            detail::indirect_invocable_<Relation, C, I0, I1>,
-            CopyConstructible<C>>;
+        using IndirectRelation = CONCEPT_alias(
+            IsTrue<detail::indirect_invocable_<Relation, C, I0, I1>>() &&
+            CopyConstructible<C>());
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // indirect_result_of
@@ -612,7 +612,7 @@ namespace ranges
         template<typename I, typename Proj>
         using projected =
             meta::if_c<
-                IndirectRegularInvocable<Proj, I>::value,
+                (bool)IndirectRegularInvocable<Proj, I>(),
                 detail::projected_<I, Proj>>;
 
         template<typename I, typename Proj>
@@ -623,55 +623,55 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
-        template<typename I, typename V = concepts::Readable::value_t<I>>
-        using Permutable = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectlySwappable<I, I>,
-            IndirectlyMovableStorable<I, I>>;
+        template<typename I>
+        using Permutable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectlySwappable<I, I>() &&
+            IndirectlyMovableStorable<I, I>());
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using Mergeable = meta::strict_and<
-            InputIterator<I0>,
-            InputIterator<I1>,
-            WeaklyIncrementable<Out>,
-            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>,
-            IndirectlyCopyable<I0, Out>,
-            IndirectlyCopyable<I1, Out>>;
+        using Mergeable = CONCEPT_alias(
+            InputIterator<I0>() &&
+            InputIterator<I1>() &&
+            WeaklyIncrementable<Out>() &&
+            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>() &&
+            IndirectlyCopyable<I0, Out>() &&
+            IndirectlyCopyable<I1, Out>());
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using MoveMergeable = meta::strict_and<
-            InputIterator<I0>,
-            InputIterator<I1>,
-            WeaklyIncrementable<Out>,
-            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>,
-            IndirectlyMovable<I0, Out>,
-            IndirectlyMovable<I1, Out>>;
+        using MoveMergeable = CONCEPT_alias(
+            InputIterator<I0>() &&
+            InputIterator<I1>() &&
+            WeaklyIncrementable<Out>() &&
+            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>() &&
+            IndirectlyMovable<I0, Out>() &&
+            IndirectlyMovable<I1, Out>());
 
         template<typename I, typename C = ordered_less, typename P = ident>
-        using Sortable = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectRelation<C, projected<I, P>, projected<I, P>>,
-            Permutable<I>>;
+        using Sortable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectRelation<C, projected<I, P>, projected<I, P>>() &&
+            Permutable<I>());
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
-        using BinarySearchable = meta::strict_and<
-            ForwardIterator<I>,
-            IndirectRelation<C, projected<I, P>, V2 const *>>;
+        using BinarySearchable = CONCEPT_alias(
+            ForwardIterator<I>() &&
+            IndirectRelation<C, projected<I, P>, V2 const *>());
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = meta::strict_and<
-            InputIterator<I1>,
-            InputIterator<I2>,
-            IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>>;
+        using AsymmetricallyComparable = CONCEPT_alias(
+            InputIterator<I1>() &&
+            InputIterator<I2>() &&
+            IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>());
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Comparable = meta::strict_and<
-            AsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>>;
+        using Comparable = CONCEPT_alias(
+            AsymmetricallyComparable<I1, I2, C, P1, P2>() &&
+            IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
 
         template<typename S, typename I>
         using sized_sentinel_concept =

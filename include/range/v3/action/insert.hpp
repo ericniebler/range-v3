@@ -104,8 +104,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
-                    requires LvalueContainerLike<Cont>() && Iterator<P>() &&
-                        Sentinel<S, I>() && !Range<S>())
+                    requires Sentinel<S, I>() && !Range<S>())
                 auto insert_impl(Cont &&cont, P p, I i, S j, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -114,8 +113,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
-                    requires LvalueContainerLike<Cont>() && Iterator<P>() &&
-                        SizedSentinel<S, I>() && RandomAccessReservable<Cont>() && !Range<S>())
+                    requires SizedSentinel<S, I>() && RandomAccessReservable<Cont>() && !Range<S>())
                 auto insert_impl(Cont &&cont_, P p, I i, S j, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         ranges::begin(unwrap_reference(cont_)), C{i}, C{j}))
@@ -128,7 +126,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
-                    requires LvalueContainerLike<Cont>() && Iterator<I>() && Range<Rng>())
+                    requires Range<Rng>())
                 auto insert_impl(Cont &&cont, I p, Rng &&rng, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -137,8 +135,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
-                    requires LvalueContainerLike<Cont>() && Iterator<I>() &&
-                        RandomAccessReservable<Cont>() && SizedRange<Rng>())
+                    requires RandomAccessReservable<Cont>() && SizedRange<Rng>())
                 auto insert_impl(Cont &&cont_, I p, Rng &&rng, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         begin(unwrap_reference(cont_)), C{ranges::begin(rng)}, C{ranges::end(rng)}))
@@ -159,7 +156,7 @@ namespace ranges
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(static_cast<Cont &&>(cont), std::move(p), std::move(i), std::move(j),
-                                    meta::strict_and<RandomAccessReservable<Cont>, SizedSentinel<S, I>>{})
+                                    RandomAccessReservable<Cont>() && SizedSentinel<S, I>())
             )
 
             CONCEPT_template(typename Cont, typename I, typename Rng,
@@ -169,7 +166,7 @@ namespace ranges
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(static_cast<Cont &&>(cont), std::move(p), static_cast<Rng &&>(rng),
-                                    meta::strict_and<RandomAccessReservable<Cont>, SizedRange<Rng>>{})
+                                    RandomAccessReservable<Cont>() && SizedRange<Rng>())
             )
 
             struct insert_fn

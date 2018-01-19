@@ -40,8 +40,8 @@ namespace ranges
         {
             /// \cond
             template<typename R>
-            using RA_and_Sized =
-                meta::strict_and<RandomAccessRange<R>, SizedRange<R>>;
+            using RA_and_Sized = decltype(
+                RandomAccessRange<R>() && SizedRange<R>());
 
             template<typename R>
             using bounded_iterator_t = meta::if_<RA_and_Sized<R>,

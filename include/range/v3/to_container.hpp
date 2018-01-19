@@ -39,38 +39,32 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            using ConvertibleToContainer = meta::strict_and<
-                Range<Cont>,
-                meta::not_<View<Cont>>,
-                MoveConstructible<Cont>,
-                ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>,
-                Constructible<Cont, I, I>>;
+            using ConvertibleToContainer = decltype(
+                Range<Cont>() && !View<Cont>() && MoveConstructible<Cont>() &&
+                ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>() &&
+                Constructible<Cont, I, I>());
 
-            template<typename ContainerMetafunctionClass>
+            template<typename ToContainer>
             struct to_container_fn
-              : pipeable<to_container_fn<ContainerMetafunctionClass>>
+              : pipeable<to_container_fn<ToContainer>>
             {
             private:
                 template<typename C, typename R>
-                using ReserveConcept =
-                    meta::strict_and<
-                        ReserveAndAssignable<C, range_common_iterator_t<R>>,
-                        SizedRange<R>>;
+                using ReserveConcept = decltype(
+                    ReserveAndAssignable<C, range_common_iterator_t<R>>() &&
+                    SizedRange<R>());
 
-                CONCEPT_template(typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
-                    requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
-                Cont impl(Rng &&rng, std::false_type) const
+                CONCEPT_template(typename Cont, typename Rng)(
+                    requires !ReserveConcept<Cont, Rng>())
+                Cont impl(Rng &&rng) const
                 {
                     using I = range_common_iterator_t<Rng>;
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
-                CONCEPT_template(typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
-                    requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
-                                      ReserveConcept<Cont, Rng>())
-                Cont impl(Rng &&rng, std::true_type) const
+                CONCEPT_template(typename Cont, typename Rng)(
+                    requires ReserveConcept<Cont, Rng>())
+                Cont impl(Rng &&rng) const
                 {
                     Cont c;
                     auto const size = ranges::size(rng);
@@ -87,13 +81,13 @@ namespace ranges
 
             public:
                 CONCEPT_template(typename Rng,
-                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_type_t<Rng>>)(
+                    typename Cont = meta::invoke<ToContainer, range_value_type_t<Rng>>)(
                     requires InputRange<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
                 Cont operator()(Rng &&rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
-                    return impl(static_cast<Rng &&>(rng), ReserveConcept<Cont, Rng>());
+                    return impl<Cont>(static_cast<Rng &&>(rng));
                 }
             };
         }

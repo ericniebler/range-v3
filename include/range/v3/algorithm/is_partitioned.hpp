@@ -37,9 +37,9 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using IsPartitionedable = meta::strict_and<
-            InputIterator<I>,
-            IndirectPredicate<C, projected<I, P>>>;
+        using IsPartitionedable = CONCEPT_alias(
+            InputIterator<I>() &&
+            IndirectPredicate<C, projected<I, P>>());
 
         /// \addtogroup group-algorithms
         /// @{
