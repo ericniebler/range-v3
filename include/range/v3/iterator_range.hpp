@@ -111,7 +111,7 @@ namespace ranges
               : rng_{detail::move(begin), detail::move(end)}, size_(size)
             {
             #ifndef NDEBUG
-                RANGES_ASSERT(!ForwardIterator<I>() ||
+                RANGES_ASSERT(!(bool)ForwardIterator<I>() ||
                     static_cast<size_type_t<I>>(ranges::distance(rng_)) == size_);
             #endif
             }
