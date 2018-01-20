@@ -335,10 +335,12 @@ namespace ranges
                 };
 
                 template<typename T>
-                using copy_construct_layer = meta::if_c<
-                    std::is_copy_constructible<T>::value &&
-                        !detail::is_trivially_copy_constructible<T>::value,
-                    optional_copy<T>, optional_base<T>>;
+                using copy_construct_layer =
+                    meta::if_c<
+                        std::is_copy_constructible<T>::value &&
+                            !detail::is_trivially_copy_constructible<T>::value,
+                        optional_copy<T>,
+                        optional_base<T>>;
 
                 template<typename T>
                 struct optional_move
@@ -359,10 +361,12 @@ namespace ranges
                 };
 
                 template<typename T>
-                using move_construct_layer = meta::if_c<
-                    std::is_move_constructible<T>::value &&
-                        !detail::is_trivially_move_constructible<T>::value,
-                    optional_move<T>, copy_construct_layer<T>>;
+                using move_construct_layer =
+                    meta::if_c<
+                        std::is_move_constructible<T>::value &&
+                            !detail::is_trivially_move_constructible<T>::value,
+                        optional_move<T>,
+                        copy_construct_layer<T>>;
 
                 template<typename T>
                 struct optional_copy_assign
@@ -403,7 +407,8 @@ namespace ranges
                         std::is_reference<T>::value ||
                           !(detail::is_trivially_copy_constructible<T>::value &&
                             detail::is_trivially_copy_assignable<T>::value),
-                        optional_copy_assign<T>, move_construct_layer<T>>,
+                        optional_copy_assign<T>,
+                        move_construct_layer<T>>,
                     deleted_copy_assign<T>>;
 
                 template<typename T>
@@ -445,7 +450,8 @@ namespace ranges
                         std::is_reference<T>::value ||
                             !(detail::is_trivially_move_constructible<T>::value &&
                               detail::is_trivially_move_assignable<T>::value),
-                        optional_move_assign<T>, copy_assign_layer<T>>,
+                        optional_move_assign<T>,
+                        copy_assign_layer<T>>,
                     deleted_move_assign<T>>;
             } // namespace optional_adl
         } // namespace detail

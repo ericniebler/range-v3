@@ -153,13 +153,15 @@ namespace ranges
               : value{}
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && ConvertibleTo<E, Element>())
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && !ConvertibleTo<E, Element>())
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
@@ -190,13 +192,15 @@ namespace ranges
               : Element{}
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && ConvertibleTo<E, Element>())
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && !ConvertibleTo<E, Element>())
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
@@ -224,11 +228,13 @@ namespace ranges
             constexpr box() noexcept
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && ConvertibleTo<E, Element>())
             constexpr box(E &&) noexcept
             {}
             CONCEPT_template(typename E)(
-                requires std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)
+                requires !Same<box, detail::decay_t<E>>() &&
+                    Constructible<Element, E>() && !ConvertibleTo<E, Element>())
             constexpr explicit box(E &&) noexcept
             {}
 
