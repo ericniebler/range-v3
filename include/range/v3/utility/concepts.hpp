@@ -106,13 +106,17 @@
         (_concepts_requires_ == __LINE__ &&                                     \
             static_cast<bool>(__VA_ARGS__))>::type* = nullptr >
 
-#define CONCEPT_requires(...)               \
-    CONCEPT_template()(requires __VA_ARGS__)
+#define CONCEPT_requires(...)                                                   \
+    template<                                                                   \
+        int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                  \
+        typename std::enable_if<                                                \
+            CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43 ||               \
+                static_cast<bool>(__VA_ARGS__),                                 \
+            int                                                                 \
+        >::type = 0>                                                            \
     /**/
 
 #define CONCEPT_alias(...) decltype(::ranges::concepts::alias(__VA_ARGS__))
-
-
 
 namespace ranges
 {

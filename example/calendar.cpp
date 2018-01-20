@@ -240,7 +240,7 @@ struct interleave_view<Rngs>::cursor  {
         return n_ == 0 && its_.end() != mismatch(its_, *rngs_,
             std::not_equal_to<>(), ident(), ranges::end).in1();
     }
-    CONCEPT_REQUIRES(ForwardRange<range_value_type_t<Rngs>>())
+    CONCEPT_requires(ForwardRange<range_value_type_t<Rngs>>())
     bool equal(cursor const& that) const {
         return n_ == that.n_ && its_ == that.its_;
     }

@@ -73,7 +73,7 @@ namespace ranges
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
                 {
                     rng_->satisfy_reverse(it);
@@ -86,13 +86,13 @@ namespace ranges
                 cache_begin();
                 return {*this};
             }
-            CONCEPT_REQUIRES(BoundedRange<Rng>())
+            CONCEPT_requires(BoundedRange<Rng>())
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
             {
                 if(BidirectionalRange<Rng>()) cache_begin();
                 return {*this};
             }
-            CONCEPT_REQUIRES(!BoundedRange<Rng>())
+            CONCEPT_requires(!BoundedRange<Rng>())
             RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor() noexcept
             {
                 return {};

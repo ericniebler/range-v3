@@ -120,14 +120,14 @@ namespace ranges
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 void prev()
                 {
                     if(it_ == ranges::begin(rng_->rng_))
                         it_ = this->get_end_(BoundedRange<Rng>());
                     --it_;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>())
                 void advance(difference_type_ n)
                 {
                     auto const begin = ranges::begin(rng_->rng_);
@@ -136,7 +136,7 @@ namespace ranges
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
                 }
-                CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
+                CONCEPT_requires(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(cursor const &that) const
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
@@ -148,7 +148,7 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CONCEPT_REQUIRES(BoundedRange<Rng const>())
+            CONCEPT_requires(BoundedRange<Rng const>())
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};

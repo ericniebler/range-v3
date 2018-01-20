@@ -100,12 +100,12 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             range_size_type_t<Rng> size()
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);

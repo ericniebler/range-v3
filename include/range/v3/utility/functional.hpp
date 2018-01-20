@@ -274,7 +274,7 @@ namespace ranges
             CONCEPT_ASSERT(Same<FD, detail::decay_t<FD>>() && MoveConstructible<FD>());
             FD pred_;
         public:
-            CONCEPT_REQUIRES(DefaultConstructible<FD>())
+            CONCEPT_requires(DefaultConstructible<FD>())
             constexpr logical_negate_()
                 noexcept(std::is_nothrow_default_constructible<FD>::value)
             {}

@@ -263,12 +263,12 @@ namespace ranges
             {
                 return done_;
             }
-            CONCEPT_REQUIRES(Incrementable<From>())
+            CONCEPT_requires(Incrementable<From>())
             bool equal(closed_iota_view const &that) const
             {
                 return that.from_ == from_ && that.done_ == done_;
             }
-            CONCEPT_REQUIRES(BidirectionalIncrementable<From>())
+            CONCEPT_requires(BidirectionalIncrementable<From>())
             void prev()
             {
                 if(done_)
@@ -306,17 +306,17 @@ namespace ranges
             {
                 return from_ == to_;
             }
-            CONCEPT_REQUIRES(Incrementable<From>())
+            CONCEPT_requires(Incrementable<From>())
             bool equal(iota_view const &that) const
             {
                 return that.from_ == from_;
             }
-            CONCEPT_REQUIRES(BidirectionalIncrementable<From>())
+            CONCEPT_requires(BidirectionalIncrementable<From>())
             void prev()
             {
                 --from_;
             }
-            CONCEPT_REQUIRES(SizedIncrementableSentinel<To, From>())
+            CONCEPT_requires(SizedIncrementableSentinel<To, From>())
             void check_advance_(difference_type_ n)
             {
                 detail::ignore_unused(n);
@@ -326,13 +326,13 @@ namespace ranges
             void check_advance_(difference_type_) const
             {
             }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
+            CONCEPT_requires(RandomAccessIncrementable<From>())
             void advance(difference_type_ n)
             {
                 this->check_advance_(n);
                 from_ = detail::iota_plus(from_, n);
             }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
+            CONCEPT_requires(RandomAccessIncrementable<From>())
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus_(that.from_, from_);
@@ -367,22 +367,22 @@ namespace ranges
             {
                 return false;
             }
-            CONCEPT_REQUIRES(Incrementable<From>())
+            CONCEPT_requires(Incrementable<From>())
             bool equal(iota_view const &that) const
             {
                 return that.value_ == value_;
             }
-            CONCEPT_REQUIRES(BidirectionalIncrementable<From>())
+            CONCEPT_requires(BidirectionalIncrementable<From>())
             void prev()
             {
                 --value_;
             }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
+            CONCEPT_requires(RandomAccessIncrementable<From>())
             void advance(difference_type_ n)
             {
                 value_ = detail::iota_plus(value_, n);
             }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
+            CONCEPT_requires(RandomAccessIncrementable<From>())
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus_(that.value_, value_);

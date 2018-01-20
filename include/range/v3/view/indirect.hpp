@@ -68,13 +68,13 @@ namespace ranges
                     typename indirect_view::view_adaptor, Rng>::value)
               : indirect_view::view_adaptor{detail::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {

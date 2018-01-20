@@ -70,7 +70,7 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 void prev()
                 {
                     --it_;
@@ -115,12 +115,12 @@ namespace ranges
                 {
                     RANGES_ASSERT(0 < n_);
                 }
-                CONCEPT_REQUIRES(SizedRange<Rng const>())
+                CONCEPT_requires(SizedRange<Rng const>())
                 range_size_type_t<Rng> size() const
                 {
                     return size_(ranges::size(this->base()));
                 }
-                CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<Rng const>())
+                CONCEPT_requires(SizedRange<Rng>() && !SizedRange<Rng const>())
                 range_size_type_t<Rng> size()
                 {
                     return size_(ranges::size(this->base()));
@@ -197,13 +197,13 @@ namespace ranges
                     ++it;
                     base_t::next();
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 void prev(iterator_t<Rng>& it)
                 {
                     base_t::prev();
                     --it;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>())
                 void advance(iterator_t<Rng>& it, range_difference_type_t<Rng> n)
                 {
                     it += n;

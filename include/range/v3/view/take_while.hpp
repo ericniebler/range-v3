@@ -65,7 +65,7 @@ namespace ranges
             {
                 return {pred_};
             }
-            CONCEPT_REQUIRES(Invocable<Pred const&, iterator_t<Rng>>())
+            CONCEPT_requires(Invocable<Pred const&, iterator_t<Rng>>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};

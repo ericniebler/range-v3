@@ -106,14 +106,14 @@ namespace ranges
                     return *this;
                 }
 
-                CONCEPT_REQUIRES(!ForwardIterator<I>())
+                CONCEPT_requires(!ForwardIterator<I>())
                 auto operator++(int) -> decltype(current_++)
                 {
                     RANGES_EXPECT(cnt_ > 0);
                     return post_increment_(std::is_void<decltype(current_++)>());
                 }
 
-                CONCEPT_REQUIRES(ForwardIterator<I>())
+                CONCEPT_requires(ForwardIterator<I>())
                 counted_iterator operator++(int)
                 {
                     auto tmp(*this);
@@ -121,7 +121,7 @@ namespace ranges
                     return tmp;
                 }
 
-                CONCEPT_REQUIRES(BidirectionalIterator<I>())
+                CONCEPT_requires(BidirectionalIterator<I>())
                 counted_iterator& operator--()
                 {
                     --current_;
@@ -129,7 +129,7 @@ namespace ranges
                     return *this;
                 }
 
-                CONCEPT_REQUIRES(BidirectionalIterator<I>())
+                CONCEPT_requires(BidirectionalIterator<I>())
                 counted_iterator operator--(int)
                 {
                     auto tmp(*this);
@@ -137,7 +137,7 @@ namespace ranges
                     return tmp;
                 }
 
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 counted_iterator& operator+=(difference_type n)
                 {
                     RANGES_EXPECT(cnt_ >= n);
@@ -146,7 +146,7 @@ namespace ranges
                     return *this;
                 }
 
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 counted_iterator operator+(difference_type n) const
                 {
                     auto tmp(*this);
@@ -154,7 +154,7 @@ namespace ranges
                     return tmp;
                 }
 
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 counted_iterator& operator-=(difference_type n)
                 {
                     RANGES_EXPECT(cnt_ >= -n);
@@ -163,7 +163,7 @@ namespace ranges
                     return *this;
                 }
 
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 counted_iterator operator-(difference_type n) const
                 {
                     auto tmp(*this);
@@ -171,14 +171,14 @@ namespace ranges
                     return tmp;
                 }
 
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 reference_t<I> operator[](difference_type n) const
                 {
                     RANGES_EXPECT(cnt_ >= n);
                     return current_[n];
                 }
 
-                CONCEPT_REQUIRES(InputIterator<I>())
+                CONCEPT_requires(InputIterator<I>())
                 friend RANGES_CXX14_CONSTEXPR
                 rvalue_reference_t<I> iter_move(const counted_iterator& i)
                 RANGES_AUTO_RETURN_NOEXCEPT

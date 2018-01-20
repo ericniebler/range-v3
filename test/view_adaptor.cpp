@@ -51,12 +51,12 @@ private:
         {
             return *ranges::prev(it);
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
+        CONCEPT_requires(ranges::RandomAccessRange<BidiRange>())
         void advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
         {
             it -= n;
         }
-        CONCEPT_REQUIRES(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
+        CONCEPT_requires(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
         ranges::range_difference_type_t<BidiRange>
         distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {

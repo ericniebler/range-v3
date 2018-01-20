@@ -419,19 +419,19 @@ namespace ranges
                     RANGES_EXPECT(ptr_);
                     ptr_->next();
                 }
-                CONCEPT_REQUIRES((Cat & category::bidirectional) == category::bidirectional)
+                CONCEPT_requires((Cat & category::bidirectional) == category::bidirectional)
                 void prev()
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->prev();
                 }
-                CONCEPT_REQUIRES((Cat & category::random_access) == category::random_access)
+                CONCEPT_requires((Cat & category::random_access) == category::random_access)
                 void advance(std::ptrdiff_t n)
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->advance(n);
                 }
-                CONCEPT_REQUIRES((Cat & category::random_access) == category::random_access)
+                CONCEPT_requires((Cat & category::random_access) == category::random_access)
                 std::ptrdiff_t distance_to(any_cursor const &that) const
                 {
                     RANGES_EXPECT(!ptr_ == !that.ptr_);
@@ -530,7 +530,7 @@ namespace ranges
                 return *this;
             }
 
-            CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
+            CONCEPT_requires((Cat & category::sized) == category::sized)
             std::size_t size() const
             {
                 return ptr_ ? ptr_->size() : 0;
@@ -578,7 +578,7 @@ namespace ranges
               : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
 
-            CONCEPT_REQUIRES((Cat & category::sized) == category::sized)
+            CONCEPT_requires((Cat & category::sized) == category::sized)
             std::size_t size() const
             {
                 return ptr_ ? ptr_->size() : 0;

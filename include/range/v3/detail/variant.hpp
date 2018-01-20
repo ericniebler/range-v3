@@ -129,7 +129,7 @@ namespace ranges
             private:
                 T datum_;
             public:
-                CONCEPT_REQUIRES(DefaultConstructible<T>())
+                CONCEPT_requires(DefaultConstructible<T>())
                 constexpr indexed_datum()
                     noexcept(std::is_nothrow_default_constructible<T>::value)
                   : datum_{}
@@ -571,7 +571,7 @@ namespace ranges
             {}
 
         public:
-            CONCEPT_REQUIRES(DefaultConstructible<datum_t<0>>())
+            CONCEPT_requires(DefaultConstructible<datum_t<0>>())
             constexpr variant()
                 noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value)
               : variant{emplaced_index<0>}

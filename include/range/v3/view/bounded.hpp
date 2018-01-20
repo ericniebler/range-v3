@@ -102,7 +102,7 @@ namespace ranges
             {
                 return detail::bounded_iterator_t<Rng>{end_(detail::RA_and_Sized<Rng>{})};
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             range_size_type_t<Rng> size()
             {
                 return ranges::size(rng_);
@@ -120,7 +120,7 @@ namespace ranges
             {
                 return detail::bounded_iterator_t<R>{end_(detail::RA_and_Sized<R>{})};
             }
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(rng_);

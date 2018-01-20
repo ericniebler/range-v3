@@ -98,14 +98,14 @@ namespace ranges
                     RANGES_EXPECT(0 == offset());
                     offset() = ranges::advance(it, n_, end_);
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 RANGES_CXX14_CONSTEXPR
                 void prev(iterator_t<Rng> &it)
                 {
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
-                CONCEPT_REQUIRES(CanSizedSentinel())
+                CONCEPT_requires(CanSizedSentinel())
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &here,
                     iterator_t<Rng> const &there, adaptor const &that) const
@@ -116,7 +116,7 @@ namespace ranges
                     RANGES_ENSURE(0 == delta % n_);
                     return delta / n_;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>())
                 RANGES_CXX14_CONSTEXPR
                 void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                 {
@@ -143,7 +143,7 @@ namespace ranges
             {
                 return adaptor{n_, ranges::end(this->base())};
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size_()
             {
@@ -156,13 +156,13 @@ namespace ranges
               : chunk_view::view_adaptor(detail::move(rng))
               , n_((RANGES_EXPECT(0 < n), n))
             {}
-            CONCEPT_REQUIRES(SizedRange<const Rng>())
+            CONCEPT_requires(SizedRange<const Rng>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size() const
             {
                 return const_cast<chunk_view*>(this)->size_();
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<const Rng>())
+            CONCEPT_requires(SizedRange<Rng>() && !SizedRange<const Rng>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size()
             {
@@ -257,7 +257,7 @@ namespace ranges
                         if(rng_->remainder() != 0 && rng_->it() == ranges::end(rng_->base()))
                             rng_->remainder() = 0;
                     }
-                    CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
+                    CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                     RANGES_CXX14_CONSTEXPR
                     range_difference_type_t<Rng> distance_to(default_sentinel) const
                     {
@@ -270,7 +270,7 @@ namespace ranges
                     constexpr explicit inner_view(chunk_view &view) noexcept
                       : rng_{&view}
                     {}
-                    CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
+                    CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                     RANGES_CXX14_CONSTEXPR
                     range_size_type_t<Rng> size()
                     {
@@ -312,7 +312,7 @@ namespace ranges
                     ranges::advance(rng_->it(), rng_->remainder(), ranges::end(rng_->base()));
                     rng_->remainder() = rng_->n();
                 }
-                CONCEPT_REQUIRES(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
+                CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>())
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> distance_to(default_sentinel) const
                 {
@@ -334,7 +334,7 @@ namespace ranges
                 it_cache() = ranges::begin(base());
                 return outer_cursor{*this};
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size_()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
@@ -349,14 +349,14 @@ namespace ranges
             chunk_view(Rng rng, range_difference_type_t<Rng> n)
               : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
                 return const_cast<chunk_view*>(this)->size_();
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng>() && !SizedRange<Rng const>())
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))

@@ -157,19 +157,19 @@ namespace ranges
                 ++ranges::get<0>(data_);
                 return *this;
             }
-            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            CONCEPT_requires(!ForwardIterator<I>())
             auto operator++(int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::get<0>(data_)++
             )
-            CONCEPT_REQUIRES(ForwardIterator<I>())
+            CONCEPT_requires(ForwardIterator<I>())
             common_iterator operator++(int)
             {
                 return common_iterator(ranges::get<0>(data_)++);
             }
 
-            CONCEPT_REQUIRES(InputIterator<I>())
+            CONCEPT_requires(InputIterator<I>())
             friend RANGES_CXX14_CONSTEXPR
             auto iter_move(const common_iterator& i)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT

@@ -65,7 +65,7 @@ namespace ranges
                             ranges::begin(rng1_), ranges::end(rng1_),
                             ranges::begin(rng2_), ranges::end(rng2_)};
                 }
-                CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
+                CONCEPT_requires(Range<Rng1 const>() && Range<Rng2 const>())
                 cursor<true> begin_cursor() const
                 {
                     return {pred_, proj1_, proj2_,

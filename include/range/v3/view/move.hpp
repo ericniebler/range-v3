@@ -65,12 +65,12 @@ namespace ranges
             explicit move_view(Rng rng)
               : move_view::view_adaptor{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());

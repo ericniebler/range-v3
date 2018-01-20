@@ -149,26 +149,26 @@ namespace ranges
                 explicit basic_proxy_reference(Cur &cur) noexcept
                   : cur_(&cur)
                 {}
-                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                CONCEPT_requires(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(basic_proxy_reference && that)
                 {
                     return *this = that;
                 }
-                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                CONCEPT_requires(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference &operator=(basic_proxy_reference const &that)
                 {
                     this->write_(that.read_());
                     return *this;
                 }
-                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                CONCEPT_requires(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference const &operator=(basic_proxy_reference && that) const
                 {
                     return *this = that;
                 }
-                CONCEPT_REQUIRES(ReadableCursor<Cur>())
+                CONCEPT_requires(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference const &operator=(basic_proxy_reference const &that) const
                 {
@@ -333,17 +333,17 @@ namespace ranges
         template<typename T>
         struct basic_mixin : private box<T>
         {
-            CONCEPT_REQUIRES(DefaultConstructible<T>())
+            CONCEPT_requires(DefaultConstructible<T>())
             constexpr basic_mixin()
                 noexcept(std::is_nothrow_default_constructible<T>::value)
               : box<T>{}
             {}
-            CONCEPT_REQUIRES(MoveConstructible<T>())
+            CONCEPT_requires(MoveConstructible<T>())
             constexpr basic_mixin(T && t)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
               : box<T>(detail::move(t))
             {}
-            CONCEPT_REQUIRES(CopyConstructible<T>())
+            CONCEPT_requires(CopyConstructible<T>())
             constexpr basic_mixin(T const &t)
                 noexcept(std::is_nothrow_copy_constructible<T>::value)
               : box<T>(t)
@@ -421,21 +421,21 @@ namespace ranges
                 return *this;
             }
 
-            CONCEPT_REQUIRES(detail::ReadableCursor<Cur>() &&
+            CONCEPT_requires(detail::ReadableCursor<Cur>() &&
                 IsTrue<!detail::is_writable_cursor<Cur>::value>())
             constexpr const_reference_t operator*() const
             noexcept(noexcept(range_access::read(std::declval<Cur const &>())))
             {
                 return range_access::read(pos());
             }
-            CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
+            CONCEPT_requires(detail::HasCursorNext<Cur>() &&
                 IsTrue<detail::is_writable_cursor<Cur>::value>())
             RANGES_CXX14_CONSTEXPR reference_t operator*()
             noexcept(noexcept(reference_t{std::declval<Cur &>()}))
             {
                 return reference_t{pos()};
             }
-            CONCEPT_REQUIRES(detail::HasCursorNext<Cur>() &&
+            CONCEPT_requires(detail::HasCursorNext<Cur>() &&
                 IsTrue<detail::is_writable_cursor<Cur const>>())
             constexpr const_reference_t operator*() const
             noexcept(noexcept(
@@ -443,7 +443,7 @@ namespace ranges
             {
                 return const_reference_t{pos()};
             }
-            CONCEPT_REQUIRES(!detail::HasCursorNext<Cur>())
+            CONCEPT_requires(!detail::HasCursorNext<Cur>())
             RANGES_CXX14_CONSTEXPR basic_iterator &operator*() noexcept
             {
                 return *this;
@@ -473,21 +473,21 @@ namespace ranges
                 return std::addressof(**this);
             }
 
-            CONCEPT_REQUIRES(detail::HasCursorNext<Cur>())
+            CONCEPT_requires(detail::HasCursorNext<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator++()
             {
                 range_access::next(pos());
                 return *this;
             }
-            CONCEPT_REQUIRES(!detail::HasCursorNext<Cur>())
+            CONCEPT_requires(!detail::HasCursorNext<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator++() noexcept
             {
                 return *this;
             }
 
-            CONCEPT_REQUIRES(!Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
+            CONCEPT_requires(!Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator operator++(int)
             {
@@ -495,7 +495,7 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
+            CONCEPT_requires(Same<range_access::InputCursor, detail::cursor_concept_t<Cur>>())
             RANGES_CXX14_CONSTEXPR
             void operator++(int)
             {
@@ -544,14 +544,14 @@ namespace ranges
             {
                 return right != left;
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
+            CONCEPT_requires(detail::BidirectionalCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator--()
             {
                 range_access::prev(pos());
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
+            CONCEPT_requires(detail::BidirectionalCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator operator--(int)
             {
@@ -559,35 +559,35 @@ namespace ranges
                 --*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator+=(difference_type n)
             {
                 range_access::advance(pos(), n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator+(basic_iterator left, difference_type n)
             {
                 left += n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator+(difference_type n, basic_iterator right)
             {
                 right += n;
                 return right;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             basic_iterator &operator-=(difference_type n)
             {
                 range_access::advance(pos(), -n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator-(basic_iterator left, difference_type n)
             {
@@ -619,31 +619,31 @@ namespace ranges
                 return -(right - left);
             }
             // symmetric comparisons
-            CONCEPT_REQUIRES(detail::SizedCursorSentinel<Cur, Cur>())
+            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator<(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 < (right - left);
             }
-            CONCEPT_REQUIRES(detail::SizedCursorSentinel<Cur, Cur>())
+            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator<=(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 <= (right - left);
             }
-            CONCEPT_REQUIRES(detail::SizedCursorSentinel<Cur, Cur>())
+            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator>(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) < 0;
             }
-            CONCEPT_REQUIRES(detail::SizedCursorSentinel<Cur, Cur>())
+            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator>=(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) <= 0;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_requires(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             const_reference_t operator[](difference_type n) const
             {

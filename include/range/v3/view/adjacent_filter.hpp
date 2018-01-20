@@ -83,7 +83,7 @@ namespace ranges
                         if(invoke(pred, *prev, *it))
                             break;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Base>())
+                CONCEPT_requires(BidirectionalRange<Base>())
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Base> &it) const
                 {
                     auto const first = ranges::begin(rng_->base());
@@ -100,22 +100,22 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
-            CONCEPT_REQUIRES(const_iterable)
+            CONCEPT_requires(const_iterable)
             constexpr adaptor begin_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(const_iterable)
+            CONCEPT_requires(const_iterable)
             constexpr adaptor end_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(!const_iterable)
+            CONCEPT_requires(!const_iterable)
             RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(!const_iterable)
+            CONCEPT_requires(!const_iterable)
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
             {
                 return {*this};

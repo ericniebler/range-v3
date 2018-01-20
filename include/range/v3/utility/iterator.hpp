@@ -699,13 +699,13 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 RANGES_CXX14_CONSTEXPR
                 void advance(difference_type_t<I> n)
                 {
                     it_ -= n;
                 }
-                CONCEPT_REQUIRES(SizedSentinel<I, I>())
+                CONCEPT_requires(SizedSentinel<I, I>())
                 RANGES_CXX14_CONSTEXPR
                 difference_type_t<I>
                 distance_to(reverse_cursor const &that) const
@@ -780,50 +780,50 @@ namespace ranges
                 ++current_;
                 return *this;
             }
-            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            CONCEPT_requires(!ForwardIterator<I>())
             void operator++(int)
             {
                 ++current_;
             }
-            CONCEPT_REQUIRES(ForwardIterator<I>())
+            CONCEPT_requires(ForwardIterator<I>())
             move_iterator operator++(int)
             {
                 return move_iterator(current_++);
             }
-            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            CONCEPT_requires(BidirectionalIterator<I>())
             move_iterator &operator--()
             {
                 --current_;
                 return *this;
             }
-            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            CONCEPT_requires(BidirectionalIterator<I>())
             move_iterator operator--(int)
             {
                 return move_iterator(current_--);
             }
-            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>())
             move_iterator operator+(difference_type n) const
             {
                 return move_iterator(current_ + n);
             }
-            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>())
             move_iterator &operator+=(difference_type n)
             {
                 current_ += n;
                 return *this;
             }
-            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>())
             move_iterator operator-(difference_type n) const
             {
                 return move_iterator(current_ - n);
             }
-            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>())
             move_iterator &operator-=(difference_type n)
             {
                 current_ -= n;
                 return *this;
             }
-            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>())
             reference operator[](difference_type n) const
             {
                 return iter_move(current_ + n);
@@ -1022,28 +1022,28 @@ namespace ranges
                 {
                     *it_ = std::move(t);
                 }
-                CONCEPT_REQUIRES(Readable<I>())
+                CONCEPT_requires(Readable<I>())
                 reference_t<I> read() const
                     noexcept(noexcept(*std::declval<I const&>()))
                 {
                     return *it_;
                 }
-                CONCEPT_REQUIRES(InputIterator<I>())
+                CONCEPT_requires(InputIterator<I>())
                 bool equal(move_into_cursor const &that) const
                 {
                     return it_ == that.it_;
                 }
-                CONCEPT_REQUIRES(BidirectionalIterator<I>())
+                CONCEPT_requires(BidirectionalIterator<I>())
                 void prev()
                 {
                     --it_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>())
                 void advance(difference_type_t<I> n)
                 {
                     it_ += n;
                 }
-                CONCEPT_REQUIRES(SizedSentinel<I, I>())
+                CONCEPT_requires(SizedSentinel<I, I>())
                 difference_type_t<I> distance_to(move_into_cursor const &that) const
                 {
                     return that.it_ - it_;

@@ -34,7 +34,7 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            CONCEPT_REQUIRES(std::is_default_constructible<T>::value)
+            CONCEPT_requires(std::is_default_constructible<T>::value)
             constexpr mutable_()
               : value{}
             {}
@@ -147,7 +147,7 @@ namespace ranges
         {
             Element value;
         public:
-            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
+            CONCEPT_requires(std::is_default_constructible<Element>::value)
             constexpr box()
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
               : value{}
@@ -186,7 +186,7 @@ namespace ranges
           : Element
         {
         public:
-            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
+            CONCEPT_requires(std::is_default_constructible<Element>::value)
             constexpr box()
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
               : Element{}

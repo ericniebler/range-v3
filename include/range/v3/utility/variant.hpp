@@ -48,16 +48,16 @@ namespace ranges
                     RANGES_EXPECT(p == ranges::end(data_));
                 }
             public:
-                CONCEPT_REQUIRES(DefaultConstructible<T>())
+                CONCEPT_requires(DefaultConstructible<T>())
                 constexpr indexed_datum(meta::nil_ = {})
                   : data_{}
                 {}
-                CONCEPT_REQUIRES(MoveConstructible<T>())
+                CONCEPT_requires(MoveConstructible<T>())
                 indexed_datum(indexed_datum &&that)
                 {
                     std::uninitialized_copy_n(std::make_move_iterator(that.data_), N, data_);
                 }
-                CONCEPT_REQUIRES(CopyConstructible<T>())
+                CONCEPT_requires(CopyConstructible<T>())
                 indexed_datum(indexed_datum const &that)
                 {
                     std::uninitialized_copy_n(that.data_, N, data_);
@@ -79,13 +79,13 @@ namespace ranges
                 explicit indexed_datum(R &&r)
                   : indexed_datum{ranges::begin(r), ranges::end(r)}
                 {}
-                CONCEPT_REQUIRES(Assignable<T &, T>())
+                CONCEPT_requires(Assignable<T &, T>())
                 indexed_datum &operator=(indexed_datum &&that)
                 {
                     ranges::move(that.data_, data_);
                     return *this;
                 }
-                CONCEPT_REQUIRES(Assignable<T &, T const &>())
+                CONCEPT_requires(Assignable<T &, T const &>())
                 indexed_datum &operator=(indexed_datum const &that)
                 {
                     ranges::copy(that.data_, data_);

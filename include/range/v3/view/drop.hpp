@@ -78,12 +78,12 @@ namespace ranges
             {
                 RANGES_EXPECT(n >= 0);
             }
-            CONCEPT_REQUIRES(!RandomAccessRange<Rng const>())
+            CONCEPT_requires(!RandomAccessRange<Rng const>())
             iterator_t<Rng> begin()
             {
                 return this->get_begin_(RandomAccessRange<Rng>{}, std::false_type{});
             }
-            CONCEPT_REQUIRES(!RandomAccessRange<Rng const>())
+            CONCEPT_requires(!RandomAccessRange<Rng const>())
             sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
@@ -100,14 +100,14 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             range_size_type_t<Rng> size() const
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);
                 return s < n ? 0 : s - n;
             }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
             range_size_type_t<Rng> size()
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));

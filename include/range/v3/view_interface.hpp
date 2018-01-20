@@ -85,7 +85,7 @@ namespace ranges
             view_interface &operator=(view_interface &&) = default;
             view_interface &operator=(view_interface const &) = default;
             // A few ways of testing whether a range can be empty:
-            CONCEPT_REQUIRES(Cardinality >= 0)
+            CONCEPT_requires(Cardinality >= 0)
             constexpr bool empty() const noexcept
             {
                 return Cardinality == 0;

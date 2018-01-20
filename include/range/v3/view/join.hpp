@@ -76,12 +76,12 @@ namespace ranges
             explicit join_view(Rng rng)
               : outer_(view::all(std::move(rng)))
             {}
-            CONCEPT_REQUIRES(detail::join_cardinality<Rng>::value >= 0)
+            CONCEPT_requires(detail::join_cardinality<Rng>::value >= 0)
             constexpr size_type size() const
             {
                 return detail::join_cardinality<Rng>::value;
             }
-            CONCEPT_REQUIRES(IsTrue<detail::join_cardinality<Rng>::value < 0>() &&
+            CONCEPT_requires(IsTrue<detail::join_cardinality<Rng>::value < 0>() &&
                 IsTrue<range_cardinality<Rng>::value >= 0>() && ForwardRange<Rng>() &&
                 SizedRange<range_reference_t<Rng>>())
             RANGES_CXX14_CONSTEXPR size_type size()
@@ -173,12 +173,12 @@ namespace ranges
               : outer_(view::all(std::move(rng)))
               , val_(view::all(std::move(val)))
             {}
-            CONCEPT_REQUIRES(IsTrue<detail::join_cardinality<Rng, ValRng>::value >= 0>())
+            CONCEPT_requires(IsTrue<detail::join_cardinality<Rng, ValRng>::value >= 0>())
             constexpr size_type size() const
             {
                 return detail::join_cardinality<Rng, ValRng>::value;
             }
-            CONCEPT_REQUIRES(IsTrue<detail::join_cardinality<Rng, ValRng>::value < 0>() &&
+            CONCEPT_requires(IsTrue<detail::join_cardinality<Rng, ValRng>::value < 0>() &&
                 IsTrue<range_cardinality<Rng>::value >= 0>() && ForwardRange<Rng>() &&
                 SizedRange<range_reference_t<Rng>>() && SizedRange<ValRng>())
             size_type size() const

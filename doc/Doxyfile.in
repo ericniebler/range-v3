@@ -87,7 +87,7 @@ INCLUDE_PATH            = @Range-v3_SOURCE_DIR@/include
 INCLUDE_FILE_PATTERNS   =
 PREDEFINED              = RANGES_DOXYGEN_INVOKED \
                           CONCEPT_REQUIRES_=requires= \
-                          "CONCEPT_REQUIRES(X)=/// \pre X" \
+                          "CONCEPT_requires(X)=/// \pre X" \
                           "RANGES_INLINE_VARIABLE(T,N)=inline constexpr T N{};"
 SKIP_FUNCTION_MACROS    = NO
 

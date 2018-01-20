@@ -268,66 +268,66 @@ namespace ranges
                 {
                     return equal_(that, meta::size_t<0>{});
                 }
-                CONCEPT_REQUIRES(CanBidi<IsConst>())
+                CONCEPT_requires(CanBidi<IsConst>())
                 void prev()
                 {
                     prev_(meta::size_t<sizeof...(Views)>{});
                 }
-                CONCEPT_REQUIRES(CanDistance<IsConst>())
+                CONCEPT_requires(CanDistance<IsConst>())
                 std::ptrdiff_t distance_to(cursor const &that) const
                 {
                     return distance_(that, meta::size_t<sizeof...(Views)>{}, {});
                 }
-                CONCEPT_REQUIRES(CanRandom<IsConst>())
+                CONCEPT_requires(CanRandom<IsConst>())
                 void advance(std::ptrdiff_t n)
                 {
                     return advance_(meta::size_t<sizeof...(Views)>{}, { n });
                 }
             };
-            CONCEPT_REQUIRES(CanConst())
+            CONCEPT_requires(CanConst())
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CONCEPT_REQUIRES(!CanConst())
+            CONCEPT_requires(!CanConst())
             cursor<false> begin_cursor()
             {
                 return cursor<false>{begin_tag{}, *this};
             }
-            CONCEPT_REQUIRES(sizeof...(Views) == 0)
+            CONCEPT_requires(sizeof...(Views) == 0)
             cursor<true> end_cursor() const
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CONCEPT_REQUIRES(CanBidi<true>() && sizeof...(Views) > 0)
+            CONCEPT_requires(CanBidi<true>() && sizeof...(Views) > 0)
             cursor<true> end_cursor() const
             {
                 return cursor<true>{end_tag{}, *this};
             }
-            CONCEPT_REQUIRES(CanBidi<false>() && !CanBidi<true>())
+            CONCEPT_requires(CanBidi<false>() && !CanBidi<true>())
             cursor<false> end_cursor()
             {
                 return cursor<false>{end_tag{}, *this};
             }
-            CONCEPT_REQUIRES(!CanBidi<true>())
+            CONCEPT_requires(!CanBidi<true>())
             default_sentinel end_cursor() const
             {
                 return {};
             }
         public:
             cartesian_product_view() = default;
-            CONCEPT_REQUIRES(sizeof...(Views) > 0)
+            CONCEPT_requires(sizeof...(Views) > 0)
             constexpr cartesian_product_view(Views... views)
               : views_{detail::move(views)...}
             {}
-            CONCEPT_REQUIRES(CanSize<true>())
+            CONCEPT_requires(CanSize<true>())
             std::size_t size() const
             {
                 if(sizeof...(Views) == 0) return 0;
                 return tuple_foldl(views_, std::size_t{1},
                     detail::cartesian_size_fn{});
             }
-            CONCEPT_REQUIRES(CanSize<false>() && !CanSize<true>())
+            CONCEPT_requires(CanSize<false>() && !CanSize<true>())
             std::size_t size()
             {
                 return tuple_foldl(views_, std::size_t{1},

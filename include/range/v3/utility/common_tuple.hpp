@@ -56,7 +56,7 @@ namespace ranges
             };
         public:
             // Construction
-            CONCEPT_REQUIRES(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
+            CONCEPT_requires(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
             common_tuple()
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
               : std::tuple<Ts...>{}
@@ -228,7 +228,7 @@ namespace ranges
             }
         public:
             // Construction
-            CONCEPT_REQUIRES(DefaultConstructible<F>() && DefaultConstructible<S>())
+            CONCEPT_requires(DefaultConstructible<F>() && DefaultConstructible<S>())
             common_pair()
                 noexcept(std::is_nothrow_default_constructible<F>::value &&
                     std::is_nothrow_default_constructible<S>::value)

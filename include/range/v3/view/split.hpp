@@ -121,7 +121,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>,
+            CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>,
                 sentinel_t<Rng>>() && Range<Rng const>())
             cursor<true> begin_cursor() const
             {

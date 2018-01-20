@@ -187,7 +187,7 @@ namespace ranges
                     {
                         return RANGES_EXPECT(engaged_), std::addressof(data_);
                     }
-                    CONCEPT_REQUIRES(MoveConstructible<T>() && Swappable<T>())
+                    CONCEPT_requires(MoveConstructible<T>() && Swappable<T>())
                     RANGES_CXX14_CONSTEXPR void swap(optional_base &that)
                         noexcept(std::is_nothrow_move_constructible<T>::value &&
                             is_nothrow_swappable<T>::value)
@@ -286,7 +286,7 @@ namespace ranges
                     {
                         ptr_ = nullptr;
                     }
-                    CONCEPT_REQUIRES(Swappable<T>())
+                    CONCEPT_requires(Swappable<T>())
                     RANGES_CXX14_CONSTEXPR void swap(optional_base &that)
                         noexcept(is_nothrow_swappable<T &>::value)
                     {

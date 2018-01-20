@@ -69,7 +69,7 @@ namespace ranges
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>())
             iterator begin() const
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
@@ -78,12 +78,12 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>())
             sentinel end() const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedView<Rng>())
+            CONCEPT_requires(SizedView<Rng>())
             constexpr size_type_ size() const
             {
                 return range_cardinality<Rng>::value >= 0

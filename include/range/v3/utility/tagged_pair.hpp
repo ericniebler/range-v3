@@ -78,12 +78,12 @@ namespace ranges
             public:
                 tagged() = default;
                 using base_t::base_t;
-                CONCEPT_REQUIRES(MoveConstructible<Base>())
+                CONCEPT_requires(MoveConstructible<Base>())
                 constexpr tagged(Base && that)
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
                   : base_t(detail::move(that))
                 {}
-                CONCEPT_REQUIRES(CopyConstructible<Base>())
+                CONCEPT_requires(CopyConstructible<Base>())
                 constexpr tagged(Base const &that)
                     noexcept(std::is_nothrow_copy_constructible<Base>::value)
                   : base_t(that)
@@ -169,12 +169,12 @@ namespace ranges
                 getter(getter &&) = default;                                         \
                 getter(getter const &) = default;                                    \
                 using Next::Next;                                                    \
-                CONCEPT_REQUIRES(MoveConstructible<Untagged>())                      \
+                CONCEPT_requires(MoveConstructible<Untagged>())                      \
                 constexpr getter(Untagged && that)                                   \
                     noexcept(std::is_nothrow_move_constructible<Untagged>::value)    \
                   : Next(detail::move(that))                                         \
                 {}                                                                   \
-                CONCEPT_REQUIRES(CopyConstructible<Untagged>())                      \
+                CONCEPT_requires(CopyConstructible<Untagged>())                      \
                 constexpr getter(Untagged const &that)                               \
                     noexcept(std::is_nothrow_copy_constructible<Untagged>::value)    \
                   : Next(that)                                                       \

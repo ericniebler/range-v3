@@ -53,13 +53,13 @@ namespace ranges
                     std::is_nothrow_move_constructible<range_value_type_t<Rng>>::value)
               : intersperse_view::view_adaptor{detail::move(rng)}, val_(detail::move(val))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return size_(ranges::size(this->base()));
             }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
@@ -89,7 +89,7 @@ namespace ranges
                 {
                     return toggle_ ? *it : val_;
                 }
-                CONCEPT_REQUIRES(Sentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                CONCEPT_requires(Sentinel<iterator_t<Rng>, iterator_t<Rng>>())
                 constexpr bool equal(iterator_t<Rng> const &it0, iterator_t<Rng> const &it1,
                     cursor_adaptor const &other) const
                     noexcept(noexcept(it0 == it1))
@@ -103,7 +103,7 @@ namespace ranges
                         ++it;
                     toggle_ = !toggle_;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>())
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it)
                     noexcept(noexcept(--it))
                 {
@@ -111,14 +111,14 @@ namespace ranges
                     if(toggle_)
                         --it;
                 }
-                CONCEPT_REQUIRES(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                CONCEPT_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
                 constexpr range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &it,
                     iterator_t<Rng> const &other_it, cursor_adaptor const &other) const
                     noexcept(noexcept(other_it - it))
                 {
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>())
                 RANGES_CXX14_CONSTEXPR
                 void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(ranges::advance(it, n)))
@@ -140,21 +140,21 @@ namespace ranges
                     it == sent
                 )
             };
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>())
             constexpr cursor_adaptor begin_adaptor() const
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view const&>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_REQUIRES(!Range<Rng const>())
+            CONCEPT_requires(!Range<Rng const>())
             RANGES_CXX14_CONSTEXPR cursor_adaptor begin_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_REQUIRES(Range<Rng const>() && BoundedRange<Rng>() &&
+            CONCEPT_requires(Range<Rng const>() && BoundedRange<Rng>() &&
                 !SinglePass<iterator_t<Rng>>())
             constexpr cursor_adaptor end_adaptor() const
                 noexcept(std::is_nothrow_constructible<
@@ -162,7 +162,7 @@ namespace ranges
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_REQUIRES(!Range<Rng const>() && BoundedRange<Rng>() &&
+            CONCEPT_requires(!Range<Rng const>() && BoundedRange<Rng>() &&
                 !SinglePass<iterator_t<Rng>>())
             RANGES_CXX14_CONSTEXPR cursor_adaptor end_adaptor()
                 noexcept(std::is_nothrow_constructible<
@@ -170,7 +170,7 @@ namespace ranges
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_REQUIRES(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
+            CONCEPT_requires(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
             constexpr sentinel_adaptor end_adaptor() const noexcept
             {
                 return {};

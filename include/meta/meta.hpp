@@ -28,6 +28,9 @@
 #pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
 #endif
 
+//#define META_VALUE_OF(N) static_cast<value_type<N>>(_t<N>())
+#define META_VALUE_OF(N) value_of<N>()
+
 /// \defgroup meta Meta
 ///
 /// A tiny metaprogramming library
@@ -153,7 +156,7 @@ namespace meta
         /// \note Requires C++14 or greater.
         /// \ingroup invocation
         template <typename T>
-        constexpr value_type<T> _v = value_of<T>();
+        constexpr value_type<T> _v = META_VALUE_OF(T);
 #endif
 
         /// Lazy versions of meta actions
@@ -191,133 +194,133 @@ namespace meta
         /// integer \c
         /// value_of<T>().
         template <typename T>
-        using inc = std::integral_constant<decltype(value_of<T>() + 1), value_of<T>() + 1>;
+        using inc = std::integral_constant<decltype(META_VALUE_OF(T) + 1), META_VALUE_OF(T) + 1>;
 
         /// An integral constant wrapper around the result of decrementing the wrapped
         /// integer \c
         /// value_of<T>().
         template <typename T>
-        using dec = std::integral_constant<decltype(value_of<T>() - 1), value_of<T>() - 1>;
+        using dec = std::integral_constant<decltype(META_VALUE_OF(T) - 1), META_VALUE_OF(T) - 1>;
 
         /// An integral constant wrapper around the result of adding the two wrapped
         /// integers
         /// \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using plus = std::integral_constant<decltype(value_of<T>() + value_of<U>()),
-                                            value_of<T>() + value_of<U>()>;
+        using plus = std::integral_constant<decltype(META_VALUE_OF(T) + META_VALUE_OF(U)),
+                                            META_VALUE_OF(T) + META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of subtracting the two
         /// wrapped integers
         /// \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using minus = std::integral_constant<decltype(value_of<T>() - value_of<U>()),
-                                             value_of<T>() - value_of<U>()>;
+        using minus = std::integral_constant<decltype(META_VALUE_OF(T) - META_VALUE_OF(U)),
+                                             META_VALUE_OF(T) - META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of multiplying the two
         /// wrapped integers
         /// \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using multiplies = std::integral_constant<decltype(value_of<T>() * value_of<U>()),
-                                                  value_of<T>() * value_of<U>()>;
+        using multiplies = std::integral_constant<decltype(META_VALUE_OF(T) * META_VALUE_OF(U)),
+                                                  META_VALUE_OF(T) * META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of dividing the two wrapped
         /// integers \c
         /// value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using divides = std::integral_constant<decltype(value_of<T>() / value_of<U>()),
-                                               value_of<T>() / value_of<U>()>;
+        using divides = std::integral_constant<decltype(META_VALUE_OF(T) / META_VALUE_OF(U)),
+                                               META_VALUE_OF(T) / META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of negating the wrapped
         /// integer
         /// \c value_of<T>().
         /// \ingroup math
         template <typename T>
-        using negate = std::integral_constant<decltype(-value_of<T>()), -value_of<T>()>;
+        using negate = std::integral_constant<decltype(-META_VALUE_OF(T)), -META_VALUE_OF(T)>;
 
         /// An integral constant wrapper around the remainder of dividing the two
         /// wrapped integers
         /// \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using modulus = std::integral_constant<decltype(value_of<T>() % value_of<U>()),
-                                               value_of<T>() % value_of<U>()>;
+        using modulus = std::integral_constant<decltype(META_VALUE_OF(T) % META_VALUE_OF(U)),
+                                               META_VALUE_OF(T) % META_VALUE_OF(U)>;
 
         /// A Boolean integral constant wrapper around the result of comparing \c
         /// value_of<T>() and
         /// \c value_of<U>() for equality.
         /// \ingroup math
         template <typename T, typename U>
-        using equal_to = bool_<value_of<T>() == value_of<U>()>;
+        using equal_to = bool_<META_VALUE_OF(T) == META_VALUE_OF(U)>;
 
         /// A Boolean integral constant wrapper around the result of comparing \c
         /// value_of<T>() and
         /// \c value_of<U>() for inequality.
         /// \ingroup math
         template <typename T, typename U>
-        using not_equal_to = bool_<value_of<T>() != value_of<U>()>;
+        using not_equal_to = bool_<META_VALUE_OF(T) != META_VALUE_OF(U)>;
 
         /// A Boolean integral constant wrapper around \c true if \c value_of<T>() is
         /// greater than
         /// \c value_of<U>(); \c false, otherwise.
         /// \ingroup math
         template <typename T, typename U>
-        using greater = bool_<(value_of<T>() > value_of<U>())>;
+        using greater = bool_<(META_VALUE_OF(T) > META_VALUE_OF(U))>;
 
         /// A Boolean integral constant wrapper around \c true if \c value_of<T>() is
         /// less than \c
         /// value_of<U>(); \c false, otherwise.
         /// \ingroup math
         template <typename T, typename U>
-        using less = bool_<(value_of<T>() < value_of<U>())>;
+        using less = bool_<(META_VALUE_OF(T) < META_VALUE_OF(U))>;
 
         /// A Boolean integral constant wrapper around \c true if \c value_of<T>() is
         /// greater than
         /// or equal to \c value_of<U>(); \c false, otherwise.
         /// \ingroup math
         template <typename T, typename U>
-        using greater_equal = bool_<(value_of<T>() >= value_of<U>())>;
+        using greater_equal = bool_<(META_VALUE_OF(T) >= META_VALUE_OF(U))>;
 
         /// A Boolean integral constant wrapper around \c true if \c value_of<T>() is
         /// less than or
         /// equal to \c value_of<U>(); \c false, otherwise.
         /// \ingroup math
         template <typename T, typename U>
-        using less_equal = bool_<(value_of<T>() <= value_of<U>())>;
+        using less_equal = bool_<(META_VALUE_OF(T) <= META_VALUE_OF(U))>;
 
         /// An integral constant wrapper around the result of bitwise-and'ing the two
         /// wrapped
         /// integers \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using bit_and = std::integral_constant<decltype(value_of<T>() & value_of<U>()),
-                                               value_of<T>() & value_of<U>()>;
+        using bit_and = std::integral_constant<decltype(META_VALUE_OF(T) & META_VALUE_OF(U)),
+                                               META_VALUE_OF(T) & META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of bitwise-or'ing the two
         /// wrapped
         /// integers \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using bit_or = std::integral_constant<decltype(value_of<T>() | value_of<U>()),
-                                              value_of<T>() | value_of<U>()>;
+        using bit_or = std::integral_constant<decltype(META_VALUE_OF(T) | META_VALUE_OF(U)),
+                                              META_VALUE_OF(T) | META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of bitwise-exclusive-or'ing
         /// the two
         /// wrapped integers \c value_of<T>() and \c value_of<U>().
         /// \ingroup math
         template <typename T, typename U>
-        using bit_xor = std::integral_constant<decltype(value_of<T>() ^ value_of<U>()),
-                                               value_of<T>() ^ value_of<U>()>;
+        using bit_xor = std::integral_constant<decltype(META_VALUE_OF(T) ^ META_VALUE_OF(U)),
+                                               META_VALUE_OF(T) ^ META_VALUE_OF(U)>;
 
         /// An integral constant wrapper around the result of bitwise-complementing the
         /// wrapped
         /// integer \c value_of<T>().
         /// \ingroup math
         template <typename T>
-        using bit_not = std::integral_constant<decltype(~value_of<T>()), ~value_of<T>()>;
+        using bit_not = std::integral_constant<decltype(~META_VALUE_OF(T)), ~META_VALUE_OF(T)>;
 
         namespace lazy
         {
@@ -843,7 +846,7 @@ namespace meta
             // Indirection through defer_i here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<detail::defer_i_<T, C, value_of<Ts>()...>>;
+            using invoke = _t<detail::defer_i_<T, C, META_VALUE_OF(Ts)...>>;
         };
 
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(META_DOXYGEN_INVOKED)
@@ -1048,19 +1051,19 @@ namespace meta
             };
 
             template <typename If>
-            struct _if_<list<If>, decltype(bool(value_of<If>()))> : std::enable_if<value_of<If>()>
+            struct _if_<list<If>, decltype(bool(META_VALUE_OF(If)))> : std::enable_if<META_VALUE_OF(If)>
             {
             };
 
             template <typename If, typename Then>
-            struct _if_<list<If, Then>, decltype(bool(value_of<If>()))>
-                : std::enable_if<value_of<If>(), Then>
+            struct _if_<list<If, Then>, decltype(bool(META_VALUE_OF(If)))>
+                : std::enable_if<META_VALUE_OF(If), Then>
             {
             };
 
             template <typename If, typename Then, typename Else>
-            struct _if_<list<If, Then, Else>, decltype(bool(value_of<If>()))>
-                : std::conditional<value_of<If>(), Then, Else>
+            struct _if_<list<If, Then, Else>, decltype(bool(META_VALUE_OF(If)))>
+                : std::conditional<META_VALUE_OF(If), Then, Else>
             {
             };
         #else
@@ -1071,25 +1074,25 @@ namespace meta
             };
 
             template <typename If>
-            struct _if_<list<If>, bool_<value_of<If>()>>
+            struct _if_<list<If>, bool_<META_VALUE_OF(If)>>
             {
                 using type = void;
             };
 
             template <typename If, typename Then>
-            struct _if_<list<If, Then>, bool_<value_of<If>()>>
+            struct _if_<list<If, Then>, bool_<META_VALUE_OF(If)>>
             {
                 using type = Then;
             };
 
             template <typename If, typename Then, typename Else>
-            struct _if_<list<If, Then, Else>, bool_<value_of<If>()>>
+            struct _if_<list<If, Then, Else>, bool_<META_VALUE_OF(If)>>
             {
                 using type = Then;
             };
 
             template <typename If, typename Then, typename Else>
-            struct _if_<list<If, Then, Else>, bool_<!value_of<If>()>>
+            struct _if_<list<If, Then, Else>, bool_<!META_VALUE_OF(If)>>
             {
                 using type = Else;
             };
@@ -1135,7 +1138,7 @@ namespace meta
             {
                 template <typename Bool_, typename... Bools>
                 using invoke = invoke<
-                    if_c<!value_of<Bool_>(),
+                    if_c<!META_VALUE_OF(Bool_),
                          id<std::false_type>,
                          _and_<0==sizeof...(Bools)>>, Bools...>;
             };
@@ -1152,7 +1155,7 @@ namespace meta
             {
                 template <typename Bool_, typename... Bools>
                 using invoke = invoke<
-                    if_c<value_of<Bool_>(),
+                    if_c<META_VALUE_OF(Bool_),
                          id<std::true_type>,
                          _or_<0 == sizeof...(Bools)>>, Bools...>;
             };
@@ -1167,7 +1170,7 @@ namespace meta
         /// Logically negate the integral constant-wrapped Boolean parameter.
         /// \ingroup logical
         template <typename Bool_>
-        using not_ = not_c<value_of<Bool_>()>;
+        using not_ = not_c<META_VALUE_OF(Bool_)>;
 
 /// Logically and together all the Boolean parameters
 /// \ingroup logical
@@ -1188,7 +1191,7 @@ namespace meta
         /// doing short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using strict_and = and_c<value_of<Bools>()...>;
+        using strict_and = and_c<META_VALUE_OF(Bools)...>;
 
         /// Logically and together all the integral constant-wrapped Boolean parameters,
         /// \e with
@@ -1209,7 +1212,7 @@ namespace meta
         /// doing short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using strict_or = or_c<meta::value_of<Bools>()...>;
+        using strict_or = or_c<META_VALUE_OF(Bools)...>;
 
         /// Logically or together all the integral constant-wrapped Boolean parameters,
         /// \e with
@@ -1916,7 +1919,7 @@ namespace meta
         /// \f$ O(1) \f$.
         /// \ingroup list
         template <typename List>
-        using empty = bool_<0 == value_of<size<List>>()>;
+        using empty = bool_<0 == META_VALUE_OF(size<List>)>;
 
         namespace lazy
         {
@@ -2899,7 +2902,7 @@ namespace meta
             template <typename Tags>
             using is_variadic_ = is_vararg_<at<push_front<Tags, void>, dec<size<Tags>>>>;
 
-            template <typename Tags, bool IsVariadic = value_of<is_variadic_<Tags>>()>
+            template <typename Tags, bool IsVariadic = META_VALUE_OF(is_variadic_<Tags>)>
             struct lambda_;
 
             // Non-variadic lambda implementation

@@ -74,13 +74,13 @@ namespace ranges
             {
                 return *this;
             }
-            CONCEPT_REQUIRES(CopyConstructible<Val>())
+            CONCEPT_requires(CopyConstructible<Val>())
             raw_storage_iterator &operator=(Val const & val)
             {
                 ::new((void*) std::addressof(*out_)) Val(val);
                 return *this;
             }
-            CONCEPT_REQUIRES(MoveConstructible<Val>())
+            CONCEPT_requires(MoveConstructible<Val>())
             raw_storage_iterator &operator=(Val && val)
             {
                 ::new((void*) std::addressof(*out_)) Val(std::move(val));
@@ -91,12 +91,12 @@ namespace ranges
                 ++out_;
                 return *this;
             }
-            CONCEPT_REQUIRES(!ForwardIterator<O>())
+            CONCEPT_requires(!ForwardIterator<O>())
             void operator++(int)
             {
                 ++out_;
             }
-            CONCEPT_REQUIRES(ForwardIterator<O>())
+            CONCEPT_requires(ForwardIterator<O>())
             raw_storage_iterator operator++(int)
             {
                 auto tmp = *this;

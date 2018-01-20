@@ -194,7 +194,7 @@ namespace ranges
             {
                 return get();
             }
-            CONCEPT_REQUIRES(!std::is_rvalue_reference<T>::value)
+            CONCEPT_requires(!std::is_rvalue_reference<T>::value)
             operator std::reference_wrapper<type> () const noexcept
             {
                 return {get()};

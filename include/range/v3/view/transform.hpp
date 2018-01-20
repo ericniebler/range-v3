@@ -98,12 +98,12 @@ namespace ranges
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>>())
+            CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>>())
             adaptor<true> begin_adaptor() const
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>>())
+            CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>>())
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};
@@ -114,12 +114,12 @@ namespace ranges
               : iter_transform_view::view_adaptor{std::move(rng)}
               , fun_(std::move(fun))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
@@ -217,19 +217,19 @@ namespace ranges
                     // one reaches the end.
                     return it1_ == s.end1_ || it2_ == s.end2_;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng1>() && BidirectionalRange<Rng2>())
+                CONCEPT_requires(BidirectionalRange<Rng1>() && BidirectionalRange<Rng2>())
                 void prev()
                 {
                     --it1_;
                     --it2_;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng1>() && RandomAccessRange<Rng2>())
+                CONCEPT_requires(RandomAccessRange<Rng1>() && RandomAccessRange<Rng2>())
                 void advance(difference_type n)
                 {
                     ranges::advance(it1_, n);
                     ranges::advance(it2_, n);
                 }
-                CONCEPT_REQUIRES(
+                CONCEPT_requires(
                     SizedSentinel<iterator_t<Rng1>, iterator_t<Rng1>>() &&
                     SizedSentinel<iterator_t<Rng2>, iterator_t<Rng2>>())
                 difference_type distance_to(cursor const &that) const
@@ -262,12 +262,12 @@ namespace ranges
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
-            CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
+            CONCEPT_requires(Range<Rng1 const>() && Range<Rng2 const>())
             cursor begin_cursor() const
             {
                 return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
             }
-            CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
+            CONCEPT_requires(Range<Rng1 const>() && Range<Rng2 const>())
             end_cursor_t end_cursor() const
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
@@ -286,18 +286,18 @@ namespace ranges
               , rng1_(std::move(rng1))
               , rng2_(std::move(rng2))
             {}
-            CONCEPT_REQUIRES(IsTrue<my_cardinality >= 0>())
+            CONCEPT_requires(IsTrue<my_cardinality >= 0>())
             constexpr size_type_ size() const
             {
                 return static_cast<size_type_>(my_cardinality);
             }
-            CONCEPT_REQUIRES(IsTrue<my_cardinality < 0>() &&
+            CONCEPT_requires(IsTrue<my_cardinality < 0>() &&
                 SizedRange<Rng1 const>() && SizedRange<Rng2 const>())
             constexpr size_type_ size() const
             {
                 return size_(*this);
             }
-            CONCEPT_REQUIRES(IsTrue<my_cardinality < 0>() &&
+            CONCEPT_requires(IsTrue<my_cardinality < 0>() &&
                 SizedRange<Rng1>() && SizedRange<Rng2>())
             RANGES_CXX14_CONSTEXPR size_type_ size()
             {
