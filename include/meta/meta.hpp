@@ -28,8 +28,7 @@
 #pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
 #endif
 
-//#define META_VALUE_OF(N) static_cast<value_type<N>>(_t<N>())
-#define META_VALUE_OF(N) value_of<N>()
+#define META_VALUE_OF(...) static_cast<value_type<__VA_ARGS__>>(_t<__VA_ARGS__>())
 
 /// \defgroup meta Meta
 ///
@@ -1573,7 +1572,7 @@ namespace meta
         /// \f$ O(log N) \f$.
         /// \ingroup list
         template <typename N, typename T = void>
-        using repeat_n = repeat_n_c<value_of<N>(), T>;
+        using repeat_n = repeat_n_c<META_VALUE_OF(N), T>;
 
         namespace lazy
         {
@@ -1968,7 +1967,7 @@ namespace meta
             constexpr std::size_t find_index_i_(bool const *const first, bool const *const last,
                                                 std::size_t N = 0)
             {
-                return first == last ? value_of<npos>()
+                return first == last ? META_VALUE_OF(npos)
                                      : *first ? N : find_index_i_(first + 1, last, N + 1);
             }
 
@@ -2021,7 +2020,7 @@ namespace meta
                                                         bool const *const last, std::size_t N)
             {
                 return first == last
-                           ? value_of<npos>()
+                           ? META_VALUE_OF(npos)
                            : *(last - 1) ? N - 1 : reverse_find_index_i_(first, last - 1, N - 1);
             }
 
@@ -2125,10 +2124,10 @@ namespace meta
 
             template <typename... List, typename Fun>
             struct find_if_<list<List...>, Fun,
-                            void_<integer_sequence<bool, bool(value_of<invoke<Fun, List>>())...>>>
+                            void_<integer_sequence<bool, bool(META_VALUE_OF(invoke<Fun, List>))...>>>
             {
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr bool s_v[sizeof...(List)] = {value_of<invoke<Fun, List>>()...};
+                static constexpr bool s_v[sizeof...(List)] = {META_VALUE_OF(invoke<Fun, List>)...};
                 using type =
                     drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
             };
@@ -2181,10 +2180,10 @@ namespace meta
             template <typename... List, typename Fun>
             struct reverse_find_if_<
                 list<List...>, Fun,
-                void_<integer_sequence<bool, bool(value_of<invoke<Fun, List>>())...>>>
+                void_<integer_sequence<bool, bool(META_VALUE_OF(invoke<Fun, List>))...>>>
             {
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr bool s_v[sizeof...(List)] = {value_of<invoke<Fun, List>>()...};
+                static constexpr bool s_v[sizeof...(List)] = {META_VALUE_OF(invoke<Fun, List>)...};
                 using type =
                   drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
                                                                    s_v + sizeof...(List)) - s_v>;
@@ -2258,7 +2257,7 @@ namespace meta
 
             template <typename... List, typename C, typename U>
             struct replace_if_<list<List...>, C, U,
-                               void_<integer_sequence<bool, bool(value_of<invoke<C, List>>())...>>>
+                               void_<integer_sequence<bool, bool(META_VALUE_OF(invoke<C, List>))...>>>
             {
                 using type = list<if_<invoke<C, List>, U, List>...>;
             };
@@ -2344,10 +2343,10 @@ namespace meta
 
             template <typename... List, typename Fn>
             struct count_if_<list<List...>, Fn,
-                             void_<integer_sequence<bool, bool(value_of<invoke<Fn, List>>())...>>>
+                             void_<integer_sequence<bool, bool(META_VALUE_OF(invoke<Fn, List>))...>>>
             {
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                static constexpr bool s_v[sizeof...(List)] = {value_of<invoke<Fn, List>>()...};
+                static constexpr bool s_v[sizeof...(List)] = {META_VALUE_OF(invoke<Fn, List>)...};
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
             };
         }
@@ -2378,7 +2377,7 @@ namespace meta
             struct filter_
             {
                 template <typename A>
-                using invoke = if_c<value_of<invoke<Pred, A>>(), list<A>, list<>>;
+                using invoke = if_c<META_VALUE_OF(invoke<Pred, A>), list<A>, list<>>;
             };
         } // namespace detail
         /// \endcond
@@ -2759,7 +2758,7 @@ namespace meta
                 };
                 template <typename... Yes, typename... No, typename A>
                 struct impl<pair<list<Yes...>, list<No...>>, A,
-                            void_<bool_<value_of<invoke<Pred, A>>()>>>
+                            void_<bool_<META_VALUE_OF(invoke<Pred, A>)>>>
                 {
                     using type = if_<invoke<Pred, A>, pair<list<Yes..., A>, list<No...>>,
                                      pair<list<Yes...>, list<No..., A>>>;
