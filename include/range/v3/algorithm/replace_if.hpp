@@ -29,7 +29,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename T, typename P = ident>
-        using ReplaceIfable = CONCEPT_alias(
+        CONCEPT_alias(ReplaceIfable,
             InputIterator<I>() &&
             IndirectPredicate<C, projected<I, P>>() &&
             Writable<I, T const &>());

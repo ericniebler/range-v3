@@ -112,8 +112,7 @@ namespace ranges
             concepts::models<concepts::ReserveAndAssignable, C, I>;
 
         template<typename C>
-        using RandomAccessReservable =
-            CONCEPT_alias(Reservable<C>() && RandomAccessRange<C>());
+        CONCEPT_alias(RandomAccessReservable, Reservable<C>() && RandomAccessRange<C>());
 
         /// \cond
         namespace detail

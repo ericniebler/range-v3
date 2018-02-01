@@ -195,7 +195,7 @@ namespace ranges
             class sample_fn
             {
                 template<typename Rng, typename URNG>
-                using Constraint = CONCEPT_alias(
+                CONCEPT_alias(Constraint,
                     InputRange<Rng>() && UniformRandomNumberGenerator<URNG>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<URNG>,

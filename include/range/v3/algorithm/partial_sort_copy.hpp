@@ -32,7 +32,7 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = ordered_less, typename PI = ident,
             typename PO = ident>
-        using PartialSortCopyConcept = CONCEPT_alias(
+        CONCEPT_alias(PartialSortCopyConcept,
             InputIterator<I>() &&
             RandomAccessIterator<O>() &&
             IndirectlyCopyable<I, O>() &&

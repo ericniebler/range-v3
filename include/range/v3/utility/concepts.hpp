@@ -116,7 +116,16 @@
         >::type = 0>                                                            \
     /**/
 
-#define CONCEPT_alias(...) decltype(::ranges::concepts::alias(__VA_ARGS__))
+#if 0
+#define CONCEPT_alias(Concept, ...)                                             \
+    constexpr auto Concept() -> decltype(::ranges::concepts::alias(__VA_ARGS__))\
+    {                                                                           \
+        return __VA_ARGS__;                                                     \
+    }                                                                           \
+    /**/
+#endif
+#define CONCEPT_alias(Concept, ...)                                             \
+    using Concept = decltype(::ranges::concepts::alias(__VA_ARGS__))
 
 namespace ranges
 {
@@ -271,6 +280,19 @@ namespace ranges
             using _8 = std::integral_constant<int, 7>;
             using _9 = std::integral_constant<int, 8>;
 
+            struct dummy
+            {
+                template<typename... Ts>
+                constexpr dummy(Ts&&...) noexcept
+                {}
+                template<typename That>
+                constexpr friend typename std::enable_if<(bool)That(), dummy>::type
+                operator&&(dummy, bool_<That>) noexcept
+                {
+                    return {};
+                }
+            };
+
             // For short-cirtuit evaluation of requirements:
             template<class T>
             struct bool_
@@ -281,16 +303,19 @@ namespace ranges
                 {
                     return static_cast<bool>(T());
                 }
-                constexpr bool operator()() const noexcept
-                {
-                    return static_cast<bool>(*this);
-                }
                 CONCEPT_template(bool B, typename T_ = T)(
                     requires B == static_cast<bool>(T_()))
-                constexpr /*implicit*/ operator std::integral_constant<bool, B>() const noexcept
+                constexpr /*implicit*/ operator meta::bool_<B>() const noexcept
                 {
                     return {};
                 }
+                static constexpr struct value_impl
+                {
+                    constexpr /*implicit*/ operator bool() const noexcept
+                    {
+                        return static_cast<bool>(T());
+                    }
+                } value {};
             };
 
             template<typename T, typename U>
@@ -299,10 +324,6 @@ namespace ranges
                 constexpr explicit operator bool() const noexcept
                 {
                     return detail::eval_if<!static_cast<bool>(T())>()(false, U());
-                }
-                constexpr bool operator()() const noexcept
-                {
-                    return static_cast<bool>(*this);
                 }
             };
 
@@ -313,10 +334,6 @@ namespace ranges
                 {
                     return detail::eval_if<static_cast<bool>(T())>()(true, U());
                 }
-                constexpr bool operator()() const noexcept
-                {
-                    return static_cast<bool>(*this);
-                }
             };
 
             template<typename T>
@@ -325,10 +342,6 @@ namespace ranges
                 constexpr explicit operator bool() const noexcept
                 {
                     return !static_cast<bool>(T());
-                }
-                constexpr bool operator()() const noexcept
-                {
-                    return static_cast<bool>(*this);
                 }
             };
 
@@ -340,15 +353,9 @@ namespace ranges
 
             template<typename...> struct undef;
             template<typename T, typename U>
-            constexpr undef<T, U> operator&&(bool_<T>, U)
-            {
-                return {};
-            }
+            constexpr undef<T, U> operator&&(bool_<T>, U);
             template<typename T, typename U>
-            constexpr undef<T, U> operator&&(T, bool_<U>)
-            {
-                return {};
-            }
+            constexpr undef<T, U> operator&&(T, bool_<U>);
 
             template<typename T, typename U>
             constexpr bool_<or_<T, U>> operator||(bool_<T>, bool_<U>)
@@ -357,15 +364,9 @@ namespace ranges
             }
 
             template<typename T, typename U>
-            constexpr undef<T, U> operator||(bool_<T>, U)
-            {
-                return {};
-            }
+            constexpr undef<T, U> operator||(bool_<T>, U);
             template<typename T, typename U>
-            constexpr undef<T, U> operator||(T, bool_<U>)
-            {
-                return {};
-            }
+            constexpr undef<T, U> operator||(T, bool_<U>);
 
             template<typename T>
             constexpr bool_<not_<T>> operator!(bool_<T>)

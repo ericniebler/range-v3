@@ -40,7 +40,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C = ordered_less, typename P = ident>
-        using IsHeapable = CONCEPT_alias(
+        CONCEPT_alias(IsHeapable,
             RandomAccessIterator<I>() &&
             IndirectRelation<C, projected<I, P>>());
 

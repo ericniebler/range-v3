@@ -35,7 +35,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename F, typename P = ident>
-        using Transformable1 = CONCEPT_alias(
+        CONCEPT_alias(Transformable1,
             InputIterator<I>() &&
             WeaklyIncrementable<O>() &&
             CopyConstructible<F>() &&
@@ -44,7 +44,7 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident>
-        using Transformable2 = CONCEPT_alias(
+        CONCEPT_alias(Transformable2,
             InputIterator<I0>() &&
             InputIterator<I1>() &&
             WeaklyIncrementable<O>() &&

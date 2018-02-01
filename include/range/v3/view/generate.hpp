@@ -89,7 +89,7 @@ namespace ranges
             struct generate_fn
             {
                 template<typename G>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     Invocable<G&>() &&
                     MoveConstructible<G>() &&
                     IsTrue<std::is_object<detail::decay_t<result_of_t<G&()>>>>() &&

@@ -28,7 +28,9 @@
 #pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
 #endif
 
-#define META_VALUE_OF(...) static_cast<value_type<__VA_ARGS__>>(_t<__VA_ARGS__>())
+#define META_VALUE_OF(...)                                                      \
+    static_cast<value_type<__VA_ARGS__>>(_t<__VA_ARGS__>::value)                \
+    /**/
 
 /// \defgroup meta Meta
 ///
@@ -141,17 +143,22 @@ namespace meta
         template <typename T>
         using _t = typename T::type;
 
+        /// Type alias for \p T::type::value_type.
+        /// \ingroup invocation
         template <typename T>
         using value_type = typename _t<T>::value_type;
 
+        /// Accessor for integral type constants.
+        /// \return static_cast<value_type<T>>(_t<T>::value)
+        /// \ingroup invocation
         template <typename T>
         constexpr value_type<T> value_of()
         {
-            return static_cast<value_type<T>>(_t<T>());
+            return META_VALUE_OF(T);
         }
 
 #if defined(__cpp_variable_templates) || defined(META_DOXYGEN_INVOKED)
-        /// Variable alias for \c value_of<T>()
+        /// Variable template for \c value_of<T>()
         /// \note Requires C++14 or greater.
         /// \ingroup invocation
         template <typename T>

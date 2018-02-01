@@ -467,7 +467,7 @@ namespace ranges
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = CONCEPT_alias(Iterator<I>() && !ForwardIterator<I>());
+        CONCEPT_alias(SinglePass,Iterator<I>() && !ForwardIterator<I>());
 
         /// \cond
         namespace detail
@@ -499,19 +499,19 @@ namespace ranges
 
         namespace detail
         {
+            template<typename T, typename U>
+            using variadic_common_reference2_ =
+                meta::if_c<(bool)CommonReference<T, U>(), common_reference_t<T, U>>;
+
             template<typename... Ts>
             struct variadic_common_reference_
+              : std::true_type
             {};
 
-            template<typename T, typename U>
-            struct variadic_common_reference_<T, U>
-              : CONCEPT_alias(CommonReference<T, U>())
-            {};
-
-            template<typename T, typename U, typename... Rest>
-            struct variadic_common_reference_<T, U, Rest...>
-              : CONCEPT_alias(CommonReference<T, U>() &&
-                    IsTrue<variadic_common_reference_<common_reference_t<T, U>, Rest...>>())
+            template<typename T, typename... Rest>
+            struct variadic_common_reference_<T, Rest...>
+              : meta::is_trait<
+                    meta::lazy::fold<meta::list<Rest...>, T, meta::quote<variadic_common_reference2_>>>
             {};
 
             // Return the value and reference types of an iterator in a list.
@@ -559,25 +559,26 @@ namespace ranges
         }
 
         template<typename C, typename ...Is>
-        using IndirectInvocable = CONCEPT_alias(
+        CONCEPT_alias(IndirectInvocable,
             IsTrue<detail::common_result_indirect_invocable_<C, Is...>>() &&
             CopyConstructible<C>());
 
         template<typename C, typename ...Is>
-        using MoveIndirectInvocable = CONCEPT_alias(
+        CONCEPT_alias(MoveIndirectInvocable,
             IsTrue<detail::common_result_indirect_invocable_<C, Is...>>() &&
             MoveConstructible<C>());
 
         template<typename C, typename ...Is>
-        using IndirectRegularInvocable = IndirectInvocable<C, Is...>;
+        CONCEPT_alias(IndirectRegularInvocable,
+            IndirectInvocable<C, Is...>());
 
         template<typename C, typename ...Is>
-        using IndirectPredicate = CONCEPT_alias(
+        CONCEPT_alias(IndirectPredicate,
             IsTrue<detail::indirect_invocable_<Predicate, C, Is...>>() &&
             CopyConstructible<C>());
 
         template<typename C, typename I0, typename I1 = I0>
-        using IndirectRelation = CONCEPT_alias(
+        CONCEPT_alias(IndirectRelation,
             IsTrue<detail::indirect_invocable_<Relation, C, I0, I1>>() &&
             CopyConstructible<C>());
 
@@ -639,14 +640,14 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I>
-        using Permutable = CONCEPT_alias(
+        CONCEPT_alias(Permutable,
             ForwardIterator<I>() &&
             IndirectlySwappable<I, I>() &&
             IndirectlyMovableStorable<I, I>());
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using Mergeable = CONCEPT_alias(
+        CONCEPT_alias(Mergeable,
             InputIterator<I0>() &&
             InputIterator<I1>() &&
             WeaklyIncrementable<Out>() &&
@@ -656,7 +657,7 @@ namespace ranges
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using MoveMergeable = CONCEPT_alias(
+        CONCEPT_alias(MoveMergeable,
             InputIterator<I0>() &&
             InputIterator<I1>() &&
             WeaklyIncrementable<Out>() &&
@@ -665,26 +666,26 @@ namespace ranges
             IndirectlyMovable<I1, Out>());
 
         template<typename I, typename C = ordered_less, typename P = ident>
-        using Sortable = CONCEPT_alias(
+        CONCEPT_alias(Sortable,
             ForwardIterator<I>() &&
             IndirectRelation<C, projected<I, P>, projected<I, P>>() &&
             Permutable<I>());
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
-        using BinarySearchable = CONCEPT_alias(
+        CONCEPT_alias(BinarySearchable,
             ForwardIterator<I>() &&
             IndirectRelation<C, projected<I, P>, V2 const *>());
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = CONCEPT_alias(
+        CONCEPT_alias(AsymmetricallyComparable,
             InputIterator<I1>() &&
             InputIterator<I2>() &&
             IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>());
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Comparable = CONCEPT_alias(
+        CONCEPT_alias(Comparable,
             AsymmetricallyComparable<I1, I2, C, P1, P2>() &&
             IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
 

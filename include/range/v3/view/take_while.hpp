@@ -104,7 +104,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     Predicate<Pred&, iterator_t<Rng>>() &&
                     CopyConstructible<Pred>());
@@ -146,7 +146,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     IndirectPredicate<Pred, iterator_t<Rng>>());
 

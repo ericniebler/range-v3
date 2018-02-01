@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename T, typename P = ident>
-        using RemoveCopyable = CONCEPT_alias(
+        CONCEPT_alias(RemoveCopyable,
             InputIterator<I>() &&
             WeaklyIncrementable<O>() &&
             IndirectRelation<equal_to, projected<I, P>, T const *>() &&

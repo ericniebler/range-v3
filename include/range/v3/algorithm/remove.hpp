@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename T, typename P = ident>
-        using Removable = CONCEPT_alias(
+        CONCEPT_alias(Removable,
             ForwardIterator<I>() &&
             IndirectRelation<equal_to, projected<I, P>, T const *>() &&
             Permutable<I>());

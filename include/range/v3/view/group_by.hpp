@@ -125,7 +125,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     ForwardRange<Rng>() &&
                     IndirectRelation<Fun, iterator_t<Rng>>());
 

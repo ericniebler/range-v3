@@ -321,7 +321,7 @@ namespace ranges
             struct iter_zip_with_fn
             {
                 template<typename Fun, typename ...Rngs>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     IsTrue<meta::and_<InputRange<Rngs>...>>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, iterator_t<Rngs>...>() &&
@@ -372,7 +372,7 @@ namespace ranges
             struct zip_with_fn
             {
                 template<typename Fun, typename ...Rngs>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     IsTrue<meta::and_<InputRange<Rngs>...>>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, range_reference_t<Rngs> &&...>());

@@ -30,11 +30,11 @@ namespace ranges
         namespace index_detail
         {
             template<typename Rng, typename T>
-            using CompatibleDifferenceType = CONCEPT_alias(
+            CONCEPT_alias(CompatibleDifferenceType,
                 ConvertibleTo<T, range_difference_type_t<Rng>>());
 
             template<typename Rng, typename T>
-            using Concept = CONCEPT_alias(
+            CONCEPT_alias(Concept,
                 RandomAccessRange<Rng>() && CompatibleDifferenceType<Rng, T>());
         }  // namespace index_detail
         /// \endcond

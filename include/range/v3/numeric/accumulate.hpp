@@ -27,7 +27,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename T, typename Op = plus, typename P = ident>
-        using Accumulateable = CONCEPT_alias(
+        CONCEPT_alias(Accumulateable,
             InputIterator<I>() &&
             IndirectInvocable<Op, T *, projected<I, P>>() &&
             Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>());

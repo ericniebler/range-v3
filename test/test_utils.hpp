@@ -30,7 +30,7 @@
 struct check_equal_fn
 {
     template<typename T, typename U>
-    using BothRanges = CONCEPT_alias(ranges::InputRange<T>() && ranges::InputRange<U>());
+    CONCEPT_alias(BothRanges,ranges::InputRange<T>() && ranges::InputRange<U>());
 
     CONCEPT_template(typename T, typename U)(
         requires !BothRanges<T, U>())

@@ -157,7 +157,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Constraint = CONCEPT_alias(
+                CONCEPT_alias(Constraint,
                     InputRange<Rng>() &&
                     IndirectPredicate<Pred, iterator_t<Rng>>());
 

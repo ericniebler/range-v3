@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = equal_to, typename P = ident>
-        using UniqueCopyable = CONCEPT_alias(
+        CONCEPT_alias(UniqueCopyable,
             InputIterator<I>() &&
             IndirectRelation<C, projected<I, P>>() &&
             WeaklyIncrementable<O>() &&

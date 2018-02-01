@@ -74,7 +74,7 @@ namespace ranges
             };
 
             template<typename T>
-            using PairLike = CONCEPT_alias(
+            CONCEPT_alias(PairLike,
                 Invocable<get_first const&, T>() &&
                 Invocable<get_second const&, T>());
         }
@@ -87,7 +87,7 @@ namespace ranges
             struct keys_fn
             {
                 template<typename Rng>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     detail::PairLike<range_reference_t<Rng>>());
 
@@ -114,7 +114,7 @@ namespace ranges
             struct values_fn
             {
                 template<typename Rng>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     detail::PairLike<range_reference_t<Rng>>());
 

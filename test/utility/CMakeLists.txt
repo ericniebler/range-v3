@@ -4,6 +4,9 @@ add_test(test.utility.basic_iterator utility.basic_iterator)
 add_executable(utility.concepts concepts.cpp)
 add_test(test.utility.concepts utility.concepts)
 
+add_executable(utility.concepts2 concepts2.cpp)
+add_test(test.utility.concepts2 utility.concepts2)
+
 add_executable(utility.common_type common_type.cpp)
 add_test(test.utility.common_type utility.common_type)
 

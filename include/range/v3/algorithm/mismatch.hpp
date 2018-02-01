@@ -36,7 +36,7 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Mismatchable = CONCEPT_alias(
+        CONCEPT_alias(Mismatchable,
             InputIterator<I1>() &&
             InputIterator<I2>() &&
             IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>());

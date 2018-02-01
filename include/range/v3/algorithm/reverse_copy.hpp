@@ -32,7 +32,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O>
-        using ReverseCopyable = CONCEPT_alias(
+        CONCEPT_alias(ReverseCopyable,
             BidirectionalIterator<I>() &&
             WeaklyIncrementable<O>() &&
             IndirectlyCopyable<I, O>());

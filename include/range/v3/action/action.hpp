@@ -65,12 +65,12 @@ namespace ranges
                 friend pipeable_access;
 
                 template<typename Rng, typename...Rest>
-                using ActionConcept = CONCEPT_alias(
+                CONCEPT_alias(ActionConcept,
                     Range<Rng>() &&
                     Invocable<Action const&, Rng, Rest...>());
 
                 template<typename Rng>
-                using ActionPipeConcept = CONCEPT_alias(
+                CONCEPT_alias(ActionPipeConcept,
                     Range<Rng>() &&
                     Invocable<Action&, Rng>() &&
                     !IsTrue<std::is_reference<Rng>>());

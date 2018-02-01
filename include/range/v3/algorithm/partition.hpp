@@ -38,7 +38,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using Partitionable = CONCEPT_alias(
+        CONCEPT_alias(Partitionable,
             ForwardIterator<I>() &&
             Permutable<I>() &&
             IndirectPredicate<C, projected<I, P>>());

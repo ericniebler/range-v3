@@ -505,7 +505,7 @@ namespace ranges
             {}
 
             template<typename U>
-            using ShouldConvert = CONCEPT_alias(!(
+            CONCEPT_alias(ShouldConvert,!(
                 Constructible<T, optional<U> &       >() ||
                 Constructible<T, optional<U> &&      >() ||
                 Constructible<T, optional<U> const & >() ||
@@ -581,7 +581,7 @@ namespace ranges
             }
 
             template<typename U>
-            using ShouldConvertAssign = CONCEPT_alias(
+            CONCEPT_alias(ShouldConvertAssign,
                 ShouldConvert<U>() &&
                 !(Assignable<T &, optional<U> &>() ||
                   Assignable<T &, optional<U> &&>() ||

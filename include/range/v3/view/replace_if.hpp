@@ -121,7 +121,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred, typename Val>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     IndirectPredicate<Pred, iterator_t<Rng>>() &&
                     Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_type_t<Rng>>() &&

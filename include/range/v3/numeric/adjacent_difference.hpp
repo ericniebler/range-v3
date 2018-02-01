@@ -36,7 +36,7 @@ namespace ranges
             typename V = value_type_t<I>,
             typename X = concepts::Invocable::result_t<P&, V>,
             typename Y = concepts::Invocable::result_t<BOp&, X, X>>
-        using AdjacentDifferentiable = CONCEPT_alias(
+        CONCEPT_alias(AdjacentDifferentiable,
             InputIterator<I>() &&
             OutputIterator<O, X>() &&
             OutputIterator<O, Y>() &&

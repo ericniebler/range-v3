@@ -189,7 +189,7 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng1>() &&
                     InputRange<Rng2>() &&
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
@@ -352,7 +352,7 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng1>() && InputRange<Rng2>() &&
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
 
@@ -558,7 +558,7 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng1>() && InputRange<Rng2>() &&
                     Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
@@ -778,7 +778,7 @@ namespace ranges
                          typename C, typename P1, typename P2,
                          typename I1 = iterator_t<Rng1>,
                          typename I2 = iterator_t<Rng2>>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng1>() && InputRange<Rng2>() &&
                     Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&

@@ -34,7 +34,7 @@ namespace ranges
             struct unique_fn
             {
                 template<typename Rng>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     ForwardRange<Rng>() &&
                     EqualityComparable<range_value_type_t<Rng>>());
 

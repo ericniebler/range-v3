@@ -199,7 +199,7 @@ namespace ranges
                 };
             public:
                 template<typename Rng, typename Fun>
-                using FunctionConcept = CONCEPT_alias(
+                CONCEPT_alias(FunctionConcept,
                     ForwardRange<Rng>() &&
                     Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>>() &&
                     CopyConstructible<Fun>() &&
@@ -208,18 +208,18 @@ namespace ranges
                         std::pair<bool, iterator_t<Rng>>>());
 
                 template<typename Rng, typename Fun>
-                using PredicateConcept = CONCEPT_alias(
+                CONCEPT_alias(PredicateConcept,
                     ForwardRange<Rng>() &&
                     Predicate<Fun const&, range_reference_t<Rng>>() &&
                     CopyConstructible<Fun>());
 
                 template<typename Rng>
-                using ElementConcept = CONCEPT_alias(
+                CONCEPT_alias(ElementConcept,
                     ForwardRange<Rng>() &&
                     Regular<range_value_type_t<Rng>>());
 
                 template<typename Rng, typename Sub>
-                using SubRangeConcept = CONCEPT_alias(
+                CONCEPT_alias(SubRangeConcept,
                     ForwardRange<Rng>() &&
                     ForwardRange<Sub>() &&
                     EqualityComparableWith<range_value_type_t<Rng>, range_value_type_t<Sub>>());

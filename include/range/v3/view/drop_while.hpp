@@ -89,7 +89,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Pred>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     IndirectPredicate<Pred, iterator_t<Rng>>());
 

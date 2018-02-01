@@ -331,7 +331,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, iterator_t<Rng>>() &&
@@ -339,7 +339,7 @@ namespace ranges
                     Invocable<Fun&, move_tag, iterator_t<Rng>>());
 
                 template<typename Rng1, typename Rng2, typename Fun>
-                using Concept2 = CONCEPT_alias(
+                CONCEPT_alias(Concept2,
                     InputRange<Rng1>() &&
                     InputRange<Rng2>() &&
                     CopyConstructible<Fun>() &&
@@ -435,7 +435,7 @@ namespace ranges
                 // Don't forget to update view::for_each whenever this set
                 // of concepts changes
                 template<typename Rng, typename Fun>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, range_reference_t<Rng>>() &&
@@ -443,7 +443,7 @@ namespace ranges
                         Fun&, range_reference_t<Rng>>>());
 
                 template<typename Rng1, typename Rng2, typename Fun>
-                using Concept2 = CONCEPT_alias(
+                CONCEPT_alias(Concept2,
                     InputRange<Rng1>() &&
                     InputRange<Rng2>() &&
                     CopyConstructible<Fun>() &&

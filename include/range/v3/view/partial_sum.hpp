@@ -133,7 +133,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Fun>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>() &&
                     ConvertibleTo<

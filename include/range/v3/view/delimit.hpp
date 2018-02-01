@@ -80,7 +80,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename Val>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     Range<Rng>() &&
                     EqualityComparableWith<Val, range_common_reference_t<Rng>>());
 

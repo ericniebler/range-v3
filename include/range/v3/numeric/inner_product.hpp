@@ -37,7 +37,7 @@ namespace ranges
                 typename X2 = concepts::Invocable::result_t<P2&, V2>,
                 typename Y2 = concepts::Invocable::result_t<BOp2&, X1, X2>,
                 typename Y1 = concepts::Invocable::result_t<BOp1&, T, Y2>>
-        using InnerProductable = CONCEPT_alias(
+        CONCEPT_alias(InnerProductable,
             InputIterator<I1>() &&
             InputIterator<I2>() &&
             Invocable<P1&, V1>() &&

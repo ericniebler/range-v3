@@ -113,7 +113,7 @@ namespace ranges
                 template<typename Rng, typename Val1, typename Val2,
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>>
-                using Concept = CONCEPT_alias(
+                CONCEPT_alias(Concept,
                     InputRange<Rng>() &&
                     Same<V1, V2>() &&
                     EqualityComparableWith<V1, range_value_type_t<Rng>>() &&

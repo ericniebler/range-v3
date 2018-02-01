@@ -39,7 +39,7 @@ namespace ranges
         class sample_fn
         {
             template<typename I, typename S, typename O, typename Gen>
-            using Constraint = CONCEPT_alias(
+            CONCEPT_alias(Constraint,
                 InputIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
                 IndirectlyCopyable<I, O>() && UniformRandomNumberGenerator<Gen>() &&
                 ConvertibleTo<concepts::UniformRandomNumberGenerator::result_t<Gen>,
