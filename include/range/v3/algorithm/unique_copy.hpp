@@ -47,7 +47,7 @@ namespace ranges
         private:
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                concepts::InputIterator*, std::false_type)
+                input_iterator_tag, std::false_type)
             {
                 if(begin != end)
                 {
@@ -72,7 +72,7 @@ namespace ranges
 
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                concepts::ForwardIterator*, std::false_type)
+                forward_iterator_tag, std::false_type)
             {
                 if(begin != end)
                 {
@@ -95,7 +95,7 @@ namespace ranges
 
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                concepts::InputIterator*, std::true_type)
+                input_iterator_tag, std::true_type)
             {
                 if(begin != end)
                 {
@@ -124,7 +124,7 @@ namespace ranges
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
-                    std::move(pred), std::move(proj), iterator_concept<I>(), ForwardIterator<O>());
+                    std::move(pred), std::move(proj), iterator_tag_of<I>(), ForwardIterator<O>());
             }
 
             /// \overload
@@ -135,7 +135,7 @@ namespace ranges
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
-                    std::move(pred), std::move(proj), iterator_concept<I>(), ForwardIterator<O>());
+                    std::move(pred), std::move(proj), iterator_tag_of<I>(), ForwardIterator<O>());
             }
         };
 

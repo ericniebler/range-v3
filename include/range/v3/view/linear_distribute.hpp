@@ -32,7 +32,7 @@ namespace ranges
             struct linear_distribute_view
               : view_facade<linear_distribute_view<T>, finite>
             {
-                CONCEPT_ASSERT(std::is_arithmetic<T>());
+                CONCEPT_assert(std::is_arithmetic<T>());
             private:
                 friend range_access;
 

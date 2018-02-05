@@ -42,7 +42,7 @@ namespace ranges
           , private detail::non_propagating_cache<
                 iterator_t<Rng>, reverse_view<Rng>, !BoundedRange<Rng>()>
         {
-            CONCEPT_ASSERT(BidirectionalRange<Rng>());
+            CONCEPT_assert(BidirectionalRange<Rng>());
 
             reverse_view() = default;
             explicit constexpr reverse_view(Rng rng)
@@ -77,7 +77,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::true_type)
                 noexcept(noexcept(ranges::end(std::declval<Rng &>())))
             {
-                CONCEPT_ASSERT(BoundedRange<Rng>());
+                CONCEPT_assert(BoundedRange<Rng>());
                 return ranges::end(this->base());
             }
             RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::false_type)
@@ -85,7 +85,7 @@ namespace ranges
                     ranges::begin(std::declval<Rng &>()),
                     ranges::end(std::declval<Rng &>())))))
             {
-                CONCEPT_ASSERT(!BoundedRange<Rng>());
+                CONCEPT_assert(!BoundedRange<Rng>());
                 using cache_t = detail::non_propagating_cache<iterator_t<Rng>, reverse_view<Rng>>;
                 auto &end_ = static_cast<cache_t &>(*this);
                 if(!end_)

@@ -322,7 +322,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 CONCEPT_alias(Concept,
-                    IsTrue<meta::and_<InputRange<Rngs>...>>() &&
+                    True<meta::and_<InputRange<Rngs>...>>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, iterator_t<Rngs>...>() &&
                     Invocable<Fun&, copy_tag, iterator_t<Rngs>...>() &&
@@ -373,7 +373,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 CONCEPT_alias(Concept,
-                    IsTrue<meta::and_<InputRange<Rngs>...>>() &&
+                    True<meta::and_<InputRange<Rngs>...>>() &&
                     CopyConstructible<Fun>() &&
                     Invocable<Fun&, range_reference_t<Rngs> &&...>());
 

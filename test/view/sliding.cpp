@@ -29,7 +29,7 @@ namespace
 {
     constexpr auto N = 7;
     constexpr auto K = 3;
-    CONCEPT_ASSERT(K < N);
+    CONCEPT_assert(K < N);
 
     template<typename Adapted>
     void test_size(Adapted& a, std::true_type)
@@ -83,9 +83,9 @@ namespace
         using Adapted = decltype(rng);
         test_size(rng, SizedRange<Base>());
 
-        CONCEPT_ASSERT(Same<
-            meta::_t<iterator_concept<iterator_t<Base>>>,
-            meta::_t<iterator_concept<iterator_t<Adapted>>>>());
+        CONCEPT_assert(Same<
+            meta::_t<iterator_tag_of<iterator_t<Base>>>,
+            meta::_t<iterator_tag_of<iterator_t<Adapted>>>>());
 
         auto it = ranges::begin(rng);
         test_bounded(rng, BoundedRange<Base>());
@@ -117,7 +117,7 @@ int main()
         auto rng = view::repeat(5) | view::sliding(K);
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 3
         // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78047
         {
@@ -155,7 +155,7 @@ int main()
         auto rng = view::iota(0, K) | view::cycle | view::sliding(K);
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
         for (auto i = 0; i < 42; ++i)
         {
             ::check_equal(*it++, {0,1,2});
@@ -171,7 +171,7 @@ int main()
         auto rng = view::iota(0,7) | view::cycle | view::sliding(K);
         //[0,1,2],[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,0],[6,0,1],...
         auto it = rng.begin();
-        CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
         ::check_equal(*it, {0,1,2});
         ::check_equal(*next(it, 2), {2,3,4});
         ::check_equal(*next(it,16), {2,3,4});

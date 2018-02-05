@@ -61,8 +61,8 @@ namespace ranges
         struct raw_storage_iterator
         {
         private:
-            CONCEPT_ASSERT(OutputIterator<O, Val>());
-            CONCEPT_ASSERT(std::is_lvalue_reference<reference_t<O>>());
+            CONCEPT_assert(OutputIterator<O, Val>());
+            CONCEPT_assert(std::is_lvalue_reference<reference_t<O>>());
             O out_;
         public:
             using difference_type = difference_type_t<O>;
@@ -113,7 +113,7 @@ namespace ranges
         struct iterator_wrapper
         {
         private:
-            CONCEPT_ASSERT(Iterator<I>());
+            CONCEPT_assert(Iterator<I>());
             mutable I *i_ = nullptr;
         public:
             using difference_type = difference_type_t<I>;

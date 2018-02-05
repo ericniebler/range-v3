@@ -120,13 +120,13 @@ namespace ranges
             {
                 template<typename ...Rngs>
                 CONCEPT_alias(Concept,
-                    IsTrue<meta::strict_and<InputRange<Rngs>...>>());
+                    True<meta::strict_and<InputRange<Rngs>...>>());
 
                 CONCEPT_template(typename...Rngs)(
                     requires Concept<Rngs...>())
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
-                    CONCEPT_ASSERT(meta::and_<Range<Rngs>...>());
+                    CONCEPT_assert(meta::and_<Range<Rngs>...>());
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
                 }
 

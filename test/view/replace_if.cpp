@@ -56,7 +56,7 @@ int main()
 
     std::vector<int> vi{1,2,3,4,5,6,7,8,9};
     auto &&rng2 = vi | view::replace_if([](int i){return i == 5;}, 42);
-    CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng2)>, int>());
+    CONCEPT_assert(Same<range_value_type_t<decltype(rng2)>, int>());
     has_type<int const &>(*begin(rng2));
     has_type<int const &>(iter_move(begin(rng2)));
     models<concepts::View>(aux::copy(rng2));
@@ -67,7 +67,7 @@ int main()
 
     int forty_two = 42;
     auto &&rng3 = vi | view::replace_if([](int i){return i == 5;}, ref(forty_two));
-    CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng3)>, int>());
+    CONCEPT_assert(Same<range_value_type_t<decltype(rng3)>, int>());
     has_type<int &>(*begin(rng3));
     has_type<int const &>(iter_move(begin(rng3)));
     models<concepts::View>(aux::copy(rng3));
@@ -77,7 +77,7 @@ int main()
     ::check_equal(rng3, {1,2,3,4,42,6,7,8,9});
 
     auto &&rng4 = view::ints | view::replace_if([](int i){return i == 5;},42) | view::take(10);
-    CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng4)>, int>());
+    CONCEPT_assert(Same<range_value_type_t<decltype(rng4)>, int>());
     has_type<int>(*begin(rng4));
     has_type<int>(iter_move(begin(rng4)));
     models<concepts::View>(aux::copy(rng4));
@@ -91,8 +91,8 @@ int main()
     bool flag = false;
     auto mutable_only = view::replace_if(rgi, [flag](int) mutable { return flag = !flag;}, 42);
     ::check_equal(mutable_only, {42,1,42,3,42,5,42,7,42,9});
-    CONCEPT_ASSERT(View<decltype(mutable_only)>());
-    CONCEPT_ASSERT(!View<decltype(mutable_only) const>());
+    CONCEPT_assert(View<decltype(mutable_only)>());
+    CONCEPT_assert(!View<decltype(mutable_only) const>());
 
     {
         int const some_ints[] = {1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9};

@@ -202,7 +202,7 @@ namespace ranges
                     InputRange<Rng>() &&
                     ConvertibleTo<T, range_value_type_t<Rng>>() &&
                     ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>() &&
-                    SemiRegular<range_value_type_t<Rng>>());
+                    Semiregular<range_value_type_t<Rng>>());
 
                 CONCEPT_template(typename Rng)(
                     requires Constraint<Rng>())
@@ -227,9 +227,9 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ConvertibleTo<range_reference_t<Rng>, V>(),
                         "The range's reference type must be convertible to the range's "
                         "value type.");
-                    CONCEPT_ASSERT_MSG(SemiRegular<V>(),
+                    CONCEPT_ASSERT_MSG(Semiregular<V>(),
                         "The range on which view::intersperse operates must have a value type that "
-                        "models the SemiRegular concept; that is, it must be default constructible, "
+                        "models the Semiregular concept; that is, it must be default constructible, "
                         "copy and move constructible, and destructible.");
                 }
             #endif

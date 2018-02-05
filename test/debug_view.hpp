@@ -19,7 +19,7 @@
 template<typename T, bool Sized = true>
 struct debug_input_view
 {
-    CONCEPT_ASSERT(std::is_object<T>::value);
+    static_assert(std::is_object<T>::value, "");
 
     using index_t = std::ptrdiff_t;
     using version_t = unsigned long;
@@ -148,16 +148,16 @@ struct debug_input_view
             return !(i == s);
         }
         CONCEPT_requires(Sized)
-        RANGES_CXX14_CONSTEXPR
-        friend difference_type operator-(sentinel const& s, iterator const& i)
+        (RANGES_CXX14_CONSTEXPR
+        friend difference_type) operator-(sentinel const& s, iterator const& i)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             i.check_current();
             return i.view_->last_ - i.view_->data_;
         }
         CONCEPT_requires(Sized)
-        RANGES_CXX14_CONSTEXPR
-        friend difference_type operator-(iterator const& i, sentinel const& s)
+        (RANGES_CXX14_CONSTEXPR
+        friend difference_type) operator-(iterator const& i, sentinel const& s)
         {
             return -(s - i);
         }
@@ -175,8 +175,8 @@ struct debug_input_view
         return sentinel{*this};
     }
     CONCEPT_requires(Sized)
-    RANGES_CXX14_CONSTEXPR
-    std::size_t size() const noexcept
+    (RANGES_CXX14_CONSTEXPR
+    std::size_t) size() const noexcept
     {
         RANGES_ENSURE(valid_);
         RANGES_ENSURE(!begin_called_);

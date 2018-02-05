@@ -19,11 +19,11 @@
 #include <initializer_list>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
 #include <range/v3/data.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/range_traits.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -65,320 +65,241 @@ namespace ranges
         struct enable_view
         {};
 
-        namespace concepts
+        ///
+        /// Range concepts below
+        ///
+
+        CONCEPT_def
+        (
+            template(typename T)
+            concept Range,
+                Sentinel<sentinel_t<T>, iterator_t<T>>()
+        );
+
+        CONCEPT_def
+        (
+            template(typename T, typename V)
+            concept OutputRange,
+                Range<T>() && OutputIterator<iterator_t<T>, V>()
+        );
+
+        CONCEPT_def
+        (
+            template(typename T)
+            concept InputRange,
+                Range<T>() && InputIterator<iterator_t<T>>()
+        );
+
+        CONCEPT_def
+        (
+            template(typename T)
+            concept ForwardRange,
+                InputRange<T>() && ForwardIterator<iterator_t<T>>()
+        );
+
+        CONCEPT_def
+        (
+            template(typename T)
+            concept BidirectionalRange,
+                ForwardRange<T>() && BidirectionalIterator<iterator_t<T>>()
+        );
+
+        CONCEPT_def
+        (
+            template(typename T)
+            concept RandomAccessRange,
+                BidirectionalRange<T>() && RandomAccessIterator<iterator_t<T>>()
+        );
+
+        /// \cond
+        namespace detail
         {
-            ///
-            /// Range concepts below
-            ///
+            template<typename Rng>
+            using data_reference_t = decltype(*data(std::declval<Rng&>()));
 
-            struct Range
-            {
-                // Associated types
-                template<typename T>
-                using iterator_t = decltype(begin(std::declval<T &>()));
-
-                template<typename T>
-                using sentinel_t = decltype(end(std::declval<T &>()));
-
-                template<typename T>
-                using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
-
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Sentinel>(end(t), begin(t))
-                    ));
-            };
-
-            struct OutputRange
-              : refines<Range(_1)>
-            {
-                template<typename T, typename V>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<OutputIterator, Range::iterator_t<T>, V>()
-                    ));
-            };
-
-            struct InputRange
-              : refines<Range>
-            {
-                // Associated types
-                template<typename T>
-                using category_t = concepts::InputIterator::category_t<iterator_t<T>>;
-
-                template<typename T>
-                using value_t = concepts::Readable::value_t<iterator_t<T>>;
-
-                template<typename T>
-                using reference_t = concepts::Readable::reference_t<iterator_t<T>>;
-
-                template<typename T>
-                using rvalue_reference_t = concepts::Readable::rvalue_reference_t<iterator_t<T>>;
-
-                template<typename T>
-                using common_reference_t = concepts::Readable::common_reference_t<iterator_t<T>>;
-
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<InputIterator>(begin(t))
-                    ));
-            };
-
-            struct ForwardRange
-              : refines<InputRange>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<ForwardIterator>(begin(t))
-                    ));
-            };
-
-            struct BidirectionalRange
-              : refines<ForwardRange>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<BidirectionalIterator>(begin(t))
-                    ));
-            };
-
-            struct RandomAccessRange
-              : refines<BidirectionalRange>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<RandomAccessIterator>(begin(t))
-                    ));
-            };
-
-            struct ContiguousRange
-              : refines<RandomAccessRange>
-            {
-                template<typename Rng>
-                using data_reference_t = decltype(*data(std::declval<Rng&>()));
-
-                template<typename Rng>
-                using element_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
-
-                template<typename Rng>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Same, InputRange::value_t<Rng>,
-                            meta::_t<std::remove_cv<element_t<Rng>>>>(),
-                        concepts::model_of<Same, data_reference_t<Rng>,
-                            concepts::InputRange::reference_t<Rng>>()
-                    ));
-            };
-
-            struct BoundedRange
-              : refines<Range>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::same_type(begin(t), end(t))
-                    ));
-            };
-
-            struct SizedRange
-              : refines<Range>
-            {
-                template<typename T>
-                using size_t = decltype(size(std::declval<T&>()));
-
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(disable_sized_range<uncvref_t<T>>()),
-                        concepts::model_of<Integral>(size(t))
-                    ));
-            };
-
-            ///
-            /// View concepts below
-            ///
-
-            struct View
-              : refines<Range, Movable, DefaultConstructible>
-            {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(detail::view_predicate_<T>())
-                    ));
-            };
-
-            struct OutputView
-              : refines<View(_1), OutputRange>
-            {};
-
-            struct InputView
-              : refines<View, InputRange>
-            {};
-
-            struct ForwardView
-              : refines<InputView, ForwardRange, Copyable>
-            {};
-
-            struct BidirectionalView
-              : refines<ForwardView, BidirectionalRange>
-            {};
-
-            struct RandomAccessView
-              : refines<BidirectionalView, RandomAccessRange>
-            {};
-
-            struct ContiguousView
-              : refines<RandomAccessView, ContiguousRange>
-            {};
-
-            // Additional concepts for checking additional orthogonal properties
-            struct BoundedView
-              : refines<View, BoundedRange>
-            {};
-
-            struct SizedView
-              : refines<View, SizedRange>
-            {};
+            template<typename Rng>
+            using element_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
         }
+        /// \endcond
 
-        template<typename T>
-        using Range = concepts::models<concepts::Range, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept ContiguousRange,
+                RandomAccessRange<T>() &&
+                Same<range_value_type_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>>() &&
+                Same<detail::data_reference_t<T>, range_reference_t<T>>()
+        );
 
-        template<typename T, typename V>
-        using OutputRange = concepts::models<concepts::OutputRange, T, V>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept BoundedRange,
+                Range<T>() &&
+                Same<iterator_t<T>, sentinel_t<T>>()
+        );
 
-        template<typename T>
-        using InputRange = concepts::models<concepts::InputRange, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept SizedRange,
+                requires (T &t)
+                {
+                    size(t) ->* Integral<_>()
+                } &&
+                Range<T>() && !True<disable_sized_range<uncvref_t<T>>>()
+        );
 
-        template<typename T>
-        using ForwardRange = concepts::models<concepts::ForwardRange, T>;
+        ///
+        /// View concepts below
+        ///
 
-        template<typename T>
-        using BidirectionalRange = concepts::models<concepts::BidirectionalRange, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept View,
+                Range<T>() && Movable<T>() && DefaultConstructible<T>() &&
+                True<detail::view_predicate_<T>>()
+        );
 
-        template<typename T>
-        using RandomAccessRange = concepts::models<concepts::RandomAccessRange, T>;
+        CONCEPT_def
+        (
+            template(typename T, typename V)
+            concept OutputView,
+                View<T>() && OutputRange<T, V>()
+        );
 
-        template<typename Rng>
-        using ContiguousRange = concepts::models<concepts::ContiguousRange, Rng>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept InputView,
+                View<T>() && InputRange<T>()
+        );
 
-        template<typename T>
-        using BoundedRange = concepts::models<concepts::BoundedRange, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept ForwardView,
+                View<T>() && ForwardRange<T>()
+        );
 
-        template<typename T>
-        using SizedRange = concepts::models<concepts::SizedRange, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept BidirectionalView,
+                View<T>() && BidirectionalRange<T>()
+        );
 
-        template<typename T>
-        using View = concepts::models<concepts::View, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept RandomAccessView,
+                View<T>() && RandomAccessRange<T>()
+        );
 
-        template<typename T, typename V>
-        using OutputView = concepts::models<concepts::OutputView, T, V>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept ContiguousView,
+                RandomAccessView<T>() && ContiguousRange<T>()
+        );
 
-        template<typename T>
-        using InputView = concepts::models<concepts::InputView, T>;
+        // Additional concepts for checking additional orthogonal properties
+        CONCEPT_def
+        (
+            template(typename T)
+            concept BoundedView,
+                View<T>() && BoundedRange<T>()
+        );
 
-        template<typename T>
-        using ForwardView = concepts::models<concepts::ForwardView, T>;
-
-        template<typename T>
-        using BidirectionalView = concepts::models<concepts::BidirectionalView, T>;
-
-        template<typename T>
-        using RandomAccessView = concepts::models<concepts::RandomAccessView, T>;
-
-        template<typename T>
-        using ContiguousView = concepts::models<concepts::ContiguousView, T>;
-
-        // Extra concepts:
-        template<typename T>
-        using BoundedView = concepts::models<concepts::BoundedView, T>;
-
-        template<typename T>
-        using SizedView = concepts::models<concepts::SizedView, T>;
+        CONCEPT_def
+        (
+            template(typename T)
+            concept SizedView,
+                View<T>() && SizedRange<T>()
+        );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // range_concept
-        template<typename T>
-        using range_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::ContiguousRange,
-                    concepts::RandomAccessRange,
-                    concepts::BidirectionalRange,
-                    concepts::ForwardRange,
-                    concepts::InputRange>, T>;
+        // range_tag
+        using range_tag = ::concepts::tag<RangeConcept>;
+        using input_range_tag = ::concepts::tag<InputRangeConcept, range_tag>;
+        using forward_range_tag = ::concepts::tag<ForwardRangeConcept, input_range_tag>;
+        using bidirectional_range_tag = ::concepts::tag<BidirectionalRangeConcept, forward_range_tag>;
+        using random_access_range_tag = ::concepts::tag<RandomAccessRangeConcept, bidirectional_range_tag>;
+        using contiguous_range_tag = ::concepts::tag<ContiguousRangeConcept, random_access_range_tag>;
 
         template<typename T>
-        using range_concept_t =
-            meta::_t<range_concept<T>>;
+        using range_tag_of =
+            ::concepts::tag_of<
+                meta::list<
+                    ContiguousRangeConcept,
+                    RandomAccessRangeConcept,
+                    BidirectionalRangeConcept,
+                    ForwardRangeConcept,
+                    InputRangeConcept,
+                    RangeConcept>,
+                T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_range_concept
-        template<typename T>
-        using bounded_range_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::BoundedRange,
-                    concepts::Range>, T>;
+        // bounded_range_tag_of
+        using bounded_range_tag = ::concepts::tag<BoundedRangeConcept, range_tag>;
 
         template<typename T>
-        using bounded_range_concept_t =
-            meta::_t<bounded_range_concept<T>>;
+        using bounded_range_tag_of =
+            ::concepts::tag_of<
+                meta::list<
+                    BoundedRangeConcept,
+                    RangeConcept>,
+                T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_range_concept
-        template<typename T>
-        using sized_range_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::SizedRange,
-                    concepts::Range>, T>;
+        using sized_range_tag = ::concepts::tag<SizedRangeConcept, range_tag>;
 
         template<typename T>
-        using sized_range_concept_t =
-            meta::_t<sized_range_concept<T>>;
+        using sized_range_tag_of =
+            ::concepts::tag_of<
+                meta::list<
+                    SizedRangeConcept,
+                    RangeConcept>,
+                T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_view_concept
-        template<typename T>
-        using bounded_view_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::BoundedView,
-                    concepts::View>, T>;
+        // bounded_view_tag_of
+        using view_tag = ::concepts::tag<ViewConcept, range_tag>;
+        using bounded_view_tag = ::concepts::tag<BoundedViewConcept, view_tag>;
 
         template<typename T>
-        using bounded_view_concept_t = meta::_t<bounded_view_concept<T>>;
+        using bounded_view_tag_of =
+            ::concepts::tag_of<
+                meta::list<
+                    BoundedViewConcept,
+                    ViewConcept,
+                    RangeConcept>,
+                T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // sized_view_concept
-        template<typename T>
-        using sized_view_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::SizedView,
-                    concepts::View>, T>;
+        // sized_view_tag_of
+        using sized_view_tag = ::concepts::tag<SizedViewConcept, view_tag>;
 
         template<typename T>
-        using sized_view_concept_t = meta::_t<sized_view_concept<T>>;
+        using sized_view_tag_of =
+            ::concepts::tag_of<
+                meta::list<
+                    SizedViewConcept,
+                    ViewConcept,
+                    RangeConcept>,
+                T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // view_concept
         template<typename T>
-        using view_concept =
-            concepts::most_refined<
+        using view_tag_of =
+            ::concepts::tag_of<
                 meta::list<
-                    concepts::View,
-                    concepts::Range>, T>;
-
-        template<typename T>
-        using view_concept_t = meta::_t<view_concept<T>>;
+                    ViewConcept,
+                    RangeConcept>,
+                T>;
 
         /// @}
 
@@ -386,7 +307,7 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            std::is_same<reference_t<concepts::Range::iterator_t<T>>, reference_t<concepts::Range::iterator_t<T const>>>
+            std::is_same<reference_t<iterator_t<T>>, reference_t<iterator_t<T const>>>
             view_like_(int);
 
             template<typename T>
@@ -404,7 +325,7 @@ namespace ranges
               : meta::_t<meta::if_<
                     meta::is_trait<enable_view<T>>,
                     enable_view<T>,
-                    meta::bool_<view_like<T>() || (bool)DerivedFrom<T, view_base>()>>>
+                    meta::bool_<view_like<T>() || (bool) DerivedFrom<T, view_base>()>>>
             {};
 
             template<typename T>

@@ -96,7 +96,7 @@ namespace ranges {
         using type = date::duration_type::duration_rep::int_type;
     };
 }
-CONCEPT_ASSERT(Incrementable<date>());
+CONCEPT_assert(Incrementable<date>());
 
 auto dates(unsigned short start, unsigned short stop) {
     return view::iota(date{start,greg::Jan,1},
@@ -160,7 +160,7 @@ namespace cal_example {
 //                       The last range may have fewer.
 template<class Rng>
 class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
-    CONCEPT_ASSERT(ForwardRange<Rng>());
+    CONCEPT_assert(ForwardRange<Rng>());
     ranges::range_difference_type_t<Rng> n_;
     friend range_access;
     class adaptor;
@@ -262,7 +262,7 @@ auto interleave() {
 auto transpose() {
     return make_pipeable([](auto&& rngs) {
         using Rngs = decltype(rngs);
-        CONCEPT_ASSERT(ForwardRange<Rngs>());
+        CONCEPT_assert(ForwardRange<Rngs>());
         return std::forward<Rngs>(rngs)
             | interleave()
             | chunk(static_cast<std::size_t>(distance(rngs)));

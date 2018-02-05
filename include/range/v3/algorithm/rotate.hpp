@@ -143,13 +143,13 @@ namespace ranges
             }
 
             template<typename I, typename S>
-            static iterator_range<I> rotate_(I begin, I middle, S end, concepts::ForwardIterator*)
+            static iterator_range<I> rotate_(I begin, I middle, S end, forward_iterator_tag)
             {
                 return rotate_fn::rotate_forward(begin, middle, end);
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::ForwardIterator*)
+            static iterator_range<I> rotate_(I begin, I middle, I end, forward_iterator_tag)
             {
                 using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -161,7 +161,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::BidirectionalIterator*)
+            static iterator_range<I> rotate_(I begin, I middle, I end, bidirectional_iterator_tag)
             {
                 using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -175,7 +175,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::RandomAccessIterator*)
+            static iterator_range<I> rotate_(I begin, I middle, I end, random_access_iterator_tag)
             {
                 using value_type = value_type_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -203,7 +203,7 @@ namespace ranges
                 {
                     return {begin, middle};
                 }
-                return rotate_fn::rotate_(begin, middle, end, iterator_concept<I>{});
+                return rotate_fn::rotate_(begin, middle, end, iterator_tag_of<I>{});
             }
 
             CONCEPT_template(typename Rng, typename I = iterator_t<Rng>)(

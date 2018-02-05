@@ -73,7 +73,7 @@ namespace ranges
             template<typename Rng>
             CONCEPT_alias(ViewableRange,
                 Range<Rng>() &&
-                IsTrue<std::is_lvalue_reference<Rng>>() || View<uncvref_t<Rng>>());
+                True<std::is_lvalue_reference<Rng>>() || View<uncvref_t<Rng>>());
 
             template<typename View>
             struct view : pipeable<view<View>>

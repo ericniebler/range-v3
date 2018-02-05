@@ -114,9 +114,9 @@ int main()
         static int const some_ints[] = {0,1,2,3};
         auto rng = debug_input_view<int const>{some_ints} | view::drop(2);
         using R = decltype(rng);
-        CONCEPT_ASSERT(InputView<R>());
-        CONCEPT_ASSERT(!ForwardRange<R>());
-        CONCEPT_ASSERT(Same<int const&, range_reference_t<R>>());
+        CONCEPT_assert(InputView<R>());
+        CONCEPT_assert(!ForwardRange<R>());
+        CONCEPT_assert(Same<int const&, range_reference_t<R>>());
         ::check_equal(rng, {2,3});
     }
 

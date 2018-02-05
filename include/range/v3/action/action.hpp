@@ -73,7 +73,7 @@ namespace ranges
                 CONCEPT_alias(ActionPipeConcept,
                     Range<Rng>() &&
                     Invocable<Action&, Rng>() &&
-                    !IsTrue<std::is_reference<Rng>>());
+                    !True<std::is_reference<Rng>>());
 
                 // Piping requires things are passed by value.
                 CONCEPT_template(typename Rng, typename Act)(
@@ -129,7 +129,7 @@ namespace ranges
             };
 
             CONCEPT_template(typename Rng, typename Action)(
-                requires IsTrue<is_pipeable<Action>>() && Range<Rng &>() &&
+                requires True<is_pipeable<Action>>() && Range<Rng &>() &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
                         result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())

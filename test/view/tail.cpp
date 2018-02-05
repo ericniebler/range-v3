@@ -55,7 +55,7 @@ int main()
     {
         auto rng = view::empty<int>() | view::tail;
         static_assert(0 == size(rng), "");
-        CONCEPT_ASSERT(Same<empty_view<int>, decltype(rng)>());
+        CONCEPT_assert(Same<empty_view<int>, decltype(rng)>());
     }
 
     {

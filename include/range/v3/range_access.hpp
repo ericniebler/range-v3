@@ -62,108 +62,126 @@ namespace ranges
             //
             // Concepts that the range cursor must model
             //
-            struct Cursor
-            {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<concepts::SemiRegular, T>(),
-                        concepts::model_of<concepts::SemiRegular, mixin_base_t<T>>(),
-                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T>(),
-                        concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>()
-                    ));
-            };
-            struct HasCursorNext
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        (t.next(), concepts::void_)
-                    ));
-            };
-            struct CursorSentinel
-              : concepts::refines<concepts::SemiRegular(concepts::_1), Cursor(concepts::_2)>
-            {
-                template<typename S, typename C>
-                auto requires_(S &s, C &c) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(c.equal(s))
-                    ));
-            };
-            struct ReadableCursor
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Cursor,
+                    Semiregular<T>() && Semiregular<mixin_base_t<T>>() &&
+                    Constructible<mixin_base_t<T>, T>() &&
+                    Constructible<mixin_base_t<T>, T const &>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept HasCursorNext,
+                    requires (T &t)
+                    {
+                        (((void) t.next()), 0)
+                    }
+            );
+
+            CONCEPT_def
+            (
+                template(typename S, typename C)
+                concept CursorSentinel,
+                    requires (S &s, C &c)
+                    {
+                        (c.equal(s)) ->* ConvertibleTo<_&&, bool>()
+                    } &&
+                    Semiregular<S>() && Cursor<C>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept ReadableCursor,
+                    requires (T &t)
+                    {
                         t.read()
-                    ));
-            };
-            struct HasCursorArrow
-            {
-                template<typename C>
-                auto requires_(C const &c) -> decltype(
-                    concepts::valid_expr(
-                        c.arrow()
-                    ));
-            };
-            struct WritableCursor
-            {
-                template<typename T, typename U>
-                auto requires_(T &t, U &&u) -> decltype(
-                    concepts::valid_expr(
-                        (t.write((U &&) u), 42)
-                    ));
-            };
-            struct SizedCursorSentinel
-              : concepts::refines<CursorSentinel>
-            {
-                template<typename S, typename C>
-                auto requires_(S &s, C &c) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<concepts::SignedIntegral>(c.distance_to(s))
-                    ));
-            };
-            struct OutputCursor
-              : concepts::refines<WritableCursor, Cursor(concepts::_1)>
-            {};
-            struct InputCursor
-              : concepts::refines<ReadableCursor, Cursor, HasCursorNext>
-            {};
-            struct ForwardCursor
-              : concepts::refines<InputCursor, CursorSentinel(concepts::_1, concepts::_1)>
-            {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(single_pass_t<uncvref_t<T>>())
-                    ));
-            };
-            struct BidirectionalCursor
-              : concepts::refines<ForwardCursor>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        (t.prev(), concepts::void_)
-                    ));
-            };
-            struct RandomAccessCursor
-              : concepts::refines<BidirectionalCursor, SizedCursorSentinel(concepts::_1, concepts::_1)>
-            {
-                template<typename T>
-                auto requires_(T &t) -> decltype(
-                    concepts::valid_expr(
-                        (t.advance(t.distance_to(t)), concepts::void_)
-                    ));
-            };
-            struct InfiniteCursor
-            {
-                template<typename T>
-                auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(typename T::is_infinite{})
-                    ));
-            };
+                    }
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept HasCursorArrow,
+                    requires (T const &t)
+                    {
+                        t.arrow()
+                    }
+            );
+
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept WritableCursor,
+                    requires (T &t, U &&u)
+                    {
+                        (t.write((U &&) u), 0)
+                    }
+            );
+
+            CONCEPT_def
+            (
+                template(typename S, typename C)
+                concept SizedCursorSentinel,
+                    requires (S &s, C &c)
+                    {
+                        (c.distance_to(s)) ->* SignedIntegral<_>()
+                    } &&
+                    CursorSentinel<S, C>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept OutputCursor,
+                    WritableCursor<T, U>() && Cursor<T>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept InputCursor,
+                    ReadableCursor<T>() && Cursor<T>() && HasCursorNext<T>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept ForwardCursor,
+                    InputCursor<T>() && CursorSentinel<T, T>() &&
+                    !True<single_pass_t<uncvref_t<T>>>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept BidirectionalCursor,
+                    requires (T &t)
+                    {
+                        (t.prev(), 0)
+                    } &&
+                    ForwardCursor<T>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T)
+                concept RandomAccessCursor,
+                    requires (T &t)
+                    {
+                        (t.advance(t.distance_to(t)), 0)
+                    } &&
+                    BidirectionalCursor<T>() && SizedCursorSentinel<T, T>()
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept InfiniteCursor,
+                    True<typename T::is_infinite>()
+            );
 
             template<typename Rng>
             static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, long)
@@ -337,66 +355,67 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            using Cursor =
-                concepts::models<range_access::Cursor, T>;
+            using Cursor = range_access::Cursor<T>;
 
             template<typename S, typename C>
             using CursorSentinel =
-                concepts::models<range_access::CursorSentinel, S, C>;
+                range_access::CursorSentinel<S, C>;
 
             template<typename T>
             using ReadableCursor =
-                concepts::models<range_access::ReadableCursor, T>;
+                range_access::ReadableCursor<T>;
 
             template<typename T, typename U>
             using WritableCursor =
-                concepts::models<range_access::WritableCursor, T, U>;
+                range_access::WritableCursor<T, U>;
 
             template<typename T>
             using HasCursorNext =
-                concepts::models<range_access::HasCursorNext, T>;
+                range_access::HasCursorNext<T>;
 
             template<typename T>
             using HasCursorArrow =
-                concepts::models<range_access::HasCursorArrow, T>;
+                range_access::HasCursorArrow<T>;
 
             template<typename S, typename C>
             using SizedCursorSentinel =
-                concepts::models<range_access::SizedCursorSentinel, S, C>;
+                range_access::SizedCursorSentinel<S, C>;
 
             template<typename T, typename U>
             using OutputCursor =
-                concepts::models<range_access::OutputCursor, T, U>;
+                range_access::OutputCursor<T, U>;
 
             template<typename T>
             using InputCursor =
-                concepts::models<range_access::InputCursor, T>;
+                range_access::InputCursor<T>;
 
             template<typename T>
             using ForwardCursor =
-                concepts::models<range_access::ForwardCursor, T>;
+                range_access::ForwardCursor<T>;
 
             template<typename T>
             using BidirectionalCursor =
-                concepts::models<range_access::BidirectionalCursor, T>;
+                range_access::BidirectionalCursor<T>;
 
             template<typename T>
             using RandomAccessCursor =
-                concepts::models<range_access::RandomAccessCursor, T>;
+                range_access::RandomAccessCursor<T>;
 
             template<typename T>
             using InfiniteCursor =
-                concepts::models<range_access::InfiniteCursor, T>;
+                range_access::InfiniteCursor<T>;
 
             template<typename T>
             using cursor_concept =
-                concepts::most_refined<
-                    meta::list<
-                        range_access::RandomAccessCursor,
-                        range_access::BidirectionalCursor,
-                        range_access::ForwardCursor,
-                        range_access::InputCursor,
-                        range_access::Cursor>, T>;
+                meta::front<
+                    meta::find_if<
+                        meta::list<
+                            range_access::RandomAccessCursorConcept,
+                            range_access::BidirectionalCursorConcept,
+                            range_access::ForwardCursorConcept,
+                            range_access::InputCursorConcept,
+                            range_access::CursorConcept>,
+                        meta::bind_back<meta::quote<::concepts::is_satisfied_by>, T>>>;
 
             template<typename T>
             using cursor_concept_t = meta::_t<cursor_concept<T>>;

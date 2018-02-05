@@ -39,7 +39,7 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputRange *,
+            iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag,
                 std::true_type)
             {
                 RANGES_EXPECT(0 <= i);
@@ -47,7 +47,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::BidirectionalRange *,
+            iterator_t<Rng> pos_at_(Rng && rng, Int i, bidirectional_range_tag,
                 std::false_type)
             {
                 if(0 > i)
@@ -62,7 +62,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputRange *,
+            iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag,
                 std::false_type)
             {
                 RANGES_EXPECT(i >= 0 || (bool)SizedRange<Rng>() || (bool)ForwardRange<Rng>());
@@ -85,7 +85,7 @@ namespace ranges
                 iterator_t<Rng> get_begin_()
                 {
                     if(!begin_)
-                        begin_ = detail::pos_at_(rng_, from_, range_concept<Rng>{},
+                        begin_ = detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                             is_infinite<Rng>{});
                     return *begin_;
                 }
@@ -133,26 +133,26 @@ namespace ranges
                 }
                 iterator_t<Rng> begin()
                 {
-                    return detail::pos_at_(rng_, from_, range_concept<Rng>{},
+                    return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{});
                 }
                 iterator_t<Rng> end()
                 {
-                    return detail::pos_at_(rng_, from_, range_concept<Rng>{},
+                    return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{}) + count_;
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
                     requires Range<BaseRng const>())
                 iterator_t<BaseRng const> begin() const
                 {
-                    return detail::pos_at_(rng_, from_, range_concept<Rng>{},
+                    return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{});
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
                     requires Range<BaseRng const>())
                 iterator_t<BaseRng const> end() const
                 {
-                    return detail::pos_at_(rng_, from_, range_concept<Rng>{},
+                    return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{}) + count_;
                 }
                 range_size_type_t<Rng> size() const
@@ -203,17 +203,17 @@ namespace ranges
                 template<typename Rng>
                 static slice_view<all_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
-                    concepts::InputRange *, concepts::Range * = nullptr)
+                    input_range_tag, range_tag = {})
                 {
                     return {all(static_cast<Rng&&>(rng)), from, count};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
+                    requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
-                    concepts::RandomAccessRange *, concepts::BoundedRange * = nullptr)
+                    random_access_range_tag, bounded_range_tag = {})
                 {
-                    auto it = detail::pos_at_(rng, from, range_concept<Rng>{}, is_infinite<Rng>{});
+                    auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                     return {it, it + count};
                 }
 
@@ -261,11 +261,11 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const ->
                     decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
-                        range_concept<Rng>{}))
+                        range_tag_of<Rng>{}))
                 {
                     RANGES_EXPECT(0 <= from && from <= to);
                     return slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
-                        range_concept<Rng>{});
+                        range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end-2)
                 //  TODO Support Forward, non-Sized ranges by returning a range that
@@ -275,14 +275,14 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
                     decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from,
-                        distance(rng) + to.dist_ - from, range_concept<Rng>{}))
+                        distance(rng) + to.dist_ - from, range_tag_of<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
                     return slice_fn::invoke_(static_cast<Rng&&>(rng), from,
-                        distance(rng) + to.dist_ - from, range_concept<Rng>{});
+                        distance(rng) + to.dist_ - from, range_tag_of<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
                 CONCEPT_template(typename Rng)(
@@ -291,15 +291,15 @@ namespace ranges
                 auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
                     decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
-                        to.dist_ - from.dist_, range_concept<Rng>{},
-                        bounded_range_concept<Rng>{}()))
+                        to.dist_ - from.dist_, range_tag_of<Rng>{},
+                        bounded_range_tag_of<Rng>{}()))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(from.dist_ <= to.dist_);
                     return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
-                        to.dist_ - from.dist_, range_concept<Rng>{},
-                        bounded_range_concept<Rng>{}());
+                        to.dist_ - from.dist_, range_tag_of<Rng>{},
+                        bounded_range_tag_of<Rng>{}());
                 }
                 // slice(rng, 4, end)
                 CONCEPT_template(typename Rng)(
@@ -317,14 +317,14 @@ namespace ranges
                 auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     end_fn) const ->
                     decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
-                        -from.dist_, range_concept<Rng>{},
-                        bounded_range_concept<Rng>{}()))
+                        -from.dist_, range_tag_of<Rng>{},
+                        bounded_range_tag_of<Rng>{}()))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
-                        -from.dist_, range_concept<Rng>{},
-                        bounded_range_concept<Rng>{}());
+                        -from.dist_, range_tag_of<Rng>{},
+                        bounded_range_tag_of<Rng>{}());
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

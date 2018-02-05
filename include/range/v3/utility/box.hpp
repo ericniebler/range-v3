@@ -34,8 +34,9 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
+
             CONCEPT_requires(std::is_default_constructible<T>::value)
-            constexpr mutable_()
+            (constexpr) mutable_()
               : value{}
             {}
             constexpr explicit mutable_(T const &t)
@@ -148,21 +149,21 @@ namespace ranges
             Element value;
         public:
             CONCEPT_requires(std::is_default_constructible<Element>::value)
-            constexpr box()
+            (constexpr) box()
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
               : value{}
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && ConvertibleTo<E, Element>())
-            constexpr box(E && e)
+            (constexpr) box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && !ConvertibleTo<E, Element>())
-            constexpr explicit box(E && e)
+            (constexpr explicit) box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
             {}
@@ -187,21 +188,21 @@ namespace ranges
         {
         public:
             CONCEPT_requires(std::is_default_constructible<Element>::value)
-            constexpr box()
+            (constexpr) box()
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
               : Element{}
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && ConvertibleTo<E, Element>())
-            constexpr box(E && e)
+            (constexpr) box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && !ConvertibleTo<E, Element>())
-            constexpr explicit box(E && e)
+            (constexpr explicit) box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
             {}
@@ -230,12 +231,12 @@ namespace ranges
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && ConvertibleTo<E, Element>())
-            constexpr box(E &&) noexcept
+            (constexpr) box(E &&) noexcept
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && !ConvertibleTo<E, Element>())
-            constexpr explicit box(E &&) noexcept
+            (constexpr) explicit box(E &&) noexcept
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept

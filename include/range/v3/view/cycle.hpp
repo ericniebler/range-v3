@@ -48,7 +48,7 @@ namespace ranges
                 iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>
         {
         private:
-            CONCEPT_ASSERT(ForwardRange<Rng>());
+            CONCEPT_assert(ForwardRange<Rng>());
             friend range_access;
             Rng rng_;
 

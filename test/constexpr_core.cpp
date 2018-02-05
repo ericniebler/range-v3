@@ -27,31 +27,31 @@
 template<typename T, typename I = random_access_iterator<T>>
 RANGES_CXX14_CONSTEXPR
 void advance(random_access_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
+    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_tag_of<I>{});
 }
 
 template<typename T, typename I = bidirectional_iterator<T>>
 RANGES_CXX14_CONSTEXPR
 void advance(bidirectional_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
+    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_tag_of<I>{});
 }
 
 template<typename T, typename I = forward_iterator<T>>
 RANGES_CXX14_CONSTEXPR
 void advance(forward_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
+    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_tag_of<I>{});
 }
 
 template<typename T, typename I = input_iterator<T>>
 RANGES_CXX14_CONSTEXPR
 void advance(input_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
+    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_tag_of<I>{});
 }
 
 // Test sequence 1,2,3,4
 template<typename It>
 RANGES_CXX14_CONSTEXPR auto test_it_back(It, It end,
-    ranges::concepts::BidirectionalIterator*) -> bool
+    ranges::bidirectional_iterator_tag) -> bool
 {
     auto end_m1_2 = It{ranges::prev(end, 1)};
     if (*end_m1_2 != 4) { return false; }
@@ -72,7 +72,7 @@ RANGES_CXX14_CONSTEXPR auto test_it_(It beg, It end) -> bool {
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 4) { return false; }
 
-    if (!test_it_back(beg, end, ranges::iterator_concept<It>{})) { return false; }
+    if (!test_it_back(beg, end, ranges::iterator_tag_of<It>{})) { return false; }
     auto end2 = beg;
     ranges::advance(end2, end);
     if (end2 != end) { return false; }
@@ -97,8 +97,8 @@ RANGES_CXX14_CONSTEXPR auto test_rit_(It beg, It end) -> bool {
     if (ranges::next(beg, 4) != end) { return false; }
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 1) { return false; }
-    if (std::is_convertible<ranges::iterator_concept<It>,
-                            ranges::concepts::BidirectionalIterator*>{}) {
+    if (std::is_convertible<ranges::iterator_tag_of<It>,
+                            ranges::bidirectional_iterator_tag>{}) {
         auto end_m1_2 = It{ranges::prev(end, 1)};
         if (*end_m1_2 != 1) { return false; }
     }

@@ -37,7 +37,7 @@ namespace ranges
             {
                 range_difference_type_t<Rng> size_;
             public:
-                CONCEPT_ASSERT(ForwardRange<Rng>() || SizedRange<Rng>());
+                CONCEPT_assert(ForwardRange<Rng>() || SizedRange<Rng>());
                 size_tracker() = default;
                 size_tracker(Rng &rng)
                   : size_(ranges::distance(rng))

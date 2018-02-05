@@ -23,8 +23,8 @@ struct my_reverse_view
   : ranges::view_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
-    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
-    CONCEPT_ASSERT(ranges::BoundedRange<BidiRange>());
+    CONCEPT_assert(ranges::BidirectionalRange<BidiRange>());
+    CONCEPT_assert(ranges::BoundedRange<BidiRange>());
     friend ranges::range_access;
     using base_iterator_t = ranges::iterator_t<BidiRange>;
 

@@ -99,14 +99,14 @@ namespace ranges
                 friend view_access;
 
                 CONCEPT_template(typename Rng)(
-                    requires !SizedRange<Rng>() && !IsTrue<is_infinite<Rng>>())
+                    requires !SizedRange<Rng>() && !True<is_infinite<Rng>>())
                 static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
 
                 CONCEPT_template(typename Rng)(
-                    requires SizedRange<Rng>() || IsTrue<is_infinite<Rng>>())
+                    requires SizedRange<Rng>() || True<is_infinite<Rng>>())
                 static auto invoke_(Rng && rng, range_difference_type_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (

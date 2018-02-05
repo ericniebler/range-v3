@@ -25,6 +25,8 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
+// disable buggy compatibility warning about "requires" and "concept" being
+// C++20 keywords.
 #pragma GCC diagnostic ignored "-Wc++2a-compat"
 #endif
 
@@ -33,15 +35,23 @@
 #elif defined(__GNUC__)
 #define CONCEPT_PP_IS_SAME(A, B) __is_same_as(A, B)
 #else
-#define CONCEPT_PP_IS_SAME(A, B) std::is_same<A, B>::value_t
+#define CONCEPT_PP_IS_SAME(A, B) std::is_same<A, B>::value
 #endif
+
+#if __COUNTER__ != __COUNTER__
+#define CONCEPT_COUNTER __COUNTER__
+#else
+#define CONCEPT_COUNTER __LINE__
+#endif
+
+#define CONCEPT_PP_CHECK(...) CONCEPT_PP_CHECK_N(__VA_ARGS__, 0,)
+#define CONCEPT_PP_CHECK_N(x, n, ...) n
+#define CONCEPT_PP_PROBE(x) x, 1,
 
 // CONCEPT_CXX_VA_OPT
 #ifndef CONCEPT_CXX_VA_OPT
-#define CONCEPT_CXX_THIRD_ARG_(A, B, C, ...) C
-#define CONCEPT_CXX_VA_OPT_I_(...)                                              \
-    CONCEPT_CXX_THIRD_ARG_(__VA_OPT__(, ), 1, 0, ?)
-#define CONCEPT_CXX_VA_OPT CONCEPT_CXX_VA_OPT_I_(?)
+#define CONCEPT_CXX_VA_OPT_(...) CONCEPT_PP_CHECK(__VA_OPT__(,) 1)
+#define CONCEPT_CXX_VA_OPT CONCEPT_CXX_VA_OPT_(~)
 #endif // CONCEPT_CXX_VA_OPT
 
 #define CONCEPT_PP_CAT_(X, ...)  X ## __VA_ARGS__
@@ -53,12 +63,9 @@
 #define CONCEPT_PP_EVAL2(X, ...) X(__VA_ARGS__)
 #define CONCEPT_PP_EVAL3(X, ...) X(__VA_ARGS__)
 #define CONCEPT_PP_EVAL4(X, ...) X(__VA_ARGS__)
+
 #define CONCEPT_PP_EXPAND(...) __VA_ARGS__
 #define CONCEPT_PP_EAT(...)
-
-#define CONCEPT_PP_CHECK(...) CONCEPT_PP_CONCEPT_PP_CHECK_N(__VA_ARGS__, 0,)
-#define CONCEPT_PP_CONCEPT_PP_CHECK_N(x, n, ...) n
-#define CONCEPT_PP_PROBE(x) x, 1,
 
 #define CONCEPT_PP_IS_PAREN(x) CONCEPT_PP_CHECK(CONCEPT_PP_IS_PAREN_PROBE x)
 #define CONCEPT_PP_IS_PAREN_PROBE(...) CONCEPT_PP_PROBE(~)
@@ -78,39 +85,52 @@
     N                                                                           \
     /**/
 
+#define CONCEPT_PP_IS_EQUAL(X,Y) \
+    CONCEPT_PP_CHECK(CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_IS_EQUAL_, X), Y))
+#define CONCEPT_PP_IS_EQUAL_00 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_11 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_22 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_33 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_44 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_55 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_66 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_77 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_88 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_99 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1010 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1111 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1212 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1313 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1414 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1515 CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_EQUAL_1616 CONCEPT_PP_PROBE(~)
+
+#define CONCEPT_PP_NOT(X) CONCEPT_PP_CAT(CONCEPT_PP_NOT_, X)
+#define CONCEPT_PP_NOT_0 1
+#define CONCEPT_PP_NOT_1 0
+
+#define CONCEPT_PP_IIF(BIT) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, BIT)
+#define CONCEPT_PP_IIF_0(TRUE, ...) __VA_ARGS__
+#define CONCEPT_PP_IIF_1(TRUE, ...) TRUE
+#define CONCEPT_PP_FIRST(X, ...) X
+#define CONCEPT_PP_SECOND(X, ...) __VA_ARGS__
+
+#define CONCEPT_PP_OR(X,Y) \
+    CONCEPT_PP_NOT(CONCEPT_PP_CHECK(CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_NOR_, X), Y)))
+#define CONCEPT_PP_NOR_00 CONCEPT_PP_PROBE(~)
+
 #if CONCEPT_CXX_VA_OPT
 
-#define CONCEPT_template(...)                                                   \
-    template<__VA_ARGS__ __VA_OPT__(, ) CONCEPT_PP_REQUIRES                     \
-    /**/
+#define CONCEPT_PP_IS_EMPTY_NON_FUNCTION(...) \
+    CONCEPT_PP_CHECK(__VA_OPT__(, 0), 1)
 
 #else // RANGES_VA_OPT
-
-// binary intermediate split macro.
-//
-// An "intermediate" is a single macro argument
-// that expands to more than one argument before
-// it can be passed to another macro.  E.g.
-//
-// #define IM x, y
-//
-// CONCEPT_PP_SPLIT(0, IM) // x
-// CONCEPT_PP_SPLIT(1, IM) // y
 
 #define CONCEPT_PP_SPLIT(i, ...)                                                \
     CONCEPT_PP_CAT_(CONCEPT_PP_SPLIT_, i)(__VA_ARGS__)                          \
     /**/
 #define CONCEPT_PP_SPLIT_0(a, ...) a
 #define CONCEPT_PP_SPLIT_1(a, ...) __VA_ARGS__
-
-// parenthetic expression detection on
-// parenthetic expressions of any arity
-// (hence the name 'variadic').  E.g.
-//
-// CONCEPT_PP_IS_VARIADIC(+)         // 0
-// CONCEPT_PP_IS_VARIADIC(())        // 1
-// CONCEPT_PP_IS_VARIADIC(text)      // 0
-// CONCEPT_PP_IS_VARIADIC((a, b, c)) // 1
 
 #define CONCEPT_PP_IS_VARIADIC(...)                                             \
     CONCEPT_PP_SPLIT(                                                           \
@@ -123,16 +143,6 @@
 #define CONCEPT_PP_IS_VARIADIC_R_1 1,
 #define CONCEPT_PP_IS_VARIADIC_R_CONCEPT_PP_IS_VARIADIC_C 0,
 
-// lazy 'if' construct.
-// 'bit' must be 0 or 1 (i.e. Boolean).  E.g.
-//
-// CONCEPT_PP_IIF(0)(T, F) // F
-// CONCEPT_PP_IIF(1)(T, F) // T
-
-#define CONCEPT_PP_IIF(bit) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, bit)
-#define CONCEPT_PP_IIF_0(t, ...) __VA_ARGS__
-#define CONCEPT_PP_IIF_1(t, ...) t
-
 // emptiness detection macro...
 
 #define CONCEPT_PP_IS_EMPTY_NON_FUNCTION(...)                                   \
@@ -141,25 +151,109 @@
     /**/
 #define CONCEPT_PP_IS_EMPTY_NON_FUNCTION_C() ()
 
-#define CONCEPT_PP_EMPTY()
-#define CONCEPT_PP_COMMA() ,
-#define CONCEPT_PP_COMMA_IIF(X) CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
-
-#define CONCEPT_template(...)                                                   \
-    template<__VA_ARGS__ CONCEPT_PP_COMMA_IIF(                                  \
-        CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__)) CONCEPT_PP_REQUIRES      \
-    /**/
-
 #endif // CONCEPT_PP_VA_OPT
 
-#define CONCEPT_PP_REQUIRES(...)                                                \
-    CONCEPT_PP_REQUIRES_2(CONCEPT_PP_CAT(CONCEPT_PP_IMPL_, __VA_ARGS__))        \
-    /**/
-#define CONCEPT_PP_IMPL_requires
-#define CONCEPT_PP_REQUIRES_2(...)                                              \
-    int _concepts_requires_ = __LINE__,                                         \
-    typename std::enable_if<                                                    \
-        (_concepts_requires_ == __LINE__ && (__VA_ARGS__))>::type* = nullptr>   \
+#define CONCEPT_PP_EMPTY()
+#define CONCEPT_PP_COMMA() ,
+#define CONCEPT_PP_COMMA_IIF(X)                                                 \
+    CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
+
+////////////////////////////////////////////////////////////////////////////////
+// CONCEPT_template
+
+#define CONCEPT_PP_EVAL_OR_(X, ...)\
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_PAREN(X))(CONCEPT_PP_EXPAND, CONCEPT_PP_EVAL)(X, __VA_ARGS__)
+#define CONCEPT_PP_EVAL_OR(...)\
+    CONCEPT_PP_EVAL_OR_(__VA_ARGS__)
+
+#define CONCEPT_PP_IF_PREFIX_ADDS_ARG_(PREFIX, ...)\
+    CONCEPT_PP_NOT(CONCEPT_PP_IS_EQUAL(CONCEPT_PP_COUNT(CONCEPT_PP_CAT(PREFIX, __VA_ARGS__)), CONCEPT_PP_COUNT(__VA_ARGS__)))
+#define CONCEPT_PP_IF_PREFIX_ADDS_ARG(...)\
+    CONCEPT_PP_IF_PREFIX_ADDS_ARG_(__VA_ARGS__)
+
+#define CONCEPT_PP_IS_KEYWORD(...) \
+    CONCEPT_PP_IF_PREFIX_ADDS_ARG(CONCEPT_PP_TOLIST_, __VA_ARGS__)
+
+#define CONCEPT_PP_FINALIZE_(PAIR, ...) \
+    CONCEPT_PP_CAT(CONCEPT_PP_FINALIZE_, CONCEPT_PP_FIRST PAIR)((CONCEPT_PP_SECOND PAIR), __VA_ARGS__)
+#define CONCEPT_PP_FINALIZE(...)\
+    CONCEPT_PP_FINALIZE_(__VA_ARGS__)
+
+#define CONCEPT_PP_IS_AUTO_auto CONCEPT_PP_PROBE(~)
+#define CONCEPT_PP_IS_DECLTYPE_AUTO_0(...) ~
+#define CONCEPT_PP_IS_DECLTYPE_AUTO_1(...) CONCEPT_PP_CAT(CONCEPT_PP_IS_AUTO_, __VA_ARGS__)
+#define CONCEPT_PP_IS_DECLTYPE_AUTO_decltype(...) \
+    CONCEPT_PP_CAT(CONCEPT_PP_IS_DECLTYPE_AUTO_, CONCEPT_PP_IS_EQUAL(1, CONCEPT_PP_COUNT(__VA_ARGS__)))(__VA_ARGS__)
+#define CONCEPT_PP_IS_DECLTYPE_AUTO(...) \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_EQUAL(1, CONCEPT_PP_COUNT(__VA_ARGS__)))(CONCEPT_PP_CHECK(CONCEPT_PP_CAT2(CONCEPT_PP_IS_DECLTYPE_AUTO_, __VA_ARGS__)),0)
+
+#define CONCEPT_PP_USE_SFINAE_TPARAM(...) \
+    CONCEPT_PP_OR(CONCEPT_PP_IF_PREFIX_ADDS_ARG(CONCEPT_PP_TESTSFINAETPARAM_, __VA_ARGS__), CONCEPT_PP_IS_DECLTYPE_AUTO(__VA_ARGS__))
+
+#define CONCEPT_PP_TESTSFINAETPARAM_auto ~,
+#define CONCEPT_PP_TESTSFINAETPARAM_implicit ~,
+
+#define CONCEPT_PP_ENABLE_IF_0(DECL, ...) \
+    > CONCEPT_PP_EXPAND DECL typename std::enable_if<_concept_requires_, __VA_ARGS__>::type
+#define CONCEPT_PP_ENABLE_IF_1(DECL, ...) \
+    , typename std::enable_if<_concept_requires_, int>::type = 0> CONCEPT_PP_EXPAND DECL
+
+#define CONCEPT_PP_FINALIZE_IMPL(DECL, ...)\
+    CONCEPT_PP_CAT(CONCEPT_PP_ENABLE_IF_, CONCEPT_PP_OR(CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__), CONCEPT_PP_USE_SFINAE_TPARAM(__VA_ARGS__)))(DECL, __VA_ARGS__) \
+    CONCEPT_PP_IIF(CONCEPT_PP_USE_SFINAE_TPARAM(__VA_ARGS__))(CONCEPT_PP_EXPAND, CONCEPT_PP_EAT)(__VA_ARGS__)
+
+#define CONCEPT_PP_FINALIZE_1(TYPE, ...) \
+    CONCEPT_PP_FINALIZE_IMPL((), CONCEPT_PP_EXPAND TYPE)
+#define CONCEPT_PP_FINALIZE_2(TYPE, _0, ...) \
+    CONCEPT_PP_FINALIZE_IMPL((CONCEPT_PP_EXPAND _0), CONCEPT_PP_EXPAND TYPE)
+#define CONCEPT_PP_FINALIZE_3(TYPE, _0, _1, ...) \
+    CONCEPT_PP_FINALIZE_IMPL((CONCEPT_PP_EXPAND _0 CONCEPT_PP_EXPAND _1), CONCEPT_PP_EXPAND TYPE)
+#define CONCEPT_PP_FINALIZE_4(TYPE, _0, _1, _2, ...) \
+    CONCEPT_PP_FINALIZE_IMPL((CONCEPT_PP_EXPAND _0 CONCEPT_PP_EXPAND _1 CONCEPT_PP_EXPAND _2), CONCEPT_PP_EXPAND TYPE)
+#define CONCEPT_PP_FINALIZE_5(TYPE, _0, _1, _2, _3, ...) \
+    CONCEPT_PP_FINALIZE_IMPL((CONCEPT_PP_EXPAND _0 CONCEPT_PP_EXPAND _1 CONCEPT_PP_EXPAND _2 CONCEPT_PP_EXPAND _3), CONCEPT_PP_EXPAND TYPE)
+
+#define CONCEPT_PP_TOLIST_1(...) \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_KEYWORD(__VA_ARGS__))(\
+        CONCEPT_PP_TOLIST_2, (1, __VA_ARGS__)), CONCEPT_PP_CAT(CONCEPT_PP_TOLIST_, __VA_ARGS__)
+#define CONCEPT_PP_TOLIST_2(_0, ...) \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_KEYWORD(__VA_ARGS__))(\
+        CONCEPT_PP_TOLIST_3, (2, __VA_ARGS__)), _0, CONCEPT_PP_CAT(CONCEPT_PP_TOLIST_, __VA_ARGS__)
+#define CONCEPT_PP_TOLIST_3(_0, _1, ...) \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_KEYWORD(__VA_ARGS__))(\
+        CONCEPT_PP_TOLIST_4, (3, __VA_ARGS__)), _0, _1, CONCEPT_PP_CAT(CONCEPT_PP_TOLIST_, __VA_ARGS__)
+#define CONCEPT_PP_TOLIST_4(_0, _1, _2, ...) \
+    CONCEPT_PP_IIF(CONCEPT_PP_IS_KEYWORD(__VA_ARGS__))(\
+        CONCEPT_PP_TOLIST_5, (4, __VA_ARGS__)), _0, _1, _2, CONCEPT_PP_CAT(CONCEPT_PP_TOLIST_, __VA_ARGS__)
+#define CONCEPT_PP_TOLIST_5(_0, _1, _2, _3, ...) \
+    (5, __VA_ARGS__), _0, _1, _2, _3,
+
+#define CONCEPT_PP_TOLIST_attribute(...) (__VA_ARGS__),
+#define CONCEPT_PP_TOLIST_attributes(...) (__VA_ARGS__),
+#define CONCEPT_PP_TOLIST_static (static),
+#define CONCEPT_PP_TOLIST_inline (inline),
+#define CONCEPT_PP_TOLIST_constexpr (constexpr),
+#define CONCEPT_PP_TOLIST_explicit (explicit),
+#define CONCEPT_PP_TOLIST_friend (friend),
+#define CONCEPT_PP_TOLIST_auto (auto)
+#define CONCEPT_PP_TOLIST_implicit ()
+#define CONCEPT_PP_TOLIST_decltype(...) (decltype(__VA_ARGS__))
+
+#define CONCEPT_PP_REQUIRES_(...) \
+    CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_, __VA_ARGS__) ) CONCEPT_PP_RETURNS_
+#define CONCEPT_PP_REQUIRES_requires
+#define CONCEPT_PP_RETURNS_(...) \
+    CONCEPT_PP_FINALIZE(CONCEPT_PP_EVAL_OR(CONCEPT_PP_EVAL_OR(\
+        CONCEPT_PP_EVAL_OR(CONCEPT_PP_EVAL_OR(\
+            CONCEPT_PP_TOLIST_1(__VA_ARGS__))))))
+
+#define CONCEPT_template(...)                                                   \
+    template<                                                                   \
+        __VA_ARGS__                                                             \
+        CONCEPT_PP_COMMA_IIF(CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__))     \
+        int (*_concept_unique_)[CONCEPT_COUNTER] = nullptr,                     \
+        bool _concept_requires_ = (_concept_unique_ == nullptr) &&              \
+            static_cast<bool>(CONCEPT_PP_REQUIRES_                              \
     /**/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +261,8 @@
 #define CONCEPT_requires(...)                                                   \
     CONCEPT_template()(requires __VA_ARGS__)                                    \
     /**/
+
+#define CONCEPT_assert(...) static_assert((bool) (__VA_ARGS__), "Concept assertion failed : " #__VA_ARGS__)
 
 ////////////////////////////////////////////////////////////////////////////////
 // CONCEPT_def
@@ -231,6 +327,7 @@
 //    using Name = is_satisfied_by<NameConcept, A, B>;
 #define CONCEPT_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, REQUIRES, ...)             \
     struct CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME), Concept) {     \
+        using _ = ::concepts::_;                                                \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
         auto requires_ CONCEPT_PP_EVAL2(                                        \
             CONCEPT_PP_DEF_WRAP,                                                \
@@ -380,6 +477,13 @@ namespace concepts
             {
                 return {};
             }
+            static constexpr struct value_t
+            {
+                constexpr /*implicit*/ operator bool() const noexcept
+                {
+                    return static_cast<bool>(T());
+                }
+            } value{};
         };
 
         template<typename T, typename U>
@@ -504,324 +608,344 @@ namespace concepts
         template<class T, class U>
         auto operator->*(T &&t, detail::id<U> p) -> decltype(p((T &&) t));
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Utility concepts
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        // For automatically generating tags corresponding to concept
+        // subsumption relationships, for use with tag dispatching.
+        template<typename Concept, typename Base = meta::nil_>
+        struct tag
+          : Base
+        {};
 
-        template<bool B>
-        constexpr concepts::bool_<meta::bool_<B>> True()
+        template<typename Concepts, typename... Ts>
+        using tag_of =
+            meta::reverse_fold<
+                meta::find_if<
+                    Concepts,
+                    meta::bind_back<meta::quote<is_satisfied_by>, Ts...>>,
+                meta::nil_,
+                meta::flip<meta::quote<tag>>>;
+
+        inline namespace concept_defns
         {
-            return {};
-        }
+            ////////////////////////////////////////////////////////////////////////////////////////
+            // Utility concepts
+            ////////////////////////////////////////////////////////////////////////////////////////
 
-        template<typename T, typename = int T::*> // should be a class
-        constexpr concepts::bool_<T> True()
-        {
-            return {};
-        }
+            template<bool B>
+            constexpr concepts::bool_<meta::bool_<B>> True()
+            {
+                return {};
+            }
 
-        template<typename T, typename = int T::*> // should be a class
-        constexpr concepts::bool_<T> True(T)
-        {
-            return {};
-        }
+            template<typename T, typename = int T::*> // should be a class
+            constexpr concepts::bool_<T> True()
+            {
+                return {};
+            }
 
-        template<template<typename...> class T, typename... Args>
-        constexpr concepts::bool_<meta::defer<T, Args...>> True() noexcept
-        {
-            return {};
-        }
+            template<typename T, typename = int T::*> // should be a class
+            constexpr concepts::bool_<T> True(T)
+            {
+                return {};
+            }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Core language concepts
-        ////////////////////////////////////////////////////////////////////////////////////////////
+            template<template<typename...> class T, typename... Args>
+            constexpr concepts::bool_<meta::defer<T, Args...>> True() noexcept
+            {
+                return {};
+            }
 
-        CONCEPT_def
-        (
-            template(typename A, typename B)
-            concept Same,
-                True<CONCEPT_PP_IS_SAME(A, B)>()
-        );
+            ////////////////////////////////////////////////////////////////////////////////////////
+            // Core language concepts
+            ////////////////////////////////////////////////////////////////////////////////////////
 
-        /// \cond
-        CONCEPT_def
-        (
-            template(typename From, typename To)
-            concept ImplicitlyConvertibleTo,
-                True(std::is_convertible<From, To>())
-        );
+            CONCEPT_def
+            (
+                template(typename A, typename B)
+                concept Same,
+                    True<CONCEPT_PP_IS_SAME(A, B)>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename From, typename To)
-            concept ExplicitlyConvertibleTo,
-                requires (From (&from)())
-                {
-                    (static_cast<To>(from()), 0) // Because To could be void
-                }
-        );
-        /// \endcond
+            /// \cond
+            CONCEPT_def
+            (
+                template(typename From, typename To)
+                concept ImplicitlyConvertibleTo,
+                    True(std::is_convertible<From, To>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename From, typename To)
-            concept ConvertibleTo,
-                ImplicitlyConvertibleTo<From, To>() &&
-                ExplicitlyConvertibleTo<From, To>()
-        );
+            CONCEPT_def
+            (
+                template(typename From, typename To)
+                concept ExplicitlyConvertibleTo,
+                    requires (From (&from)())
+                    {
+                        (static_cast<To>(from()), 0) // Because To could be void
+                    }
+            );
+            /// \endcond
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept DerivedFrom,
-                True(std::is_base_of<U, T>()) &&
-                ConvertibleTo<T const volatile *, U const volatile *>()
-        );
+            CONCEPT_def
+            (
+                template(typename From, typename To)
+                concept ConvertibleTo,
+                    ImplicitlyConvertibleTo<From, To>() &&
+                    ExplicitlyConvertibleTo<From, To>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept CommonReference,
-                Same<common_reference_t<T, U>, common_reference_t<U, T>>() &&
-                ConvertibleTo<T, common_reference_t<T, U>>() &&
-                ConvertibleTo<U, common_reference_t<T, U>>()
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept DerivedFrom,
+                    True(std::is_base_of<U, T>()) &&
+                    ConvertibleTo<T const volatile *, U const volatile *>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept Common,
-                Same<common_type_t<T, U>, common_type_t<U, T>>() &&
-                ConvertibleTo<T, common_type_t<T, U>>() &&
-                ConvertibleTo<U, common_type_t<T, U>>() &&
-                CommonReference<
-                    typename std::add_lvalue_reference<T const>::type,
-                    typename std::add_lvalue_reference<U const>::type>() &&
-                CommonReference<
-                    typename std::add_lvalue_reference<common_type_t<T, U>>::type,
-                    common_reference_t<
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept CommonReference,
+                    Same<common_reference_t<T, U>, common_reference_t<U, T>>() &&
+                    ConvertibleTo<T, common_reference_t<T, U>>() &&
+                    ConvertibleTo<U, common_reference_t<T, U>>()
+            );
+
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept Common,
+                    Same<common_type_t<T, U>, common_type_t<U, T>>() &&
+                    ConvertibleTo<T, common_type_t<T, U>>() &&
+                    ConvertibleTo<U, common_type_t<T, U>>() &&
+                    CommonReference<
                         typename std::add_lvalue_reference<T const>::type,
-                        typename std::add_lvalue_reference<U const>::type>>()
-        );
+                        typename std::add_lvalue_reference<U const>::type>() &&
+                    CommonReference<
+                        typename std::add_lvalue_reference<common_type_t<T, U>>::type,
+                        common_reference_t<
+                            typename std::add_lvalue_reference<T const>::type,
+                            typename std::add_lvalue_reference<U const>::type>>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Integral,
-                True(std::is_integral<T>())
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Integral,
+                    True(std::is_integral<T>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept SignedIntegral,
-                Integral<T>() &&
-                True(std::is_signed<T>())
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept SignedIntegral,
+                    Integral<T>() &&
+                    True(std::is_signed<T>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept UnsignedIntegral,
-                Integral<T>() &&
-                !SignedIntegral<T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept UnsignedIntegral,
+                    Integral<T>() &&
+                    !SignedIntegral<T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept Assignable,
-                requires (T t, U &&u)
-                {
-                    (t = (U &&) u) ->* Same<_&&, T>()
-                } &&
-                True(std::is_lvalue_reference<T>())
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept Assignable,
+                    requires (T t, U &&u)
+                    {
+                        (t = (U &&) u) ->* Same<_&&, T>()
+                    } &&
+                    True(std::is_lvalue_reference<T>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Swappable,
-                requires (T &t, T &u)
-                {
-                    (concepts::swap(t, u), 0)
-                }
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Swappable,
+                    requires (T &t, T &u)
+                    {
+                        (concepts::swap(t, u), 0)
+                    }
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept SwappableWith,
-                requires (T &&t, U &&u)
-                {
-                    (concepts::swap((T &&) t, (T &&) t), 0),
-                    (concepts::swap((U &&) u, (U &&) u), 0),
-                    (concepts::swap((U &&) u, (T &&) t), 0),
-                    (concepts::swap((T &&) t, (U &&) u), 0)
-                } &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>()
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept SwappableWith,
+                    requires (T &&t, U &&u)
+                    {
+                        (concepts::swap((T &&) t, (T &&) t), 0),
+                        (concepts::swap((U &&) u, (U &&) u), 0),
+                        (concepts::swap((U &&) u, (T &&) t), 0),
+                        (concepts::swap((T &&) t, (U &&) u), 0)
+                    } &&
+                    CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>()
+            );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Comparison concepts
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept WeaklyEqualityComparableWith,
-                requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
-                {
-                    (t == u) ? 1 : 0,
-                    (t != u) ? 1 : 0,
-                    (u == t) ? 1 : 0,
-                    (u != t) ? 1 : 0
-                }
-        );
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // Comparison concepts
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept WeaklyEqualityComparableWith,
+                    requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
+                    {
+                        (t == u) ? 1 : 0,
+                        (t != u) ? 1 : 0,
+                        (u == t) ? 1 : 0,
+                        (u != t) ? 1 : 0
+                    }
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept EqualityComparable,
-                WeaklyEqualityComparableWith<T, T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept EqualityComparable,
+                    WeaklyEqualityComparableWith<T, T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept EqualityComparableWith,
-                EqualityComparable<T>() &&
-                EqualityComparable<U>() &&
-                WeaklyEqualityComparableWith<T, U>() &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>() &&
-                EqualityComparable<
-                    common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept EqualityComparableWith,
+                    EqualityComparable<T>() &&
+                    EqualityComparable<U>() &&
+                    WeaklyEqualityComparableWith<T, U>() &&
+                    CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>() &&
+                    EqualityComparable<
+                        common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept StrictTotallyOrdered,
-                requires (detail::as_cref_t<T> t, detail::as_cref_t<T> u)
-                {
-                    (t < u) ? 1 : 0,
-                    (t > u) ? 1 : 0,
-                    (u <= t) ? 1 : 0,
-                    (u >= t) ? 1 : 0
-                } &&
-                EqualityComparable<T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept StrictTotallyOrdered,
+                    requires (detail::as_cref_t<T> t, detail::as_cref_t<T> u)
+                    {
+                        (t < u) ? 1 : 0,
+                        (t > u) ? 1 : 0,
+                        (u <= t) ? 1 : 0,
+                        (u >= t) ? 1 : 0
+                    } &&
+                    EqualityComparable<T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename U)
-            concept StrictTotallyOrderedWith,
-                requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
-                {
-                    (t < u) ? 1 : 0,
-                    (t > u) ? 1 : 0,
-                    (t <= u) ? 1 : 0,
-                    (t >= u) ? 1 : 0,
-                    (u < t) ? 1 : 0,
-                    (u > t) ? 1 : 0,
-                    (u <= t) ? 1 : 0,
-                    (u >= t) ? 1 : 0
-                } &&
-                StrictTotallyOrdered<T>() &&
-                StrictTotallyOrdered<U>() &&
-                EqualityComparableWith<T, U>() &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>() &&
-                StrictTotallyOrdered<
-                    common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept StrictTotallyOrderedWith,
+                    requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
+                    {
+                        (t < u) ? 1 : 0,
+                        (t > u) ? 1 : 0,
+                        (t <= u) ? 1 : 0,
+                        (t >= u) ? 1 : 0,
+                        (u < t) ? 1 : 0,
+                        (u > t) ? 1 : 0,
+                        (u <= t) ? 1 : 0,
+                        (u >= t) ? 1 : 0
+                    } &&
+                    StrictTotallyOrdered<T>() &&
+                    StrictTotallyOrdered<U>() &&
+                    EqualityComparableWith<T, U>() &&
+                    CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>>() &&
+                    StrictTotallyOrdered<
+                        common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
+            );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Object concepts
-        ////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // Object concepts
+            ////////////////////////////////////////////////////////////////////////////////////////////
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Destructible,
-                True(std::is_nothrow_destructible<T>())
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Destructible,
+                    True(std::is_nothrow_destructible<T>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename T, typename... Args)
-            (concept Constructible)(T, Args...),
-                Destructible<T>() &&
-                True(std::is_constructible<T, Args...>())
-        );
+            CONCEPT_def
+            (
+                template(typename T, typename... Args)
+                (concept Constructible)(T, Args...),
+                    Destructible<T>() &&
+                    True(std::is_constructible<T, Args...>())
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept DefaultConstructible,
-                Constructible<T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept DefaultConstructible,
+                    Constructible<T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept MoveConstructible,
-                Constructible<T, T>() &&
-                ConvertibleTo<T, T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept MoveConstructible,
+                    Constructible<T, T>() &&
+                    ConvertibleTo<T, T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept CopyConstructible,
-                MoveConstructible<T>() &&
-                Constructible<T, T &>() &&
-                Constructible<T, T const &>() &&
-                Constructible<T, T const>() &&
-                ConvertibleTo<T &, T>() &&
-                ConvertibleTo<T const &, T>() &&
-                ConvertibleTo<T const, T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept CopyConstructible,
+                    MoveConstructible<T>() &&
+                    Constructible<T, T &>() &&
+                    Constructible<T, T const &>() &&
+                    Constructible<T, T const>() &&
+                    ConvertibleTo<T &, T>() &&
+                    ConvertibleTo<T const &, T>() &&
+                    ConvertibleTo<T const, T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Movable,
-                MoveConstructible<T>() &&
-                True(std::is_object<T>()) &&
-                Assignable<T &, T>() &&
-                Swappable<T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Movable,
+                    MoveConstructible<T>() &&
+                    True(std::is_object<T>()) &&
+                    Assignable<T &, T>() &&
+                    Swappable<T>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Copyable,
-                Movable<T>() &&
-                CopyConstructible<T>() &&
-                True(std::is_object<T>()) &&
-                // Spec requires this to be validated
-                Assignable<T &, T const &>() &&
-                // Spec does not require these to be validated
-                Assignable<T &, T &>() &&
-                Assignable<T &, T const>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Copyable,
+                    Movable<T>() &&
+                    CopyConstructible<T>() &&
+                    True(std::is_object<T>()) &&
+                    // Spec requires this to be validated
+                    Assignable<T &, T const &>() &&
+                    // Spec does not require these to be validated
+                    Assignable<T &, T &>() &&
+                    Assignable<T &, T const>()
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Semiregular,
-                Copyable<T>() &&
-                DefaultConstructible<T>()
-            // Axiom: copies are independent. See Fundamentals of Generic Programming
-            // http://www.stepanovpapers.com/DeSt98.pdf
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Semiregular,
+                    Copyable<T>() &&
+                    DefaultConstructible<T>()
+                // Axiom: copies are independent. See Fundamentals of Generic Programming
+                // http://www.stepanovpapers.com/DeSt98.pdf
+            );
 
-        CONCEPT_def
-        (
-            template(typename T)
-            concept Regular,
-                Semiregular<T>() &&
-                EqualityComparable<T>()
-        );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Regular,
+                    Semiregular<T>() &&
+                    EqualityComparable<T>()
+            );
+        }
+
     } // inline namespace v1
 } // namespace concepts
 

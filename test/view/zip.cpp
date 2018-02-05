@@ -46,16 +46,16 @@ int main()
         using Rng = decltype((rng));
         ::models_not<concepts::BoundedView>(aux::copy(rng));
         ::models_not<concepts::SizedView>(aux::copy(rng));
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_value_type_t<Rng>,
             std::tuple<int, std::string, std::string>>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_reference_t<Rng>,
             common_tuple<int &, std::string const &, std::string &>>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_rvalue_reference_t<Rng>,
             common_tuple<int &&, std::string const &&, std::string &&>>());
-        CONCEPT_ASSERT(ConvertibleTo<range_value_type_t<Rng> &&,
+        CONCEPT_assert(ConvertibleTo<range_value_type_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
@@ -150,9 +150,9 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CONCEPT_ASSERT(Same<range_value_type_t<R2>, MoveOnlyString>());
-        CONCEPT_ASSERT(Same<range_reference_t<R2>, MoveOnlyString &>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
+        CONCEPT_assert(Same<range_value_type_t<R2>, MoveOnlyString>());
+        CONCEPT_assert(Same<range_reference_t<R2>, MoveOnlyString &>());
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
     }
 
     {
@@ -160,17 +160,17 @@ int main()
         auto rng = view::zip(v, v);
         using Rng = decltype(rng);
         using I = iterator_t<Rng>;
-        CONCEPT_ASSERT(Readable<I>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Readable<I>());
+        CONCEPT_assert(Same<
             range_value_type_t<Rng>,
             std::pair<MoveOnlyString, MoveOnlyString>>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_rvalue_reference_t<Rng>,
             common_pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
-        CONCEPT_ASSERT(Same<
+        CONCEPT_assert(Same<
             range_common_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
     }
@@ -179,10 +179,10 @@ int main()
         std::vector<int> v{1,2,3,4};
         auto moved = v | view::move;
         using Moved = decltype(moved);
-        CONCEPT_ASSERT(Same<range_reference_t<Moved>, int &&>());
+        CONCEPT_assert(Same<range_reference_t<Moved>, int &&>());
         auto zipped = view::zip(moved);
         using Zipped = decltype(zipped);
-        CONCEPT_ASSERT(Same<range_reference_t<Zipped>, common_tuple<int &&> >());
+        CONCEPT_assert(Same<range_reference_t<Zipped>, common_tuple<int &&> >());
     }
 
     // This is actually a test of the logic of view_adaptor. Since the stride view
@@ -191,8 +191,8 @@ int main()
     {
         auto rng0 = view::zip(vi, vs);
         auto rng1 = view::stride(rng0, 2);
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
-        CONCEPT_ASSERT(Same<range_value_type_t<decltype(rng1)>, range_value_type_t<decltype(rng0)>>());
+        CONCEPT_assert(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
+        CONCEPT_assert(Same<range_value_type_t<decltype(rng1)>, range_value_type_t<decltype(rng0)>>());
     }
 
     // Test for noexcept iter_move

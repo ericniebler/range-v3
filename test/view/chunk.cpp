@@ -37,11 +37,11 @@ namespace
         auto make_range = [&]{ return debug_input_view<int const>{ints} | view::chunk(K); };
         auto rng = make_range();
         using Rng = decltype(rng);
-        CONCEPT_ASSERT(InputView<Rng>());
-        CONCEPT_ASSERT(!ForwardRange<Rng>());
-        CONCEPT_ASSERT(SizedRange<Rng>());
+        CONCEPT_assert(InputView<Rng>());
+        CONCEPT_assert(!ForwardRange<Rng>());
+        CONCEPT_assert(SizedRange<Rng>());
         CHECK(ranges::size(rng) == (N + K - 1) / K);
-        CONCEPT_ASSERT(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>());
+        CONCEPT_assert(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>());
         CHECK((ranges::end(rng) - ranges::begin(rng)) == int((N + K - 1) / K));
 
         rng = make_range();
@@ -199,7 +199,7 @@ int main()
         std::vector<std::vector<int>> data{{1, 2, 3}, {4, 5, 6}};
         auto rng = data | view::join | view::chunk(2);
         ::models<concepts::InputRange>(rng);
-        CONCEPT_ASSERT(InputRange<range_reference_t<decltype(rng)>>());
+        CONCEPT_assert(InputRange<range_reference_t<decltype(rng)>>());
         int const expected[][2] = {{1, 2}, {3, 4}, {5, 6}};
         ::check_equal(rng, expected);
     }

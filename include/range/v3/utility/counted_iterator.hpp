@@ -31,7 +31,7 @@ namespace ranges
             struct counted_iterator
             {
             private:
-                CONCEPT_ASSERT(Iterator<I>());
+                CONCEPT_assert(Iterator<I>());
                 template<typename, typename> friend struct counted_iterator;
 
                 I current_{};
@@ -39,12 +39,12 @@ namespace ranges
 
                 void post_increment_(std::true_type)
                 {
-                    CONCEPT_ASSERT(std::is_void<decltype(current_++)>());
+                    CONCEPT_assert(std::is_void<decltype(current_++)>());
                     ++current_;
                 }
                 auto post_increment_(std::false_type) -> decltype(current_++)
                 {
-                    CONCEPT_ASSERT(!std::is_void<decltype(current_++)>());
+                    CONCEPT_assert(!std::is_void<decltype(current_++)>());
                     auto&& tmp = current_++;
                     --cnt_;
                     return static_cast<decltype(tmp) &&>(tmp);

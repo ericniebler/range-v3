@@ -9,6 +9,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+//#define RANGES_USE_LEGACY_CONCEPTS 1
+
 #include <sstream>
 #include <vector>
 #include <range/v3/utility/concepts.hpp>
@@ -225,7 +227,7 @@ static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
 
 static_assert(ranges::Swappable<int &>(), "");
-static_assert(ranges::Swappable<int>(), "");
+static_assert(!ranges::Swappable<int>(), "");
 static_assert(!ranges::Swappable<int const &>(), "");
 static_assert(ranges::Swappable<IntSwappable>(), "");
 static_assert(ranges::SwappableWith<IntSwappable, int &>(), "");
@@ -244,8 +246,8 @@ static_assert(ranges::EqualityComparableWith<int &, IntComparable &>(), "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_range_concept_t<std::vector<int>>,
-        ranges::concepts::BoundedRange
+        ranges::bounded_range_tag_of<std::vector<int>>,
+        ranges::bounded_range_tag
     >::value, "");
 
 static_assert(
@@ -270,7 +272,7 @@ struct myview {
     const char *begin();
     const char *end();
 };
-CONCEPT_ASSERT(ranges::View<myview>());
+CONCEPT_assert(ranges::View<myview>());
 
 int main()
 {

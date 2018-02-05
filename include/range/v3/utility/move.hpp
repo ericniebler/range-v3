@@ -28,7 +28,8 @@ namespace ranges
         namespace aux
         {
             /// \ingroup group-utility
-            struct move_fn : move_tag
+            struct move_fn
+              : move_tag
             {
                 template<typename T,
                     typename U = meta::_t<std::remove_reference<T>>>

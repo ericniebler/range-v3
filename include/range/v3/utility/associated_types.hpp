@@ -47,12 +47,12 @@ namespace ranges
 
             template<typename T, typename Enable = void>
             struct difference_type1
-            : detail::difference_type2<T>
+              : detail::difference_type2<T>
             {};
 
             template<typename T>
             struct difference_type1<T *>
-            : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
+              : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
             {};
 
             template<typename T>
@@ -65,12 +65,12 @@ namespace ranges
 
         template<typename T>
         struct difference_type
-        : detail::difference_type1<T>
+          : detail::difference_type1<T>
         {};
 
         template<typename T>
         struct difference_type<T const>
-        : difference_type<T>
+          : difference_type<T>
         {};
 
         ////////////////////////////////////////////////////////////////////////////////////////

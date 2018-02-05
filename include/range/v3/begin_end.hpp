@@ -54,7 +54,7 @@ namespace ranges
                 CONCEPT_template(typename R,
                     typename I = decltype(aux::copy(std::declval<R &>().begin())))(
                     requires Iterator<I>())
-                static constexpr I impl_(R &r, int)
+                (static constexpr I) impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     r.begin()
@@ -64,7 +64,7 @@ namespace ranges
                 CONCEPT_template(typename R,
                     typename I = decltype(aux::copy(begin(std::declval<R &>()))))(
                     requires Iterator<I>())
-                static constexpr I impl_(R &r, long)
+                (static constexpr I) impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     begin(r)
@@ -134,7 +134,7 @@ namespace ranges
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(aux::copy(std::declval<R &>().end())))(
                     requires Sentinel<S, I>())
-                static constexpr S impl_(R &r, int)
+                (static constexpr S) impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     r.end()
@@ -145,7 +145,7 @@ namespace ranges
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(aux::copy(end(std::declval<R &>()))))(
                     requires Sentinel<S, I>())
-                static constexpr S impl_(R &r, long)
+                (static constexpr S) impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     end(r)
@@ -265,7 +265,7 @@ namespace ranges
                 CONCEPT_template(typename R,
                     typename I = decltype(aux::copy(std::declval<R &>().rbegin())))(
                     requires Iterator<I>())
-                static constexpr I impl_(R &r, int)
+                (static constexpr I) impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     r.rbegin()
@@ -275,7 +275,7 @@ namespace ranges
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(ranges::end(std::declval<R &>())))(
                     requires Same<I, S>() && BidirectionalIterator<I>())
-                static constexpr reverse_iterator<I> impl_(R &r, long)
+                (static constexpr reverse_iterator<I>) impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::make_reverse_iterator(ranges::end(r))
@@ -340,7 +340,7 @@ namespace ranges
                     typename I = decltype(ranges::rbegin(std::declval<R &>())),
                     typename S = decltype(aux::copy(std::declval<R &>().rend())))(
                     requires Sentinel<S, I>())
-                static constexpr S impl_(R &r, int)
+                (static constexpr S) impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     r.rend()
@@ -350,7 +350,7 @@ namespace ranges
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(ranges::end(std::declval<R &>())))(
                     requires Same<I, S>() && BidirectionalIterator<I>())
-                static constexpr reverse_iterator<I> impl_(R &r, long)
+                (static constexpr) reverse_iterator<I> impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::make_reverse_iterator(ranges::begin(r))

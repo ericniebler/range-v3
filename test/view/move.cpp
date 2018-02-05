@@ -27,14 +27,14 @@ int main()
     std::vector<MoveOnlyString> vs(begin(data), end(data));
 
     auto x = vs | view::move;
-    CONCEPT_ASSERT(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
-    CONCEPT_ASSERT(Same<sized_view_concept_t<decltype(x)>, concepts::SizedView>());
+    CONCEPT_assert(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
+    CONCEPT_assert(Same<sized_view_concept_t<decltype(x)>, concepts::SizedView>());
     ::models<concepts::BoundedView>(aux::copy(x));
     ::models<concepts::SizedView>(aux::copy(x));
     ::models<concepts::RandomAccessIterator>(x.begin());
     using I = decltype(x.begin());
-    CONCEPT_ASSERT(Same<iterator_concept_t<I>, concepts::RandomAccessIterator>());
-    CONCEPT_ASSERT(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>());
+    CONCEPT_assert(Same<iterator_tag_of<I>, ranges::random_access_iterator_tag>());
+    CONCEPT_assert(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>());
 
     CHECK(bool(*x.begin() == "'allo"));
 

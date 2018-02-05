@@ -139,7 +139,7 @@ namespace ranges
                         --it.get();
                     }
                     CONCEPT_template(typename I, std::size_t N)(
-                        requires IsTrue<N != 0>() && BidirectionalIterator<I>())
+                        requires True<N != 0>() && BidirectionalIterator<I>())
                     void operator()(indexed_element<I, N> it) const
                     {
                         if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))

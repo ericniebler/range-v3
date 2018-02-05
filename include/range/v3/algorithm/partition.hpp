@@ -49,7 +49,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end, C pred, P proj, concepts::ForwardIterator*)
+            static I impl(I begin, S end, C pred, P proj, forward_iterator_tag)
             {
                 while(true)
                 {
@@ -71,7 +71,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end_, C pred, P proj, concepts::BidirectionalIterator*)
+            static I impl(I begin, S end_, C pred, P proj, bidirectional_iterator_tag)
             {
                 I end = ranges::next(begin, end_);
                 while(true)
@@ -99,7 +99,7 @@ namespace ranges
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
-                    std::move(proj), iterator_concept<I>());
+                    std::move(proj), iterator_tag_of<I>());
             }
 
             CONCEPT_template(typename Rng, typename C, typename P = ident,
@@ -108,7 +108,7 @@ namespace ranges
             safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),
-                    std::move(proj), iterator_concept<I>());
+                    std::move(proj), iterator_tag_of<I>());
             }
         };
 

@@ -121,7 +121,7 @@ namespace ranges
             {
                 std::exception_ptr except_ = nullptr;
 
-                CONCEPT_ASSERT(meta::or_<std::is_reference<Reference>,
+                CONCEPT_assert(meta::or_<std::is_reference<Reference>,
                     CopyConstructible<Reference>>());
 
                 generator_promise *get_return_object() noexcept

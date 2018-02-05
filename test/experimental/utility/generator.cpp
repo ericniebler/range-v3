@@ -39,7 +39,7 @@ private:
     template<typename Rng>
     CONCEPT_alias(Constraint,
         ranges::InputRange<Rng>() &&
-        (IsTrue<std::is_reference<ranges::range_reference_t<Rng>>>() ||
+        (True<std::is_reference<ranges::range_reference_t<Rng>>>() ||
             ranges::CopyConstructible<ranges::range_reference_t<Rng>>()));
 
     template<typename V>

@@ -41,9 +41,9 @@ namespace ranges
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
-            CONCEPT_ASSERT(BidirectionalView<Rng>() && BoundedRange<Rng>());
-            CONCEPT_ASSERT(SemiRegular<Regex>());
-            CONCEPT_ASSERT(SemiRegular<SubMatchRange>());
+            CONCEPT_assert(BidirectionalView<Rng>() && BoundedRange<Rng>());
+            CONCEPT_assert(Semiregular<Regex>());
+            CONCEPT_assert(Semiregular<SubMatchRange>());
 
             Rng rng_;
             Regex rex_;
@@ -94,8 +94,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
-                    CONCEPT_ASSERT(BoundedRange<Rng>());
+                    CONCEPT_assert(BidirectionalRange<Rng>());
+                    CONCEPT_assert(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
@@ -109,8 +109,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
-                    CONCEPT_ASSERT(BoundedRange<Rng>());
+                    CONCEPT_assert(BidirectionalRange<Rng>());
+                    CONCEPT_assert(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
@@ -124,8 +124,8 @@ namespace ranges
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
-                    CONCEPT_ASSERT(BoundedRange<Rng>());
+                    CONCEPT_assert(BidirectionalRange<Rng>());
+                    CONCEPT_assert(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");

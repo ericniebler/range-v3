@@ -159,7 +159,7 @@ namespace ranges
             template<typename F>
             generate_n_view<F> operator()(bool b, F f) const
             {
-                CONCEPT_ASSERT(Invocable<F&>());
+                CONCEPT_assert(Invocable<F&>());
                 return view::generate_n(std::move(f), b ? 1 : 0);
             }
         };

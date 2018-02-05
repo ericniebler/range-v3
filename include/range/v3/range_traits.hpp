@@ -21,42 +21,47 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        struct RangeConcept;
+        template<class T>
+        using Range = ::concepts::is_satisfied_by<RangeConcept, T>;
+        /// \endcond
+
         /// \addtogroup group-core
         /// @{
 
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using iterator_t = concepts::Range::iterator_t<Rng>;
+        using iterator_t = decltype(begin(std::declval<Rng &>()));
 
         template<typename Rng>
-        using sentinel_t = concepts::Range::sentinel_t<Rng>;
+        using sentinel_t = decltype(end(std::declval<Rng &>()));
 
         template<typename Rng>
-        using range_difference_type_t = concepts::Range::difference_t<Rng>;
+        using range_difference_type_t = difference_type_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_size_type_t = meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
 
         template<typename Rng>
-        using range_value_type_t = concepts::InputRange::value_t<Rng>;
+        using range_value_type_t = value_type_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_reference_t = concepts::InputRange::reference_t<Rng>;
+        using range_reference_t = reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_rvalue_reference_t = concepts::InputRange::rvalue_reference_t<Rng>;
+        using range_rvalue_reference_t = rvalue_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_common_reference_t = concepts::InputRange::common_reference_t<Rng>;
+        using range_common_reference_t = iter_common_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_category_t = concepts::InputRange::category_t<Rng>;
+        using range_category_t = iterator_category_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_common_iterator_t = common_iterator_t<iterator_t<Rng>, sentinel_t<Rng>>;
@@ -65,7 +70,7 @@ namespace ranges
         using safe_iterator_t =
             meta::if_<
                 std::is_lvalue_reference<Rng>,
-                meta::if_<Range<Rng>, iterator_t<Rng>>,
+                meta::if_c<(bool) Range<Rng>(), iterator_t<Rng>>,
                 dangling<iterator_t<Rng>>>;
 
         /// \cond
@@ -73,17 +78,17 @@ namespace ranges
         template<typename Rng>
         using range_iterator_t
             RANGES_DEPRECATED("Please use ranges::iterator_t instead") =
-                concepts::Range::iterator_t<Rng>;
+                iterator_t<Rng>;
 
         template<typename Rng>
         using range_sentinel_t
             RANGES_DEPRECATED("Please use ranges::sentinel_t instead") =
-                concepts::Range::sentinel_t<Rng>;
+                sentinel_t<Rng>;
 
         template<typename Rng>
         using range_difference_t
             RANGES_DEPRECATED("Please use ranges::range_difference_type_t instead") =
-                concepts::Range::difference_t<Rng>;
+                range_difference_type_t<Rng>;
 
         template<typename Rng>
         using range_size_t
@@ -93,7 +98,7 @@ namespace ranges
         template<typename Rng>
         using range_value_t
             RANGES_DEPRECATED("Please use ranges::range_value_type_t instead") =
-                concepts::InputRange::value_t<Rng>;
+                range_size_type_t<Rng>;
 
         template<typename Rng>
         using range_safe_iterator_t
@@ -105,7 +110,7 @@ namespace ranges
             RANGES_DEPRECATED("range_safe_sentinel_t is deprecated") =
                 meta::if_<
                     std::is_lvalue_reference<Rng>,
-                    meta::if_<Range<Rng>, sentinel_t<Rng>>,
+                    meta::if_c<(bool) Range<Rng>(), sentinel_t<Rng>>,
                     dangling<sentinel_t<Rng>>>;
 
         // Deprecated metafunctions

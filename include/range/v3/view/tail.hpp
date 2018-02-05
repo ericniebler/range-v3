@@ -63,7 +63,7 @@ namespace ranges
             tail_view(Rng rng)
               : rng_(static_cast<Rng&&>(rng))
             {
-                CONCEPT_ASSERT(InputRange<Rng>());
+                CONCEPT_assert(InputRange<Rng>());
             }
             iterator begin()
             {

@@ -68,7 +68,7 @@ namespace ranges
                     meta::quote<detail::product_cardinality>>::value>
         {
             friend range_access;
-            CONCEPT_ASSERT(meta::and_c<(bool)ForwardView<Views>()...>::value);
+            CONCEPT_assert(meta::and_c<(bool)ForwardView<Views>()...>::value);
             using CanConst = meta::and_c<
                 (bool)Range<Views const>()...>;
             template<bool IsConst>
@@ -140,7 +140,7 @@ namespace ranges
                     auto &i = std::get<N - 1>(its_);
                     if(i == ranges::begin(v))
                     {
-                        CONCEPT_ASSERT(CanBidi<IsConst>());
+                        CONCEPT_assert(CanBidi<IsConst>());
                         // CanBidi<IsConst> implies this advance call is O(1)
                         ranges::advance(i, ranges::end(v));
                         prev_(meta::size_t<N - 1>{});
@@ -168,7 +168,7 @@ namespace ranges
                 std::ptrdiff_t distance_(
                     cursor const &, meta::size_t<0>, dist_info) const
                 {
-                    CONCEPT_ASSERT(sizeof...(Views) == 0);
+                    CONCEPT_assert(sizeof...(Views) == 0);
                     return 0;
                 }
                 std::ptrdiff_t distance_(

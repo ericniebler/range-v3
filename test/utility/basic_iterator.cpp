@@ -38,8 +38,8 @@ namespace test_weak_input
         void next() { ++it_; }
     };
 
-    CONCEPT_ASSERT(ranges::detail::InputCursor<cursor<char *>>());
-    CONCEPT_ASSERT(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>());
+    CONCEPT_assert(ranges::detail::InputCursor<cursor<char *>>());
+    CONCEPT_assert(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -57,7 +57,7 @@ namespace test_weak_input
     {
         using namespace ranges;
         using I = iterator<char const *>;
-        CONCEPT_ASSERT(std::is_same<std::iterator_traits<I>::pointer, char const *>());
+        CONCEPT_assert(std::is_same<std::iterator_traits<I>::pointer, char const *>());
 
         static char const sz[] = "hello world";
         I i{sz};
@@ -99,7 +99,7 @@ namespace test_random_access
         }
     };
 
-    CONCEPT_ASSERT(ranges::detail::RandomAccessCursor<cursor<char *>>());
+    CONCEPT_assert(ranges::detail::RandomAccessCursor<cursor<char *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -118,7 +118,7 @@ namespace test_random_access
         iterator<char const *> b(nullptr);
         iterator<char const *> c(a);
 
-        CONCEPT_ASSERT(std::is_same<std::iterator_traits<iterator<char *>>::pointer, char *>());
+        CONCEPT_assert(std::is_same<std::iterator_traits<iterator<char *>>::pointer, char *>());
 
         b = a;
         bool d = a == b;
@@ -158,14 +158,14 @@ namespace test_weak_output
         explicit cursor(I i) : it_(i) {}
     };
 
-    CONCEPT_ASSERT(ranges::detail::OutputCursor<cursor<char *>, char>());
-    CONCEPT_ASSERT(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>());
+    CONCEPT_assert(ranges::detail::OutputCursor<cursor<char *>, char>());
+    CONCEPT_assert(!ranges::detail::CursorSentinel<cursor<char *>, cursor<char *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
 
-    CONCEPT_ASSERT(ranges::OutputIterator<iterator<char *>, char>());
-    CONCEPT_ASSERT(!ranges::EqualityComparable<iterator<char *>>());
+    CONCEPT_assert(ranges::OutputIterator<iterator<char *>, char>());
+    CONCEPT_assert(!ranges::EqualityComparable<iterator<char *>>());
 
     void test()
     {
@@ -212,16 +212,16 @@ namespace test_output
         bool equal(cursor const &that) const { return it_ == that.it_; }
     };
 
-    CONCEPT_ASSERT(ranges::detail::OutputCursor<cursor<char *>, char>());
-    CONCEPT_ASSERT(ranges::detail::ForwardCursor<cursor<char *>>());
+    CONCEPT_assert(ranges::detail::OutputCursor<cursor<char *>, char>());
+    CONCEPT_assert(ranges::detail::ForwardCursor<cursor<char *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
 
-    CONCEPT_ASSERT(ranges::OutputIterator<iterator<char *>, char>());
-    CONCEPT_ASSERT(ranges::ForwardIterator<iterator<char *>>());
+    CONCEPT_assert(ranges::OutputIterator<iterator<char *>, char>());
+    CONCEPT_assert(ranges::ForwardIterator<iterator<char *>>());
 
-    CONCEPT_ASSERT(std::is_same<std::iterator_traits<iterator<char *>>::pointer, char *>());
+    CONCEPT_assert(std::is_same<std::iterator_traits<iterator<char *>>::pointer, char *>());
 
     void test()
     {
@@ -287,14 +287,14 @@ namespace test_move_only
         bool equal(zip1_cursor const &that) const { return it_ == that.it_; }
     };
 
-    CONCEPT_ASSERT(ranges::detail::OutputCursor<zip1_cursor<MoveOnly *>, std::tuple<MoveOnly> &&>());
-    CONCEPT_ASSERT(ranges::detail::ForwardCursor<zip1_cursor<MoveOnly *>>());
+    CONCEPT_assert(ranges::detail::OutputCursor<zip1_cursor<MoveOnly *>, std::tuple<MoveOnly> &&>());
+    CONCEPT_assert(ranges::detail::ForwardCursor<zip1_cursor<MoveOnly *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<zip1_cursor<I>>;
 
-    CONCEPT_ASSERT(ranges::OutputIterator<iterator<MoveOnly *>, std::tuple<MoveOnly> &&>());
-    CONCEPT_ASSERT(ranges::ForwardIterator<iterator<MoveOnly *>>());
+    CONCEPT_assert(ranges::OutputIterator<iterator<MoveOnly *>, std::tuple<MoveOnly> &&>());
+    CONCEPT_assert(ranges::ForwardIterator<iterator<MoveOnly *>>());
 
     void test()
     {
@@ -333,8 +333,8 @@ namespace test_forward_sized
         }
     };
 
-    CONCEPT_ASSERT(ranges::detail::SizedCursorSentinel<cursor<char *>, cursor<char *>>());
-    CONCEPT_ASSERT(ranges::detail::ForwardCursor<cursor<char *>>());
+    CONCEPT_assert(ranges::detail::SizedCursorSentinel<cursor<char *>, cursor<char *>>());
+    CONCEPT_assert(ranges::detail::ForwardCursor<cursor<char *>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;

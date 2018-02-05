@@ -65,7 +65,7 @@ namespace ranges
             template<span_index_t N>
             struct span_extent
             {
-                CONCEPT_ASSERT(N >= 0);
+                CONCEPT_assert(N >= 0);
 
                 constexpr span_extent() noexcept = default;
                 constexpr span_extent(span_index_t size) noexcept
@@ -106,7 +106,7 @@ namespace ranges
                 (N == dynamic_extent ? finite : static_cast<cardinality>(N))>,
             public detail::span_extent<N>
         {
-            CONCEPT_ASSERT(std::is_object<T>::value);
+            CONCEPT_assert(std::is_object<T>::value);
 
             using element_type = T;
             using value_type = meta::_t<std::remove_cv<T>>;
@@ -133,7 +133,7 @@ namespace ranges
             template<typename Rng>
             using CompatibleRange = decltype(
                 !Same<span, uncvref_t<Rng>>() && SizedRange<Rng>() && ContiguousRange<Rng>() &&
-                    IsTrue<std::is_convertible<
+                    True<std::is_convertible<
                         concepts::ContiguousRange::element_t<Rng>(*)[],
                         T(*)[]>>());
 
@@ -143,7 +143,7 @@ namespace ranges
             {};
 
             CONCEPT_template(typename Rng)(
-                requires CompatibleRange<Rng>() && IsTrue<DynamicConversion<Rng>>())
+                requires CompatibleRange<Rng>() && True<DynamicConversion<Rng>>())
             constexpr span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
               : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
@@ -155,7 +155,7 @@ namespace ranges
             {};
 
             CONCEPT_template(typename Rng)(
-                requires CompatibleRange<Rng>() && IsTrue<StaticConversion<Rng>>())
+                requires CompatibleRange<Rng>() && True<StaticConversion<Rng>>())
             constexpr span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng)))
               : span{ranges::data(rng), N}
@@ -320,13 +320,13 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                IsTrue<range_cardinality<Rng>::value < cardinality{}>())
+                True<range_cardinality<Rng>::value < cardinality{}>())
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>>;
 
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                IsTrue<range_cardinality<Rng>::value >= cardinality{}>())
+                True<range_cardinality<Rng>::value >= cardinality{}>())
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>,
                 static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;
@@ -359,7 +359,7 @@ namespace ranges
         }
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                IsTrue<range_cardinality<Rng>::value < cardinality{}>())
+                True<range_cardinality<Rng>::value < cardinality{}>())
         constexpr span<concepts::ContiguousRange::element_t<Rng>>
         make_span(Rng &&rng)
             noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
@@ -369,7 +369,7 @@ namespace ranges
         }
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                IsTrue<range_cardinality<Rng>::value >= cardinality{}>())
+                True<range_cardinality<Rng>::value >= cardinality{}>())
         constexpr span<concepts::ContiguousRange::element_t<Rng>,
             static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>
         make_span(Rng &&rng)

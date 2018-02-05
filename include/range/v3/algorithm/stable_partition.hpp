@@ -267,7 +267,7 @@ namespace ranges
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
-                    std::ref(proj), iterator_concept<I>());
+                    std::ref(proj), iterator_tag_of<I>());
             }
 
             // BUGBUG Can this be optimized if Rng has O1 size?

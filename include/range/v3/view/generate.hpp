@@ -92,7 +92,7 @@ namespace ranges
                 CONCEPT_alias(Concept,
                     Invocable<G&>() &&
                     MoveConstructible<G>() &&
-                    IsTrue<std::is_object<detail::decay_t<result_of_t<G&()>>>>() &&
+                    True<std::is_object<detail::decay_t<result_of_t<G&()>>>>() &&
                     Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>() &&
                     Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>());
 

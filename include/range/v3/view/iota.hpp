@@ -46,7 +46,7 @@ namespace ranges
             };
 
             struct SizedIncrementableSentinel
-              : refines<SemiRegular(_1), WeaklyIncrementable(_2)>
+              : refines<Semiregular(_1), WeaklyIncrementable(_2)>
             {
                 template<typename T, typename U>
                 auto requires_(T t, U u) -> decltype(

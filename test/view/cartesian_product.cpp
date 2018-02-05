@@ -55,19 +55,19 @@ void test_empty_set()
 {
     auto rng = view::cartesian_product();
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CONCEPT_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>());
+    CONCEPT_assert(BoundedRange<Rng>());
+    CONCEPT_assert(SizedRange<Rng>());
     CHECK(size(rng) == 0u);
     CHECK(empty(rng));
 
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_value_type_t<Rng>,
         std::tuple<>>());
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_reference_t<Rng>,
         common_tuple<>>());
 
@@ -96,18 +96,18 @@ void test_empty_range()
         e
     );
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CONCEPT_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>());
+    CONCEPT_assert(BoundedRange<Rng>());
+    CONCEPT_assert(SizedRange<Rng>());
     CHECK(size(rng) == 0u);
 
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_value_type_t<Rng>,
         std::tuple<int, char>>());
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_reference_t<Rng>,
         common_tuple<int &, char const &>>());
 
@@ -138,19 +138,19 @@ int main()
         span<char const*, size(some_strings)>{some_strings}
     );
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(range_cardinality<Rng>::value ==
+    CONCEPT_assert(range_cardinality<Rng>::value ==
         range_cardinality<decltype(some_ints)>::value *
         range_cardinality<decltype(some_strings)>::value);
 
-    CONCEPT_ASSERT(RandomAccessView<Rng>());
-    CONCEPT_ASSERT(BoundedRange<Rng>());
-    CONCEPT_ASSERT(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>());
+    CONCEPT_assert(BoundedRange<Rng>());
+    CONCEPT_assert(SizedRange<Rng>());
     CHECK(size(rng) == size(some_ints) * size(some_strings));
 
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_value_type_t<Rng>,
         std::tuple<int, char const *>>());
-    CONCEPT_ASSERT(std::is_same<
+    CONCEPT_assert(std::is_same<
         range_reference_t<Rng>,
         common_tuple<int &, char const * &>>());
 

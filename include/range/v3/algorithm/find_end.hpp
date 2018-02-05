@@ -62,7 +62,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
             static I1
             impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-                 concepts::ForwardIterator*, concepts::ForwardIterator*)
+                 forward_iterator_tag, forward_iterator_tag)
             {
                 bool found = false;
                 I1 res;
@@ -102,7 +102,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                 concepts::BidirectionalIterator*, concepts::BidirectionalIterator*)
+                 bidirectional_iterator_tag, bidirectional_iterator_tag)
             {
                 // modeled after search algorithm (in reverse)
                 if(begin2 == end2)
@@ -132,7 +132,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                 concepts::RandomAccessIterator*, concepts::RandomAccessIterator*)
+                 random_access_iterator_tag, random_access_iterator_tag)
             {
                 // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
                 auto len2 = end2 - begin2;
@@ -170,7 +170,7 @@ namespace ranges
                     begin1, detail::next_to_if<Bidi>(begin1, end1),
                     begin2, detail::next_to_if<Bidi>(begin2, end2),
                     std::move(pred), std::move(proj),
-                    iterator_concept<I1>(), iterator_concept<I2>());
+                    iterator_tag_of<I1>(), iterator_tag_of<I2>());
             }
 
             CONCEPT_template(typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,

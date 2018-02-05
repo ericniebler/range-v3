@@ -145,14 +145,14 @@ namespace ranges
             #endif
                 template<typename Rng>
                 static drop_exactly_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::InputRange*)
+                invoke_(Rng && rng, range_difference_type_t<Rng> n, input_range_tag)
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
+                    requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
+                invoke_(Rng && rng, range_difference_type_t<Rng> n, random_access_range_tag)
                 {
                     return {next(begin(rng), n), end(rng)};
                 }
@@ -162,7 +162,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_concept<Rng>{})
+                    drop_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_tag_of<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(

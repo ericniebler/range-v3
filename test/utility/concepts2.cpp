@@ -161,6 +161,10 @@ struct XXX
 };
 
 static_assert(concepts::Constructible<XXX, int>(), "");
+static_assert(!concepts::MoveConstructible<XXX>(), "");
+static_assert(!concepts::Movable<XXX>(), "");
+static_assert(!concepts::Semiregular<XXX>(), "");
+static_assert(!concepts::Regular<XXX>(), "");
 
 static_assert(concepts::DefaultConstructible<int>(), "");
 static_assert(concepts::DefaultConstructible<int const>(), "");
@@ -229,6 +233,23 @@ static_assert(concepts::EqualityComparable<int>(), "");
 static_assert(concepts::EqualityComparableWith<int, int>(), "");
 static_assert(concepts::EqualityComparableWith<int, IntComparable>(), "");
 static_assert(concepts::EqualityComparableWith<int &, IntComparable &>(), "");
+
+CONCEPT_template(class T)
+    (requires concepts::Regular<T>())
+(constexpr bool) is_regular(T&&)
+{
+    return true;
+}
+
+CONCEPT_template(class T)
+    (requires !concepts::Regular<T>())
+(constexpr bool) is_regular(T&&)
+{
+    return false;
+}
+
+static_assert(is_regular(42), "");
+static_assert(!is_regular(XXX{}), "");
 
 int main()
 {

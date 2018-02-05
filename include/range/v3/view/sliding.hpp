@@ -108,7 +108,7 @@ namespace ranges
                     caching<Rng>::value != cache::none>
             {
             public:
-                CONCEPT_ASSERT(ForwardRange<Rng>());
+                CONCEPT_assert(ForwardRange<Rng>());
                 sv_base() = default;
                 sv_base(Rng rng, range_difference_type_t<Rng> n)
                 : sv_base::view_adaptor(std::move(rng)), n_(n)

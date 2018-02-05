@@ -36,8 +36,8 @@ int main()
     models_not<concepts::SizedView>(aux::copy(rng));
     models<concepts::BidirectionalIterator>(begin(rng));
     models_not<concepts::RandomAccessIterator>(begin(rng));
-    CONCEPT_ASSERT(OutputIterator<decltype(ranges::back_inserter(out)), int>());
-    CONCEPT_ASSERT(!EqualityComparable<decltype(ranges::back_inserter(out))>());
+    CONCEPT_assert(OutputIterator<decltype(ranges::back_inserter(out)), int>());
+    CONCEPT_assert(!EqualityComparable<decltype(ranges::back_inserter(out))>());
     copy(rng, ranges::back_inserter(out));
     ::check_equal(out, {1, 2, 3, 4});
 

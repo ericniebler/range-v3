@@ -36,21 +36,21 @@ namespace ranges
             private:
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::Range*, concepts::Sentinel*)
+                from_container(T & t, concepts::Range*, sentinel_tag)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
                 static sized_iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, concepts::Sentinel*)
+                from_container(T & t, concepts::SizedRange*, sentinel_tag)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, concepts::SizedSentinel*)
+                from_container(T & t, concepts::SizedRange*, sized_sentinel_tag)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
@@ -67,7 +67,7 @@ namespace ranges
                 /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
                 CONCEPT_template(typename T,
-                    typename SIRC = sized_sentinel_concept<sentinel_t<T>, iterator_t<T>>)(
+                    typename SIRC = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>)(
                     requires !View<uncvref_t<T>>())
                 static auto from_range(T && t) ->
                     decltype(all_fn::from_container(t, sized_range_concept<T>(), SIRC()))

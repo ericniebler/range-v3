@@ -56,31 +56,31 @@ namespace ranges
             };
         public:
             // Construction
-            CONCEPT_requires(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
+            CONCEPT_requires(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)()
             common_tuple()
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
               : std::tuple<Ts...>{}
             {}
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Constructible<Ts, Us>()...>::value)
-            explicit common_tuple(Us &&... us)
+            (explicit) common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : std::tuple<Ts...>{static_cast<Us&&>(us)...}
             {}
             CONCEPT_template(typename...Us)(
-                requires meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)
+                requires meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)()
             common_tuple(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)
+                requires meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)()
             common_tuple(std::tuple<Us...> const &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires meta::and_c<(bool) Constructible<Ts, Us>()...>::value)
+                requires meta::and_c<(bool) Constructible<Ts, Us>()...>::value)()
             common_tuple(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
@@ -98,7 +98,7 @@ namespace ranges
             // Assignment
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts &, Us &>()...>::value)
-            common_tuple &operator=(std::tuple<Us...> &that)
+            (common_tuple &)operator=(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
@@ -106,7 +106,7 @@ namespace ranges
             }
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts &, Us const &>()...>::value)
-            common_tuple &operator=(std::tuple<Us...> const & that)
+            (common_tuple &)operator=(std::tuple<Us...> const & that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
@@ -114,7 +114,7 @@ namespace ranges
             }
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts &, Us>()...>::value)
-            common_tuple &operator=(std::tuple<Us...> &&that)
+            (common_tuple &)operator=(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
             {
                 (void)tuple_transform(base(), std::move(that), element_assign_{});
@@ -123,7 +123,7 @@ namespace ranges
 
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts const &, Us &>()...>::value)
-            common_tuple const &operator=(std::tuple<Us...> &that) const
+            (common_tuple const &)operator=(std::tuple<Us...> &that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
@@ -131,7 +131,7 @@ namespace ranges
             }
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts const &, Us const &>()...>::value)
-            common_tuple const &operator=(std::tuple<Us...> const & that) const
+            (common_tuple const &)operator=(std::tuple<Us...> const & that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
@@ -139,7 +139,7 @@ namespace ranges
             }
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Assignable<Ts const &, Us &&>()...>::value)
-            common_tuple const &operator=(std::tuple<Us...> &&that) const
+            (common_tuple const &)operator=(std::tuple<Us...> &&that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
             {
                 (void)tuple_transform(base(), std::move(that), element_assign_{});
@@ -148,21 +148,21 @@ namespace ranges
 
             // Conversion
             CONCEPT_template(typename ...Us)(
-                requires meta::and_c<(bool) Constructible<Us, Ts &>()...>::value)
+                requires meta::and_c<(bool) Constructible<Us, Ts &>()...>::value)()
             operator std::tuple<Us...> () &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
             {
                 return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             CONCEPT_template(typename ...Us)(
-                requires meta::and_c<(bool) Constructible<Us, Ts const &>()...>::value)
+                requires meta::and_c<(bool) Constructible<Us, Ts const &>()...>::value)()
             operator std::tuple<Us...> () const &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
             {
                 return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             CONCEPT_template(typename ...Us)(
-                requires meta::and_c<(bool) Constructible<Us, Ts>()...>::value)
+                requires meta::and_c<(bool) Constructible<Us, Ts>()...>::value)()
             operator std::tuple<Us...> () &&
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
             {
@@ -174,19 +174,19 @@ namespace ranges
 #define LOGICAL_OP(OP, CONCEPT)\
         CONCEPT_template(typename...Ts, typename...Us)(\
             requires meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)\
-        bool operator OP(common_tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        (bool) operator OP(common_tuple<Ts...> const &a, common_tuple<Us...> const &b)\
         {\
             return a.base() OP b.base();\
         }\
         CONCEPT_template(typename...Ts, typename...Us)(\
             requires meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)\
-        bool operator OP(std::tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        (bool) operator OP(std::tuple<Ts...> const &a, common_tuple<Us...> const &b)\
         {\
             return a OP b.base();\
         }\
         CONCEPT_template(typename...Ts, typename...Us)(\
             requires meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)\
-        bool operator OP(common_tuple<Ts...> const &a, std::tuple<Us...> const &b)\
+        (bool) operator OP(common_tuple<Ts...> const &a, std::tuple<Us...> const &b)\
         {\
             return a.base() OP b;\
         }\
@@ -228,35 +228,35 @@ namespace ranges
             }
         public:
             // Construction
-            CONCEPT_requires(DefaultConstructible<F>() && DefaultConstructible<S>())
+            CONCEPT_requires(DefaultConstructible<F>() && DefaultConstructible<S>())()
             common_pair()
                 noexcept(std::is_nothrow_default_constructible<F>::value &&
                     std::is_nothrow_default_constructible<S>::value)
               : std::pair<F, S>{}
             {}
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F, F2>() && Constructible<S, S2>())
+                requires Constructible<F, F2>() && Constructible<S, S2>())()
             common_pair(F2 &&f2, S2 &&s2)
                 noexcept(std::is_nothrow_constructible<F, F2>::value &&
                     std::is_nothrow_constructible<S, S2>::value)
               : std::pair<F, S>{static_cast<F2&&>(f2), static_cast<S2&&>(s2)}
             {}
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F, F2 &>() && Constructible<S, S2 &>())
+                requires Constructible<F, F2 &>() && Constructible<S, S2 &>())()
             common_pair(std::pair<F2, S2> &that)
                 noexcept(std::is_nothrow_constructible<F, F2 &>::value &&
                     std::is_nothrow_constructible<S, S2 &>::value)
               : std::pair<F, S>{that.first, that.second}
             {}
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F, F2 const &>() && Constructible<S, S2 const &>())
+                requires Constructible<F, F2 const &>() && Constructible<S, S2 const &>())()
             common_pair(std::pair<F2, S2> const &that)
                 noexcept(std::is_nothrow_constructible<F, F2 const &>::value &&
                     std::is_nothrow_constructible<S, S2 const &>::value)
               : std::pair<F, S>{that.first, that.second}
             {}
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F, F2>() && Constructible<S, S2>())
+                requires Constructible<F, F2>() && Constructible<S, S2>())()
             common_pair(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_constructible<F, F2>::value &&
                     std::is_nothrow_constructible<S, S2>::value)
@@ -265,7 +265,7 @@ namespace ranges
 
             // Conversion
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F2, F &>() && Constructible<S2, S &>())
+                requires Constructible<F2, F &>() && Constructible<S2, S &>())()
             operator std::pair<F2, S2> () &
                 noexcept(std::is_nothrow_constructible<F2, F &>::value &&
                     std::is_nothrow_constructible<S2, S &>::value)
@@ -273,7 +273,7 @@ namespace ranges
                 return {this->first, this->second};
             }
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F2, F const &>() && Constructible<S2, S const &>())
+                requires Constructible<F2, F const &>() && Constructible<S2, S const &>())()
             operator std::pair<F2, S2> () const &
                 noexcept(std::is_nothrow_constructible<F2, F const &>::value &&
                     std::is_nothrow_constructible<S2, S const &>::value)
@@ -281,7 +281,7 @@ namespace ranges
                 return {this->first, this->second};
             }
             CONCEPT_template(typename F2, typename S2)(
-                requires Constructible<F2, F>() && Constructible<S2, S>())
+                requires Constructible<F2, F>() && Constructible<S2, S>())()
             operator std::pair<F2, S2> () &&
                 noexcept(std::is_nothrow_constructible<F2, F>::value &&
                     std::is_nothrow_constructible<S2, S>::value)
@@ -292,7 +292,7 @@ namespace ranges
             // Assignment
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F &, F2 &>() && Assignable<S &, S2 &>())
-            common_pair &operator=(std::pair<F2, S2> &that)
+            (common_pair &)operator=(std::pair<F2, S2> &that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &>::value &&
                          std::is_nothrow_assignable<S &, S2 &>::value)
             {
@@ -302,7 +302,7 @@ namespace ranges
             }
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F &, F2 const &>() && Assignable<S &, S2 const &>())
-            common_pair &operator=(std::pair<F2, S2> const & that)
+            (common_pair &)operator=(std::pair<F2, S2> const & that)
                 noexcept(std::is_nothrow_assignable<F &, F2 const &>::value &&
                          std::is_nothrow_assignable<S &, S2 const &>::value)
             {
@@ -312,7 +312,7 @@ namespace ranges
             }
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F &, F2>() && Assignable<S &, S2>())
-            common_pair &operator=(std::pair<F2, S2> &&that)
+            (common_pair &)operator=(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_assignable<F &, F2>::value &&
                          std::is_nothrow_assignable<S &, S2>::value)
             {
@@ -323,7 +323,7 @@ namespace ranges
 
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F const &, F2 &>() && Assignable<S const &, S2 &>())
-            common_pair const &operator=(std::pair<F2, S2> &that) const
+            (common_pair const &)operator=(std::pair<F2, S2> &that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 &>::value &&
                          std::is_nothrow_assignable<S const &, S2 &>::value)
             {
@@ -333,7 +333,7 @@ namespace ranges
             }
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F const &, F2 const &>() && Assignable<S const &, S2 const &>())
-            common_pair const &operator=(std::pair<F2, S2> const & that) const
+            (common_pair const &)operator=(std::pair<F2, S2> const & that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 const &>::value &&
                          std::is_nothrow_assignable<S const &, S2 const &>::value)
             {
@@ -343,7 +343,7 @@ namespace ranges
             }
             CONCEPT_template(typename F2, typename S2)(
                 requires Assignable<F const &, F2 &&>() && Assignable<S const &, S2 &&>())
-            common_pair const &operator=(std::pair<F2, S2> &&that) const
+            (common_pair const &)operator=(std::pair<F2, S2> &&that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 &&>::value &&
                          std::is_nothrow_assignable<S const &, S2 &&>::value)
             {
@@ -356,56 +356,56 @@ namespace ranges
         // Logical operators
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
-        bool operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        (bool) operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
-        bool operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        (bool) operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires EqualityComparableWith<F1, F2>() && EqualityComparableWith<S1, S2>())
-        bool operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        (bool) operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first == b.first && a.second == b.second;
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
-        bool operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        (bool) operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
-        bool operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        (bool) operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
             requires StrictTotallyOrderedWith<F1, F2>() && StrictTotallyOrderedWith<S1, S2>())
-        bool operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        (bool) operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
 #define LOGICAL_OP(OP, CONCEPT, RET)\
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
             requires CONCEPT<F1, F2>() && CONCEPT<S1, S2>())\
-        bool operator OP(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        (bool) operator OP(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
         {\
             return RET;\
         }\
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
             requires CONCEPT<F1, F2>() && CONCEPT<S1, S2>())\
-        bool operator OP(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        (bool) operator OP(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
         {\
             return RET;\
         }\
         CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
             requires CONCEPT<F1, F2>() && CONCEPT<S1, S2>())\
-        bool operator OP(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)\
+        (bool) operator OP(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)\
         {\
             return RET;\
         }\
@@ -464,48 +464,7 @@ namespace ranges
                     meta::any_of<meta::list<Ts...>, meta::quote<std::is_reference>>,
                     common_tuple<Ts...>,
                     std::tuple<Ts...>>;
-        }
 
-        // common_type for pairs
-        template<typename F1, typename S1, typename F2, typename S2>
-        struct common_type<std::pair<F1, S1>, common_pair<F2, S2>>
-          : detail::common_type_tuple_like<std::pair<F1, S1>, common_pair<F2, S2>,
-                meta::quote<detail::make_common_pair>>
-        {};
-
-        template<typename F1, typename S1, typename F2, typename S2>
-        struct common_type<common_pair<F1, S1>, std::pair<F2, S2>>
-          : detail::common_type_tuple_like<common_pair<F1, S1>, std::pair<F2, S2>,
-                meta::quote<detail::make_common_pair>>
-        {};
-
-        template<typename F1, typename S1, typename F2, typename S2>
-        struct common_type<common_pair<F1, S1>, common_pair<F2, S2>>
-          : detail::common_type_tuple_like<common_pair<F1, S1>, common_pair<F2, S2>,
-                meta::quote<common_pair>>
-        {};
-
-        // common_type for tuples
-        template<typename ...Ts, typename ...Us>
-        struct common_type<common_tuple<Ts...>, std::tuple<Us...>>
-          : detail::common_type_tuple_like<common_tuple<Ts...>, std::tuple<Us...>,
-                meta::quote<detail::make_common_tuple>>
-        {};
-
-        template<typename ...Ts, typename ...Us>
-        struct common_type<std::tuple<Ts...>, common_tuple<Us...>>
-          : detail::common_type_tuple_like<std::tuple<Ts...>, common_tuple<Us...>,
-                meta::quote<detail::make_common_tuple>>
-        {};
-
-        template<typename ...Ts, typename ...Us>
-        struct common_type<common_tuple<Ts...>, common_tuple<Us...>>
-          : detail::common_type_tuple_like<common_tuple<Ts...>, common_tuple<Us...>,
-                meta::quote<common_tuple>>
-        {};
-
-        namespace detail
-        {
             template<typename, typename, typename, typename = void>
             struct common_ref_tuple_like
             {};
@@ -518,59 +477,92 @@ namespace ranges
                     meta::lazy::invoke<TupleLike, meta::lazy::_t<common_reference<Ts, Us>>...>>
             {};
         }
-
-        // common reference for pairs
-        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
-        struct basic_common_reference<common_pair<F1, S1>, std::pair<F2, S2>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
-                std::pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
-                meta::quote<detail::make_common_pair>>
-        {};
-
-        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
-        struct basic_common_reference<std::pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                std::pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
-                common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
-                meta::quote<detail::make_common_pair>>
-        {};
-
-        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
-        struct basic_common_reference<common_pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
-                common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
-                meta::quote<common_pair>>
-        {};
-
-        // common reference for tuples
-        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
-        struct basic_common_reference<common_tuple<Ts...>, std::tuple<Us...>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                common_tuple<meta::invoke<Qual1, Ts>...>,
-                std::tuple<meta::invoke<Qual2, Us>...>,
-                meta::quote<detail::make_common_tuple>>
-        {};
-
-        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
-        struct basic_common_reference<std::tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                std::tuple<meta::invoke<Qual1, Ts>...>,
-                common_tuple<meta::invoke<Qual2, Us>...>,
-                meta::quote<detail::make_common_tuple>>
-        {};
-
-        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
-        struct basic_common_reference<common_tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
-          : detail::common_ref_tuple_like<
-                common_tuple<meta::invoke<Qual1, Ts>...>,
-                common_tuple<meta::invoke<Qual2, Us>...>,
-                meta::quote<common_tuple>>
-        {};
         /// \endcond
     }
 }
+
+/// \cond
+namespace concepts
+{
+    // common_type for pairs
+    template<typename F1, typename S1, typename F2, typename S2>
+    struct common_type<std::pair<F1, S1>, ranges::common_pair<F2, S2>>
+      : ranges::detail::common_type_tuple_like<std::pair<F1, S1>, ranges::common_pair<F2, S2>,
+            meta::quote<ranges::detail::make_common_pair>>
+    {};
+    template<typename F1, typename S1, typename F2, typename S2>
+    struct common_type<ranges::common_pair<F1, S1>, std::pair<F2, S2>>
+      : ranges::detail::common_type_tuple_like<ranges::common_pair<F1, S1>, std::pair<F2, S2>,
+            meta::quote<ranges::detail::make_common_pair>>
+    {};
+    template<typename F1, typename S1, typename F2, typename S2>
+    struct common_type<ranges::common_pair<F1, S1>, ranges::common_pair<F2, S2>>
+      : ranges::detail::common_type_tuple_like<ranges::common_pair<F1, S1>, ranges::common_pair<F2, S2>,
+            meta::quote<ranges::common_pair>>
+    {};
+    // common_type for tuples
+    template<typename ...Ts, typename ...Us>
+    struct common_type<ranges::common_tuple<Ts...>, std::tuple<Us...>>
+      : ranges::detail::common_type_tuple_like<ranges::common_tuple<Ts...>, std::tuple<Us...>,
+            meta::quote<ranges::detail::make_common_tuple>>
+    {};
+    template<typename ...Ts, typename ...Us>
+    struct common_type<std::tuple<Ts...>, ranges::common_tuple<Us...>>
+      : ranges::detail::common_type_tuple_like<std::tuple<Ts...>, ranges::common_tuple<Us...>,
+            meta::quote<ranges::detail::make_common_tuple>>
+    {};
+    template<typename ...Ts, typename ...Us>
+    struct common_type<ranges::common_tuple<Ts...>, ranges::common_tuple<Us...>>
+      : ranges::detail::common_type_tuple_like<ranges::common_tuple<Ts...>, ranges::common_tuple<Us...>,
+            meta::quote<ranges::common_tuple>>
+    {};
+
+    // common reference for pairs
+    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    struct basic_common_reference<ranges::common_pair<F1, S1>, std::pair<F2, S2>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            ranges::common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+            std::pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
+            meta::quote<ranges::detail::make_common_pair>>
+    {};
+    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    struct basic_common_reference<std::pair<F1, S1>, ranges::common_pair<F2, S2>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            std::pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+            ranges::common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
+            meta::quote<ranges::detail::make_common_pair>>
+    {};
+    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    struct basic_common_reference<ranges::common_pair<F1, S1>, ranges::common_pair<F2, S2>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            ranges::common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+            ranges::common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
+            meta::quote<ranges::common_pair>>
+    {};
+    // common reference for tuples
+    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    struct basic_common_reference<ranges::common_tuple<Ts...>, std::tuple<Us...>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            ranges::common_tuple<meta::invoke<Qual1, Ts>...>,
+            std::tuple<meta::invoke<Qual2, Us>...>,
+            meta::quote<ranges::detail::make_common_tuple>>
+    {};
+    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    struct basic_common_reference<std::tuple<Ts...>, ranges::common_tuple<Us...>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            std::tuple<meta::invoke<Qual1, Ts>...>,
+            ranges::common_tuple<meta::invoke<Qual2, Us>...>,
+            meta::quote<ranges::detail::make_common_tuple>>
+    {};
+    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    struct basic_common_reference<ranges::common_tuple<Ts...>, ranges::common_tuple<Us...>, Qual1, Qual2>
+      : ranges::detail::common_ref_tuple_like<
+            ranges::common_tuple<meta::invoke<Qual1, Ts>...>,
+            ranges::common_tuple<meta::invoke<Qual2, Us>...>,
+            meta::quote<ranges::common_tuple>>
+    {};
+}
+/// \endcond
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_PRAGMAS

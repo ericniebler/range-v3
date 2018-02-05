@@ -95,7 +95,7 @@ namespace ranges
         struct safe_int
         {
         private:
-            CONCEPT_ASSERT(SignedIntegral<SignedInteger>());
+            CONCEPT_assert(SignedIntegral<SignedInteger>());
             static constexpr SignedInteger pos_inf_ =
                 std::numeric_limits<SignedInteger>::max();
             // Use -max instead of min for 2's complement weirdness.

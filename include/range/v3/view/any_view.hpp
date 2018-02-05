@@ -231,8 +231,8 @@ namespace ranges
                     tag::current(iterator_t<Rng>)>
               , private any_view_sentinel_impl<Rng>
             {
-                CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_ASSERT(!Sized || (bool)SizedRange<Rng>());
+                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>());
+                CONCEPT_assert(!Sized || (bool)SizedRange<Rng>());
 
                 explicit any_input_view_impl(Rng rng_)
                   : tagged_t{std::move(rng_), iterator_t<Rng>{}}
@@ -302,8 +302,8 @@ namespace ranges
             struct any_cursor_impl
               : any_cloneable_cursor_interface<Ref, Cat>
             {
-                CONCEPT_ASSERT(ConvertibleTo<reference_t<I>, Ref>());
-                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
+                CONCEPT_assert(ConvertibleTo<reference_t<I>, Ref>());
+                CONCEPT_assert((Cat & category::forward) == category::forward);
 
                 any_cursor_impl() = default;
                 any_cursor_impl(I it)
@@ -375,7 +375,7 @@ namespace ranges
             struct any_cursor
             {
             private:
-                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
+                CONCEPT_assert((Cat & category::forward) == category::forward);
 
                 std::unique_ptr<any_cloneable_cursor_interface<Ref, Cat>> ptr_;
 
@@ -443,7 +443,7 @@ namespace ranges
             struct any_view_interface
               : fully_erased_view
             {
-                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
+                CONCEPT_assert((Cat & category::forward) == category::forward);
 
                 virtual ~any_view_interface() = default;
                 virtual any_cursor<Ref, Cat> begin_cursor() = 0;
@@ -465,9 +465,9 @@ namespace ranges
               , private box<Rng, any_view_impl<Rng, Ref, Cat>>
               , private any_view_sentinel_impl<Rng>
             {
-                CONCEPT_ASSERT((Cat & category::forward) == category::forward);
-                CONCEPT_ASSERT(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_ASSERT((Cat & category::sized) == category::none || (bool)SizedRange<Rng>());
+                CONCEPT_assert((Cat & category::forward) == category::forward);
+                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>());
+                CONCEPT_assert((Cat & category::sized) == category::none || (bool)SizedRange<Rng>());
 
                 any_view_impl() = default;
                 any_view_impl(Rng rng)
@@ -507,7 +507,7 @@ namespace ranges
           : view_facade<any_view<Ref, Cat>, (Cat & category::sized) == category::sized ? finite : unknown>
         {
             friend range_access;
-            CONCEPT_ASSERT((Cat & category::forward) == category::forward);
+            CONCEPT_assert((Cat & category::forward) == category::forward);
 
             any_view() = default;
             CONCEPT_template(typename Rng)(

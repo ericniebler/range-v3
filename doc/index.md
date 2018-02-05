@@ -229,7 +229,7 @@ range and transforms all the elements with a unary function.
       : public ranges::view_adaptor<transform_view<Rng, Fun>, Rng>
     {
         friend ranges::range_access;
-        ranges::semiregular_t<Fun> fun_; // Make Fun model SemiRegular if it doesn't
+        ranges::semiregular_t<Fun> fun_; // Make Fun model Semiregular if it doesn't
         class adaptor : public ranges::adaptor_base
         {
             ranges::semiregular_t<Fun> fun_;

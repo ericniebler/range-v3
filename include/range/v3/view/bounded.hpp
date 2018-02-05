@@ -55,8 +55,8 @@ namespace ranges
           : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
-            CONCEPT_ASSERT(View<Rng>());
-            CONCEPT_ASSERT(!BoundedView<Rng>());
+            CONCEPT_assert(View<Rng>());
+            CONCEPT_assert(!BoundedView<Rng>());
 
             Rng rng_;
 

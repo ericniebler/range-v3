@@ -31,9 +31,9 @@ good men
     ::check_equal(rng, {"Now is", "the time", "for all", "good men"});
 
     using Rng = decltype(rng);
-    CONCEPT_ASSERT(InputView<Rng>());
-    CONCEPT_ASSERT(!ForwardView<Rng>());
-    CONCEPT_ASSERT(Same<range_rvalue_reference_t<Rng>, std::string &&>());
+    CONCEPT_assert(InputView<Rng>());
+    CONCEPT_assert(!ForwardView<Rng>());
+    CONCEPT_assert(Same<range_rvalue_reference_t<Rng>, std::string &&>());
 
     return ::test_result();
 }

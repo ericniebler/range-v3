@@ -165,7 +165,7 @@ namespace ranges
         {
             semiregular() = default;
             CONCEPT_template(typename Arg)(
-                requires Constructible<ranges::reference_wrapper<T &>, Arg &>())
+                requires Constructible<ranges::reference_wrapper<T &>, Arg &>())()
             semiregular(in_place_t, Arg &arg)
               : ranges::reference_wrapper<T &>(arg)
             {}
@@ -181,7 +181,7 @@ namespace ranges
         {
             semiregular() = default;
             CONCEPT_template(typename Arg)(
-                requires Constructible<ranges::reference_wrapper<T &&>, Arg>())
+                requires Constructible<ranges::reference_wrapper<T &&>, Arg>())()
             semiregular(in_place_t, Arg &&arg)
               : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))
             {}
@@ -193,19 +193,19 @@ namespace ranges
 
         template<typename T>
         using semiregular_t =
-            meta::if_<SemiRegular<T>, T, semiregular<T>>;
+            meta::if_c<(bool) Semiregular<T>(), T, semiregular<T>>;
 
         template<typename T>
         using movesemiregular_t =
             meta::if_c<
-                Movable<T>() && DefaultConstructible<T>(),
+                (bool) (Movable<T>() && DefaultConstructible<T>()),
                 T,
                 semiregular<T>>;
 
         template<typename T, bool IsConst = false>
         using semiregular_ref_or_val_t =
-            meta::if_<
-                SemiRegular<T>,
+            meta::if_c<
+                (bool) Semiregular<T>(),
                 meta::if_c<IsConst, T, reference_wrapper<T>>,
                 reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
 

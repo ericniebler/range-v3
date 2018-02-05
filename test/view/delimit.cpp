@@ -27,7 +27,7 @@ int main()
     ::models<concepts::View>(aux::copy(rng0));
     ::models_not<concepts::BoundedView>(aux::copy(rng0));
     ::models<concepts::RandomAccessIterator>(rng0.begin());
-    CONCEPT_ASSERT(RandomAccessView<delimit_view<std::vector<int>, int>>());
+    CONCEPT_assert(RandomAccessView<delimit_view<std::vector<int>, int>>());
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::delimit(50);

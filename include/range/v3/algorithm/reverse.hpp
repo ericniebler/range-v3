@@ -33,7 +33,7 @@ namespace ranges
         {
         private:
             template<typename I>
-            static void impl(I begin, I end, concepts::BidirectionalIterator*)
+            static void impl(I begin, I end, bidirectional_iterator_tag)
             {
                 while(begin != end)
                 {
@@ -45,7 +45,7 @@ namespace ranges
             }
 
             template<typename I>
-            static void impl(I begin, I end, concepts::RandomAccessIterator*)
+            static void impl(I begin, I end, random_access_iterator_tag)
             {
                 if(begin != end)
                     for(; begin < --end; ++begin)
@@ -58,7 +58,7 @@ namespace ranges
             I operator()(I begin, S end_) const
             {
                 I end = ranges::next(begin, end_);
-                reverse_fn::impl(begin, end, iterator_concept<I>{});
+                reverse_fn::impl(begin, end, iterator_tag_of<I>{});
                 return end;
             }
 

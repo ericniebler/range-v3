@@ -159,7 +159,7 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && IsTrue<std::is_lvalue_reference<Rng>>())
+                    requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {
@@ -190,7 +190,7 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_concept<Rng>{})
+                    take_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_tag_of<Rng>{})
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

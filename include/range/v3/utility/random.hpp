@@ -167,7 +167,7 @@ namespace ranges
 #endif
                 std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
                 {
-                    CONCEPT_ASSERT(seed_count >= weird_seed_sources);
+                    CONCEPT_assert(seed_count >= weird_seed_sources);
                     std::array<std::uint32_t, seed_count> seeds;
                     auto it = seeds.begin();
 
@@ -316,7 +316,7 @@ namespace ranges
                     std::size_t mix_rounds = 1 + (count <= 2)>
                 struct seed_seq_fe {
                 public:
-                    CONCEPT_ASSERT(UnsignedIntegral<IntRep>());
+                    CONCEPT_assert(UnsignedIntegral<IntRep>());
                     typedef IntRep result_type;
 
                 private:

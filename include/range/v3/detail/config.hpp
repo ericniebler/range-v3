@@ -468,6 +468,10 @@ namespace ranges
 #define RANGES_INTENDED_MODULAR_ARITHMETIC
 #endif
 
+#ifndef RANGES_USE_LEGACY_CONCEPTS
+#define RANGES_USE_LEGACY_CONCEPTS 1 //0
+#endif
+
 namespace ranges {
     inline namespace v3 {
         namespace detail {

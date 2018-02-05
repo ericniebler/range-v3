@@ -51,7 +51,7 @@ namespace ranges
                         concepts::valid_expr(
                             concepts::model_of<concepts::InputRange, Rng>(),
                             concepts::model_of<concepts::InputRange, range_value_type_t<Rng>>(),
-                            concepts::model_of<concepts::SemiRegular, join_value_t<Rng>>()
+                            concepts::model_of<concepts::Semiregular, join_value_t<Rng>>()
                         ));
                 };
 
