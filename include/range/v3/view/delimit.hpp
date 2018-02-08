@@ -79,22 +79,25 @@ namespace ranges
                     make_pipeable(std::bind(delimit, std::placeholders::_1, std::move(value)))
                 )
             public:
-                template<typename Rng, typename Val>
-                CONCEPT_alias(Concept,
-                    Range<Rng>() &&
-                    EqualityComparableWith<Val, range_common_reference_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Val)
+                    concept Delimitable,
+                        Range<Rng>() &&
+                        EqualityComparableWith<Val, range_common_reference_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Val)(
-                    requires Concept<Rng, Val>())
-                delimit_view<all_t<Rng>, Val>
+                    requires Delimitable<Rng, Val>())
+                (delimit_view<all_t<Rng>, Val>)
                 operator()(Rng && rng, Val value) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Val)(
-                    requires !Concept<Rng, Val>())
-                void
+                    requires !Delimitable<Rng, Val>())
+                (void)
                 operator()(Rng &&, Val) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
@@ -112,7 +115,7 @@ namespace ranges
 
                 CONCEPT_template(typename I, typename Val)(
                     requires InputIterator<I>())
-                delimit_view<iterator_range<I, unreachable>, Val>
+                (delimit_view<iterator_range<I, unreachable>, Val>)
                 operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};

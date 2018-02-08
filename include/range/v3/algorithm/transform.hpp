@@ -58,7 +58,7 @@ namespace ranges
             // Single-range variant
             CONCEPT_template(typename I, typename S, typename O, typename F, typename P = ident)(
                 requires Sentinel<S, I>() && Transformable1<I, O, F, P>())
-            tagged_pair<tag::in(I), tag::out(O)>
+            (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I begin, S end, O out, F fun, P proj = P{}) const
             {
                 for(; begin != end; ++begin, ++out)
@@ -69,7 +69,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename O, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng>() && Transformable1<I, O, F, P>())
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(fun),
@@ -81,7 +81,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
+            (tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)
             operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
@@ -96,10 +96,10 @@ namespace ranges
                 typename I1 = iterator_t<Rng1>)(
                 requires Range<Rng0>() && Range<Rng1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())
-            tagged_tuple<
+            (tagged_tuple<
                 tag::in1(safe_iterator_t<Rng0>),
                 tag::in2(safe_iterator_t<Rng1>),
-                tag::out(O)>
+                tag::out(O)>)
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
@@ -112,7 +112,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
+            (tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)
             operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
@@ -125,7 +125,7 @@ namespace ranges
                 typename I0 = iterator_t<Rng0>)(
                 requires Range<Rng0>() && Iterator<I1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())
-            tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(I1), tag::out(O)>
+            (tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(I1), tag::out(O)>)
             operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {

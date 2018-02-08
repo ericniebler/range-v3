@@ -78,7 +78,7 @@ namespace ranges
                 // Piping requires things are passed by value.
                 CONCEPT_template(typename Rng, typename Act)(
                     requires ActionPipeConcept<Rng>())
-                static auto pipe(Rng && rng, Act && act)
+                (static auto) pipe(Rng && rng, Act && act)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     invoke(act.action_, detail::move(rng))
@@ -88,7 +88,7 @@ namespace ranges
                 // For better error messages:
                 CONCEPT_template(typename Rng, typename Act)(
                     requires !ActionPipeConcept<Rng>())
-                static void pipe(Rng &&, Act &&)
+                (static void) pipe(Rng &&, Act &&)
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "The type Rng must be a model of the Range concept.");
@@ -112,7 +112,7 @@ namespace ranges
                 // Calling directly requires things are passed by reference.
                 CONCEPT_template(typename Rng, typename...Rest)(
                     requires ActionConcept<Rng &, Rest...>())
-                auto operator()(Rng & rng, Rest &&... rest) const
+                (auto) operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     invoke(action_, rng, static_cast<Rest&&>(rest)...)
@@ -133,7 +133,7 @@ namespace ranges
                     Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
                         result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())
-            Rng & operator|=(Rng & rng, Action && action)
+            (Rng &) operator|=(Rng & rng, Action && action)
             {
                 ref(rng) | action;
                 return rng;

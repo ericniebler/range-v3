@@ -39,7 +39,7 @@ namespace ranges
 
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, difference_type_t<I> n, InputIteratorConcept)
+            void advance_impl(I &i, difference_type_t<I> n, input_iterator_tag)
             {
                 RANGES_EXPECT(n >= 0);
                 for(; n > 0; --n)
@@ -47,13 +47,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, difference_type_t<I> n, ForwardIteratorConcept)
-            {
-                adl_advance_detail::advance_impl(i, n, InputIteratorConcept{});
-            }
-            template<typename I>
-            RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, difference_type_t<I> n, BidirectionalIteratorConcept)
+            void advance_impl(I &i, difference_type_t<I> n, bidirectional_iterator_tag)
             {
                 if(n > 0)
                     for(; n > 0; --n)
@@ -64,7 +58,7 @@ namespace ranges
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
-            void advance_impl(I &i, difference_type_t<I> n, RandomAccessIteratorConcept)
+            void advance_impl(I &i, difference_type_t<I> n, random_access_iterator_tag)
             {
                 i += n;
             }

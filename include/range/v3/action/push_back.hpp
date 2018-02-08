@@ -31,7 +31,7 @@ namespace ranges
         {
             CONCEPT_template(typename Cont, typename T)(
                 requires LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())
-            auto push_back(Cont && cont, T && t) ->
+            (auto) push_back(Cont && cont, T && t) ->
                 decltype((void)unwrap_reference(cont).push_back(static_cast<T&&>(t)))
             {
                 unwrap_reference(cont).push_back(static_cast<T&&>(t));
@@ -39,7 +39,7 @@ namespace ranges
 
             CONCEPT_template(typename Cont, typename Rng)(
                 requires LvalueContainerLike<Cont>() && Range<Rng>())
-            auto push_back(Cont && cont, Rng && rng) ->
+            (auto) push_back(Cont && cont, Rng && rng) ->
                 decltype((void)ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng)))
             {
                 ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng&&>(rng));
@@ -74,7 +74,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename T)(
                     requires Concept<Rng, T>())
-                Rng operator()(Rng && rng, T && t) const
+                (Rng) operator()(Rng && rng, T && t) const
                 {
                     push_back(rng, static_cast<T&&>(t));
                     return static_cast<Rng&&>(rng);
@@ -83,7 +83,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires !Concept<Rng, T>())
-                void operator()(Rng &&rng, T &&t) const
+                (void) operator()(Rng &&rng, T &&t) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::push_back operates must be a model of the "

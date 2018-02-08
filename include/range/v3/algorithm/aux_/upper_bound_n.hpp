@@ -61,7 +61,7 @@ namespace ranges
                 /// \pre `Rng` is a model of the `Range` concept
                 CONCEPT_template(typename I, typename V2, typename C = ordered_less, typename P = ident)(
                     requires BinarySearchable<I, V2, C, P>())
-                I operator()(I begin, difference_type_t<I> d, V2 const &val, C pred = C{},
+                (I) operator()(I begin, difference_type_t<I> d, V2 const &val, C pred = C{},
                     P proj = P{}) const
                 {
                     return partition_point_n(std::move(begin), d,

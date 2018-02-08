@@ -43,7 +43,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename O, typename C, typename T, typename P = ident)(
                 requires ReplaceCopyIfable<I, O, C, T, P>() && Sentinel<S, I>())
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const
+            (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const
             {
                 for(; begin != end; ++begin, ++out)
                 {
@@ -59,7 +59,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename O, typename C, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ReplaceCopyIfable<I, O, C, T, P>() && Range<Rng>())
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), new_value,

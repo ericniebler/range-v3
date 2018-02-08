@@ -36,21 +36,21 @@ namespace ranges
             private:
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::Range*, sentinel_tag)
+                from_container(T & t, range_tag, sentinel_tag)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
                 static sized_iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, sentinel_tag)
+                from_container(T & t, sized_range_tag, sentinel_tag)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, sized_sentinel_tag)
+                from_container(T & t, sized_range_tag, sized_sentinel_tag)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
@@ -59,7 +59,7 @@ namespace ranges
                 /// If it's a view already, pass it though.
                 CONCEPT_template(typename T)(
                     requires View<uncvref_t<T>>())
-                static T from_range(T && t)
+                (static T) from_range(T && t)
                 {
                     return static_cast<T&&>(t);
                 }
@@ -69,11 +69,11 @@ namespace ranges
                 CONCEPT_template(typename T,
                     typename SIRC = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>)(
                     requires !View<uncvref_t<T>>())
-                static auto from_range(T && t) ->
-                    decltype(all_fn::from_container(t, sized_range_concept<T>(), SIRC()))
+                (static decltype(all_fn::from_container(std::declval<T&>(), sized_range_tag_of<T>(), SIRC())))
+                from_range(T && t)
                 {
                     static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
-                    return all_fn::from_container(t, sized_range_concept<T>(), SIRC());
+                    return all_fn::from_container(t, sized_range_tag_of<T>(), SIRC());
                 }
 
                 // TODO handle char const * by turning it into a delimited range?
@@ -81,15 +81,16 @@ namespace ranges
             public:
                 CONCEPT_template(typename T)(
                     requires Range<T>())
-                auto operator()(T && t) const ->
-                    decltype(all_fn::from_range(static_cast<T&&>(t)))
+                (decltype(all_fn::from_range(std::declval<T>())))
+                operator()(T && t) const
                 {
                     return all_fn::from_range(static_cast<T&&>(t));
                 }
 
                 CONCEPT_template(typename T)(
                     requires Range<T &>())
-                ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
+                (ranges::reference_wrapper<T>)
+                operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());
                 }

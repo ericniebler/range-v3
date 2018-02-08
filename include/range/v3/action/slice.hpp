@@ -38,35 +38,28 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename D)(
                     requires Integral<D>())
-                static auto bind(slice_fn slice, D from, D to)
+                (static auto) bind(slice_fn slice, D from, D to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(slice, std::placeholders::_1, from, to)
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T, typename U,
-                        typename I = iterator_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>(),
-                            concepts::model_of<concepts::ConvertibleTo, U, D>()
-                        ));
-                };
-
-                template<typename Rng, typename T, typename U>
-                using Concept = concepts::models<ConceptImpl, Rng, T, U>;
+                CONCEPT_def
+                (
+                    template(typename Rng, typename T, typename U)
+                    concept Concept,
+                        ForwardRange<Rng>() &&
+                        ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>() &&
+                        ConvertibleTo<T, range_difference_type_t<Rng>>() &&
+                        ConvertibleTo<U, range_difference_type_t<Rng>>()
+                );
 
                 // TODO support slice from end.
                 CONCEPT_template(typename Rng,
                     typename I = iterator_t<Rng>,
                     typename D = range_difference_type_t<Rng>)(
                     requires Concept<Rng, D, D>())
-                Rng operator()(Rng && rng, range_difference_type_t<Rng> from,
+                (Rng) operator()(Rng && rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const
                 {
                     RANGES_EXPECT(from <= to);
@@ -78,7 +71,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T, typename U)(
                     requires !Concept<Rng, T, U>())
-                void operator()(Rng &&, T &&, U &&) const
+                (void) operator()(Rng &&, T &&, U &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::slice operates must be a model of the "

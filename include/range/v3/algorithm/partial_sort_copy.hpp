@@ -47,7 +47,7 @@ namespace ranges
                 typename PI = ident, typename PO = ident)(
                 requires PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     Sentinel<SI, I>() && Sentinel<SO, O>())
-            O operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{}, PI in_proj = PI{},
+            (O) operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const
             {
                 O r = out_begin;
@@ -77,7 +77,7 @@ namespace ranges
                 typename O = iterator_t<OutRng>)(
                 requires PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     Range<InRng>() && Range<OutRng>())
-            safe_iterator_t<OutRng>
+            (safe_iterator_t<OutRng>)
             operator()(InRng && in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const
             {

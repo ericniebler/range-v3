@@ -269,13 +269,13 @@ namespace ranges
                 }
             };
 
-            auto iter_cat(range_access::InputCursorConcept) ->
+            auto iter_cat(input_cursor_tag) ->
                 ranges::input_iterator_tag;
-            auto iter_cat(range_access::ForwardCursorConcept) ->
+            auto iter_cat(forward_cursor_tag) ->
                 ranges::forward_iterator_tag;
-            auto iter_cat(range_access::BidirectionalCursorConcept) ->
+            auto iter_cat(bidirectional_cursor_tag) ->
                 ranges::bidirectional_iterator_tag;
-            auto iter_cat(range_access::RandomAccessCursorConcept) ->
+            auto iter_cat(random_access_cursor_tag) ->
                 ranges::random_access_iterator_tag;
 
             template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
@@ -284,7 +284,7 @@ namespace ranges
             protected:
                 using reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
-                using cursor_concept_t = range_access::OutputCursorConcept;
+                using cursor_tag_t = concepts::tag<range_access::OutputCursorConcept, cursor_tag>;
             public:
                 using reference = void;
                 using difference_type = range_access::cursor_difference_t<Cur>;
@@ -298,7 +298,7 @@ namespace ranges
             struct iterator_associated_types_base<Cur, true>
             {
             protected:
-                using cursor_concept_t = detail::cursor_concept_t<Cur>;
+                using cursor_tag_t = detail::cursor_tag_of<Cur>;
                 using reference_t =
                     meta::if_<
                         is_writable_cursor<Cur const>,
@@ -317,7 +317,7 @@ namespace ranges
                 using value_type = range_access::cursor_value_t<Cur>;
                 using reference = reference_t;
                 using iterator_category =
-                    decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
+                    decltype(detail::iter_cat(cursor_tag_t()));
                 using pointer = meta::_t<meta::if_<
                     HasCursorArrow<Cur>,
                     meta::defer<cursor_arrow_t, Cur>,
@@ -369,7 +369,7 @@ namespace ranges
             using mixin_t = range_access::mixin_base_t<Cur>;
             static_assert((bool) detail::Cursor<Cur>(), "");
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
-            using typename assoc_types_::cursor_concept_t;
+            using typename assoc_types_::cursor_tag_t;
             using typename assoc_types_::reference_t;
             using typename assoc_types_::const_reference_t;
             RANGES_CXX14_CONSTEXPR Cur &pos() noexcept // this noexcept is a lie
@@ -486,7 +486,7 @@ namespace ranges
                 return *this;
             }
 
-            CONCEPT_requires(!Same<range_access::InputCursorConcept, detail::cursor_concept_t<Cur>>())
+            CONCEPT_requires(!Same<detail::input_cursor_tag, detail::cursor_tag_of<Cur>>())
             (RANGES_CXX14_CONSTEXPR
             basic_iterator) operator++(int)
             {
@@ -494,7 +494,7 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            CONCEPT_requires(Same<range_access::InputCursorConcept, detail::cursor_concept_t<Cur>>())
+            CONCEPT_requires(Same<detail::input_cursor_tag, detail::cursor_tag_of<Cur>>())
             (RANGES_CXX14_CONSTEXPR
             void) operator++(int)
             {

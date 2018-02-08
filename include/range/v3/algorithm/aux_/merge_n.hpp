@@ -53,7 +53,7 @@ namespace ranges
                 CONCEPT_template(typename I0, typename I1, typename O, typename C = ordered_less,
                     typename P0 = ident, typename P1 = ident)(
                     requires Mergeable<I0, I1, O, C, P0, P1>())
-                tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
+                (tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)
                 operator()(I0 begin0, difference_type_t<I0> n0,
                            I1 begin1, difference_type_t<I1> n1,
                            O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const

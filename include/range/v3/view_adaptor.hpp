@@ -117,13 +117,13 @@ namespace ranges
             )
             CONCEPT_template(typename I)(
                 requires EqualityComparable<I>())
-            static bool equal(I const &it0, I const &it1)
+            (static bool) equal(I const &it0, I const &it1)
             {
                 return it0 == it1;
             }
             CONCEPT_template(typename I)(
                 requires Iterator<I>())
-            static reference_t<I> read(I const &it,
+            (static reference_t<I>) read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
                 noexcept(noexcept(reference_t<I>(*it)))
             {
@@ -131,31 +131,31 @@ namespace ranges
             }
             CONCEPT_template(typename I)(
                 requires Iterator<I>())
-            static void next(I &it)
+            (static void) next(I &it)
             {
                 ++it;
             }
             CONCEPT_template(typename I)(
                 requires BidirectionalIterator<I>())
-            static void prev(I &it)
+            (static void) prev(I &it)
             {
                 --it;
             }
             CONCEPT_template(typename I)(
                 requires RandomAccessIterator<I>())
-            static void advance(I &it, difference_type_t<I> n)
+            (static void) advance(I &it, difference_type_t<I> n)
             {
                 it += n;
             }
             CONCEPT_template(typename I)(
                 requires SizedSentinel<I, I>())
-            static difference_type_t<I> distance_to(I const &it0, I const &it1)
+            (static difference_type_t<I>) distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
             CONCEPT_template(typename I, typename S)(
                 requires Sentinel<S, I>())
-            static constexpr bool empty(I const &it, S const &end)
+            (static constexpr bool) empty(I const &it, S const &end)
             {
                 return it == end;
             }
@@ -419,15 +419,17 @@ namespace ranges
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>())
-            RANGES_CXX14_CONSTEXPR auto begin_cursor()
-            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D &>()))
+            (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::begin_cursor_(std::declval<D &>())))
+            begin_cursor()
+                noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D &>())))
             {
                 return view_adaptor::begin_cursor_(derived());
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && Range<base_range_t const>())
-            RANGES_CXX14_CONSTEXPR auto begin_cursor() const
-            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::begin_cursor_(std::declval<D const &>()))
+            (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))
+            begin_cursor() const
+                noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
             {
                 return view_adaptor::begin_cursor_(derived());
             }
@@ -444,15 +446,17 @@ namespace ranges
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>())
-            RANGES_CXX14_CONSTEXPR auto end_cursor()
-            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D &>()))
+            (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::end_cursor_(std::declval<D &>())))
+            end_cursor()
+                noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D &>())))
             {
                 return view_adaptor::end_cursor_(derived());
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && Range<base_range_t const>())
-            RANGES_CXX14_CONSTEXPR auto end_cursor() const
-            RANGES_DECLTYPE_NOEXCEPT(view_adaptor::end_cursor_(std::declval<D const &>()))
+            (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::end_cursor_(std::declval<D const &>())))
+            end_cursor() const
+                noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))
             {
                 return view_adaptor::end_cursor_(derived());
             }

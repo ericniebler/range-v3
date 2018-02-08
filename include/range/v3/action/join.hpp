@@ -61,7 +61,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng)(
                     requires Joinable<Rng>())
-                join_value_t<Rng> operator()(Rng && rng) const
+                (join_value_t<Rng>) operator()(Rng && rng) const
                 {
                     join_value_t<Rng> ret;
                     auto end = ranges::end(rng);
@@ -73,7 +73,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires !Joinable<Rng>())
-                void operator()(Rng &&) const
+                (void) operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::join operates must be a model of the "

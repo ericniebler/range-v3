@@ -405,20 +405,31 @@ namespace ranges
             using InfiniteCursor =
                 range_access::InfiniteCursor<T>;
 
-            template<typename T>
-            using cursor_concept =
-                meta::front<
-                    meta::find_if<
-                        meta::list<
-                            range_access::RandomAccessCursorConcept,
-                            range_access::BidirectionalCursorConcept,
-                            range_access::ForwardCursorConcept,
-                            range_access::InputCursorConcept,
-                            range_access::CursorConcept>,
-                        meta::bind_back<meta::quote<::concepts::is_satisfied_by>, T>>>;
+            using cursor_tag =
+                concepts::tag<range_access::CursorConcept>;
+
+            using input_cursor_tag =
+                concepts::tag<range_access::InputCursorConcept, cursor_tag>;
+
+            using forward_cursor_tag =
+                concepts::tag<range_access::ForwardCursorConcept, input_cursor_tag>;
+
+            using bidirectional_cursor_tag =
+                concepts::tag<range_access::BidirectionalCursorConcept, forward_cursor_tag>;
+
+            using random_access_cursor_tag =
+                concepts::tag<range_access::RandomAccessCursorConcept, bidirectional_cursor_tag>;
 
             template<typename T>
-            using cursor_concept_t = meta::_t<cursor_concept<T>>;
+            using cursor_tag_of =
+                concepts::tag_of<
+                    meta::list<
+                        range_access::RandomAccessCursorConcept,
+                        range_access::BidirectionalCursorConcept,
+                        range_access::ForwardCursorConcept,
+                        range_access::InputCursorConcept,
+                        range_access::CursorConcept>,
+                    T>;
 
             template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
             struct is_writable_cursor_

@@ -29,7 +29,7 @@ namespace ranges
         {
             CONCEPT_template(typename Cont, typename I)(
                 requires LvalueContainerLike<Cont>() && ForwardIterator<I>())
-            auto erase(Cont && cont, I it) ->
+            (auto) erase(Cont && cont, I it) ->
                 decltype(unwrap_reference(cont).erase(it))
             {
                 return unwrap_reference(cont).erase(it);
@@ -38,7 +38,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename I, typename S)(
                 requires LvalueContainerLike<Cont>() && ForwardIterator<I>() &&
                     Sentinel<S, I>())
-            auto erase(Cont && cont, I begin, S end) ->
+            (auto) erase(Cont && cont, I begin, S end) ->
                 decltype(unwrap_reference(cont).erase(begin, end))
             {
                 return unwrap_reference(cont).erase(begin, end);
@@ -49,7 +49,7 @@ namespace ranges
                 // TODO associative erase by key
                 CONCEPT_template(typename Rng, typename I)(
                     requires Range<Rng>() && ForwardIterator<I>())
-                auto operator()(Rng && rng, I it) const ->
+                (auto) operator()(Rng && rng, I it) const ->
                     decltype(erase(static_cast<Rng&&>(rng), it))
                 {
                     return erase(static_cast<Rng&&>(rng), it);
@@ -57,7 +57,7 @@ namespace ranges
                 CONCEPT_template(typename Rng, typename I, typename S)(
                     requires Range<Rng>() && ForwardIterator<I>() &&
                         Sentinel<S, I>())
-                auto operator()(Rng && rng, I begin, S end) const ->
+                (auto) operator()(Rng && rng, I begin, S end) const ->
                     decltype(erase(static_cast<Rng&&>(rng), begin, end))
                 {
                     return erase(static_cast<Rng&&>(rng), begin, end);

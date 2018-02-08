@@ -34,7 +34,7 @@ namespace ranges
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Comparable<I0, I1, C, P0, P1>())
-            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
+            (bool) operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 for(; begin1 != end1; ++begin0, ++begin1)
@@ -53,7 +53,7 @@ namespace ranges
                 typename I1 = iterator_t<Rng1>)(
                 requires InputRange<Rng0>() && InputRange<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>())
-            bool operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
+            (bool) operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(pred),

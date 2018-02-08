@@ -39,28 +39,25 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
                     requires !Range<C>())
-                static auto bind(remove_if_fn remove_if, C pred, P proj = P{})
+                (static auto) bind(remove_if_fn remove_if, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
                         protect(std::move(proj)))
                 )
             public:
-                struct ConceptImpl
-                {
-                    CONCEPT_template(typename Rng, typename C, typename P = ident,
-                        typename I = iterator_t<Rng>)(
-                        requires ForwardRange<Rng>() && ErasableRange<Rng, I, I>() &&
-                            RemovableIf<I, C, P>())
-                    void requires_();
-                };
-
-                template<typename Rng, typename C, typename P = ident>
-                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
+                CONCEPT_def
+                (
+                    template(typename Rng, typename C, typename P = ident)
+                    concept Concept,
+                        ForwardRange<Rng>() &&
+                        ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>() &&
+                        RemovableIf<iterator_t<Rng>, C, P>()
+                );
 
                 CONCEPT_template(typename Rng, typename C, typename P = ident)(
                     requires Concept<Rng, C, P>())
-                Rng operator()(Rng && rng, C pred, P proj = P{}) const
+                (Rng) operator()(Rng && rng, C pred, P proj = P{}) const
                 {
                     auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, ranges::end(rng));
@@ -70,7 +67,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C, typename P = ident)(
                     requires !Concept<Rng, C, P>())
-                void operator()(Rng &&, C &&, P && = P{}) const
+                (void) operator()(Rng &&, C &&, P && = P{}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::remove_if operates must be a model of the "

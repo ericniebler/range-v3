@@ -50,7 +50,7 @@ namespace ranges
                     typename VB = iter_common_reference_t<B>)(
                     requires Same<VI, VB>() && IndirectlyCopyable<I, B>() &&
                         Mergeable<B, I, I, C, P, P>())
-                I operator()(I begin, difference_type_t<I> n, B buff, C r = C{}, P p = P{}) const
+                (I) operator()(I begin, difference_type_t<I> n, B buff, C r = C{}, P p = P{}) const
                 {
                     auto half = n / 2;
                     if(0 == half)

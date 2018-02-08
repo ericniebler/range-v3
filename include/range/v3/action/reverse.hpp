@@ -36,22 +36,18 @@ namespace ranges
             private:
                 friend action_access;
 
-                struct Reversible_
-                {
-                    template<typename Rng>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::BidirectionalRange, Rng>(),
-                            concepts::is_true(Permutable<iterator_t<Rng>>())
-                        ));
-                };
             public:
-                template<typename Rng>
-                using Reversible = concepts::models<Reversible_, Rng>;
+                CONCEPT_def
+                (
+                    template(typename Rng)
+                    concept Reversible,
+                        BidirectionalRange<Rng>() &&
+                        Permutable<iterator_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng)(
                     requires Reversible<Rng>())
-                Rng operator()(Rng && rng) const
+                (Rng) operator()(Rng && rng) const
                 {
                     ranges::reverse(rng);
                     return static_cast<Rng&&>(rng);
@@ -60,7 +56,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                          requires !Reversible<Rng>())
-                void operator()(Rng &&) const
+                (void) operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),
                         "The object on which action::reverse operates must be a model of the "

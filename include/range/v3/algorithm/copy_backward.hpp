@@ -35,7 +35,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename O)(
                 requires BidirectionalIterator<I>() && Sentinel<S, I>() &&
                     BidirectionalIterator<O>() && IndirectlyCopyable<I, O>())
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
+            (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end_, O out) const
             {
                 I i = ranges::next(begin, end_), end = i;
                 while(begin != i)
@@ -46,7 +46,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename O)(
                 requires BidirectionalRange<Rng>() && BidirectionalIterator<O>() &&
                     IndirectlyCopyable<iterator_t<Rng>, O>())
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

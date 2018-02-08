@@ -76,7 +76,7 @@ namespace ranges
                     rng_->satisfy_forward(++it);
                 }
                 CONCEPT_requires(BidirectionalRange<Rng>())
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
+                (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Rng> &it) const
                     noexcept(noexcept(std::declval<remove_if_view &>().satisfy_reverse(it)))
                 {
                     rng_->satisfy_reverse(it);
@@ -93,12 +93,12 @@ namespace ranges
                 return {*this};
             }
             CONCEPT_requires(!BoundedRange<Rng>())
-            constexpr adaptor_base end_adaptor() const noexcept
+            (constexpr adaptor_base) end_adaptor() const noexcept
             {
                 return {};
             }
             CONCEPT_requires(BoundedRange<Rng>())
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
+            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor()
                 noexcept(noexcept(std::declval<remove_if_view &>().cache_begin()))
             {
                 if(BidirectionalRange<Rng>()) cache_begin();
@@ -156,14 +156,17 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                template<typename Rng, typename Pred>
-                CONCEPT_alias(Constraint,
-                    InputRange<Rng>() &&
-                    IndirectPredicate<Pred, iterator_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Pred)
+                    concept SearchableRange,
+                        InputRange<Rng>() &&
+                        IndirectPredicate<Pred, iterator_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires Constraint<Rng, Pred>())
-                RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
+                    requires SearchableRange<Rng, Pred>())
+                (RANGES_CXX14_CONSTEXPR auto) operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     remove_if_view<all_t<Rng>, Pred>{
@@ -171,8 +174,8 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires !Constraint<Rng, Pred>())
-                void operator()(Rng &&, Pred) const
+                    requires !SearchableRange<Rng, Pred>())
+                (void) operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::remove_if must be a model of the "

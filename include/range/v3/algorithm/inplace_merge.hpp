@@ -84,7 +84,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename I, typename C = ordered_less, typename P = ident)(
                     requires BidirectionalIterator<I>() && Sortable<I, C, P>())
-                void operator()(I begin, I middle, I end, difference_type_t<I> len1,
+                (void) operator()(I begin, I middle, I end, difference_type_t<I> len1,
                     difference_type_t<I> len2, value_type_t<I> *buf,
                     std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
                 {
@@ -177,7 +177,7 @@ namespace ranges
             {
                 CONCEPT_template(typename I, typename C = ordered_less, typename P = ident)(
                     requires BidirectionalIterator<I>() && Sortable<I, C, P>())
-                void operator()(I begin, I middle, I end, difference_type_t<I> len1,
+                (void) operator()(I begin, I middle, I end, difference_type_t<I> len1,
                     difference_type_t<I> len2, C pred = C{}, P proj = P{}) const
                 {
                     merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
@@ -197,7 +197,7 @@ namespace ranges
             // TODO reimplement to only need forward iterators
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires BidirectionalIterator<I>() && Sortable<I, C, P>())
-            I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
+            (I) operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
                 using value_type = value_type_t<I>;
                 auto len1 = distance(begin, middle);
@@ -219,7 +219,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires BidirectionalRange<Rng>() && Sortable<I, C, P>())
-            safe_iterator_t<Rng>
+            (safe_iterator_t<Rng>)
             operator()(Rng &&rng, I middle, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),

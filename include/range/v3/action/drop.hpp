@@ -38,7 +38,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(drop_fn drop, Int n)
+                (static auto) bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(drop, std::placeholders::_1, n)
@@ -62,7 +62,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
                     requires Concept<Rng, D>())
-                Rng operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                (Rng) operator()(Rng && rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
@@ -72,7 +72,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires !Concept<Rng, T>())
-                void operator()(Rng &&, T &&) const
+                (void) operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::drop operates must be a model of the "

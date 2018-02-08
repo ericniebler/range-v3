@@ -29,13 +29,20 @@ namespace ranges
         /// \cond
         namespace index_detail
         {
-            template<typename Rng, typename T>
-            CONCEPT_alias(CompatibleDifferenceType,
-                ConvertibleTo<T, range_difference_type_t<Rng>>());
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                class CompatibleDifferenceType,
+                    ConvertibleTo<T, range_difference_type_t<Rng>>()
+            );
 
-            template<typename Rng, typename T>
-            CONCEPT_alias(Concept,
-                RandomAccessRange<Rng>() && CompatibleDifferenceType<Rng, T>());
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                class Indexable,
+                    RandomAccessRange<Rng>() &&
+                    CompatibleDifferenceType<Rng, T>()
+            );
         }  // namespace index_detail
         /// \endcond
 
@@ -47,12 +54,9 @@ namespace ranges
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
                 requires RandomAccessRange<Rng>())
-            RANGES_CXX14_CONSTEXPR
-            auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-                noexcept(noexcept(ranges::begin(rng)[n]) &&
-                         noexcept(n < ranges::distance(rng)))
-              ->
-                decltype(ranges::begin(rng)[n])
+            (RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                noexcept(noexcept(ranges::begin(rng)[n]))
             {
                 RANGES_EXPECT(!(bool)SizedRange<Rng>() || n < ranges::distance(rng));
                 return ranges::begin(rng)[n];
@@ -63,17 +67,17 @@ namespace ranges
                 requires RandomAccessRange<Rng>() &&
                                   !Same<uncvref_t<T>, D>() &&
                                   ConvertibleTo<T, D>())
-            RANGES_CXX14_CONSTEXPR
-            auto operator()(Rng &&rng, T &&t) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                Self{}((Rng &&) rng, static_cast<D>((T &&) t))
-            )
+            (RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng>) operator()(Rng &&rng, T &&t) const
+                noexcept(noexcept(ranges::begin(rng)[D()]))
+            {
+                return Self{}((Rng &&) rng, static_cast<D>((T &&) t));
+            }
 
             /// \cond
             CONCEPT_template(typename R, typename T)(
-                requires !index_detail::Concept<R, T>())
-            void operator()(R&&, T&&) const
+                requires !index_detail::Indexable<R, T>())
+            (void) operator()(R&&, T&&) const
             {
                 CONCEPT_ASSERT_MSG(RandomAccessRange<R>(),
                     "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");

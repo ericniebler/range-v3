@@ -48,7 +48,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                 requires Comparable<I1, I2, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())
-            bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
+            (bool) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 for(; begin2 != end2; ++begin1)
@@ -67,7 +67,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Comparable<I1, I2, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            bool operator()(Rng1 && rng1, Rng2 && rng2,
+            (bool) operator()(Rng1 && rng1, Rng2 && rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
@@ -85,7 +85,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())
-            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
+            (tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>)
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -121,7 +121,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
+            (tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>)
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
@@ -140,7 +140,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())
-            O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            (O) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 while(begin1 != end1 && begin2 != end2)
@@ -167,7 +167,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            O operator()(Rng1 && rng1, Rng2 && rng2, O out,
+            (O) operator()(Rng1 && rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
@@ -186,7 +186,8 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())
-            tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            (tagged_pair<tag::in1(I1), tag::out(O)>)
+            operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 while(begin1 != end1)
@@ -215,7 +216,8 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::out(O)> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
+            (tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::out(O)>)
+            operator()(Rng1 &&rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
@@ -234,7 +236,8 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Sentinel<S1, I1>() && Sentinel<S2, I2>())
-            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            (tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>)
+            operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 while(begin1 != end1)
@@ -272,7 +275,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>
+            (tagged_tuple<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>), tag::out(O)>)
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

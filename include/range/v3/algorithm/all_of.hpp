@@ -34,7 +34,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename F, typename P = ident)(
                 requires InputIterator<I>() && Sentinel<S, I>() &&
                     IndirectPredicate<F, projected<I, P> >())
-            bool
+            (bool)
             operator()(I first, S last, F pred, P proj = P{}) const
             {
                 for(; first != last; ++first)
@@ -46,7 +46,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng>() && IndirectPredicate<F, projected<I, P> >())
-            bool
+            (bool)
             operator()(Rng &&rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

@@ -37,33 +37,27 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename Gen)(
                     requires UniformRandomNumberGenerator<Gen>())
-                static auto bind(shuffle_fn shuffle, Gen && gen)
+                (static auto) bind(shuffle_fn shuffle, Gen && gen)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen))
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename Gen,
-                        typename I = iterator_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::RandomAccessRange, Rng>(),
-                            concepts::is_true(Permutable<I>()),
-                            concepts::is_true(UniformRandomNumberGenerator<Gen>()),
-                            concepts::is_true(ConvertibleTo<
-                                concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                                difference_type_t<I>>())
-                        ));
-                };
-
-                template<typename Rng, typename Gen>
-                using Concept = concepts::models<ConceptImpl, Rng, Gen>;
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Gen)
+                    concept Concept,
+                        RandomAccessRange<Rng>() &&
+                        Permutable<iterator_t<Rng>>() &&
+                        UniformRandomNumberGenerator<Gen>() &&
+                        ConvertibleTo<
+                            invoke_result_t<Gen>,
+                            range_difference_type_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Gen)(
                     requires Concept<Rng, Gen>())
-                Rng operator()(Rng && rng, Gen && gen) const
+                (Rng) operator()(Rng && rng, Gen && gen) const
                 {
                     ranges::shuffle(rng, static_cast<Gen&&>(gen));
                     return static_cast<Rng&&>(rng);
@@ -72,7 +66,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Gen)(
                     requires !Concept<Rng, Gen>())
-                void operator()(Rng &&, Gen &&) const
+                (void) operator()(Rng &&, Gen &&) const
                 {
                     CONCEPT_ASSERT_MSG(RandomAccessRange<Rng>(),
                         "The object on which action::shuffle operates must be a model of the "
