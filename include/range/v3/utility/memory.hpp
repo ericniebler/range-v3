@@ -47,7 +47,7 @@ namespace ranges
             };
 
             CONCEPT_template(typename T, typename... Args)(
-                requires !std::is_array<T>::value)
+                requires !True(std::is_array<T>()))
             (std::unique_ptr<T>) make_unique(Args &&... args)
             {
                 return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};

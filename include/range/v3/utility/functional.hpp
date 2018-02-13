@@ -689,7 +689,7 @@ namespace ranges
 
         // Evaluate the pipe with an argument
         CONCEPT_template(typename Arg, typename Pipe)(
-            requires !is_pipeable<Arg>() && is_pipeable<Pipe>())
+            requires !True(is_pipeable<Arg>()) && True(is_pipeable<Pipe>()))
         (decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(), std::declval<Pipe &>())))
         operator|(Arg &&arg, Pipe pipe)
         {
@@ -698,7 +698,7 @@ namespace ranges
 
         // Compose two pipes
         CONCEPT_template(typename Pipe0, typename Pipe1)(
-            requires is_pipeable<Pipe0>() && is_pipeable<Pipe1>())
+            requires True(is_pipeable<Pipe0>()) && True(is_pipeable<Pipe1>()))
         (decltype(make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))
         operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
@@ -731,7 +731,7 @@ namespace ranges
         struct ref_fn : pipeable<ref_fn>
         {
             CONCEPT_template(typename T)(
-                requires !is_reference_wrapper_t<T>())
+                requires !True(is_reference_wrapper_t<T>()))
             (reference_wrapper<T>) operator()(T &t) const
             {
                 return {t};
@@ -760,7 +760,7 @@ namespace ranges
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {
             CONCEPT_template(typename T)(
-                requires !is_reference_wrapper<T>())
+                requires !True(is_reference_wrapper<T>()))
             (T &&)operator()(T &&t) const noexcept
             {
                 return static_cast<T &&>(t);
@@ -820,14 +820,14 @@ namespace ranges
         struct protect_fn
         {
             CONCEPT_template(typename F)(
-                requires std::is_bind_expression<uncvref_t<F>>())
+                requires True<std::is_bind_expression<uncvref_t<F>>>())
             (detail::protect<uncvref_t<F>>) operator()(F &&f) const
             {
                 return {static_cast<F &&>(f)};
             }
             /// \overload
             CONCEPT_template(typename F)(
-                requires !std::is_bind_expression<uncvref_t<F>>())
+                requires !True<std::is_bind_expression<uncvref_t<F>>>())
             (F) operator()(F &&f) const
             {
                 return static_cast<F &&>(f);

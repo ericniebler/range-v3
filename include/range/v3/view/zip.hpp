@@ -38,7 +38,7 @@ namespace ranges
             {
                 // tuple value
                 CONCEPT_template(typename ...Its)(
-                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
+                    requires True(meta::and_<Readable<Its>...>()) && True<sizeof...(Its) != 2>())
                 (attribute([[noreturn]]) std::tuple<value_type_t<Its>...>)
                 operator()(copy_tag, Its...) const
                 {
@@ -47,7 +47,7 @@ namespace ranges
 
                 // tuple reference
                 CONCEPT_template(typename ...Its)(
-                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
+                    requires True(meta::and_<Readable<Its>...>()) && True<sizeof...(Its) != 2>())
                 (common_tuple<reference_t<Its>...>)
                 operator()(Its const &...its) const
                     noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
@@ -57,7 +57,7 @@ namespace ranges
 
                 // tuple rvalue reference
                 CONCEPT_template(typename ...Its)(
-                    requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
+                    requires True(meta::and_<Readable<Its>...>()) && True<sizeof...(Its) != 2>())
                 (common_tuple<rvalue_reference_t<Its>...>)
                 operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<

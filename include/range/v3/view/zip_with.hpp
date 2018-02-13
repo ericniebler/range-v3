@@ -188,7 +188,8 @@ namespace ranges
                 {
                     tuple_for_each(its_, detail::inc);
                 }
-                CONCEPT_requires(meta::and_c<(bool) Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
+                CONCEPT_requires(True(meta::and_c<(bool)
+                    Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>()))
                 (bool) equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
@@ -209,19 +210,21 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CONCEPT_requires(meta::and_c<(bool) BidirectionalRange<Rngs>()...>::value)
+                CONCEPT_requires(True(meta::and_c<(bool)
+                    BidirectionalRange<Rngs>()...>()))
                 (void) prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
-                CONCEPT_requires(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
+                CONCEPT_requires(True(meta::and_c<(bool)
+                    RandomAccessRange<Rngs>()...>()))
                 (void) advance(difference_type n)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
-                CONCEPT_requires(meta::and_c<(bool)
-                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
+                CONCEPT_requires(True(meta::and_c<(bool)
+                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>()))
                 (difference_type) distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -269,12 +272,12 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_requires(meta::and_c<(bool) Range<Rngs const>()...>::value)
+            CONCEPT_requires(And(Range<Rngs const>()...))
             (cursor) begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_requires(meta::and_c<(bool) Range<Rngs const>()...>::value)
+            CONCEPT_requires(And(Range<Rngs const>()...))
             (end_cursor_t) end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
@@ -289,7 +292,7 @@ namespace ranges
               : fun_(std::move(fun))
               , rngs_{std::move(rngs)...}
             {}
-            CONCEPT_requires(meta::and_c<(bool) SizedRange<Rngs>()...>::value)
+            CONCEPT_requires(And(SizedRange<Rngs>()...))
             (constexpr size_type_) size() const
             {
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?

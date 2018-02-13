@@ -54,6 +54,19 @@ namespace ranges
         using concepts::swap;
 
         /// \cond
+        namespace detail
+        {
+            template<class Derived>
+            struct member_swap
+            {
+                friend RANGES_CXX14_CONSTEXPR void swap(Derived &a, Derived &b)
+                    noexcept(noexcept(a.swap(b)))
+                {
+                    a.swap(b);
+                }
+            };
+        }
+
         namespace adl_swap_detail
         {
             // Q: Should std::reference_wrapper be considered a proxy wrt swapping rvalues?

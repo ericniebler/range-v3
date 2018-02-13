@@ -55,9 +55,9 @@ namespace ranges
         struct common_iterator
         {
         private:
-            static_assert((bool) Iterator<I>(), "");
-            static_assert((bool) Sentinel<S, I>(), "");
-            static_assert((bool) !Same<I, S>(), "");
+            CONCEPT_assert(Iterator<I>());
+            CONCEPT_assert(Sentinel<S, I>());
+            CONCEPT_assert(!Same<I, S>());
             variant<I, S> data_;
 
             friend variant<I, S> &detail::cidata<>(common_iterator<I, S> &);
@@ -96,7 +96,7 @@ namespace ranges
                 return j;
             }
             CONCEPT_template(typename J, typename R = reference_t<J>)(
-                requires std::is_reference<R>::value)
+                requires True(std::is_reference<R>()))
             (static meta::_t<std::add_pointer<R>>) operator_arrow_(J const &j, long) noexcept
             {
                 auto &&r = *j;

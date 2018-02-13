@@ -286,18 +286,18 @@ namespace ranges
               , rng1_(std::move(rng1))
               , rng2_(std::move(rng2))
             {}
-            CONCEPT_requires(True<my_cardinality >= 0>())
+            CONCEPT_requires(True<(my_cardinality >= 0)>())
             (constexpr size_type_) size() const
             {
                 return static_cast<size_type_>(my_cardinality);
             }
-            CONCEPT_requires(True<my_cardinality < 0>() &&
+            CONCEPT_requires(True<(my_cardinality < 0)>() &&
                 SizedRange<Rng1 const>() && SizedRange<Rng2 const>())
             (constexpr size_type_) size() const
             {
                 return size_(*this);
             }
-            CONCEPT_requires(True<my_cardinality < 0>() &&
+            CONCEPT_requires(True<(my_cardinality < 0)>() &&
                 SizedRange<Rng1>() && SizedRange<Rng2>())
             (RANGES_CXX14_CONSTEXPR size_type_) size()
             {

@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {
@@ -55,6 +56,7 @@ namespace ranges
         T const * any_cast(any const *) noexcept;
 
         struct any
+          : private detail::member_swap<any>
         {
         private:
             template<typename T>
@@ -109,7 +111,7 @@ namespace ranges
         public:
             any() noexcept = default;
             CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
-                requires Copyable<T>() && !Same<T, any>())
+                requires Copyable<T>() && !Same<T, any>())()
             any(TRef &&t)
               : ptr_(new impl<T>(static_cast<TRef &&>(t)))
             {}
@@ -125,7 +127,7 @@ namespace ranges
             }
             CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
                 requires Copyable<T>() && !Same<T, any>())
-            any &operator=(TRef &&t)
+            (any &)operator=(TRef &&t)
             {
                 any{static_cast<TRef &&>(t)}.swap(*this);
                 return *this;
@@ -145,10 +147,6 @@ namespace ranges
             void swap(any &that) noexcept
             {
                 ptr_.swap(that.ptr_);
-            }
-            friend void swap(any &x, any &y) noexcept
-            {
-                x.swap(y);
             }
         };
 

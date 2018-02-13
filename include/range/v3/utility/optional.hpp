@@ -464,7 +464,7 @@ namespace ranges
         private:
             using base_t = detail::optional_adl::move_assign_layer<T>;
         public:
-            static_assert((bool) Destructible<T>(), "");
+            CONCEPT_assert(Destructible<T>());
             static_assert(std::is_object<T>::value || std::is_lvalue_reference<T>::value, "");
             static_assert((bool) !Same<nullopt_t, uncvref_t<T>>(), "");
             static_assert((bool) !Same<in_place_t, uncvref_t<T>>(), "");

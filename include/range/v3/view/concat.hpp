@@ -263,12 +263,12 @@ namespace ranges
                     return its_.index() == cranges - 1 &&
                         ranges::get<cranges - 1>(its_) == pos.end_;
                 }
-                CONCEPT_requires(meta::and_c<(bool)BidirectionalRange<Rngs>()...>::value)
+                CONCEPT_requires(And(BidirectionalRange<Rngs>()...))
                 (void) prev()
                 {
                     its_.visit_i(prev_fun{this});
                 }
-                CONCEPT_requires(meta::and_c<(bool)RandomAccessRange<Rngs>()...>::value)
+                CONCEPT_requires(And(RandomAccessRange<Rngs>()...))
                 (void) advance(difference_type n)
                 {
                     if(n > 0)
@@ -276,8 +276,8 @@ namespace ranges
                     else if(n < 0)
                         its_.visit_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_requires(meta::and_c<(bool)
-                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
+                CONCEPT_requires(True(meta::and_c<(bool)
+                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>()))
                 (difference_type) distance_to(cursor const &that) const
                 {
                     if(its_.index() <= that.its_.index())
@@ -294,12 +294,12 @@ namespace ranges
             {
                 return {*this, end_tag{}};
             }
-            CONCEPT_requires(meta::and_c<(bool)Range<Rngs const>()...>())
+            CONCEPT_requires(And(Range<Rngs const>()...))
             (cursor<true>) begin_cursor() const
             {
                 return {*this, begin_tag{}};
             }
-            CONCEPT_requires(meta::and_c<(bool)Range<Rngs const>()...>())
+            CONCEPT_requires(And(Range<Rngs const>()...))
             (meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<true>, sentinel<true>>)
             end_cursor() const
             {
@@ -310,19 +310,19 @@ namespace ranges
             explicit concat_view(Rngs...rngs)
               : rngs_{std::move(rngs)...}
             {}
-            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value >= 0)
+            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value >= 0>())
             (constexpr size_type_) size() const
             {
                 return static_cast<size_type_>(detail::concat_cardinality<Rngs...>::value);
             }
-            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
-                meta::and_c<(bool)SizedRange<Rngs const>()...>::value)
+            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value < 0>() &&
+                And(SizedRange<Rngs const>()...))
             (RANGES_CXX14_CONSTEXPR size_type_) size() const
             {
                 return const_cast<concat_view *>(this)->size();
             }
-            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
-                meta::and_c<(bool)SizedRange<Rngs>()...>::value)
+            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value < 0>() &&
+                And(SizedRange<Rngs>()...))
             (RANGES_CXX14_CONSTEXPR size_type_) size()
             {
                 return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});

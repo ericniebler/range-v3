@@ -68,13 +68,13 @@ namespace ranges
         protected:
             RANGES_CXX14_CONSTEXPR Derived &derived() noexcept
             {
-                static_assert((bool) DerivedFrom<Derived, view_interface>(), "");
+                CONCEPT_assert(DerivedFrom<Derived, view_interface>());
                 return static_cast<Derived &>(*this);
             }
             /// \overload
             constexpr Derived const &derived() const noexcept
             {
-                static_assert((bool) DerivedFrom<Derived, view_interface>(), "");
+                CONCEPT_assert(DerivedFrom<Derived, view_interface>());
                 return static_cast<Derived const &>(*this);
             }
             ~view_interface() = default;
@@ -85,7 +85,7 @@ namespace ranges
             view_interface &operator=(view_interface &&) = default;
             view_interface &operator=(view_interface const &) = default;
             // A few ways of testing whether a range can be empty:
-            CONCEPT_requires(Cardinality >= 0)
+            CONCEPT_requires(True<Cardinality >= 0>())
             (constexpr bool) empty() const noexcept
             {
                 return Cardinality == 0;

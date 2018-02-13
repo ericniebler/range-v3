@@ -67,39 +67,47 @@ namespace ranges
                         static_cast<cardinality>((sizeof...(Views) > 0))>,
                     meta::quote<detail::product_cardinality>>::value>
         {
+        public: // BUGBUG
             friend range_access;
-            CONCEPT_assert(meta::and_c<(bool)ForwardView<Views>()...>::value);
-            using CanConst = meta::and_c<
-                (bool)Range<Views const>()...>;
-            template<bool IsConst>
-            using CanSize = meta::and_c<
-                (bool)SizedRange<meta::const_if_c<IsConst, Views>>()...>;
-            template<bool IsConst>
-            using CanDistance = meta::and_c<
-                CanSize<IsConst>::value,
-                (bool)SizedSentinel<
-                    iterator_t<meta::const_if_c<IsConst, Views>>,
-                    iterator_t<meta::const_if_c<IsConst, Views>>>()...>;
-            template<bool IsConst>
-            using CanRandom = meta::and_c<
-                CanDistance<IsConst>::value,
-                (bool)RandomAccessIterator<iterator_t<
-                    meta::const_if_c<IsConst, Views>>>()...>;
-            template<bool IsConst>
-            using CanBidi = meta::or_c<
-                CanRandom<IsConst>::value,
-                meta::and_c<
-                    ((bool)BoundedRange<meta::const_if_c<IsConst, Views>>())...,
-                    ((bool)BidirectionalIterator<iterator_t<
-                        meta::const_if_c<IsConst, Views>>>())...>::value>;
+            CONCEPT_assert(And(ForwardView<Views>()...));
 
+            using CanConst = decltype(And(Range<Views const>()...));
+            CONCEPT_def(
+                template(typename IsConst)
+                concept CanSize,
+                    And(SizedRange<meta::const_if<IsConst, Views>>()...)
+            );
+            CONCEPT_def(
+                template(typename IsConst)
+                concept CanDistance,
+                    CanSize<IsConst>() &&
+                    And(SizedSentinel<
+                        iterator_t<meta::const_if<IsConst, Views>>,
+                        iterator_t<meta::const_if<IsConst, Views>>>()...)
+            );
+            CONCEPT_def(
+                template(typename IsConst)
+                concept CanRandom,
+                    CanDistance<IsConst>() &&
+                    And(RandomAccessIterator<iterator_t<
+                        meta::const_if<IsConst, Views>>>()...)
+            );
+            CONCEPT_def(
+                template(typename IsConst)
+                concept CanBidi,
+                    CanRandom<IsConst>() ||
+                    And(BoundedRange<meta::const_if<IsConst, Views>>()...,
+                        BidirectionalIterator<iterator_t<
+                            meta::const_if<IsConst, Views>>>()...)
+            );
             std::tuple<Views...> views_;
 
-            template<bool IsConst>
+            template<bool IsConst_>
             class cursor
             {
+                using IsConst = meta::bool_<IsConst_>;
                 template<typename T>
-                using constify_if = meta::const_if_c<IsConst, T>;
+                using constify_if = meta::const_if_c<IsConst_, T>;
                 using pos_t = std::tuple<iterator_t<constify_if<Views>>...>;
                 constify_if<cartesian_product_view> *view_;
                 pos_t its_;
@@ -294,40 +302,40 @@ namespace ranges
             {
                 return cursor<false>{begin_tag{}, *this};
             }
-            CONCEPT_requires(sizeof...(Views) == 0)
+            CONCEPT_requires(True<sizeof...(Views) == 0>())
             (cursor<true>) end_cursor() const
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CONCEPT_requires(CanBidi<true>() && sizeof...(Views) > 0)
+            CONCEPT_requires(CanBidi<std::true_type>() && True<(sizeof...(Views) > 0)>())
             (cursor<true>) end_cursor() const
             {
                 return cursor<true>{end_tag{}, *this};
             }
-            CONCEPT_requires(CanBidi<false>() && !CanBidi<true>())
+            CONCEPT_requires(CanBidi<std::false_type>() && !CanBidi<std::true_type>())
             (cursor<false>) end_cursor()
             {
                 return cursor<false>{end_tag{}, *this};
             }
-            CONCEPT_requires(!CanBidi<true>())
+            CONCEPT_requires(!CanBidi<std::true_type>() && True<(sizeof...(Views) > 0)>())
             (default_sentinel) end_cursor() const
             {
                 return {};
             }
         public:
             cartesian_product_view() = default;
-            CONCEPT_requires(sizeof...(Views) > 0)
+            CONCEPT_requires(True<(sizeof...(Views) > 0)>())
             (constexpr) cartesian_product_view(Views... views)
               : views_{detail::move(views)...}
             {}
-            CONCEPT_requires(CanSize<true>())
+            CONCEPT_requires(CanSize<std::true_type>())
             (std::size_t) size() const
             {
                 if(sizeof...(Views) == 0) return 0;
                 return tuple_foldl(views_, std::size_t{1},
                     detail::cartesian_size_fn{});
             }
-            CONCEPT_requires(CanSize<false>() && !CanSize<true>())
+            CONCEPT_requires(CanSize<std::false_type>() && !CanSize<std::true_type>())
             (std::size_t) size()
             {
                 return tuple_foldl(views_, std::size_t{1},
@@ -339,11 +347,8 @@ namespace ranges
         {
             struct cartesian_product_fn
             {
-                template<typename... Rngs>
-                using Constraint = meta::and_c<(bool)ForwardRange<Rngs>()...>;
-
                 CONCEPT_template(typename... Rngs)(
-                    requires Constraint<Rngs...>())
+                    requires concepts::And(ForwardRange<Rngs>()...))
                 (constexpr cartesian_product_view<all_t<Rngs>...>) operator()(Rngs &&... rngs) const
                 {
                     return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
@@ -351,7 +356,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename... Rngs)(
-                    requires !Constraint<Rngs...>())
+                    requires !concepts::And(ForwardRange<Rngs>()...))
                 (void) operator()(Rngs &&...) const
                 {
                     static_assert(meta::strict_and<ForwardRange<Rngs>...>(),

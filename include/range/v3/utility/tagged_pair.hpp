@@ -45,99 +45,94 @@ namespace ranges
                 )
             }
             using adl_get_detail::adl_get;
-        }
-        /// \endcond
 
-        namespace tagged_detail
-        {
-            /// \cond
-            template<typename Base, std::size_t, typename...>
+            template<typename Base, typename, typename...>
             struct chain
             {
                 using type = Base;
             };
-            template<typename Base, std::size_t I, typename First, typename... Rest>
+            template<typename Base, typename I, typename First, typename... Rest>
             struct chain<Base, I, First, Rest...>
             {
-                using type = typename First::template getter<
-                    Base, I, meta::_t<chain<Base, I + 1, Rest...>>>;
-            };
-            /// \endcond
-
-            template<typename Base, typename...Tags>
-            class tagged
-              : public meta::_t<chain<Base, 0, Tags...>>
-            {
-                CONCEPT_assert(Same<Base, uncvref_t<Base>>());
-                using base_t = meta::_t<chain<Base, 0, Tags...>>;
-
-                template<typename Other>
-                using can_convert =
-                    meta::bool_<!std::is_same<Other, Base>::value &&
-                        std::is_convertible<Other, Base>::value>;
-            public:
-                tagged() = default;
-                using base_t::base_t;
-                CONCEPT_requires(MoveConstructible<Base>())
-                (constexpr) tagged(Base &&that)
-                    noexcept(std::is_nothrow_move_constructible<Base>::value)
-                  : base_t(detail::move(that))
-                {}
-                CONCEPT_requires(CopyConstructible<Base>())
-                (constexpr) tagged(Base const &that)
-                    noexcept(std::is_nothrow_copy_constructible<Base>::value)
-                  : base_t(that)
-                {}
-                template<typename Other, typename = meta::if_<can_convert<Other>>>
-                constexpr tagged(tagged<Other, Tags...> && that)
-                    noexcept(std::is_nothrow_constructible<Base, Other>::value)
-                  : base_t(static_cast<Other &&>(that))
-                {}
-                template<typename Other, typename = meta::if_<can_convert<Other>>>
-                constexpr tagged(tagged<Other, Tags...> const &that)
-                    noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
-                  : base_t(static_cast<Other const &>(that))
-                {}
-                template<typename Other, typename = meta::if_<can_convert<Other>>>
-                RANGES_CXX14_CONSTEXPR tagged &operator=(tagged<Other, Tags...> && that)
-                    noexcept(noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
-                {
-                    static_cast<Base &>(*this) = static_cast<Other &&>(that);
-                    return *this;
-                }
-                template<typename Other, typename = meta::if_<can_convert<Other>>>
-                RANGES_CXX14_CONSTEXPR tagged &operator=(tagged<Other, Tags...> const &that)
-                    noexcept(noexcept(std::declval<Base &>() = static_cast<Other const &>(that)))
-                {
-                    static_cast<Base &>(*this) = static_cast<Other const &>(that);
-                    return *this;
-                }
-                template<typename U,
-                    typename = meta::if_c<!std::is_same<tagged, detail::decay_t<U>>::value>,
-                    typename = decltype(std::declval<Base &>() = std::declval<U>())>
-                RANGES_CXX14_CONSTEXPR tagged &operator=(U &&u)
-                    noexcept(noexcept(std::declval<Base &>() = static_cast<U &&>(u)))
-                {
-                    static_cast<Base &>(*this) = static_cast<U &&>(u);
-                    return *this;
-                }
-                template<typename B = Base>
-                RANGES_CXX14_CONSTEXPR meta::if_c<is_swappable<B>::value>
-                swap(tagged &that)
-                    noexcept(is_nothrow_swappable<B>::value)
-                {
-                    ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
-                }
-                template<typename B = Base>
-                friend RANGES_CXX14_CONSTEXPR meta::if_c<is_swappable<B>::value>
-                swap(tagged &x, tagged &y)
-                    noexcept(is_nothrow_swappable<B>::value)
-                {
-                    x.swap(y);
-                }
+                using type =
+                    meta::invoke<First, Base, I, meta::_t<chain<Base, meta::inc<I>, Rest...>>>;
             };
         }
-        using tagged_detail::tagged;
+        /// \endcond
+
+        template<typename Base, typename...Tags>
+        class tagged
+          : public meta::_t<detail::chain<Base, meta::size_t<0>, Tags...>>
+          , detail::member_swap<tagged<Base, Tags...>>
+        {
+            CONCEPT_assert(Same<Base, uncvref_t<Base>>());
+            using base_t = meta::_t<detail::chain<Base, meta::size_t<0>, Tags...>>;
+
+            CONCEPT_def
+            (
+                template(typename B, typename... Ts)
+                (concept CanConvert)(B, Ts...),
+                    requires {} &&
+                    !Same<tagged<B, Ts...>, tagged>() &&
+                    ConvertibleTo<B, Base>()
+            );
+        public:
+            tagged() = default;
+            using base_t::base_t;
+            CONCEPT_requires(MoveConstructible<Base>())
+            (constexpr) tagged(Base &&that)
+                noexcept(std::is_nothrow_move_constructible<Base>::value)
+              : base_t(detail::move(that))
+            {}
+            CONCEPT_requires(CopyConstructible<Base>())
+            (constexpr) tagged(Base const &that)
+                noexcept(std::is_nothrow_copy_constructible<Base>::value)
+              : base_t(that)
+            {}
+            CONCEPT_template(typename B, typename... Ts)
+                (requires CanConvert<B, Ts...>())
+            (constexpr) tagged(tagged<B, Ts...> &&that)
+                noexcept(std::is_nothrow_constructible<Base, B>::value)
+              : base_t(static_cast<B &&>(that))
+            {}
+            CONCEPT_template(typename B, typename... Ts)
+                (requires CanConvert<B, Ts...>())
+            (constexpr) tagged(tagged<B, Ts...> const &that)
+                noexcept(std::is_nothrow_constructible<Base, B const &>::value)
+              : base_t(static_cast<B const &>(that))
+            {}
+            CONCEPT_template(typename B, typename... Ts)
+                (requires CanConvert<B, Ts...>())
+            (RANGES_CXX14_CONSTEXPR tagged &)operator=(tagged<B, Ts...> && that)
+                noexcept(std::is_nothrow_assignable<Base &, B>::value)
+            {
+                static_cast<Base &>(*this) = static_cast<B &&>(that);
+                return *this;
+            }
+            CONCEPT_template(typename B, typename... Ts)
+                (requires CanConvert<B, Ts...>())
+            (RANGES_CXX14_CONSTEXPR tagged &)operator=(tagged<B, Ts...> const &that)
+                noexcept(std::is_nothrow_assignable<Base &, B const &>::value)
+            {
+                static_cast<Base &>(*this) = static_cast<B const &>(that);
+                return *this;
+            }
+            CONCEPT_template(typename U)
+                (requires !Same<tagged, detail::decay_t<U>>() && Assignable<Base &, U>())
+            (RANGES_CXX14_CONSTEXPR tagged &)operator=(U &&u)
+                noexcept(std::is_nothrow_assignable<Base &, U>::value)
+            {
+                static_cast<Base &>(*this) = static_cast<U &&>(u);
+                return *this;
+            }
+            CONCEPT_template(typename B = Base)
+                (requires True(is_swappable<B>()))
+            (RANGES_CXX14_CONSTEXPR void) swap(tagged &that)
+                noexcept(is_nothrow_swappable<B>::value)
+            {
+                ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
+            }
+        };
 
         template<typename F, typename S>
         using tagged_pair =
@@ -154,57 +149,55 @@ namespace ranges
     }
 }
 
-#define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                            \
-    namespace tag                                                                    \
-    {                                                                                \
-        struct NAME                                                                  \
-        {                                                                            \
-            template<typename Untagged, std::size_t I, typename Next>                \
-            class getter : public Next                                               \
-            {                                                                        \
-            protected:                                                               \
-                ~getter() = default;                                                 \
-            public:                                                                  \
-                getter() = default;                                                  \
-                getter(getter &&) = default;                                         \
-                getter(getter const &) = default;                                    \
-                using Next::Next;                                                    \
-                CONCEPT_requires(MoveConstructible<Untagged>())                      \
-                (constexpr) getter(Untagged &&that)                                 \
-                    noexcept(std::is_nothrow_move_constructible<Untagged>::value)    \
-                  : Next(detail::move(that))                                         \
-                {}                                                                   \
-                CONCEPT_requires(CopyConstructible<Untagged>())                      \
-                (constexpr) getter(Untagged const &that)                             \
-                    noexcept(std::is_nothrow_copy_constructible<Untagged>::value)    \
-                  : Next(that)                                                       \
-                {}                                                                   \
-                getter &operator=(getter &&) = default;                              \
-                getter &operator=(getter const &) = default;                         \
-                RANGES_CXX14_CONSTEXPR                                               \
-                meta::_t<std::tuple_element<I, Untagged>> &NAME() &                  \
-                    noexcept(noexcept(                                               \
-                        detail::adl_get<I>(std::declval<Untagged &>())))             \
-                {                                                                    \
-                    return detail::adl_get<I>(static_cast<Untagged &>(*this));       \
-                }                                                                    \
-                RANGES_CXX14_CONSTEXPR                                               \
-                meta::_t<std::tuple_element<I, Untagged>> &&NAME() &&                \
-                    noexcept(noexcept(                                               \
-                        detail::adl_get<I>(std::declval<Untagged>())))               \
-                {                                                                    \
-                    return detail::adl_get<I>(static_cast<Untagged &&>(*this));      \
-                }                                                                    \
-                constexpr                                                            \
-                meta::_t<std::tuple_element<I, Untagged>> const &NAME() const &      \
-                    noexcept(noexcept(                                               \
-                        detail::adl_get<I>(std::declval<Untagged const &>())))       \
-                {                                                                    \
-                    return detail::adl_get<I>(static_cast<Untagged const &>(*this)); \
-                }                                                                    \
-            };                                                                       \
-        };                                                                           \
-    }                                                                                \
+#define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                                           \
+    namespace tag                                                                                   \
+    {                                                                                               \
+        struct NAME                                                                                 \
+        {                                                                                           \
+            template<typename Untagged, typename I, typename Next>                                  \
+            class invoke : public Next                                                              \
+            {                                                                                       \
+            protected:                                                                              \
+                ~invoke() = default;                                                                \
+            public:                                                                                 \
+                invoke() = default;                                                                 \
+                invoke(invoke &&) = default;                                                        \
+                invoke(invoke const &) = default;                                                   \
+                using Next::Next;                                                                   \
+                CONCEPT_template(typename U)(                                                       \
+                    requires Same<::ranges::detail::decay_t<U>, Untagged>() &&                      \
+                        Constructible<Untagged, U>())                                               \
+                (constexpr) invoke(U &&that)                                                        \
+                    noexcept(std::is_nothrow_constructible<Untagged, U>::value)                     \
+                  : Next(static_cast<U &&>(that))                                                   \
+                {}                                                                                  \
+                invoke &operator=(invoke &&) = default;                                             \
+                invoke &operator=(invoke const &) = default;                                        \
+                RANGES_CXX14_CONSTEXPR                                                              \
+                meta::_t<std::tuple_element<I::value, Untagged>> &NAME() &                          \
+                    noexcept(noexcept(                                                              \
+                        ::ranges::detail::adl_get<I::value>(std::declval<Untagged &>())))           \
+                {                                                                                   \
+                    return ::ranges::detail::adl_get<I::value>(static_cast<Untagged &>(*this));     \
+                }                                                                                   \
+                RANGES_CXX14_CONSTEXPR                                                              \
+                meta::_t<std::tuple_element<I::value, Untagged>> &&NAME() &&                        \
+                    noexcept(noexcept(                                                              \
+                        ::ranges::detail::adl_get<I::value>(std::declval<Untagged>())))             \
+                {                                                                                   \
+                    return ::ranges::detail::adl_get<I::value>(static_cast<Untagged &&>(*this));    \
+                }                                                                                   \
+                constexpr                                                                           \
+                meta::_t<std::tuple_element<I::value, Untagged>> const &NAME() const &              \
+                    noexcept(noexcept(                                                              \
+                        ::ranges::detail::adl_get<I::value>(std::declval<Untagged const &>())))     \
+                {                                                                                   \
+                    return ::ranges::detail::adl_get<I::value>(                                     \
+                        static_cast<Untagged const &>(*this));                                      \
+                }                                                                                   \
+            };                                                                                      \
+        };                                                                                          \
+    }                                                                                               \
     /**/
 
 RANGES_DIAGNOSTIC_PUSH

@@ -76,7 +76,7 @@ namespace ranges
             explicit join_view(Rng rng)
               : outer_(view::all(std::move(rng)))
             {}
-            CONCEPT_requires(detail::join_cardinality<Rng>::value >= 0)
+            CONCEPT_requires(True<detail::join_cardinality<Rng>::value >= 0>())
             (constexpr size_type) size() const
             {
                 return detail::join_cardinality<Rng>::value;

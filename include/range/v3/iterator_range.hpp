@@ -195,7 +195,7 @@ namespace ranges
 
         /// Tuple-like access for `sized_iterator_range`
         CONCEPT_template(std::size_t N, typename I, typename S)(
-            requires N < 2)
+            requires True<(N < 2)>())
         (constexpr auto) get(sized_iterator_range<I, S> const &p)
         RANGES_DECLTYPE_AUTO_RETURN
         (
@@ -204,7 +204,7 @@ namespace ranges
 
         /// \overload
         CONCEPT_template(std::size_t N, typename I, typename S)(
-            requires N == 2)
+            requires True<N == 2>())
         (constexpr size_type_t<I>) get(sized_iterator_range<I, S> const &p)
         {
             return p.size();

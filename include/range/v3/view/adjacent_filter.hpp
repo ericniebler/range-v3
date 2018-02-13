@@ -57,14 +57,11 @@ namespace ranges
         private:
             friend range_access;
 
-            static constexpr bool const_iterable =
-                detail::AdjacentFilter<Rng const, Pred const>();
-
             struct adaptor : adaptor_base
             {
             private:
-                using Base = meta::const_if_c<const_iterable, Rng>;
-                using Parent = meta::const_if_c<const_iterable, adjacent_filter_view>;
+                using Base = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>(), Rng>;
+                using Parent = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>(), adjacent_filter_view>;
                 Parent *rng_;
             public:
                 adaptor() = default;
@@ -97,22 +94,22 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>())
             (constexpr adaptor) begin_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>())
             (constexpr adaptor) end_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!detail::AdjacentFilter<Rng const, Pred const>())
             (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!detail::AdjacentFilter<Rng const, Pred const>())
             (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() noexcept
             {
                 return {*this};

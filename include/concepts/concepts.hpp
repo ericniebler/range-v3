@@ -45,7 +45,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #ifdef __clang__
 #define CONCEPT_PP_IS_SAME(A, B) __is_same(A, B)
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
 #define CONCEPT_PP_IS_SAME(A, B) __is_same_as(A, B)
 #else
 #define CONCEPT_PP_IS_SAME(A, B) std::is_same<A, B>::value
@@ -210,9 +210,9 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_TESTSFINAETPARAM_union ~,
 
 #define CONCEPT_PP_ENABLE_IF_0(DECL, ...) \
-    > CONCEPT_PP_EXPAND DECL typename std::enable_if<_concept_requires_, __VA_ARGS__>::type
+    > CONCEPT_PP_EXPAND DECL typename std::enable_if<(bool) _concept_requires_(), __VA_ARGS__>::type
 #define CONCEPT_PP_ENABLE_IF_1(DECL, ...) \
-    , typename std::enable_if<_concept_requires_, int>::type = 0> CONCEPT_PP_EXPAND DECL
+    , typename std::enable_if<(bool) _concept_requires_(), int>::type = 0> CONCEPT_PP_EXPAND DECL
 
 #define CONCEPT_PP_FINALIZE_IMPL(DECL, ...)\
     CONCEPT_PP_CAT(CONCEPT_PP_ENABLE_IF_, CONCEPT_PP_OR(CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__), CONCEPT_PP_USE_SFINAE_TPARAM(__VA_ARGS__)))(DECL, __VA_ARGS__) \
@@ -259,7 +259,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_TOLIST_decltype(...) (decltype(__VA_ARGS__))
 
 #define CONCEPT_PP_REQUIRES_(...) \
-    CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_, __VA_ARGS__) ) CONCEPT_PP_RETURNS_
+    CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_, __VA_ARGS__) ) ) CONCEPT_PP_RETURNS_
 #define CONCEPT_PP_REQUIRES_requires
 #define CONCEPT_PP_RETURNS_(...) \
     CONCEPT_PP_FINALIZE(CONCEPT_PP_EVAL_OR(CONCEPT_PP_EVAL_OR(\
@@ -270,9 +270,9 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<                                                                   \
         __VA_ARGS__                                                             \
         CONCEPT_PP_COMMA_IIF(CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__))     \
-        int (*_concept_unique_)[CONCEPT_COUNTER] = nullptr,                     \
-        bool _concept_requires_ = (_concept_unique_ == nullptr) &&              \
-            static_cast<bool>(CONCEPT_PP_REQUIRES_                              \
+        int (*)[CONCEPT_COUNTER] = nullptr,                                     \
+        typename _concept_requires_ =                                           \
+            decltype(::concepts::detail::requires_(CONCEPT_PP_REQUIRES_         \
     /**/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +375,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_DEF_class
 #define CONCEPT_PP_DEF_typename
 #define CONCEPT_PP_DEF_int
+#define CONCEPT_PP_DEF_bool
 #define CONCEPT_PP_DEF_size_t
 #define CONCEPT_PP_DEF_unsigned
 #define CONCEPT_PP_DEF_requires ~,
@@ -470,8 +471,14 @@ namespace concepts
                 constexpr dummy(Ts &&...) noexcept
                 {}
                 template<typename That>
-                constexpr friend typename std::enable_if<(bool)That(), dummy>::type
+                constexpr friend meta::if_c<(bool) That(), dummy>
                 operator&&(dummy, bool_<That>) noexcept
+                {
+                    return {};
+                }
+                template<typename That>
+                constexpr friend meta::if_c<(bool) That(), dummy>
+                operator||(dummy, bool_<That>) noexcept
                 {
                     return {};
                 }
@@ -491,6 +498,35 @@ namespace concepts
 
             template<typename T>
             constexpr typename keywords<T>::requires_type keywords<T>::Requires;
+
+            template<class T>
+            struct must_be_bool_wrapper
+            {
+                static_assert(meta::is<T, bool_>::value,
+                    "requires clause must have type concepts::bool_");
+                using type = T;
+            };
+
+            template<class T>
+            meta::_t<must_be_bool_wrapper<T>> requires_(T);
+
+            template<typename... Bools>
+            struct and_
+            {
+                constexpr explicit operator bool() const noexcept
+                {
+                    return true;
+                }
+            };
+
+            template<typename Bool, typename... Bools>
+            struct and_<Bool, Bools...>
+            {
+                constexpr explicit operator bool() const noexcept
+                {
+                    return eval_if<!(bool) Bool()>()(false, and_<Bools...>());
+                }
+            };
         }
         /// \endcond
 
@@ -533,10 +569,10 @@ namespace concepts
             {
                 return detail::eval_if<!static_cast<bool>(T())>()(false, U());
             }
-            constexpr bool operator()() const noexcept
-            {
-                return static_cast<bool>(*this);
-            }
+            // constexpr bool operator()() const noexcept
+            // {
+            //     return static_cast<bool>(*this);
+            // }
         };
 
         template<typename T, typename U>
@@ -546,10 +582,10 @@ namespace concepts
             {
                 return detail::eval_if<static_cast<bool>(T())>()(true, U());
             }
-            constexpr bool operator()() const noexcept
-            {
-                return static_cast<bool>(*this);
-            }
+            // constexpr bool operator()() const noexcept
+            // {
+            //     return static_cast<bool>(*this);
+            // }
         };
 
         template<typename T>
@@ -559,11 +595,17 @@ namespace concepts
             {
                 return !static_cast<bool>(T());
             }
-            constexpr bool operator()() const noexcept
-            {
-                return static_cast<bool>(*this);
-            }
+            // constexpr bool operator()() const noexcept
+            // {
+            //     return static_cast<bool>(*this);
+            // }
         };
+
+        // template<typename T, typename U>
+        // constexpr meta::if_c<(bool)T(), bool_<U>, bool_<T>> operator&&(bool_<T>, bool_<U>)
+        // {
+        //     return {};
+        // }
 
         template<typename T, typename U>
         constexpr bool_<and_<T, U>> operator&&(bool_<T>, bool_<U>)
@@ -571,10 +613,17 @@ namespace concepts
             return {};
         }
 
-        template<typename T, typename U>
-        constexpr detail::undef<T, U> operator&&(bool_<T>, U);
-        template<typename T, typename U>
-        constexpr detail::undef<T, U> operator&&(T, bool_<U>);
+        // template<typename T, typename U>
+        // constexpr detail::undef<T, U> operator&&(bool_<T>, U);
+        // template<typename T, typename U>
+        // constexpr detail::undef<T, U> operator&&(T, bool_<U>);
+
+        // template<typename T, typename U>
+        // constexpr meta::if_c<(bool)T(), bool_<T>, bool_<U>>
+        // operator||(bool_<T>, bool_<U>)
+        // {
+        //     return {};
+        // }
 
         template<typename T, typename U>
         constexpr bool_<or_<T, U>> operator||(bool_<T>, bool_<U>)
@@ -582,10 +631,10 @@ namespace concepts
             return {};
         }
 
-        template<typename T, typename U>
-        constexpr detail::undef<T, U> operator||(bool_<T>, U);
-        template<typename T, typename U>
-        constexpr detail::undef<T, U> operator||(T, bool_<U>);
+        // template<typename T, typename U>
+        // constexpr detail::undef<T, U> operator||(bool_<T>, U);
+        // template<typename T, typename U>
+        // constexpr detail::undef<T, U> operator||(T, bool_<U>);
 
         template<typename T>
         constexpr bool_<not_<T>> operator!(bool_<T>)
@@ -690,6 +739,13 @@ namespace concepts
 
             template<template<typename...> class T, typename... Args>
             constexpr concepts::bool_<meta::defer<T, Args...>> True() noexcept
+            {
+                return {};
+            }
+
+            template<typename... Bools>
+            constexpr concepts::bool_<concepts::detail::and_<Bools...>>
+            And(bool_<Bools>...) noexcept
             {
                 return {};
             }

@@ -147,7 +147,7 @@ struct debug_input_view
         {
             return !(i == s);
         }
-        CONCEPT_requires(Sized)
+        CONCEPT_requires(concepts::True<Sized>())
         (RANGES_CXX14_CONSTEXPR
         friend difference_type) operator-(sentinel const& s, iterator const& i)
         {
@@ -155,7 +155,7 @@ struct debug_input_view
             i.check_current();
             return i.view_->last_ - i.view_->data_;
         }
-        CONCEPT_requires(Sized)
+        CONCEPT_requires(concepts::True<Sized>())
         (RANGES_CXX14_CONSTEXPR
         friend difference_type) operator-(iterator const& i, sentinel const& s)
         {
@@ -174,7 +174,7 @@ struct debug_input_view
         RANGES_ENSURE(valid_);
         return sentinel{*this};
     }
-    CONCEPT_requires(Sized)
+    CONCEPT_requires(concepts::True<Sized>())
     (RANGES_CXX14_CONSTEXPR
     std::size_t) size() const noexcept
     {

@@ -642,7 +642,7 @@ namespace ranges
             struct reverse_cursor
             {
             private:
-                static_assert((bool) BidirectionalIterator<I>(), "");
+                CONCEPT_assert(BidirectionalIterator<I>());
                 friend range_access;
                 template<typename OtherI>
                 friend struct reverse_cursor;
@@ -741,7 +741,7 @@ namespace ranges
         struct move_iterator
         {
         private:
-            static_assert((bool) InputIterator<I>(), "");
+            CONCEPT_assert(InputIterator<I>());
             I current_ = detail::value_init{};
         public:
             using iterator_type = I;
@@ -880,7 +880,7 @@ namespace ranges
             return x + n;
         }
 
-        static_assert((bool) InputIterator<move_iterator<int*>>(), "");
+        CONCEPT_assert(InputIterator<move_iterator<int*>>());
 
         struct make_move_iterator_fn
         {

@@ -67,7 +67,7 @@ namespace ranges
             {
                 // Fixed-length
                 CONCEPT_template(typename Char, std::size_t N)(
-                    requires detail::is_char_type<Char>())
+                    requires True(detail::is_char_type<Char>()))
                 (ranges::iterator_range<Char *>) operator()(Char (&sz)[N]) const
                 {
                     return {&sz[0], &sz[N-1]};
@@ -75,7 +75,7 @@ namespace ranges
 
                 // Null-terminated
                 CONCEPT_template(typename Char)(
-                    requires detail::is_char_type<Char>())
+                    requires True(detail::is_char_type<Char>()))
                 (ranges::delimit_view<
                     ranges::iterator_range<Char *, ranges::unreachable>,
                     meta::_t<std::remove_cv<Char>>>)

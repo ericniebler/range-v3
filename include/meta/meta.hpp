@@ -1145,8 +1145,9 @@ namespace meta
                 template <typename Bool_, typename... Bools>
                 using invoke = invoke<
                     if_c<!META_VALUE_OF(Bool_),
-                         id<std::false_type>,
-                         _and_<0==sizeof...(Bools)>>, Bools...>;
+                        id<std::false_type>,
+                        _and_<0 == sizeof...(Bools)>>,
+                    Bools...>;
             };
 
             template <bool>
@@ -1162,8 +1163,9 @@ namespace meta
                 template <typename Bool_, typename... Bools>
                 using invoke = invoke<
                     if_c<META_VALUE_OF(Bool_),
-                         id<std::true_type>,
-                         _or_<0 == sizeof...(Bools)>>, Bools...>;
+                        id<std::true_type>,
+                        _or_<0 == sizeof...(Bools)>>,
+                    Bools...>;
             };
         } // namespace detail
         /// \endcond

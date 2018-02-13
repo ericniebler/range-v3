@@ -118,7 +118,7 @@ namespace ranges
                     meta::quote<meta::lazy::strict_and>,
                     meta::transform<
                         base_concepts_of_t<Concept>,
-                        meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
+                        meta::bind_back<meta::quote<legacy_concepts::models>, Ts...>>>;
 
             template<typename List>
             struct most_refined_
@@ -134,11 +134,7 @@ namespace ranges
         }
         /// \endcond
 
-#if defined(RANGES_USE_LEGACY_CONCEPTS) && 0 < RANGES_USE_LEGACY_CONCEPTS
-        namespace concepts
-#else
         namespace legacy_concepts
-#endif
         {
             using detail::void_;
             using detail::is_void;
@@ -163,7 +159,7 @@ namespace ranges
 
             template<typename T, typename U>
             auto convertible_to(U &&u) ->
-                decltype(concepts::returns_<int>(static_cast<T>((U &&) u)));
+                decltype(legacy_concepts::returns_<int>(static_cast<T>((U &&) u)));
 
             template<typename T, typename U>
             auto has_type(U &&) ->
@@ -201,11 +197,11 @@ namespace ranges
             // model_of
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
+                meta::if_c<legacy_concepts::models<Concept, Ts...>::value, int>;
 
             template<typename Concept, typename ...Ts>
             auto model_of() ->
-                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
+                meta::if_c<legacy_concepts::models<Concept, Ts...>::value, int>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // most_refined
@@ -236,8 +232,8 @@ namespace ranges
 
                 template<typename ...Ts>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(same_t<Ts...>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(same_t<Ts...>{})
                     ));
             };
 
@@ -246,8 +242,8 @@ namespace ranges
             {
                 template<typename From, typename To>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_convertible<From, To>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_convertible<From, To>{})
                     ));
             };
 
@@ -255,7 +251,7 @@ namespace ranges
             {
                 template<typename From, typename To>
                 auto requires_(From (&from)()) -> decltype(
-                    concepts::valid_expr(
+                    legacy_concepts::valid_expr(
                         ((void) static_cast<To>(from()), 42)
                     ));
             };
@@ -269,9 +265,9 @@ namespace ranges
             {
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_base_of<U, T>{}),
-                        concepts::is_true(std::is_convertible<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_base_of<U, T>{}),
+                        legacy_concepts::is_true(std::is_convertible<
                             meta::_t<std::remove_cv<T>> *, meta::_t<std::remove_cv<U>> *>{})
                     ));
             };
@@ -283,18 +279,18 @@ namespace ranges
 
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
-                        concepts::model_of<ConvertibleTo, T, reference_t<T, U>>(),
-                        concepts::model_of<ConvertibleTo, U, reference_t<T, U>>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
+                        legacy_concepts::model_of<ConvertibleTo, T, reference_t<T, U>>(),
+                        legacy_concepts::model_of<ConvertibleTo, U, reference_t<T, U>>()
                     ));
 
                 template<typename T, typename U, typename...Rest,
                     typename CommonReference_ = CommonReference>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<CommonReference_, T, U>(),
-                        concepts::model_of<CommonReference_, reference_t<T, U>, Rest...>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<CommonReference_, T, U>(),
+                        legacy_concepts::model_of<CommonReference_, reference_t<T, U>, Rest...>()
                     ));
             };
 
@@ -305,20 +301,20 @@ namespace ranges
 
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_same<uncvref_t<T>, uncvref_t<U>>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_same<uncvref_t<T>, uncvref_t<U>>{})
                     ));
 
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(std::is_same<uncvref_t<T>, uncvref_t<U>>{}),
-                        concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
-                        concepts::model_of<ConvertibleTo, T, value_t<T, U>>(),
-                        concepts::model_of<ConvertibleTo, U, value_t<T, U>>(),
-                        concepts::model_of<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_false(std::is_same<uncvref_t<T>, uncvref_t<U>>{}),
+                        legacy_concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
+                        legacy_concepts::model_of<ConvertibleTo, T, value_t<T, U>>(),
+                        legacy_concepts::model_of<ConvertibleTo, U, value_t<T, U>>(),
+                        legacy_concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::model_of<
+                        legacy_concepts::model_of<
                             CommonReference,
                             value_t<T, U> &,
                             common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>()
@@ -327,9 +323,9 @@ namespace ranges
                 template<typename T, typename U, typename...Rest,
                     typename Common_ = Common>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Common_, T, U>(),
-                        concepts::model_of<Common_, value_t<T, U>, Rest...>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<Common_, T, U>(),
+                        legacy_concepts::model_of<Common_, value_t<T, U>, Rest...>()
                     ));
             };
 
@@ -337,8 +333,8 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_integral<T>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_integral<T>{})
                     ));
             };
 
@@ -347,8 +343,8 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_signed<T>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_signed<T>{})
                     ));
             };
 
@@ -357,8 +353,8 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(std::is_signed<T>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_false(std::is_signed<T>{})
                     ));
             };
 
@@ -366,11 +362,11 @@ namespace ranges
             {
                 template<typename T, typename U>
                 auto requires_(T &&t, U &&u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_lvalue_reference<T>{}),
-                        concepts::model_of<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_lvalue_reference<T>{}),
+                        legacy_concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::has_type<T>((T &&) t = (U &&) u)
+                        legacy_concepts::has_type<T>((T &&) t = (U &&) u)
                     ));
             };
 
@@ -378,16 +374,16 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_(T &&t) -> decltype(
-                    concepts::valid_expr(
+                    legacy_concepts::valid_expr(
                         ((void)ranges::swap((T &&) t, (T &&) t), 42)
                     ));
 
                 template<typename T, typename U>
                 auto requires_(T &&t, U &&u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Swappable, T>(),
-                        concepts::model_of<Swappable, U>(),
-                        concepts::model_of<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<Swappable, T>(),
+                        legacy_concepts::model_of<Swappable, U>(),
+                        legacy_concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
                         ((void)ranges::swap((T &&) t, (U &&) u), 42),
                         ((void)ranges::swap((U &&) u, (T &&) t), 42)
@@ -402,11 +398,11 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
                     // Not to spec: doesn't compare to a Boolean trait
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t == u),
-                        concepts::convertible_to<bool>(t != u),
-                        concepts::convertible_to<bool>(u == t),
-                        concepts::convertible_to<bool>(u != t)
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::convertible_to<bool>(t == u),
+                        legacy_concepts::convertible_to<bool>(t != u),
+                        legacy_concepts::convertible_to<bool>(u == t),
+                        legacy_concepts::convertible_to<bool>(u != t)
                     ));
             };
 
@@ -416,16 +412,16 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_(detail::as_cref_t<T> t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t == t),
-                        concepts::convertible_to<bool>(t != t)
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::convertible_to<bool>(t == t),
+                        legacy_concepts::convertible_to<bool>(t != t)
                     ));
 
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_same<T, U>{}),
-                        concepts::model_of<EqualityComparable, T>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_same<T, U>{}),
+                        legacy_concepts::model_of<EqualityComparable, T>()
                     ));
 
                 // Cross-type equality comparison from N3351:
@@ -433,14 +429,14 @@ namespace ranges
                 template<typename T, typename U,
                     typename C = common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(std::is_same<T, U>{}),
-                        concepts::model_of<EqualityComparable, T>(),
-                        concepts::model_of<EqualityComparable, U>(),
-                        concepts::model_of<WeaklyEqualityComparable, T, U>(),
-                        concepts::model_of<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_false(std::is_same<T, U>{}),
+                        legacy_concepts::model_of<EqualityComparable, T>(),
+                        legacy_concepts::model_of<EqualityComparable, U>(),
+                        legacy_concepts::model_of<WeaklyEqualityComparable, T, U>(),
+                        legacy_concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::model_of<EqualityComparable, C>()
+                        legacy_concepts::model_of<EqualityComparable, C>()
                     ));
             };
 
@@ -448,30 +444,30 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_(T &&t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t < t),
-                        concepts::convertible_to<bool>(t > t),
-                        concepts::convertible_to<bool>(t <= t),
-                        concepts::convertible_to<bool>(t >= t)
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::convertible_to<bool>(t < t),
+                        legacy_concepts::convertible_to<bool>(t > t),
+                        legacy_concepts::convertible_to<bool>(t <= t),
+                        legacy_concepts::convertible_to<bool>(t >= t)
                     ));
 
                 template<typename T, typename U,
                     typename C = common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
                 auto requires_(detail::as_cref_t<T> t, detail::as_cref_t<U> u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<WeaklyOrdered, T>(),
-                        concepts::model_of<WeaklyOrdered, U>(),
-                        concepts::model_of<
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<WeaklyOrdered, T>(),
+                        legacy_concepts::model_of<WeaklyOrdered, U>(),
+                        legacy_concepts::model_of<
                             CommonReference, detail::as_cref_t<T>, detail::as_cref_t<U>>(),
-                        concepts::model_of<WeaklyOrdered, C>(),
-                        concepts::convertible_to<bool>(t < u),
-                        concepts::convertible_to<bool>(u < t),
-                        concepts::convertible_to<bool>(t > u),
-                        concepts::convertible_to<bool>(u > t),
-                        concepts::convertible_to<bool>(t <= u),
-                        concepts::convertible_to<bool>(u <= t),
-                        concepts::convertible_to<bool>(t >= u),
-                        concepts::convertible_to<bool>(u >= t)
+                        legacy_concepts::model_of<WeaklyOrdered, C>(),
+                        legacy_concepts::convertible_to<bool>(t < u),
+                        legacy_concepts::convertible_to<bool>(u < t),
+                        legacy_concepts::convertible_to<bool>(t > u),
+                        legacy_concepts::convertible_to<bool>(u > t),
+                        legacy_concepts::convertible_to<bool>(t <= u),
+                        legacy_concepts::convertible_to<bool>(u <= t),
+                        legacy_concepts::convertible_to<bool>(t >= u),
+                        legacy_concepts::convertible_to<bool>(u >= t)
                     ));
             };
 
@@ -483,9 +479,9 @@ namespace ranges
 
                 template<typename T, typename U>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<TotallyOrdered, T>(),
-                        concepts::model_of<TotallyOrdered, U>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<TotallyOrdered, T>(),
+                        legacy_concepts::model_of<TotallyOrdered, U>()
                     ));
             };
 
@@ -499,8 +495,8 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_nothrow_destructible<T>())
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_nothrow_destructible<T>())
                     ));
             };
 
@@ -509,8 +505,8 @@ namespace ranges
             {
                 template<typename T, typename... Args>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_constructible<T, Args...>{})
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_constructible<T, Args...>{})
                     ));
             };
 
@@ -525,9 +521,9 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Constructible, T, T>(),
-                        concepts::model_of<ConvertibleTo, T, T>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<Constructible, T, T>(),
+                        legacy_concepts::model_of<ConvertibleTo, T, T>()
                     ));
             };
 
@@ -536,13 +532,13 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Constructible, T, T &>(),
-                        concepts::model_of<Constructible, T, T const &>(),
-                        concepts::model_of<Constructible, T, T const>(),
-                        concepts::model_of<ConvertibleTo, T &, T>(),
-                        concepts::model_of<ConvertibleTo, T const &, T>(),
-                        concepts::model_of<ConvertibleTo, T const, T>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::model_of<Constructible, T, T &>(),
+                        legacy_concepts::model_of<Constructible, T, T const &>(),
+                        legacy_concepts::model_of<Constructible, T, T const>(),
+                        legacy_concepts::model_of<ConvertibleTo, T &, T>(),
+                        legacy_concepts::model_of<ConvertibleTo, T const &, T>(),
+                        legacy_concepts::model_of<ConvertibleTo, T const, T>()
                     ));
             };
 
@@ -551,10 +547,10 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_object<T>{}),
-                        concepts::model_of<Assignable, T &, T>(),
-                        concepts::model_of<Swappable, T &>()
+                    legacy_concepts::valid_expr(
+                        legacy_concepts::is_true(std::is_object<T>{}),
+                        legacy_concepts::model_of<Assignable, T &, T>(),
+                        legacy_concepts::model_of<Swappable, T &>()
                     ));
             };
 
@@ -563,12 +559,12 @@ namespace ranges
             {
                 template<typename T>
                 auto requires_() -> decltype(
-                    concepts::valid_expr(
+                    legacy_concepts::valid_expr(
                         // Spec requires this to be validated
-                        concepts::model_of<Assignable, T &, T const &>(),
+                        legacy_concepts::model_of<Assignable, T &, T const &>(),
                         // Spec does not require these to be validated
-                        concepts::model_of<Assignable, T &, T &>(),
-                        concepts::model_of<Assignable, T &, T const>()
+                        legacy_concepts::model_of<Assignable, T &, T &>(),
+                        legacy_concepts::model_of<Assignable, T &, T const>()
                     ));
             };
 
@@ -585,98 +581,98 @@ namespace ranges
         }
 
         template<typename ...Ts>
-        using Same = concepts::Same::same_t<Ts...>; // This handles void better than using the Same concept
+        using Same = legacy_concepts::Same::same_t<Ts...>; // This handles void better than using the Same concept
 
         template<typename T, typename U>
         using ImplicitlyConvertibleTo =
-            concepts::models<concepts::ImplicitlyConvertibleTo, T, U>;
+            legacy_concepts::models<legacy_concepts::ImplicitlyConvertibleTo, T, U>;
 
         template<typename T, typename U>
         using ExplicitlyConvertibleTo =
-            concepts::models<concepts::ExplicitlyConvertibleTo, T, U>;
+            legacy_concepts::models<legacy_concepts::ExplicitlyConvertibleTo, T, U>;
 
         template<typename T, typename U>
-        using ConvertibleTo = concepts::models<concepts::ConvertibleTo, T, U>;
+        using ConvertibleTo = legacy_concepts::models<legacy_concepts::ConvertibleTo, T, U>;
 
         template<typename T, typename U>
-        using DerivedFrom = concepts::models<concepts::DerivedFrom, T, U>;
+        using DerivedFrom = legacy_concepts::models<legacy_concepts::DerivedFrom, T, U>;
 
         template<typename T, typename U, typename...Rest>
         using CommonReference =
-            concepts::models<concepts::CommonReference, T, U, Rest...>;
+            legacy_concepts::models<legacy_concepts::CommonReference, T, U, Rest...>;
 
         template<typename T, typename U, typename...Rest>
         using Common =
-            concepts::models<concepts::Common, T, U, Rest...>;
+            legacy_concepts::models<legacy_concepts::Common, T, U, Rest...>;
 
         template<typename T>
-        using Integral = concepts::models<concepts::Integral, T>;
+        using Integral = legacy_concepts::models<legacy_concepts::Integral, T>;
 
         template<typename T>
-        using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
+        using SignedIntegral = legacy_concepts::models<legacy_concepts::SignedIntegral, T>;
 
         template<typename T>
-        using UnsignedIntegral = concepts::models<concepts::UnsignedIntegral, T>;
+        using UnsignedIntegral = legacy_concepts::models<legacy_concepts::UnsignedIntegral, T>;
 
         template<typename T>
-        using Destructible = concepts::models<concepts::Destructible, T>;
+        using Destructible = legacy_concepts::models<legacy_concepts::Destructible, T>;
 
         template<typename T, typename ...Args>
-        using Constructible = concepts::models<concepts::Constructible, T, Args...>;
+        using Constructible = legacy_concepts::models<legacy_concepts::Constructible, T, Args...>;
 
         template<typename T>
-        using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
+        using DefaultConstructible = legacy_concepts::models<legacy_concepts::DefaultConstructible, T>;
 
         template<typename T>
-        using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
+        using MoveConstructible = legacy_concepts::models<legacy_concepts::MoveConstructible, T>;
 
         template<typename T>
-        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
+        using CopyConstructible = legacy_concepts::models<legacy_concepts::CopyConstructible, T>;
 
         template<typename T, typename U>
-        using Assignable = concepts::models<concepts::Assignable, T, U>;
+        using Assignable = legacy_concepts::models<legacy_concepts::Assignable, T, U>;
 
         template<typename T>
-        using Movable = concepts::models<concepts::Movable, T>;
+        using Movable = legacy_concepts::models<legacy_concepts::Movable, T>;
 
         template<typename T>
-        using Copyable = concepts::models<concepts::Copyable, T>;
+        using Copyable = legacy_concepts::models<legacy_concepts::Copyable, T>;
 
         template<typename T, typename U>
-        using WeaklyEqualityComparable = concepts::models<concepts::WeaklyEqualityComparable, T, U>;
+        using WeaklyEqualityComparable = legacy_concepts::models<legacy_concepts::WeaklyEqualityComparable, T, U>;
 
         template<typename T, typename U>
-        using WeaklyEqualityComparableWith = concepts::models<concepts::WeaklyEqualityComparable, T, U>;
+        using WeaklyEqualityComparableWith = legacy_concepts::models<legacy_concepts::WeaklyEqualityComparable, T, U>;
 
         template<typename T, typename U = T>
-        using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
+        using EqualityComparable = legacy_concepts::models<legacy_concepts::EqualityComparable, T, U>;
 
         template<typename T, typename U>
-        using EqualityComparableWith = concepts::models<concepts::EqualityComparable, T, U>;
+        using EqualityComparableWith = legacy_concepts::models<legacy_concepts::EqualityComparable, T, U>;
 
         template<typename T, typename U = T>
-        using WeaklyOrdered = concepts::models<concepts::WeaklyOrdered, T, U>;
+        using WeaklyOrdered = legacy_concepts::models<legacy_concepts::WeaklyOrdered, T, U>;
 
         template<typename T, typename U = T>
-        using TotallyOrdered = concepts::models<concepts::TotallyOrdered, T, U>;
+        using TotallyOrdered = legacy_concepts::models<legacy_concepts::TotallyOrdered, T, U>;
 
         template<typename T>
-        using StrictTotallyOrdered = concepts::models<concepts::TotallyOrdered, T, T>;
+        using StrictTotallyOrdered = legacy_concepts::models<legacy_concepts::TotallyOrdered, T, T>;
 
         template<typename T, typename U>
-        using StrictTotallyOrderedWith = concepts::models<concepts::TotallyOrdered, T, U>;
+        using StrictTotallyOrderedWith = legacy_concepts::models<legacy_concepts::TotallyOrdered, T, U>;
 
         template<typename T>
-        using Semiregular = concepts::models<concepts::Semiregular, T>;
+        using Semiregular = legacy_concepts::models<legacy_concepts::Semiregular, T>;
 
         template<typename T>
-        using Regular = concepts::models<concepts::Regular, T>;
+        using Regular = legacy_concepts::models<legacy_concepts::Regular, T>;
 
         template<typename T, typename U = T>
-        using Swappable = concepts::models<concepts::Swappable, T, U>;
+        using Swappable = legacy_concepts::models<legacy_concepts::Swappable, T, U>;
 
         template<typename T, typename U>
-        using SwappableWith = concepts::models<concepts::Swappable, T, U>;
+        using SwappableWith = legacy_concepts::models<legacy_concepts::Swappable, T, U>;
 
         template<class T>
         constexpr bool True() noexcept

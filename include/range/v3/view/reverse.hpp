@@ -66,9 +66,7 @@ namespace ranges
         private:
             friend range_access;
 
-            static constexpr bool const_iterable = BoundedRange<Rng const>();
-
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(BoundedRange<Rng const>())
             (constexpr iterator_t<Rng>) get_end() const
                 noexcept(noexcept(ranges::end(std::declval<Rng const &>())))
             {
@@ -92,7 +90,7 @@ namespace ranges
                     end_ = ranges::next(ranges::begin(this->base()), ranges::end(this->base()));
                 return *end_;
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!BoundedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR iterator_t<Rng>) get_end()
                 noexcept(noexcept(std::declval<reverse_view &>().get_end_(BoundedRange<Rng>())))
             {
@@ -102,8 +100,8 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using Parent = meta::const_if_c<const_iterable, reverse_view>;
-                using Base = meta::const_if_c<const_iterable, Rng>;
+                using Parent = meta::const_if_c<(bool) BoundedRange<Rng const>(), reverse_view>;
+                using Base = meta::const_if_c<(bool) BoundedRange<Rng const>(), Rng>;
 #ifndef NDEBUG
                 Parent *rng_;
 #endif
@@ -163,25 +161,25 @@ namespace ranges
                     return here - there;
                 }
             };
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(BoundedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() const
                 noexcept(std::is_nothrow_constructible<adaptor, reverse_view const &>::value)
             {
                 return {*this};
             }
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(BoundedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() const
                 noexcept(std::is_nothrow_constructible<adaptor, reverse_view const &>::value)
             {
                 return {*this};
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!BoundedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor()
                 noexcept(std::is_nothrow_constructible<adaptor, reverse_view &>::value)
             {
                 return {*this};
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!BoundedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor()
                 noexcept(std::is_nothrow_constructible<adaptor, reverse_view &>::value)
             {

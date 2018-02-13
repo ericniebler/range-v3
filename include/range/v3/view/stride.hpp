@@ -225,14 +225,14 @@ namespace ranges
                     }
                 }
             };
-            CONCEPT_requires(const_iterable)
+            CONCEPT_requires(True<const_iterable>())
             (constexpr adaptor) begin_adaptor() const
                 noexcept(std::is_nothrow_constructible<adaptor, stride_view const &>::value &&
                     std::is_nothrow_move_constructible<adaptor>::value)
             {
                 return adaptor{*this};
             }
-            CONCEPT_requires(!const_iterable)
+            CONCEPT_requires(!True<const_iterable>())
             (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor()
                 noexcept(std::is_nothrow_constructible<adaptor, stride_view &>::value &&
                     std::is_nothrow_move_constructible<adaptor>::value)

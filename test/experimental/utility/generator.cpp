@@ -36,11 +36,14 @@ using maybe_sized_generator = meta::if_c<Condition,
 struct coro_fn
 {
 private:
-    template<typename Rng>
-    CONCEPT_alias(Constraint,
-        ranges::InputRange<Rng>() &&
-        (True<std::is_reference<ranges::range_reference_t<Rng>>>() ||
-            ranges::CopyConstructible<ranges::range_reference_t<Rng>>()));
+    CONCEPT_def
+    (
+        template(typename Rng)
+        concept Constraint,
+            ranges::InputRange<Rng>() &&
+            (True(std::is_reference<ranges::range_reference_t<Rng>>()) ||
+                ranges::CopyConstructible<ranges::range_reference_t<Rng>>())
+    );
 
     template<typename V>
     using generator_for = meta::invoke<
@@ -61,10 +64,10 @@ private:
     }
 public:
     CONCEPT_template(typename Rng)(
-        requires meta::and_<
-            meta::not_<meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>>,
-            meta::not_<meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>>,
-            Constraint<Rng>>::value)
+        requires
+            !True(meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>()) &&
+            !True(meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>()) &&
+            Constraint<Rng>())
     generator_for<ranges::view::all_t<Rng>> operator()(Rng &&rng) const
     {
         return impl(ranges::view::all(static_cast<Rng &&>(rng)));

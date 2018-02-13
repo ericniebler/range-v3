@@ -190,7 +190,6 @@ namespace ranges
 
         namespace view
         {
-
             /// Returns a random sample of a range of length `size(range)`.
             class sample_fn
             {
@@ -198,19 +197,20 @@ namespace ranges
                 (
                     template(typename Rng, typename URNG)
                     concept Constraint,
-                        InputRange<Rng>() && UniformRandomNumberGenerator<URNG>() &&
+                        InputRange<Rng>() &&
+                        UniformRandomNumberGenerator<URNG>() &&
                         ConvertibleTo<
                             invoke_result_t<URNG &>,
-                            range_difference_type_t<Rng>>() && (
-                                SizedRange<Rng>() ||
-                                SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() ||
-                                ForwardRange<Rng>()
-                            )
+                            range_difference_type_t<Rng>>() &&
+                        (
+                            SizedRange<Rng>() ||
+                            SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() ||
+                            ForwardRange<Rng>())
                 );
 
                 friend view_access;
                 CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(
-                    requires Integral<Size>(), UniformRandomNumberGenerator<URNG>())
+                    requires Integral<Size>() && UniformRandomNumberGenerator<URNG>())
                 (static auto) bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
