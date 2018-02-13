@@ -30,7 +30,7 @@ namespace ranges
             {
                 CONCEPT_template(typename T)(
                     requires Constructible<detail::decay_t<T>, T>())
-                (detail::decay_t<T>) operator()(T && t) const
+                (detail::decay_t<T>) operator()(T &&t) const
                 {
                     return static_cast<T &&>(t);
                 }
@@ -44,7 +44,7 @@ namespace ranges
             /// \sa `copy_fn`
             CONCEPT_template(typename T)(
                 requires Constructible<detail::decay_t<T>, T>())
-            (detail::decay_t<T>) operator|(T && t, copy_fn)
+            (detail::decay_t<T>) operator|(T &&t, copy_fn)
             {
                 return static_cast<T &&>(t);
             }

@@ -162,7 +162,7 @@ namespace ranges
             Ret returns_(T const &);
 
             template<typename T, typename U>
-            auto convertible_to(U && u) ->
+            auto convertible_to(U &&u) ->
                 decltype(concepts::returns_<int>(static_cast<T>((U &&) u)));
 
             template<typename T, typename U>
@@ -383,7 +383,7 @@ namespace ranges
                     ));
 
                 template<typename T, typename U>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &&t, U &&u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Swappable, T>(),
                         concepts::model_of<Swappable, U>(),
@@ -447,7 +447,7 @@ namespace ranges
             struct WeaklyOrdered
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T &&t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t < t),
                         concepts::convertible_to<bool>(t > t),
@@ -744,10 +744,7 @@ namespace ranges
 #endif
 /// @}
 
-#define CONCEPT_ASSERT_MSG static_assert
+#define CONCEPT_assert_msg static_assert
 /// @}
-
-#define CONCEPT_alias(NAME, ...) \
-    using NAME = meta::bool_<(bool)(__VA_ARGS__)>
 
 #endif // RANGES_V3_UTILITY_LEGACY_CONCEPTS_HPP

@@ -156,16 +156,16 @@ namespace ranges
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && ConvertibleTo<E, Element>())
-            (constexpr) box(E && e)
+            (constexpr) box(E &&e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : value(static_cast<E&&>(e))
+              : value(static_cast<E &&>(e))
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && !ConvertibleTo<E, Element>())
-            (constexpr explicit) box(E && e)
+            (constexpr explicit) box(E &&e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : value(static_cast<E&&>(e))
+              : value(static_cast<E &&>(e))
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept
@@ -195,16 +195,16 @@ namespace ranges
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && ConvertibleTo<E, Element>())
-            (constexpr) box(E && e)
+            (constexpr) box(E &&e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : Element(static_cast<E&&>(e))
+              : Element(static_cast<E &&>(e))
             {}
             CONCEPT_template(typename E)(
                 requires !Same<box, detail::decay_t<E>>() &&
                     Constructible<Element, E>() && !ConvertibleTo<E, Element>())
-            (constexpr explicit) box(E && e)
+            (constexpr explicit) box(E &&e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
-              : Element(static_cast<E&&>(e))
+              : Element(static_cast<E &&>(e))
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept
@@ -270,7 +270,7 @@ namespace ranges
         }
 
         template<typename Tag, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element && get(box<Element, Tag, BC> && b) noexcept
+        RANGES_CXX14_CONSTEXPR Element &&get(box<Element, Tag, BC> && b) noexcept
         {
             return detail::move(b).get();
         }
@@ -289,7 +289,7 @@ namespace ranges
         }
 
         template<std::size_t I, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element && get(box<Element, meta::size_t<I>, BC> && b) noexcept
+        RANGES_CXX14_CONSTEXPR Element &&get(box<Element, meta::size_t<I>, BC> && b) noexcept
         {
             return detail::move(b).get();
         }

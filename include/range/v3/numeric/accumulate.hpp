@@ -26,27 +26,29 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I, typename T, typename Op = plus, typename P = ident>
-        CONCEPT_alias(Accumulateable,
-            InputIterator<I>() &&
-            IndirectInvocable<Op, T *, projected<I, P>>() &&
-            Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>());
+        CONCEPT_def
+        (
+            template(typename I, typename T, typename Op = plus, typename P = ident)
+            (concept Accumulateable)(I, T, Op, P),
+                InputIterator<I>() &&
+                IndirectInvocable<Op, T *, projected<I, P>>() &&
+                Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>()
+        );
 
         struct accumulate_fn
         {
             CONCEPT_template(typename I, typename S, typename T, typename Op = plus, typename P = ident)(
                 requires Sentinel<S, I>() && Accumulateable<I, T, Op, P>())
-            T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
+            (T) operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
                     init = invoke(op, init, invoke(proj, *begin));
                 return init;
             }
 
-            CONCEPT_template(typename Rng, typename T, typename Op = plus, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng>() && Accumulateable<I, T, Op, P>())
-            T operator()(Rng && rng, T init, Op op = Op{}, P proj = P{}) const
+            CONCEPT_template(typename Rng, typename T, typename Op = plus, typename P = ident)(
+                requires Range<Rng>() && Accumulateable<iterator_t<Rng>, T, Op, P>())
+            (T) operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(init), std::move(op),
                     std::move(proj));

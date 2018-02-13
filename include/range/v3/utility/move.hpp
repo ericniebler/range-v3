@@ -33,7 +33,7 @@ namespace ranges
             {
                 template<typename T,
                     typename U = meta::_t<std::remove_reference<T>>>
-                U && operator()(T && t) const noexcept
+                U &&operator()(T &&t) const noexcept
                 {
                     return static_cast<U &&>(t);
                 }
@@ -46,7 +46,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `move_fn`
             template<typename T>
-            meta::_t<std::remove_reference<T>> && operator|(T && t, move_fn move) noexcept
+            meta::_t<std::remove_reference<T>> && operator|(T &&t, move_fn move) noexcept
             {
                 return move(t);
             }

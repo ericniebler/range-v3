@@ -85,6 +85,16 @@ namespace concepts
             {
                 using type = T const &;
             };
+            template<>
+            struct as_cref_<void>
+            {
+                using type = void;
+            };
+            template<>
+            struct as_cref_<void const>
+            {
+                using type = void const;
+            };
 
             template<typename T>
             using as_cref_t = typename as_cref_<T>::type;

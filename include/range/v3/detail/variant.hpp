@@ -138,7 +138,7 @@ namespace ranges
                     requires Constructible<T, Ts...>())
                 (constexpr) indexed_datum(Ts &&... ts)
                     noexcept(std::is_nothrow_constructible<T, Ts...>::value)
-                  : datum_(static_cast<Ts&&>(ts)...)
+                  : datum_(static_cast<Ts &&>(ts)...)
                 {}
                 RANGES_CXX14_CONSTEXPR indexed_element<T, Index::value> ref() noexcept
                 {
@@ -380,12 +380,12 @@ namespace ranges
                 void construct_(U &u, meta::index_sequence<Is...>)
                     noexcept(std::is_nothrow_constructible<U, Ts...>::value)
                 {
-                    ::new((void*)std::addressof(u)) U(static_cast<Ts&&>(std::get<Is>(args_))...);
+                    ::new((void*)std::addressof(u)) U(static_cast<Ts &&>(std::get<Is>(args_))...);
                 }
 
                 construct_fn(Ts &&...ts)
                     noexcept(std::is_nothrow_constructible<std::tuple<Ts...>, Ts...>::value)
-                  : args_{static_cast<Ts&&>(ts)...}
+                  : args_{static_cast<Ts &&>(ts)...}
                 {}
                 template<typename U, std::size_t M>
                 [[noreturn]] meta::if_c<N != M> operator()(indexed_datum<U, meta::size_t<M>> &) noexcept
@@ -435,7 +435,7 @@ namespace ranges
                 auto operator()(Ts &&...ts) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    ranges::emplace<N>(*var_, static_cast<Ts&&>(ts)...)
+                    ranges::emplace<N>(*var_, static_cast<Ts &&>(ts)...)
                 )
             };
 
@@ -580,7 +580,7 @@ namespace ranges
                 requires Constructible<datum_t<N>, Args...>())
             (constexpr) variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
                 noexcept(std::is_nothrow_constructible<datum_t<N>, Args...>::value)
-              : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args&&>(args)...}
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
               , index_(N)
             {}
             CONCEPT_template(std::size_t N, typename T, typename...Args)(
@@ -627,7 +627,7 @@ namespace ranges
             (void) emplace(Args &&...args)
             {
                 this->clear_();
-                detail::construct_fn<N, Args&&...> fn{static_cast<Args&&>(args)...};
+                detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
                 detail::variant_visit_(N, data_(), std::ref(fn), ident{});
                 index_ = N;
             }
@@ -737,7 +737,7 @@ namespace ranges
             meta::if_c<(bool)Constructible<detail::variant_datum_t<N, Ts...>, Args...>(), int>>
         void emplace(variant<Ts...> &var, Args &&...args)
         {
-            var.template emplace<N>(static_cast<Args&&>(args)...);
+            var.template emplace<N>(static_cast<Args &&>(args)...);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

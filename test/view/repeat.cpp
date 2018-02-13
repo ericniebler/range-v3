@@ -21,9 +21,9 @@ int main()
 {
     using namespace ranges;
     auto rng = view::repeat(9) | view::take(10);
-    ::models<concepts::SizedView>(aux::copy(rng));
-    ::models<concepts::View>(aux::copy(rng));
-    ::models<concepts::RandomAccessIterator>(rng.begin());
+    ::models<SizedViewConcept>(aux::copy(rng));
+    ::models<ViewConcept>(aux::copy(rng));
+    ::models<RandomAccessIteratorConcept>(rng.begin());
     ::check_equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9});
 
     return test_result();

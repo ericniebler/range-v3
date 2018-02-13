@@ -30,14 +30,16 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename C = ordered_less, typename PI = ident,
-            typename PO = ident>
-        CONCEPT_alias(PartialSortCopyConcept,
-            InputIterator<I>() &&
-            RandomAccessIterator<O>() &&
-            IndirectlyCopyable<I, O>() &&
-            IndirectRelation<C, projected<I, PI>, projected<O, PO>>() &&
-            Sortable<O, C, PO>());
+        CONCEPT_def
+        (
+            template(typename I, typename O, typename C = ordered_less, typename PI = ident, typename PO = ident)
+            (concept PartialSortCopyConcept)(I, O, C, PI, PO),
+                InputIterator<I>() &&
+                RandomAccessIterator<O>() &&
+                IndirectlyCopyable<I, O>() &&
+                IndirectRelation<C, projected<I, PI>, projected<O, PO>>() &&
+                Sortable<O, C, PO>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{
@@ -78,7 +80,7 @@ namespace ranges
                 requires PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     Range<InRng>() && Range<OutRng>())
             (safe_iterator_t<OutRng>)
-            operator()(InRng && in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
+            operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const
             {
                 return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),

@@ -61,24 +61,24 @@ void test_wrap_around() {
     auto rng = view::ints(from, to);
     static_assert(RandomAccessRange<decltype(rng)>(), "");
     static_assert(SizedRange<decltype(rng)>(), "");
-    models<concepts::RandomAccessView>(aux::copy(rng));
-    models<concepts::BoundedView>(aux::copy(rng));
+    models<RandomAccessViewConcept>(aux::copy(rng));
+    models<BoundedViewConcept>(aux::copy(rng));
     CHECK(ranges::size(rng) == std::size_t(5));
     ::check_equal(rng, {U(max - 2), U(max - 1), max, U(0), U(1)});
 
     auto rng2 = view::indices(from, to);
     static_assert(RandomAccessRange<decltype(rng2)>(), "");
     static_assert(SizedRange<decltype(rng2)>(), "");
-    models<concepts::RandomAccessView>(aux::copy(rng2));
-    models<concepts::BoundedView>(aux::copy(rng2));
+    models<RandomAccessViewConcept>(aux::copy(rng2));
+    models<BoundedViewConcept>(aux::copy(rng2));
     CHECK(ranges::size(rng2) == std::size_t(5));
     ::check_equal(rng2, {U(max - 2), U(max - 1), max, U(0), U(1)});
 
     auto rng3 = view::closed_indices(from, to);
     static_assert(RandomAccessRange<decltype(rng3)>(), "");
     static_assert(SizedRange<decltype(rng3)>(), "");
-    models<concepts::RandomAccessView>(aux::copy(rng3));
-    models<concepts::BoundedView>(aux::copy(rng3));
+    models<RandomAccessViewConcept>(aux::copy(rng3));
+    models<BoundedViewConcept>(aux::copy(rng3));
     CHECK(ranges::size(rng3) == std::size_t(6));
     ::check_equal(rng3, {U(max - 2), U(max - 1), max, U(0), U(1), U(2)});
 }
@@ -107,18 +107,18 @@ int main()
                             std::numeric_limits<char>::max());
     static_assert(RandomAccessRange<decltype(chars)>(), "");
     static_assert(Same<int, range_difference_type_t<decltype(chars)>>(), "");
-    ::models<concepts::RandomAccessView>(aux::copy(chars));
-    models<concepts::BoundedView>(aux::copy(chars));
+    ::models<RandomAccessViewConcept>(aux::copy(chars));
+    models<BoundedViewConcept>(aux::copy(chars));
 
     auto shorts = view::ints(std::numeric_limits<unsigned short>::min(),
                              std::numeric_limits<unsigned short>::max());
-    models<concepts::BoundedView>(aux::copy(shorts));
+    models<BoundedViewConcept>(aux::copy(shorts));
     static_assert(Same<int, range_difference_type_t<decltype(shorts)>>(), "");
 
     auto uints = view::closed_indices(
         std::numeric_limits<std::uint_least32_t>::min(),
         std::numeric_limits<std::uint_least32_t>::max() - 1);
-    models<concepts::BoundedView>(aux::copy(uints));
+    models<BoundedViewConcept>(aux::copy(uints));
     static_assert(Same<std::int_fast64_t, range_difference_type_t<decltype(uints)>>(), "");
     static_assert(Same<std::uint_fast64_t, range_size_type_t<decltype(uints)>>(), "");
     CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
@@ -133,7 +133,7 @@ int main()
     {
         auto ints = view::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
-        models_not<concepts::BoundedView>(aux::copy(ints));
+        models_not<BoundedViewConcept>(aux::copy(ints));
     }
 
     {  // iota minus tests

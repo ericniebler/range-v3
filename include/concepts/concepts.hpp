@@ -21,14 +21,27 @@
 #include <concepts/swap.hpp>
 #include <concepts/type_traits.hpp>
 
-#if defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wpragmas"
 // disable buggy compatibility warning about "requires" and "concept" being
 // C++20 keywords.
-#pragma GCC diagnostic ignored "-Wc++2a-compat"
+#if defined(__clang__)
+#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN \
+    _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
+    _Pragma("GCC diagnostic ignored \"-Wpragmas\"") \
+    _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"") \
+    /**/
+#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END \
+    _Pragma("GCC diagnostic pop")
+#else
+#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
+#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+// #pragma GCC diagnostic ignored "-Wpragmas"
+// #pragma GCC diagnostic ignored "-Wc++2a-compat"
 #endif
+
+CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #ifdef __clang__
 #define CONCEPT_PP_IS_SAME(A, B) __is_same(A, B)
@@ -192,6 +205,9 @@
 
 #define CONCEPT_PP_TESTSFINAETPARAM_auto ~,
 #define CONCEPT_PP_TESTSFINAETPARAM_implicit ~,
+#define CONCEPT_PP_TESTSFINAETPARAM_class ~,
+#define CONCEPT_PP_TESTSFINAETPARAM_struct ~,
+#define CONCEPT_PP_TESTSFINAETPARAM_union ~,
 
 #define CONCEPT_PP_ENABLE_IF_0(DECL, ...) \
     > CONCEPT_PP_EXPAND DECL typename std::enable_if<_concept_requires_, __VA_ARGS__>::type
@@ -236,6 +252,9 @@
 #define CONCEPT_PP_TOLIST_explicit (explicit),
 #define CONCEPT_PP_TOLIST_friend (friend),
 #define CONCEPT_PP_TOLIST_auto (auto)
+#define CONCEPT_PP_TOLIST_class (class)
+#define CONCEPT_PP_TOLIST_struct (struct)
+#define CONCEPT_PP_TOLIST_union (union)
 #define CONCEPT_PP_TOLIST_implicit ()
 #define CONCEPT_PP_TOLIST_decltype(...) (decltype(__VA_ARGS__))
 
@@ -263,6 +282,7 @@
     /**/
 
 #define CONCEPT_assert(...) static_assert((bool) (__VA_ARGS__), "Concept assertion failed : " #__VA_ARGS__)
+#define CONCEPT_assert_msg static_assert
 
 ////////////////////////////////////////////////////////////////////////////////
 // CONCEPT_def
@@ -320,20 +340,23 @@
 // Expand the template definition into a struct and template alias like:
 //    struct NameConcept {
 //      template<class A, class B>
-//      auto requires_(/*requirement expression args (optional)*/) -> decltype(
+//      auto _concept_requires_(/*requirement expression args (optional)*/) -> decltype(
 //          dummy{} && /*requirements...*/)
 //    };
 //    template<class A, class B>
 //    using Name = is_satisfied_by<NameConcept, A, B>;
 #define CONCEPT_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, REQUIRES, ...)             \
-    struct CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME), Concept) {     \
-        using _ = ::concepts::_;                                                \
+    struct CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME), Concept)       \
+      : ::concepts::detail::keywords<>                                          \
+    {                                                                           \
+        CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
-        auto requires_ CONCEPT_PP_EVAL2(                                        \
+        auto _concept_requires_ CONCEPT_PP_EVAL2(                               \
             CONCEPT_PP_DEF_WRAP,                                                \
             CONCEPT_PP_CAT(CONCEPT_PP_DEF_, REQUIRES),                          \
             REQUIRES,                                                           \
             (__VA_ARGS__))(~) void());                                          \
+        CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
     };                                                                          \
     CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                     \
     using CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME) =                               \
@@ -405,6 +428,8 @@ namespace concepts
         template<typename T>
         struct bool_;
 
+        struct _;
+
         namespace detail
         {
             template<typename T>
@@ -451,6 +476,21 @@ namespace concepts
                     return {};
                 }
             };
+
+            template<typename = void>
+            struct keywords
+            {
+                using _ = ::concepts::_;
+                struct requires_type
+                {
+                    template <typename T>
+                    typename std::enable_if<(bool)T(), int>::type operator()(T) const;
+                };
+                static constexpr requires_type Requires {};
+            };
+
+            template<typename T>
+            constexpr typename keywords<T>::requires_type keywords<T>::Requires;
         }
         /// \endcond
 
@@ -559,7 +599,7 @@ namespace concepts
         struct is_satisfied_by_
         {
             template<typename C = Concept,
-                typename = decltype(detail::gcc_bugs_bugs_bugs(&C::template requires_<Ts...>))>
+                typename = decltype(detail::gcc_bugs_bugs_bugs(&C::template _concept_requires_<Ts...>))>
             constexpr explicit operator bool() const noexcept
             {
                 return true;
@@ -951,8 +991,10 @@ namespace concepts
 
 /// @}
 
-#if defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
+// #if defined(__clang__)
+// #pragma GCC diagnostic pop
+// #endif
+
+CONCEPT_PP_IGNORE_CXX2A_COMPAT_END
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

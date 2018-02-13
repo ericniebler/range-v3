@@ -24,9 +24,9 @@ int main()
 
     auto rng0 = view::iota(10) | view::drop_while([](int i) { return i < 25; });
     CONCEPT_assert(range_cardinality<decltype(rng0)>::value == unknown);
-    ::models<concepts::RandomAccessView>(aux::copy(rng0));
-    ::models_not<concepts::BoundedView>(aux::copy(rng0));
-    ::models<concepts::RandomAccessIterator>(rng0.begin());
+    ::models<RandomAccessViewConcept>(aux::copy(rng0));
+    ::models_not<BoundedViewConcept>(aux::copy(rng0));
+    ::models<RandomAccessIteratorConcept>(rng0.begin());
     auto b = rng0.begin();
     CHECK(*b == 25);
     CHECK(*(b+1) == 26);
@@ -35,9 +35,9 @@ int main()
     std::list<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::drop_while([](int i) { return i != 50; });
     CONCEPT_assert(range_cardinality<decltype(rng1)>::value == ranges::finite);
-    ::models<concepts::BidirectionalView>(aux::copy(rng1));
-    ::models<concepts::BoundedView>(aux::copy(rng1));
-    ::models<concepts::BidirectionalIterator>(rng1.begin());
+    ::models<BidirectionalViewConcept>(aux::copy(rng1));
+    ::models<BoundedViewConcept>(aux::copy(rng1));
+    ::models<BidirectionalIteratorConcept>(rng1.begin());
     CHECK(rng1.begin() == rng1.end());
 
     // Check with a mutable predicate

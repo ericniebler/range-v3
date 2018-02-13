@@ -30,11 +30,14 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename T, typename P = ident>
-        CONCEPT_alias(Removable,
-            ForwardIterator<I>() &&
-            IndirectRelation<equal_to, projected<I, P>, T const *>() &&
-            Permutable<I>());
+        CONCEPT_def
+        (
+            template(typename I, typename T, typename P = ident)
+            (concept Removable)(I, T, P),
+                ForwardIterator<I>() &&
+                IndirectRelation<equal_to, projected<I, P>, T const *>() &&
+                Permutable<I>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

@@ -74,17 +74,17 @@ namespace ranges
                 return Self{}((Rng &&) rng, static_cast<D>((T &&) t));
             }
 
-            /// \cond
-            CONCEPT_template(typename R, typename T)(
-                requires !index_detail::Indexable<R, T>())
-            (void) operator()(R&&, T&&) const
-            {
-                CONCEPT_ASSERT_MSG(RandomAccessRange<R>(),
-                    "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-                CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<R>>(),
-                    "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
-            }
-            /// \endcond
+            // /// \cond
+            // CONCEPT_template(typename R, typename T)(
+            //     requires !index_detail::Indexable<R, T>())
+            // (void) operator()(R &&, T &&) const
+            // {
+            //     CONCEPT_assert_msg(RandomAccessRange<R>(),
+            //         "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
+            //     CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>(),
+            //         "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
+            // }
+            // /// \endcond
         };
 
         /// Unchecked indexed range access.

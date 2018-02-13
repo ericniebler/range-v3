@@ -48,7 +48,7 @@ namespace ranges
 
             CONCEPT_template(typename T, typename... Args)(
                 requires !std::is_array<T>::value)
-            std::unique_ptr<T> make_unique(Args &&... args)
+            (std::unique_ptr<T>) make_unique(Args &&... args)
             {
                 return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
             }
@@ -75,13 +75,13 @@ namespace ranges
                 return *this;
             }
             CONCEPT_requires(CopyConstructible<Val>())
-            raw_storage_iterator &operator=(Val const & val)
+            (raw_storage_iterator &)operator=(Val const & val)
             {
                 ::new((void*) std::addressof(*out_)) Val(val);
                 return *this;
             }
             CONCEPT_requires(MoveConstructible<Val>())
-            raw_storage_iterator &operator=(Val && val)
+            (raw_storage_iterator &)operator=(Val &&val)
             {
                 ::new((void*) std::addressof(*out_)) Val(std::move(val));
                 return *this;
@@ -92,12 +92,12 @@ namespace ranges
                 return *this;
             }
             CONCEPT_requires(!ForwardIterator<O>())
-            void operator++(int)
+            (void) operator++(int)
             {
                 ++out_;
             }
             CONCEPT_requires(ForwardIterator<O>())
-            raw_storage_iterator operator++(int)
+            (raw_storage_iterator) operator++(int)
             {
                 auto tmp = *this;
                 ++out_;
@@ -154,7 +154,7 @@ namespace ranges
 
         CONCEPT_template(typename I)(
             requires Iterator<I>())
-        iterator_wrapper<I> iter_ref(I &i)
+        (iterator_wrapper<I>) iter_ref(I &i)
         {
             return i;
         }

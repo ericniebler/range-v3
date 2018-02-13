@@ -66,7 +66,7 @@ namespace ranges
                             ranges::begin(rng2_), ranges::end(rng2_)};
                 }
                 CONCEPT_requires(Range<Rng1 const>() && Range<Rng2 const>())
-                cursor<true> begin_cursor() const
+                (cursor<true>) begin_cursor() const
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
@@ -185,24 +185,24 @@ namespace ranges
             struct set_difference_fn
             {
             public:
-                template<typename Rng1, typename Rng2,
-                         typename C, typename P1, typename P2,
-                         typename I1 = iterator_t<Rng1>,
-                         typename I2 = iterator_t<Rng2>>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng1>() &&
-                    InputRange<Rng2>() &&
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+                CONCEPT_def
+                (
+                    template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
+                    concept Concept,
+                        InputRange<Rng1>() &&
+                        InputRange<Rng2>() &&
+                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>()
+                );
 
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
-                set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
-                operator()(Rng1 && rng1, Rng2 && rng2,
+                (set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)),
-                            all(static_cast<Rng2&&>(rng2)),
+                    return {all(static_cast<Rng1 &&>(rng1)),
+                            all(static_cast<Rng2 &&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -214,24 +214,24 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires !Concept<Rng1, Rng2, C, P1, P2>())
-                void operator()(Rng1 &&, Rng2 &&, C, P1, P2) const
+                (void) operator()(Rng1 &&, Rng2 &&, C, P1, P2) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
+                    CONCEPT_assert_msg(InputRange<Rng1>(),
                         "The first parameter of view::set_difference "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<Rng2>(),
+                    CONCEPT_assert_msg(InputRange<Rng2>(),
                         "The second parameter of view::set_difference "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P1&, range_value_type_t<Rng1>>(),
                         "The first projection function passed to view::set_difference "
                         "must be callable with an argument of the first range's value type.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P2&, range_value_type_t<Rng2>>(),
                         "The second projection function passed to view::set_difference "
                         "must be callable with an argument of the second range's value type.");
@@ -348,23 +348,23 @@ namespace ranges
             struct set_intersection_fn
             {
             public:
-                template<typename Rng1, typename Rng2,
-                         typename C, typename P1, typename P2,
-                         typename I1 = iterator_t<Rng1>,
-                         typename I2 = iterator_t<Rng2>>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng1>() && InputRange<Rng2>() &&
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+                CONCEPT_def
+                (
+                    template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
+                    concept Concept,
+                        InputRange<Rng1>() && InputRange<Rng2>() &&
+                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>()
+                );
 
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
-                set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
-                operator()(Rng1 && rng1, Rng2 && rng2,
+                (set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)),
-                            all(static_cast<Rng2&&>(rng2)),
+                    return {all(static_cast<Rng1 &&>(rng1)),
+                            all(static_cast<Rng2 &&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -376,25 +376,25 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires !Concept<Rng1, Rng2, C, P1, P2>())
-                void operator()(Rng1 &&, Rng2 &&,
+                (void) operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
+                    CONCEPT_assert_msg(InputRange<Rng1>(),
                         "The first parameter of view::set_intersection "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<Rng2>(),
+                    CONCEPT_assert_msg(InputRange<Rng2>(),
                         "The second parameter of view::set_intersection "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_intersection "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P1&, range_value_type_t<Rng1>>(),
                         "The first projection function passed to view::set_intersection "
                         "must be callable with an argument of the first range's value type.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P2&, range_value_type_t<Rng2>>(),
                         "The second projection function passed to view::set_intersection "
                         "must be callable with an argument of the second range's value type.");
@@ -554,26 +554,26 @@ namespace ranges
             struct set_union_fn
             {
             public:
-                template<typename Rng1, typename Rng2,
-                         typename C, typename P1, typename P2,
-                         typename I1 = iterator_t<Rng1>,
-                         typename I2 = iterator_t<Rng2>>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng1>() && InputRange<Rng2>() &&
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
-                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
-                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+                CONCEPT_def
+                (
+                    template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
+                    concept Concept,
+                        InputRange<Rng1>() && InputRange<Rng2>() &&
+                        Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
+                        CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
+                        CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
+                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>()
+                );
 
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
-                set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
-                operator()(Rng1 && rng1, Rng2 && rng2,
+                (set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)),
-                            all(static_cast<Rng2&&>(rng2)),
+                    return {all(static_cast<Rng1 &&>(rng1)),
+                            all(static_cast<Rng2 &&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -585,31 +585,31 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires !Concept<Rng1, Rng2, C, P1, P2>())
-                void operator()(Rng1 &&, Rng2 &&,
+                (void) operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
+                    CONCEPT_assert_msg(InputRange<Rng1>(),
                         "The first parameter of view::set_union "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<Rng2>(),
+                    CONCEPT_assert_msg(InputRange<Rng2>(),
                         "The second parameter of view::set_union "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>(),
+                    CONCEPT_assert_msg(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>(),
                         "The value types of the two ranges must share a common type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>(),
+                    CONCEPT_assert_msg(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>(),
                         "The reference types of the two ranges must share a common reference.");
-                    CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
+                    CONCEPT_assert_msg(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_union "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P1&, range_value_type_t<Rng1>>(),
                         "The first projection function passed to view::set_union "
                         "must be callable with an argument of the first range's value type.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P2&, range_value_type_t<Rng2>>(),
                         "The second projection function passed to view::set_union "
                         "must be callable with an argument of the second range's value type.");
@@ -774,26 +774,26 @@ namespace ranges
             struct set_symmetric_difference_fn
             {
             public:
-                template<typename Rng1, typename Rng2,
-                         typename C, typename P1, typename P2,
-                         typename I1 = iterator_t<Rng1>,
-                         typename I2 = iterator_t<Rng2>>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng1>() && InputRange<Rng2>() &&
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
-                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
-                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
-                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>());
+                CONCEPT_def
+                (
+                    template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
+                    concept Concept,
+                        InputRange<Rng1>() && InputRange<Rng2>() &&
+                        Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>() &&
+                        CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>() &&
+                        CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>() &&
+                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>, projected<iterator_t<Rng2>, P2>>()
+                );
 
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires Concept<Rng1, Rng2, C, P1, P2>())
-                set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
-                operator()(Rng1 && rng1, Rng2 && rng2,
+                (set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
-                    return {all(static_cast<Rng1&&>(rng1)),
-                            all(static_cast<Rng2&&>(rng2)),
+                    return {all(static_cast<Rng1 &&>(rng1)),
+                            all(static_cast<Rng2 &&>(rng2)),
                             std::move(pred),
                             std::move(proj1),
                             std::move(proj2)};
@@ -805,31 +805,31 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires !Concept<Rng1, Rng2, C, P1, P2>())
-                void operator()(Rng1 &&, Rng2 &&,
+                (void) operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
+                    CONCEPT_assert_msg(InputRange<Rng1>(),
                         "The first parameter of view::set_symmetric_difference "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<Rng2>(),
+                    CONCEPT_assert_msg(InputRange<Rng2>(),
                         "The second parameter of view::set_symmetric_difference "
                         "must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>(),
+                    CONCEPT_assert_msg(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>(),
                         "The value types of the two ranges must share a common type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>(),
+                    CONCEPT_assert_msg(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>(),
                         "The reference types of the two ranges must share a common reference.");
-                    CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
+                    CONCEPT_assert_msg(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_symmetric_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P1&, range_value_type_t<Rng1>>(),
                         "The first projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the first range's value type.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<P2&, range_value_type_t<Rng2>>(),
                         "The second projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the second range's value type.");

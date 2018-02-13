@@ -129,25 +129,25 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
             RANGES_DECLTYPE_NOEXCEPT(std::declval<T &>()(static_cast<Args &&>(args)...))
             {
-                return (**this)(static_cast<Args&&>(args)...);
+                return (**this)(static_cast<Args &&>(args)...);
             }
             template<typename...Args>
             constexpr auto operator()(Args &&...args) const &
             RANGES_DECLTYPE_NOEXCEPT(std::declval<T const &>()(static_cast<Args &&>(args)...))
             {
-                return (**this)(static_cast<Args&&>(args)...);
+                return (**this)(static_cast<Args &&>(args)...);
             }
             template<typename...Args>
             RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
             RANGES_DECLTYPE_NOEXCEPT(std::declval<T &&>()(static_cast<Args &&>(args)...))
             {
-                return (*detail::move(*this))(static_cast<Args&&>(args)...);
+                return (*detail::move(*this))(static_cast<Args &&>(args)...);
             }
             template<typename...Args>
             constexpr auto operator()(Args &&...args) const &&
             RANGES_DECLTYPE_NOEXCEPT(std::declval<T const &&>()(static_cast<Args &&>(args)...))
             {
-                return (*detail::move(*this))(static_cast<Args&&>(args)...);
+                return (*detail::move(*this))(static_cast<Args &&>(args)...);
             }
         private:
             struct tag {};

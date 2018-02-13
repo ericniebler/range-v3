@@ -28,11 +28,14 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename T0, typename T1, typename P = ident>
-        CONCEPT_alias(Replaceable,
-            InputIterator<I>() &&
-            IndirectRelation<equal_to, projected<I, P>, T0 const *>() &&
-            Writable<I, T1 const &>());
+        CONCEPT_def
+        (
+            template(typename I, typename T0, typename T1, typename P = ident)
+            (concept Replaceable)(I, T0, T1, P),
+                InputIterator<I>() &&
+                IndirectRelation<equal_to, projected<I, P>, T0 const *>() &&
+                Writable<I, T1 const &>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

@@ -44,11 +44,14 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident>
-        CONCEPT_alias(StablePartitionable,
-            ForwardIterator<I>() &&
-            Permutable<I>() &&
-            IndirectPredicate<C, projected<I, P>>());
+        CONCEPT_def
+        (
+            template(typename I, typename C, typename P = ident)
+            (concept StablePartitionable)(I, C, P),
+                ForwardIterator<I>() &&
+                Permutable<I>() &&
+                IndirectPredicate<C, projected<I, P>>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{
@@ -56,7 +59,7 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair const p, concepts::ForwardIterator *fi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair const p, forward_iterator_tag fi)
             {
                 // *begin is known to be false
                 // len >= 1
@@ -118,7 +121,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end, C pred, P proj, concepts::ForwardIterator *fi)
+            static I impl(I begin, S end, C pred, P proj, forward_iterator_tag fi)
             {
                 using difference_type = difference_type_t<I>;
                 difference_type const alloc_limit = 3;  // might want to make this a function of trivial assignment
@@ -142,7 +145,7 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair p, concepts::BidirectionalIterator *bi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair p, bidirectional_iterator_tag bi)
             {
                 // *begin is known to be false
                 // *end is known to be true
@@ -228,7 +231,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end_, C pred, P proj, concepts::BidirectionalIterator *bi)
+            static I impl(I begin, S end_, C pred, P proj, bidirectional_iterator_tag bi)
             {
                 using difference_type = difference_type_t<I>;
                 using value_type = value_type_t<I>;

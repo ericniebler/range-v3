@@ -93,16 +93,16 @@ namespace ranges
             {
                 CONCEPT_template(typename Val)(
                     requires Semiregular<Val>())
-                repeat_view<Val> operator()(Val value) const
+                (repeat_view<Val>) operator()(Val value) const
                 {
                     return repeat_view<Val>{std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Val)(
                     requires !Semiregular<Val>())
-                void operator()(Val) const
+                (void) operator()(Val) const
                 {
-                    CONCEPT_ASSERT_MSG(Semiregular<Val>(),
+                    CONCEPT_assert_msg(Semiregular<Val>(),
                         "The value passed to view::repeat must be Semiregular; that is, it needs "
                         "to be default constructible, copy and move constructible, and destructible.");
                 }

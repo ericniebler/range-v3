@@ -75,7 +75,7 @@ namespace ranges
             {
                 CONCEPT_template(typename I)(
                     requires Iterator<I>())
-                void operator()(I & i, difference_type_t<I> n) const
+                (void) operator()(I & i, difference_type_t<I> n) const
                 {
                     advance(i, n);
                 }
@@ -189,7 +189,7 @@ namespace ranges
                     tuple_for_each(its_, detail::inc);
                 }
                 CONCEPT_requires(meta::and_c<(bool) Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
-                bool equal(cursor const &that) const
+                (bool) equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -210,19 +210,19 @@ namespace ranges
                         [](bool a, bool b) { return a || b; });
                 }
                 CONCEPT_requires(meta::and_c<(bool) BidirectionalRange<Rngs>()...>::value)
-                void prev()
+                (void) prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
                 CONCEPT_requires(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
-                void advance(difference_type n)
+                (void) advance(difference_type n)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
                 CONCEPT_requires(meta::and_c<(bool)
                     SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>::value)
-                difference_type distance_to(cursor const &that) const
+                (difference_type) distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -270,12 +270,12 @@ namespace ranges
                 return {fun_, tuple_transform(rngs_, end)};
             }
             CONCEPT_requires(meta::and_c<(bool) Range<Rngs const>()...>::value)
-            cursor begin_cursor() const
+            (cursor) begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
             CONCEPT_requires(meta::and_c<(bool) Range<Rngs const>()...>::value)
-            end_cursor_t end_cursor() const
+            (end_cursor_t) end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
@@ -290,7 +290,7 @@ namespace ranges
               , rngs_{std::move(rngs)...}
             {}
             CONCEPT_requires(meta::and_c<(bool) SizedRange<Rngs>()...>::value)
-            constexpr size_type_ size() const
+            (constexpr size_type_) size() const
             {
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
                     (size_type_)range_cardinality<iter_zip_with_view>::value :
@@ -320,44 +320,47 @@ namespace ranges
         {
             struct iter_zip_with_fn
             {
-                template<typename Fun, typename ...Rngs>
-                CONCEPT_alias(Concept,
-                    True<meta::and_<InputRange<Rngs>...>>() &&
-                    CopyConstructible<Fun>() &&
-                    Invocable<Fun&, iterator_t<Rngs>...>() &&
-                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...>() &&
-                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>());
+                CONCEPT_def
+                (
+                    template(typename Fun, typename ...Rngs)
+                    (concept Concept)(Fun, Rngs...),
+                        True<meta::and_<InputRange<Rngs>...>>() &&
+                        CopyConstructible<Fun>() &&
+                        Invocable<Fun&, iterator_t<Rngs>...>() &&
+                        Invocable<Fun&, copy_tag, iterator_t<Rngs>...>() &&
+                        Invocable<Fun&, move_tag, iterator_t<Rngs>...>()
+                );
 
                 CONCEPT_template(typename...Rngs, typename Fun)(
                     requires Concept<Fun, Rngs...>())
-                iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                (iter_zip_with_view<Fun, all_t<Rngs>...>) operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(static_cast<Rngs&&>(rngs))...
+                        all(static_cast<Rngs &&>(rngs))...
                     };
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Fun, typename...Rngs)(
                     requires !Concept<Fun, Rngs...>())
-                void operator()(Fun, Rngs &&...) const
+                (void) operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                    CONCEPT_assert_msg(meta::and_<InputRange<Rngs>...>(),
                         "All of the objects passed to view::iter_zip_with must model the InputRange "
                         "concept");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         CopyConstructible<Fun>(),
                         "The function object passed to view::iter_zip_with must be CopyConstructible.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<Fun&, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with arguments "
                         "of the ranges' iterator types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<Fun&, copy_tag, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<Fun&, move_tag, iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "move_tag and arguments of the ranges' iterator types.");
@@ -371,34 +374,37 @@ namespace ranges
 
             struct zip_with_fn
             {
-                template<typename Fun, typename ...Rngs>
-                CONCEPT_alias(Concept,
-                    True<meta::and_<InputRange<Rngs>...>>() &&
-                    CopyConstructible<Fun>() &&
-                    Invocable<Fun&, range_reference_t<Rngs> &&...>());
+                CONCEPT_def
+                (
+                    template(typename Fun, typename ...Rngs)
+                    (concept Concept)(Fun, Rngs...),
+                        True<meta::and_<InputRange<Rngs>...>>() &&
+                        CopyConstructible<Fun>() &&
+                        Invocable<Fun&, range_reference_t<Rngs> &&...>()
+                );
 
                 CONCEPT_template(typename...Rngs, typename Fun)(
                     requires Concept<Fun, Rngs...>())
-                zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                (zip_with_view<Fun, all_t<Rngs>...>) operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(static_cast<Rngs&&>(rngs))...
+                        all(static_cast<Rngs &&>(rngs))...
                     };
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Fun, typename...Rngs)(
                     requires !Concept<Fun, Rngs...>())
-                void operator()(Fun, Rngs &&...) const
+                (void) operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                    CONCEPT_assert_msg(meta::and_<InputRange<Rngs>...>(),
                         "All of the objects passed to view::zip_with must model the InputRange "
                         "concept");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         CopyConstructible<Fun>(),
                         "The function object passed to view::zip_with must be CopyConstructible.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<Fun&, range_reference_t<Rngs> &&...>(),
                         "The function passed to view::zip_with must be callable with arguments "
                         "of the ranges' reference types.");

@@ -252,7 +252,7 @@ namespace ranges
                 pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto write(Cur &pos, T && t)
+            static RANGES_CXX14_CONSTEXPR auto write(Cur &pos, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 pos.write((T &&) t)

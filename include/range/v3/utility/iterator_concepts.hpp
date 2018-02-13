@@ -41,7 +41,7 @@ namespace ranges
         (
             template(typename Out, typename T)
             concept Writable,
-                requires (Out&& o, T &&t)
+                requires (Out && o, T &&t)
                 {
                     ((void)(*o = (T &&) t), 0),
                     ((void)(*((Out &&) o) = (T &&) t), 0),
@@ -91,7 +91,7 @@ namespace ranges
         (
             template(typename I1, typename I2)
             concept IndirectlySwappable,
-                requires (I1&& i1, I2&& i2)
+                requires (I1 && i1, I2 && i2)
                 {
                     ((void)ranges::iter_swap((I1 &&) i1, (I2 &&) i2), 0),
                     ((void)ranges::iter_swap((I1 &&) i1, (I1 &&) i1), 0),
@@ -203,16 +203,18 @@ namespace ranges
         (
             template(typename I)
             concept RandomAccessIterator,
-                requires (I i)
+                requires (I i, difference_type_t<I> n)
                 {
-                    (i + (i - i))  ->* Same<_&&, I>(),
-                    ((i - i) + i)  ->* Same<_&&, I>(),
-                    (i - (i - i))  ->* Same<_&&, I>(),
-                    (i += (i-i))   ->* Same<_&, I>(),
-                    (i -= (i - i)) ->* Same<_&, I>(),
-                    i[i - i] ->* Same<_&&, reference_t<I>&&>() // TODO: not to spec
+                    (i + n)  ->* Same<_&&, I>(),
+                    (n + i)  ->* Same<_&&, I>(),
+                    (i - n)  ->* Same<_&&, I>(),
+                    (i += n) ->* Same<_&, I>(),
+                    (i -= n) ->* Same<_&, I>(),
+                    Requires (Same<decltype(i[n]), reference_t<I>>())
                 } &&
-                BidirectionalIterator<I>() && StrictTotallyOrdered<I>() && SizedSentinel<I, I>() &&
+                BidirectionalIterator<I>() &&
+                StrictTotallyOrdered<I>() &&
+                SizedSentinel<I, I>() &&
                 DerivedFrom<iterator_category_t<I>, ranges::random_access_iterator_tag>()
         );
 

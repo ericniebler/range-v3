@@ -49,9 +49,9 @@ int main()
     {
         auto res = view::set_difference(i1_finite, i2_finite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -75,9 +75,9 @@ int main()
     {
         auto res = view::set_difference(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -100,9 +100,9 @@ int main()
     {
         auto res = view::set_difference(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -119,9 +119,9 @@ int main()
     {
         auto res = view::set_difference(i1_infinite, i2_finite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 

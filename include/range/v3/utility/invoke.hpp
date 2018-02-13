@@ -59,72 +59,72 @@ namespace ranges
         private:
             template<typename MemberFunctionPtr, typename First, typename... Rest>
             static constexpr auto invoke_member_fn(
-                std::true_type, detail::any, MemberFunctionPtr fn, First && first, Rest &&... rest)
+                std::true_type, detail::any, MemberFunctionPtr fn, First &&first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (static_cast<First&&>(first).*fn)(static_cast<Rest&&>(rest)...)
+                (static_cast<First &&>(first).*fn)(static_cast<Rest &&>(rest)...)
             )
             template<typename MemberFunctionPtr, typename First, typename... Rest>
             static constexpr auto invoke_member_fn(
-                std::false_type, std::true_type, MemberFunctionPtr fn, First && first, Rest &&... rest)
+                std::false_type, std::true_type, MemberFunctionPtr fn, First &&first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (static_cast<First&&>(first).get().*fn)(static_cast<Rest&&>(rest)...)
+                (static_cast<First &&>(first).get().*fn)(static_cast<Rest &&>(rest)...)
             )
             template<typename MemberFunctionPtr, typename First, typename... Rest>
             static constexpr auto invoke_member_fn(
-                std::false_type, std::false_type, MemberFunctionPtr fn, First && first, Rest &&... rest)
+                std::false_type, std::false_type, MemberFunctionPtr fn, First &&first, Rest &&... rest)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                ((*static_cast<First&&>(first)).*fn)(static_cast<Rest&&>(rest)...)
+                ((*static_cast<First &&>(first)).*fn)(static_cast<Rest &&>(rest)...)
             )
 
             template<typename MemberDataPtr, typename First>
             static constexpr auto invoke_member_data(
-                std::true_type, detail::any, MemberDataPtr ptr, First && first)
+                std::true_type, detail::any, MemberDataPtr ptr, First &&first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<First&&>(first).*ptr
+                static_cast<First &&>(first).*ptr
             )
             template<typename MemberDataPtr, typename First>
             static constexpr auto invoke_member_data(
-                std::false_type, std::true_type, MemberDataPtr ptr, First && first)
+                std::false_type, std::true_type, MemberDataPtr ptr, First &&first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<First&&>(first).get().*ptr
+                static_cast<First &&>(first).get().*ptr
             )
             template<typename MemberDataPtr, typename First>
             static constexpr auto invoke_member_data(
-                std::false_type, std::false_type, MemberDataPtr ptr, First && first)
+                std::false_type, std::false_type, MemberDataPtr ptr, First &&first)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                (*static_cast<First&&>(first)).*ptr
+                (*static_cast<First &&>(first)).*ptr
             )
         public:
             template<typename F, typename Obj, typename First, typename... Rest,
                 meta::if_c<detail::is_function<F>::value, int> = 0>
-            constexpr auto operator()(F Obj::*ptr, First && first, Rest &&... rest) const
+            constexpr auto operator()(F Obj::*ptr, First &&first, Rest &&... rest) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 invoke_member_fn(std::is_base_of<Obj, detail::decay_t<First>>{},
                     is_reference_wrapper_t<detail::decay_t<First>>{},
-                    ptr, static_cast<First&&>(first), static_cast<Rest&&>(rest)...)
+                    ptr, static_cast<First &&>(first), static_cast<Rest &&>(rest)...)
             )
             template<typename Data, typename Obj, typename First,
                 meta::if_c<!detail::is_function<Data>::value, int> = 0>
-            constexpr auto operator()(Data Obj::*ptr, First && first) const
+            constexpr auto operator()(Data Obj::*ptr, First &&first) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 invoke_member_data(std::is_base_of<Obj, detail::decay_t<First>>{},
                     is_reference_wrapper_t<detail::decay_t<First>>{},
-                    ptr, static_cast<First&&>(first))
+                    ptr, static_cast<First &&>(first))
             )
             template<typename F, typename... Args,
                 meta::if_c<!std::is_member_pointer<uncvref_t<F>>::value, int> = 0>
-            constexpr auto operator()(F && fn, Args &&... args) const
+            constexpr auto operator()(F &&fn, Args &&... args) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                static_cast<F&&>(fn)(static_cast<Args&&>(args)...)
+                static_cast<F &&>(fn)(static_cast<Args &&>(args)...)
             )
         };
         RANGES_INLINE_VARIABLE(invoke_fn, invoke)
@@ -204,7 +204,7 @@ namespace ranges
             RANGES_DECLTYPE_NOEXCEPT(
                 invoke(std::declval<reference>(), std::declval<Args>()...))
             {
-                return invoke(get(), static_cast<Args&&>(args)...);
+                return invoke(get(), static_cast<Args &&>(args)...);
             }
         };
 

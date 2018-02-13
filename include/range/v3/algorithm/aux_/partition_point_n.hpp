@@ -24,10 +24,13 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident>
-        CONCEPT_alias(PartitionPointable,
-            ForwardIterator<I>() &&
-            IndirectPredicate<C, projected<I, P>>());
+        CONCEPT_def
+        (
+            template(typename I, typename C, typename P = ident)
+            (concept PartitionPointable)(I, C, P),
+                ForwardIterator<I>() &&
+                IndirectPredicate<C, projected<I, P>>()
+        );
 
         namespace aux
         {

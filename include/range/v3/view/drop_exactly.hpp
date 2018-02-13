@@ -53,13 +53,13 @@ namespace ranges
             // RandomAccessRange == true
             CONCEPT_template(typename BaseRng = Rng)(
                 requires RandomAccessRange<BaseRng const>())
-            iterator_t<Rng> get_begin_(std::true_type) const
+            (iterator_t<Rng>) get_begin_(std::true_type) const
             {
                 return next(ranges::begin(rng_), n_);
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires !RandomAccessRange<BaseRng const>())
-            iterator_t<Rng> get_begin_(std::true_type)
+            (iterator_t<Rng>) get_begin_(std::true_type)
             {
                 return next(ranges::begin(rng_), n_);
             }
@@ -90,23 +90,23 @@ namespace ranges
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires RandomAccessRange<BaseRng const>())
-            iterator_t<BaseRng const> begin() const
+            (iterator_t<BaseRng const>) begin() const
             {
                 return this->get_begin_(std::true_type{});
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires RandomAccessRange<BaseRng const>())
-            sentinel_t<BaseRng const> end() const
+            (sentinel_t<BaseRng const>) end() const
             {
                 return ranges::end(rng_);
             }
             CONCEPT_requires(SizedRange<Rng const>())
-            range_size_type_t<Rng> size() const
+            (range_size_type_t<Rng>) size() const
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);
             }
             CONCEPT_requires(SizedRange<Rng>())
-            range_size_type_t<Rng> size()
+            (range_size_type_t<Rng>) size()
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);
             }
@@ -128,7 +128,7 @@ namespace ranges
                 friend view_access;
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(drop_exactly_fn drop_exactly, Int n)
+                (static auto) bind(drop_exactly_fn drop_exactly, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n))
@@ -136,42 +136,42 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Int)(
                     requires !Integral<Int>())
-                static detail::null_pipe bind(drop_exactly_fn, Int)
+                (static detail::null_pipe) bind(drop_exactly_fn, Int)
                 {
-                    CONCEPT_ASSERT_MSG(Integral<Int>(),
+                    CONCEPT_assert_msg(Integral<Int>(),
                         "The object passed to view::drop_exactly must be Integral");
                     return {};
                 }
             #endif
                 template<typename Rng>
                 static drop_exactly_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, input_range_tag)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> n, input_range_tag)
                 {
-                    return {all(static_cast<Rng&&>(rng)), n};
+                    return {all(static_cast<Rng &&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
                     requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
-                static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, random_access_range_tag)
+                (static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> n, random_access_range_tag)
                 {
                     return {next(begin(rng), n), end(rng)};
                 }
             public:
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>())
-                auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_tag_of<Rng>{})
+                    drop_exactly_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires !(InputRange<Rng>() && Integral<T>()))
-                void operator()(Rng &&, T) const
+                (void) operator()(Rng &&, T) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The first argument to view::drop_exactly must be a model of the InputRange concept");
-                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                    CONCEPT_assert_msg(Integral<T>(),
                         "The second argument to view::drop_exactly must be a model of the Integral concept");
                 }
             #endif

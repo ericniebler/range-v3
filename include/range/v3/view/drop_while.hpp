@@ -88,27 +88,30 @@ namespace ranges
                     make_pipeable(std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))))
                 )
             public:
-                template<typename Rng, typename Pred>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng>() &&
-                    IndirectPredicate<Pred, iterator_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Pred)
+                    concept Concept,
+                        InputRange<Rng>() &&
+                        IndirectPredicate<Pred, iterator_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires Concept<Rng, Pred>())
-                drop_while_view<all_t<Rng>, Pred>
-                operator()(Rng && rng, Pred pred) const
+                (drop_while_view<all_t<Rng>, Pred>)
+                operator()(Rng &&rng, Pred pred) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(pred)};
+                    return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires !Concept<Rng, Pred>())
-                void operator()(Rng &&, Pred) const
+                (void) operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The first argument to view::drop_while must be a model of the "
                         "InputRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The second argument to view::drop_while must be callable with "
                         "an argument of the range's common reference type, and its return value "
                         "must be convertible to bool");

@@ -30,12 +30,15 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename C, typename T, typename P = ident>
-        CONCEPT_alias(ReplaceCopyIfable,
-            InputIterator<I>() &&
-            OutputIterator<O, T const &>() &&
-            IndirectlyCopyable<I, O>() &&
-            IndirectPredicate<C, projected<I, P>>());
+        CONCEPT_def
+        (
+            template(typename I, typename O, typename C, typename T, typename P = ident)
+            (concept ReplaceCopyIfable)(I, O, C, T, P),
+                InputIterator<I>() &&
+                OutputIterator<O, T const &>() &&
+                IndirectlyCopyable<I, O>() &&
+                IndirectPredicate<C, projected<I, P>>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

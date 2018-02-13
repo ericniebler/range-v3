@@ -63,10 +63,10 @@ int main()
 
         auto rng = rgi | view::unique;
         has_type<int &>(*begin(rng));
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
         CONCEPT_assert(Range<decltype(rng) const>());
         copy(rng, ranges::back_inserter(out));
         ::check_equal(out, {1, 2, 3, 4});
@@ -77,13 +77,13 @@ int main()
         std::vector<ci_string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
         auto rng = rgs | view::unique;
         has_type<ci_string &>(*begin(rng));
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
         CONCEPT_assert(Range<decltype(rng) const>());
         auto fs = rng | view::transform([](ci_string s){return std::string(s.data(), s.size());});
-        models<concepts::BidirectionalView>(aux::copy(fs));
+        models<BidirectionalViewConcept>(aux::copy(fs));
         ::check_equal(fs, {"hello","bye"});
         ::check_equal(view::reverse(fs), {"bye","hello"});
     }
@@ -96,10 +96,10 @@ int main()
         CONCEPT_assert(!ForwardRange<decltype(rng0) const>());
         // ...and composable with unique_view
         auto rng = rng0 | view::unique;
-        models<concepts::BidirectionalView>(aux::copy(rng));
-        models_not<concepts::RandomAccessRange>(rng);
-        models<concepts::BoundedRange>(rng);
-        models_not<concepts::SizedRange>(rng);
+        models<BidirectionalViewConcept>(aux::copy(rng));
+        models_not<RandomAccessRangeConcept>(rng);
+        models<BoundedRangeConcept>(rng);
+        models_not<SizedRangeConcept>(rng);
         ::check_equal(rng, {4, 3, 2, 1});
     }
 

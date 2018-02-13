@@ -90,9 +90,9 @@ namespace ranges
                 CONCEPT_template(typename Rng, typename Val)(
                     requires Delimitable<Rng, Val>())
                 (delimit_view<all_t<Rng>, Val>)
-                operator()(Rng && rng, Val value) const
+                operator()(Rng &&rng, Val value) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(value)};
+                    return {all(static_cast<Rng &&>(rng)), std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Val)(
@@ -100,9 +100,9 @@ namespace ranges
                 (void)
                 operator()(Rng &&, Val) const
                 {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
+                    CONCEPT_assert_msg(Range<Rng>(),
                         "Rng must model the Range concept");
-                    CONCEPT_ASSERT_MSG(EqualityComparableWith<Val, range_common_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(EqualityComparableWith<Val, range_common_reference_t<Rng>>(),
                         "The delimiting value type must be EqualityComparableWith to the "
                         "range's common reference type.");
                 }

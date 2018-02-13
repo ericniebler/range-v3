@@ -227,7 +227,7 @@ static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
 
 static_assert(ranges::Swappable<int &>(), "");
-static_assert(!ranges::Swappable<int>(), "");
+static_assert(ranges::Swappable<int>(), "");
 static_assert(!ranges::Swappable<int const &>(), "");
 static_assert(ranges::Swappable<IntSwappable>(), "");
 static_assert(ranges::SwappableWith<IntSwappable, int &>(), "");
@@ -252,20 +252,20 @@ static_assert(
 
 static_assert(
     std::is_same<
-        ranges::sized_range_concept_t<std::vector<int>>,
-        ranges::concepts::SizedRange
+        ranges::sized_range_tag_of<std::vector<int>>,
+        ranges::sized_range_tag
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_view_concept_t<ranges::istream_range<int>>,
-        ranges::concepts::View
+        ranges::bounded_view_tag_of<ranges::istream_range<int>>,
+        ranges::view_tag
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_view_concept_t<ranges::istream_range<int>>,
-        ranges::concepts::View
+        ranges::sized_view_tag_of<ranges::istream_range<int>>,
+        ranges::view_tag
     >::value, "");
 
 struct myview {

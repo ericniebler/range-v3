@@ -38,19 +38,21 @@ namespace ranges
         /// @{
         class sample_fn
         {
-            template<typename I, typename S, typename O, typename Gen>
-            CONCEPT_alias(Constraint,
-                InputIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
-                IndirectlyCopyable<I, O>() && UniformRandomNumberGenerator<Gen>() &&
-                ConvertibleTo<concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                    difference_type_t<I>>());
+            CONCEPT_def
+            (
+                template(typename I, typename S, typename O, typename Gen)
+                concept Constraint,
+                    InputIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
+                    IndirectlyCopyable<I, O>() && UniformRandomNumberGenerator<Gen>() &&
+                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>()
+            );
 
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires Constraint<I, S, O, Gen>())
             (static tagged_pair<tag::in(I), tag::out(O)>)
             sized_impl(I first, S last, difference_type_t<I> pop_size,
-                O out, difference_type_t<I> n, Gen && gen)
+                O out, difference_type_t<I> n, Gen &&gen)
             {
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
@@ -73,11 +75,11 @@ namespace ranges
                     Constraint<I, S, O, Gen>())
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen && gen = detail::get_random_engine()) const
+                Gen &&gen = detail::get_random_engine()) const
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, std::move(out), n, static_cast<Gen&&>(gen));
+                    k, std::move(out), n, static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
@@ -86,7 +88,7 @@ namespace ranges
                     Constraint<I, S, O, Gen>())
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen && gen = detail::get_random_engine()) const
+                Gen &&gen = detail::get_random_engine()) const
             {
                 if(n <= 0)
                     goto done;
@@ -117,12 +119,12 @@ namespace ranges
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, iterator_t<ORng>, Gen>())
             (tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)
-            operator()(I first, S last, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, begin(out), distance(out), static_cast<Gen&&>(gen));
+                    k, begin(out), distance(out), static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&)(
@@ -131,11 +133,11 @@ namespace ranges
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, iterator_t<ORng>, Gen>())
             (tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)
-            operator()(I first, S last, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(std::move(first), std::move(last), begin(out),
-                    distance(out), static_cast<Gen&&>(gen));
+                    distance(out), static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
@@ -143,22 +145,22 @@ namespace ranges
                     !(ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
-            operator()(Rng && rng, O out, range_difference_type_t<Rng> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    std::move(out), n, static_cast<Gen&&>(gen));
+                    std::move(out), n, static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires (ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
-            operator()(Rng && rng, O out, range_difference_type_t<Rng> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    std::move(out), n, static_cast<Gen&&>(gen));
+                    std::move(out), n, static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
@@ -170,11 +172,11 @@ namespace ranges
             (tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>)
-            operator()(IRng && rng, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(IRng &&rng, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    begin(out), distance(out), static_cast<Gen&&>(gen));
+                    begin(out), distance(out), static_cast<Gen &&>(gen));
             }
             CONCEPT_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
@@ -185,11 +187,11 @@ namespace ranges
             (tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>)
-            operator()(IRng && rng, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(IRng &&rng, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    begin(out), distance(out), static_cast<Gen&&>(gen));
+                    begin(out), distance(out), static_cast<Gen &&>(gen));
             }
         };
 

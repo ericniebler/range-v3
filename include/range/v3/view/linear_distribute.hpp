@@ -93,7 +93,7 @@ namespace ranges
             {
                 CONCEPT_template(typename T)(
                     requires std::is_arithmetic<T>())
-                constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
+                (constexpr auto) operator()(T from, T to, std::ptrdiff_t n) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     linear_distribute_view<T>{from, to, n}
@@ -102,9 +102,9 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename T)(
                     requires !std::is_arithmetic<T>())
-                void operator()(T, T, std::ptrdiff_t) const
+                (void) operator()(T, T, std::ptrdiff_t) const
                 {
-                    CONCEPT_ASSERT_MSG(std::is_arithmetic<T>(),
+                    CONCEPT_assert_msg(std::is_arithmetic<T>(),
                         "The object passed to view::linear_distribute must model the Arithmetic "
                         "concept; that is, it must be one of the native integer of floating-point types");
                 }

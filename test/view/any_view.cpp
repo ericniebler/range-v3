@@ -122,7 +122,7 @@ RANGES_DIAGNOSTIC_POP
     }
     {
         any_view<int, category::random_access> ints3 = view::ints | view::take(10);
-        ::models<concepts::RandomAccessView>(aux::copy(ints3));
+        ::models<RandomAccessViewConcept>(aux::copy(ints3));
         ::check_equal(ints3, ten_ints);
         ::check_equal(ints3, ten_ints);
         ::check_equal(aux::copy(ints3), ten_ints);

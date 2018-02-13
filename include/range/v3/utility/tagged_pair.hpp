@@ -38,7 +38,7 @@ namespace ranges
                 using std::get;
 
                 template<std::size_t I, typename T>
-                constexpr auto adl_get(T && t)
+                constexpr auto adl_get(T &&t)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     get<I>((T &&) t)
@@ -68,7 +68,7 @@ namespace ranges
             class tagged
               : public meta::_t<chain<Base, 0, Tags...>>
             {
-                static_assert((bool)Same<Base, uncvref_t<Base>>(),"");
+                CONCEPT_assert(Same<Base, uncvref_t<Base>>());
                 using base_t = meta::_t<chain<Base, 0, Tags...>>;
 
                 template<typename Other>
@@ -79,7 +79,7 @@ namespace ranges
                 tagged() = default;
                 using base_t::base_t;
                 CONCEPT_requires(MoveConstructible<Base>())
-                (constexpr) tagged(Base && that)
+                (constexpr) tagged(Base &&that)
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
                   : base_t(detail::move(that))
                 {}
@@ -115,10 +115,10 @@ namespace ranges
                 template<typename U,
                     typename = meta::if_c<!std::is_same<tagged, detail::decay_t<U>>::value>,
                     typename = decltype(std::declval<Base &>() = std::declval<U>())>
-                RANGES_CXX14_CONSTEXPR tagged &operator=(U && u)
-                    noexcept(noexcept(std::declval<Base &>() = static_cast<U&&>(u)))
+                RANGES_CXX14_CONSTEXPR tagged &operator=(U &&u)
+                    noexcept(noexcept(std::declval<Base &>() = static_cast<U &&>(u)))
                 {
-                    static_cast<Base &>(*this) = static_cast<U&&>(u);
+                    static_cast<Base &>(*this) = static_cast<U &&>(u);
                     return *this;
                 }
                 template<typename B = Base>
@@ -146,10 +146,10 @@ namespace ranges
 
         template<typename Tag1, typename Tag2, typename T1, typename T2,
             typename R = tagged_pair<Tag1(bind_element_t<T1>), Tag2(bind_element_t<T2>)>>
-        constexpr R make_tagged_pair(T1 && t1, T2 && t2)
+        constexpr R make_tagged_pair(T1 &&t1, T2 &&t2)
             noexcept(std::is_nothrow_constructible<R, T1, T2>::value)
         {
-            return {static_cast<T1&&>(t1), static_cast<T2&&>(t2)};
+            return {static_cast<T1 &&>(t1), static_cast<T2 &&>(t2)};
         }
     }
 }
@@ -170,7 +170,7 @@ namespace ranges
                 getter(getter const &) = default;                                    \
                 using Next::Next;                                                    \
                 CONCEPT_requires(MoveConstructible<Untagged>())                      \
-                (constexpr) getter(Untagged && that)                                 \
+                (constexpr) getter(Untagged &&that)                                 \
                     noexcept(std::is_nothrow_move_constructible<Untagged>::value)    \
                   : Next(detail::move(that))                                         \
                 {}                                                                   \

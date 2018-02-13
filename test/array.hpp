@@ -263,7 +263,7 @@ namespace test {
 
     template<size_t I, class T, size_t N>
     RANGES_CXX14_CONSTEXPR
-    T&& get(array<T, N>&& a) noexcept
+    T && get(array<T, N>&& a) noexcept
     {
         static_assert(I < N, "Index out of bounds in ranges::get<> (ranges::array &&)");
         return std::move(a.elems_[I]);

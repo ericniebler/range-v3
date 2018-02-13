@@ -106,10 +106,10 @@ namespace ranges
                     requires !ReadableRange<Rng>())
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The argument to view::indirect must be a model of the InputRange "
                         "concept");
-                    CONCEPT_ASSERT_MSG(Readable<range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(Readable<range_value_type_t<Rng>>(),
                         "The value type of the range passed to view::indirect must be a model "
                         "of the Readable concept.");
                 }

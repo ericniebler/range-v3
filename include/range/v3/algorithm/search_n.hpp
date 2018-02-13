@@ -39,10 +39,13 @@ namespace ranges
     inline namespace v3
     {
         /// ingroup group-concepts
-        template<typename I, typename V, typename C = equal_to, typename P = ident>
-        CONCEPT_alias(Searchnable,
-            ForwardIterator<I>() &&
-            IndirectRelation<C, projected<I, P>, V const *>());
+        CONCEPT_def
+        (
+            template(typename I, typename V, typename C = equal_to, typename P = ident)
+            (concept Searchnable)(I, V, C, P),
+                ForwardIterator<I>() &&
+                IndirectRelation<C, projected<I, P>, V const *>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

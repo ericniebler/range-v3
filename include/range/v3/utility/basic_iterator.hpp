@@ -132,7 +132,7 @@ namespace ranges
                 }
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
-                void write_(T && t) const
+                void write_(T &&t) const
                 {
                     range_access::write(*cur_, (T &&) t);
                 }
@@ -212,7 +212,7 @@ namespace ranges
                 CONCEPT_template(typename T)(
                     requires WritableCursor<Cur, T>())
                 (RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference &)operator=(T && t)
+                basic_proxy_reference &)operator=(T &&t)
                 {
                     this->write_((T &&) t);
                     return *this;
@@ -220,7 +220,7 @@ namespace ranges
                 CONCEPT_template(typename T)(
                     requires WritableCursor<Cur, T &&>())
                 (RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &)operator=(T && t) const
+                basic_proxy_reference const &)operator=(T &&t) const
                 {
                     this->write_((T &&) t);
                     return *this;
@@ -339,7 +339,7 @@ namespace ranges
               : box<T>{}
             {}
             CONCEPT_requires(MoveConstructible<T>())
-            (constexpr) basic_mixin(T && t)
+            (constexpr) basic_mixin(T &&t)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
               : box<T>(detail::move(t))
             {}
@@ -401,7 +401,7 @@ namespace ranges
                 requires !Same<detail::decay_t<T>, basic_iterator>() &&
                     !detail::HasCursorNext<Cur>() && detail::WritableCursor<Cur, T>())
             (RANGES_CXX14_CONSTEXPR
-            basic_iterator &)operator=(T && t)
+            basic_iterator &)operator=(T &&t)
             noexcept(noexcept(
                 std::declval<Cur &>().write(static_cast<T &&>(t))))
             {
@@ -413,7 +413,7 @@ namespace ranges
                 requires !Same<detail::decay_t<T>, basic_iterator>() &&
                     !detail::HasCursorNext<Cur>() && detail::WritableCursor<Cur const, T>())
             (RANGES_CXX14_CONSTEXPR
-            basic_iterator const &)operator=(T && t) const
+            basic_iterator const &)operator=(T &&t) const
             noexcept(noexcept(
                 std::declval<Cur const &>().write(static_cast<T &&>(t))))
             {

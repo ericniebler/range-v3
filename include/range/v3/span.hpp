@@ -45,7 +45,7 @@ namespace ranges
         {
             CONCEPT_template(typename To, typename From)(
                 requires Integral<To>() && Integral<From>())
-            constexpr To narrow_cast(From from) noexcept
+            (constexpr To) narrow_cast(From from) noexcept
             {
                 using C = common_type_t<To, From>;
                 return RANGES_EXPECT((from > 0) == (static_cast<To>(from) > 0)),
@@ -130,12 +130,16 @@ namespace ranges
               : span{first, last - first}
             {}
 
-            template<typename Rng>
-            using CompatibleRange = decltype(
-                !Same<span, uncvref_t<Rng>>() && SizedRange<Rng>() && ContiguousRange<Rng>() &&
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept CompatibleRange,
+                    SizedRange<Rng>() && ContiguousRange<Rng>() &&
+                    !Same<span, uncvref_t<Rng>>() &&
                     True<std::is_convertible<
-                        concepts::ContiguousRange::element_t<Rng>(*)[],
-                        T(*)[]>>());
+                        detail::element_t<Rng>(*)[],
+                        T(*)[]>>()
+            );
 
             template<typename Rng>
             struct DynamicConversion
@@ -144,7 +148,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng)(
                 requires CompatibleRange<Rng>() && True<DynamicConversion<Rng>>())
-            constexpr span(Rng &&rng)
+            (constexpr) span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
               : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
             {}
@@ -156,7 +160,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng)(
                 requires CompatibleRange<Rng>() && True<StaticConversion<Rng>>())
-            constexpr span(Rng &&rng)
+            (constexpr) span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng)))
               : span{ranges::data(rng), N}
             {}
@@ -270,7 +274,7 @@ namespace ranges
 
             CONCEPT_template(typename U, index_type M)(
                 requires EqualityComparableWith<T, U>())
-            bool operator==(span<U, M> const &that) const
+            (bool) operator==(span<U, M> const &that) const
             {
                 RANGES_EXPECT(!size() || data());
                 RANGES_EXPECT(!that.size() || that.data());
@@ -278,14 +282,14 @@ namespace ranges
             }
             CONCEPT_template(typename U, index_type M)(
                 requires EqualityComparableWith<T, U>())
-            bool operator!=(span<U, M> const &that) const
+            (bool) operator!=(span<U, M> const &that) const
             {
                 return !(*this == that);
             }
 
             CONCEPT_template(typename U, index_type M)(
                 requires StrictTotallyOrderedWith<T, U>())
-            bool operator<(span<U, M> const &that) const
+            (bool) operator<(span<U, M> const &that) const
             {
                 RANGES_EXPECT(!size() || data());
                 RANGES_EXPECT(!that.size() || that.data());
@@ -293,19 +297,19 @@ namespace ranges
             }
             CONCEPT_template(typename U, index_type M)(
                 requires StrictTotallyOrderedWith<T, U>())
-            bool operator>(span<U, M> const &that) const
+            (bool) operator>(span<U, M> const &that) const
             {
                 return that < *this;
             }
             CONCEPT_template(typename U, index_type M)(
                 requires StrictTotallyOrderedWith<T, U>())
-            bool operator<=(span<U, M> const &that) const
+            (bool) operator<=(span<U, M> const &that) const
             {
                 return !(that < *this);
             }
             CONCEPT_template(typename U, index_type M)(
                 requires StrictTotallyOrderedWith<T, U>())
-            bool operator>=(span<U, M> const &that) const
+            (bool) operator>=(span<U, M> const &that) const
             {
                 return !(*this < that);
             }
@@ -320,13 +324,13 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                True<range_cardinality<Rng>::value < cardinality{}>())
+                True<range_cardinality<Rng>::value < cardinality{}>())()
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>>;
 
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
-                True<range_cardinality<Rng>::value >= cardinality{}>())
+                True<range_cardinality<Rng>::value >= cardinality{}>())()
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>,
                 static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;
@@ -360,7 +364,7 @@ namespace ranges
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
                 True<range_cardinality<Rng>::value < cardinality{}>())
-        constexpr span<concepts::ContiguousRange::element_t<Rng>>
+        (constexpr span<detail::element_t<Rng>>)
         make_span(Rng &&rng)
             noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
         {
@@ -370,8 +374,8 @@ namespace ranges
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
                 True<range_cardinality<Rng>::value >= cardinality{}>())
-        constexpr span<concepts::ContiguousRange::element_t<Rng>,
-            static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>
+        (constexpr span<detail::element_t<Rng>,
+            static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>)
         make_span(Rng &&rng)
             noexcept(noexcept(ranges::data(rng)))
         {

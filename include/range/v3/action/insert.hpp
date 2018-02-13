@@ -155,8 +155,12 @@ namespace ranges
             (auto) insert(Cont &&cont, P p, I i, S j)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                detail::insert_impl(static_cast<Cont &&>(cont), std::move(p), std::move(i), std::move(j),
-                                    RandomAccessReservable<Cont>() && SizedSentinel<S, I>())
+                detail::insert_impl(
+                    static_cast<Cont &&>(cont),
+                    std::move(p),
+                    std::move(i),
+                    std::move(j),
+                    RandomAccessReservable<Cont>() && SizedSentinel<S, I>())
             )
 
             CONCEPT_template(typename Cont, typename I, typename Rng,
@@ -165,8 +169,11 @@ namespace ranges
             (auto) insert(Cont &&cont, I p, Rng &&rng)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                detail::insert_impl(static_cast<Cont &&>(cont), std::move(p), static_cast<Rng &&>(rng),
-                                    RandomAccessReservable<Cont>() && SizedRange<Rng>())
+                detail::insert_impl(
+                    static_cast<Cont &&>(cont),
+                    std::move(p),
+                    static_cast<Rng &&>(rng),
+                    RandomAccessReservable<Cont>() && SizedRange<Rng>())
             )
 
             struct insert_fn
@@ -216,8 +223,8 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename I, typename Rng2)(
                     requires Range<Rng>() && Iterator<I>() && Range<Rng2>())
-                (auto) operator()(Rng &&rng, I p, Rng2 &&rng2) const ->
-                    decltype(insert(static_cast<Rng &&>(rng), std::move(p), static_cast<Rng2 &&>(rng2)))
+                (decltype(insert(std::declval<Rng>(), std::declval<I>(), std::declval<Rng2>())))
+                operator()(Rng &&rng, I p, Rng2 &&rng2) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempting to insert an infinite range into a container");
@@ -261,23 +268,19 @@ namespace ranges
             using ranges::insert;
         }
 
-        namespace concepts
-        {
-            /// \ingroup group-concepts
-            struct InsertableRange
-              : refines<Range(_1)>
-            {
-                template<typename Rng, typename... Rest>
-                auto requires_(Rng &&rng, Rest &&... rest) -> decltype(
-                    concepts::valid_expr(
-                        ((void)ranges::insert(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...), 42)
-                    ));
-            };
-        }
-
         /// \ingroup group-concepts
-        template<typename Rng, typename... Rest>
-        using InsertableRange = concepts::models<concepts::InsertableRange, Rng, Rest...>;
+        CONCEPT_def
+        (
+            template(typename Rng, typename... Rest)
+            (concept InsertableRange)(Rng, Rest...),
+                requires (Rng &&rng, Rest &&... rest)
+                {
+                    ((void)ranges::insert(
+                        static_cast<Rng &&>(rng),
+                        static_cast<Rest &&>(rest)...), 42)
+                } &&
+                Range<Rng>()
+        );
     }
 }
 

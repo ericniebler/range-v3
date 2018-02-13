@@ -30,15 +30,18 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename C = equal_to, typename P = ident>
-        CONCEPT_alias(UniqueCopyable,
-            InputIterator<I>() &&
-            IndirectRelation<C, projected<I, P>>() &&
-            WeaklyIncrementable<O>() &&
-            IndirectlyCopyable<I, O>() && (
-                ForwardIterator<I>() ||
-                ForwardIterator<O>() ||
-                IndirectlyCopyableStorable<I, O>()));
+        CONCEPT_def
+        (
+            template(typename I, typename O, typename C = equal_to, typename P = ident)
+            (concept UniqueCopyable)(I, O, C, P),
+                InputIterator<I>() &&
+                IndirectRelation<C, projected<I, P>>() &&
+                WeaklyIncrementable<O>() &&
+                IndirectlyCopyable<I, O>() && (
+                    ForwardIterator<I>() ||
+                    ForwardIterator<O>() ||
+                    IndirectlyCopyableStorable<I, O>())
+        );
 
         /// \addtogroup group-algorithms
         /// @{

@@ -31,11 +31,14 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O>
-        CONCEPT_alias(ReverseCopyable,
-            BidirectionalIterator<I>() &&
-            WeaklyIncrementable<O>() &&
-            IndirectlyCopyable<I, O>());
+        CONCEPT_def
+        (
+            template(typename I, typename O)
+            concept ReverseCopyable,
+                BidirectionalIterator<I>() &&
+                WeaklyIncrementable<O>() &&
+                IndirectlyCopyable<I, O>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

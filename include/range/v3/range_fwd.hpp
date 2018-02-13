@@ -198,13 +198,13 @@ namespace ranges
             struct make_compressed_pair_fn;
 
             template<typename T>
-            constexpr T && forward(meta::_t<std::remove_reference<T>> & t) noexcept
+            constexpr T &&forward(meta::_t<std::remove_reference<T>> & t) noexcept
             {
                 return static_cast<T &&>(t);
             }
 
             template<typename T>
-            constexpr T && forward(meta::_t<std::remove_reference<T>> && t) noexcept
+            constexpr T &&forward(meta::_t<std::remove_reference<T>> && t) noexcept
             {
                 // This is to catch way sketchy stuff like: forward<int const &>(42)
                 static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
@@ -213,7 +213,7 @@ namespace ranges
 
             template<typename T>
             constexpr meta::_t<std::remove_reference<T>> &&
-            move(T && t) noexcept
+            move(T &&t) noexcept
             {
                 return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
             }

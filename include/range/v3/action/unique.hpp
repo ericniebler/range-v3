@@ -36,60 +36,52 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
                     requires !Range<C>())
-                static auto bind(unique_fn unique, C pred, P proj = P{})
+                (static auto) bind(unique_fn unique, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
                         protect(std::move(proj)))
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename C = equal_to, typename P = ident,
-                        typename I = iterator_t<Rng>,
-                        typename S = sentinel_t<Rng>>
-                        auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
-                            concepts::is_true(Sortable<I, C, P>())
-                        ));
-                };
+                CONCEPT_def
+                (
+                    template(typename Rng, typename C = equal_to, typename P = ident)
+                    (concept Concept)(Rng, C, P),
+                        ForwardRange<Rng>() &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>() &&
+                        Sortable<iterator_t<Rng>, C, P>()
+                );
 
-                template<typename Rng, typename C = equal_to, typename P = ident>
-                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
-
-                CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident,
-                    typename I = iterator_t<Rng>)(
+                CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident)(
                     requires Concept<Rng, C, P>())
-                Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+                (Rng) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
-                    I it = ranges::unique(rng, std::move(pred), std::move(proj));
+                    auto it = ranges::unique(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, end(rng));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident)(
                     requires !Concept<Rng, C, P>())
-                void operator()(Rng &&, C && = C{}, P && = P{}) const
+                (void) operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::unique operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
-                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>(),
                         "The object on which action::unique operates must allow element "
                         "removal.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
+                    CONCEPT_assert_msg(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectRelation<C, projected<I, P>>(),
+                    CONCEPT_assert_msg(IndirectRelation<C, projected<I, P>>(),
                         "The comparator passed to action::unique must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");
-                    CONCEPT_ASSERT_MSG(Permutable<I>(),
+                    CONCEPT_assert_msg(Permutable<I>(),
                         "The iterator type of the range passed to action::unique must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");

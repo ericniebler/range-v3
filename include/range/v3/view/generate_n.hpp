@@ -99,14 +99,14 @@ namespace ranges
             {
                 CONCEPT_template(typename G)(
                     requires generate_fn::Concept<G>())
-                generate_n_view<G> operator()(G g, std::size_t n) const
+                (generate_n_view<G>) operator()(G g, std::size_t n) const
                 {
                     return generate_n_view<G>{std::move(g), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename G)(
                     requires !generate_fn::Concept<G>())
-                void operator()(G, std::size_t) const
+                (void) operator()(G, std::size_t) const
                 {
                     generate_fn::check<G>();
                 }

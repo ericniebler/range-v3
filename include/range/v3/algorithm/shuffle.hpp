@@ -36,11 +36,9 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<I>() && Sentinel<S, I>() &&
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
-                    ConvertibleTo<
-                        concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        difference_type_t<I>>())
+                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>())
             (I) operator()(I const begin, S const end,
-                Gen && gen = detail::get_random_engine()) const
+                Gen &&gen = detail::get_random_engine()) const
             {
                 auto mid = begin;
                 if(mid == end)
@@ -58,13 +56,12 @@ namespace ranges
             CONCEPT_template(typename Rng, typename Gen = detail::default_random_engine&,
                 typename I = iterator_t<Rng>)(
                 requires RandomAccessRange<Rng>() && Permutable<I>() &&
-                    UniformRandomNumberGenerator<Gen>() && ConvertibleTo<
-                        concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        difference_type_t<I>>())
+                    UniformRandomNumberGenerator<Gen>() &&
+                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>())
             (safe_iterator_t<Rng>)
-            operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
+            operator()(Rng &&rng, Gen &&rand = detail::get_random_engine()) const
             {
-                return (*this)(begin(rng), end(rng), static_cast<Gen&&>(rand));
+                return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
             }
         };
 

@@ -27,11 +27,11 @@ int main()
     std::vector<MoveOnlyString> vs(begin(data), end(data));
 
     auto x = vs | view::move;
-    CONCEPT_assert(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
-    CONCEPT_assert(Same<sized_view_concept_t<decltype(x)>, concepts::SizedView>());
-    ::models<concepts::BoundedView>(aux::copy(x));
-    ::models<concepts::SizedView>(aux::copy(x));
-    ::models<concepts::RandomAccessIterator>(x.begin());
+    CONCEPT_assert(Same<bounded_view_tag_of<decltype(x)>, bounded_view_tag>());
+    CONCEPT_assert(Same<sized_view_tag_of<decltype(x)>, sized_view_tag>());
+    ::models<BoundedViewConcept>(aux::copy(x));
+    ::models<SizedViewConcept>(aux::copy(x));
+    ::models<RandomAccessIteratorConcept>(x.begin());
     using I = decltype(x.begin());
     CONCEPT_assert(Same<iterator_tag_of<I>, ranges::random_access_iterator_tag>());
     CONCEPT_assert(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>());

@@ -33,14 +33,17 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O0, typename O1, typename C, typename P = ident>
-        CONCEPT_alias(PartitionCopyable,
-            InputIterator<I>() &&
-            WeaklyIncrementable<O0>() &&
-            WeaklyIncrementable<O1>() &&
-            IndirectlyCopyable<I, O0>() &&
-            IndirectlyCopyable<I, O1>() &&
-            IndirectPredicate<C, projected<I, P>>());
+        CONCEPT_def
+        (
+            template(typename I, typename O0, typename O1, typename C, typename P = ident)
+            (concept PartitionCopyable)(I, O0, O1, C, P),
+                InputIterator<I>() &&
+                WeaklyIncrementable<O0>() &&
+                WeaklyIncrementable<O1>() &&
+                IndirectlyCopyable<I, O0>() &&
+                IndirectlyCopyable<I, O1>() &&
+                IndirectPredicate<C, projected<I, P>>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

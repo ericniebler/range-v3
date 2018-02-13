@@ -37,7 +37,7 @@ namespace ranges
         }
 
         template<typename T>
-        T && get(meta::id_t<T> && value)
+        T &&get(meta::id_t<T> && value)
         {
             return std::move(value);
         }

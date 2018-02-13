@@ -209,7 +209,7 @@ namespace concepts
 
             private:
                 template<typename... Ts>
-                static constexpr int ignore_unused(Ts&&...)
+                static constexpr int ignore_unused(Ts &&...)
                 {
                     return 0;
                 }

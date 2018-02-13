@@ -30,12 +30,15 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename T, typename P = ident>
-        CONCEPT_alias(RemoveCopyable,
-            InputIterator<I>() &&
-            WeaklyIncrementable<O>() &&
-            IndirectRelation<equal_to, projected<I, P>, T const *>() &&
-            IndirectlyCopyable<I, O>());
+        CONCEPT_def
+        (
+            template(typename I, typename O, typename T, typename P = ident)
+            (concept RemoveCopyable)(I, O, T, P),
+                InputIterator<I>() &&
+                WeaklyIncrementable<O>() &&
+                IndirectRelation<equal_to, projected<I, P>, T const *>() &&
+                IndirectlyCopyable<I, O>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{

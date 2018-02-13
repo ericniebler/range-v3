@@ -60,7 +60,7 @@ namespace ranges
                 requires InputRange<Rng1>() && InputIterator<I2>() &&
                     IndirectlySwappable<I1, I2>())
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
-            operator()(Rng1 && rng1, I2_ && begin2) const
+            operator()(Rng1 &&rng1, I2_ &&begin2) const
             {
                 return (*this)(begin(rng1), end(rng1), (I2_ &&)begin2);
             }
@@ -73,7 +73,7 @@ namespace ranges
             (tagged_pair<
                 tag::in1(safe_iterator_t<Rng1>),
                 tag::in2(safe_iterator_t<Rng2>)>)
-            operator()(Rng1 && rng1, Rng2 && rng2) const
+            operator()(Rng1 &&rng1, Rng2 &&rng2) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));
             }

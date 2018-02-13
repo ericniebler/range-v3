@@ -32,7 +32,7 @@ int main()
     CHECK(is_sorted(v));
     CHECK(!is_sorted(v2));
     CHECK(size(v2) == size(v));
-    ::models<concepts::Same>(v, v2);
+    ::models<SameConcept>(v, v2);
     CHECK(!equal(v, v2));
 
     // "Ints" view vs. shuffled and sorted

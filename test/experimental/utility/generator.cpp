@@ -198,20 +198,20 @@ int main()
 
     {
         auto rng = ::iota_generator(0, 10);
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
         auto rng = ::coro(::coro(::coro(::iota_generator(0, 10))));
         ::has_type<decltype(::iota_generator(0, 10)) &>(rng);
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,1,2,3,4,5,6,7,8,9});
     }
     {
         auto rng = ::coro(view::ints | view::filter(even) | view::take_exactly(10));
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 10u);
         ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
     }
@@ -222,7 +222,7 @@ int main()
         CHECK(equal(a, control, std::equal_to<int>{}, &MoveInt::i_));
         CHECK(count(b, 42, &MoveInt::i_) == 3);
         auto rng = ::coro(view::move(a));
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 3u);
         copy(rng, b);
         CHECK(equal(b, control, std::equal_to<int>{}, &MoveInt::i_));
@@ -231,7 +231,7 @@ int main()
     {
         int some_ints[] = {0,1,2};
         auto rng = ::coro(some_ints);
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 3u);
         auto i = begin(rng);
         auto e = end(rng);
@@ -249,7 +249,7 @@ int main()
     {
         std::vector<bool> vec(3, false);
         auto rng = ::coro(vec);
-        ::models<concepts::SizedRange>(rng);
+        ::models<SizedRangeConcept>(rng);
         CHECK(size(rng) == 3u);
         ::check_equal(rng, {false,false,false});
     }

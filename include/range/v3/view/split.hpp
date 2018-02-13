@@ -142,7 +142,7 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename T>
-                static auto bind(split_fn split, T && t)
+                static auto bind(split_fn split, T &&t)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(split, std::placeholders::_1, bind_forward<T>(t)))
@@ -176,8 +176,8 @@ namespace ranges
                     all_t<Sub> sub_;
                     range_difference_type_t<Sub> len_;
                     subrange_pred() = default;
-                    subrange_pred(Sub && sub)
-                      : sub_(all(static_cast<Sub&&>(sub))), len_(distance(sub_))
+                    subrange_pred(Sub &&sub)
+                      : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
                     {}
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
@@ -235,27 +235,27 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires SplitOnFunction<Rng, Fun>())
-                (split_view<all_t<Rng>, Fun>) operator()(Rng && rng, Fun fun) const
+                (split_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires SplitOnPredicate<Rng, Fun>())
-                (split_view<all_t<Rng>, predicate_pred<Rng, Fun>>) operator()(Rng && rng, Fun fun) const
+                (split_view<all_t<Rng>, predicate_pred<Rng, Fun>>) operator()(Rng &&rng, Fun fun) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
+                    return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 CONCEPT_template(typename Rng)(
                     requires SplitOnElement<Rng>())
-                (split_view<all_t<Rng>, element_pred<Rng>>) operator()(Rng && rng, range_value_type_t<Rng> val) const
+                (split_view<all_t<Rng>, element_pred<Rng>>) operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), {std::move(val)}};
+                    return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
                 }
                 CONCEPT_template(typename Rng, typename Sub)(
                     requires SplitOnSubRange<Rng, Sub>())
-                (split_view<all_t<Rng>, subrange_pred<Rng, Sub>>) operator()(Rng && rng, Sub && sub) const
+                (split_view<all_t<Rng>, subrange_pred<Rng, Sub>>) operator()(Rng &&rng, Sub &&sub) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), {static_cast<Sub&&>(sub)}};
+                    return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -263,10 +263,10 @@ namespace ranges
                     requires !ConvertibleTo<T, range_value_type_t<Rng>>())
                 (void) operator()(Rng &&, T &&) const volatile
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which view::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, range_value_type_t<Rng>>(),
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "

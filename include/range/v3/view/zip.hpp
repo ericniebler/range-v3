@@ -39,8 +39,8 @@ namespace ranges
                 // tuple value
                 CONCEPT_template(typename ...Its)(
                     requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
-                [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                    std::tuple<value_type_t<Its>...>
+                (attribute([[noreturn]]) std::tuple<value_type_t<Its>...>)
+                operator()(copy_tag, Its...) const
                 {
                     RANGES_EXPECT(false);
                 }
@@ -48,29 +48,29 @@ namespace ranges
                 // tuple reference
                 CONCEPT_template(typename ...Its)(
                     requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
-                auto operator()(Its const &...its) const
+                (common_tuple<reference_t<Its>...>)
+                operator()(Its const &...its) const
                     noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    common_tuple<reference_t<Its>...>{*its...}
-                )
+                {
+                    return common_tuple<reference_t<Its>...>{*its...};
+                }
 
                 // tuple rvalue reference
                 CONCEPT_template(typename ...Its)(
                     requires meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)
-                auto operator()(move_tag, Its const &...its) const
+                (common_tuple<rvalue_reference_t<Its>...>)
+                operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
                         noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    common_tuple<rvalue_reference_t<Its>...>{iter_move(its)...}
-                )
+                {
+                    return common_tuple<rvalue_reference_t<Its>...>{iter_move(its)...};
+                }
 
                 // pair value
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1>() && Readable<It2>())
-                [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
-                    std::pair<value_type_t<It1>, value_type_t<It2>>
+                (attribute([[noreturn]]) std::pair<value_type_t<It1>, value_type_t<It2>>)
+                operator()(copy_tag, It1, It2) const
                 {
                     RANGES_EXPECT(false);
                 }
@@ -78,25 +78,25 @@ namespace ranges
                 // pair reference
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1>() && Readable<It2>())
-                auto operator()(It1 const &it1, It2 const &it2) const
+                (common_pair<reference_t<It1>, reference_t<It2>>)
+                operator()(It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(reference_t<It1>(*it1)) &&
                              noexcept(reference_t<It2>(*it2)))
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    common_pair<reference_t<It1>, reference_t<It2>>{*it1, *it2}
-                )
+                {
+                    return common_pair<reference_t<It1>, reference_t<It2>>{*it1, *it2};
+                }
 
                 // pair rvalue reference
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1>() && Readable<It2>())
-                auto operator()(move_tag, It1 const &it1, It2 const &it2) const
+                (common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>)
+                operator()(move_tag, It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
                              noexcept(rvalue_reference_t<It2>(iter_move(it2))))
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>{
-                        iter_move(it1), iter_move(it2)}
-                )
+                {
+                    return common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>{
+                        iter_move(it1), iter_move(it2)};
+                }
             };
         } // namespace detail
         /// \endcond
@@ -118,24 +118,27 @@ namespace ranges
         {
             struct zip_fn
             {
-                template<typename ...Rngs>
-                CONCEPT_alias(Concept,
-                    True<meta::strict_and<InputRange<Rngs>...>>());
+                CONCEPT_def
+                (
+                    template(typename ...Rngs)
+                    (concept Concept)(Rngs...),
+                        True<meta::strict_and<InputRange<Rngs>...>>()
+                );
 
                 CONCEPT_template(typename...Rngs)(
                     requires Concept<Rngs...>())
-                zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
+                (zip_view<all_t<Rngs>...>) operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_assert(meta::and_<Range<Rngs>...>());
-                    return zip_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
+                    return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename...Rngs)(
                     requires !Concept<Rngs...>())
-                void operator()(Rngs &&...) const
+                (void) operator()(Rngs &&...) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                    CONCEPT_assert_msg(meta::and_<InputRange<Rngs>...>(),
                         "All of the objects passed to view::zip must model the InputRange "
                         "concept");
                 }

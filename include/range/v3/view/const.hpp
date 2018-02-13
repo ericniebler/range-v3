@@ -74,12 +74,12 @@ namespace ranges
               : const_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_requires(SizedRange<Rng const>())
-            range_size_type_t<Rng> size() const
+            (range_size_type_t<Rng>) size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(SizedRange<Rng>())
-            range_size_type_t<Rng> size()
+            (range_size_type_t<Rng>) size()
             {
                 return ranges::size(this->base());
             }
@@ -92,9 +92,9 @@ namespace ranges
                 template<typename Rng>
                 const_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
-                    CONCEPT_ASSERT_MSG(Range<Rng>(),
+                    CONCEPT_assert_msg(Range<Rng>(),
                         "Rng must be a model of the Range concept");
-                    return const_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                    return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
             };
 

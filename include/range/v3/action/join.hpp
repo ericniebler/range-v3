@@ -44,24 +44,19 @@ namespace ranges
                         range_value_type_t<Rng>,
                         std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
 
-                struct Joinable_
-                {
-                    template<typename Rng>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::InputRange, Rng>(),
-                            concepts::model_of<concepts::InputRange, range_value_type_t<Rng>>(),
-                            concepts::model_of<concepts::Semiregular, join_value_t<Rng>>()
-                        ));
-                };
-
             public:
-                template<typename Rng>
-                using Joinable = concepts::models<Joinable_, Rng>;
+                CONCEPT_def
+                (
+                    template(typename Rng)
+                    concept Joinable,
+                        InputRange<Rng>() &&
+                        InputRange<range_value_type_t<Rng>>() &&
+                        Semiregular<join_value_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng)(
                     requires Joinable<Rng>())
-                (join_value_t<Rng>) operator()(Rng && rng) const
+                (join_value_t<Rng>) operator()(Rng &&rng) const
                 {
                     join_value_t<Rng> ret;
                     auto end = ranges::end(rng);
@@ -75,10 +70,10 @@ namespace ranges
                     requires !Joinable<Rng>())
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object on which action::join operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(InputRange<range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(InputRange<range_value_type_t<Rng>>(),
                         "The Range on which action::join operates must have a value type that "
                         "models the InputRange concept.");
                 }

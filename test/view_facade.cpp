@@ -73,9 +73,9 @@ int main()
 {
     using namespace ranges;
     auto r = MyRange{};
-    ::models<concepts::BoundedView>(aux::copy(r));
-    ::models<concepts::SizedView>(aux::copy(r));
-    ::models<concepts::RandomAccessView>(aux::copy(r));
+    ::models<BoundedViewConcept>(aux::copy(r));
+    ::models<SizedViewConcept>(aux::copy(r));
+    ::models<RandomAccessViewConcept>(aux::copy(r));
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 
     CHECK(7u == r.size());

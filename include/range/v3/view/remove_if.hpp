@@ -177,10 +177,10 @@ namespace ranges
                     requires !SearchableRange<Rng, Pred>())
                 (void) operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The first argument to view::remove_if must be a model of the "
                         "InputRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The second argument to view::remove_if must be callable with "
                         "a value of the range, and the return type must be convertible "
                         "to bool");

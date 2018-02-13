@@ -34,7 +34,7 @@ namespace
     template<typename Adapted>
     void test_size(Adapted& a, std::true_type)
     {
-        ::models<concepts::SizedRange>(a);
+        ::models<SizedRangeConcept>(a);
         CHECK(size(a), unsigned(N - K + 1));
     }
     template<typename Adapted>
@@ -44,7 +44,7 @@ namespace
     template<typename Adapted>
     void test_bounded(Adapted& a, std::true_type)
     {
-        ::models<concepts::BoundedRange>(a);
+        ::models<BoundedRangeConcept>(a);
     }
     // template<typename Adapted>
     // void test_bounded(Adapted&, std::false_type)
@@ -53,7 +53,7 @@ namespace
     template<typename Adapted>
     void test_prev(Adapted& a, iterator_t<Adapted> const& it, std::true_type)
     {
-        ::models<concepts::BidirectionalRange>(a);
+        ::models<BidirectionalRangeConcept>(a);
         ::check_equal(*ranges::prev(it, 3), view::iota(N - K - 2, N - 2));
     }
     template<typename Adapted>
@@ -84,8 +84,8 @@ namespace
         test_size(rng, SizedRange<Base>());
 
         CONCEPT_assert(Same<
-            meta::_t<iterator_tag_of<iterator_t<Base>>>,
-            meta::_t<iterator_tag_of<iterator_t<Adapted>>>>());
+            iterator_tag_of<iterator_t<Base>>,
+            iterator_tag_of<iterator_t<Adapted>>>());
 
         auto it = ranges::begin(rng);
         test_bounded(rng, BoundedRange<Base>());
@@ -115,7 +115,7 @@ int main()
     {
         // An infinite, cyclic range with cycle length == 1
         auto rng = view::repeat(5) | view::sliding(K);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         CONCEPT_assert(RandomAccessIterator<decltype(it)>());
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 3
@@ -153,7 +153,7 @@ int main()
     {
         // An infinite, cyclic range with cycle length == K
         auto rng = view::iota(0, K) | view::cycle | view::sliding(K);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         CONCEPT_assert(RandomAccessIterator<decltype(it)>());
         for (auto i = 0; i < 42; ++i)

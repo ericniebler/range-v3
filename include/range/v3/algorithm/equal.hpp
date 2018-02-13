@@ -81,7 +81,7 @@ namespace ranges
                 requires Range<Rng0>() && Iterator<I1>() &&
                     Comparable<I0, I1, C, P0, P1>())
             (RANGES_CXX14_CONSTEXPR
-            bool) operator()(Rng0 && rng0, I1Ref && begin1, C pred = C{}, P0 proj0 = P0{},
+            bool) operator()(Rng0 &&rng0, I1Ref &&begin1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), (I1Ref &&) begin1, std::move(pred),
@@ -95,7 +95,7 @@ namespace ranges
                 requires Range<Rng0>() && Range<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>())
             (RANGES_CXX14_CONSTEXPR
-            bool) operator()(Rng0 && rng0, Rng1 && rng1, C pred = C{}, P0 proj0 = P0{},
+            bool) operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 if(SizedRange<Rng0>() && SizedRange<Rng1>())

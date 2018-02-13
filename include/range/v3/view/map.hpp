@@ -39,7 +39,7 @@ namespace ranges
 
             CONCEPT_template(typename T)(
                 requires MoveConstructible<T>())
-            RANGES_CXX14_CONSTEXPR T
+            (RANGES_CXX14_CONSTEXPR T)
             get_first_second_helper(T& t, std::false_type)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
             {
@@ -54,7 +54,7 @@ namespace ranges
             struct get_first
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto operator()(Pair && p) const
+                RANGES_CXX14_CONSTEXPR auto operator()(Pair &&p) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     get_first_second_helper(p.first,
@@ -65,7 +65,7 @@ namespace ranges
             struct get_second
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto operator()(Pair && p) const
+                RANGES_CXX14_CONSTEXPR auto operator()(Pair &&p) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     get_first_second_helper(p.second,
@@ -73,10 +73,13 @@ namespace ranges
                 )
             };
 
-            template<typename T>
-            CONCEPT_alias(PairLike,
-                Invocable<get_first const&, T>() &&
-                Invocable<get_second const&, T>());
+            CONCEPT_def
+            (
+                template(typename T)
+                concept PairLike,
+                    Invocable<get_first const&, T>() &&
+                    Invocable<get_second const&, T>()
+            );
         }
         /// \endcond
 
@@ -86,25 +89,28 @@ namespace ranges
         {
             struct keys_fn
             {
-                template<typename Rng>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng>() &&
-                    detail::PairLike<range_reference_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng)
+                    concept Concept,
+                        InputRange<Rng>() &&
+                        detail::PairLike<range_reference_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng)(
                     requires Concept<Rng>())
-                keys_range_view<all_t<Rng>> operator()(Rng && rng) const
+                (keys_range_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), detail::get_first{}};
+                    return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires !Concept<Rng>())
-                void operator()(Rng &&) const
+                (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The argument of view::keys must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>(),
                         "The value type of the range passed to view::keys must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }
@@ -113,25 +119,28 @@ namespace ranges
 
             struct values_fn
             {
-                template<typename Rng>
-                CONCEPT_alias(Concept,
+                CONCEPT_def
+                (
+                    template(typename Rng)
+                    concept Concept,
                     InputRange<Rng>() &&
-                    detail::PairLike<range_reference_t<Rng>>());
+                    detail::PairLike<range_reference_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng)(
                     requires Concept<Rng>())
-                values_view<all_t<Rng>> operator()(Rng && rng) const
+                (values_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), detail::get_second{}};
+                    return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires !Concept<Rng>())
-                void operator()(Rng &&) const
+                (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The argument of view::values must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>(),
                         "The value type of the range passed to view::values must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }

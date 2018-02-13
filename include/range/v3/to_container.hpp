@@ -112,9 +112,9 @@ namespace ranges
         CONCEPT_template(template<typename...> class ContT, typename Rng,
             typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>)(
             requires Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
-        (Cont) to_(Rng && rng)
+        (Cont) to_(Rng &&rng)
         {
-            return static_cast<Rng&&>(rng) | ranges::to_<ContT>();
+            return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
 
         /// \overload
@@ -136,9 +136,9 @@ namespace ranges
         /// \overload
         CONCEPT_template(typename Cont, typename Rng)(
             requires Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())
-        (Cont) to_(Rng && rng)
+        (Cont) to_(Rng &&rng)
         {
-            return static_cast<Rng&&>(rng) | ranges::to_<Cont>();
+            return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
 
         /// \overload

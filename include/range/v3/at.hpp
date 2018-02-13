@@ -73,11 +73,11 @@ namespace ranges
             /// \cond
             CONCEPT_template(typename R, typename T)(
                 requires !index_detail::Indexable<R, T>())
-            (void) operator()(R&&, T&&) const
+            (void) operator()(R &&, T &&) const
             {
-                CONCEPT_ASSERT_MSG(RandomAccessRange<R>(),
+                CONCEPT_assert_msg(RandomAccessRange<R>(),
                     "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-                CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<R>>(),
+                CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>(),
                     "ranges::at(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             }
 

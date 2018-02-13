@@ -49,7 +49,7 @@ namespace ranges
                     template(typename Rng, typename T, typename U)
                     concept Concept,
                         ForwardRange<Rng>() &&
-                        ErasableRange<Rng, iterator_t<Rng>, iterator_t<Rng>>() &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>() &&
                         ConvertibleTo<T, range_difference_type_t<Rng>>() &&
                         ConvertibleTo<U, range_difference_type_t<Rng>>()
                 );
@@ -59,13 +59,13 @@ namespace ranges
                     typename I = iterator_t<Rng>,
                     typename D = range_difference_type_t<Rng>)(
                     requires Concept<Rng, D, D>())
-                (Rng) operator()(Rng && rng, range_difference_type_t<Rng> from,
+                (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const
                 {
                     RANGES_EXPECT(from <= to);
                     ranges::action::erase(rng, next(begin(rng), to), end(rng));
                     ranges::action::erase(rng, begin(rng), next(begin(rng), from));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -73,14 +73,14 @@ namespace ranges
                     requires !Concept<Rng, T, U>())
                 (void) operator()(Rng &&, T &&, U &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::slice operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>(),
                         "The object on which action::slice operates must allow element "
                         "removal.");
-                    CONCEPT_ASSERT_MSG(meta::and_<ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CONCEPT_assert_msg(meta::and_<ConvertibleTo<T, range_difference_type_t<Rng>>,
                             ConvertibleTo<U, range_difference_type_t<Rng>>>(),
                         "The bounds passed to action::slice must be convertible to the range's "
                         "difference type. TODO slicing from the end with 'end-2' syntax is not "

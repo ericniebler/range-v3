@@ -34,12 +34,15 @@ namespace ranges
         // of Predicate. Relation requires symmetry: is_valid(pred(a,b)) => is_valid(pred(b,a))
 
         /// \ingroup group-concepts
-        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-            typename P2 = ident>
-        CONCEPT_alias(Mismatchable,
-            InputIterator<I1>() &&
-            InputIterator<I2>() &&
-            IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>());
+        CONCEPT_def
+        (
+            template(typename I1, typename I2, typename C = equal_to,
+                typename P1 = ident, typename P2 = ident)
+            (concept Mismatchable)(I1, I2, C, P1, P2),
+                InputIterator<I1>() &&
+                InputIterator<I2>() &&
+                IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{
@@ -82,7 +85,7 @@ namespace ranges
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), static_cast<I2&&>(begin2), std::move(pred),
+                return (*this)(begin(rng1), end(rng1), static_cast<I2 &&>(begin2), std::move(pred),
                     std::move(proj1), std::move(proj2));
             }
 

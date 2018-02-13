@@ -67,7 +67,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Comparable<I1, I2, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            (bool) operator()(Rng1 && rng1, Rng2 && rng2,
+            (bool) operator()(Rng1 &&rng1, Rng2 &&rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
@@ -167,7 +167,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
-            (O) operator()(Rng1 && rng1, Rng2 && rng2, O out,
+            (O) operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
@@ -217,7 +217,7 @@ namespace ranges
                 requires Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())
             (tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::out(O)>)
-            operator()(Rng1 &&rng1, Rng2 && rng2, O out,
+            operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),

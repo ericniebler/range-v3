@@ -39,7 +39,7 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag,
+            iterator_t<Rng> pos_at_(Rng &&rng, Int i, input_range_tag,
                 std::true_type)
             {
                 RANGES_EXPECT(0 <= i);
@@ -47,7 +47,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, bidirectional_range_tag,
+            iterator_t<Rng> pos_at_(Rng &&rng, Int i, bidirectional_range_tag,
                 std::false_type)
             {
                 if(0 > i)
@@ -62,7 +62,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Int>
-            iterator_t<Rng> pos_at_(Rng && rng, Int i, input_range_tag,
+            iterator_t<Rng> pos_at_(Rng &&rng, Int i, input_range_tag,
                 std::false_type)
             {
                 RANGES_EXPECT(i >= 0 || (bool)SizedRange<Rng>() || (bool)ForwardRange<Rng>());
@@ -143,14 +143,14 @@ namespace ranges
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
                     requires Range<BaseRng const>())
-                iterator_t<BaseRng const> begin() const
+                (iterator_t<BaseRng const>) begin() const
                 {
                     return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{});
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
                     requires Range<BaseRng const>())
-                iterator_t<BaseRng const> end() const
+                (iterator_t<BaseRng const>) end() const
                 {
                     return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{}) + count_;
@@ -176,7 +176,7 @@ namespace ranges
         {
             CONCEPT_template(typename Int)(
                 requires Integral<Int>())
-            detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist)
+            (detail::from_end_<meta::_t<std::make_signed<Int>>>) operator-(end_fn, Int dist)
             {
                 RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
                 return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
@@ -202,15 +202,15 @@ namespace ranges
 
                 template<typename Rng>
                 static slice_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
+                invoke_(Rng &&rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     input_range_tag, range_tag = {})
                 {
-                    return {all(static_cast<Rng&&>(rng)), from, count};
+                    return {all(static_cast<Rng &&>(rng)), from, count};
                 }
                 CONCEPT_template(typename Rng)(
                     requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
-                static iterator_range<iterator_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
+                (static iterator_range<iterator_t<Rng>>)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     random_access_range_tag, bounded_range_tag = {})
                 {
                     auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
@@ -220,35 +220,35 @@ namespace ranges
                 // Overloads for the pipe syntax: rng | view::slice(from,to)
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(slice_fn slice, Int from, Int to)
+                (static auto) bind(slice_fn slice, Int from, Int to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
                 )
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(slice_fn slice, Int from, detail::from_end_<Int> to)
+                (static auto) bind(slice_fn slice, Int from, detail::from_end_<Int> to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
                 )
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(slice_fn slice, detail::from_end_<Int> from, detail::from_end_<Int> to)
+                (static auto) bind(slice_fn slice, detail::from_end_<Int> from, detail::from_end_<Int> to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
                 )
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(slice_fn, Int from, end_fn)
+                (static auto) bind(slice_fn, Int from, end_fn)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(ranges::view::drop_exactly, std::placeholders::_1, from))
                 )
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
+                (static auto) bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
@@ -258,13 +258,13 @@ namespace ranges
                 // slice(rng, 2, 4)
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>())
-                auto operator()(Rng && rng, range_difference_type_t<Rng> from,
+                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
+                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from, to - from,
                         range_tag_of<Rng>{}))
                 {
                     RANGES_EXPECT(0 <= from && from <= to);
-                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from, to - from,
+                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from, to - from,
                         range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end-2)
@@ -272,59 +272,59 @@ namespace ranges
                 //       doesn't know it's size?
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>() && SizedRange<Rng>())
-                auto operator()(Rng && rng, range_difference_type_t<Rng> from,
+                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from,
+                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from,
                         distance(rng) + to.dist_ - from, range_tag_of<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
-                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from,
+                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from,
                         distance(rng) + to.dist_ - from, range_tag_of<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
                 CONCEPT_template(typename Rng)(
-                    requires (InputRange<Rng>() && SizedRange<Rng>()) ||
+                    requires //(InputRange<Rng>() && SizedRange<Rng>()) ||
                         ForwardRange<Rng>())
-                auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
+                (auto) operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
+                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}()))
+                        bounded_range_tag_of<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(from.dist_ <= to.dist_);
-                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
+                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}());
+                        bounded_range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end)
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>())
-                auto operator()(Rng && rng, range_difference_type_t<Rng> from, end_fn) const ->
-                    decltype(ranges::view::drop_exactly(static_cast<Rng&&>(rng), from))
+                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> from, end_fn) const ->
+                    decltype(ranges::view::drop_exactly(static_cast<Rng &&>(rng), from))
                 {
                     RANGES_EXPECT(0 <= from);
-                    return ranges::view::drop_exactly(static_cast<Rng&&>(rng), from);
+                    return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
                 }
                 // slice(rng, end-4, end)
                 CONCEPT_template(typename Rng)(
                     requires (InputRange<Rng>() && SizedRange<Rng>()) ||
                         ForwardRange<Rng>())
-                auto operator()(Rng && rng, detail::from_end_<range_difference_type_t<Rng>> from,
+                (auto) operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     end_fn) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
+                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         -from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}()))
+                        bounded_range_tag_of<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
-                    return slice_fn::invoke_(static_cast<Rng&&>(rng), from.dist_,
+                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         -from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}());
+                        bounded_range_tag_of<Rng>{});
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -336,20 +336,20 @@ namespace ranges
                 // slice(rng, 2, 4)
                 CONCEPT_template(typename Rng)(
                     requires !InputRange<Rng>())
-                void operator()(Rng &&, range_difference_type_t<Rng>, range_difference_type_t<Rng>) const
+                (void) operator()(Rng &&, range_difference_type_t<Rng>, range_difference_type_t<Rng>) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object to be sliced must be a model of the InputRange concept.");
                 }
                 // slice(rng, 4, end-2)
                 CONCEPT_template(typename Rng)(
                     requires !(InputRange<Rng>() && SizedRange<Rng>()))
-                void operator()(Rng &&, range_difference_type_t<Rng>,
+                (void) operator()(Rng &&, range_difference_type_t<Rng>,
                     detail::from_end_<range_difference_type_t<Rng>>) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object to be sliced must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(SizedRange<Rng>(),
+                    CONCEPT_assert_msg(SizedRange<Rng>(),
                         "When slicing a range with a positive start offset and a stop offset "
                         "measured from the end, the range must be a model of the SizedRange "
                         "concept; that is, its size must be known.");
@@ -358,12 +358,12 @@ namespace ranges
                 CONCEPT_template(typename Rng)(
                     requires !((InputRange<Rng>() && SizedRange<Rng>()) ||
                         ForwardRange<Rng>()))
-                void operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>,
+                (void) operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>,
                     detail::from_end_<range_difference_type_t<Rng>>) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object to be sliced must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(SizedRange<Rng>() || ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(SizedRange<Rng>() || ForwardRange<Rng>(),
                         "When slicing a range with a start and stop offset measured from the end, "
                         "the range must either be a model of the SizedRange concept (its size "
                         "must be known), or it must be a model of the ForwardRange concept.");
@@ -371,20 +371,20 @@ namespace ranges
                 // slice(rng, 4, end)
                 CONCEPT_template(typename Rng)(
                     requires !(InputRange<Rng>()))
-                void operator()(Rng &&, range_difference_type_t<Rng>, end_fn) const
+                (void) operator()(Rng &&, range_difference_type_t<Rng>, end_fn) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object to be sliced must be a model of the InputRange concept.");
                 }
                 // slice(rng, end-4, end)
                 CONCEPT_template(typename Rng)(
                     requires !((InputRange<Rng>() && SizedRange<Rng>()) ||
                         ForwardRange<Rng>()))
-                void operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>, end_fn) const
+                (void) operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>, end_fn) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object to be sliced must be a model of the InputRange concept.");
-                    CONCEPT_ASSERT_MSG(SizedRange<Rng>() || ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(SizedRange<Rng>() || ForwardRange<Rng>(),
                         "When slicing a range with a start and stop offset measured from the end, "
                         "the range must either be a model of the SizedRange concept (its size "
                         "must be known), or it must be a model of the ForwardRange concept.");

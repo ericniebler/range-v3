@@ -38,7 +38,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
                     requires !Range<C>())
-                static auto bind(stable_sort_fn stable_sort, C pred, P proj = P{})
+                (static auto) bind(stable_sort_fn stable_sort, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(stable_sort, std::placeholders::_1, protect(std::move(pred)),
@@ -47,29 +47,29 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires sort_fn::Sortable<Rng, C, P>())
-                Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+                (Rng) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::stable_sort(rng, std::move(pred), std::move(proj));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires !sort_fn::Sortable<Rng, C, P>())
-                void operator()(Rng &&, C && = C{}, P && = P{}) const
+                (void) operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::stable_sort operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
+                    CONCEPT_assert_msg(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectRelation<C, projected<I, P>>(),
+                    CONCEPT_assert_msg(IndirectRelation<C, projected<I, P>>(),
                         "The comparator passed to action::stable_sort must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");
-                    CONCEPT_ASSERT_MSG(Permutable<I>(),
+                    CONCEPT_assert_msg(Permutable<I>(),
                         "The iterator type of the range passed to action::stable_sort must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");

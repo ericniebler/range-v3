@@ -35,9 +35,9 @@ namespace ranges
                 Val* val_;
 
                 template<typename T>
-                bool operator()(T&& t) const
+                bool operator()(T && t) const
                 {
-                    return !invoke(*pred_, *val_, static_cast<T&&>(t));
+                    return !invoke(*pred_, *val_, static_cast<T &&>(t));
                 }
             };
 

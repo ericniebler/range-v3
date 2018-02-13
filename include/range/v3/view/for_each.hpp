@@ -48,45 +48,39 @@ namespace ranges
                     make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(fun))))
                 )
 
-                struct Concept_
-                {
-                    template<typename Rng, typename Fun>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::is_true(transform_fn::Concept<Rng, Fun>()),
-                            concepts::model_of<
-                                concepts::InputRange,
-                                concepts::Invocable::result_t<Fun&, range_reference_t<Rng>>>()));
-                };
-
             public:
-                template<typename Rng, typename Fun>
-                using Concept = concepts::models<Concept_, Rng, Fun>;
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Fun)
+                    concept Concept,
+                        transform_fn::TransformableRange<Rng, Fun>() &&
+                        InputRange<invoke_result_t<Fun&, range_reference_t<Rng>>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())
-                auto operator()(Rng && rng, Fun fun) const
+                (auto) operator()(Rng &&rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    join(transform(static_cast<Rng&&>(rng), std::move(fun)))
+                    join(transform(static_cast<Rng &&>(rng), std::move(fun)))
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires !Concept<Rng, Fun>())
-                void operator()(Rng &&, Fun) const
+                (void) operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object on which view::for_each operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         CopyConstructible<Fun>(),
                         "The function passed to view::for_each must be CopyConstructible.");
-                    CONCEPT_ASSERT_MSG(
+                    CONCEPT_assert_msg(
                         Invocable<Fun&, range_reference_t<Rng>>(),
                         "The function passed to view::for_each must be callable with an argument "
                         "of the range's reference type.");
-                    CONCEPT_ASSERT_MSG(InputRange<concepts::Invocable::result_t<
+                    CONCEPT_assert_msg(InputRange<invoke_result_t<
                         Fun&, range_reference_t<Rng>>>(),
                         "To use view::for_each, the function F must return a model of the InputRange "
                         "concept.");
@@ -103,7 +97,7 @@ namespace ranges
         {
             CONCEPT_template(typename V)(
                 requires CopyConstructible<V>())
-            single_view<V> operator()(V v) const
+            (single_view<V>) operator()(V v) const
             {
                 return view::single(std::move(v));
             }
@@ -111,12 +105,12 @@ namespace ranges
         #ifndef RANGES_DOXYGEN_INVOKED
             CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
                 requires !(CopyConstructible<Val>() && Constructible<Val, Arg>()))
-            void operator()(Arg &&) const
+            (void) operator()(Arg &&) const
             {
-                CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
+                CONCEPT_assert_msg(CopyConstructible<Val>(),
                     "The object passed to yield must be a model of the CopyConstructible "
                     "concept; that is, it needs to be copy and move constructible, and destructible.");
-                CONCEPT_ASSERT_MSG(!CopyConstructible<Val>() || Constructible<Val, Arg>(),
+                CONCEPT_assert_msg(!CopyConstructible<Val>() || Constructible<Val, Arg>(),
                     "The object type passed to yield must be initializable from the "
                     "actual argument expression.");
             }
@@ -131,7 +125,7 @@ namespace ranges
         {
             CONCEPT_template(typename Rng)(
                 requires View<Rng>())
-            Rng operator()(Rng rng) const
+            (Rng) operator()(Rng rng) const
             {
                 return rng;
             }
@@ -174,10 +168,10 @@ namespace ranges
             requires Range<Rng>() && CopyConstructible<Fun>() &&
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
                 Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())
-        auto operator >>= (Rng && rng, Fun fun) ->
-            decltype(view::for_each(static_cast<Rng&&>(rng), std::move(fun)))
+        (auto) operator >>= (Rng &&rng, Fun fun) ->
+            decltype(view::for_each(static_cast<Rng &&>(rng), std::move(fun)))
         {
-            return view::for_each(static_cast<Rng&&>(rng), std::move(fun));
+            return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
         }
         /// \endcond
     }

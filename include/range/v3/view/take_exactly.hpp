@@ -154,14 +154,14 @@ namespace ranges
 
                 template<typename Rng>
                 static take_exactly_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, input_range_tag)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> n, input_range_tag)
                 {
-                    return {all(static_cast<Rng&&>(rng)), n};
+                    return {all(static_cast<Rng &&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
                     requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
                 (static iterator_range<iterator_t<Rng>>)
-                invoke_(Rng && rng, range_difference_type_t<Rng> n, random_access_range_tag)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> n, random_access_range_tag)
                 {
                     return {begin(rng), next(begin(rng), n)};
                 }
@@ -178,7 +178,7 @@ namespace ranges
                     requires !Integral<Int>())
                 (static detail::null_pipe) bind(take_exactly_fn, Int)
                 {
-                    CONCEPT_ASSERT_MSG(Integral<Int>(),
+                    CONCEPT_assert_msg(Integral<Int>(),
                         "The object passed to view::take must be a model of the Integral concept.");
                     return {};
                 }
@@ -187,10 +187,10 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>())
-                (auto) operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_exactly_fn::invoke_(static_cast<Rng&&>(rng), n, range_tag_of<Rng>{})
+                    take_exactly_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -198,10 +198,10 @@ namespace ranges
                     requires !InputRange<Rng>())
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<T>(),
+                    CONCEPT_assert_msg(InputRange<T>(),
                         "The object on which view::take operates must be a model of the InputRange "
                         "concept.");
-                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                    CONCEPT_assert_msg(Integral<T>(),
                         "The second argument to view::take must be a model of the Integral concept.");
                 }
             #endif

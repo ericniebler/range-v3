@@ -37,7 +37,7 @@ int main()
     CHECK(size(v2) == size(v));
     CHECK(is_sorted(v2));
     CHECK(!is_sorted(v));
-    ::models<concepts::Same>(v, v2);
+    ::models<SameConcept>(v, v2);
 
     v |= action::sort;
     CHECK(is_sorted(v));

@@ -34,22 +34,27 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename F, typename P = ident>
-        CONCEPT_alias(Transformable1,
-            InputIterator<I>() &&
-            WeaklyIncrementable<O>() &&
-            CopyConstructible<F>() &&
-            Writable<O, indirect_result_of_t<F&(projected<I, P>)>>());
+        CONCEPT_def
+        (
+            template(typename I, typename O, typename F, typename P = ident)
+            (concept Transformable1)(I, O, F, P),
+                InputIterator<I>() &&
+                WeaklyIncrementable<O>() &&
+                CopyConstructible<F>() &&
+                Writable<O, indirect_result_of_t<F&(projected<I, P>)>>()
+        );
 
         /// \ingroup group-concepts
-        template<typename I0, typename I1, typename O, typename F,
-            typename P0 = ident, typename P1 = ident>
-        CONCEPT_alias(Transformable2,
-            InputIterator<I0>() &&
-            InputIterator<I1>() &&
-            WeaklyIncrementable<O>() &&
-            CopyConstructible<F>() &&
-            Writable<O, indirect_result_of_t<F&(projected<I0, P0>, projected<I1, P1>)>>());
+        CONCEPT_def
+        (
+            template(typename I0, typename I1, typename O, typename F, typename P0 = ident, typename P1 = ident)
+            (concept Transformable2)(I0, I1, O, F, P0, P1),
+                InputIterator<I0>() &&
+                InputIterator<I1>() &&
+                WeaklyIncrementable<O>() &&
+                CopyConstructible<F>() &&
+                Writable<O, indirect_result_of_t<F&(projected<I0, P0>, projected<I1, P1>)>>()
+        );
 
         /// \addtogroup group-algorithms
         /// @{
@@ -129,7 +134,7 @@ namespace ranges
             operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
-                return (*this)(begin(rng0), end(rng0), static_cast<I1Ref&&>(begin1), unreachable{},
+                return (*this)(begin(rng0), end(rng0), static_cast<I1Ref &&>(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
         };

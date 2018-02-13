@@ -81,14 +81,14 @@ namespace ranges
         template<typename Val>
         istream_range<Val> istream(std::istream & sin)
         {
-            CONCEPT_ASSERT_MSG(DefaultConstructible<Val>(),
+            CONCEPT_assert_msg(DefaultConstructible<Val>(),
                "Only DefaultConstructible types are extractable from streams.");
             return {sin};
         }
     #else
         CONCEPT_template(typename Val)(
             requires DefaultConstructible<Val>())
-        struct istream_fn
+        (struct) istream_fn
         {
             istream_range<Val> operator()(std::istream & sin) const
             {

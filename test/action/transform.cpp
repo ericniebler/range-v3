@@ -25,7 +25,7 @@ int main()
     std::vector<int> v = view::ints(0,10);
 
     auto v0 = v | copy | action::transform([](int i){return i*i;});
-    ::models<concepts::Same>(v, v0);
+    ::models<SameConcept>(v, v0);
     ::check_equal(v0, {0,1,4,9,16,25,36,49,64,81});
 
     action::transform(v, [](int i){return i*i;});

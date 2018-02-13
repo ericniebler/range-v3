@@ -31,7 +31,7 @@ namespace test_weak_input
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CONCEPT_template(class J)(
-            requires ranges::ConvertibleTo<J, I>())
+            requires ranges::ConvertibleTo<J, I>())()
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
@@ -84,7 +84,7 @@ namespace test_random_access
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CONCEPT_template(class J)(
-            requires ranges::ConvertibleTo<J, I>())
+            requires ranges::ConvertibleTo<J, I>())()
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
@@ -201,7 +201,7 @@ namespace test_output
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CONCEPT_template(class J)(
-            requires ranges::ConvertibleTo<J, I>())
+            requires ranges::ConvertibleTo<J, I>())()
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         using value_type = ranges::value_type_t<I>;
@@ -273,7 +273,7 @@ namespace test_move_only
         zip1_cursor() = default;
         explicit zip1_cursor(I i) : it_(i) {}
         CONCEPT_template(class J)(
-            requires ranges::ConvertibleTo<J, I>())
+            requires ranges::ConvertibleTo<J, I>())()
         zip1_cursor(zip1_cursor<J> that) : it_(std::move(that.it_)) {}
 
         using value_type = std::tuple<ranges::value_type_t<I>>;
@@ -322,7 +322,7 @@ namespace test_forward_sized
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
         CONCEPT_template(class J)(
-            requires ranges::ConvertibleTo<J, I>())
+            requires ranges::ConvertibleTo<J, I>())()
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }

@@ -61,7 +61,7 @@ namespace ranges
 
                 CONCEPT_template(typename I)(
                     requires !Invocable<Pred const&, reference_t<I>>())
-                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
+                (common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)
                 operator()(I const &i)
                 {
                     auto &&x = *i;
@@ -71,7 +71,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename I)(
                     requires Invocable<Pred const&, reference_t<I>>())
-                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
+                (common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)
                 operator()(I const &i) const
                 {
                     auto &&x = *i;
@@ -82,7 +82,7 @@ namespace ranges
 
                 CONCEPT_template(typename I)(
                     requires !Invocable<Pred const&, rvalue_reference_t<I>>())
-                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
+                (common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)
                 operator()(move_tag, I const &i)
                 {
                     auto &&x = iter_move(i);
@@ -92,7 +92,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename I)(
                     requires Invocable<Pred const&, rvalue_reference_t<I>>())
-                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
+                (common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);
@@ -120,43 +120,46 @@ namespace ranges
                         protect(std::move(pred)), std::move(new_value)))
                 )
             public:
-                template<typename Rng, typename Pred, typename Val>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng>() &&
-                    IndirectPredicate<Pred, iterator_t<Rng>>() &&
-                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_type_t<Rng>>() &&
-                    CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>() &&
-                    CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Pred, typename Val)
+                    concept Concept,
+                        InputRange<Rng>() &&
+                        IndirectPredicate<Pred, iterator_t<Rng>>() &&
+                        Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_type_t<Rng>>() &&
+                        CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>() &&
+                        CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Pred, typename Val)(
                     requires Concept<Rng, Pred, Val>())
-                replace_if_view<all_t<Rng>, Pred, Val>
-                operator()(Rng && rng, Pred pred, Val new_value) const
+                (replace_if_view<all_t<Rng>, Pred, Val>)
+                operator()(Rng &&rng, Pred pred, Val new_value) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), {std::move(pred), std::move(new_value)}};
+                    return {all(static_cast<Rng &&>(rng)), {std::move(pred), std::move(new_value)}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 CONCEPT_template(typename Rng, typename Pred, typename Val)(
                     requires !Concept<Rng, Pred, Val>())
-                void operator()(Rng &&, Pred, Val) const
+                (void) operator()(Rng &&, Pred, Val) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object on which view::replace_if operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>(),
                         "The function passed to view::replace_if must be callable with "
                         "objects of the range's common reference type, and the result must be "
                         "convertible to bool.");
-                    CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                    CONCEPT_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
                             range_value_type_t<Rng>>(),
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val const &>,
+                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
                             range_reference_t<Rng>>(),
                         "The value passed to view::replace must share a reference with the "
                         "range's reference type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val const &>,
+                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
                             range_rvalue_reference_t<Rng>>(),
                         "The value passed to view::replace must share a reference with the "
                         "range's rvalue reference type.");

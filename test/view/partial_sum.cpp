@@ -28,9 +28,9 @@ int main()
     auto && rng = rgi | view::partial_sum();
     has_type<int &>(*begin(rgi));
     has_type<int>(*begin(rng));
-    models<concepts::SizedView>(aux::copy(rng));
-    models<concepts::ForwardView>(aux::copy(rng));
-    models_not<concepts::BidirectionalView>(aux::copy(rng));
+    models<SizedViewConcept>(aux::copy(rng));
+    models<ForwardViewConcept>(aux::copy(rng));
+    models_not<BidirectionalViewConcept>(aux::copy(rng));
     ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
 
     auto it = begin(rng);

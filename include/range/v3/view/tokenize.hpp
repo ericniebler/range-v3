@@ -66,7 +66,7 @@ namespace ranges
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
             CONCEPT_requires(Range<Rng const &>())
-            iterator begin() const
+            (iterator) begin() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
@@ -90,7 +90,7 @@ namespace ranges
             {
                 template<typename Rng, typename Regex>
                 tokenize_view<all_t<Rng>, detail::decay_t<Regex>, int>
-                operator()(Rng && rng, Regex && rex, int sub = 0,
+                operator()(Rng &&rng, Regex &&rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
@@ -99,13 +99,13 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex), sub,
+                    return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex), sub,
                             flags};
                 }
 
                 template<typename Rng, typename Regex>
                 tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::vector<int>>
-                operator()(Rng && rng, Regex && rex, std::vector<int> subs,
+                operator()(Rng &&rng, Regex &&rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
@@ -114,13 +114,13 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
+                    return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex),
                             std::move(subs), flags};
                 }
 
                 template<typename Rng, typename Regex>
                 tokenize_view<all_t<Rng>, detail::decay_t<Regex>, std::initializer_list<int>>
-                operator()(Rng && rng, Regex && rex,
+                operator()(Rng &&rng, Regex &&rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
@@ -129,12 +129,12 @@ namespace ranges
                     static_assert(std::is_same<range_value_type_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {all(static_cast<Rng&&>(rng)), static_cast<Regex&&>(rex),
+                    return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex),
                             std::move(subs), flags};
                 }
 
                 template<typename Regex>
-                auto operator()(Regex && rex, int sub = 0,
+                auto operator()(Regex &&rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
@@ -145,7 +145,7 @@ namespace ranges
                 }
 
                 template<typename Regex>
-                auto operator()(Regex && rex, std::vector<int> subs,
+                auto operator()(Regex &&rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
@@ -156,7 +156,7 @@ namespace ranges
                 }
 
                 template<typename Regex>
-                auto operator()(Regex && rex,
+                auto operator()(Regex &&rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
@@ -179,29 +179,29 @@ namespace ranges
             public:
                 template<typename ...Args>
                 auto operator()(Args &&...args) const
-                    -> decltype(base()(static_cast<Args&&>(args)...))
+                    -> decltype(base()(static_cast<Args &&>(args)...))
                 {
-                    return base()(static_cast<Args&&>(args)...);
+                    return base()(static_cast<Args &&>(args)...);
                 }
 
                 template<typename Arg0, typename ...Args>
-                auto operator()(Arg0 && arg0, std::initializer_list<int> subs,
+                auto operator()(Arg0 &&arg0, std::initializer_list<int> subs,
                     Args &&...args) const
-                    -> decltype(base()(static_cast<Arg0&&>(arg0), std::move(subs),
-                                       static_cast<Args&&>(args)...))
+                    -> decltype(base()(static_cast<Arg0 &&>(arg0), std::move(subs),
+                                       static_cast<Args &&>(args)...))
                 {
-                    return base()(static_cast<Arg0&&>(arg0), std::move(subs),
-                                  static_cast<Args&&>(args)...);
+                    return base()(static_cast<Arg0 &&>(arg0), std::move(subs),
+                                  static_cast<Args &&>(args)...);
                 }
 
                 template<typename Arg0, typename Arg1, typename ...Args>
-                auto operator()(Arg0 && arg0, Arg1 && arg1, std::initializer_list<int> subs,
+                auto operator()(Arg0 &&arg0, Arg1 &&arg1, std::initializer_list<int> subs,
                     Args &&...args) const
-                    -> decltype(base()(static_cast<Arg0&&>(arg0), static_cast<Arg1&&>(arg1),
-                                       std::move(subs), static_cast<Args&&>(args)...))
+                    -> decltype(base()(static_cast<Arg0 &&>(arg0), static_cast<Arg1 &&>(arg1),
+                                       std::move(subs), static_cast<Args &&>(args)...))
                 {
-                    return base()(static_cast<Arg0&&>(arg0), static_cast<Arg1&&>(arg1),
-                                  std::move(subs), static_cast<Args&&>(args)...);
+                    return base()(static_cast<Arg0 &&>(arg0), static_cast<Arg1 &&>(arg1),
+                                  std::move(subs), static_cast<Args &&>(args)...);
                 }
             };
 

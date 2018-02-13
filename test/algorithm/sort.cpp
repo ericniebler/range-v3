@@ -225,7 +225,7 @@ namespace
     };
     CONCEPT_assert(ranges::DefaultConstructible<Int>());
     CONCEPT_assert(ranges::Movable<Int>());
-    CONCEPT_assert(ranges::TotallyOrdered<Int>());
+    CONCEPT_assert(ranges::StrictTotallyOrdered<Int>());
 }
 
 int main()

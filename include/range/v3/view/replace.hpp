@@ -90,7 +90,7 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
                     requires Same<V1, V2>())
-                static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
+                (static auto) bind(replace_fn replace, Val1 old_value, Val2 new_value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(replace, std::placeholders::_1,
@@ -102,59 +102,60 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
                     requires !Same<V1, V2>())
-                static detail::null_pipe bind(replace_fn, Val1, Val2)
+                (static detail::null_pipe) bind(replace_fn, Val1, Val2)
                 {
-                    CONCEPT_ASSERT_MSG(Same<V1, V2>(),
+                    CONCEPT_assert_msg(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
                     return {};
                 }
             #endif
             public:
-                template<typename Rng, typename Val1, typename Val2,
-                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
-                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng>() &&
-                    Same<V1, V2>() &&
-                    EqualityComparableWith<V1, range_value_type_t<Rng>>() &&
-                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>() &&
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>() &&
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Val1, typename Val2)
+                    concept Concept,
+                        InputRange<Rng>() &&
+                        Same<detail::decay_t<unwrap_reference_t<Val1>>, detail::decay_t<unwrap_reference_t<Val2>>>() &&
+                        EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_type_t<Rng>>() &&
+                        Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>>() &&
+                        CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>() &&
+                        CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Val1, typename Val2)(
                     requires Concept<Rng, Val1, Val2>())
-                replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
-                operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
+                (replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)
+                operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const
                 {
-                    return {all(static_cast<Rng&&>(rng)),
-                            {static_cast<Val1&&>(old_value),
-                             static_cast<Val2&&>(new_value)}};
+                    return {all(static_cast<Rng &&>(rng)),
+                            {static_cast<Val1 &&>(old_value),
+                             static_cast<Val2 &&>(new_value)}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 CONCEPT_template(typename Rng, typename Val1, typename Val2)(
                     requires !Concept<Rng, Val1, Val2>())
-                void operator()(Rng &&, Val1 &&, Val2 &&) const
+                (void) operator()(Rng &&, Val1 &&, Val2 &&) const
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
                     using V2 = detail::decay_t<unwrap_reference_t<Val2>>;
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The first argument to view::replace must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(Same<V1, V2>(),
+                    CONCEPT_assert_msg(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
-                    CONCEPT_ASSERT_MSG(EqualityComparableWith<V1, range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(EqualityComparableWith<V1, range_value_type_t<Rng>>(),
                         "The values passed to view::replace must be EqualityComparableWith "
                         "to the range's value type.");
-                    CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
+                    CONCEPT_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
                             range_value_type_t<Rng>>(),
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val2 const &>,
+                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val2 const &>,
                             range_reference_t<Rng>>(),
                         "The value passed to view::replace must share a reference with the "
                         "range's reference type.");
-                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val2 const &>,
+                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val2 const &>,
                             range_rvalue_reference_t<Rng>>(),
                         "The value passed to view::replace must share a reference with the "
                         "range's rvalue reference type.");

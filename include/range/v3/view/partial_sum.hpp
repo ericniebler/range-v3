@@ -94,14 +94,14 @@ namespace ranges
             CONCEPT_requires(Range<Rng const>() &&
                 Invocable<Fun const&, range_common_reference_t<Rng>,
                     range_common_reference_t<Rng>>())
-            adaptor<true> begin_adaptor() const
+            (adaptor<true>) begin_adaptor() const
             {
                 return {*this};
             }
             CONCEPT_requires(Range<Rng const>() &&
                 Invocable<Fun const&, range_common_reference_t<Rng>,
                     range_common_reference_t<Rng>>())
-            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
+            (meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>) end_adaptor() const
             {
                 return {*this};
             }
@@ -112,7 +112,7 @@ namespace ranges
               , fun_(std::move(fun))
             {}
             CONCEPT_requires(SizedRange<Rng>())
-            range_size_type_t<Rng> size() const
+            (range_size_type_t<Rng>) size() const
             {
                 return ranges::size(this->base());
             }
@@ -132,35 +132,38 @@ namespace ranges
                         protect(std::move(fun))))
                 )
             public:
-                template<typename Rng, typename Fun>
-                CONCEPT_alias(Concept,
-                    InputRange<Rng>() &&
-                    IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>() &&
-                    ConvertibleTo<
-                        result_of_t<Fun&(
-                            range_common_reference_t<Rng> &&,
-                            range_common_reference_t<Rng> &&)>,
-                        range_value_type_t<Rng>>());
+                CONCEPT_def
+                (
+                    template(typename Rng, typename Fun)
+                    concept Concept,
+                        InputRange<Rng>() &&
+                        IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>() &&
+                        ConvertibleTo<
+                            result_of_t<Fun&(
+                                range_common_reference_t<Rng> &&,
+                                range_common_reference_t<Rng> &&)>,
+                            range_value_type_t<Rng>>()
+                );
 
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires Concept<Rng, Fun>())
-                partial_sum_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
+                (partial_sum_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
                 {
-                    return {all(static_cast<Rng&&>(rng)), std::move(fun)};
+                    return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires !Concept<Rng, Fun>())
-                void operator()(Rng &&, Fun) const
+                (void) operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<Fun, iterator_t<Rng>,
+                    CONCEPT_assert_msg(IndirectInvocable<Fun, iterator_t<Rng>,
                         iterator_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<
+                    CONCEPT_assert_msg(ConvertibleTo<
                         result_of_t<Fun&(range_common_reference_t<Rng> &&,
                             range_common_reference_t<Rng> &&)>,
                         range_value_type_t<Rng>>(),

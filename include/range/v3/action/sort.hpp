@@ -44,13 +44,6 @@ namespace ranges
                         protect(std::move(proj)))
                 )
 
-                struct SortableConcept
-                {
-                    CONCEPT_template(typename Rng, typename C, typename P)(
-                        requires ForwardRange<Rng>() && Sortable<iterator_t<Rng>, C, P>())
-                    void requires_();
-                };
-
             public:
                 CONCEPT_def
                 (
@@ -61,10 +54,10 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires Sortable<Rng, C, P>())
-                (Rng) operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+                (Rng) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -72,18 +65,18 @@ namespace ranges
                     requires !Sortable<Rng, C, P>())
                 (void) operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::sort operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(IndirectInvocable<P, I>(),
+                    CONCEPT_assert_msg(IndirectInvocable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectRelation<C, projected<I, P>>(),
+                    CONCEPT_assert_msg(IndirectRelation<C, projected<I, P>>(),
                         "The comparator passed to action::sort must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");
-                    CONCEPT_ASSERT_MSG(Permutable<I>(),
+                    CONCEPT_assert_msg(Permutable<I>(),
                         "The iterator type of the range passed to action::sort must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");

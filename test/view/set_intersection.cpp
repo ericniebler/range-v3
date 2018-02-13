@@ -48,9 +48,9 @@ int main()
     {
         auto res = view::set_intersection(i1_finite, i2_finite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -69,9 +69,9 @@ int main()
     {
         auto res = view::set_intersection(i1_infinite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -88,9 +88,9 @@ int main()
     {
         auto res = view::set_intersection(i1_finite, i2_infinite);
 
-        models<concepts::ForwardView>(aux::copy(res));
-        models_not<concepts::RandomAccessView>(aux::copy(res));
-        models_not<concepts::BoundedView>(aux::copy(res));
+        models<ForwardViewConcept>(aux::copy(res));
+        models_not<RandomAccessViewConcept>(aux::copy(res));
+        models_not<BoundedViewConcept>(aux::copy(res));
 
         using R = decltype(res);
 
@@ -104,9 +104,9 @@ int main()
 
         auto res2 = view::set_intersection(i1_infinite, i2_finite);
 
-        models<concepts::ForwardView>(aux::copy(res2));
-        models_not<concepts::RandomAccessView>(aux::copy(res2));
-        models_not<concepts::BoundedView>(aux::copy(res2));
+        models<ForwardViewConcept>(aux::copy(res2));
+        models_not<RandomAccessViewConcept>(aux::copy(res2));
+        models_not<BoundedViewConcept>(aux::copy(res2));
 
         using R2 = decltype(res2);
 

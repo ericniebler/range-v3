@@ -39,10 +39,13 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C = ordered_less, typename P = ident>
-        CONCEPT_alias(IsHeapable,
-            RandomAccessIterator<I>() &&
-            IndirectRelation<C, projected<I, P>>());
+        CONCEPT_def
+        (
+            template(typename I, typename C = ordered_less, typename P = ident)
+            (concept IsHeapable)(I, C, P),
+                RandomAccessIterator<I>() &&
+                IndirectRelation<C, projected<I, P>>()
+        );
 
         /// \cond
         namespace detail

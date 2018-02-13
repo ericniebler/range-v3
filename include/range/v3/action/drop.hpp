@@ -44,29 +44,22 @@ namespace ranges
                     std::bind(drop, std::placeholders::_1, n)
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T,
-                        typename I = iterator_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>()
-                        ));
-                };
+                CONCEPT_def
+                (
+                    template(typename Rng, typename T)
+                    concept Concept,
+                        ForwardRange<Rng>() &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>() &&
+                        ConvertibleTo<T, range_difference_type_t<Rng>>()
+                );
 
-                template<typename Rng, typename T>
-                using Concept = concepts::models<ConceptImpl, Rng, T>;
-
-                CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
-                    requires Concept<Rng, D>())
-                (Rng) operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                CONCEPT_template(typename Rng)(
+                    requires Concept<Rng, range_difference_type_t<Rng>>())
+                (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -74,13 +67,13 @@ namespace ranges
                     requires !Concept<Rng, T>())
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::drop operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>(),
                         "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<Rng>>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>(),
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

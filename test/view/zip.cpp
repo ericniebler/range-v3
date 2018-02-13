@@ -44,8 +44,8 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         using Rng = decltype((rng));
-        ::models_not<concepts::BoundedView>(aux::copy(rng));
-        ::models_not<concepts::SizedView>(aux::copy(rng));
+        ::models_not<BoundedViewConcept>(aux::copy(rng));
+        ::models_not<SizedViewConcept>(aux::copy(rng));
         CONCEPT_assert(Same<
             range_value_type_t<Rng>,
             std::tuple<int, std::string, std::string>>());
@@ -57,8 +57,8 @@ int main()
             common_tuple<int &&, std::string const &&, std::string &&>>());
         CONCEPT_assert(ConvertibleTo<range_value_type_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
-        ::models<concepts::InputIterator>(begin(rng));
-        ::models_not<concepts::ForwardIterator>(begin(rng));
+        ::models<InputIteratorConcept>(begin(rng));
+        ::models_not<ForwardIteratorConcept>(begin(rng));
         auto expected = to_vector(rng);
         ::check_equal(expected, {V{0, "hello", "john"},
                                  V{1, "goodbye", "paul"},
@@ -71,11 +71,11 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
-        ::models<concepts::View>(aux::copy(rng));
-        ::models_not<concepts::SizedView>(aux::copy(rng));
-        ::models_not<concepts::BoundedView>(aux::copy(rng));
-        ::models<concepts::InputIterator>(begin(rng));
-        ::models_not<concepts::ForwardIterator>(begin(rng));
+        ::models<ViewConcept>(aux::copy(rng));
+        ::models_not<SizedViewConcept>(aux::copy(rng));
+        ::models_not<BoundedViewConcept>(aux::copy(rng));
+        ::models<InputIteratorConcept>(begin(rng));
+        ::models_not<ForwardIteratorConcept>(begin(rng));
         std::vector<V> expected;
         copy(rng, ranges::back_inserter(expected));
         ::check_equal(expected, {V{0, "hello", "john"},
@@ -87,9 +87,9 @@ int main()
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
     static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
-    ::models<concepts::BoundedView>(aux::copy(rnd_rng));
-    ::models<concepts::SizedView>(aux::copy(rnd_rng));
-    ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
+    ::models<BoundedViewConcept>(aux::copy(rnd_rng));
+    ::models<SizedViewConcept>(aux::copy(rnd_rng));
+    ::models<RandomAccessIteratorConcept>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);
     CHECK(std::get<1>(*tmp) == "goodbye");
@@ -126,7 +126,7 @@ int main()
         auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
-        ::models<concepts::RandomAccessRange>(rng);
+        ::models<RandomAccessRangeConcept>(rng);
         std::vector<std::pair<MoveOnlyString, MoveOnlyString>> expected;
         move(rng, ranges::back_inserter(expected));
         ::check_equal(expected | view::keys, {"a","b","c"});
@@ -210,7 +210,7 @@ int main()
         std::unique_ptr<int> rg1[10], rg2[10];
         auto rg3 = rg2 | view::take_while([](std::unique_ptr<int> &){return true;});
         auto x = view::zip(rg1, rg3);
-        ::models_not<concepts::BoundedRange>(x);
+        ::models_not<BoundedRangeConcept>(x);
         auto y = x | view::bounded;
         std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(y.begin());
         auto it = x.begin();

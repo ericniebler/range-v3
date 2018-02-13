@@ -1098,9 +1098,9 @@ namespace ranges
                 template<typename I>
                 constexpr
                 auto operator()(I i) const ->
-                    decltype(uncounted((I&&)i))
+                    decltype(uncounted((I &&)i))
                 {
-                    return uncounted((I&&)i);
+                    return uncounted((I &&)i);
                 }
             };
 
@@ -1109,9 +1109,9 @@ namespace ranges
                 template<typename I, typename J>
                 constexpr
                 auto operator()(I i, J j, difference_type_t<J> n) const ->
-                    decltype(recounted((I&&)i, (J&&)j, n))
+                    decltype(recounted((I &&)i, (J &&)j, n))
                 {
-                    return recounted((I&&)i, (J&&)j, n);
+                    return recounted((I &&)i, (J &&)j, n);
                 }
             };
         }

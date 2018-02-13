@@ -47,21 +47,21 @@ namespace ranges
 
                 CONCEPT_template(typename Rng)(
                     requires Reversible<Rng>())
-                (Rng) operator()(Rng && rng) const
+                (Rng) operator()(Rng &&rng) const
                 {
                     ranges::reverse(rng);
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                         requires !Reversible<Rng>())
+                    requires !Reversible<Rng>())
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),
+                    CONCEPT_assert_msg(BidirectionalRange<Rng>(),
                         "The object on which action::reverse operates must be a model of the "
                         "BidirectionalRange concept.");
-                    CONCEPT_ASSERT_MSG(Permutable<iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(Permutable<iterator_t<Rng>>(),
                         "The iterator type of the range passed to action::reverse must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");

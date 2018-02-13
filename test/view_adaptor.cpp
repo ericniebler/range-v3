@@ -52,12 +52,12 @@ private:
             return *ranges::prev(it);
         }
         CONCEPT_requires(ranges::RandomAccessRange<BidiRange>())
-        void advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
+        (void) advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
         {
             it -= n;
         }
         CONCEPT_requires(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
-        ranges::range_difference_type_t<BidiRange>
+        (ranges::range_difference_type_t<BidiRange>)
         distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {
             return here - there;
@@ -88,23 +88,23 @@ int main()
     using namespace ranges;
     std::vector<int> v{1, 2, 3, 4};
     my_reverse_view<std::vector<int>&> retro{v};
-    ::models<concepts::BoundedView>(aux::copy(retro));
-    ::models<concepts::RandomAccessIterator>(retro.begin());
+    ::models<BoundedViewConcept>(aux::copy(retro));
+    ::models<RandomAccessIteratorConcept>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
-    ::models<concepts::BoundedView>(aux::copy(retro2));
-    ::models<concepts::BidirectionalIterator>(retro2.begin());
-    ::models_not<concepts::RandomAccessIterator>(retro2.begin());
+    ::models<BoundedViewConcept>(aux::copy(retro2));
+    ::models<BidirectionalIteratorConcept>(retro2.begin());
+    ::models_not<RandomAccessIteratorConcept>(retro2.begin());
     ::check_equal(retro2, {4, 3, 2, 1});
 
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
     my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
-    ::models<concepts::View>(aux::copy(r));
-    ::models_not<concepts::BoundedView>(aux::copy(r));
-    ::models<concepts::InputIterator>(r.begin());
-    ::models_not<concepts::ForwardIterator>(r.begin());
+    ::models<ViewConcept>(aux::copy(r));
+    ::models_not<BoundedViewConcept>(aux::copy(r));
+    ::models<InputIteratorConcept>(r.begin());
+    ::models_not<ForwardIteratorConcept>(r.begin());
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
 
     return ::test_result();

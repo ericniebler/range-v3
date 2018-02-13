@@ -34,16 +34,13 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            struct AdjacentFilterConcept
-            {
-                CONCEPT_template(typename Rng, typename Pred)(
-                    requires ForwardRange<Rng>() &&
-                        IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>())
-                void requires_();
-            };
-
-            template<typename Rng, typename Pred>
-            using AdjacentFilter = concepts::models<AdjacentFilterConcept, Rng, Pred>;
+            CONCEPT_def
+            (
+                template(typename Rng, typename Pred)
+                concept AdjacentFilter,
+                    ForwardRange<Rng>() &&
+                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>()
+            );
         }
         /// \endcond
 
@@ -84,7 +81,7 @@ namespace ranges
                             break;
                 }
                 CONCEPT_requires(BidirectionalRange<Base>())
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Base> &it) const
+                (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Base> &it) const
                 {
                     auto const first = ranges::begin(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -101,22 +98,22 @@ namespace ranges
                 void distance_to() = delete;
             };
             CONCEPT_requires(const_iterable)
-            constexpr adaptor begin_adaptor() const noexcept
+            (constexpr adaptor) begin_adaptor() const noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(const_iterable)
-            constexpr adaptor end_adaptor() const noexcept
+            (constexpr adaptor) end_adaptor() const noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(!const_iterable)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(!const_iterable)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
+            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() noexcept
             {
                 return {*this};
             }
@@ -148,7 +145,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires detail::AdjacentFilter<Rng, Pred>())
-                RANGES_CXX14_CONSTEXPR auto operator()(Rng && rng, Pred pred) const
+                (RANGES_CXX14_CONSTEXPR auto) operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     adjacent_filter_view<all_t<Rng>, Pred>{
@@ -157,11 +154,11 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires !detail::AdjacentFilter<Rng, Pred>())
-                void operator()(Rng &&, Pred) const
+                (void) operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_ASSERT_MSG(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>(),
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

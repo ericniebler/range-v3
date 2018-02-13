@@ -38,14 +38,14 @@ struct check_equal_fn
 
     CONCEPT_template(typename T, typename U)(
         requires !BothRanges<T, U>())
-    (void) operator()(T && actual, U && expected) const
+    (void) operator()(T &&actual, U &&expected) const
     {
         CHECK((T &&) actual == (U &&) expected);
     }
 
     CONCEPT_template(typename Rng1, typename Rng2)(
         requires BothRanges<Rng1, Rng2>())
-    (void) operator()(Rng1 && actual, Rng2 && expected) const
+    (void) operator()(Rng1 &&actual, Rng2 &&expected) const
     {
         auto begin0 = ranges::begin(actual);
         auto end0 = ranges::end(actual);
@@ -59,7 +59,7 @@ struct check_equal_fn
 
     CONCEPT_template(typename Rng, typename Val)(
         requires ranges::InputRange<Rng>())
-    (void) operator()(Rng && actual, std::initializer_list<Val> && expected) const
+    (void) operator()(Rng &&actual, std::initializer_list<Val> && expected) const
     {
         (*this)(actual, expected);
     }
@@ -86,7 +86,7 @@ void models_not(Types &&...)
 }
 
 template<typename T>
-T & as_lvalue(T && t)
+T & as_lvalue(T &&t)
 {
     return t;
 }

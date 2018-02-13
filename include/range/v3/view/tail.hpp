@@ -61,7 +61,7 @@ namespace ranges
 
             tail_view() = default;
             tail_view(Rng rng)
-              : rng_(static_cast<Rng&&>(rng))
+              : rng_(static_cast<Rng &&>(rng))
             {
                 CONCEPT_assert(InputRange<Rng>());
             }
@@ -70,7 +70,7 @@ namespace ranges
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
             CONCEPT_requires(Range<Rng const>())
-            iterator begin() const
+            (iterator) begin() const
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
@@ -79,12 +79,12 @@ namespace ranges
                 return ranges::end(rng_);
             }
             CONCEPT_requires(Range<Rng const>())
-            sentinel end() const
+            (sentinel) end() const
             {
                 return ranges::end(rng_);
             }
             CONCEPT_requires(SizedView<Rng>())
-            constexpr size_type_ size() const
+            (constexpr size_type_) size() const
             {
                 return range_cardinality<Rng>::value >= 0
                   ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
@@ -106,18 +106,18 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>())
-                meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>
-                operator()(Rng && rng) const
+                (meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>)
+                operator()(Rng &&rng) const
                 {
-                    return all(static_cast<Rng&&>(rng));
+                    return all(static_cast<Rng &&>(rng));
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires !InputRange<Rng>())
-                void operator()(Rng &&) const
+                (void) operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object on which view::tail is to operate must be a model of the "
                         "InputRange concept.");
                 }

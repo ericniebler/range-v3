@@ -38,51 +38,44 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>())
-                static auto bind(take_fn take, Int n)
+                (static auto) bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(take, std::placeholders::_1, n)
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T,
-                        typename I = iterator_t<Rng>,
-                        typename S = sentinel_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>()
-                        ));
-                };
+                CONCEPT_def
+                (
+                    template(typename Rng, typename T)
+                    concept Concept,
+                        ForwardRange<Rng>() &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>() &&
+                        ConvertibleTo<T, range_difference_type_t<Rng>>()
+                );
 
-                template<typename Rng, typename T>
-                using Concept = concepts::models<ConceptImpl, Rng, T>;
-
-                CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
+                CONCEPT_template(typename Rng, typename D)(
                     requires Concept<Rng, D>())
-                Rng operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                (Rng) operator()(Rng &&rng, D &&d) const
                 {
+                    range_difference_type_t<Rng> n = d;
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires !Concept<Rng, T>())
-                void operator()(Rng &&, T &&) const
+                (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>(),
                         "The object on which action::take operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
-                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>(),
                         "The object on which action::take operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_type_t<Rng>>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>(),
                         "The stride argument to action::take must be convertible to the range's "
                         "difference type.");
                 }

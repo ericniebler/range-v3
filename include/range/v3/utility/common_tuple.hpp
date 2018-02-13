@@ -29,9 +29,9 @@ namespace ranges
         namespace detail
         {
             template<typename ...Us, typename Tup, std::size_t...Is>
-            std::tuple<Us...> to_std_tuple(Tup && tup, meta::index_sequence<Is...>)
+            std::tuple<Us...> to_std_tuple(Tup &&tup, meta::index_sequence<Is...>)
             {
-                return std::tuple<Us...>{std::get<Is>(static_cast<Tup&&>(tup))...};
+                return std::tuple<Us...>{std::get<Is>(static_cast<Tup &&>(tup))...};
             }
         }
         /// \endcond
@@ -42,15 +42,15 @@ namespace ranges
         {
         private:
             template<typename That, std::size_t...Is>
-            common_tuple(That && that, meta::index_sequence<Is...>)
-              : std::tuple<Ts...>{std::get<Is>(static_cast<That&&>(that))...}
+            common_tuple(That &&that, meta::index_sequence<Is...>)
+              : std::tuple<Ts...>{std::get<Is>(static_cast<That &&>(that))...}
             {}
             struct element_assign_
             {
                 template<typename T, typename U>
                 int operator()(T &t, U &&u) const
                 {
-                    t = static_cast<U&&>(u);
+                    t = static_cast<U &&>(u);
                     return 0;
                 }
             };
@@ -65,7 +65,7 @@ namespace ranges
                 requires meta::and_c<(bool) Constructible<Ts, Us>()...>::value)
             (explicit) common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
-              : std::tuple<Ts...>{static_cast<Us&&>(us)...}
+              : std::tuple<Ts...>{static_cast<Us &&>(us)...}
             {}
             CONCEPT_template(typename...Us)(
                 requires meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)()
@@ -209,7 +209,7 @@ namespace ranges
                         unwrap_reference_t<Args>>::value...>::value)
             {
                 return common_tuple<bind_element_t<Args>...>{
-                    unwrap_reference(static_cast<Args&&>(args))...};
+                    unwrap_reference(static_cast<Args &&>(args))...};
             }
         };
 
@@ -239,7 +239,7 @@ namespace ranges
             common_pair(F2 &&f2, S2 &&s2)
                 noexcept(std::is_nothrow_constructible<F, F2>::value &&
                     std::is_nothrow_constructible<S, S2>::value)
-              : std::pair<F, S>{static_cast<F2&&>(f2), static_cast<S2&&>(s2)}
+              : std::pair<F, S>{static_cast<F2 &&>(f2), static_cast<S2 &&>(s2)}
             {}
             CONCEPT_template(typename F2, typename S2)(
                 requires Constructible<F, F2 &>() && Constructible<S, S2 &>())()
@@ -316,8 +316,8 @@ namespace ranges
                 noexcept(std::is_nothrow_assignable<F &, F2>::value &&
                          std::is_nothrow_assignable<S &, S2>::value)
             {
-                this->first = static_cast<F2&&>(that.first);
-                this->second = static_cast<S2&&>(that.second);
+                this->first = static_cast<F2 &&>(that.first);
+                this->second = static_cast<S2 &&>(that.second);
                 return *this;
             }
 
@@ -347,8 +347,8 @@ namespace ranges
                 noexcept(std::is_nothrow_assignable<F const &, F2 &&>::value &&
                          std::is_nothrow_assignable<S const &, S2 &&>::value)
             {
-                this->first = static_cast<F2&&>(that.first);
-                this->second = static_cast<S2&&>(that.second);
+                this->first = static_cast<F2 &&>(that.first);
+                this->second = static_cast<S2 &&>(that.second);
                 return *this;
             }
         };
@@ -421,13 +421,13 @@ namespace ranges
             template<typename First, typename Second,
                 typename F = bind_element_t<First>,
                 typename S = bind_element_t<Second>>
-            common_pair<F, S> operator()(First && f, Second && s) const
+            common_pair<F, S> operator()(First &&f, Second &&s) const
                 noexcept(std::is_nothrow_constructible<F, unwrap_reference_t<First>>::value &&
                     std::is_nothrow_constructible<F, unwrap_reference_t<Second>>::value)
             {
                 return {
-                    unwrap_reference(static_cast<First&&>(f)),
-                    unwrap_reference(static_cast<Second&&>(s))};
+                    unwrap_reference(static_cast<First &&>(f)),
+                    unwrap_reference(static_cast<Second &&>(s))};
             }
         };
 

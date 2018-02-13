@@ -30,19 +30,24 @@ namespace ranges
         namespace adl_push_front_detail
         {
             CONCEPT_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont>() && Constructible<range_value_type_t<Cont>, T>())
-            (auto) push_front(Cont && cont, T && t) ->
-                decltype((void)unwrap_reference(cont).push_front(static_cast<T&&>(t)))
+                requires LvalueContainerLike<Cont>() &&
+                    Constructible<range_value_type_t<Cont>, T>())
+            (decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
+                push_front(std::declval<T>()))))
+            push_front(Cont &&cont, T &&t)
             {
-                unwrap_reference(cont).push_front(static_cast<T&&>(t));
+                unwrap_reference(cont).push_front(static_cast<T &&>(t));
             }
 
             CONCEPT_template(typename Cont, typename Rng)(
                 requires LvalueContainerLike<Cont>() && Range<Rng>())
-            (auto) push_front(Cont && cont, Rng && rng) ->
-                decltype((void)ranges::insert(cont, begin(cont), static_cast<Rng&&>(rng)))
+            (decltype(static_cast<void>(ranges::insert(
+                std::declval<Cont &>(),
+                std::declval<iterator_t<Cont>>(),
+                std::declval<Rng>()))))
+            push_front(Cont &&cont, Rng &&rng)
             {
-                ranges::insert(cont, begin(cont), static_cast<Rng&&>(rng));
+                ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
             }
 
             struct push_front_fn
@@ -50,34 +55,31 @@ namespace ranges
             private:
                 friend action::action_access;
                 template<typename T>
-                static auto bind(push_front_fn push_front, T && val)
+                static auto bind(push_front_fn push_front, T &&val)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(push_front, std::placeholders::_1, bind_forward<T>(val))
                 )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T>
-                    auto requires_(Rng &&rng, T &&t) -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::InputRange, Rng>(),
-                            concepts::is_true(meta::or_<
-                                Constructible<range_value_type_t<Rng>, T>,
-                                Range<T>>()),
+                CONCEPT_def
+                (
+                    template(typename Rng, typename T)
+                    concept Concept,
+                        requires (Rng &&rng, T &&t)
+                        {
                             ((void)push_front(rng, (T &&) t), 42)
-                        ));
-                };
-
-                template<typename Rng, typename Fun>
-                using Concept = concepts::models<ConceptImpl, Rng, Fun>;
+                        } &&
+                        InputRange<Rng>() &&
+                            (Constructible<range_value_type_t<Rng>, T>() ||
+                            Range<T>())
+                );
 
                 CONCEPT_template(typename Rng, typename T)(
                     requires Concept<Rng, T>())
-                (Rng) operator()(Rng && rng, T && t) const
+                (Rng) operator()(Rng &&rng, T &&t) const
                 {
-                    push_front(rng, static_cast<T&&>(t));
-                    return static_cast<Rng&&>(rng);
+                    push_front(rng, static_cast<T &&>(t));
+                    return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -85,10 +87,10 @@ namespace ranges
                     requires !Concept<Rng, T>())
                 (void) operator()(Rng &&rng, T &&t) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>(),
                         "The object on which action::push_front operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_ASSERT_MSG(meta::or_<
+                    CONCEPT_assert_msg(meta::or_<
                         Constructible<range_value_type_t<Rng>, T>,
                         Range<T>>(),
                         "The object to be inserted with action::push_front must either be "
