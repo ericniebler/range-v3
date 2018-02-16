@@ -437,9 +437,13 @@ namespace ranges
 
 // __VA_OPT__
 #ifndef RANGES_CXX_VA_OPT
+#if __cplusplus > 201703L
 #define RANGES_CXX_THIRD_ARG_(A, B, C, ...) C
 #define RANGES_CXX_VA_OPT_I_(...) RANGES_CXX_THIRD_ARG_(__VA_OPT__(, ), 1, 0, ?)
 #define RANGES_CXX_VA_OPT RANGES_CXX_VA_OPT_I_(?)
+#else
+#define RANGES_CXX_VA_OPT 0
+#endif
 #endif // RANGES_CXX_VA_OPT
 
 #ifdef RANGES_FEWER_WARNINGS

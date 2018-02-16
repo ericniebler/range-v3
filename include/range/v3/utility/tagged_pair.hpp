@@ -149,6 +149,31 @@ namespace ranges
     }
 }
 
+#if 0
+#define RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                        \
+    CONCEPT_template(typename U)(                                                                   \
+        requires Same<::ranges::detail::decay_t<U>, Untagged>() &&                                  \
+            Constructible<Untagged, U>())                                                           \
+    (constexpr) invoke(U &&that)                                                                    \
+        noexcept(std::is_nothrow_constructible<Untagged, U>::value)                                 \
+      : Next(static_cast<U &&>(that))                                                               \
+    {}                                                                                              \
+    /**/
+#else
+#define RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                        \
+    CONCEPT_requires(MoveConstructible<Untagged>())                                                 \
+    (constexpr) invoke(Untagged && that)                                                            \
+        noexcept(std::is_nothrow_move_constructible<Untagged>::value)                               \
+      : Next(detail::move(that))                                                                    \
+    {}                                                                                              \
+    CONCEPT_requires(CopyConstructible<Untagged>())                                                 \
+    (constexpr) invoke(Untagged const &that)                                                        \
+        noexcept(std::is_nothrow_copy_constructible<Untagged>::value)                               \
+      : Next(that)                                                                                  \
+    {}                                                                                              \
+    /**/
+#endif
+
 #define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                                           \
     namespace tag                                                                                   \
     {                                                                                               \
@@ -164,13 +189,7 @@ namespace ranges
                 invoke(invoke &&) = default;                                                        \
                 invoke(invoke const &) = default;                                                   \
                 using Next::Next;                                                                   \
-                CONCEPT_template(typename U)(                                                       \
-                    requires Same<::ranges::detail::decay_t<U>, Untagged>() &&                      \
-                        Constructible<Untagged, U>())                                               \
-                (constexpr) invoke(U &&that)                                                        \
-                    noexcept(std::is_nothrow_constructible<Untagged, U>::value)                     \
-                  : Next(static_cast<U &&>(that))                                                   \
-                {}                                                                                  \
+                RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                \
                 invoke &operator=(invoke &&) = default;                                             \
                 invoke &operator=(invoke const &) = default;                                        \
                 RANGES_CXX14_CONSTEXPR                                                              \

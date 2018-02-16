@@ -63,8 +63,12 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 // CONCEPT_CXX_VA_OPT
 #ifndef CONCEPT_CXX_VA_OPT
+#if __cplusplus > 201703L
 #define CONCEPT_CXX_VA_OPT_(...) CONCEPT_PP_CHECK(__VA_OPT__(,) 1)
 #define CONCEPT_CXX_VA_OPT CONCEPT_CXX_VA_OPT_(~)
+#else
+#define CONCEPT_CXX_VA_OPT 0
+#endif
 #endif // CONCEPT_CXX_VA_OPT
 
 #define CONCEPT_PP_CAT_(X, ...)  X ## __VA_ARGS__
