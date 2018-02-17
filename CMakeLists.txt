@@ -89,7 +89,7 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3/version.hpp RANGE_V3_N
 # If the new version.hpp is materially different from the one in the source
 # directory, update it, amend the most recent commit, and tag the commit.
 if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
-  # Check that Version.cmake is the only changed file:
+  # Check that README.md and Version.cmake are the only changed file:
   execute_process(
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" status --porcelain -uno
     OUTPUT_VARIABLE RANGE_V3_GIT_STATUS
@@ -119,7 +119,7 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   if (NOT "x${CONAN_EXECUTABLE}" STREQUAL "xCONAN_EXECUTABLE-NOTFOUND")
     message("Exporting conanfile for new version")
     execute_process(
-      COMMAND ${CONAN_EXECUTABLE} export ericniebler/stable
+      COMMAND ${CONAN_EXECUTABLE} export . ericniebler/stable
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   endif()
