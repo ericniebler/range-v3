@@ -11,6 +11,10 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+module concepts {
+    umbrella "concepts"
+    export *
+}
 module meta {
     umbrella "meta"
     export *
