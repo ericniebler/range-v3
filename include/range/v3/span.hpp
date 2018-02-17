@@ -326,13 +326,13 @@ namespace ranges
             requires ContiguousRange<Rng>() &&
                 True<range_cardinality<Rng>::value < cardinality{}>())()
         span(Rng &&rng) ->
-            span<concepts::ContiguousRange::element_t<Rng>>;
+            span<detail::element_t<Rng>>;
 
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng>() &&
                 True<range_cardinality<Rng>::value >= cardinality{}>())()
         span(Rng &&rng) ->
-            span<concepts::ContiguousRange::element_t<Rng>,
+            span<detail::element_t<Rng>,
                 static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;
 #endif
 
