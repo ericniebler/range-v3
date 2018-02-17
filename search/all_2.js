@@ -12,7 +12,7 @@ var searchData=
   ['basic_5fcommon_5freference',['basic_common_reference',['../structranges_1_1v3_1_1basic__common__reference.html',1,'ranges::v3']]],
   ['basic_5fiterator',['basic_iterator',['../structranges_1_1v3_1_1basic__iterator.html',1,'ranges::v3']]],
   ['basic_5fiterator_2ehpp',['basic_iterator.hpp',['../basic__iterator_8hpp.html',1,'']]],
-  ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3::basic_mixin&lt; T &gt;'],['../structranges_1_1v3_1_1basic__mixin.html#a7aff9a69882482cc7bac73a067dca9b0',1,'ranges::v3::basic_mixin::basic_mixin()']]],
+  ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3::basic_mixin&lt; T &gt;'],['../structranges_1_1v3_1_1basic__mixin.html#a7aff9a69882482cc7bac73a067dca9b0',1,'ranges::v3::basic_mixin::basic_mixin() noexcept(std::is_nothrow_default_constructible&lt; T &gt;::value)'],['../structranges_1_1v3_1_1basic__mixin.html#a1fafaa15d1b92249f12d395dcde62a32',1,'ranges::v3::basic_mixin::basic_mixin(T &amp;&amp;t) noexcept(std::is_nothrow_move_constructible&lt; T &gt;::value)'],['../structranges_1_1v3_1_1basic__mixin.html#a98a7258fb3117a3ec5ae8290820a2a66',1,'ranges::v3::basic_mixin::basic_mixin(T const &amp;t) noexcept(std::is_nothrow_copy_constructible&lt; T &gt;::value)']]],
   ['basic_5fmixin_3c_20adaptor_5fcursor_20_3e',['basic_mixin&lt; adaptor_cursor &gt;',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
   ['basic_5fview',['basic_view',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['basic_5fview_3c_20cardinality_20_3e',['basic_view&lt; Cardinality &gt;',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],

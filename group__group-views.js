@@ -158,8 +158,8 @@ var group__group_views =
       [ "interleave_view", "structranges_1_1v3_1_1interleave__view.html#a454155ccde2cd061c3892f8895cf454e", null ]
     ] ],
     [ "cursor", "structranges_1_1v3_1_1interleave__view_1_1cursor.html", [
+      [ "CONCEPT_requires", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#aac074c972aad690d10700f4d4d9d65c3", null ],
       [ "done", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#ac48d3499e17a3c931d874a0a271d7a98", null ],
-      [ "equal", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#a6ba8ff6b9db85b9b03baaecd078dddc9", null ],
       [ "get", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#adfa525317a1b8a23b3035a1cdd723ceb", null ],
       [ "next", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#a0d9fbd3f013f0cb27dc8b6261f45c3f8", null ],
       [ "cursor", "structranges_1_1v3_1_1interleave__view_1_1cursor.html#a140417b0aef2a4f7ff004bf97a48c1f6", null ],
@@ -265,6 +265,8 @@ var group__group_views =
       [ "split_view", "structranges_1_1v3_1_1split__view.html#a867202965799b541df6a68f693fe3fbc", null ]
     ] ],
     [ "stride_view", "structranges_1_1v3_1_1stride__view.html", [
+      [ "size", "structranges_1_1v3_1_1stride__view.html#a10081d7c8f3491d2a94e8281d49513dd", null ],
+      [ "size", "structranges_1_1v3_1_1stride__view.html#ab93725d70509b93151aba60b3199a7b1", null ],
       [ "stride_view", "structranges_1_1v3_1_1stride__view.html#a3936f2c5c4d3750c735f5d5d3fae85fc", null ],
       [ "stride_view", "structranges_1_1v3_1_1stride__view.html#a22516911c6c7051c22b13d0e5e302d3b", null ]
     ] ],
@@ -349,7 +351,8 @@ var group__group_views =
     ] ],
     [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html", [
       [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html#ae925f6d0be8e9081ce1587dd18881ca8", null ],
-      [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html#a896d3e5c076eafdd9604cc7c41314c55", null ]
+      [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html#a896d3e5c076eafdd9604cc7c41314c55", null ],
+      [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html#ac7a8c5fc968aceb2fdb090663585a29a", null ]
     ] ],
     [ "advance", "group__group-views.html#ga59cb9288269faf247174930e0e349478", null ],
     [ "distance_to", "group__group-views.html#ga32cc0000eb946a4f8de9d43dfe3a05ed", null ],

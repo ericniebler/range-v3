@@ -61,7 +61,9 @@ var group__group_utility =
       [ "basic_iterator", "structranges_1_1v3_1_1basic__iterator.html#a38024356a9ea54285cc0ebdef2379321", null ]
     ] ],
     [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html", [
-      [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html#a7aff9a69882482cc7bac73a067dca9b0", null ]
+      [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html#a7aff9a69882482cc7bac73a067dca9b0", null ],
+      [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html#a1fafaa15d1b92249f12d395dcde62a32", null ],
+      [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html#a98a7258fb3117a3ec5ae8290820a2a66", null ]
     ] ],
     [ "bind_element", "structranges_1_1v3_1_1bind__element.html", null ],
     [ "bind_element< reference_wrapper< T > >", "structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_01_4_01_4.html", [
@@ -417,6 +419,10 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1ref__fn.html#af04b45c10d27c6e10f7e0cb6d5516e2b", null ]
     ] ],
     [ "reference_wrapper", "structranges_1_1v3_1_1reference__wrapper.html", [
+      [ "get", "group__group-utility.html#gabb0f1550f554ba5e7ccbd20251c02c8b", null ],
+      [ "operator reference", "group__group-utility.html#gaae155a7c9cf6bcd1b4b659b3bca347d5", null ],
+      [ "operator std::reference_wrapper< type >", "group__group-utility.html#gae6a3f92bdd8f0399230456f8cd721f20", null ],
+      [ "operator()", "group__group-utility.html#ga89d79c57c0885b27a2373b25c0f3a22f", null ],
       [ "reference", "group__group-utility.html#ga9a7d8a85b9ba3901c01543668118a466", null ],
       [ "type", "group__group-utility.html#gad2911ddf3a499091c804120c4f77f88c", null ],
       [ "reference_wrapper", "group__group-utility.html#ga4ed22fb88d755f4e7d620b6988880568", null ],
@@ -487,6 +493,7 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1with__braced__init__args.html#a9077ef8d03264ef3d2e3fa3cbf673502", null ]
     ] ],
     [ "move_t", "group__group-utility.html#ga7465bd869ea861f5f8789d36c7c47e36", null ],
+    [ "operator std::reference_wrapper< type >", "group__group-utility.html#gae6a3f92bdd8f0399230456f8cd721f20", null ],
     [ "operator|", "group__group-utility.html#ga40947d06a54effe04c84688102fc6ce1", null ],
     [ "operator|", "group__group-utility.html#ga666ada406594f0fc35648f34b069d5a7", null ],
     [ "advance", "group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed", null ],

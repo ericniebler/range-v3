@@ -1,3 +1,26 @@
+/*
+@ @licstart  The following is the entire license notice for the
+JavaScript code in this file.
+
+Copyright (C) 1997-2017 by Dimitri van Heesch
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+@licend  The above is the entire license notice
+for the JavaScript code in this file
+*/
 var NAVTREE =
 [
   [ "Range-v3", "index.html", [
@@ -35,19 +58,19 @@ var NAVTREEINDEX =
 ".html",
 "common__tuple_8hpp.html#ac6dfa8b99d38a3adfc66eb8a1f6c8a95",
 "group__group-algorithms.html#gaa9101051c87fe779484bac4efeaf3d50",
-"group__group-views.html#gafc4e6cd6088d01bd209fe5dd0b70532b",
-"is__partitioned_8hpp.html",
-"meta_8hpp.html#gaa92a89fba24ac03db56deed0dbe44f60",
-"sliding_8hpp.html#a9fa252b797d92d78660f06a4db91a1f6",
-"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1reverse__view_3_01_ts_8_8_8_01_4_01_4.html",
-"structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html",
-"structranges_1_1v3_1_1common__reference_3_01_t_01_4.html#aefa43f895a3c8846ed6e12bd14bfdd9f",
-"structranges_1_1v3_1_1detail_1_1indexed__datum_3_01_t[_n]_00_01_index_01_4.html#a81e96b50e761af05c41993a1e88e56cd",
-"structranges_1_1v3_1_1interleave__view_1_1cursor.html#adfa525317a1b8a23b3035a1cdd723ceb",
-"structranges_1_1v3_1_1nth__element__fn.html#a3f1a25480d5b171cc298df6379ce1b25",
-"structranges_1_1v3_1_1set__intersection__fn.html",
-"structranges_1_1v3_1_1view_1_1generate__fn.html",
-"to__container_8hpp.html#ga1e0608aee3b230471bba14364d27f60f"
+"group__group-views.html#gaeda943b575b98a90bf9258883d1f085f",
+"interleave_8hpp.html#a83a50ae334ae555f89c17d51c83cbbef",
+"meta_8hpp.html#ga9f3a3adf2556161e23d0b181d075498a",
+"sliding_8hpp.html#a6e1f68c8cf0f7535af8fdf1bec212fe7",
+"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1remove__if__view_3_01_ts_8_8_8_01_4_01const_01_4.html",
+"structranges_1_1v3_1_1action_1_1reverse__fn.html#a2f29f7e0b37292c8c41b09324ff4cec1",
+"structranges_1_1v3_1_1common__iterator.html#af683078ac63023c4c8c6cf18464605e2",
+"structranges_1_1v3_1_1count__if__fn.html",
+"structranges_1_1v3_1_1insert__fn.html",
+"structranges_1_1v3_1_1move__sentinel.html#aa523424b36cbfb42674fc2cd9566da36",
+"structranges_1_1v3_1_1scope__exit.html#a00b2879e9f642d1d7363a6d39bcbe27b",
+"structranges_1_1v3_1_1view_1_1chunk__fn.html",
+"structranges_1_1v3_1_1yield__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

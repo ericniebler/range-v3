@@ -21,8 +21,8 @@ var structranges_1_1v3_1_1span =
     [ "subspan", "structranges_1_1v3_1_1span.html#a000eb294fb137c6430710da5056e8d68", null ],
     [ "subspan", "structranges_1_1v3_1_1span.html#a22a323a7a3f3def6f710a821f24e9d4c", null ],
     [ "subspan", "structranges_1_1v3_1_1span.html#a649d319e2a39d715632c61ff0d880a4e", null ],
-    [ "data_", "structranges_1_1v3_1_1span.html#a005e6550a755d65141bc61766d0f652e", null ],
     [ "span< T, N >", "structranges_1_1v3_1_1span.html#a942a07a2083c836ebd04f2a1e4857439", null ],
+    [ "CompatibleRange", "structranges_1_1v3_1_1span.html#aeeb0b9422c7aaa2f2b43bbb5503f414e", null ],
     [ "difference_type", "structranges_1_1v3_1_1span.html#a716d7e8e54271d20c3d59e7a61ee1d3d", null ],
     [ "DynamicConversion", "structranges_1_1v3_1_1span.html#a874f125d68c4d592d44231c35fa55d07", null ],
     [ "element_type", "structranges_1_1v3_1_1span.html#a23a6262fe2698d1a8e858e62bce51fb8", null ],
@@ -35,6 +35,7 @@ var structranges_1_1v3_1_1span =
     [ "value_type", "structranges_1_1v3_1_1span.html#a7bc161a8493209c01420bbdff2318072", null ],
     [ "span", "structranges_1_1v3_1_1span.html#a14508fd1e022e912c2f73654a46a3990", null ],
     [ "span", "structranges_1_1v3_1_1span.html#a6e4bb676fea21207415744f71f54023b", null ],
+    [ "span", "structranges_1_1v3_1_1span.html#abd86c67a859f0f1b1f0681103d7eb011", null ],
     [ "span", "structranges_1_1v3_1_1span.html#afd8e8e209d30a89aeae578f63aa8560f", null ],
     [ "span", "structranges_1_1v3_1_1span.html#aaed2aadd1651d4256885d585abc9a6c0", null ]
 ];
