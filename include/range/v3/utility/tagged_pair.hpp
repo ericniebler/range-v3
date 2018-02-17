@@ -57,6 +57,58 @@ namespace ranges
                 using type =
                     meta::invoke<First, Base, I, meta::_t<chain<Base, meta::inc<I>, Rest...>>>;
             };
+
+            template<
+                typename Untagged,
+                typename Next,
+                bool = (bool) MoveConstructible<Untagged>(),
+                bool = (bool) CopyConstructible<Untagged>()>
+            struct link
+              : Next
+            {
+                link() = default;
+                using Next::Next;
+            };
+
+            template<typename Untagged, typename Next>
+            struct link<Untagged, Next, false, true>
+              : Next
+            {
+                link() = default;
+                using Next::Next;
+                constexpr link(Untagged &&that)
+                    noexcept(std::is_move_constructible<Untagged>::value)
+                  : Next(detail::move(that))
+                {}
+            };
+
+            template<typename Untagged, typename Next>
+            struct link<Untagged, Next, true, false>
+              : Next
+            {
+                link() = default;
+                using Next::Next;
+                constexpr link(Untagged const &that)
+                    noexcept(std::is_copy_constructible<Untagged>::value)
+                  : Next(that)
+                {}
+            };
+
+            template<typename Untagged, typename Next>
+            struct link<Untagged, Next, true, true>
+              : Next
+            {
+                link() = default;
+                using Next::Next;
+                constexpr link(Untagged &&that)
+                    noexcept(std::is_move_constructible<Untagged>::value)
+                  : Next(detail::move(that))
+                {}
+                constexpr link(Untagged const &that)
+                    noexcept(std::is_copy_constructible<Untagged>::value)
+                  : Next(that)
+                {}
+            };
         }
         /// \endcond
 
@@ -149,47 +201,18 @@ namespace ranges
     }
 }
 
-#if 0
-#define RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                        \
-    CONCEPT_template(typename U)(                                                                   \
-        requires Same<::ranges::detail::decay_t<U>, Untagged>() &&                                  \
-            Constructible<Untagged, U>())                                                           \
-    (constexpr) invoke(U &&that)                                                                    \
-        noexcept(std::is_nothrow_constructible<Untagged, U>::value)                                 \
-      : Next(static_cast<U &&>(that))                                                               \
-    {}                                                                                              \
-    /**/
-#else
-#define RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                        \
-    CONCEPT_requires(MoveConstructible<Untagged>())                                                 \
-    (constexpr) invoke(Untagged && that)                                                            \
-        noexcept(std::is_nothrow_move_constructible<Untagged>::value)                               \
-      : Next(detail::move(that))                                                                    \
-    {}                                                                                              \
-    CONCEPT_requires(CopyConstructible<Untagged>())                                                 \
-    (constexpr) invoke(Untagged const &that)                                                        \
-        noexcept(std::is_nothrow_copy_constructible<Untagged>::value)                               \
-      : Next(that)                                                                                  \
-    {}                                                                                              \
-    /**/
-#endif
-
 #define RANGES_DEFINE_TAG_SPECIFIER(NAME)                                                           \
     namespace tag                                                                                   \
     {                                                                                               \
         struct NAME                                                                                 \
         {                                                                                           \
             template<typename Untagged, typename I, typename Next>                                  \
-            class invoke : public Next                                                              \
+            struct invoke : ::ranges::detail::link<Untagged, Next>                                  \
             {                                                                                       \
-            protected:                                                                              \
-                ~invoke() = default;                                                                \
-            public:                                                                                 \
                 invoke() = default;                                                                 \
                 invoke(invoke &&) = default;                                                        \
                 invoke(invoke const &) = default;                                                   \
-                using Next::Next;                                                                   \
-                RANGES_TAG_CONSTRUCT_FROM_UNTAGGED()                                                \
+                using ::ranges::detail::link<Untagged, Next>::link;                                 \
                 invoke &operator=(invoke &&) = default;                                             \
                 invoke &operator=(invoke const &) = default;                                        \
                 RANGES_CXX14_CONSTEXPR                                                              \
@@ -214,6 +237,8 @@ namespace ranges
                     return ::ranges::detail::adl_get<I::value>(                                     \
                         static_cast<Untagged const &>(*this));                                      \
                 }                                                                                   \
+            protected:                                                                              \
+                ~invoke() = default;                                                                \
             };                                                                                      \
         };                                                                                          \
     }                                                                                               \
