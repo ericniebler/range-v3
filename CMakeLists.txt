@@ -104,30 +104,18 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3
   )
   # Update the conanfiles, too
-  configure_file(conanfile.py.in ${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py @ONLY)
-  configure_file(test_package/conanfile.py.in ${CMAKE_CURRENT_SOURCE_DIR}/test_package/conanfile.py @ONLY)
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" add -u
-  )
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" commit --amend --no-edit
-  )
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" tag -f -a "${RANGE_V3_VERSION}" -m "${RANGE_V3_VERSION}"
-  )
   find_program(CONAN_EXECUTABLE NAMES conan conan.exe)
   if (NOT "x${CONAN_EXECUTABLE}" STREQUAL "xCONAN_EXECUTABLE-NOTFOUND")
     message("Exporting conanfile for new version")
     execute_process(
-      COMMAND ${CONAN_EXECUTABLE} export . ericniebler/stable
+      COMMAND ${CONAN_EXECUTABLE} create . range-v3/${RANGE_V3_VERSION}@ericniebler/stable
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   endif()
   message("Version updated to ${RANGE_V3_VERSION}. Don't forget to:")
   message("  git push origin <feature-branch>")
   message("and (after that is merged to master) then:")
-  message("  conan export ericniebler")
-  message("  conan test_package")
+  message("  conan create . range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
