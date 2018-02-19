@@ -103,7 +103,15 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
     COPY ${CMAKE_CURRENT_BINARY_DIR}/include/range/v3/version.hpp
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3
   )
-  # Update the conanfiles, too
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" add -u
+  )
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" commit --amend --no-edit
+  )
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" tag -f -a "${RANGE_V3_VERSION}" -m "${RANGE_V3_VERSION}"
+  )
   find_program(CONAN_EXECUTABLE NAMES conan conan.exe)
   if (NOT "x${CONAN_EXECUTABLE}" STREQUAL "xCONAN_EXECUTABLE-NOTFOUND")
     message("Exporting conanfile for new version")
