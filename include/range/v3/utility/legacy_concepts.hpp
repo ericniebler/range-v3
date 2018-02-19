@@ -25,9 +25,7 @@
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
 
-#if !RANGES_USE_LEGACY_CONCEPTS
 #pragma message "This header is deprecated. Please use <concepts/concepts.hpp> instead."
-#endif
 
 namespace ranges
 {
@@ -721,26 +719,5 @@ namespace ranges
             int                                                                     \
         >::type = 0>                                                                \
     /**/
-
-#define CONCEPT_template(...) \
-    template<__VA_ARGS__, CONCEPT_REQUIRES_IMPL_
-#define CONCEPT_REQUIRES_IMPL_(...) \
-    CONCEPT_PP_CAT(CONCEPT_REQUIRES_IMPL_, __VA_ARGS__) ), int>::type = 0>
-#define CONCEPT_REQUIRES_IMPL_requires \
-    int _concept_requires_ = __LINE__, \
-    typename std::enable_if< \
-        (_concept_requires_ == __LINE__) && (
-
-#define CONCEPT_requires CONCEPT_REQUIRES
-
-#if RANGES_CXX_STATIC_ASSERT >= RANGES_CXX_STATIC_ASSERT_17
-#define CONCEPT_assert static_assert
-#else
-#define CONCEPT_assert(...) static_assert((__VA_ARGS__), "Concept check failed: " #__VA_ARGS__)
-#endif
-/// @}
-
-#define CONCEPT_assert_msg static_assert
-/// @}
 
 #endif // RANGES_V3_UTILITY_LEGACY_CONCEPTS_HPP
