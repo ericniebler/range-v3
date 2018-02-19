@@ -98,5 +98,12 @@ int main()
         ::check_equal(rng, {1,3,5,7,9});
     }
 
+    {
+        // Defend against regression of #793
+        int const some_ints[] = {1, 2, 3};
+        auto a = some_ints | ranges::view::remove_if([](int val) { return val > 0; });
+        CHECK(a.empty());
+    }
+
     return test_result();
 }
