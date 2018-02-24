@@ -1,4 +1,14 @@
 cc_library(
+  name = 'concepts',
+  hdrs = glob([
+    'include/concepts/**/*.hpp',
+  ]),
+  includes = [
+    "include",
+  ],
+)
+
+cc_library(
   name = 'meta',
   hdrs = glob([
     'include/meta/**/*.hpp',
@@ -15,6 +25,7 @@ cc_library(
   ]),
   visibility = ["//visibility:public"],
   deps = [
+    ':concepts',
     ':meta',
   ],
 )

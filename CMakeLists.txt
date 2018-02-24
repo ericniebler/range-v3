@@ -20,11 +20,32 @@ include(CTest)
 
 enable_testing()
 
-include_directories(include)
+add_library(concepts INTERFACE)
+target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+
+add_library(meta INTERFACE)
+target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+
+add_library(range-v3 INTERFACE)
+target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+target_link_libraries(range-v3 INTERFACE concepts meta)
+
 add_subdirectory(doc)
-add_subdirectory(test)
-add_subdirectory(example)
-add_subdirectory(perf)
+
+if(NOT RANGE_V3_NO_TESTING)
+  add_subdirectory(test)
+endif()
+
+if(NOT RANGE_V3_NO_EXAMPLE)
+  add_subdirectory(example)
+endif()
+
+if(NOT RANGE_V3_NO_PERF)
+  add_subdirectory(perf)
+endif()
 
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
@@ -72,7 +93,7 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3/version.hpp RANGE_V3_N
 # If the new version.hpp is materially different from the one in the source
 # directory, update it, amend the most recent commit, and tag the commit.
 if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
-  # Check that Version.cmake is the only changed file:
+  # Check that README.md and Version.cmake are the only changed file:
   execute_process(
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" status --porcelain -uno
     OUTPUT_VARIABLE RANGE_V3_GIT_STATUS
@@ -86,9 +107,6 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
     COPY ${CMAKE_CURRENT_BINARY_DIR}/include/range/v3/version.hpp
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3
   )
-  # Update the conanfiles, too
-  configure_file(conanfile.py.in ${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py @ONLY)
-  configure_file(test_package/conanfile.py.in ${CMAKE_CURRENT_SOURCE_DIR}/test_package/conanfile.py @ONLY)
   execute_process(
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" add -u
   )
@@ -102,18 +120,27 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   if (NOT "x${CONAN_EXECUTABLE}" STREQUAL "xCONAN_EXECUTABLE-NOTFOUND")
     message("Exporting conanfile for new version")
     execute_process(
-      COMMAND ${CONAN_EXECUTABLE} export ericniebler/stable
+      COMMAND ${CONAN_EXECUTABLE} create . range-v3/${RANGE_V3_VERSION}@ericniebler/stable
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   endif()
   message("Version updated to ${RANGE_V3_VERSION}. Don't forget to:")
   message("  git push origin <feature-branch>")
   message("and (after that is merged to master) then:")
-  message("  conan export ericniebler")
-  message("  conan test_package")
+  message("  conan create . range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
   message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+  VERSION ${RANGE_V3_VERSION}
+  COMPATIBILITY ExactVersion
+)
 
-install(DIRECTORY include/ DESTINATION include
-        FILES_MATCHING PATTERN "*.hpp")
+install(TARGETS concepts meta range-v3 EXPORT range-v3-targets DESTINATION lib)
+install(EXPORT range-v3-targets FILE range-v3-config.cmake DESTINATION lib/cmake/range-v3)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/range-v3-config-version.cmake
+  DESTINATION lib/cmake/range-v3)
+install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")

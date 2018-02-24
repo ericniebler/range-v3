@@ -141,25 +141,29 @@ namespace ranges
                         T(*)[]>>()
             );
 
-            template<typename Rng>
-            struct DynamicConversion
-              : meta::bool_<N == dynamic_extent || range_cardinality<Rng>::value < cardinality{}>
-            {};
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept DynamicConversion,
+                    True<N == dynamic_extent || range_cardinality<Rng>::value < cardinality{}>()
+            );
 
             CONCEPT_template(typename Rng)(
-                requires CompatibleRange<Rng>() && True<DynamicConversion<Rng>>())
+                requires CompatibleRange<Rng>() && DynamicConversion<Rng>())
             (constexpr) span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
               : span{ranges::data(rng), detail::narrow_cast<index_type>(ranges::size(rng))}
             {}
 
-            template<typename Rng>
-            struct StaticConversion
-              : meta::bool_<N != dynamic_extent && range_cardinality<Rng>::value == N>
-            {};
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept StaticConversion,
+                    True<N != dynamic_extent && range_cardinality<Rng>::value == N>()
+            );
 
             CONCEPT_template(typename Rng)(
-                requires CompatibleRange<Rng>() && True<StaticConversion<Rng>>())
+                requires CompatibleRange<Rng>() && StaticConversion<Rng>())
             (constexpr) span(Rng &&rng)
                 noexcept(noexcept(ranges::data(rng)))
               : span{ranges::data(rng), N}
