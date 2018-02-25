@@ -22,4 +22,5 @@ module meta {
 module range_v3 {
     umbrella "range"
     export *
+    exclude header "range/v3/utility/legacy_concepts.hpp"
 }
