@@ -286,7 +286,7 @@ namespace ranges
                 }
                 // slice(rng, end-4, end-2)
                 CONCEPT_template(typename Rng)(
-                    requires //(InputRange<Rng>() && SizedRange<Rng>()) ||
+                    requires (InputRange<Rng>() && SizedRange<Rng>()) ||
                         ForwardRange<Rng>())
                 (auto) operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from,
                     detail::from_end_<range_difference_type_t<Rng>> to) const ->
@@ -326,7 +326,12 @@ namespace ranges
                         -from.dist_, range_tag_of<Rng>{},
                         bounded_range_tag_of<Rng>{});
                 }
+            };
 
+            struct _slice_fn
+              : slice_fn
+            {
+                using slice_fn::operator();
             #ifndef RANGES_DOXYGEN_INVOKED
                 //
                 // These overloads are strictly so that users get better error messages
@@ -392,9 +397,9 @@ namespace ranges
             #endif
             };
 
-            /// \relates slice_fn
+            /// \relates _slice_fn
             /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<slice_fn>, slice)
+            RANGES_INLINE_VARIABLE(view<_slice_fn>, slice)
         }
         /// @}
     }

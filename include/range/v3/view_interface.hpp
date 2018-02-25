@@ -56,6 +56,16 @@ namespace ranges
                     return {static_cast<Other>(dist_)};
                 }
             };
+
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept CanEmpty,
+                    requires (Rng &&rng)
+                    {
+                        ranges::empty((Rng &&) rng)
+                    }
+            );
         }
         /// \endcond
 
@@ -98,7 +108,7 @@ namespace ranges
                 noexcept(noexcept(bool(ranges::begin(std::declval<D &>()) ==
                     ranges::end(std::declval<D &>()))))
             {
-                return ranges::begin(derived()) == ranges::end(derived());
+                return bool(ranges::begin(derived()) == ranges::end(derived()));
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() &&
@@ -108,18 +118,17 @@ namespace ranges
                 noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
                     ranges::end(std::declval<D const &>()))))
             {
-                return ranges::begin(derived()) == ranges::end(derived());
+                return bool(ranges::begin(derived()) == ranges::end(derived()));
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
-            (constexpr auto) operator!() const
-            RANGES_DECLTYPE_NOEXCEPT(ranges::empty(std::declval<D const &>()))
+                requires Same<D, Derived>() && detail::CanEmpty<D &>())
+            (RANGES_CXX14_CONSTEXPR explicit) operator bool()
+                noexcept(noexcept(ranges::empty(std::declval<D &>())))
             {
-                return ranges::empty(derived());
+                return !ranges::empty(derived());
             }
-            CONCEPT_template(typename D = Derived,
-                typename = decltype(ranges::empty(std::declval<D const &>())))(
-                requires Same<D, Derived>())
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>() && detail::CanEmpty<D const &>())
             (constexpr explicit) operator bool() const
                 noexcept(noexcept(ranges::empty(std::declval<D const &>())))
             {
@@ -128,9 +137,9 @@ namespace ranges
             /// Access the size of the range, if it can be determined:
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && True<Cardinality >= 0>())
-            (constexpr range_size_type_t<D>) size() const noexcept
+            (static constexpr range_size_type_t<D>) size() noexcept
             {
-                return (range_size_type_t<D>)Cardinality;
+                return static_cast<range_size_type_t<D>>(Cardinality);
             }
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && True<Cardinality < 0>() &&
@@ -183,7 +192,7 @@ namespace ranges
             /// Simple indexing:
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && RandomAccessRange<D>())
-            (RANGES_CXX14_CONSTEXPR decltype(std::declval<D &>().begin()[0]))
+            (RANGES_CXX14_CONSTEXPR range_reference_t<D>)
             operator[](range_difference_type_t<D> n)
             {
                 return derived().begin()[n];
@@ -191,9 +200,37 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>() && RandomAccessRange<D const>())
-            (constexpr decltype(std::declval<D const &>().begin()[0]))
+            (constexpr range_reference_t<D const>)
             operator[](range_difference_type_t<D> n) const
             {
+                return derived().begin()[n];
+            }
+            /// Returns a reference to the element at specified location pos, with bounds checking.
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>() && RandomAccessRange<D>() && SizedRange<D>())
+            (RANGES_CXX14_CONSTEXPR range_reference_t<D>)
+            at(range_difference_type_t<D> n)
+            {
+                using size_type = range_size_type_t<Derived>;
+                if (n < 0 || size_type(n) >= ranges::size(derived()))
+                {
+                    throw std::out_of_range("view_interface::at");
+                }
+                return derived().begin()[n];
+            }
+            /// \overload
+            CONCEPT_template(typename D = Derived)(
+                requires Same<D, Derived>() &&
+                    RandomAccessRange<D const>() &&
+                    SizedRange<D const>())
+            (RANGES_CXX14_CONSTEXPR range_reference_t<D const>)
+            at(range_difference_type_t<D> n) const
+            {
+                using size_type = range_size_type_t<Derived>;
+                if (n < 0 || size_type(n) >= ranges::size(derived()))
+                {
+                    throw std::out_of_range("view_interface::at");
+                }
                 return derived().begin()[n];
             }
             /// Python-ic slicing:
@@ -456,32 +493,6 @@ namespace ranges
                     end_fn> offs) &&
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
-            }
-            /// Returns a reference to the element at specified location pos, with bounds checking.
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && RandomAccessRange<D>() && SizedRange<D>())
-            (RANGES_CXX14_CONSTEXPR decltype(std::declval<D &>().begin()[0]))
-            at(range_difference_type_t<D> n)
-            {
-                using size_type = range_size_type_t<Derived>;
-                if (n < 0 || size_type(n) >= ranges::size(derived()))
-                {
-                    throw std::out_of_range("view_interface::at");
-                }
-                return derived().begin()[n];
-            }
-            /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && RandomAccessRange<D const>() && SizedRange<D const>())
-            (RANGES_CXX14_CONSTEXPR decltype(std::declval<D const &>().begin()[0]))
-            at(range_difference_type_t<D> n) const
-            {
-                using size_type = range_size_type_t<Derived>;
-                if (n < 0 || size_type(n) >= ranges::size(derived()))
-                {
-                    throw std::out_of_range("view_interface::at");
-                }
-                return derived().begin()[n];
             }
             /// Implicit conversion to something that looks like a container.
             CONCEPT_template(typename Container, typename D = Derived,
