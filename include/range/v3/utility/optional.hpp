@@ -22,15 +22,12 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/in_place.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-utility
-        struct in_place_t {};
-        RANGES_INLINE_VARIABLE(in_place_t, in_place)
-
         template<typename> struct optional;
 
         struct bad_optional_access

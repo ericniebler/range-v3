@@ -495,16 +495,14 @@ namespace ranges
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
             /// Implicit conversion to something that looks like a container.
-            CONCEPT_template(typename Container, typename D = Derived,
-                typename = typename Container::allocator_type)( // HACKHACK
+            CONCEPT_template(typename Container, typename D = Derived)(
                 requires detail::ConvertibleToContainer<D, Container>())()
             RANGES_CXX14_CONSTEXPR operator Container ()
             {
                 return ranges::to_<Container>(derived());
             }
             /// \overload
-            CONCEPT_template(typename Container, typename D = Derived,
-                typename = typename Container::allocator_type)( // HACKHACK
+            CONCEPT_template(typename Container, typename D = Derived)(
                 requires detail::ConvertibleToContainer<D const, Container>())()
             constexpr operator Container () const
             {

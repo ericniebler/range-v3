@@ -38,24 +38,32 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            using ConvertibleToContainer = decltype(
-                Range<Cont>() && !View<Cont>() && MoveConstructible<Cont>() &&
-                ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>() &&
-                Constructible<Cont, I, I>());
+            CONCEPT_def
+            (
+                template(typename Rng, typename Cont)
+                concept ConvertibleToContainer,
+                    requires (typename Cont::allocator_type) // HACKHACK
+                    {} &&
+                    Range<Cont>() && !View<Cont>() && MoveConstructible<Cont>() &&
+                    ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>>() &&
+                    Constructible<Cont, range_common_iterator_t<Rng>, range_common_iterator_t<Rng>>()
+            );
 
             template<typename ToContainer>
             struct to_container_fn
               : pipeable<to_container_fn<ToContainer>>
             {
             private:
-                template<typename C, typename R>
-                using ReserveConcept = decltype(
-                    ReserveAndAssignable<C, range_common_iterator_t<R>>() &&
-                    SizedRange<R>());
+                CONCEPT_def
+                (
+                    template(typename C, typename R)
+                    concept Reserve,
+                        ReserveAndAssignable<C, range_common_iterator_t<R>>() &&
+                        SizedRange<R>()
+                );
 
                 CONCEPT_template(typename Cont, typename Rng)(
-                    requires !ReserveConcept<Cont, Rng>())
+                    requires !Reserve<Cont, Rng>())
                 (Cont) impl(Rng &&rng) const
                 {
                     using I = range_common_iterator_t<Rng>;
@@ -63,7 +71,7 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename Cont, typename Rng)(
-                    requires ReserveConcept<Cont, Rng>())
+                    requires Reserve<Cont, Rng>())
                 (Cont) impl(Rng &&rng) const
                 {
                     Cont c;

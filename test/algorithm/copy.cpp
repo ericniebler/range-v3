@@ -18,7 +18,7 @@
 #include <range/v3/view/delimit.hpp>
 #include "../simple_test.hpp"
 
-#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
+#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14 && RANGES_CONSTEXPR_INVOKE
 RANGES_CXX14_CONSTEXPR
 bool test_constexpr_copy()
 {
