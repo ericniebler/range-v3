@@ -816,7 +816,7 @@ namespace concepts
 {
     inline namespace v1
     {
-        inline namespace concept_defns
+        inline namespace defs
         {}
     }
 }
@@ -826,7 +826,7 @@ namespace ranges
     inline namespace v3
     {
         namespace concepts = ::concepts;
-        using namespace ::concepts::concept_defns;
+        using namespace ::concepts::defs;
     }
 }
 

@@ -27,9 +27,8 @@ namespace ranges
     inline namespace v3
     {
         /// \cond
-        struct RangeConcept;
         template<class T>
-        using Range = ::concepts::is_satisfied_by<RangeConcept, T>;
+        struct Range;
         /// \endcond
 
         /// \addtogroup group-core

@@ -29,6 +29,7 @@
     _Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
     _Pragma("GCC diagnostic ignored \"-Wpragmas\"") \
     _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"") \
+    _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"") \
     /**/
 #define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END \
     _Pragma("GCC diagnostic pop")
@@ -214,9 +215,9 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_TESTSFINAETPARAM_union ~,
 
 #define CONCEPT_PP_ENABLE_IF_0(DECL, ...) \
-    > CONCEPT_PP_EXPAND DECL typename std::enable_if<(bool) _concept_requires_(), __VA_ARGS__>::type
+    > CONCEPT_PP_EXPAND DECL ::concepts::enable_if_t<(bool) _concept_requires_(), __VA_ARGS__>
 #define CONCEPT_PP_ENABLE_IF_1(DECL, ...) \
-    , typename std::enable_if<(bool) _concept_requires_(), int>::type = 0> CONCEPT_PP_EXPAND DECL
+    , ::concepts::enable_if_t<(bool) _concept_requires_(), int> = 0> CONCEPT_PP_EXPAND DECL
 
 #define CONCEPT_PP_FINALIZE_IMPL(DECL, ...)\
     CONCEPT_PP_CAT(CONCEPT_PP_ENABLE_IF_, CONCEPT_PP_OR(CONCEPT_PP_IS_EMPTY_NON_FUNCTION(__VA_ARGS__), CONCEPT_PP_USE_SFINAE_TPARAM(__VA_ARGS__)))(DECL, __VA_ARGS__) \
@@ -363,10 +364,11 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
     };                                                                          \
     CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                     \
-    using CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME) =                               \
-        ::concepts::is_satisfied_by<                                            \
+    struct CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME)                                \
+      : ::concepts::is_satisfied_by<                                            \
             CONCEPT_PP_CAT(CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME), Concept),     \
             CONCEPT_PP_EXPAND ARGS>                                             \
+    {}                                                                          \
     /**/
 
 #define CONCEPT_PP_DEF_DECL_template(...)                                       \
@@ -430,21 +432,37 @@ namespace concepts
     inline namespace v1
     {
         /// \cond
+        struct bool_base
+        {};
+
         template<typename T>
         struct bool_;
 
         struct _;
 
+        template<bool>
+        struct enable_if_
+        {
+            template<typename T>
+            using invoke = T;
+        };
+
+        template<>
+        struct enable_if_<false>
+        {};
+
+        template<bool B, typename T = void>
+        using enable_if_t = typename enable_if_<B>::template invoke<T>;
+
         namespace detail
         {
             template<typename T>
-            T gcc_bugs_bugs_bugs(T);
+            bool gcc_bugs_bugs_bugs(T);
 
             template<bool If>
             struct eval_if
             {
-                template<typename Else>
-                constexpr bool operator()(bool then_, Else) const noexcept
+                constexpr bool operator()(bool then_, void *) const noexcept
                 {
                     return then_;
                 }
@@ -454,9 +472,9 @@ namespace concepts
             struct eval_if<false>
             {
                 template<typename Else>
-                constexpr bool operator()(bool, Else else_) const noexcept
+                constexpr bool operator()(bool, Else *) const noexcept
                 {
-                    return static_cast<bool>(else_);
+                    return static_cast<bool>(Else());
                 }
             };
 
@@ -495,7 +513,7 @@ namespace concepts
                 struct requires_type
                 {
                     template <typename T>
-                    typename std::enable_if<(bool)T(), int>::type operator()(T) const;
+                    enable_if_t<(bool)T(), int> operator()(T) const;
                 };
                 static constexpr requires_type Requires {};
             };
@@ -506,7 +524,7 @@ namespace concepts
             template<class T>
             struct must_be_bool_wrapper
             {
-                static_assert(meta::is<T, bool_>::value,
+                static_assert(std::is_base_of<bool_base, T>::value,
                     "requires clause must have type concepts::bool_");
                 using type = T;
             };
@@ -528,7 +546,7 @@ namespace concepts
             {
                 constexpr explicit operator bool() const noexcept
                 {
-                    return eval_if<!(bool) Bool()>()(false, and_<Bools...>());
+                    return eval_if<!(bool) Bool()>()(false, static_cast<and_<Bools...> *>(nullptr));
                 }
             };
         }
@@ -538,9 +556,10 @@ namespace concepts
         /// @{
         ///
 
-        // For short-cirtuit evaluation of requirements:
+        // For short-circuit evaluation of requirements:
         template<class T>
         struct bool_
+          : bool_base
         {
             using type = bool_;
             using value_type = bool;
@@ -552,7 +571,7 @@ namespace concepts
             {
                 return static_cast<bool>(*this);
             }
-            template<bool B, typename T_ = T, typename std::enable_if<B == (bool)T_(), int>::type = 0>
+            template<bool B, typename T_ = T, enable_if_t<B == (bool)T_(), int> = 0>
             constexpr /*implicit*/ operator meta::bool_<B>() const noexcept
             {
                 return {};
@@ -571,12 +590,8 @@ namespace concepts
         {
             constexpr explicit operator bool() const noexcept
             {
-                return detail::eval_if<!static_cast<bool>(T())>()(false, U());
+                return detail::eval_if<!static_cast<bool>(T())>()(false, static_cast<U *>(nullptr));
             }
-            // constexpr bool operator()() const noexcept
-            // {
-            //     return static_cast<bool>(*this);
-            // }
         };
 
         template<typename T, typename U>
@@ -584,12 +599,8 @@ namespace concepts
         {
             constexpr explicit operator bool() const noexcept
             {
-                return detail::eval_if<static_cast<bool>(T())>()(true, U());
+                return detail::eval_if<static_cast<bool>(T())>()(true, static_cast<U *>(nullptr));
             }
-            // constexpr bool operator()() const noexcept
-            // {
-            //     return static_cast<bool>(*this);
-            // }
         };
 
         template<typename T>
@@ -599,17 +610,7 @@ namespace concepts
             {
                 return !static_cast<bool>(T());
             }
-            // constexpr bool operator()() const noexcept
-            // {
-            //     return static_cast<bool>(*this);
-            // }
         };
-
-        // template<typename T, typename U>
-        // constexpr meta::if_c<(bool)T(), bool_<U>, bool_<T>> operator&&(bool_<T>, bool_<U>)
-        // {
-        //     return {};
-        // }
 
         template<typename T, typename U>
         constexpr bool_<and_<T, U>> operator&&(bool_<T>, bool_<U>)
@@ -617,28 +618,11 @@ namespace concepts
             return {};
         }
 
-        // template<typename T, typename U>
-        // constexpr detail::undef<T, U> operator&&(bool_<T>, U);
-        // template<typename T, typename U>
-        // constexpr detail::undef<T, U> operator&&(T, bool_<U>);
-
-        // template<typename T, typename U>
-        // constexpr meta::if_c<(bool)T(), bool_<T>, bool_<U>>
-        // operator||(bool_<T>, bool_<U>)
-        // {
-        //     return {};
-        // }
-
         template<typename T, typename U>
         constexpr bool_<or_<T, U>> operator||(bool_<T>, bool_<U>)
         {
             return {};
         }
-
-        // template<typename T, typename U>
-        // constexpr detail::undef<T, U> operator||(bool_<T>, U);
-        // template<typename T, typename U>
-        // constexpr detail::undef<T, U> operator||(T, bool_<U>);
 
         template<typename T>
         constexpr bool_<not_<T>> operator!(bool_<T>)
@@ -651,19 +635,23 @@ namespace concepts
         template<typename Concept, typename...Ts>
         struct is_satisfied_by_
         {
-            template<typename C = Concept,
-                typename = decltype(detail::gcc_bugs_bugs_bugs(&C::template _concept_requires_<Ts...>))>
-            constexpr explicit operator bool() const noexcept
+        private:
+            template<typename C>
+            using bool_if =
+                decltype(detail::gcc_bugs_bugs_bugs(&C::template _concept_requires_<Ts...>));
+            template<typename C>
+            static constexpr bool_if<C> check(C *) noexcept
             {
                 return true;
             }
-            constexpr explicit operator bool() const volatile noexcept
+            static constexpr bool check(void *) noexcept
             {
                 return false;
             }
-            constexpr bool operator()() const noexcept
+        public:
+            constexpr explicit operator bool() const noexcept
             {
-                return static_cast<bool>(*this);
+                return is_satisfied_by_::check(static_cast<Concept *>(nullptr));
             }
         };
 
@@ -683,19 +671,19 @@ namespace concepts
         // For placeholder requirements, like:
         //      ( a.foo() ) ->* Concept< _ [const][ref], Args...>()
         template<class T, class Concept, class... Args>
-        typename std::enable_if<(bool)is_satisfied_by_<Concept, T, Args...>(), int>::type
+        enable_if_t<(bool)is_satisfied_by_<Concept, T, Args...>(), int>
         operator->*(T, is_satisfied_by<Concept, _, Args...>);
 
         template<class T, class Concept, class... Args>
-        typename std::enable_if<(bool)is_satisfied_by_<Concept, T, Args...>(), int>::type
+        enable_if_t<(bool)is_satisfied_by_<Concept, T, Args...>(), int>
         operator->*(T &&, is_satisfied_by<Concept, _ &&, Args...>);
 
         template<class T, class Concept, class... Args>
-        typename std::enable_if<(bool)is_satisfied_by_<Concept, T, Args...>(), int>::type
+        enable_if_t<(bool)is_satisfied_by_<Concept, T, Args...>(), int>
         operator->*(T &, is_satisfied_by<Concept, _ &, Args...>);
 
         template<class T, class Concept, class... Args>
-        typename std::enable_if<(bool)is_satisfied_by_<Concept, T, Args...>(), int>::type
+        enable_if_t<(bool)is_satisfied_by_<Concept, T, Args...>(), int>
         operator->*(T const &, is_satisfied_by<Concept, _ const &, Args...>);
 
         template<class T, class U>
@@ -717,7 +705,7 @@ namespace concepts
                 meta::nil_,
                 meta::flip<meta::quote<tag>>>;
 
-        inline namespace concept_defns
+        inline namespace defs
         {
             ////////////////////////////////////////////////////////////////////////////////////////
             // Utility concepts
@@ -1044,8 +1032,7 @@ namespace concepts
                     Semiregular<T>() &&
                     EqualityComparable<T>()
             );
-        }
-
+        } // inline namespace defs
     } // inline namespace v1
 } // namespace concepts
 
