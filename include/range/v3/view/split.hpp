@@ -151,23 +151,30 @@ namespace ranges
                 struct predicate_pred
                 {
                     semiregular_t<Pred> pred_;
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
+
+                    CONCEPT_template(class S)(
+                        requires Sentinel<S, iterator_t<Rng>>())
+                    (std::pair<bool, iterator_t<Rng>>)
+                    operator()(iterator_t<Rng> cur, S end) const
                     {
                         auto where = ranges::find_if_not(cur, end, std::ref(pred_));
-                        return std::make_pair(cur != where, where);
+                        return std::pair<bool, iterator_t<Rng>>{cur != where, where};
                     }
                 };
                 template<typename Rng>
                 struct element_pred
                 {
                     range_value_type_t<Rng> val_;
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
+
+                    CONCEPT_template(class S)(
+                        requires Sentinel<S, iterator_t<Rng>>())
+                    (std::pair<bool, iterator_t<Rng>>)
+                    operator()(iterator_t<Rng> cur, S end) const
                     {
-                        using P = std::pair<bool, iterator_t<Rng>>;
                         RANGES_EXPECT(cur != end);
-                        return *cur == val_ ? P{true, ranges::next(cur)} : P{false, cur};
+                        bool const match = *cur == val_;
+                        if (match) ++cur;
+                        return std::pair<bool, iterator_t<Rng>>{match, cur};
                     }
                 };
                 template<typename Rng, typename Sub>
@@ -175,25 +182,28 @@ namespace ranges
                 {
                     all_t<Sub> sub_;
                     range_difference_type_t<Sub> len_;
+
                     subrange_pred() = default;
                     subrange_pred(Sub &&sub)
                       : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
                     {}
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, sentinel_t<Rng> end) const
+                    CONCEPT_template(class S)(
+                        requires Sentinel<S, iterator_t<Rng>>())
+                    (std::pair<bool, iterator_t<Rng>>)
+                    operator()(iterator_t<Rng> cur, S end) const
                     {
+                        using P = std::pair<bool, iterator_t<Rng>>;
                         RANGES_EXPECT(cur != end);
-                        if((bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() &&
-                            distance(cur, end) < len_)
-                            return {false, cur};
+                        if((bool) SizedSentinel<S, iterator_t<Rng>>() && distance(cur, end) < len_)
+                            return P{false, cur};
                         auto pat_cur = ranges::begin(sub_);
                         auto pat_end = ranges::end(sub_);
                         for(;; ++cur, ++pat_cur)
                         {
                             if(pat_cur == pat_end)
-                                return {true, cur};
+                                return P{true, cur};
                             if(cur == end || !(*cur == *pat_cur))
-                                return {false, cur};
+                                return P{false, cur};
                         }
                     }
                 };
@@ -204,6 +214,7 @@ namespace ranges
                     concept SplitOnFunction,
                         ForwardRange<Rng>() &&
                         Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>>() &&
+                        Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>>() &&
                         CopyConstructible<Fun>() &&
                         ConvertibleTo<
                             result_of_t<Fun&(iterator_t<Rng>, sentinel_t<Rng>)>,
