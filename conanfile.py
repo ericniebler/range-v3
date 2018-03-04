@@ -18,6 +18,7 @@ class Rangev3Conan(ConanFile):
     url = "https://github.com/ericniebler/range-v3"
     description = """Experimental range library for C++11/14/17"""
     exports_sources = "include*", "LICENSE.txt"
+    build_policy = "missing"
 
     def package(self):
         self.copy("*.hpp", src="include", dst="include", keep_path=True)
