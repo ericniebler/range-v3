@@ -115,5 +115,23 @@ int main()
         ::check_equal(rng, {0,2,4,6});
     }
 
+    {
+        std::list<int> li;
+        copy(v, back_inserter(li));
+        iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
+        auto rng = tmp | view::stride(3);
+        using R = decltype(rng);
+        CONCEPT_ASSERT(BidirectionalView<R>());
+        CONCEPT_ASSERT(!RandomAccessRange<R>());
+        CONCEPT_ASSERT(BoundedRange<R>());
+        CONCEPT_ASSERT(!SizedRange<R>());
+        CONCEPT_ASSERT(!Range<R const>());
+        CHECK((*--rng.end()) == 48);
+        ::check_equal(rng,
+                    {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
+        ::check_equal(rng | view::reverse,
+                    {48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0});
+    }
+
     return ::test_result();
 }
