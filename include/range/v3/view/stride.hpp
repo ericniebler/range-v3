@@ -77,9 +77,9 @@ namespace ranges
                 void set_offset(range_difference_type_t<Rng> const) const noexcept
                 {}
                 RANGES_CXX14_CONSTEXPR
-                range_difference_type_t<Rng> get_offset() const noexcept
+                range_difference_type_t<Rng> get_offset(bool check = true) const noexcept
                 {
-                    RANGES_EXPECT(0 <= offset_);
+                    RANGES_EXPECT(!check || 0 <= offset_);
                     return offset_;
                 }
 
@@ -117,7 +117,7 @@ namespace ranges
                 void set_offset(range_difference_type_t<Rng> const) const noexcept
                 {}
                 RANGES_CXX14_CONSTEXPR
-                range_difference_type_t<Rng> get_offset() const noexcept
+                range_difference_type_t<Rng> get_offset(bool = true) const noexcept
                 {
                     return 0;
                 }
@@ -174,6 +174,11 @@ namespace ranges
                     auto delta = -rng_->stride_;
                     if(it == ranges::end(rng_->base()))
                     {
+                        if(rng_->get_offset(false) < 0) // hasn't been set yet!
+                        {
+                            auto const rem = ranges::distance(rng_->base()) % rng_->stride_;
+                            rng_->set_offset(rem ? rng_->stride_ - rem : 0);
+                        }
                         delta += rng_->get_offset();
                     }
                     ranges::advance(it, delta);
