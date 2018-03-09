@@ -121,11 +121,11 @@ int main()
         iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_ASSERT(BidirectionalView<R>());
-        CONCEPT_ASSERT(!RandomAccessRange<R>());
-        CONCEPT_ASSERT(BoundedRange<R>());
-        CONCEPT_ASSERT(!SizedRange<R>());
-        CONCEPT_ASSERT(!Range<R const>());
+        CONCEPT_assert(BidirectionalView<R>());
+        CONCEPT_assert(!RandomAccessRange<R>());
+        CONCEPT_assert(BoundedRange<R>());
+        CONCEPT_assert(!SizedRange<R>());
+        CONCEPT_assert(!Range<R const>());
         CHECK((*--rng.end()) == 48);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
