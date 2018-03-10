@@ -31,7 +31,7 @@ int main()
     models<concepts::SizedView>(aux::copy(rng0));
     models<concepts::RandomAccessIterator>(begin(rng0));
     ::check_equal(rng0, {0, 1, 2, 3, 4, 5});
-    CHECK(size(rng0) == 6u);
+    CHECK(size(rng0) == 6);
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));

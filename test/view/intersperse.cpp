@@ -24,11 +24,11 @@ ranges::iterator_range<char const*> c_str(char const (&sz)[N])
     return {&sz[0], &sz[N-1]};
 }
 
-ranges::delimit_view<ranges::iterator_range<char const *, ranges::unreachable>, char>
-c_str_(char const *sz)
-{
-    return ranges::view::delimit(sz, '\0');
-}
+auto c_str_(char const *sz)
+RANGES_DECLTYPE_AUTO_RETURN
+(
+    ranges::view::delimit(sz, '\0')
+)
 
 int main()
 {

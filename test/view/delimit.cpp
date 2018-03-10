@@ -27,10 +27,10 @@ int main()
     ::models<concepts::View>(aux::copy(rng0));
     ::models_not<concepts::BoundedView>(aux::copy(rng0));
     ::models<concepts::RandomAccessIterator>(rng0.begin());
-    CONCEPT_ASSERT(RandomAccessView<delimit_view<std::vector<int>, int>>());
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::delimit(50);
+    CONCEPT_ASSERT(RandomAccessView<decltype(rng1)>());
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
     auto rng2 = view::delimit(vi.begin(), 8);

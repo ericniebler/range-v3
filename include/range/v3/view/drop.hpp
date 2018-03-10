@@ -16,7 +16,6 @@
 
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
@@ -28,6 +27,7 @@
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -154,7 +154,7 @@ namespace ranges
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
                 template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
-                static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
+                static subrange<iterator_t<Rng>, sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {next(begin(rng), n), end(rng)};

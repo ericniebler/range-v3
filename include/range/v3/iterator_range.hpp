@@ -14,18 +14,20 @@
 #ifndef RANGES_V3_ITERATOR_RANGE_HPP
 #define RANGES_V3_ITERATOR_RANGE_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
 #include <range/v3/distance.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/view_interface.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/tagged_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/view/all.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -58,6 +60,17 @@ namespace ranges
                 CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
             constexpr iterator_range(iterator_range<X, Y> rng)
               : base_t{detail::move(rng.begin()), detail::move(rng.end())}
+            {}
+            template<typename Rng,
+                CONCEPT_REQUIRES_(Constructible<I, iterator_t<Rng>>() &&
+                    Constructible<S, sentinel_t<Rng>>())>
+            constexpr iterator_range(ref_view<Rng> r)
+              : base_t{r.begin(), r.end()}
+            {}
+            template<typename X, typename Y, subrange_kind K,
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            constexpr iterator_range(subrange<X, Y, K> const &rng)
+              : base_t{rng.begin(), rng.end()}
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
@@ -130,6 +143,29 @@ namespace ranges
             RANGES_NDEBUG_CONSTEXPR sized_iterator_range(sized_iterator_range<X, Y> rng)
               : sized_iterator_range{detail::move(rng).rng_.first(), detail::move(rng).rng_.second, rng.size_}
             {}
+            template<typename Rng,
+                CONCEPT_REQUIRES_(SizedRange<Rng>() &&
+                    Constructible<I, iterator_t<Rng>>() &&
+                    Constructible<S, sentinel_t<Rng>>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(ref_view<Rng> rng)
+              : sized_iterator_range{rng.begin(), rng.end(), static_cast<size_type_t<I>>(rng.size())}
+            {}
+            template<typename Rng,
+                CONCEPT_REQUIRES_(Constructible<I, iterator_t<Rng>>() &&
+                    Constructible<S, sentinel_t<Rng>>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(ref_view<Rng> rng, size_type_t<I> size)
+              : sized_iterator_range{rng.begin(), rng.end(), size}
+            {}
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(subrange<X, Y, subrange_kind::sized> const &rng)
+              : sized_iterator_range{rng.begin(), rng.end(), static_cast<size_type_t<I>>(rng.size())}
+            {}
+            template<typename X, typename Y, subrange_kind K,
+                CONCEPT_REQUIRES_(Constructible<I, X>() && Constructible<S, Y>())>
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(subrange<X, Y, K> const &rng, size_type_t<I> size)
+              : sized_iterator_range{rng.begin(), rng.end(), size}
+            {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Assignable<I &, X>() && Assignable<S &, Y>())>
             sized_iterator_range &operator=(sized_iterator_range<X, Y> rng)
@@ -175,7 +211,6 @@ namespace ranges
                 CONCEPT_REQUIRES_(Sentinel<S, I>())>
             constexpr iterator_range<I, S> operator()(I begin, S end) const
             {
-                CONCEPT_ASSERT(Sentinel<S, I>());
                 return {detail::move(begin), detail::move(end)};
             }
 
@@ -184,8 +219,15 @@ namespace ranges
                 CONCEPT_REQUIRES_(Sentinel<S, I>())>
             constexpr sized_iterator_range<I, S> operator()(I begin, S end, size_type_t<I> size) const
             {
-                CONCEPT_ASSERT(Sentinel<S, I>());
                 return {detail::move(begin), detail::move(end), size};
+            }
+
+            /// \return `{begin(r), end(r)}`
+            template<typename Rng,
+                CONCEPT_REQUIRES_(ReferenceableRange<Rng>())>
+            constexpr iterator_range<iterator_t<Rng>, sentinel_t<Rng>> operator()(Rng &&rng) const
+            {
+                return {begin(rng), end(rng)};
             }
         };
 

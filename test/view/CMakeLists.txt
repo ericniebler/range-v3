@@ -154,6 +154,9 @@ add_executable(view.stride stride.cpp)
 target_link_libraries(view.stride range-v3)
 add_test(test.view.stride, view.stride)
 
+add_executable(view.subrange subrange.cpp)
+add_test(test.view.subrange view.subrange)
+
 add_executable(view.tail tail.cpp)
 target_link_libraries(view.tail range-v3)
 add_test(test.view.tail, view.tail)

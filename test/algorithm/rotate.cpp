@@ -263,7 +263,7 @@ int main()
     // test rvalue range
     {
         int rgi[] = {0,1,2,3,4,5};
-        auto r = ranges::rotate(ranges::view::all(rgi), rgi+2);
+        auto r = ranges::rotate(ranges::make_iterator_range(rgi, rgi+6), rgi+2);
         CHECK(r.get_unsafe().begin() == rgi+4);
         CHECK(r.get_unsafe().end() == ranges::end(rgi));
         CHECK(rgi[0] == 2);

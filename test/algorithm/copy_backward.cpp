@@ -40,7 +40,7 @@ int main()
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
-    auto res2 = ranges::copy_backward(ranges::view::all(a), end(out));
+    auto res2 = ranges::copy_backward(ranges::make_iterator_range(a), end(out));
     CHECK(res2.first.get_unsafe() == end(a));
     CHECK(res2.second == begin(out));
     CHECK(std::equal(a, a + size(a), out));

@@ -15,11 +15,13 @@
 
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <range/v3/begin_end.hpp>
+#include <range/v3/data.hpp>
+#include <range/v3/empty.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/iterator_range.hpp>
-#include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -27,74 +29,125 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            struct CanEmptyRange_
+              : concepts::refines<concepts::Range>
+            {
+                template<typename T>
+                auto requires_(T &t) -> decltype(
+                    concepts::valid_expr(
+                        empty(t)
+                    ));
+            };
+
+            template<typename Rng>
+            using CanEmptyRange = concepts::models<CanEmptyRange_, Rng>;
+        } // namespace detail
+        /// \endcond
+
         /// \addtogroup group-views
         /// @{
+        template<typename Rng>
+        struct ref_view
+          : view_interface<ref_view<Rng>, range_cardinality<Rng>::value>
+        {
+        private:
+            CONCEPT_ASSERT(std::is_object<Rng>::value && Range<Rng>() && !View<Rng>());
+
+            Rng *rng_ = nullptr;
+        public:
+            ref_view() = default;
+            constexpr explicit ref_view(Rng &rng) noexcept
+              : rng_{&rng}
+            {}
+            constexpr iterator_t<Rng> begin() const
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::begin(*rng_)
+            )
+            constexpr sentinel_t<Rng> end() const
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::end(*rng_)
+            )
+            template<typename R = Rng,
+                CONCEPT_REQUIRES_(SizedRange<R>())>
+            constexpr auto size() const
+                RANGES_DECLTYPE_NOEXCEPT(ranges::size(std::declval<R &>()))
+            {
+                return ranges::size(*rng_);
+            }
+            template<typename R = Rng,
+                CONCEPT_REQUIRES_(detail::CanEmptyRange<R>())>
+            constexpr auto empty() const
+                RANGES_DECLTYPE_NOEXCEPT(ranges::empty(std::declval<R &>()))
+            {
+                return ranges::empty(*rng_);
+            }
+            template<typename R = Rng,
+                CONCEPT_REQUIRES_(ContiguousRange<R>())>
+            constexpr auto data() const
+                RANGES_DECLTYPE_NOEXCEPT(ranges::data(std::declval<R &>()))
+            {
+                return ranges::data(*rng_);
+            }
+        };
+
+        template<typename R>
+        struct is_referenceable_range<ref_view<R>> : std::true_type {};
+
         namespace view
         {
             struct all_fn : pipeable<all_fn>
             {
-            private:
-                template<typename T>
-                static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::Range*, concepts::Sentinel*)
-                {
-                    return {begin(t), end(t)};
-                }
-
-                template<typename T>
-                static sized_iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, concepts::Sentinel*)
-                {
-                    return {begin(t), end(t), size(t)};
-                }
-
-                template<typename T>
-                static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, concepts::SizedRange*, concepts::SizedSentinel*)
-                {
-                    RANGES_ASSERT(size(t) == size(begin(t), end(t)));
-                    return {begin(t), end(t)};
-                }
-
                 /// If it's a view already, pass it though.
                 template<typename T,
                     CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
-                static T from_range(T && t)
+                RANGES_CXX14_CONSTEXPR uncvref_t<T> operator()(T &&t) const
+                    noexcept(noexcept(uncvref_t<T>(uncvref_t<T>(static_cast<T &&>(t)))))
                 {
-                    return static_cast<T&&>(t);
+                    return static_cast<T &&>(t);
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                constexpr uncvref_t<T> operator()(std::reference_wrapper<T> ref) const
+                    noexcept(std::is_nothrow_constructible<uncvref_t<T>, T &>::value)
+                {
+                    return ref.get();
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(View<uncvref_t<T>>())>
+                constexpr uncvref_t<T> operator()(ranges::reference_wrapper<T> ref) const
+                    noexcept(std::is_nothrow_constructible<uncvref_t<T>, T &>::value)
+                {
+                    return ref.get();
                 }
 
-                /// If it is container-like, turn it into a view, being careful
-                /// to preserve the Sized-ness of the range.
+                /// If it's container-like, turn it into a view.
                 template<typename T,
-                    CONCEPT_REQUIRES_(!View<uncvref_t<T>>()),
-                    typename I = iterator_t<T>,
-                    typename S = sentinel_t<T>,
-                    typename SIC = sized_range_concept<T>,
-                    typename SIRC = sized_sentinel_concept<S, I>>
-                static auto from_range(T && t) ->
-                    decltype(all_fn::from_container(t, SIC(), SIRC()))
+                    CONCEPT_REQUIRES_(Range<T>() && !View<uncvref_t<T>>())>
+                constexpr ref_view<meta::_t<std::remove_reference<T>>>
+                operator()(T &&t) const noexcept
                 {
-                    static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
-                    return all_fn::from_container(t, SIC(), SIRC());
+                    static_assert(std::is_lvalue_reference<T>::value,
+                        "Cannot get a view of a temporary container");
+                    return ref_view<meta::_t<std::remove_reference<T>>>{t};
                 }
-
-                // TODO handle char const * by turning it into a delimited range?
-
-            public:
                 template<typename T,
-                    CONCEPT_REQUIRES_(Range<T>())>
-                auto operator()(T && t) const ->
-                    decltype(all_fn::from_range(static_cast<T&&>(t)))
+                    CONCEPT_REQUIRES_(Range<T>() && !View<uncvref_t<T>>())>
+                constexpr ref_view<T>
+                operator()(std::reference_wrapper<T> ref) const noexcept
                 {
-                    return all_fn::from_range(static_cast<T&&>(t));
+                    return ref_view<T>(ref.get());
                 }
-
                 template<typename T,
-                    CONCEPT_REQUIRES_(Range<T &>())>
-                ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
+                    CONCEPT_REQUIRES_(Range<T>() && !View<uncvref_t<T>>())>
+                constexpr ref_view<T>
+                operator()(ranges::reference_wrapper<T> ref) const noexcept
                 {
-                    return ranges::ref(ref.get());
+                    return ref_view<T>(ref.get());
                 }
             };
 
@@ -103,8 +156,7 @@ namespace ranges
             RANGES_INLINE_VARIABLE(all_fn, all)
 
             template<typename Rng>
-            using all_t =
-                meta::_t<std::decay<decltype(all(std::declval<Rng>()))>>;
+            using all_t = decltype(all(std::declval<Rng>()));
         }
         /// @}
     }

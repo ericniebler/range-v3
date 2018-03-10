@@ -55,9 +55,9 @@ int main()
     pi = find(ia, 10);
     CHECK(pi == ia+s);
 
-    auto pj = find(view::all(ia), 3);
+    auto pj = find(make_iterator_range(ia), 3);
     CHECK(*pj.get_unsafe() == 3);
-    pj = find(view::all(ia), 10);
+    pj = find(make_iterator_range(ia), 10);
     CHECK(pj.get_unsafe() == ia+s);
 
     S sa[] = {{0}, {1}, {2}, {3}, {4}, {5}};

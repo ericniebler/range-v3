@@ -54,7 +54,7 @@ namespace ranges
             constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
             CONCEPT_REQUIRES(!SizedRange<Rng const>() && (SizedRange<Rng>() ||
                 SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>()))
@@ -191,7 +191,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size_(std::true_type)
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
             // SizedRange == false, SizedSentinel == true
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size_(std::false_type)

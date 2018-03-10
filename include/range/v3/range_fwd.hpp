@@ -487,6 +487,11 @@ namespace ranges
         template<typename>
         struct is_reference_wrapper;
 
+        template<typename Rng>
+        struct is_referenceable_range
+            : meta::_t<std::is_lvalue_reference<Rng>>
+        {};
+
         // Views
         //
         template<typename Rng, typename Pred>

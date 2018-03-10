@@ -306,7 +306,7 @@ int main()
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res1 =
-            ranges::set_symmetric_difference(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+            ranges::set_symmetric_difference(ranges::make_iterator_range(ia), ranges::make_iterator_range(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK(std::get<0>(res1).get_unsafe() == ranges::end(ia));
         CHECK(std::get<1>(res1).get_unsafe() == ranges::end(ib));
         CHECK((std::get<2>(res1) - ic) == sr);
@@ -314,7 +314,7 @@ int main()
         ranges::fill(ic, U{0});
 
         auto res2 =
-            ranges::set_symmetric_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
+            ranges::set_symmetric_difference(ranges::make_iterator_range(ib), ranges::make_iterator_range(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK(std::get<0>(res2).get_unsafe() == ranges::end(ib));
         CHECK(std::get<1>(res2).get_unsafe() == ranges::end(ia));
         CHECK((std::get<2>(res2) - ic) == sr);

@@ -228,7 +228,7 @@ int main()
             v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
-        CHECK(ranges::stable_sort(ranges::view::all(v), std::less<int>{}, &S::i).get_unsafe() == v.end());
+        CHECK(ranges::stable_sort(ranges::make_iterator_range(v), std::less<int>{}, &S::i).get_unsafe() == v.end());
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
             CHECK(v[i].i == i);

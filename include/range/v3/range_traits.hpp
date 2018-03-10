@@ -64,7 +64,7 @@ namespace ranges
         template<typename Rng>
         using safe_iterator_t =
             meta::if_<
-                std::is_lvalue_reference<Rng>,
+                ReferenceableRange<Rng>,
                 meta::if_<Range<Rng>, iterator_t<Rng>>,
                 dangling<iterator_t<Rng>>>;
 

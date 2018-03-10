@@ -210,7 +210,7 @@ int main()
         CHECK(!is_odd()(i->i));
 
     // Test rvalue range
-    auto r2 = ranges::partition(ranges::view::all(ia), is_odd(), &S::i);
+    auto r2 = ranges::partition(ranges::make_iterator_range(ia), is_odd(), &S::i);
     CHECK(r2.get_unsafe() == ia + 5);
     for (S* i = ia; i < r2.get_unsafe(); ++i)
         CHECK(is_odd()(i->i));
