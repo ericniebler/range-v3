@@ -49,12 +49,16 @@ namespace ranges
         {
         private:
             friend range_access;
-
-            using CanSizedSentinel = SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>;
+            CONCEPT_assert(ForwardRange<Rng>());
+            // CONCEPT_assert(!ForwardRange<Rng const>() || Same<range_difference_type_t<Rng>, range_difference_type_t<Rng const>>());
+            template<typename T>
+            using constify = meta::const_if<ForwardRange<Rng const>, T>;
+            static constexpr bool CanSizedSentinel =
+                SizedSentinel<iterator_t<constify<Rng>>, iterator_t<constify<Rng>>>();
 
             using offset_t =
                 meta::if_c<
-                    BidirectionalRange<Rng>() || CanSizedSentinel(),
+                    BidirectionalRange<constify<Rng>>() || CanSizedSentinel,
                     range_difference_type_t<Rng>,
                     constant<range_difference_type_t<Rng>, 0>>;
 
@@ -65,7 +69,8 @@ namespace ranges
             {
             private:
                 range_difference_type_t<Rng> n_;
-                sentinel_t<Rng> end_;
+                sentinel_t<constify<Rng>> end_;
+
                 RANGES_CXX14_CONSTEXPR
                 offset_t const &offset() const
                 {
@@ -80,11 +85,12 @@ namespace ranges
                 }
             public:
                 adaptor() = default;
-                constexpr adaptor(range_difference_type_t<Rng> n, sentinel_t<Rng> end)
+                constexpr adaptor(range_difference_type_t<Rng> n,
+                    sentinel_t<constify<Rng>> end)
                   : box<offset_t>{0}, n_((RANGES_EXPECT(0 < n), n)), end_(end)
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto read(iterator_t<Rng> it) const ->
+                auto read(iterator_t<constify<Rng>> it) const ->
                     decltype(view::take(make_iterator_range(std::move(it), end_), n_))
                 {
                     RANGES_EXPECT(it != end_);
@@ -92,23 +98,23 @@ namespace ranges
                     return view::take(make_iterator_range(std::move(it), end_), n_);
                 }
                 RANGES_CXX14_CONSTEXPR
-                void next(iterator_t<Rng> &it)
+                void next(iterator_t<constify<Rng>> &it)
                 {
                     RANGES_EXPECT(it != end_);
                     RANGES_EXPECT(0 == offset());
                     offset() = ranges::advance(it, n_, end_);
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<constify<Rng>>())
                 (RANGES_CXX14_CONSTEXPR
-                void) prev(iterator_t<Rng> &it)
+                void) prev(iterator_t<constify<Rng>> &it)
                 {
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
-                CONCEPT_requires(CanSizedSentinel())
+                CONCEPT_requires(True<CanSizedSentinel>())
                 (RANGES_CXX14_CONSTEXPR
-                range_difference_type_t<Rng>) distance_to(iterator_t<Rng> const &here,
-                    iterator_t<Rng> const &there, adaptor const &that) const
+                range_difference_type_t<Rng>) distance_to(iterator_t<constify<Rng>> const &here,
+                    iterator_t<constify<Rng>> const &there, adaptor const &that) const
                 {
                     auto const delta = (there - here) + (that.offset() - offset());
                     // This can fail for cyclic base ranges when the chunk size does not divide the
@@ -116,9 +122,9 @@ namespace ranges
                     RANGES_ENSURE(0 == delta % n_);
                     return delta / n_;
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<constify<Rng>>())
                 (RANGES_CXX14_CONSTEXPR
-                void) advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
+                void) advance(iterator_t<constify<Rng>> &it, range_difference_type_t<Rng> n)
                 {
                     using Limits = std::numeric_limits<range_difference_type_t<Rng>>;
                     if(0 < n)
@@ -139,16 +145,21 @@ namespace ranges
             };
 
             RANGES_CXX14_CONSTEXPR
-            adaptor begin_adaptor() const
+            adaptor begin_adaptor()
             {
                 return adaptor{n_, ranges::end(this->base())};
             }
-            CONCEPT_requires(SizedRange<Rng>())
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size_()
+            CONCEPT_requires(ForwardRange<Rng const>())
+            (constexpr adaptor) begin_adaptor() const
             {
-                auto const sz = ranges::distance(this->base());
-                return static_cast<range_size_type_t<Rng>>(sz / n_ + (0 != (sz % n_)));
+                return adaptor{n_, ranges::end(this->base())};
+            }
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size_(range_difference_type_t<Rng> base_size) const
+            {
+                CONCEPT_assert(SizedRange<Rng>());
+                base_size = base_size / n_ + (0 != (base_size % n_));
+                return static_cast<range_size_type_t<Rng>>(base_size);
             }
         public:
             chunk_view() = default;
@@ -156,17 +167,17 @@ namespace ranges
               : chunk_view::view_adaptor(detail::move(rng))
               , n_((RANGES_EXPECT(0 < n), n))
             {}
-            CONCEPT_requires(SizedRange<const Rng>())
+            CONCEPT_requires(SizedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng>) size() const
             {
-                return const_cast<chunk_view*>(this)->size_();
+                return size_(ranges::distance(this->base()));
             }
-            CONCEPT_requires(SizedRange<Rng>() && !SizedRange<const Rng>())
+            CONCEPT_requires(SizedRange<Rng>() && !SizedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng>) size()
             {
-                return size_();
+                return size_(ranges::distance(this->base()));
             }
         };
 
@@ -178,6 +189,7 @@ namespace ranges
         {
         private:
             friend range_access;
+            CONCEPT_assert(InputRange<Rng>() && !ForwardRange<Rng>());
 
             using iter_cache_t = detail::non_propagating_cache<iterator_t<Rng>>;
 
@@ -334,14 +346,13 @@ namespace ranges
                 it_cache() = ranges::begin(base());
                 return outer_cursor{*this};
             }
-            CONCEPT_requires(SizedRange<Rng>())
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size_()
-                noexcept(noexcept(ranges::size(std::declval<Rng &>())))
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size_(range_difference_type_t<Rng> base_size) const
             {
-                auto const sz = ranges::size(base());
-                auto const n = static_cast<range_size_type_t<Rng>>(this->n());
-                return sz / n + (0 != sz % n);
+                CONCEPT_assert(SizedRange<Rng>());
+                auto const n = this->n();
+                base_size = base_size / n + (0 != base_size % n);
+                return static_cast<range_size_type_t<Rng>>(base_size);
             }
         public:
             chunk_view() = default;
@@ -352,16 +363,16 @@ namespace ranges
             CONCEPT_requires(SizedRange<Rng const>())
             (RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng>) size() const
-                noexcept(noexcept(ranges::size(std::declval<Rng &>())))
+                noexcept(noexcept(ranges::distance(std::declval<Rng const &>())))
             {
-                return const_cast<chunk_view*>(this)->size_();
+                return size_(ranges::distance(base()));
             }
-            CONCEPT_requires(SizedRange<Rng>() && !SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng>())
             (RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng>) size()
-                noexcept(noexcept(ranges::size(std::declval<Rng &>())))
+                noexcept(noexcept(ranges::distance(std::declval<Rng &>())))
             {
-                return size_();
+                return size_(ranges::distance(base()));
             }
         };
 
