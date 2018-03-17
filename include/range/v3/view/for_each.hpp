@@ -172,7 +172,7 @@ namespace ranges
         template<typename Rng, typename Fun,
             CONCEPT_REQUIRES_(Range<Rng>() && CopyConstructible<Fun>() &&
                 Invocable<Fun&, range_common_reference_t<Rng>>() &&
-                Range<result_of_t<Fun&(range_common_reference_t<Rng> &&)>>())>
+                Range<invoke_result_t<Fun&, range_common_reference_t<Rng>>>())>
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(static_cast<Rng&&>(rng), std::move(fun)))
         {

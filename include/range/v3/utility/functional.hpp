@@ -206,11 +206,11 @@ namespace ranges
             struct Invocable
             {
                 template<typename Fun, typename... Args>
-                using result_t = result_of_t<Fun &&(Args &&...)>;
+                using result_t = invoke_result_t<Fun, Args...>;
 
                 template<typename Fun, typename... Args>
                 auto requires_() ->
-                    meta::void_<result_of_t<Fun &&(Args &&...)>>;
+                    meta::void_<invoke_result_t<Fun, Args...>>;
             };
 
             struct RegularInvocable
@@ -402,7 +402,7 @@ namespace ranges
               : composed::compressed_pair{std::move(first), std::move(second)}
             {}
             template<typename...Ts,
-                typename FirstResultT = result_of_t<First&(Ts &&...)>>
+                typename FirstResultT = invoke_result_t<First&, Ts...>>
             auto operator()(Ts &&...ts)
             RANGES_DECLTYPE_NOEXCEPT(composed::do_(
                 std::declval<First &>(),
@@ -416,7 +416,7 @@ namespace ranges
                     (Ts &&) ts...);
             }
             template<typename...Ts,
-                typename FirstResultT = result_of_t<First const &(Ts &&...)>>
+                typename FirstResultT = invoke_result_t<First const &, Ts...>>
             auto operator()(Ts &&...ts) const
             RANGES_DECLTYPE_NOEXCEPT(composed::do_(
                 std::declval<First const &>(),
@@ -530,7 +530,7 @@ namespace ranges
             // value_type (needs no impl)
             template<typename ...Its>
             [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                result_of_t<Fn &(decltype(*std::declval<Its>())...)>
+                invoke_result_t<Fn &, decltype(*std::declval<Its>())...>
             {
                 RANGES_EXPECT(false);
             }
