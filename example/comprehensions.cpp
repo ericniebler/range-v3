@@ -16,23 +16,21 @@
 
 using namespace ranges;
 
-int main()
+int
+main()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto triples =
-        view::for_each(view::ints(1), [](int z)
-        {
-            return view::for_each(view::ints(1, z+1), [=](int x)
-            {
-                return view::for_each(view::ints(x, z+1), [=](int y)
-                {
-                    return yield_if(x*x + y*y == z*z, std::make_tuple(x, y, z));
-                });
+    auto triples = view::for_each(view::ints(1), [](int z) {
+        return view::for_each(view::ints(1, z + 1), [=](int x) {
+            return view::for_each(view::ints(x, z + 1), [=](int y) {
+                return yield_if(x * x + y * y == z * z,
+                                std::make_tuple(x, y, z));
             });
         });
+    });
 
     //// This alternate syntax also works:
-    //auto triples = ints(1)      >>= [] (int z) { return
+    // auto triples = ints(1)      >>= [] (int z) { return
     //               ints(1, z+1) >>= [=](int x) { return
     //               ints(x, z+1) >>= [=](int y) { return
     //    yield_if(x*x + y*y == z*z,
@@ -41,10 +39,8 @@ int main()
     // Display the first 100 triples
     RANGES_FOR(auto triple, triples | view::take(100))
     {
-        std::cout << '('
-            << std::get<0>(triple) << ','
-            << std::get<1>(triple) << ','
-            << std::get<2>(triple) << ')' << '\n';
+        std::cout << '(' << std::get<0>(triple) << ',' << std::get<1>(triple)
+                  << ',' << std::get<2>(triple) << ')' << '\n';
     }
 }
 
@@ -56,6 +52,7 @@ class timer
 {
 private:
     std::chrono::high_resolution_clock::time_point start_;
+
 public:
     timer()
     {
@@ -76,20 +73,18 @@ public:
     }
 };
 
-void benchmark()
+void
+benchmark()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto triples =
-        view::for_each(view::ints(1), [](int z)
-        {
-            return view::for_each(view::ints(1, z+1), [=](int x)
-            {
-                return view::for_each(view::ints(x, z+1), [=](int y)
-                {
-                    return yield_if(x*x + y*y == z*z, std::make_tuple(x, y, z));
-                });
+    auto triples = view::for_each(view::ints(1), [](int z) {
+        return view::for_each(view::ints(1, z + 1), [=](int x) {
+            return view::for_each(view::ints(x, z + 1), [=](int y) {
+                return yield_if(x * x + y * y == z * z,
+                                std::make_tuple(x, y, z));
             });
         });
+    });
 
     static constexpr int max_triples = 3000;
 
@@ -113,7 +108,7 @@ void benchmark()
         {
             for(int y = x; y <= z; ++y)
             {
-                if(x*x + y*y == z*z)
+                if(x * x + y * y == z * z)
                 {
                     result += (x + y + z);
                     ++found;

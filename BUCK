@@ -6,7 +6,7 @@ prebuilt_cxx_library(
     ('include/meta', '**/*.hpp'),
   ]),
   licenses = [
-    'LICENSE.txt', 
+    'LICENSE.txt',
   ],
 )
 
@@ -18,7 +18,7 @@ prebuilt_cxx_library(
     ('include/range/v3', '**/*.hpp'),
   ]),
   licenses = [
-    'LICENSE.txt', 
+    'LICENSE.txt',
   ],
   visibility = [
     'PUBLIC'

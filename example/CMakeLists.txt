@@ -1,5 +1,7 @@
 # examples use a less draconian set of compiler warnings
 ranges_append_flag(RANGES_HAS_WNO_MISSING_BRACES -Wno-missing-braces)
+ranges_append_flag(RANGES_HAS_WNO_SHORTEN_64_TO_32 -Wno-shorten-64-to-32)
+ranges_append_flag(RANGES_HAS_WNO_GLOBAL_CONSTRUCTORS -Wno-global-constructors)
 
 add_executable(comprehensions comprehensions.cpp)
 add_test(example.comprehensions, comprehensions)
