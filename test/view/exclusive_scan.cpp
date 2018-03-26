@@ -34,13 +34,12 @@ int main(){
             int cnt = 0;
             auto mutable_rng = view::exclusive_scan(rgi, 0, [cnt](int i, int j) mutable {return i + j + cnt++;});
             ::check_equal(mutable_rng, {0, 1, 4, 9, 16, 25, 36, 49, 64, 81});
-            CHECK(cnt == 0);
             CONCEPT_ASSERT(View<decltype(mutable_rng)>());
             CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
         }
     }
 
-    {// For an emtpy range.
+    {// For an empty range.
         std::vector<int> rgi;
         auto && rng = rgi | view::exclusive_scan(0);
         has_type<int &>(*begin(rgi));
