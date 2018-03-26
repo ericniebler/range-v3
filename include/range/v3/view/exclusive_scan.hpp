@@ -39,8 +39,7 @@ namespace ranges {
             {
             private:
                 using exclusive_scan_view_t = meta::const_if_c<IsConst, exclusive_scan_view>;
-                // sum_'s type doesn't have to be range_value_type_t<Rng>.
-                semiregular_t<range_value_type_t<Rng>> sum_;
+                T sum_;
                 exclusive_scan_view_t *rng_;
             public:
                 using single_pass = exclusive_scan_view::single_pass;
@@ -126,7 +125,7 @@ namespace ranges {
                         InputRange<Rng>,
                         MoveConstructible<T>,
                         IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>,
-                        ConvertibleTo<result_of_t<Fun&(T, range_common_reference_t<Rng> &&)>, T>>;
+                        IndirectInvocable<Fun, iterator_t<Rng>, T*>>;
 
                 template<typename Rng, typename T, typename Fun,
                         CONCEPT_REQUIRES_(Concept<Rng, T, Fun>())>
