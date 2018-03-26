@@ -97,8 +97,13 @@ namespace ranges {
               , init_(std::move(init))
               , fun_(std::move(fun))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             range_size_type_t<Rng> size() const
+            {
+                return ranges::size(this->base());
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
