@@ -1,6 +1,6 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2014
+//  Copyright Eric Niebler 2014-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -16,6 +16,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/cycle.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/move.hpp>
@@ -210,6 +211,22 @@ int main()
         int const expected[][2] = {{0, 1}, {2, 3}};
         auto rng = view::all(some_ints);
         ::check_equal(rng | view::chunk(2), expected);
+    }
+
+    {
+        // Regression test for https://stackoverflow.com/questions/49210190
+        auto rng = view::closed_iota(1,25)
+            | view::filter([](int item){ return item % 10 != 0; })
+            | view::chunk(10);
+        auto it = ranges::begin(rng);
+        auto last = ranges::end(rng);
+        CHECK(it != last);
+        ::check_equal(*it, {1,2,3,4,5,6,7,8,9,11});
+        CHECK(++it != last);
+        ::check_equal(*it, {12,13,14,15,16,17,18,19,21,22});
+        CHECK(++it != last);
+        ::check_equal(*it, {23,24,25});
+        CHECK(++it == last);
     }
 
     return ::test_result();

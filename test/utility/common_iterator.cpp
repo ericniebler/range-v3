@@ -1,6 +1,6 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2015
+//  Copyright Eric Niebler 2015-present
 //  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the

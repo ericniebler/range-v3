@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-2015
+//  Copyright Eric Niebler 2013-present
 //  Copyright Gonzalo Brito Gadeschi 2015
 //
 //  Use, modification and distribution is subject to the

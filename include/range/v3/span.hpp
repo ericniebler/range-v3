@@ -97,6 +97,13 @@ namespace ranges
             private:
                 span_index_t size_ = 0;
             };
+
+            constexpr span_index_t subspan_extent(
+                span_index_t Extent, span_index_t Offset, span_index_t Count) noexcept
+            {
+                return Count == dynamic_extent && Extent != dynamic_extent
+                    ? Extent - Offset : Count;
+            }
         } // namespace detail
         /// \endcond
 
@@ -197,25 +204,28 @@ namespace ranges
             }
 
             template<index_type Offset, index_type Count>
-            constexpr span<T, Count> subspan() const noexcept
+            constexpr span<T, detail::subspan_extent(N, Offset, Count)>
+            subspan() const noexcept
             {
                 static_assert(Offset >= 0,
                     "Offset of first element to extract cannot be negative.");
-                static_assert(Count >= 0,
+                static_assert(Count >= dynamic_extent,
                     "Count of elements to extract cannot be negative.");
-                static_assert(N == dynamic_extent || N >= Offset + Count,
+                static_assert(N == dynamic_extent ||
+                    N >= Offset + (Count == dynamic_extent ? 0 : Count),
                     "Sequence of elements to extract must be within the static span extent.");
-                return RANGES_EXPECT(size() >= Offset + Count),
-                    RANGES_EXPECT((Offset == 0 && Count == 0) || data_ != nullptr),
-                    span<T, Count>{data_ + Offset, Count};
+                return RANGES_EXPECT(size() >= Offset + (Count == dynamic_extent ? 0 : Count)),
+                    RANGES_EXPECT((Offset == 0 && Count <= 0) || data_ != nullptr),
+                    span<T, detail::subspan_extent(N, Offset, Count)>{
+                        data_ + Offset, Count == dynamic_extent ? size() - Offset : Count};
             }
             template<index_type Offset>
             constexpr span<T, N >= Offset ? N - Offset : dynamic_extent> subspan() const noexcept
             {
                 static_assert(Offset >= 0,
                     "Offset of first element to extract cannot be negative.");
-                static_assert(N == dynamic_extent || Offset <= N,
-                    "Offset of first element to extract must be less than the static span extent.");
+                static_assert(N == dynamic_extent || N >= Offset,
+                    "Offset of first element to extract must be within the static span extent.");
                 return RANGES_EXPECT(size() >= Offset),
                     RANGES_EXPECT((Offset == 0 && size() == 0) || data_ != nullptr),
                     span<T, N >= Offset ? N - Offset : dynamic_extent>{

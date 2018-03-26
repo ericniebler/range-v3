@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2017
+//  Copyright Eric Niebler 2017-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -16,7 +16,7 @@
 
 #define RANGE_V3_MAJOR 0
 #define RANGE_V3_MINOR 3
-#define RANGE_V3_PATCHLEVEL 0
+#define RANGE_V3_PATCHLEVEL 5
 
 #define RANGE_V3_VERSION (RANGE_V3_MAJOR * 10000 \
                         + RANGE_V3_MINOR * 100 \
