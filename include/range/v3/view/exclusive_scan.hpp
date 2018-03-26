@@ -35,7 +35,8 @@ namespace ranges {
             using use_sentinel_t = meta::or_<meta::not_<BoundedRange<Rng>>, single_pass>;
 
             template<bool IsConst>
-            struct adaptor : adaptor_base {
+            struct adaptor : adaptor_base
+            {
             private:
                 using exclusive_scan_view_t = meta::const_if_c<IsConst, exclusive_scan_view>;
                 // sum_'s type doesn't have to be range_value_type_t<Rng>.
@@ -45,7 +46,7 @@ namespace ranges {
                 using single_pass = exclusive_scan_view::single_pass;
                 adaptor() = default;
                 adaptor(exclusive_scan_view_t &rng)
-                        : rng_(&rng)
+                  : rng_(&rng)
                 {}
                 iterator_t<Rng> begin(exclusive_scan_view_t &)
                 {
@@ -94,9 +95,9 @@ namespace ranges {
         public:
             exclusive_scan_view() = default;
             exclusive_scan_view(Rng rng, T init, Fun fun)
-            : exclusive_scan_view::view_adaptor{std::move(rng)}
-            , init_(std::move(init))
-            , fun_(std::move(fun))
+              : exclusive_scan_view::view_adaptor{std::move(rng)}
+              , init_(std::move(init))
+              , fun_(std::move(fun))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_type_t<Rng> size() const
