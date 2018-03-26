@@ -29,7 +29,7 @@ namespace ranges {
         {
         private:
             friend range_access;
-            T init_;
+            semiregular_t<T> init_;
             semiregular_t<Fun> fun_;
             using single_pass = SinglePass<iterator_t<Rng>>;
             using use_sentinel_t = meta::or_<meta::not_<BoundedRange<Rng>>, single_pass>;
