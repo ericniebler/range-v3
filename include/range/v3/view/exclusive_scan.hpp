@@ -41,6 +41,15 @@ namespace ranges {
                 using exclusive_scan_view_t = meta::const_if_c<IsConst, exclusive_scan_view>;
                 T sum_;
                 exclusive_scan_view_t *rng_;
+
+                T move_or_copy_init(std::false_type) {
+                    return rng_->init_;
+                }
+
+                // If the base range is single-pass, we can move the init value.
+                T move_or_copy_init(std::true_type) {
+                    return std::move(rng_->init_);
+                }
             public:
                 using single_pass = exclusive_scan_view::single_pass;
                 adaptor() = default;
@@ -49,10 +58,10 @@ namespace ranges {
                 {}
                 iterator_t<Rng> begin(exclusive_scan_view_t &)
                 {
-                    sum_ = rng_->init_;
+                    sum_ = move_or_copy_init(single_pass{});
                     return ranges::begin(rng_->base());
                 }
-                range_value_type_t<Rng> read(iterator_t<Rng>) const
+                T read(iterator_t<Rng>) const
                 {
                     return sum_;
                 }
@@ -60,8 +69,7 @@ namespace ranges {
                 {
                     RANGES_EXPECT(it != ranges::end(rng_->base()));
 
-                    auto &current = static_cast<range_value_type_t<Rng> &>(sum_);
-                    sum_ = invoke(rng_->fun_, current, *it);
+                    sum_ = invoke(rng_->fun_, std::move(sum_), *it);
                     ++it;
                 }
                 void prev() = delete;
