@@ -137,7 +137,7 @@ namespace ranges {
                         InputRange<Rng>,
                         MoveConstructible<T>,
                         IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>,
-                        IndirectInvocable<Fun, iterator_t<Rng>, T*>>;
+                        IndirectInvocable<Fun, T*, iterator_t<Rng>>>;
 
                 template<typename Rng, typename T, typename Fun,
                         CONCEPT_REQUIRES_(Concept<Rng, T, Fun>())>
@@ -160,9 +160,10 @@ namespace ranges {
                                                iterator_t<Rng>>(),
                                        "The third argument passed to view::exclusive_scan must be callable with "
                                                "two values from the range passed as the first argument.");
-                    CONCEPT_ASSERT_MSG(ConvertibleTo<result_of_t<Fun&(T, range_common_reference_t<Rng> &&)>, T>(),
-                                       "The return type of the function passed to view::exclusive_scan must be "
-                                               "convertible to the type of init value.");
+                    CONCEPT_ASSERT_MSG(IndirectInvocable<Fun, T*, iterator_t<Rng>>(),
+                                       "The third argument passed to view::exclusive_scan must be callable with "
+                                               "a value from the range passed as the first argument and the init"
+                                               "value passed as the second argument.");
                 }
 #endif
             };
