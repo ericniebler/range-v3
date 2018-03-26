@@ -58,12 +58,11 @@ namespace ranges {
                 }
                 void next(iterator_t<Rng> &it)
                 {
-                    if (it != ranges::end(rng_->base()))
-                    {
-                        auto &current = static_cast<range_value_type_t<Rng> &>(sum_);
-                        sum_ = invoke(rng_->fun_, current, *it);
-                        ++it;
-                    }
+                    RANGES_EXPECT(it != ranges::end(rng_->base()));
+
+                    auto &current = static_cast<range_value_type_t<Rng> &>(sum_);
+                    sum_ = invoke(rng_->fun_, current, *it);
+                    ++it;
                 }
                 void prev() = delete;
             };
