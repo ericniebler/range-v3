@@ -20,20 +20,24 @@ target_link_libraries(count_if range-v3)
 add_test(example.count_if, count_if)
 
 add_executable(any_all_none_of any_all_none_of.cpp)
+target_link_libraries(any_all_none_of range-v3)
 add_test(example.any_all_none_of, any_all_none_of)
 
 add_executable(for_each_sequence for_each_sequence.cpp)
+target_link_libraries(for_each_sequence range-v3)
 add_test(example.for_each_sequence, for_each_sequence)
 
 add_executable(for_each_assoc for_each_assoc.cpp)
+target_link_libraries(for_each_assoc range-v3)
 add_test(example.for_each_assoc, for_each_assoc)
 
 add_executable(is_sorted is_sorted.cpp)
+target_link_libraries(is_sorted range-v3)
 add_test(example.is_sorted, is_sorted)
 
 add_executable(find find.cpp)
+target_link_libraries(find range-v3)
 add_test(example.find, find)
-
 
 # add_executable(fibonacci fibonacci.cpp)
 # target_link_libraries(fibonacci range-v3)
