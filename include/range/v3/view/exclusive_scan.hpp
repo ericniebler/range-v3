@@ -25,7 +25,8 @@ namespace ranges {
         /// @{
         template<typename Rng, typename T, typename Fun>
         struct exclusive_scan_view
-                : view_adaptor<exclusive_scan_view<Rng, T, Fun>, Rng> {
+          : view_adaptor<exclusive_scan_view<Rng, T, Fun>, Rng>
+        {
         private:
             friend range_access;
             T init_;
