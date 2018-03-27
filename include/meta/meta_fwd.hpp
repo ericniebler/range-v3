@@ -2,7 +2,7 @@
 //
 // Meta library
 //
-//  Copyright Eric Niebler 2014-2015
+//  Copyright Eric Niebler 2014-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying

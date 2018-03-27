@@ -65,6 +65,31 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.3.5** February 17, 2018
+  - Rvalues may satisfy `Writable` (see [ericniebler/stl2\#387](https://github.com/ericniebler/stl2/issues/387)).
+  - `view_interface` gets a bounds-checking `at` method.
+  - `chunk_view` works on Input ranges.
+  - Fix bug in `group_by_view`.
+  - Improved concept checks for `partial_sum` numeric algorithm.
+  - Define `ContiguousIterator` concept and `contiguous_iterator_tag` iterator
+    category tag.
+  - Sundry `span` fixes.
+  - `action::insert` avoids interfering with `vector`'s exponentional growth
+    strategy.
+  - Add an experimental `shared` view for views that need container-like scratch
+    space to do their work.
+  - Faster, simpler `reverse_view`.
+  - Rework `ranges::reference_wrapper` to avoid [LWG\#2993](http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#2993).
+  - Reworked `any_view`, the type-erased view wrapper.
+  - `equal` algorithm is `constexpr` in C++14.
+  - `stride_view` no longer needs an `atomic` data member.
+  - `const`-correct `drop_view`.
+  - `adjacent_filter_view` supports bidirectional iteration.
+  - Massive `view_adaptor` cleanup to remove the need for a `mutable` data
+    member holding the adapted view.
+  - Fix `counting_iterator` post-increment bug.
+  - `tail_view` of an empty range is an empty range, not undefined behavior.
+  - Various portability fixes for gcc and clang trunk.
 * **0.3.0** June 30, 2017
   - Input views may now be move-only (from @CaseyCarter)
   - Input `any_view`s are now *much* more efficicient (from @CaseyCarter)

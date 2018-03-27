@@ -1,6 +1,6 @@
 // Range v3 library
 //
-//  Copyright Eric Niebler 2014
+//  Copyright Eric Niebler 2014-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -13,9 +13,10 @@
 #include <cctype>
 #include <range/v3/core.hpp>
 #include <range/v3/view/counted.hpp>
-#include <range/v3/view/split.hpp>
+#include <range/v3/view/c_str.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/split.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -153,6 +154,12 @@ int main()
             check_equal(*(next(begin(rng),2)), c_str("the"));
             check_equal(*(next(begin(rng),3)), c_str("time"));
         }
+    }
+
+    {   // Regression test for https://stackoverflow.com/questions/49015671
+        auto const str = "quick brown fox";
+        auto rng = view::c_str(str) | view::split(' ');
+        CONCEPT_ASSERT(ForwardRange<decltype(rng)>());
     }
 
     return test_result();

@@ -1,7 +1,7 @@
 /// \file
 // Range v3 library
 //
-//  Copyright Eric Niebler 2013-2014
+//  Copyright Eric Niebler 2013-present
 //  Copyright Tobias Mayer 2016
 //  Copyright Casey Carter 2016
 //

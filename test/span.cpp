@@ -27,6 +27,7 @@
 #include "simple_test.hpp"
 
 using ranges::span;
+using ranges::dynamic_extent;
 using ranges::make_span;
 using ranges::as_bytes;
 using ranges::as_writeable_bytes;
@@ -658,6 +659,38 @@ void test_case_subspan()
         CHECK(av.subspan(5).size() == 0);
         const auto av2 = av.subspan(1);
         for (int i = 0; i < 4; ++i) CHECK(av2[i] == i + 2);
+    }
+
+    {
+        span<int, 5> av = arr;
+        CHECK(decltype(av.subspan<0, dynamic_extent>())::extent == 5);
+        CHECK((av.subspan<0, dynamic_extent>().size() == 5));
+        CHECK(decltype(av.subspan<1, dynamic_extent>())::extent == 4);
+        CHECK((av.subspan<1, dynamic_extent>().size() == 4));
+        CHECK(decltype(av.subspan<2, dynamic_extent>())::extent == 3);
+        CHECK((av.subspan<2, dynamic_extent>().size() == 3));
+        CHECK(decltype(av.subspan<3, dynamic_extent>())::extent == 2);
+        CHECK((av.subspan<3, dynamic_extent>().size() == 2));
+        CHECK(decltype(av.subspan<4, dynamic_extent>())::extent == 1);
+        CHECK((av.subspan<4, dynamic_extent>().size() == 1));
+        CHECK(decltype(av.subspan<5, dynamic_extent>())::extent == 0);
+        CHECK((av.subspan<5, dynamic_extent>().size() == 0));
+    }
+
+    {
+        span<int> av = arr;
+        CHECK(decltype(av.subspan<0, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<0, dynamic_extent>().size() == 5));
+        CHECK(decltype(av.subspan<1, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<1, dynamic_extent>().size() == 4));
+        CHECK(decltype(av.subspan<2, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<2, dynamic_extent>().size() == 3));
+        CHECK(decltype(av.subspan<3, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<3, dynamic_extent>().size() == 2));
+        CHECK(decltype(av.subspan<4, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<4, dynamic_extent>().size() == 1));
+        CHECK(decltype(av.subspan<5, dynamic_extent>())::extent == dynamic_extent);
+        CHECK((av.subspan<5, dynamic_extent>().size() == 0));
     }
 }
 
