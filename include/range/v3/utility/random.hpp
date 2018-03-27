@@ -106,7 +106,7 @@ namespace ranges
             struct UniformRandomNumberGenerator
             {
                 template<typename Gen>
-                using result_t = result_of_t<Gen&()>;
+                using result_t = invoke_result_t<Gen&>;
 
                 template<typename Gen, typename Result = result_t<Gen>>
                 auto requires_() -> decltype(

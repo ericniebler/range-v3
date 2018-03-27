@@ -30,7 +30,7 @@ namespace ranges
         using Accumulateable = meta::strict_and<
             InputIterator<I>,
             IndirectInvocable<Op, T *, projected<I, P>>,
-            Assignable<T&, indirect_result_of_t<Op&(T *, projected<I, P>)>>>;
+            Assignable<T&, indirect_invoke_result_t<Op &, T *, projected<I, P>>>>;
 
         struct accumulate_fn
         {

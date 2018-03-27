@@ -212,7 +212,7 @@ namespace ranges
                     Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>>,
                     CopyConstructible<Fun>,
                     ConvertibleTo<
-                        result_of_t<Fun&(iterator_t<Rng>, sentinel_t<Rng>)>,
+                        invoke_result_t<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
                         std::pair<bool, iterator_t<Rng>>>>;
 
                 template<typename Rng, typename Fun>
