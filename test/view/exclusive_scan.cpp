@@ -42,7 +42,6 @@ int main(){
     {// For an empty range.
         std::vector<int> rgi;
         auto && rng = rgi | view::exclusive_scan(0);
-        has_type<int &>(*begin(rgi));
         has_type<int>(*begin(rng));
         models<concepts::SizedView>(aux::copy(rng));
         models<concepts::ForwardView>(aux::copy(rng));
