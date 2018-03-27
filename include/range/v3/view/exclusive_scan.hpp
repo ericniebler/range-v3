@@ -135,7 +135,7 @@ namespace ranges {
                 template<typename Rng, typename T, typename Fun>
                 using Concept = meta::and_<
                         InputRange<Rng>,
-                        MoveConstructible<T>,
+                        CopyConstructible<T>,
                         IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>,
                         IndirectInvocable<Fun, T*, iterator_t<Rng>>>;
 
@@ -153,9 +153,9 @@ namespace ranges {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                                        "The first argument passed to view::exclusive_scan must be a model of the "
                                                "InputRange concept.");
-                    CONSEPT_ASSERT_MSG(MoveConstructible<T>(),
+                    CONSEPT_ASSERT_MSG(CopyConstructible<T>(),
                                        "The second argument passed to view::exclusive_scan must be a model of the"
-                                               "MoveConstructible concept.");
+                                               "CopyConstructible concept.");
                     CONCEPT_ASSERT_MSG(IndirectInvocable<Fun, iterator_t<Rng>,
                                                iterator_t<Rng>>(),
                                        "The third argument passed to view::exclusive_scan must be callable with "
