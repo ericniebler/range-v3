@@ -21,6 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_interface.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -153,11 +154,12 @@ namespace ranges
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
-                template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() && std::is_lvalue_reference<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!View<uncvref_t<Rng>>() &&
+                    std::is_lvalue_reference<Rng>() && SizedRange<Rng>())>
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_type_t<Rng> n, concepts::RandomAccessRange*)
                 {
-                    return {next(begin(rng), n), end(rng)};
+                    return {begin(rng) + ranges::min(n, distance(rng)), end(rng)};
                 }
             public:
                 template<typename Rng,
