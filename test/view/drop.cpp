@@ -132,5 +132,12 @@ int main()
         }
     }
 
+    {
+        // regression test for #813
+        static int const some_ints[] = {0,1,2,3};
+        auto rng = some_ints | view::drop(10);
+        CHECK(empty(rng));
+    }
+
     return test_result();
 }
