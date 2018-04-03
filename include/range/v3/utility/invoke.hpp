@@ -223,14 +223,24 @@ namespace ranges
             }
         };
 
-        template<typename Sig, typename Enable /*= void*/>
-        struct result_of {};
         template<typename Fun, typename...Args>
-        struct result_of<Fun(Args...), meta::void_<
-            decltype(invoke(std::declval<Fun>(), std::declval<Args>()...))>>
-        {
-            using type = decltype(invoke(std::declval<Fun>(), std::declval<Args>()...));
-        };
+        using invoke_result_t =
+            decltype(invoke(std::declval<Fun>(), std::declval<Args>()...));
+
+        template<typename Fun, typename...Args>
+        struct invoke_result
+          : meta::defer<invoke_result_t, Fun, Args...>
+        {};
+
+        template<typename Sig>
+        struct result_of
+        {};
+
+        template<typename Fun, typename...Args>
+        struct result_of<Fun(Args...)>
+          : meta::defer<invoke_result_t, Fun, Args...>
+        {};
+
     } // namespace v3
 } // namespace ranges
 

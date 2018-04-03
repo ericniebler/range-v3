@@ -107,11 +107,11 @@ namespace ranges
             concept UniformRandomNumberGenerator,
                 requires
                 {
-                    uncvref_t<Gen>::min() ->* Same<_&&, result_of_t<Gen&()>>(),
-                    uncvref_t<Gen>::max() ->* Same<_&&, result_of_t<Gen&()>>()
+                    uncvref_t<Gen>::min() ->* Same<_&&, invoke_result_t<Gen&>>(),
+                    uncvref_t<Gen>::max() ->* Same<_&&, invoke_result_t<Gen&>>()
                 } &&
                 Invocable<Gen &>() &&
-                UnsignedIntegral<result_of_t<Gen&()>>() &&
+                UnsignedIntegral<invoke_result_t<Gen&>>() &&
                 True<(uncvref_t<Gen>::min() < uncvref_t<Gen>::max())>()
         );
         /// @}

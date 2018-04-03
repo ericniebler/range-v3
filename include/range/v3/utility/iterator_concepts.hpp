@@ -378,32 +378,32 @@ namespace ranges
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // indirect_result_of
+        // indirect_invoke_result
         /// \cond
-        namespace detail
-        {
-            template<typename Sig, typename = void>
-            struct indirect_result_of_
-            {
-            };
+        template<typename Fun, typename... Is>
+        using indirect_invoke_result_t =
+            meta::if_c<
+                meta::and_c<(bool) Readable<Is>()...>::value,
+                invoke_result_t<Fun, reference_t<Is>...>>;
 
-            template<typename Fun, typename... Is>
-            struct indirect_result_of_<
-                Fun(Is...),
-                meta::if_c<meta::and_c<(bool) Readable<Is>()...>::value>>
-              : meta::if_c<
-                    (bool) Invocable<Fun, reference_t<Is>...>(),
-                    meta::defer<invoke_result_t, Fun, reference_t<Is>...>,
-                    meta::nil_>
-            {
-            };
-        }
+        template<typename Fun, typename... Is>
+        struct indirect_invoke_result
+          : meta::defer<indirect_invoke_result_t, Fun, Is...>
+        {};
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // indirect_result_of
+        template<typename Sig>
+        struct indirect_result_of
+        {};
+
+        template<typename Fun, typename... Is>
+        struct indirect_result_of<Fun(Is...)>
+          : meta::defer<indirect_invoke_result_t, Fun, Is...>
+        {};
 
         template<typename Sig>
-        using indirect_result_of = detail::indirect_result_of_<Sig>;
-
-        template<typename Sig>
-        using indirect_result_of_t = meta::_t<detail::indirect_result_of_<Sig>>;
+        using indirect_result_of_t = meta::_t<indirect_result_of<Sig>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Project struct, for "projecting" a Readable with a unary callable
@@ -413,7 +413,7 @@ namespace ranges
             template<typename I, typename Proj>
             struct projected_
             {
-                using reference = indirect_result_of_t<Proj &(I)>;
+                using reference = indirect_invoke_result_t<Proj &, I>;
                 using value_type = uncvref_t<reference>;
                 reference operator*() const;
             };

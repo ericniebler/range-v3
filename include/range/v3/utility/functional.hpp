@@ -194,9 +194,6 @@ namespace ranges
 
         /// \addtogroup group-concepts
         /// @{
-        template <typename Fun, typename... Args>
-        using invoke_result_t = result_of_t<Fun &&(Args &&...)>;
-
         CONCEPT_def
         (
             template(typename Fun, typename... Args)

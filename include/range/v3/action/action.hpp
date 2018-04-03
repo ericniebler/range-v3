@@ -141,7 +141,7 @@ namespace ranges
                 requires True<is_pipeable<Action>>() && Range<Rng &>() &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
                     Same<ref_t<Rng &>,
-                        result_of_t<bitwise_or(ref_t<Rng &> &&, Action &)>>())
+                        invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>())
             (Rng &) operator|=(Rng &rng, Action &&action)
             {
                 ref(rng) | action;

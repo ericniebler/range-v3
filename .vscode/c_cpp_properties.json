@@ -25,7 +25,10 @@
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
-            ]
+            ],
+            "compilerPath": "/Users/eniebler/llvm-install/bin/clang++",
+            "cStandard": "c11",
+            "cppStandard": "c++11"
         },
         {
             "name": "Linux",

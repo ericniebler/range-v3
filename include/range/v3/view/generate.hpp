@@ -40,7 +40,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using result_t = result_of_t<G&()>;
+            using result_t = invoke_result_t<G &>;
             movesemiregular_t<G> gen_;
             movesemiregular_t<result_t> val_;
             struct cursor
@@ -94,9 +94,9 @@ namespace ranges
                     concept Concept,
                         Invocable<G&>() &&
                         MoveConstructible<G>() &&
-                        True<std::is_object<detail::decay_t<result_of_t<G&()>>>>() &&
-                        Constructible<detail::decay_t<result_of_t<G&()>>, result_of_t<G&()>>() &&
-                        Assignable<detail::decay_t<result_of_t<G&()>>&, result_of_t<G&()>>()
+                        True<std::is_object<detail::decay_t<invoke_result_t<G &>>>>() &&
+                        Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>>() &&
+                        Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>()
                 );
 
                 CONCEPT_template(typename G)(
@@ -119,7 +119,7 @@ namespace ranges
                         "The function object G must be callable with no arguments.");
                     CONCEPT_assert_msg(MoveConstructible<G>(),
                         "The function object G must be MoveConstructible.");
-                    using T = result_of_t<G&()>;
+                    using T = invoke_result_t<G &>;
                     using D = detail::decay_t<T>;
                     CONCEPT_assert_msg(std::is_object<D>(),
                         "The return type of the function object G must decay to an object type.");

@@ -33,7 +33,7 @@ namespace ranges
         {
             CONCEPT_template(typename O, typename S, typename F)(
                 requires Invocable<F&>() &&
-                    OutputIterator<O, result_of_t<F&()>>() &&
+                    OutputIterator<O, invoke_result_t<F &>>() &&
                     Sentinel<S, O>())
             (tagged_pair<tag::out(O), tag::fun(F)>)
             operator()(O begin, S end, F fun) const
@@ -43,10 +43,9 @@ namespace ranges
                 return {detail::move(begin), detail::move(fun)};
             }
 
-            CONCEPT_template(typename Rng, typename F,
-                typename O = iterator_t<Rng>)(
+            CONCEPT_template(typename Rng, typename F, typename O = iterator_t<Rng>)(
                 requires Invocable<F&>() &&
-                    OutputRange<Rng, result_of_t<F&()>>())
+                    OutputRange<Rng, invoke_result_t<F &>>())
             (tagged_pair<tag::out(safe_iterator_t<Rng>), tag::fun(F)>)
             operator()(Rng &&rng, F fun) const
             {

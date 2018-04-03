@@ -1135,19 +1135,21 @@ namespace meta
             template <bool>
             struct _and_
             {
-                template <class = void>
+                template <class...>
                 using invoke = std::true_type;
             };
 
             template <>
             struct _and_<false>
             {
-                template <typename Bool_, typename... Bools>
-                using invoke = invoke<
-                    if_c<!META_VALUE_OF(Bool_),
-                        id<std::false_type>,
-                        _and_<0 == sizeof...(Bools)>>,
-                    Bools...>;
+                template <typename Bool, typename... Bools>
+                using invoke =
+                    invoke<
+                        if_c<
+                            !META_VALUE_OF(Bool),
+                            id<std::false_type>,
+                            _and_<0 == sizeof...(Bools)>>,
+                        Bools...>;
             };
 
             template <bool>
@@ -1160,12 +1162,14 @@ namespace meta
             template <>
             struct _or_<false>
             {
-                template <typename Bool_, typename... Bools>
-                using invoke = invoke<
-                    if_c<META_VALUE_OF(Bool_),
-                        id<std::true_type>,
-                        _or_<0 == sizeof...(Bools)>>,
-                    Bools...>;
+                template <typename Bool, typename... Bools>
+                using invoke =
+                    invoke<
+                        if_c<
+                            META_VALUE_OF(Bool),
+                            id<std::true_type>,
+                            _or_<0 == sizeof...(Bools)>>,
+                        Bools...>;
             };
         } // namespace detail
         /// \endcond

@@ -103,8 +103,9 @@ namespace ranges
         // template<typename ...Ts>
         // using common_reference_t = meta::_t<common_reference<Ts...>>;
 
-        template<typename, typename = void>
+        template<typename>
         struct result_of;
+
         template<typename Sig>
         using result_of_t = meta::_t<result_of<Sig>>;
 

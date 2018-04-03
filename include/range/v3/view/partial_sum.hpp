@@ -139,9 +139,8 @@ namespace ranges
                         InputRange<Rng>() &&
                         IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>>() &&
                         ConvertibleTo<
-                            result_of_t<Fun&(
-                                range_common_reference_t<Rng> &&,
-                                range_common_reference_t<Rng> &&)>,
+                            invoke_result_t<Fun &, range_common_reference_t<Rng>,
+                                range_common_reference_t<Rng>>,
                             range_value_type_t<Rng>>()
                 );
 
@@ -164,8 +163,8 @@ namespace ranges
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
                     CONCEPT_assert_msg(ConvertibleTo<
-                        result_of_t<Fun&(range_common_reference_t<Rng> &&,
-                            range_common_reference_t<Rng> &&)>,
+                        invoke_result_t<Fun &, range_common_reference_t<Rng>,
+                            range_common_reference_t<Rng>>,
                         range_value_type_t<Rng>>(),
                         "The return type of the function passed to view::partial_sum must be "
                         "convertible to the value type of the range.");

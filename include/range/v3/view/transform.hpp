@@ -73,7 +73,7 @@ namespace ranges
                 fun_ref_ fun_;
             public:
                 using value_type =
-                    detail::decay_t<result_of_t<Fun&(copy_tag, iterator_t<Rng> &&)>>;
+                    detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<Rng>>>;
                 adaptor() = default;
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
@@ -186,8 +186,8 @@ namespace ranges
                     (bool) SinglePass<iterator_t<Rng1>>(),
                     (bool) SinglePass<iterator_t<Rng2>>()>;
                 using value_type =
-                    detail::decay_t<result_of_t<Fun&(copy_tag, iterator_t<Rng1>,
-                        iterator_t<Rng2>)>>;
+                    detail::decay_t<invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>,
+                        iterator_t<Rng2>>>;
 
                 cursor() = default;
                 cursor(fun_ref_ fun, iterator_t<Rng1> it1, iterator_t<Rng2> it2)

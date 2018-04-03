@@ -506,9 +506,9 @@ namespace ranges
             template<typename Fun, typename... Ts, std::size_t... Is>
             struct variant_visit_results<
                 Fun, meta::list<Ts...>, meta::index_sequence<Is...>,
-                meta::void_<result_of_t<Fun&(indexed_element<Ts, Is>)>...>>
+                meta::void_<invoke_result_t<Fun&, indexed_element<Ts, Is>>...>>
             {
-                using type = variant<result_of_t<Fun&(indexed_element<Ts, Is>)>...>;
+                using type = variant<invoke_result_t<Fun&, indexed_element<Ts, Is>>...>;
             };
             template<typename Fun, typename... Ts>
             using variant_visit_results_t = meta::_t<

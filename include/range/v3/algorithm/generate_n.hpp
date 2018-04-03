@@ -35,7 +35,7 @@ namespace ranges
         {
             CONCEPT_template(typename O, typename F)(
                 requires Invocable<F&>() &&
-                    OutputIterator<O, result_of_t<F&()>>())
+                    OutputIterator<O, invoke_result_t<F &>>())
             (tagged_pair<tag::out(O), tag::fun(F)>)
             operator()(O begin, difference_type_t<O> n, F fun) const
             {
