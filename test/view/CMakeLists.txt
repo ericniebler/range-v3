@@ -54,6 +54,10 @@ add_executable(view.drop_while drop_while.cpp)
 target_link_libraries(view.drop_while range-v3)
 add_test(test.view.drop_while, view.drop_while)
 
+add_executable(view.exclusive_scan exclusive_scan.cpp)
+target_link_libraries(view.exclusive_scan range-v3)
+add_test(test.view.exclusive_scan, view.exclusive_scan)
+
 add_executable(view.generate generate.cpp)
 target_link_libraries(view.generate range-v3)
 add_test(test.view.generate, view.generate)
