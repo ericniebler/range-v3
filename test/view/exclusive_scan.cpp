@@ -14,14 +14,15 @@
 #include <range/v3/view/exclusive_scan.hpp>
 #include "../test_utils.hpp"
 
-int main(){
+int main()
+{
     using namespace ranges;
 
     {// For non empty range.
         int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         {
-            auto && rng = rgi | view::exclusive_scan(0);
+            auto rng = rgi | view::exclusive_scan(0);
             has_type<int &>(*begin(rgi));
             has_type<int>(*begin(rng));
             models<concepts::SizedView>(aux::copy(rng));
@@ -41,7 +42,7 @@ int main(){
 
     {// For an empty range.
         std::vector<int> rgi;
-        auto && rng = rgi | view::exclusive_scan(0);
+        auto rng = rgi | view::exclusive_scan(0);
         has_type<int>(*begin(rng));
         models<concepts::SizedView>(aux::copy(rng));
         models<concepts::ForwardView>(aux::copy(rng));
