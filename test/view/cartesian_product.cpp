@@ -19,6 +19,8 @@
 #include <range/v3/span.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/cartesian_product.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
@@ -129,6 +131,21 @@ void test_empty_range()
     }
 }
 
+void test_bug_820()
+{
+    // https://github.com/ericniebler/range-v3/issues/820
+    using CT = common_tuple<int, int>;
+    std::initializer_list<CT> control = {
+        CT{0, 0}, CT{0, 1}, CT{0, 2},
+        CT{1, 0}, CT{1, 1}, CT{1, 2},
+        CT{2, 0}, CT{2, 1}, CT{2, 2}
+    };
+
+    auto x = ranges::view::iota(0) | ranges::view::take_exactly(3);
+    auto y = ranges::view::cartesian_product(x, x);
+    ::check_equal(y, control);
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -178,6 +195,7 @@ int main()
 
     test_empty_set();
     test_empty_range();
+    test_bug_820();
 
     return test_result();
 }
