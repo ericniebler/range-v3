@@ -174,7 +174,7 @@ namespace ranges
                     cursor const &that, meta::size_t<1>, dist_info const inf) const
                 {
                     auto const my_distance = std::get<0>(that.its_) - std::get<0>(its_);
-                    return my_distance * inf.size_product + inf.distance;
+                    return static_cast<std::ptrdiff_t>(my_distance * inf.size_product + inf.distance);
                 }
                 template<std::size_t N>
                 std::ptrdiff_t distance_(
@@ -245,8 +245,8 @@ namespace ranges
                 cursor(end_tag, constify_if<cartesian_product_view> &view, std::false_type) // !Bounded
                   : cursor(begin_tag{}, view)
                 {
-                    std::get<0>(its_) =
-                        std::get<0>(its_) + ranges::distance(std::get<0>(view.views_));
+                    // Only called when the 0th view type is !Bounded && RandomAccess && Sized
+                    std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
                 }
             public:
                 using value_type = std::tuple<range_value_type_t<Views>...>;
