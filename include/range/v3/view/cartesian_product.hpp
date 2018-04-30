@@ -174,7 +174,7 @@ namespace ranges
                     cursor const &that, meta::size_t<1>, dist_info const inf) const
                 {
                     auto const my_distance = std::get<0>(that.its_) - std::get<0>(its_);
-                    return my_distance * inf.size_product + inf.distance;
+                    return static_cast<std::ptrdiff_t>(my_distance * inf.size_product + inf.distance);
                 }
                 template<std::size_t N>
                 std::ptrdiff_t distance_(
@@ -237,6 +237,17 @@ namespace ranges
                     return check_at_end_(meta::size_t<N - 1>{}, at_end ||
                         std::get<N - 1>(its_) == ranges::end(std::get<N - 1>(view_->views_)));
                 }
+                cursor(end_tag, constify_if<cartesian_product_view> &view, std::true_type) // Bounded
+                  : cursor(begin_tag{}, view)
+                {
+                    std::get<0>(its_) = ranges::end(std::get<0>(view.views_));
+                }
+                cursor(end_tag, constify_if<cartesian_product_view> &view, std::false_type) // !Bounded
+                  : cursor(begin_tag{}, view)
+                {
+                    // Only called when the 0th view type is !Bounded && RandomAccess && Sized
+                    std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
+                }
             public:
                 using value_type = std::tuple<range_value_type_t<Views>...>;
                 cursor() = default;
@@ -247,10 +258,8 @@ namespace ranges
                     check_at_end_(meta::size_t<sizeof...(Views)>{});
                 }
                 explicit cursor(end_tag, constify_if<cartesian_product_view> &view)
-                  : cursor(begin_tag{}, view)
-                {
-                    std::get<0>(its_) = ranges::end(std::get<0>(view.views_));
-                }
+                  : cursor(end_tag{}, view, BoundedView<meta::at_c<meta::list<Views...>, 0>>{})
+                {}
                 ranges::common_tuple<range_reference_t<Views>...> read() const
                 {
                     return tuple_transform(its_, ranges::dereference);
