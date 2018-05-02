@@ -292,8 +292,7 @@ install:
   - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" -a "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address"; fi
   # Required to test the C++ compiler since libc++ is compiled with MSan enabled:
   - if [ -n "$CLANG_VERSION" -a "$MSAN" == "On" -a "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=memory"; fi
-  - if [ "$HEADERS" == "On" ]; then NO_HEADER_CHECK=0; else NO_HEADER_CHECK=1; fi
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=$NO_HEADER_CHECK -DRANGES_VERBOSE_BUILD=On -DRANGES_ASAN=$ASAN -DRANGES_MSAN=$MSAN -Wdev
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_HEADER_CHECKS=$HEADERS -DRANGES_VERBOSE_BUILD=On -DRANGES_ASAN=$ASAN -DRANGES_MSAN=$MSAN -Wdev
   - cat CMakeFiles/CMakeError.log
   - cat CMakeFiles/CMakeOutput.log
   - |
