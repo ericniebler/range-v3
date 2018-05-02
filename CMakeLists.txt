@@ -38,7 +38,7 @@ if(RANGE_V3_EXAMPLES)
   add_subdirectory(example)
 endif()
 
-if(RANGE_V3_BENCHMARKS)
+if(RANGE_V3_PERF)
   add_subdirectory(perf)
 endif()
 

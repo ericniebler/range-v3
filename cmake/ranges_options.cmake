@@ -40,6 +40,8 @@ CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES
   "Build the Range-v3 examples and integrate with ctest"
   ON "${is_subproject}" OFF)
 
-CMAKE_DEPENDENT_OPTION(RANGE_V3_BENCHMARKS
+CMAKE_DEPENDENT_OPTION(RANGE_V3_PERF
   "Build the Range-v3 performance benchmarks"
   ON "${is_subproject}" OFF)
+
+mark_as_advanced(RANGE_V3_PERF)
