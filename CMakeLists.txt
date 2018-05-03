@@ -28,6 +28,17 @@ target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_link_libraries(range-v3 INTERFACE meta)
 
+# Test for <thread>
+try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
+
+# Test for coroutine TS support
+include(CheckCXXSourceCompiles)
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
+set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
+check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
+unset(CMAKE_REQUIRED_FLAGS)
+
 add_subdirectory(doc)
 
 if(RANGE_V3_TESTS)
@@ -40,23 +51,6 @@ endif()
 
 if(RANGE_V3_PERF)
   add_subdirectory(perf)
-endif()
-
-# Test for <thread>
-try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
-if(NOT RANGE_V3_TRY_THREAD)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRANGES_CXX_THREAD=0")
-endif()
-
-# Test for coroutine TS support
-include(CheckCXXSourceCompiles)
-
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
-set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
-check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
-
-if (RANGE_V3_HAS_FCOROUTINES_TS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
 endif()
 
 # Test all headers
