@@ -7,7 +7,6 @@
 include(CMakeDependentOption)
 
 set(RANGES_CXX_STD 11 CACHE STRING "C++ standard version.")
-option(RANGE_V3_NO_HEADER_CHECK "Build all headers." OFF)
 option(RANGE_BUILD_CALENDAR_EXAMPLE "Builds the calendar example." ON)
 option(RANGES_ASAN "Run the tests using AddressSanitizer." OFF)
 option(RANGES_MSAN "Run the tests using MemorySanitizer." OFF)
@@ -28,3 +27,21 @@ endif()
 if (RANGES_VERBOSE_BUILD)
   message("[range-v3]: verbose build enabled.")
 endif()
+
+CMAKE_DEPENDENT_OPTION(RANGE_V3_TESTS
+  "Build the Range-v3 tests and integrate with ctest"
+  "${BUILD_TESTING}" "${is_subproject}" OFF)
+
+CMAKE_DEPENDENT_OPTION(RANGE_V3_HEADER_CHECKS
+  "Build the Range-v3 header checks and integrate with ctest"
+  "${BUILD_TESTING}" "${is_subproject}" OFF)
+
+CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES
+  "Build the Range-v3 examples and integrate with ctest"
+  ON "${is_subproject}" OFF)
+
+CMAKE_DEPENDENT_OPTION(RANGE_V3_PERF
+  "Build the Range-v3 performance benchmarks"
+  ON "${is_subproject}" OFF)
+
+mark_as_advanced(RANGE_V3_PERF)

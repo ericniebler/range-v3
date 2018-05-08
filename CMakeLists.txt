@@ -6,19 +6,18 @@
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.6)
+get_directory_property(is_subproject PARENT_DIRECTORY)
 
 project(Range-v3 CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 
+include(CTest) # invokes enable_testing() and defines BUILD_TESTING variable, defaulting to ON
 include(TestHeaders)
 include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
-include(CTest)
-
-enable_testing()
 
 add_library(meta INTERFACE)
 target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
@@ -31,15 +30,15 @@ target_link_libraries(range-v3 INTERFACE meta)
 
 add_subdirectory(doc)
 
-if(NOT RANGE_V3_NO_TESTING)
+if(RANGE_V3_TESTS)
   add_subdirectory(test)
 endif()
 
-if(NOT RANGE_V3_NO_EXAMPLE)
+if(RANGE_V3_EXAMPLES)
   add_subdirectory(example)
 endif()
 
-if(NOT RANGE_V3_NO_PERF)
+if(RANGE_V3_PERF)
   add_subdirectory(perf)
 endif()
 
@@ -70,10 +69,10 @@ file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
 
 include(TestHeaders)
-if(RANGE_V3_NO_HEADER_CHECK)
-  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
-else()
+if(RANGE_V3_HEADER_CHECKS)
   add_custom_target(headers ALL SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
+else()
+  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
 generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 
