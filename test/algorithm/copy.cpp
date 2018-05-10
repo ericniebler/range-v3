@@ -23,7 +23,7 @@ RANGES_CXX14_CONSTEXPR
 bool test_constexpr_copy()
 {
     int a[4] = {0, 0, 0, 0};
-    int b[4] = {1, 2, 3, 4};
+    int const b[4] = {1, 2, 3, 4};
     ranges::copy(b, a);
     return ranges::equal(b, a);
 }

@@ -104,7 +104,10 @@ namespace ranges
         }
         /// \endcond
 
-        RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
+        }
 
         /// \cond
         struct indirect_move_fn

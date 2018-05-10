@@ -84,13 +84,15 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_iterator_t<D> begin()
             {
-                return {range_access::begin_cursor(derived(), 42)};
+                return detail::facade_iterator_t<D>{
+                    range_access::begin_cursor(derived(), 42)};
             }
             /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_iterator_t<D const> begin() const
             {
-                return {range_access::begin_cursor(derived(), 42)};
+                return detail::facade_iterator_t<D const>{
+                    range_access::begin_cursor(derived(), 42)};
             }
             /// Let `d` be `static_cast<Derived &>(*this)`. Let `e` be
             /// `std::as_const(d).end_cursor()` if that expression is well-formed;

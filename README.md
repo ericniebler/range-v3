@@ -94,7 +94,7 @@ Release Notes:
   - Add an experimental `shared` view for views that need container-like scratch
     space to do their work.
   - Faster, simpler `reverse_view`.
-  - Rework `ranges::reference_wrapper` to avoid [LWG\#2993](http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#2993).
+  - Rework `ranges::reference_wrapper` to avoid [LWG\#2993](https://wg21.link/lwg2993).
   - Reworked `any_view`, the type-erased view wrapper.
   - `equal` algorithm is `constexpr` in C++14.
   - `stride_view` no longer needs an `atomic` data member.
@@ -107,7 +107,7 @@ Release Notes:
   - Various portability fixes for gcc and clang trunk.
 * **0.3.0** June 30, 2017
   - Input views may now be move-only (from @CaseyCarter)
-  - Input `any_view`s are now *much* more efficicient (from @CaseyCarter)
+  - Input `any_view`s are now *much* more efficient (from @CaseyCarter)
   - Better support for systems lacking a working `<thread>` header (from @CaseyCarter)
 * **0.2.6** June 21, 2017
   - Experimental coroutines with `ranges::experimental::generator` (from @CaseyCarter)

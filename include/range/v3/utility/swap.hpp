@@ -208,7 +208,7 @@ namespace ranges
             //    std::reference_wrapper<T>. How do I make it model IndirectlySwappable?
             // A: With an overload of iter_swap.
 
-            // Intentionally create an ambiguity with std::swap, which is
+            // Intentionally create an ambiguity with std::iter_swap, which is
             // (possibly) unconstrained.
             template<typename T>
             void iter_swap(T, T) = delete;
@@ -338,13 +338,17 @@ namespace ranges
                 adl_swap_detail::is_nothrow_indirectly_swappable_<T, U>>
         {};
 
-        /// \ingroup group-utility
-        /// \relates adl_swap_detail::swap_fn
-        RANGES_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
+        inline namespace CPOs
+        {
+            /// \ingroup group-utility
+            /// \relates adl_swap_detail::swap_fn
+            RANGES_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
 
-        /// \ingroup group-utility
-        /// \relates adl_swap_detail::iter_swap_fn
-        RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
+            /// \ingroup group-utility
+            /// \relates adl_swap_detail::iter_swap_fn
+            RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
+        }
+
 
         /// \cond
         struct indirect_swap_fn

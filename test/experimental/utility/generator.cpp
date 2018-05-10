@@ -82,7 +82,10 @@ public:
     }
 };
 
-RANGES_INLINE_VARIABLE(coro_fn, coro)
+inline namespace function_objects
+{
+    RANGES_INLINE_VARIABLE(coro_fn, coro)
+}
 
 auto f(int const n)
 RANGES_DECLTYPE_AUTO_RETURN

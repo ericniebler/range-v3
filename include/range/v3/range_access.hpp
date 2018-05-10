@@ -72,6 +72,9 @@ namespace ranges
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T>(),
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>()
                     ));
+                    // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
+                    //   which perfectly-returns the contained cursor object and does not throw
+                    //   exceptions.
             };
             struct HasCursorNext
             {
