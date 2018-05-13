@@ -41,6 +41,14 @@ namespace ranges
             template<typename T>
             void begin(T const &) = delete;
 
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8
+            // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
+            template<typename T>
+            void begin(std::initializer_list<T> volatile &) = delete;
+            template<typename T>
+            void begin(std::initializer_list<T> const volatile &) = delete;
+#endif
+
             struct fn
             {
             private:
@@ -119,6 +127,14 @@ namespace ranges
             void end(T &) = delete;
             template<typename T>
             void end(T const &) = delete;
+
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8
+            // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
+            template<typename T>
+            void end(std::initializer_list<T> volatile &) = delete;
+            template<typename T>
+            void end(std::initializer_list<T> const volatile &) = delete;
+#endif
 
             struct fn
             {
