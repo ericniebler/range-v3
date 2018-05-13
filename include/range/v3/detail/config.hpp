@@ -159,6 +159,9 @@ namespace ranges
 #define RANGES_CXX_DEDUCTION_GUIDES_11 0L
 #define RANGES_CXX_DEDUCTION_GUIDES_14 0L
 #define RANGES_CXX_DEDUCTION_GUIDES_17 201606L
+#define RANGES_CXX_IF_CONSTEXPR_11 0L
+#define RANGES_CXX_IF_CONSTEXPR_14 0L
+#define RANGES_CXX_IF_CONSTEXPR_17 201606L
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #if _MSC_VER >= 1900
@@ -460,6 +463,22 @@ namespace ranges
 #else
 #define RANGES_INTENDED_MODULAR_ARITHMETIC
 #endif
+
+#ifndef RANGES_CXX_IF_CONSTEXPR
+#ifdef __cpp_if_constexpr
+#define RANGES_CXX_IF_CONSTEXPR __cpp_if_constexpr
+#else
+#define RANGES_CXX_IF_CONSTEXPR RANGES_CXX_FEATURE(IF_CONSTEXPR)
+#endif
+#endif // RANGES_CXX_IF_CONSTEXPR
+
+#ifndef RANGES_CONSTEXPR_IF
+#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
+#define RANGES_CONSTEXPR_IF constexpr
+#else
+#define RANGES_CONSTEXPR_IF
+#endif
+#endif // RANGES_CONSTEXPR_IF
 
 namespace ranges {
     inline namespace v3 {
