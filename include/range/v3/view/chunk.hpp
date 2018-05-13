@@ -31,8 +31,8 @@
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -50,7 +50,7 @@ namespace ranges
         private:
             friend range_access;
             CONCEPT_ASSERT(ForwardRange<Rng>());
-            // CONCEPT_ASSERT(!ForwardRange<Rng const>() || Same<range_difference_type_t<Rng>, range_difference_type_t<Rng const>>());
+
             template<typename T>
             using constify = meta::const_if<ForwardRange<Rng const>, T>;
             static constexpr bool CanSizedSentinel =
@@ -85,17 +85,18 @@ namespace ranges
                 }
             public:
                 adaptor() = default;
-                constexpr adaptor(range_difference_type_t<Rng> n,
-                    sentinel_t<constify<Rng>> end)
-                  : box<offset_t>{0}, n_((RANGES_EXPECT(0 < n), n)), end_(end)
+                constexpr adaptor(constify<chunk_view> &cv)
+                  : box<offset_t>{0}
+                  , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
+                  , end_(ranges::end(cv.base()))
                 {}
                 RANGES_CXX14_CONSTEXPR
-                auto read(iterator_t<constify<Rng>> it) const ->
-                    decltype(view::take(make_iterator_range(std::move(it), end_), n_))
+                auto read(iterator_t<constify<Rng>> const &it) const ->
+                    decltype(view::take(make_iterator_range(it, end_), n_))
                 {
                     RANGES_EXPECT(it != end_);
                     RANGES_EXPECT(0 == offset());
-                    return view::take(make_iterator_range(std::move(it), end_), n_);
+                    return view::take(make_iterator_range(it, end_), n_);
                 }
                 RANGES_CXX14_CONSTEXPR
                 void next(iterator_t<constify<Rng>> &it)
@@ -147,12 +148,12 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             adaptor begin_adaptor()
             {
-                return adaptor{n_, ranges::end(this->base())};
+                return adaptor{*this};
             }
             CONCEPT_REQUIRES(ForwardRange<Rng const>())
             constexpr adaptor begin_adaptor() const
             {
-                return adaptor{n_, ranges::end(this->base())};
+                return adaptor{*this};
             }
             RANGES_CXX14_CONSTEXPR
             range_size_type_t<Rng> size_(range_difference_type_t<Rng> base_size) const
