@@ -24,7 +24,6 @@
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 namespace ranges

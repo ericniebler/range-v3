@@ -219,7 +219,6 @@ namespace ranges
 
 // The standard is inconsistent about whether these are classes or structs
 RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 /// \cond

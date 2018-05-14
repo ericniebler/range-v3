@@ -40,7 +40,6 @@
 /// Concept-checking classes and utilities
 
 RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 namespace ranges
