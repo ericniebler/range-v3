@@ -36,7 +36,8 @@ namespace ranges
           : view_adaptor<take_view<Rng>, Rng, finite>
         {
         private:
-            friend struct ranges::range_access;
+            friend range_access;
+
             range_difference_type_t<Rng> n_ = 0;
 
             template<bool IsConst>
@@ -70,14 +71,12 @@ namespace ranges
             {
                 return {};
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Range<BaseRng const>())>
-            adaptor<true> begin_adaptor()
+            CONCEPT_REQUIRES(Range<Rng const>())
+            adaptor<true> begin_adaptor() const
             {
                 return {};
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Range<BaseRng const>())>
+            CONCEPT_REQUIRES(Range<Rng const>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {};
@@ -85,7 +84,7 @@ namespace ranges
         public:
             take_view() = default;
             take_view(Rng rng, range_difference_type_t<Rng> n)
-              : view_adaptor<take_view<Rng>, Rng, finite>(std::move(rng)), n_{n}
+              : take_view::view_adaptor(std::move(rng)), n_{n}
             {
                 RANGES_EXPECT(n >= 0);
             }
@@ -100,18 +99,18 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!SizedRange<Rng>() && !is_infinite<Rng>())>
-                static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_type_t<Rng> n)
+                static take_view<all_t<Rng>> invoke_(Rng &&rng, range_difference_type_t<Rng> n)
                 {
-                    return {all(static_cast<Rng&&>(rng)), n};
+                    return {all(static_cast<Rng &&>(rng)), n};
                 }
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(SizedRange<Rng>() || is_infinite<Rng>())>
-                static auto invoke_(Rng && rng, range_difference_type_t<Rng> n)
+                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_exactly(
-                        static_cast<Rng&&>(rng),
+                        static_cast<Rng &&>(rng),
                         is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
 
@@ -134,10 +133,10 @@ namespace ranges
 
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
-                auto operator()(Rng && rng, range_difference_type_t<Rng> n) const
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_fn::invoke_(static_cast<Rng&&>(rng), n)
+                    take_fn::invoke_(static_cast<Rng &&>(rng), n)
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
