@@ -65,6 +65,19 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.3.6** May 15, 2018
+  - NEW: `view::exclusive_scan` (thanks to GitHub user @mitsutaka-takeda).
+  - All views get non-`const` overloads of `.empty()` and `.size()` (see [ericniebler/stl2\#793](https://github.com/ericniebler/stl2/issues/793)).
+  - Upgrade Conan support for conan 1.0.
+  - `subspan` interface tweaks.
+  - Fix bug in `view::split` (see [this stackoverflow question](https://stackoverflow.com/questions/49015671)).
+  - Fix bug in `view::stride` (see [ericniebler/stl2\#805](https://github.com/ericniebler/stl2/issues/805)).
+  - Fix `const`-correctness problem in `view::chunk` (see [this stackoverflow question](https://stackoverflow.com/questions/49210190)).
+  - Replace uses of `ranges::result_of` with `ranges::invoke_result`.
+  - Fix potential buffer overrun of `view::drop` over RandomAccessRanges.
+  - Lots of `view::cartesian_product` fixes (see [ericniebler/stl2\#820](https://github.com/ericniebler/stl2/issues/820), [ericniebler/stl2\#823](https://github.com/ericniebler/stl2/issues/823)).
+  - Work around gcc-8 regression regarding `volatile` `std::initializer_list`s (see [ericniebler/stl2\#826](https://github.com/ericniebler/stl2/issues/826)).
+  - Fix `const`-correctness problem of `view::take`.
 * **0.3.5** February 17, 2018
   - Rvalues may satisfy `Writable` (see [ericniebler/stl2\#387](https://github.com/ericniebler/stl2/issues/387)).
   - `view_interface` gets a bounds-checking `at` method.
