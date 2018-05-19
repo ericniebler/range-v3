@@ -639,16 +639,6 @@ namespace ranges
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
-        template<typename I0, typename I1, typename Out, typename C = ordered_less,
-            typename P0 = ident, typename P1 = ident>
-        using MoveMergeable = meta::strict_and<
-            InputIterator<I0>,
-            InputIterator<I1>,
-            WeaklyIncrementable<Out>,
-            IndirectRelation<C, projected<I0, P0>, projected<I1, P1>>,
-            IndirectlyMovable<I0, Out>,
-            IndirectlyMovable<I1, Out>>;
-
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::strict_and<
             ForwardIterator<I>,
