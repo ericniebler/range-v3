@@ -485,4 +485,15 @@ namespace ranges {
     }
 }
 
+#if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED)
+#if defined(__clang__) // Workaround https://bugs.llvm.org/show_bug.cgi?id=37556
+#define RANGES_BROKEN_CPO_LOOKUP 1
+#elif defined(__GNUC__) && __GNUC__ < 6 // Workaround unknown GCC bug
+#define RANGES_BROKEN_CPO_LOOKUP 1
+#endif
+#endif
+#ifndef RANGES_BROKEN_CPO_LOOKUP
+#define RANGES_BROKEN_CPO_LOOKUP 0
+#endif
+
 #endif
