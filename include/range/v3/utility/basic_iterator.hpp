@@ -352,20 +352,22 @@ namespace ranges
             using box<T>::get;
         };
 
-        /// \cond
-        namespace _basic_iterator_
-        {
-        /// \endcond
+#if RANGES_BROKEN_CPO_LOOKUP
+        namespace _basic_iterator_ { template <typename> struct adl_hook {}; }
+#endif
 
         template<typename Cur>
         struct basic_iterator
           : range_access::mixin_base_t<Cur>
           , detail::iterator_associated_types_base<Cur>
+#if RANGES_BROKEN_CPO_LOOKUP
+          , private _basic_iterator_::adl_hook<basic_iterator<Cur>>
+#endif
         {
         private:
-            template<typename Cur2>
+            template<typename>
             friend struct basic_iterator;
-            friend struct ranges::range_access;
+            friend range_access;
             using mixin_t = range_access::mixin_base_t<Cur>;
             CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
@@ -644,20 +646,35 @@ namespace ranges
                 return *(*this + n);
             }
 
+#if !RANGES_BROKEN_CPO_LOOKUP
             // Optionally support hooking iter_move when the cursor sports a
             // move() member function.
             template<typename C = Cur,
-               CONCEPT_REQUIRES_(Same<C, Cur>() && detail::InputCursor<Cur>())>
+                CONCEPT_REQUIRES_(Same<C, Cur>() && detail::InputCursor<Cur>())>
             RANGES_CXX14_CONSTEXPR
             friend auto iter_move(basic_iterator const &it)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 range_access::move(static_cast<basic_iterator<C> const &>(it).pos())
             )
+#endif
         };
-        /// \cond
-        } // namespace _basic_iterator_
-        /// \endcond
+
+#if RANGES_BROKEN_CPO_LOOKUP
+        namespace _basic_iterator_
+        {
+            // Optionally support hooking iter_move when the cursor sports a
+            // move() member function.
+            template<typename Cur,
+                CONCEPT_REQUIRES_(detail::InputCursor<Cur>())>
+            RANGES_CXX14_CONSTEXPR
+            auto iter_move(basic_iterator<Cur> const &it)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                range_access::move(range_access::pos(it))
+            )
+        }
+#endif
 
         /// Get a cursor from a basic_iterator
         struct get_cursor_fn

@@ -63,6 +63,11 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
+            // Workaround unclassified GCC4 bug
+            void iter_move(); // unqualified name lookup block
+#endif
+
             template<typename T,
                 typename = decltype(iter_move(std::declval<T>()))>
             std::true_type try_adl_iter_move_(int);

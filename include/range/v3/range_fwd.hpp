@@ -421,14 +421,8 @@ namespace ranges
         template<typename Cur>
         struct basic_mixin;
 
-        /// \cond
-        namespace _basic_iterator_
-        {
-            template<typename Cur>
-            struct basic_iterator;
-        }
-        using _basic_iterator_::basic_iterator;
-        /// \endcond
+        template<typename Cur>
+        struct basic_iterator;
 
         template<cardinality>
         struct basic_view : view_base
@@ -442,14 +436,8 @@ namespace ranges
                  cardinality C = range_cardinality<BaseRng>::value>
         struct view_adaptor;
 
-        /// \cond
-        namespace _common_iterator_
-        {
-            template<typename I, typename S>
-            struct common_iterator;
-        }
-        using _common_iterator_::common_iterator;
-        /// \endcond
+        template<typename I, typename S>
+        struct common_iterator;
 
         template<typename I, typename S>
         using common_iterator_t =
@@ -535,12 +523,6 @@ namespace ranges
         }
 
         struct default_sentinel { };
-
-        namespace _counted_iterator_
-        {
-            template<typename I, typename = void>
-            struct counted_iterator;
-        }
 
         template<typename I>
         struct move_iterator;

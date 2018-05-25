@@ -25,278 +25,356 @@ namespace ranges
 {
     inline namespace v3
     {
+        template<typename I, typename = meta::if_<Iterator<I>>>
+        struct counted_iterator;
+
+        /// \cond
         namespace _counted_iterator_
         {
-            template<typename I, typename /*= void*/>
-            struct counted_iterator
+            struct access
             {
-            private:
-                CONCEPT_ASSERT(Iterator<I>());
-                template<typename, typename> friend struct counted_iterator;
-
-                I current_{};
-                difference_type_t<I> cnt_{0};
-
-                void post_increment_(std::true_type)
+                template<typename I>
+                static RANGES_CXX14_CONSTEXPR difference_type_t<counted_iterator<I>> &
+                count(counted_iterator<I> &ci) noexcept
                 {
-                    CONCEPT_ASSERT(std::is_void<decltype(current_++)>());
-                    ++current_;
-                }
-                auto post_increment_(std::false_type) -> decltype(current_++)
-                {
-                    CONCEPT_ASSERT(!std::is_void<decltype(current_++)>());
-                    auto&& tmp = current_++;
-                    --cnt_;
-                    return static_cast<decltype(tmp) &&>(tmp);
-                }
-            public:
-                using iterator_type = I;
-                using difference_type = difference_type_t<I>;
-
-                counted_iterator() = default;
-
-                counted_iterator(I x, difference_type_t<I> n)
-                  : current_(std::move(x)), cnt_(n)
-                {
-                    RANGES_EXPECT(n >= 0);
+                    return ci.cnt_;
                 }
 
-                template<typename I2,
-                    CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
-                counted_iterator(const counted_iterator<I2>& i)
-                  : current_(i.current_), cnt_(i.cnt_)
-                {}
-
-                template<typename I2,
-                    CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
-                counted_iterator& operator=(const counted_iterator<I2>& i)
+                template<typename I>
+                static RANGES_CXX14_CONSTEXPR I &
+                current(counted_iterator<I> &ci) noexcept
                 {
-                    current_ = i.current_;
-                    cnt_ = i.cnt_;
+                    return ci.current_;
                 }
 
-                I base() const
+                template<typename I>
+                static constexpr I const &
+                current(counted_iterator<I> const &ci) noexcept
                 {
-                    return current_;
-                }
-
-                difference_type_t<I> count() const
-                {
-                    return cnt_;
-                }
-
-                reference_t<I> operator*()
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    *current_
-                )
-                template<typename I2 = I, CONCEPT_REQUIRES_(Readable<I2 const>())>
-                reference_t<I> operator*() const
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    *static_cast<I2 const &>(current_)
-                )
-
-                counted_iterator& operator++()
-                {
-                    RANGES_EXPECT(cnt_ > 0);
-                    ++current_;
-                    --cnt_;
-                    return *this;
-                }
-
-                CONCEPT_REQUIRES(!ForwardIterator<I>())
-                auto operator++(int) -> decltype(current_++)
-                {
-                    RANGES_EXPECT(cnt_ > 0);
-                    return post_increment_(std::is_void<decltype(current_++)>());
-                }
-
-                CONCEPT_REQUIRES(ForwardIterator<I>())
-                counted_iterator operator++(int)
-                {
-                    auto tmp(*this);
-                    ++*this;
-                    return tmp;
-                }
-
-                CONCEPT_REQUIRES(BidirectionalIterator<I>())
-                counted_iterator& operator--()
-                {
-                    --current_;
-                    ++cnt_;
-                    return *this;
-                }
-
-                CONCEPT_REQUIRES(BidirectionalIterator<I>())
-                counted_iterator operator--(int)
-                {
-                    auto tmp(*this);
-                    --*this;
-                    return tmp;
-                }
-
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                counted_iterator& operator+=(difference_type n)
-                {
-                    RANGES_EXPECT(cnt_ >= n);
-                    current_ += n;
-                    cnt_ -= n;
-                    return *this;
-                }
-
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                counted_iterator operator+(difference_type n) const
-                {
-                    auto tmp(*this);
-                    tmp += n;
-                    return tmp;
-                }
-
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                counted_iterator& operator-=(difference_type n)
-                {
-                    RANGES_EXPECT(cnt_ >= -n);
-                    current_ -= n;
-                    cnt_ += n;
-                    return *this;
-                }
-
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                counted_iterator operator-(difference_type n) const
-                {
-                    auto tmp(*this);
-                    tmp -= n;
-                    return tmp;
-                }
-
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                reference_t<I> operator[](difference_type n) const
-                {
-                    RANGES_EXPECT(cnt_ >= n);
-                    return current_[n];
-                }
-
-                CONCEPT_REQUIRES(InputIterator<I>())
-                friend RANGES_CXX14_CONSTEXPR
-                rvalue_reference_t<I> iter_move(const counted_iterator& i)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::iter_move(i.current_)
-                )
-
-                template<typename I2,
-                    CONCEPT_REQUIRES_(IndirectlySwappable<I2, I>())>
-                friend void iter_swap(
-                    const counted_iterator& x, counted_iterator<I2> const &y)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::iter_swap(x.current_, y.current_)
-                )
-
-                friend void advance(counted_iterator& i, difference_type_t<I> n)
-                {
-                    ranges::advance(i.current_, n);
-                    i.cnt_ -= n;
+                    return ci.current_;
                 }
             };
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator==(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+#if RANGES_BROKEN_CPO_LOOKUP
+            template<typename> struct adl_hook {};
+#endif
+        }
+        /// \endcond
+
+        template<typename I, typename /*= meta::if_<Iterator<I>>*/>
+        struct counted_iterator
+#if RANGES_BROKEN_CPO_LOOKUP
+          : private _counted_iterator_::adl_hook<counted_iterator<I>>
+#endif
+        {
+        private:
+            CONCEPT_ASSERT(Iterator<I>());
+            friend _counted_iterator_::access;
+
+            I current_{};
+            difference_type_t<I> cnt_{0};
+
+            void post_increment_(std::true_type)
             {
-                return x.count() == y.count();
+                CONCEPT_ASSERT(std::is_void<decltype(current_++)>());
+                ++current_;
+            }
+            auto post_increment_(std::false_type) -> decltype(current_++)
+            {
+                CONCEPT_ASSERT(!std::is_void<decltype(current_++)>());
+                auto&& tmp = current_++;
+                --cnt_;
+                return static_cast<decltype(tmp) &&>(tmp);
+            }
+        public:
+            using iterator_type = I;
+            using difference_type = difference_type_t<I>;
+
+            counted_iterator() = default;
+
+            counted_iterator(I x, difference_type_t<I> n)
+              : current_(std::move(x)), cnt_(n)
+            {
+                RANGES_EXPECT(n >= 0);
             }
 
-            template<typename I>
-            bool operator==(const counted_iterator<I>& x, default_sentinel)
+            template<typename I2,
+                CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
+            counted_iterator(const counted_iterator<I2>& i)
+              : current_(_counted_iterator_::access::current(i)), cnt_(i.count())
+            {}
+
+            template<typename I2,
+                CONCEPT_REQUIRES_(ConvertibleTo<I2, I>())>
+            counted_iterator& operator=(const counted_iterator<I2>& i)
             {
-                return x.count() == 0;
+                current_ = _counted_iterator_::access::current(i);
+                cnt_ = i.count();
             }
 
-            template<typename I>
-            bool operator==(default_sentinel, const counted_iterator<I>& x)
+            I base() const
             {
-                return x.count() == 0;
+                return current_;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator!=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            difference_type_t<I> count() const
             {
-                return !(x == y);
+                return cnt_;
             }
 
-            template<typename I>
-            bool operator!=(const counted_iterator<I>& x, default_sentinel y)
+            reference_t<I> operator*()
+                noexcept(noexcept(reference_t<I>(*current_)))
             {
-                return !(x == y);
+                RANGES_EXPECT(cnt_ > 0);
+                return *current_;
+            }
+            template<typename I2 = I, CONCEPT_REQUIRES_(Readable<I const>())>
+            reference_t<I2> operator*() const
+                noexcept(noexcept(reference_t<I>(*current_)))
+            {
+                RANGES_EXPECT(cnt_ > 0);
+                return *current_;
             }
 
-            template<typename I>
-            bool operator!=(default_sentinel x, const counted_iterator<I>& y)
+            counted_iterator& operator++()
             {
-                return !(x == y);
+                RANGES_EXPECT(cnt_ > 0);
+                ++current_;
+                --cnt_;
+                return *this;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator<(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            CONCEPT_REQUIRES(!ForwardIterator<I>())
+            auto operator++(int) -> decltype(current_++)
             {
-                return y.count() < x.count();
+                RANGES_EXPECT(cnt_ > 0);
+                return post_increment_(std::is_void<decltype(current_++)>());
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator<=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            CONCEPT_REQUIRES(ForwardIterator<I>())
+            counted_iterator operator++(int)
             {
-                return !(y < x);
+                auto tmp(*this);
+                ++*this;
+                return tmp;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator>(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            counted_iterator& operator--()
             {
-                return y < x;
+                --current_;
+                ++cnt_;
+                return *this;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            bool operator>=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            CONCEPT_REQUIRES(BidirectionalIterator<I>())
+            counted_iterator operator--(int)
             {
-                return !(x < y);
+                auto tmp(*this);
+                --*this;
+                return tmp;
             }
 
-            template<typename I1, typename I2,
-                CONCEPT_REQUIRES_(Common<I1, I2>())>
-            difference_type_t<I2>
-            operator-(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            counted_iterator& operator+=(difference_type n)
             {
-                return y.count() - x.count();
+                RANGES_EXPECT(cnt_ >= n);
+                current_ += n;
+                cnt_ -= n;
+                return *this;
             }
 
-            template<typename I>
-            difference_type_t<I>
-            operator-(const counted_iterator<I>& x, default_sentinel)
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            counted_iterator operator+(difference_type n) const
             {
-                return -x.count();
+                auto tmp(*this);
+                tmp += n;
+                return tmp;
             }
 
-            template<typename I>
-            difference_type_t<I>
-            operator-(default_sentinel, const counted_iterator<I>& y)
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            counted_iterator& operator-=(difference_type n)
             {
-                return y.count();
+                RANGES_EXPECT(cnt_ >= -n);
+                current_ -= n;
+                cnt_ += n;
+                return *this;
             }
 
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            counted_iterator operator-(difference_type n) const
+            {
+                auto tmp(*this);
+                tmp -= n;
+                return tmp;
+            }
+
+            CONCEPT_REQUIRES(RandomAccessIterator<I>())
+            reference_t<I> operator[](difference_type n) const
+            {
+                RANGES_EXPECT(cnt_ >= n);
+                return current_[n];
+            }
+
+#if !RANGES_BROKEN_CPO_LOOKUP
+            CONCEPT_REQUIRES(InputIterator<I>())
+            friend RANGES_CXX14_CONSTEXPR
+            rvalue_reference_t<I> iter_move(const counted_iterator& i)
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_move(i.current_)
+            )
+
+            template<typename I2,
+                CONCEPT_REQUIRES_(IndirectlySwappable<I2, I>())>
+            friend void iter_swap(
+                const counted_iterator& x, counted_iterator<I2> const &y)
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_swap(x.current_, _counted_iterator_::access::current(y))
+            )
+
+            friend void advance(counted_iterator& i, difference_type_t<I> n)
+            {
+                RANGES_EXPECT(i.cnt_ >= n);
+                ranges::advance(i.current_, n);
+                i.cnt_ -= n;
+            }
+#endif
+        };
+
+#if RANGES_BROKEN_CPO_LOOKUP
+        namespace _counted_iterator_
+        {
             template<typename I,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            counted_iterator<I>
-            operator+(difference_type_t<I> n, const counted_iterator<I>& x)
-            {
-                return x + n;
-            }
+                CONCEPT_REQUIRES_(InputIterator<I>())>
+            RANGES_CXX14_CONSTEXPR
+            rvalue_reference_t<I> iter_move(counted_iterator<I> const &i)
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_move(_counted_iterator_::access::current(i))
+            )
 
+            template<typename I1, typename I2,
+                CONCEPT_REQUIRES_(IndirectlySwappable<I2, I1>())>
+            void iter_swap(
+                counted_iterator<I1> const &x, counted_iterator<I2> const &y)
+            RANGES_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_swap(
+                    _counted_iterator_::access::current(x),
+                    _counted_iterator_::access::current(y))
+            )
+
+            template<typename I>
+            void advance(counted_iterator<I> &i, difference_type_t<I> n)
+            {
+                auto &count = _counted_iterator_::access::count(i);
+                RANGES_EXPECT(count >= n);
+                ranges::advance(_counted_iterator_::access::current(i), n);
+                count -= n;
+            }
+        }
+#endif
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator==(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return x.count() == y.count();
+        }
+
+        template<typename I>
+        bool operator==(const counted_iterator<I>& x, default_sentinel)
+        {
+            return x.count() == 0;
+        }
+
+        template<typename I>
+        bool operator==(default_sentinel, const counted_iterator<I>& x)
+        {
+            return x.count() == 0;
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator!=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return !(x == y);
+        }
+
+        template<typename I>
+        bool operator!=(const counted_iterator<I>& x, default_sentinel y)
+        {
+            return !(x == y);
+        }
+
+        template<typename I>
+        bool operator!=(default_sentinel x, const counted_iterator<I>& y)
+        {
+            return !(x == y);
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator<(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return y.count() < x.count();
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator<=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return !(y < x);
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator>(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return y < x;
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        bool operator>=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return !(x < y);
+        }
+
+        template<typename I1, typename I2,
+            CONCEPT_REQUIRES_(Common<I1, I2>())>
+        difference_type_t<I2>
+        operator-(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        {
+            return y.count() - x.count();
+        }
+
+        template<typename I>
+        difference_type_t<I>
+        operator-(const counted_iterator<I>& x, default_sentinel)
+        {
+            return -x.count();
+        }
+
+        template<typename I>
+        difference_type_t<I>
+        operator-(default_sentinel, const counted_iterator<I>& y)
+        {
+            return y.count();
+        }
+
+        template<typename I,
+            CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+        counted_iterator<I>
+        operator+(difference_type_t<I> n, const counted_iterator<I>& x)
+        {
+            return x + n;
+        }
+
+        namespace _counted_iterator_
+        {
             template<typename I, typename = void>
             struct value_type_
             {};
@@ -342,10 +420,6 @@ namespace ranges
                 using pointer = meta::_t<detail::pointer_type_<I>>;
             };
         } // namespace _counted_iterator_
-
-        template<typename I>
-        using counted_iterator =
-            _counted_iterator_::counted_iterator<I, meta::if_<Iterator<I>>>;
 
         template<typename I,
             CONCEPT_REQUIRES_(Iterator<I>())>
