@@ -17,6 +17,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/detail/adl_get.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -32,19 +33,6 @@ namespace ranges
 
             template<typename T>
             using tag_elem = meta::back<meta::as_list<T>>;
-
-            namespace adl_get_detail
-            {
-                using std::get;
-
-                template<std::size_t I, typename T>
-                constexpr auto adl_get(T && t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get<I>((T &&) t)
-                )
-            }
-            using adl_get_detail::adl_get;
         }
 
         namespace _tagged_
@@ -157,6 +145,48 @@ namespace ranges
             }
         }
 #endif
+
+        template<std::size_t I, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> &t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<I>(static_cast<Base &>(t))
+        )
+        template<std::size_t I, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> const &t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<I>(static_cast<Base const &>(t))
+        )
+        template<std::size_t I, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> &&t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<I>(static_cast<Base &&>(t))
+        )
+        template<std::size_t I, typename Base, typename... Tags>
+        void get(tagged<Base, Tags...> const &&) = delete;
+
+        template<typename T, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> &t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<T>(static_cast<Base &>(t))
+        )
+        template<typename T, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> const &t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<T>(static_cast<Base const &>(t))
+        )
+        template<typename T, typename Base, typename... Tags>
+        auto get(tagged<Base, Tags...> &&t)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            ranges::detail::adl_get<T>(static_cast<Base &&>(t))
+        )
+        template<typename T, typename Base, typename... Tags>
+        void get(tagged<Base, Tags...> const &&) = delete;
 
         template<typename F, typename S>
         using tagged_pair =

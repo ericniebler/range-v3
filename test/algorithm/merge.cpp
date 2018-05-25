@@ -35,9 +35,9 @@ int main()
             ib[i] = 2 * i + 1;
         auto r = ranges::merge(ia.get(), ia.get() + N,
             ib.get(), ib.get() + N, ic.get());
-        CHECK(std::get<0>(r) == ia.get() + N);
-        CHECK(std::get<1>(r) == ib.get() + N);
-        CHECK(std::get<2>(r) == ic.get() + 2 * N);
+        CHECK(ranges::get<0>(r) == ia.get() + N);
+        CHECK(ranges::get<1>(r) == ib.get() + N);
+        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
@@ -55,9 +55,9 @@ int main()
         auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
         auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
         auto r = ranges::merge(r0, r1, ic.get());
-        CHECK(std::get<0>(r) == ia.get() + N);
-        CHECK(std::get<1>(r) == ib.get() + N);
-        CHECK(std::get<2>(r) == ic.get() + 2 * N);
+        CHECK(ranges::get<0>(r) == ia.get() + N);
+        CHECK(ranges::get<1>(r) == ib.get() + N);
+        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
@@ -76,9 +76,9 @@ int main()
         auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
         auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
         auto r = ranges::merge(std::move(r0), std::move(r1), ic.get());
-        CHECK(std::get<0>(r).get_unsafe() == ia.get() + N);
-        CHECK(std::get<1>(r).get_unsafe() == ib.get() + N);
-        CHECK(std::get<2>(r) == ic.get() + 2 * N);
+        CHECK(ranges::get<0>(r).get_unsafe() == ia.get() + N);
+        CHECK(ranges::get<1>(r).get_unsafe() == ib.get() + N);
+        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));

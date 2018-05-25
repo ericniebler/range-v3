@@ -17,6 +17,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/detail/adl_get.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
@@ -28,10 +29,10 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename ...Us, typename Tup, std::size_t...Is>
-            std::tuple<Us...> to_std_tuple(Tup && tup, meta::index_sequence<Is...>)
+            template<typename ...Us, typename Tup, std::size_t ...Is>
+            std::tuple<Us...> to_std_tuple(Tup &&tup, meta::index_sequence<Is...>)
             {
-                return std::tuple<Us...>{std::get<Is>(static_cast<Tup&&>(tup))...};
+                return std::tuple<Us...>{adl_get<Is>(static_cast<Tup &&>(tup))...};
             }
         }
         /// \endcond
@@ -41,16 +42,16 @@ namespace ranges
           : std::tuple<Ts...>
         {
         private:
-            template<typename That, std::size_t...Is>
-            common_tuple(That && that, meta::index_sequence<Is...>)
-              : std::tuple<Ts...>{std::get<Is>(static_cast<That&&>(that))...}
+            template<typename That, std::size_t ...Is>
+            common_tuple(That &&that, meta::index_sequence<Is...>)
+              : std::tuple<Ts...>{detail::adl_get<Is>(static_cast<That &&>(that))...}
             {}
             struct element_assign_
             {
                 template<typename T, typename U>
                 int operator()(T &t, U &&u) const
                 {
-                    t = static_cast<U&&>(u);
+                    t = static_cast<U &&>(u);
                     return 0;
                 }
             };
@@ -82,6 +83,24 @@ namespace ranges
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us>()...>::value)>
             common_tuple(std::tuple<Us...> &&that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
+              : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
+            {}
+            template<typename...Us,
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)>
+            common_tuple(common_tuple<Us...> &that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
+              : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
+            {}
+            template<typename...Us,
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)>
+            common_tuple(common_tuple<Us...> const &that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
+              : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
+            {}
+            template<typename...Us,
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us>()...>::value)>
+            common_tuple(common_tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
             {}
@@ -169,6 +188,52 @@ namespace ranges
                 return detail::to_std_tuple<Us...>(std::move(*this), meta::make_index_sequence<sizeof...(Ts)>{});
             }
         };
+
+        template<std::size_t I, typename ...Ts,
+            CONCEPT_REQUIRES_(I < sizeof...(Ts))>
+        constexpr auto get(common_tuple<Ts...> &ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<I>(ct.base())
+        )
+        template<std::size_t I, typename ...Ts,
+            CONCEPT_REQUIRES_(I < sizeof...(Ts))>
+        constexpr auto get(common_tuple<Ts...> const &ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<I>(ct.base())
+        )
+        template<std::size_t I, typename ...Ts,
+            CONCEPT_REQUIRES_(I < sizeof...(Ts))>
+        constexpr auto get(common_tuple<Ts...> &&ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<I>(std::move(ct.base()))
+        )
+        template<std::size_t I, typename ...Ts,
+            CONCEPT_REQUIRES_(I < sizeof...(Ts))>
+        void get(common_tuple<Ts...> const &&ct) = delete;
+
+        template<typename T, typename ...Ts>
+        constexpr auto get(common_tuple<Ts...> &ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<T>(ct.base())
+        )
+        template<typename T, typename ...Ts>
+        constexpr auto get(common_tuple<Ts...> const &ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<T>(ct.base())
+        )
+        template<typename T, typename ...Ts>
+        constexpr auto get(common_tuple<Ts...> &&ct)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            std::get<T>(std::move(ct.base()))
+        )
+        template<typename T, typename ...Ts>
+        void get(common_tuple<Ts...> const &&ct) = delete;
 
         // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)\
