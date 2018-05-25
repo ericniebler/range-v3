@@ -1,5 +1,7 @@
 shallow_clone: true
 
+image: Visual Studio 2017
+
 platform:
   - x86
   - x64
@@ -8,31 +10,45 @@ configuration:
   - Debug
   - Release
 
+environment:
+  matrix:
+    - CPP: latest
+
+#    - CPP: 14
+
 cache:
-  - C:\cmake-3.6.3-win32-x86
+  - C:\ninja-1.8.2
 
 install:
   - ps: |
-      if (![IO.File]::Exists("C:\cmake-3.6.3-win32-x86\bin\cmake.exe")) {
-        Start-FileDownload 'https://cmake.org/files/v3.6/cmake-3.6.3-win32-x86.zip'
-        7z x -y cmake-3.6.3-win32-x86.zip -oC:\
+      if (![IO.File]::Exists("C:\ninja-1.8.2\ninja.exe")) {
+        Start-FileDownload 'https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip'
+        7z x -y ninja-win.zip -oC:\ninja-1.8.2
       }
-      $env:PATH="C:\cmake-3.6.3-win32-x86\bin;$env:PATH"
+      $env:PATH="C:\ninja-1.8.2;$env:PATH"
+  - for /f "tokens=1* delims=" %%i in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM:x86=x64_x86%
+  - cmake --version
+  - ninja --version
+  - clang-cl --version
+
+build_script:
   - mkdir build && cd build
   - ps: |
-      if ($env:PLATFORM -eq "x64" -and $env:CONFIGURATION -eq "Debug") {
-        $env:HEADER_CHECK=1
+      $env:CC='clang-cl'
+      $env:CXX='clang-cl'
+      $env:HEADER_CHECK=0
+      if ($env:PLATFORM -eq "x64") {
+        if ($env:CONFIGURATION -eq "Debug") {
+          $env:HEADER_CHECK=1
+        }
       } else {
-        $env:HEADER_CHECK=0
+        $env:CXXFLAGS='-m32'
+        $env:CFLAGS='-m32'
       }
-  - cmake .. -DRANGE_V3_HEADER_CHECKS=%HEADER_CHECK% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -T v140_clang_c2
-
-build:
-  project: c:/projects/range-v3/build/ALL_BUILD.vcxproj
-  parallel: true
-  verbosity: minimal
+  - cmake .. -G Ninja -Wdev -DRANGE_V3_HEADER_CHECKS=%HEADER_CHECK% -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DRANGES_CXX_STD=%CPP%
+  - ninja -v
 
 test_script:
-  - ctest -j2
+  - ctest -j2 --output-on-failure
 
 deploy: off

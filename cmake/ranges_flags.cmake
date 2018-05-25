@@ -18,13 +18,21 @@ endmacro()
 # All compilation flags
 # Language flag: version of the C++ standard to use
 message("[range-v3]: C++ std=${RANGES_CXX_STD}")
-ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
+if (RANGES_CXX_COMPILER_CLANGCL)
+  ranges_append_flag(RANGES_HAS_CXXSTDCOLON "-std:c++${RANGES_CXX_STD}")
+else()
+  ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
+endif()
 
 # Enable "normal" warnings and make them errors:
-ranges_append_flag(RANGES_HAS_WERROR -Werror)
-ranges_append_flag(RANGES_HAS_WX -WX)
-ranges_append_flag(RANGES_HAS_WALL -Wall)
-ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
+if (RANGES_CXX_COMPILER_CLANGCL)
+  ranges_append_flag(RANGES_HAS_W3 -W3)
+  ranges_append_flag(RANGES_HAS_WX -WX)
+else()
+  ranges_append_flag(RANGES_HAS_WALL -Wall)
+  ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
+  ranges_append_flag(RANGES_HAS_WERROR -Werror)
+endif()
 
 if (RANGES_ENV_LINUX AND RANGES_CXX_COMPILER_CLANG)
   # On linux libc++ re-exports the system math headers. The ones from libstdc++
@@ -134,9 +142,7 @@ if (RANGES_RELEASE_BUILD)
     ranges_append_flag(RANGES_HAS_O2 -O2)
   endif()
   ranges_append_flag(RANGES_HAS_STRICT_ALIASING -fstrict-aliasing)
-  if (NOT RANGES_CXX_COMPILER_CLANGC2)
-    ranges_append_flag(RANGES_HAS_STRICT_VTABLE_POINTERS -fstrict-vtable-pointers)
-  endif()
+  ranges_append_flag(RANGES_HAS_STRICT_VTABLE_POINTERS -fstrict-vtable-pointers)
   ranges_append_flag(RANGES_HAS_FAST_MATH -ffast-math)
   ranges_append_flag(RANGES_HAS_VECTORIZE -fvectorize)
 
