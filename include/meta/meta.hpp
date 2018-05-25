@@ -1981,8 +1981,12 @@ namespace meta
             template <typename... T, typename V>
             struct find_index_<list<T...>, V>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+#else
+                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+#endif
                 using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
             };
         } // namespace detail
@@ -2034,8 +2038,12 @@ namespace meta
             template <typename... T, typename V>
             struct reverse_find_index_<list<T...>, V>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+#else
+                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+#endif
                 using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
             };
         } // namespace detail
@@ -2122,8 +2130,12 @@ namespace meta
             struct find_if_<list<List...>, Fun,
                             void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
+#else
+                static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+#endif
                 using type =
                     drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
             };
@@ -2178,8 +2190,12 @@ namespace meta
                 list<List...>, Fun,
                 void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
+#else
+                static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+#endif
                 using type =
                   drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
                                                                    s_v + sizeof...(List)) - s_v>;
@@ -2301,8 +2317,12 @@ namespace meta
             template <typename... List, typename T>
             struct count_<list<List...>, T>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {std::is_same<T, List>::value...};
+#else
+                static constexpr bool s_v[] = {std::is_same<T, List>::value...};
+#endif
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
             };
         }
@@ -2341,8 +2361,12 @@ namespace meta
             struct count_if_<list<List...>, Fn,
                              void_<integer_sequence<bool, bool(invoke<Fn, List>::type::value)...>>>
             {
+#if defined(__clang__) & __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fn, List>::type::value...};
+#else
+                static constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
+#endif
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
             };
         }
