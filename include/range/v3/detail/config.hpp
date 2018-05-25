@@ -18,8 +18,8 @@
 #include <iosfwd>
 #if (defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
     (!defined(NDEBUG) && !defined(RANGES_ASSERT) && \
-     defined(__GNUC__) && !defined(__clang__) && \
-     (__GNUC__ < 5 || defined(__MINGW32__)))
+     ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \
+      defined(_MSVC_STL_VERSION)))
 #include <cstdio>
 #include <cstdlib>
 
@@ -41,8 +41,9 @@ namespace ranges
 #endif
 
 #ifndef RANGES_ASSERT
-#if !defined(NDEBUG) && defined(__GNUC__) && !defined(__clang__) && \
-    (__GNUC__ < 5 || defined(__MINGW32__))
+#if !defined(NDEBUG) && \
+    ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \
+     defined(_MSVC_STL_VERSION))
 #define RANGES_ASSERT(...) \
     static_cast<void>((__VA_ARGS__) ? void(0) : \
         ::ranges::detail::assert_failure(__FILE__, __LINE__, "assertion failed: " #__VA_ARGS__))
