@@ -38,7 +38,7 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
-        struct drop_view
+        struct RANGES_EMPTY_BASES drop_view
           : view_interface<drop_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>,

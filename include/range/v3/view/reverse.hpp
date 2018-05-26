@@ -38,7 +38,7 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng, bool /* = decltype(detail::double_reverse<Rng>(42))::value */>
-        struct reverse_view
+        struct RANGES_EMPTY_BASES reverse_view
           : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>, reverse_view<Rng>, !BoundedRange<Rng>()>

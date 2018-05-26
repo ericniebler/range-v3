@@ -97,11 +97,7 @@ namespace
         CHECK(it == ranges::end(rng));
 
         test_prev(rng, it, BidirectionalRange<Base>());
-
-        if (!ranges::v3::detail::broken_ebo)
-        {
-            CHECK(sizeof(it) == sizeof(size_compare<Base>));
-        }
+        CHECK(sizeof(it) == sizeof(size_compare<Base>));
     }
 }
 

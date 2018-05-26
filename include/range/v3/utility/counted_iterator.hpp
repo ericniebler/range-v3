@@ -144,8 +144,14 @@ namespace ranges
                 return *this;
             }
 
+#ifdef RANGES_WORKAROUND_MSVC_677925
+            template<typename I2 = I,
+                CONCEPT_REQUIRES_(!ForwardIterator<I2>())>
+            auto operator++(int) -> decltype(std::declval<I2 &>()++)
+#else // ^^^ workaround ^^^ / vvv no workaround vvv
             CONCEPT_REQUIRES(!ForwardIterator<I>())
             auto operator++(int) -> decltype(current_++)
+#endif // RANGES_WORKAROUND_MSVC_677925
             {
                 RANGES_EXPECT(cnt_ > 0);
                 return post_increment_(std::is_void<decltype(current_++)>());

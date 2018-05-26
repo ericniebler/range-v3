@@ -51,29 +51,48 @@ namespace ranges
             friend range_access;
             CONCEPT_ASSERT(ForwardRange<Rng>());
 
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            template<bool Const, typename I = iterator_t<meta::const_if_c<Const, Rng>>>
+            static constexpr bool CanSizedSentinel = SizedSentinel<I, I>();
+#else // ^^^ workaround / no workaround vvv
             template<bool Const>
             static constexpr bool CanSizedSentinel() noexcept
             {
                 using I = iterator_t<meta::const_if_c<Const, Rng>>;
                 return (bool) SizedSentinel<I, I>();
             }
+#endif // RANGES_WORKAROUND_MSVC_711347
+
             template<bool Const>
             using offset_t =
                 meta::if_c<
                     BidirectionalRange<meta::const_if_c<Const, Rng>>() ||
+#ifdef RANGES_WORKAROUND_MSVC_711347
+                        chunk_view::CanSizedSentinel<Const>,
+#else // ^^^ workaround / no workaround vvv
                         chunk_view::CanSizedSentinel<Const>(),
+#endif // RANGES_WORKAROUND_MSVC_711347
                     range_difference_type_t<Rng>,
                     constant<range_difference_type_t<Rng>, 0>>;
 
             range_difference_type_t<Rng> n_ = 0;
 
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            template<bool Const, bool CanSized = CanSizedSentinel<Const>>
+#else // ^^^ workaround / no workaround vvv
             template<bool Const>
-            struct adaptor
+#endif // RANGES_WORKAROUND_MSVC_711347
+            struct RANGES_EMPTY_BASES adaptor
               : adaptor_base
               , private box<offset_t<Const>>
             {
             private:
+#ifdef RANGES_WORKAROUND_MSVC_711347
+                template <bool, bool>
+                friend struct adaptor;
+#else // ^^^ workaround / no workaround vvv
                 friend struct adaptor<!Const>;
+#endif // RANGES_WORKAROUND_MSVC_711347
                 using CRng = meta::const_if_c<Const, Rng>;
 
                 range_difference_type_t<CRng> n_;
@@ -128,7 +147,12 @@ namespace ranges
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
+
+#ifdef RANGES_WORKAROUND_MSVC_711347
+                CONCEPT_REQUIRES(CanSized)
+#else // ^^^ workaround / no workaround vvv
                 CONCEPT_REQUIRES(CanSizedSentinel<Const>())
+#endif // RANGES_WORKAROUND_MSVC_711347
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> distance_to(iterator_t<CRng> const &here,
                     iterator_t<CRng> const &there, adaptor const &that) const
@@ -166,8 +190,13 @@ namespace ranges
             {
                 return adaptor<simple_view<Rng>()>{*this};
             }
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            template<bool BB = true, CONCEPT_REQUIRES_(ForwardRange<Rng const>())>
+            constexpr adaptor<BB> begin_adaptor() const
+#else // ^^^ workaround / no workaround vvv
             CONCEPT_REQUIRES(ForwardRange<Rng const>())
             constexpr adaptor<true> begin_adaptor() const
+#endif // RANGES_WORKAROUND_MSVC_711347
             {
                 return adaptor<true>{*this};
             }

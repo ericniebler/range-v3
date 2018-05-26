@@ -48,7 +48,7 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng, typename Pred>
-        struct adjacent_filter_view
+        struct RANGES_EMPTY_BASES adjacent_filter_view
           : view_adaptor<
                 adjacent_filter_view<Rng, Pred>,
                 Rng,

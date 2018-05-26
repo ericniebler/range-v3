@@ -224,7 +224,7 @@ namespace ranges
             };
 
             template<typename Rng, typename Ref, bool Sized = false>
-            struct any_input_view_impl
+            struct RANGES_EMPTY_BASES any_input_view_impl
               : any_input_view_interface<Ref, Sized>
               , private tagged_compressed_tuple<tag::range(Rng),
                     tag::current(iterator_t<Rng>)>
@@ -465,7 +465,7 @@ namespace ranges
                 cloneable<any_view_interface<Ref, Cat>>;
 
             template<typename Rng, typename Ref, category Cat>
-            struct any_view_impl
+            struct RANGES_EMPTY_BASES any_view_impl
               : any_cloneable_view_interface<Ref, Cat>
               , private box<Rng, any_view_impl<Rng, Ref, Cat>>
               , private any_view_sentinel_impl<Rng>

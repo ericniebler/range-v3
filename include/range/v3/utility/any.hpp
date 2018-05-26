@@ -61,7 +61,14 @@ namespace ranges
         template<typename T>
         T const * any_cast(any const *) noexcept;
 
+#if defined(RANGES_WORKAROUND_MSVC_589046) && !defined(RANGES_DOXYGEN_INVOKED)
+        namespace _any_ { struct adl_hook {}; }
+#endif
+
         struct any
+#if defined(RANGES_WORKAROUND_MSVC_589046) && !defined(RANGES_DOXYGEN_INVOKED)
+          : private _any_::adl_hook
+#endif
         {
         private:
             template<typename T>
@@ -153,11 +160,24 @@ namespace ranges
             {
                 ptr_.swap(that.ptr_);
             }
+
+#if !defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_DOXYGEN_INVOKED)
             friend void swap(any &x, any &y) noexcept
             {
                 x.swap(y);
             }
+#endif
         };
+
+#if defined(RANGES_WORKAROUND_MSVC_589046) && !defined(RANGES_DOXYGEN_INVOKED)
+        namespace _any_
+        {
+            void swap(any &x, any &y) noexcept
+            {
+                x.swap(y);
+            }
+        }
+#endif
 
         /// \throw bad_any_cast
         template<typename T>

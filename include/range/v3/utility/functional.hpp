@@ -626,7 +626,7 @@ namespace ranges
         namespace detail
         {
             template<typename Bind>
-            struct pipeable_binder
+            struct RANGES_EMPTY_BASES pipeable_binder
               : Bind
               , pipeable<pipeable_binder<Bind>>
             {

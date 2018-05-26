@@ -108,7 +108,7 @@ namespace ranges
         /// \endcond
 
         template<typename T, detail::span_index_t N = dynamic_extent>
-        struct span
+        struct RANGES_EMPTY_BASES span
           : public view_interface<span<T, N>,
                 (N == dynamic_extent ? finite : static_cast<cardinality>(N))>,
             public detail::span_extent<N>
@@ -220,7 +220,7 @@ namespace ranges
                         data_ + Offset, Count == dynamic_extent ? size() - Offset : Count};
             }
             template<index_type Offset>
-            constexpr span<T, N >= Offset ? N - Offset : dynamic_extent> subspan() const noexcept
+            constexpr span<T, (N >= Offset ? N - Offset : dynamic_extent)> subspan() const noexcept
             {
                 static_assert(Offset >= 0,
                     "Offset of first element to extract cannot be negative.");

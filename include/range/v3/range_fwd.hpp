@@ -398,7 +398,7 @@ namespace ranges
         struct basic_mixin;
 
         template<typename Cur>
-        struct basic_iterator;
+        struct RANGES_EMPTY_BASES basic_iterator;
 
         template<cardinality>
         struct basic_view : view_base
@@ -440,7 +440,7 @@ namespace ranges
     #endif
 
         template<typename I, typename S = I>
-        struct iterator_range;
+        struct RANGES_EMPTY_BASES iterator_range;
 
         template<typename I, typename S = I>
         struct sized_iterator_range;
@@ -454,7 +454,7 @@ namespace ranges
         // Views
         //
         template<typename Rng, typename Pred>
-        struct adjacent_filter_view;
+        struct RANGES_EMPTY_BASES adjacent_filter_view;
 
         namespace view
         {
@@ -462,7 +462,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Pred>
-        struct adjacent_remove_if_view;
+        struct RANGES_EMPTY_BASES adjacent_remove_if_view;
 
         namespace view
         {
@@ -500,7 +500,7 @@ namespace ranges
             basic_iterator<detail::move_into_cursor<I>>;
 
         template<typename Rng, bool = (bool) is_infinite<Rng>()>
-        struct cycled_view;
+        struct RANGES_EMPTY_BASES cycled_view;
 
         namespace view
         {
@@ -610,7 +610,7 @@ namespace ranges
         }
 
         template<typename Rng, bool = decltype(detail::double_reverse<Rng>(42))::value>
-        struct reverse_view;
+        struct RANGES_EMPTY_BASES reverse_view;
 
         namespace view
         {

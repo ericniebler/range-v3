@@ -135,17 +135,27 @@ namespace ranges
             // stride_view const models Range if Rng const models Range, and
             // either (1) Rng is sized, so we can pre-calculate offset_, or (2)
             // Rng is not Bidirectional, so it does not need offset_.
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            static constexpr bool const_iterable = Range<Rng const>() &&
+                (SizedRange<Rng const>() || !BidirectionalRange<Rng const>());
+#else // ^^^ workaround / no workaround vvv
             static constexpr bool const_iterable() noexcept
             {
                 return Range<Rng const>() &&
                     (SizedRange<Rng const>() || !BidirectionalRange<Rng const>());
             }
+#endif // RANGES_WORKAROUND_MSVC_711347
 
             // If the underlying range doesn't model BoundedRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // BoundedView, adapt it anyway.
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            template<bool Const, class CRng = meta::const_if_c<Const, Rng>>
+            static constexpr bool can_bound = BoundedRange<CRng>()
+                    && (SizedRange<CRng>() || !BidirectionalRange<CRng>());
+#else // ^^^ workaround / no workaround vvv
             template<bool Const>
             static constexpr bool can_bound() noexcept
             {
@@ -153,6 +163,7 @@ namespace ranges
                 return BoundedRange<CRng>()
                     && (SizedRange<CRng>() || !BidirectionalRange<CRng>());
             }
+#endif // RANGES_WORKAROUND_MSVC_711347
 
             template<bool Const>
             struct adaptor : adaptor_base
@@ -244,20 +255,34 @@ namespace ranges
             {
                 return adaptor<false>{*this};
             }
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            CONCEPT_REQUIRES(const_iterable)
+#else // ^^^ workaround / no workaround vvv
             CONCEPT_REQUIRES(const_iterable())
+#endif // RANGES_WORKAROUND_MSVC_711347
             constexpr adaptor<true> begin_adaptor() const
             {
                 return adaptor<true>{*this};
             }
 
             RANGES_CXX14_CONSTEXPR
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            meta::if_c<can_bound<false>, adaptor<false>, adaptor_base> end_adaptor()
+#else // ^^^ workaround / no workaround vvv
             meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base> end_adaptor()
+#endif // RANGES_WORKAROUND_MSVC_711347
             {
                 return {*this};
             }
+#ifdef RANGES_WORKAROUND_MSVC_711347
+            CONCEPT_REQUIRES(const_iterable)
+            constexpr
+            meta::if_c<can_bound<true>, adaptor<true>, adaptor_base> end_adaptor() const
+#else // ^^^ workaround / no workaround vvv
             CONCEPT_REQUIRES(const_iterable())
             constexpr
             meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base> end_adaptor() const
+#endif // RANGES_WORKAROUND_MSVC_711347
             {
                 return {*this};
             }

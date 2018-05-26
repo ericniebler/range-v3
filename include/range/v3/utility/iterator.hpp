@@ -35,6 +35,10 @@ namespace ranges
         /// @{
         namespace adl_advance_detail
         {
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void advance();
+#endif
+
             template<typename I, typename D>
             void advance(I&, D) = delete;
 

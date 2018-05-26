@@ -41,6 +41,10 @@ namespace ranges
             template<typename T>
             void begin(T const &) = delete;
 
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void begin();
+#endif
+
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC_MINOR__ < 2
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
             template<typename T>
@@ -130,6 +134,10 @@ namespace ranges
             void end(T &) = delete;
             template<typename T>
             void end(T const &) = delete;
+
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void end();
+#endif
 
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC_MINOR__ < 2
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
