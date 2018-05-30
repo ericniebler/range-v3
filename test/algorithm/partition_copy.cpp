@@ -116,13 +116,13 @@ void test_rvalue()
     S r1[10] = {S{0}};
     S r2[10] = {S{0}};
     auto p = ranges::partition_copy(ranges::view::all(ia), r1, r2, is_odd(), &S::i);
-    CHECK(std::get<0>(p).get_unsafe() == std::end(ia));
-    CHECK(std::get<1>(p) == r1 + 4);
+    CHECK(ranges::get<0>(p).get_unsafe() == std::end(ia));
+    CHECK(ranges::get<1>(p) == r1 + 4);
     CHECK(r1[0].i == 1);
     CHECK(r1[1].i == 3);
     CHECK(r1[2].i == 5);
     CHECK(r1[3].i == 7);
-    CHECK(std::get<2>(p) == r2 + 4);
+    CHECK(ranges::get<2>(p) == r2 + 4);
     CHECK(r2[0].i == 2);
     CHECK(r2[1].i == 4);
     CHECK(r2[2].i == 6);

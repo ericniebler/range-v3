@@ -54,7 +54,9 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2 (or later)
 - GCC 4.9.1 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
-- "Clang with Microsoft CodeGen" (Clang/C2) VS2015 Update 3 (or later)
+- Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
+
+[ Note: We've "retired" support for Clang/C2 with the VS2015 toolset (i.e., the `v140_clang_c2` toolset) which Microsoft no longer supports for C++ use. We no longer have CI runs, but haven't gone out of our way to break anything, so it will likely continue to work. ]
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 

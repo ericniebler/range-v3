@@ -520,14 +520,6 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
             span s{arr};
             CONCEPT_ASSERT(std::is_same<span<int, 5>, decltype(s)>::value);
         }
-        {
-            span s{ranges::begin(arr), ranges::size(arr)};
-            CONCEPT_ASSERT(std::is_same<span<int>, decltype(s)>::value);
-        }
-        {
-            span s{ranges::begin(arr), ranges::end(arr)};
-            CONCEPT_ASSERT(std::is_same<span<int>, decltype(s)>::value);
-        }
     }
     {
         std::vector<int> vec = {1, 2, 3, 4, 5};

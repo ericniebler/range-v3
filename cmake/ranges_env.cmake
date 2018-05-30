@@ -7,9 +7,9 @@ include(CheckCXXCompilerFlag)
 
 if("x${CMAKE_CXX_COMPILER_ID}" MATCHES "x.*Clang")
   if("x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC")
-    set (RANGES_CXX_COMPILER_CLANGC2 TRUE)
+    set (RANGES_CXX_COMPILER_CLANGCL TRUE)
     if (RANGES_VERBOSE_BUILD)
-      message("[range-v3]: compiler is clangC2.")
+      message("[range-v3]: compiler is clang-cl.")
     endif()
   else()
     set (RANGES_CXX_COMPILER_CLANG TRUE)
@@ -45,11 +45,14 @@ else()
   message("[range-v3 warning]: unknown system ${CMAKE_SYSTEM_NAME} !")
 endif()
 
-# Clang/C2 will blow up with various parts of the standard library
+# Clang-CL will blow up with various parts of the standard library
 # if compiling with -std less than c++14.
-if ((RANGES_CXX_COMPILER_CLANGC2) AND (RANGES_CXX_STD EQUAL 11))
-  set(CMAKE_CXX_STANDARD 14)
-  set(RANGES_CXX_STD 14)
+if (RANGES_CXX_COMPILER_CLANGCL)
+  if (RANGES_CXX_STD EQUAL 11)
+    set(CMAKE_CXX_STANDARD 14)
+    set(RANGES_CXX_STD 14)
+  endif()
+  target_compile_definitions(range-v3 INTERFACE _SILENCE_CXX17_TEMPORARY_BUFFER_DEPRECATION_WARNING)
 endif()
 
 # Build type

@@ -290,8 +290,6 @@ namespace ranges
         template<typename Int>
         using make_safe_int_t = typename make_safe_int<Int>::type;
 
-        static_assert(std::is_literal_type<safe_int<int>>::value, "");
-
         template<typename SignedInteger>
         constexpr SignedInteger safe_int<SignedInteger>::pos_inf_;
 
@@ -305,11 +303,6 @@ namespace ranges
 
 namespace std
 {
-    template<typename T>
-    struct is_integral<::ranges::v3::safe_int<T>>
-      : is_integral<T>
-    {};
-
     template<typename T>
     class numeric_limits<::ranges::v3::safe_int<T>>
       : public numeric_limits<T>
