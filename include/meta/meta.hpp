@@ -1990,7 +1990,7 @@ namespace meta
             template <typename... T, typename V>
             struct find_index_<list<T...>, V>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
 #else
@@ -2047,7 +2047,7 @@ namespace meta
             template <typename... T, typename V>
             struct reverse_find_index_<list<T...>, V>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
 #else
@@ -2139,7 +2139,7 @@ namespace meta
             struct find_if_<list<List...>, Fun,
                             void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
 #else
@@ -2199,7 +2199,7 @@ namespace meta
                 list<List...>, Fun,
                 void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
 #else
@@ -2326,7 +2326,7 @@ namespace meta
             template <typename... List, typename T>
             struct count_<list<List...>, T>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {std::is_same<T, List>::value...};
 #else
@@ -2370,7 +2370,7 @@ namespace meta
             struct count_if_<list<List...>, Fn,
                              void_<integer_sequence<bool, bool(invoke<Fn, List>::type::value)...>>>
             {
-#if defined(__clang__) & __clang_major__ < 6
+#if defined(__clang__) && __clang_major__ < 6
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fn, List>::type::value...};
 #else

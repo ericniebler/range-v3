@@ -321,8 +321,8 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
-                    meta::and_<InputRange<Rngs>...>,
-                    CopyConstructible<Fun>(),
+                    InputRange<Rngs>...,
+                    CopyConstructible<Fun>,
                     Invocable<Fun&, iterator_t<Rngs>...>,
                     Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
                     Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
