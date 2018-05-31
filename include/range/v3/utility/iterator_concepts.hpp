@@ -182,12 +182,12 @@ namespace ranges
                 using reference_t = Readable::reference_t<Out>;
 
                 template<typename Out, typename T>
-                auto requires_(Out&& o, T &&t) -> decltype(
+                auto requires_(Out &&o, T &&t) -> decltype(
                     concepts::valid_expr(
-                        ((void)(*o = (T &&) t), 42),
-                        ((void)(*((Out &&) o) = (T &&) t), 42),
-                        ((void)(const_cast<reference_t<Out> const &&>(*o) = (T &&)t), 42),
-                        ((void)(const_cast<reference_t<Out> const &&>(*((Out &&) o)) = (T &&)t), 42)
+                        ((void)(*o = static_cast<T &&>(t)), 42),
+                        ((void)(*static_cast<Out &&>(o) = static_cast<T &&>(t)), 42),
+                        ((void)(const_cast<reference_t<Out> const &&>(*o) = static_cast<T &&>(t)), 42),
+                        ((void)(const_cast<reference_t<Out> const &&>(*static_cast<Out &&>(o)) = static_cast<T &&>(t)), 42)
                     ));
             };
 

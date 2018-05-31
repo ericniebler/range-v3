@@ -75,7 +75,8 @@ namespace ranges
                 static auto from_range(T && t) ->
                     decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
-                    static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
+                    static_assert(std::is_lvalue_reference<T>::value,
+                        "Cannot get a view of a temporary container");
                     return all_fn::from_container(t, SIC(), SIRC());
                 }
 

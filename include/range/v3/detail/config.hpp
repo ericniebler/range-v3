@@ -143,7 +143,7 @@ namespace ranges
 #define RANGES_CXX_STD_11 201103L
 #define RANGES_CXX_STD_14 201402L
 #define RANGES_CXX_STD_17 201703L
-#define RANGES_CXX_THREAD_LOCAL_PRE_STANDARD 200000L // Arbitrarily number between 0 and C++11
+#define RANGES_CXX_THREAD_LOCAL_PRE_STANDARD 200000L // Arbitrary number between 0 and C++11
 #define RANGES_CXX_THREAD_LOCAL_11 RANGES_CXX_STD_11
 #define RANGES_CXX_THREAD_LOCAL_14 RANGES_CXX_THREAD_LOCAL_11
 #define RANGES_CXX_THREAD_LOCAL_17 RANGES_CXX_THREAD_LOCAL_14
@@ -165,30 +165,7 @@ namespace ranges
 #define RANGES_CXX_IF_CONSTEXPR_17 201606L
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#if _MSC_VER >= 1900
-#ifndef RANGES_CXX_VARIABLE_TEMPLATES
-#define RANGES_CXX_VARIABLE_TEMPLATES RANGES_CXX_VARIABLE_TEMPLATES_14
-#endif
-#ifndef RANGES_CXX_ATTRIBUTE_DEPRECATED
-#define RANGES_CXX_ATTRIBUTE_DEPRECATED RANGES_CXX_ATTRIBUTE_DEPRECATED_14
-#endif
-#if !defined(RANGES_CXX_RANGE_BASED_FOR) && defined(_MSVC_LANG) && _MSVC_LANG > 201402
-#define RANGES_CXX_RANGE_BASED_FOR RANGES_CXX_RANGE_BASED_FOR_17
-#endif
-#ifndef RANGES_CXX_LIB_IS_FINAL
-#define RANGES_CXX_LIB_IS_FINAL RANGES_CXX_LIB_IS_FINAL_14
-#endif
-#ifndef RANGES_CXX_RETURN_TYPE_DEDUCTION
-#define RANGES_CXX_RETURN_TYPE_DEDUCTION RANGES_CXX_RETURN_TYPE_DEDUCTION_14
-#endif
-#ifndef RANGES_CXX_GENERIC_LAMBDAS
-#define RANGES_CXX_GENERIC_LAMBDAS RANGES_CXX_GENERIC_LAMBDAS_14
-#endif
-
-#else // _MSC_VER < 1900
-#error Unsupported version of Visual C++
-#endif // _MSC_VER switch
-
+#define RANGES_CXX_VER _MSVC_LANG
 #define RANGES_DIAGNOSTIC_PUSH __pragma(warning(push))
 #define RANGES_DIAGNOSTIC_POP __pragma(warning(pop))
 #define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable:4068))
@@ -212,6 +189,7 @@ namespace ranges
 
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 // Generic configuration using SD-6 feature test macros with fallback to __cplusplus
+#define RANGES_CXX_VER __cplusplus
 #if defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
 #define RANGES_DIAGNOSTIC_PUSH RANGES_PRAGMA(GCC diagnostic push)
@@ -258,17 +236,16 @@ namespace ranges
 
 #define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_ ## y ## _ ## z
 #define RANGES_CXX_FEATURE_CONCAT(y, z) RANGES_CXX_FEATURE_CONCAT2(y, z)
-#define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, RANGES_CXX_STD_NAME)
 
-#if __cplusplus >= RANGES_CXX_STD_17
-#define RANGES_CXX_STD_NAME 17
+#if RANGES_CXX_VER >= RANGES_CXX_STD_17
 #define RANGES_CXX_STD RANGES_CXX_STD_17
-#elif __cplusplus >= RANGES_CXX_STD_14
-#define RANGES_CXX_STD_NAME 14
+#define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, 17)
+#elif RANGES_CXX_VER >= RANGES_CXX_STD_14
 #define RANGES_CXX_STD RANGES_CXX_STD_14
+#define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, 14)
 #else
-#define RANGES_CXX_STD_NAME 11
 #define RANGES_CXX_STD RANGES_CXX_STD_11
+#define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, 11)
 #endif
 
 #ifndef RANGES_CXX_STATIC_ASSERT
@@ -350,19 +327,16 @@ namespace ranges
 #endif
 #endif
 
-#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
+#if !defined(RANGES_DEPRECATED) && !defined(RANGES_DISABLE_DEPRECATED_WARNINGS)
 #if RANGES_CXX_ATTRIBUTE_DEPRECATED &&            \
    !((defined(__clang__) || defined(__GNUC__)) && \
      RANGES_CXX_STD < RANGES_CXX_STD_14)
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #elif defined(__clang__) || defined(__GNUC__)
 #define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
-#elif defined(_MSC_VER)
-#define RANGES_DEPRECATED(MSG) __declspec(deprecated(MSG))
-#else
-#define RANGES_DEPRECATED(MSG)
 #endif
-#else
+#endif
+#ifndef RANGES_DEPRECATED
 #define RANGES_DEPRECATED(MSG)
 #endif
 
@@ -394,36 +368,26 @@ namespace ranges
 #endif
 
 #ifndef RANGES_CXX_INLINE_VARIABLES
-
-#ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
+#ifdef __cpp_inline_variables
 #define RANGES_CXX_INLINE_VARIABLES __cpp_inline_variables
-#elif defined(__clang__) && \
-    (__clang_major__ > 3 || __clang_major__ == 3 && __clang_minor__ == 9) && \
-    __cplusplus > 201402L
-// TODO: remove once clang defines __cpp_inline_variables (or equivalent)
+#elif defined(__clang__) && (__clang_major__ == 3 && __clang_minor__ == 9) && \
+    RANGES_CXX_VER > RANGES_CXX_STD_14
+// Clang 3.9 supports inline variables in C++17 mode, but doesn't define __cpp_inline_variables
 #define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_INLINE_VARIABLES_17
 #else
 #define RANGES_CXX_INLINE_VARIABLES RANGES_CXX_FEATURE(INLINE_VARIABLES)
 #endif  // __cpp_inline_variables
-
 #endif  // RANGES_CXX_INLINE_VARIABLES
 
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_INLINE_VARIABLE(type, name)                              \
-    inline namespace function_objects                                   \
-    {                                                                   \
-        inline namespace                                                \
-        {                                                               \
-            constexpr auto &name = ::ranges::static_const<type>::value; \
-        }                                                               \
+#define RANGES_INLINE_VARIABLE(type, name)                          \
+    inline namespace                                                \
+    {                                                               \
+        constexpr auto &name = ::ranges::static_const<type>::value; \
     }
-
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_INLINE_VARIABLE(type, name) \
-    inline namespace function_objects      \
-    {                                      \
-        inline constexpr type name{};      \
-    }
+    inline constexpr type name{};
 #endif // RANGES_CXX_INLINE_VARIABLES
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES

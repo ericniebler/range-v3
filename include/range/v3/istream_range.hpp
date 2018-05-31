@@ -66,7 +66,7 @@ namespace ranges
             }
         public:
             istream_range() = default;
-            istream_range(std::istream &sin)
+            explicit istream_range(std::istream &sin)
               : sin_(&sin), obj_{}
             {
                 next(); // prime the pump
@@ -83,7 +83,7 @@ namespace ranges
         {
             CONCEPT_ASSERT_MSG(DefaultConstructible<Val>(),
                "Only DefaultConstructible types are extractable from streams.");
-            return {sin};
+            return istream_range<Val>{sin};
         }
     #else
         template<typename Val, CONCEPT_REQUIRES_(DefaultConstructible<Val>())>
@@ -91,7 +91,7 @@ namespace ranges
         {
             istream_range<Val> operator()(std::istream & sin) const
             {
-                return {sin};
+                return istream_range<Val>{sin};
             }
         };
 
@@ -102,11 +102,8 @@ namespace ranges
             constexpr auto& istream = static_const<istream_fn<Val>>::value;
         }
     #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
-        inline namespace function_objects
-        {
-            template<typename Val>
-            inline constexpr istream_fn<Val> istream{};
-        }
+        template<typename Val>
+        inline constexpr istream_fn<Val> istream{};
     #endif  // RANGES_CXX_INLINE_VARIABLES
 
     #endif  // RANGES_CXX_VARIABLE_TEMPLATES

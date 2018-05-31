@@ -167,7 +167,7 @@ namespace ranges
         /// \endcond
 
         // Can be used to store rvalue references in addition to lvalue references.
-        // Also, see: https://cplusplus.github.io/LWG/lwg-active.html#2993
+        // Also, see: https://wg21.link/lwg2993
         template<typename T>
         struct reference_wrapper : private detail::reference_wrapper_<T>
         {

@@ -116,7 +116,10 @@ namespace ranges
         /// \return \c r, if \c r is an array. Otherwise, `r.begin()` if that expression is
         ///   well-formed and returns an Iterator. Otherwise, `begin(r)` if that expression
         ///   returns an Iterator.
-        RANGES_INLINE_VARIABLE(_begin_::fn, begin)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_begin_::fn, begin)
+        }
 
         /// \cond
         namespace _end_
@@ -205,7 +208,10 @@ namespace ranges
         /// \return \c r+size(r), if \c r is an array. Otherwise, `r.end()` if that expression is
         ///   well-formed and returns an Iterator. Otherwise, `end(r)` if that expression
         ///   returns an Iterator.
-        RANGES_INLINE_VARIABLE(_end_::fn, end)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_end_::fn, end)
+        }
 
         /// \cond
         namespace _cbegin_
@@ -234,7 +240,10 @@ namespace ranges
         /// \param r
         /// \return The result of calling `ranges::begin` with a const-qualified
         ///    reference to r.
-        RANGES_INLINE_VARIABLE(_cbegin_::fn, cbegin)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_cbegin_::fn, cbegin)
+        }
 
         /// \cond
         namespace _cend_
@@ -263,7 +272,10 @@ namespace ranges
         /// \param r
         /// \return The result of calling `ranges::end` with a const-qualified
         ///    reference to r.
-        RANGES_INLINE_VARIABLE(_cend_::fn, cend)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_cend_::fn, cend)
+        }
 
         /// \cond
         namespace _rbegin_
@@ -337,7 +349,10 @@ namespace ranges
         ///   Otherwise, `make_reverse_iterator(ranges::end(r))` if `ranges::begin(r)`
         ///   and `ranges::end(r)` are both well-formed and have the same type that
         ///   satisfies BidirectionalIterator.
-        RANGES_INLINE_VARIABLE(_rbegin_::fn, rbegin)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_rbegin_::fn, rbegin)
+        }
 
         /// \cond
         namespace _rend_
@@ -413,7 +428,10 @@ namespace ranges
         ///   Otherwise, `make_reverse_iterator(ranges::begin(r))` if `ranges::begin(r)`
         ///   and `ranges::end(r)` are both well-formed and have the same type that
         ///   satisfies BidirectionalIterator.
-        RANGES_INLINE_VARIABLE(_rend_::fn, rend)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_rend_::fn, rend)
+        }
 
         /// \cond
         namespace _crbegin_
@@ -442,7 +460,10 @@ namespace ranges
         /// \param r
         /// \return The result of calling `ranges::rbegin` with a const-qualified
         ///    reference to r.
-        RANGES_INLINE_VARIABLE(_crbegin_::fn, crbegin)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_crbegin_::fn, crbegin)
+        }
 
         /// \cond
         namespace _crend_
@@ -471,7 +492,10 @@ namespace ranges
         /// \param r
         /// \return The result of calling `ranges::rend` with a const-qualified
         ///    reference to r.
-        RANGES_INLINE_VARIABLE(_crend_::fn, crend)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_crend_::fn, crend)
+        }
     }
 }
 

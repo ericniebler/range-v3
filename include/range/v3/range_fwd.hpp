@@ -46,27 +46,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        inline namespace function_objects {}
-
-        namespace aux
-        {
-            inline namespace function_objects {}
-        }
-
-        namespace view
-        {
-            inline namespace function_objects {}
-        }
-
-        namespace action
-        {
-            inline namespace function_objects {}
-        }
-
-        namespace detail
-        {
-            inline namespace function_objects {}
-        }
+        inline namespace CPOs {}
 
         /// \cond
         namespace _end_
