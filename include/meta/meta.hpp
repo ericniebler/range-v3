@@ -2139,10 +2139,11 @@ namespace meta
             struct find_if_<list<List...>, Fun,
                             void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
-#if defined(__clang__) && __clang_major__ < 6
+#if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
+                // Track Apples version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
-#else
+#elif
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
 #endif
                 using type =
