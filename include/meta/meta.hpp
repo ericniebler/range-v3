@@ -2143,7 +2143,7 @@ namespace meta
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
                 // Track Apples version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
-#elif
+#else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
 #endif
                 using type =
