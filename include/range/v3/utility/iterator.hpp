@@ -35,8 +35,6 @@ namespace ranges
         /// @{
         namespace adl_advance_detail
         {
-            using std::advance;
-
             template<typename I>
             RANGES_CXX14_CONSTEXPR
             void advance_impl(I &i, difference_type_t<I> n, concepts::InputIterator *)
@@ -109,7 +107,7 @@ namespace ranges
                 {
                     // Use ADL here to give custom iterator types (like counted_iterator)
                     // a chance to optimize it (see utility/counted_iterator.hpp)
-                    advance(i, n);
+                    std::advance(i, n);
                 }
                 // Advance to a certain position:
                 template<typename I, typename S,
