@@ -1992,7 +1992,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
 #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
@@ -2050,7 +2049,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
 #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
@@ -2143,7 +2141,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
 #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
@@ -2204,7 +2201,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fun, List>::type::value...};
 #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
@@ -2332,7 +2328,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {std::is_same<T, List>::value...};
 #else
                 static constexpr bool s_v[] = {std::is_same<T, List>::value...};
@@ -2377,7 +2372,6 @@ namespace meta
             {
 #if (defined(__clang__) && __clang_major__ < 6) || defined(__apple_build_version__)
                 // Explicitly specify extent to avoid https://llvm.org/bugs/show_bug.cgi?id=28385
-                // Track Apple's version here: https://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
                 static constexpr bool s_v[sizeof...(List)] = {invoke<Fn, List>::type::value...};
 #else
                 static constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
