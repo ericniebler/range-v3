@@ -41,7 +41,7 @@ namespace ranges
             template<typename T>
             void begin(T const &) = delete;
 
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC_MINOR__ < 2
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
             template<typename T>
             void begin(std::initializer_list<T> volatile &) = delete;
@@ -131,7 +131,7 @@ namespace ranges
             template<typename T>
             void end(T const &) = delete;
 
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 8 && __GNUC_MINOR__ < 2
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85765
             template<typename T>
             void end(std::initializer_list<T> volatile &) = delete;
