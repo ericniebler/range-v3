@@ -17,6 +17,7 @@ class Rangev3Conan(ConanFile):
     license = "Boost Software License - Version 1.0 - August 17th, 2003"
     url = "https://github.com/ericniebler/range-v3"
     description = """Experimental range library for C++11/14/17"""
+    settings = "compiler", "arch"
     exports_sources = "include*", "LICENSE.txt", "CMakeLists.txt", "cmake/*", "Version.cmake", "version.hpp.in"
     build_policy = "missing"
 
