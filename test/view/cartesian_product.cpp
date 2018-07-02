@@ -15,14 +15,20 @@
 #include <iostream>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/empty.hpp>
+#include <range/v3/range_for.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/span.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/cartesian_product.hpp>
+#include <range/v3/view/chunk.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/take_exactly.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+
+RANGES_DIAGNOSTIC_IGNORE_RANGE_LOOP_ANALYSIS
 
 using namespace ranges;
 
@@ -129,6 +135,71 @@ void test_empty_range()
     }
 }
 
+void test_bug_820()
+{
+    // https://github.com/ericniebler/range-v3/issues/820
+    using CT = common_tuple<int, int>;
+    std::initializer_list<CT> control = {
+        CT{0, 0}, CT{0, 1}, CT{0, 2},
+        CT{1, 0}, CT{1, 1}, CT{1, 2},
+        CT{2, 0}, CT{2, 1}, CT{2, 2}
+    };
+
+    auto x = ranges::view::iota(0) | ranges::view::take_exactly(3);
+    auto y = ranges::view::cartesian_product(x, x);
+    ::check_equal(y, control);
+}
+
+void test_bug_823()
+{
+    // https://github.com/ericniebler/range-v3/issues/823
+    auto three = ranges::view::iota(0) | ranges::view::take_exactly(3);
+    CONCEPT_assert(ranges::RandomAccessView<decltype(three)>());
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(three)>());
+
+    auto prod = ranges::view::cartesian_product(three, three);
+    CONCEPT_assert(ranges::RandomAccessView<decltype(prod)>());
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(prod)>());
+    CONCEPT_assert(ranges::SizedRange<decltype(prod)>());
+    CHECK(ranges::size(prod) == 9u);
+
+    {
+        int i = 0;
+        RANGES_FOR(auto&& x, prod) {
+            (void)x;
+            RANGES_ENSURE(i++ < 3 * 3);
+        }
+        CHECK(i == 3 * 3);
+    }
+
+    auto twoD = prod | ranges::view::chunk(3);
+    CONCEPT_assert(ranges::RandomAccessView<decltype(twoD)>());
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(twoD)>());
+
+    {
+        int i = 0;
+        RANGES_FOR(auto&& row, twoD) {
+            (void)row;
+            RANGES_ENSURE(i++ < 3);
+        }
+        CHECK(i == 3);
+    }
+
+    {
+        int i = 0;
+        RANGES_FOR(auto&& row, twoD) {
+            RANGES_ENSURE(i++ < 3);
+            int j = 0;
+            RANGES_FOR(auto&& col, row) {
+                (void)col;
+                RANGES_ENSURE(j++ < 3);
+            }
+            CHECK(j == 3);
+        }
+        CHECK(i == 3);
+    }
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -178,6 +249,8 @@ int main()
 
     test_empty_set();
     test_empty_range();
+    test_bug_820();
+    test_bug_823();
 
     return test_result();
 }

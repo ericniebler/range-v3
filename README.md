@@ -54,7 +54,9 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2 (or later)
 - GCC 4.9.1 (or later) (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
-- "Clang with Microsoft CodeGen" (Clang/C2) VS2015 Update 3 (or later)
+- Clang/LLVM 6 (or later) on Windows (older versions may work - we haven't tested.)
+
+[ Note: We've "retired" support for Clang/C2 with the VS2015 toolset (i.e., the `v140_clang_c2` toolset) which Microsoft no longer supports for C++ use. We no longer have CI runs, but haven't gone out of our way to break anything, so it will likely continue to work. ]
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
@@ -65,6 +67,19 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.3.6** May 15, 2018
+  - NEW: `view::exclusive_scan` (thanks to GitHub user @mitsutaka-takeda).
+  - All views get non-`const` overloads of `.empty()` and `.size()` (see [ericniebler/stl2\#793](https://github.com/ericniebler/stl2/issues/793)).
+  - Upgrade Conan support for conan 1.0.
+  - `subspan` interface tweaks.
+  - Fix bug in `view::split` (see [this stackoverflow question](https://stackoverflow.com/questions/49015671)).
+  - Fix bug in `view::stride` (see [ericniebler/stl2\#805](https://github.com/ericniebler/stl2/issues/805)).
+  - Fix `const`-correctness problem in `view::chunk` (see [this stackoverflow question](https://stackoverflow.com/questions/49210190)).
+  - Replace uses of `ranges::result_of` with `ranges::invoke_result`.
+  - Fix potential buffer overrun of `view::drop` over RandomAccessRanges.
+  - Lots of `view::cartesian_product` fixes (see [ericniebler/stl2\#820](https://github.com/ericniebler/stl2/issues/820), [ericniebler/stl2\#823](https://github.com/ericniebler/stl2/issues/823)).
+  - Work around gcc-8 regression regarding `volatile` `std::initializer_list`s (see [ericniebler/stl2\#826](https://github.com/ericniebler/stl2/issues/826)).
+  - Fix `const`-correctness problem of `view::take`.
 * **0.3.5** February 17, 2018
   - Rvalues may satisfy `Writable` (see [ericniebler/stl2\#387](https://github.com/ericniebler/stl2/issues/387)).
   - `view_interface` gets a bounds-checking `at` method.
@@ -79,7 +94,7 @@ Release Notes:
   - Add an experimental `shared` view for views that need container-like scratch
     space to do their work.
   - Faster, simpler `reverse_view`.
-  - Rework `ranges::reference_wrapper` to avoid [LWG\#2993](http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#2993).
+  - Rework `ranges::reference_wrapper` to avoid [LWG\#2993](https://wg21.link/lwg2993).
   - Reworked `any_view`, the type-erased view wrapper.
   - `equal` algorithm is `constexpr` in C++14.
   - `stride_view` no longer needs an `atomic` data member.
@@ -92,7 +107,7 @@ Release Notes:
   - Various portability fixes for gcc and clang trunk.
 * **0.3.0** June 30, 2017
   - Input views may now be move-only (from @CaseyCarter)
-  - Input `any_view`s are now *much* more efficicient (from @CaseyCarter)
+  - Input `any_view`s are now *much* more efficient (from @CaseyCarter)
   - Better support for systems lacking a working `<thread>` header (from @CaseyCarter)
 * **0.2.6** June 21, 2017
   - Experimental coroutines with `ranges::experimental::generator` (from @CaseyCarter)

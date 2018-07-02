@@ -60,11 +60,8 @@ namespace ranges
             constexpr auto& emplaced_index = static_const<emplaced_index_t<I>>::value;
         }
     #else // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
-        inline namespace function_objects
-        {
-            template<std::size_t I>
-            inline constexpr emplaced_index_t<I> emplaced_index{};
-        }
+        template<std::size_t I>
+        inline constexpr emplaced_index_t<I> emplaced_index{};
     #endif  // RANGES_CXX_INLINE_VARIABLES
 
         /// \cond
@@ -525,10 +522,10 @@ namespace ranges
           , private detail::variant_base<variant<Ts...>>
         {
         private:
-            friend struct detail::variant_core_access;
+            friend detail::variant_core_access;
             template<typename...>
             friend struct variant;
-            friend struct detail::variant_base<variant, false>;
+            friend detail::variant_base<variant, false>;
             template<std::size_t Index>
             using datum_t =
                 detail::variant_datum_t<Index, Ts...>;
@@ -773,7 +770,6 @@ namespace ranges
 }
 
 RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std

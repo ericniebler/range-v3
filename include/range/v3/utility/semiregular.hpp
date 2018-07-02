@@ -90,6 +90,17 @@ namespace ranges
                     this->reset();
                 return *this;
             }
+            semiregular &operator=(T t)
+                noexcept(std::is_nothrow_move_constructible<T>::value &&
+                    (!std::is_move_assignable<T>::value ||
+                        std::is_nothrow_move_assignable<T>::value))
+            {
+                if (engaged_)
+                    this->move_assign(detail::move(t), std::is_move_assignable<T>());
+                else
+                    this->construct_from(detail::move(t));
+                return *this;
+            }
             RANGES_CXX14_CONSTEXPR T &get() & noexcept
             {
                 return RANGES_ENSURE(engaged_), data_;

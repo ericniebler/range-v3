@@ -102,9 +102,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
-        /// Not to spec per N4651: allow non-const size functions (See
-        /// https://github.com/ericniebler/range-v3/issues/385)
-        RANGES_INLINE_VARIABLE(_size_::fn, size)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(_size_::fn, size)
+        }
     }
 }
 

@@ -190,7 +190,7 @@ namespace ranges
                             is_nothrow_swappable<T>::value)
                     {
                         constexpr bool can_swap_trivially =
-                            !::concepts::_adl_swap_::is_adl_swappable_<T>::value &&
+                            !::concepts::adl_swap_detail::is_adl_swappable_<T>::value &&
                             detail::is_trivially_move_constructible<T>::value &&
                             detail::is_trivially_move_assignable<T>::value;
 

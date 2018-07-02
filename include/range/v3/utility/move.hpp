@@ -64,6 +64,11 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
+#if (defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5) || defined(_MSC_VER)
+            // Workaround unclassified GCC4 bug
+            void iter_move(); // unqualified name lookup block
+#endif
+
             template<typename T,
                 typename = decltype(iter_move(std::declval<T>()))>
             std::true_type try_adl_iter_move_(int);
@@ -100,7 +105,10 @@ namespace ranges
         }
         /// \endcond
 
-        RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
+        }
 
         /// \cond
         struct indirect_move_fn

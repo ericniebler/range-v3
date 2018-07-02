@@ -116,7 +116,7 @@ namespace concepts
         }
 
         /// \cond
-        namespace _adl_swap_
+        namespace adl_swap_detail
         {
             // Intentionally create an ambiguity with std::swap, which is
             // (possibly) unconstrained.
@@ -135,7 +135,7 @@ namespace concepts
 
             template<typename T, typename U = T>
             struct is_adl_swappable_
-              : meta::id_t<decltype(_adl_swap_::try_adl_swap_<T, U>(42))>
+              : meta::id_t<decltype(adl_swap_detail::try_adl_swap_<T, U>(42))>
             {};
 
             struct swap_fn
@@ -262,7 +262,7 @@ namespace concepts
         /// \ingroup group-utility
         template<typename T, typename U>
         struct is_swappable_with
-          : _adl_swap_::is_swappable_with_<T, U>
+          : adl_swap_detail::is_swappable_with_<T, U>
         {};
 
         /// \ingroup group-utility
@@ -270,7 +270,7 @@ namespace concepts
         struct is_nothrow_swappable_with
           : meta::and_<
                 is_swappable_with<T, U>,
-                _adl_swap_::is_nothrow_swappable_with_<T, U>>
+                adl_swap_detail::is_nothrow_swappable_with_<T, U>>
         {};
 
         /// \ingroup group-utility
@@ -285,9 +285,12 @@ namespace concepts
           : is_nothrow_swappable_with<T &, T &>
         {};
 
-        /// \ingroup group-utility
-        /// \relates _adl_swap_::swap_fn
-        CONCEPTS_INLINE_VARIABLE(_adl_swap_::swap_fn, swap)
+        inline namespace CPOs
+        {
+            /// \ingroup group-utility
+            /// \relates adl_swap_detail::swap_fn
+            CONCEPTS_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
+        }
     }
 }
 

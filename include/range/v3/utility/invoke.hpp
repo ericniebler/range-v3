@@ -24,7 +24,6 @@
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
-RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 // constexpr invoke leads to premature function template instantiation
@@ -183,7 +182,7 @@ namespace ranges
         /// \endcond
 
         // Can be used to store rvalue references in addition to lvalue references.
-        // Also, see: https://cplusplus.github.io/LWG/lwg-active.html#2993
+        // Also, see: https://wg21.link/lwg2993
         template<typename T>
         struct reference_wrapper : private detail::reference_wrapper_<T>
         {

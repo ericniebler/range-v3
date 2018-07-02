@@ -147,9 +147,9 @@ test2()
         auto r =
             ranges::transform(std::move(rng0), InIter2(ia),
                               OutIter(ib), std::minus<int>());
-        CHECK(base(std::get<0>(r).get_unsafe()) == ib + sa);
-        CHECK(base(std::get<1>(r)) == ia + sa);
-        CHECK(base(std::get<2>(r)) == ib + sa);
+        CHECK(base(ranges::get<0>(r).get_unsafe()) == ib + sa);
+        CHECK(base(ranges::get<1>(r)) == ia + sa);
+        CHECK(base(ranges::get<2>(r)) == ib + sa);
         CHECK(ib[0] == 1);
         CHECK(ib[1] == 1);
         CHECK(ib[2] == 1);
@@ -183,9 +183,9 @@ test2()
         auto rng1 = ranges::make_iterator_range(InIter2(ia), sentinel<int const *>(ia + sa));
         auto r =
             ranges::transform(std::move(rng0), std::move(rng1), OutIter(ib), std::minus<int>());
-        CHECK(base(std::get<0>(r).get_unsafe()) == ib + sa);
-        CHECK(base(std::get<1>(r).get_unsafe()) == ia + sa);
-        CHECK(base(std::get<2>(r)) == ib + sa);
+        CHECK(base(ranges::get<0>(r).get_unsafe()) == ib + sa);
+        CHECK(base(ranges::get<1>(r).get_unsafe()) == ia + sa);
+        CHECK(base(ranges::get<2>(r)) == ib + sa);
         CHECK(ib[0] == 1);
         CHECK(ib[1] == 1);
         CHECK(ib[2] == 1);

@@ -82,8 +82,8 @@ namespace ranges
                     (void) operator()(std::shared_ptr<Rng>) const
                     {
                         CONCEPT_assert_msg(Range<Rng>(),
-                            "The object on which view::shared operates must be a "
-                            "model of the Range concept.");
+                            "The object on which view::shared operates must be "
+                            "a model of the Range concept.");
                     }
 #endif
 
@@ -100,14 +100,14 @@ namespace ranges
                     (void) operator()(Rng &&) const
                     {
                         CONCEPT_assert_msg(Range<Rng>(),
-                            "The object on which view::shared operates must be a "
-                            "model of the Range concept.");
+                            "The object on which view::shared operates must be "
+                            "a model of the Range concept.");
                         CONCEPT_assert_msg(!View<Rng>(),
                             "view::shared cannot be constructed from a view. "
                             "Please copy the original view instead.");
                         CONCEPT_assert_msg(!std::is_reference<Rng>::value,
-                            "view::shared needs an rvalue reference "
-                            "to build a shared object.");
+                            "view::shared needs an rvalue to build a shared "
+                            "object.");
                     }
 #endif
                 };

@@ -36,7 +36,8 @@ namespace ranges
           : view_adaptor<take_view<Rng>, Rng, finite>
         {
         private:
-            friend struct ranges::range_access;
+            friend range_access;
+
             range_difference_type_t<Rng> n_ = 0;
 
             template<bool IsConst>
@@ -72,7 +73,7 @@ namespace ranges
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires Range<BaseRng const>())
-            (adaptor<true>) begin_adaptor()
+            (adaptor<true>) begin_adaptor() const
             {
                 return {};
             }
@@ -85,7 +86,7 @@ namespace ranges
         public:
             take_view() = default;
             take_view(Rng rng, range_difference_type_t<Rng> n)
-              : view_adaptor<take_view<Rng>, Rng, finite>(std::move(rng)), n_{n}
+              : take_view::view_adaptor(std::move(rng)), n_{n}
             {
                 RANGES_EXPECT(n >= 0);
             }

@@ -140,7 +140,11 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
-        RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn, advance)
+        /// Not to spec: advance is an ADL customization point
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn, advance)
+        }
 
         namespace adl_advance_detail
         {

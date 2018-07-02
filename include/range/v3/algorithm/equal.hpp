@@ -67,7 +67,7 @@ namespace ranges
             bool) operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
-                if(SizedSentinel<S0, I0>() && SizedSentinel<S1, I1>())
+                if RANGES_CONSTEXPR_IF(SizedSentinel<S0, I0>() && SizedSentinel<S1, I1>())
                     if(distance(begin0, end0) != distance(begin1, end1))
                         return false;
                 return this->nocheck(std::move(begin0), std::move(end0), std::move(begin1),
@@ -98,7 +98,7 @@ namespace ranges
             bool) operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
-                if(SizedRange<Rng0>() && SizedRange<Rng1>())
+                if RANGES_CONSTEXPR_IF (SizedRange<Rng0>() && SizedRange<Rng1>())
                     if(distance(rng0) != distance(rng1))
                         return false;
                 return this->nocheck(begin(rng0), end(rng0), begin(rng1), end(rng1),

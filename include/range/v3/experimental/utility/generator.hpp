@@ -145,8 +145,8 @@ namespace ranges
                 }
                 CONCEPT_template(typename Arg)(
                     requires ConvertibleTo<Arg, Reference>() &&
-                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
-                std::experimental::suspend_always yield_value(Arg &&arg)
+                        True<std::is_assignable<semiregular_t<Reference> &, Arg>>())
+                (std::experimental::suspend_always) yield_value(Arg &&arg)
                     noexcept(std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
                 {
                     ref_ = std::forward<Arg>(arg);

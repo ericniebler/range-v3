@@ -456,8 +456,10 @@ namespace concepts
 
         namespace detail
         {
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 5 && __GNUC_MINOR__ < 5
             template<typename T>
             bool gcc_bugs_bugs_bugs(T);
+#endif
 
             template<bool If>
             struct eval_if
@@ -498,12 +500,13 @@ namespace concepts
                 {
                     return {};
                 }
-                template<typename That>
-                constexpr friend meta::if_c<(bool) That(), dummy>
-                operator||(dummy, bool_<That>) noexcept
-                {
-                    return {};
-                }
+                // BUGBUG alternation is broken.
+                // template<typename That>
+                // constexpr friend meta::if_c<(bool) That(), dummy>
+                // operator||(dummy, bool_<That>) noexcept
+                // {
+                //     return {};
+                // }
             };
 
             template<typename = void>
@@ -638,7 +641,11 @@ namespace concepts
         private:
             template<typename C>
             using bool_if =
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 5 && __GNUC_MINOR__ < 5
                 decltype(detail::gcc_bugs_bugs_bugs(&C::template _concept_requires_<Ts...>));
+#else
+                decltype(!&C::template _concept_requires_<Ts...>);
+#endif
             template<typename C>
             static constexpr bool_if<C> check(C *) noexcept
             {

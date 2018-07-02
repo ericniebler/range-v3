@@ -22,6 +22,9 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 namespace ranges
 {
     inline namespace v3
@@ -35,7 +38,11 @@ namespace ranges
             }
         };
 
-        struct any;
+        struct RANGES_DEPRECATED(
+            "ranges::any will be going away in the not-too-distant future. "
+            "We suggest you use std::any or boost::any instead (or simply steal "
+            "this header and maintain it yourself)."
+        ) any;
 
         template<typename T>
         meta::if_c<std::is_reference<T>() || Copyable<T>(), T>
@@ -201,5 +208,7 @@ namespace ranges
         }
     }
 }
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

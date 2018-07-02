@@ -92,7 +92,7 @@ namespace ranges
         template<typename Rng>
         using range_size_t
             RANGES_DEPRECATED("Please use ranges::range_size_type_t instead") =
-                meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+                meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
 
         template<typename Rng>
         using range_value_t
@@ -116,12 +116,12 @@ namespace ranges
         template<typename Rng>
         using range_iterator
             RANGES_DEPRECATED("range_iterator is deprecated") =
-                meta::defer<range_iterator_t, Rng>;
+                meta::defer<iterator_t, Rng>;
 
         template<typename Rng>
         using range_sentinel
             RANGES_DEPRECATED("range_sentinel is deprecated") =
-                meta::defer<range_sentinel_t, Rng>;
+                meta::defer<sentinel_t, Rng>;
 
         template<typename Rng>
         using range_category
@@ -131,12 +131,12 @@ namespace ranges
         template<typename Rng>
         using range_value
             RANGES_DEPRECATED("range_value is deprecated") =
-                meta::defer<range_value_t, Rng>;
+                meta::defer<range_value_type_t, Rng>;
 
         template<typename Rng>
         using range_difference
             RANGES_DEPRECATED("range_difference is deprecated") =
-                meta::defer<range_difference_t, Rng>;
+                meta::defer<range_difference_type_t, Rng>;
 
         template<typename Rng>
         using range_reference
@@ -156,7 +156,7 @@ namespace ranges
         template<typename Rng>
         using range_size
             RANGES_DEPRECATED("range_size is deprecated") =
-                meta::defer<range_size_t, Rng>;
+                meta::defer<range_size_type_t, Rng>;
 
         namespace detail
         {

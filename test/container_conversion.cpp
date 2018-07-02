@@ -93,7 +93,7 @@ int main()
     std::set<int> s = view::ints | view::take(10);
     ::check_equal(s, {0,1,2,3,4,5,6,7,8,9});
 
-    static_assert(!ranges::is_view<std::initializer_list<int>>::value, "");
+    static_assert(!View<std::initializer_list<int>>(), "");
 
     return ::test_result();
 }

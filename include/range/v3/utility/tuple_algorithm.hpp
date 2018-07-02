@@ -21,6 +21,7 @@
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/detail/adl_get.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/invoke.hpp>
 
@@ -42,7 +43,7 @@ namespace ranges
             static auto impl(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                invoke(static_cast<Fun &&>(fun), std::get<Is>(static_cast<Tup &&>(tup))...)
+                invoke(static_cast<Fun &&>(fun), detail::adl_get<Is>(static_cast<Tup &&>(tup))...)
             )
         public:
             template<typename Fun, typename Tup>
@@ -65,17 +66,17 @@ namespace ranges
             static auto impl1(Tup &&tup, Fun &fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::tuple<decltype(fun(std::get<Is>(static_cast<Tup &&>(tup))))...>{
-                    fun(std::get<Is>(static_cast<Tup &&>(tup)))...}
+                std::tuple<decltype(fun(detail::adl_get<Is>(static_cast<Tup&&>(tup))))...>{
+                    fun(detail::adl_get<Is>(static_cast<Tup&&>(tup)))...}
             )
             template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
             static auto impl2(Tup0 &&tup0, Tup1 &&tup1, Fun &fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                std::tuple<decltype(fun(std::get<Is>(static_cast<Tup0 &&>(tup0)),
-                                        std::get<Is>(static_cast<Tup1 &&>(tup1))))...>{
-                    fun(std::get<Is>(static_cast<Tup0 &&>(tup0)),
-                        std::get<Is>(static_cast<Tup1 &&>(tup1)))...}
+                std::tuple<decltype(fun(detail::adl_get<Is>(static_cast<Tup0&&>(tup0)),
+                                        detail::adl_get<Is>(static_cast<Tup1&&>(tup1))))...>{
+                    fun(detail::adl_get<Is>(static_cast<Tup0&&>(tup0)),
+                        detail::adl_get<Is>(static_cast<Tup1&&>(tup1)))...}
             )
         public:
             template<typename Tup, typename Fun>
@@ -110,8 +111,8 @@ namespace ranges
             static auto impl(Tup &&tup, Val val, Fun &fun)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                Impl::template impl<Is...>(static_cast<Tup &&>(tup),
-                    fun(std::move(val), std::get<I0>(static_cast<Tup &&>(tup))), fun)
+                Impl::template impl<Is...>(static_cast<Tup&&>(tup),
+                    fun(std::move(val), detail::adl_get<I0>(static_cast<Tup&&>(tup))), fun)
             )
             template<typename Tup, typename Val, typename Fun, std::size_t...Is>
             static auto impl2(Tup &&tup, Val val, Fun &fun, meta::index_sequence<Is...>)
@@ -140,7 +141,7 @@ namespace ranges
             static void impl(Tup &&tup, Fun &fun, meta::index_sequence<Is...>)
             {
                 (void)std::initializer_list<int>{
-                    ((void)fun(std::get<Is>(static_cast<Tup &&>(tup))), 42)...};
+                    ((void)fun(detail::adl_get<Is>(static_cast<Tup&&>(tup))), 42)...};
             }
         public:
             template<typename Tup, typename Fun>

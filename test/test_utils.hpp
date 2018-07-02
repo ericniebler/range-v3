@@ -65,7 +65,10 @@ struct check_equal_fn
     }
 };
 
-RANGES_INLINE_VARIABLE(check_equal_fn, check_equal)
+inline namespace function_objects
+{
+    RANGES_INLINE_VARIABLE(check_equal_fn, check_equal)
+}
 
 template<typename Expected, typename Actual>
 void has_type(Actual &&)

@@ -50,8 +50,12 @@ namespace ranges
 
         using concepts::exchange;
 
-        /// \ingroup group-utility
-        using concepts::swap;
+        inline namespace CPOs
+        {
+            /// \ingroup group-utility
+            /// \relates concepts::adl_swap_detail::swap_fn
+            using concepts::swap;
+        }
 
         /// \cond
         namespace detail
@@ -189,24 +193,12 @@ namespace ranges
                 adl_swap_detail::is_nothrow_indirectly_swappable_<T, U>>
         {};
 
-        /// \ingroup group-utility
-        /// \relates adl_swap_detail::iter_swap_fn
-        RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
-
-        /// \cond
-        struct indirect_swap_fn
+        inline namespace CPOs
         {
-            template<typename I0, typename I1>
-            RANGES_DEPRECATED("Please replace uses of ranges::indirect_swap with ranges::iter_swap.")
-            void operator()(I0 &&i0, I1 &&i1) const
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_swap((I0 &&) i0, (I1 &&) i1)
-            )
-        };
-
-        RANGES_INLINE_VARIABLE(indirect_swap_fn, indirect_swap)
-        /// \endcond
+            /// \ingroup group-utility
+            /// \relates adl_swap_detail::iter_swap_fn
+            RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
+        }
     }
 }
 

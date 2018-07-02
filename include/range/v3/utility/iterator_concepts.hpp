@@ -41,12 +41,12 @@ namespace ranges
         (
             template(typename Out, typename T)
             concept Writable,
-                requires (Out && o, T &&t)
+                requires (Out &&o, T &&t)
                 {
-                    ((void)(*o = (T &&) t), 0),
-                    ((void)(*((Out &&) o) = (T &&) t), 0),
-                    ((void)(const_cast<reference_t<Out> const &&>(*o) = (T &&) t), 0),
-                    ((void)(const_cast<reference_t<Out> const &&>(*((Out &&) o)) = (T &&) t), 0)
+                    ((void)(*o = static_cast<T &&>(t)), 0),
+                    ((void)(*((Out &&) o) = static_cast<T &&>(t)), 0),
+                    ((void)(const_cast<reference_t<Out> const &&>(*o) = static_cast<T &&>(t)), 0),
+                    ((void)(const_cast<reference_t<Out> const &&>(*((Out &&) o)) = static_cast<T &&>(t)), 0)
                 }
         );
 
@@ -164,7 +164,7 @@ namespace ranges
             concept OutputIterator,
                 requires (Out o, T &&t)
                 {
-                    ((void)(*o++ = (T &&) t), 0)
+                    ((void)(*o++ = static_cast<T &&>(t)), 0)
                 } &&
                 Iterator<Out>() && Writable<Out, T>()
         );

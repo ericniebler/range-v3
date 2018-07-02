@@ -79,7 +79,10 @@ namespace ranges
         }
         /// \endcond
 
-        RANGES_INLINE_VARIABLE(data_detail::data_fn, data)
+        inline namespace CPOs
+        {
+            RANGES_INLINE_VARIABLE(data_detail::data_fn, data)
+        }
     }
 }
 

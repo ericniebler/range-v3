@@ -44,15 +44,15 @@ namespace ranges
             }
         }
 
-        // Detail namespace, otherwise clang complains that iter_move
-        // and iter_swap conflict with the namespace scope objects of the
-        // same name.
-        namespace _common_iterator_
-        {
-        /// \endcond
+#if RANGES_BROKEN_CPO_LOOKUP
+        namespace _common_iterator_ { template <typename> struct adl_hook {}; }
+#endif
 
         template<typename I, typename S>
         struct common_iterator
+#if RANGES_BROKEN_CPO_LOOKUP
+          : private _common_iterator_::adl_hook<common_iterator<I, S>>
+#endif
         {
         private:
             CONCEPT_assert(Iterator<I>());
@@ -169,6 +169,7 @@ namespace ranges
                 return common_iterator(ranges::get<0>(data_)++);
             }
 
+#if !RANGES_BROKEN_CPO_LOOKUP
             CONCEPT_requires(InputIterator<I>())
             (friend RANGES_CXX14_CONSTEXPR
             auto) iter_move(const common_iterator& i)
@@ -186,7 +187,31 @@ namespace ranges
                     ranges::get<0>(detail::cidata(x)),
                     ranges::get<0>(detail::cidata(y)))
             )
+#endif
         };
+
+#if RANGES_BROKEN_CPO_LOOKUP
+        namespace _common_iterator_
+        {
+            CONCEPT_template(typename I, typename S)(
+                requires InputIterator<I>())
+            (RANGES_CXX14_CONSTEXPR
+            auto) iter_move(common_iterator<I, S> const &i)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_move(ranges::get<0>(detail::cidata(i)))
+            )
+            CONCEPT_template(typename I1, typename S1, typename I2, typename S2)(
+                requires IndirectlySwappable<I2, I1>())
+            (auto) iter_swap(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                ranges::iter_swap(
+                    ranges::get<0>(detail::cidata(x)),
+                    ranges::get<0>(detail::cidata(y)))
+            )
+        }
+#endif
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
@@ -229,10 +254,6 @@ namespace ranges
                     ranges::get<0>(detail::cidata(x)) - ranges::get<1>(detail::cidata(y)) :
                     ranges::get<0>(detail::cidata(x)) - ranges::get<0>(detail::cidata(y)));
         }
-
-        /// \cond
-        } // namespace _common_iterator_
-        /// \endcond
 
         template<typename I, typename S>
         struct value_type<common_iterator<I, S>>

@@ -92,7 +92,7 @@ struct can_invoke : can_invoke_<F, meta::list<As...>>
 static_assert(can_invoke<meta::quote<std::pair>, int, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ >= 5
 static_assert(!can_invoke<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
@@ -126,7 +126,7 @@ static_assert(
 static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ >= 5
 static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
 #endif
 
@@ -219,9 +219,6 @@ static_assert(factorial<meta::size_t<1>>::value == 1, "");
 static_assert(factorial<meta::size_t<2>>::value == 2, "");
 static_assert(factorial<meta::size_t<3>>::value == 6, "");
 static_assert(factorial<meta::size_t<4>>::value == 24, "");
-
-template<typename T>
-struct undef_t;
 
 int main()
 {
@@ -371,7 +368,7 @@ int main()
 
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ >= 5
         static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int>::value, "");
         static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
                       "");

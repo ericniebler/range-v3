@@ -69,6 +69,9 @@ namespace ranges
                     Semiregular<T>() && Semiregular<mixin_base_t<T>>() &&
                     Constructible<mixin_base_t<T>, T>() &&
                     Constructible<mixin_base_t<T>, T const &>()
+                    // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
+                    //   which perfectly-returns the contained cursor object and does not throw
+                    //   exceptions.
             );
 
             CONCEPT_def

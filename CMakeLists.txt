@@ -6,6 +6,7 @@
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.6)
+get_directory_property(is_subproject PARENT_DIRECTORY)
 
 project(Range-v3 CXX)
 
@@ -33,25 +34,8 @@ target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_link_libraries(range-v3 INTERFACE concepts meta)
 
-add_subdirectory(doc)
-
-if(NOT RANGE_V3_NO_TESTING)
-  add_subdirectory(test)
-endif()
-
-if(NOT RANGE_V3_NO_EXAMPLE)
-  add_subdirectory(example)
-endif()
-
-if(NOT RANGE_V3_NO_PERF)
-  add_subdirectory(perf)
-endif()
-
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
-if(NOT RANGE_V3_TRY_THREAD)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRANGES_CXX_THREAD=0")
-endif()
 
 # Test for coroutine TS support
 include(CheckCXXSourceCompiles)
@@ -59,9 +43,20 @@ include(CheckCXXSourceCompiles)
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
 set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
+unset(CMAKE_REQUIRED_FLAGS)
 
-if (RANGE_V3_HAS_FCOROUTINES_TS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
+add_subdirectory(doc)
+
+if(RANGE_V3_TESTS)
+  add_subdirectory(test)
+endif()
+
+if(RANGE_V3_EXAMPLES)
+  add_subdirectory(example)
+endif()
+
+if(RANGE_V3_PERF)
+  add_subdirectory(perf)
 endif()
 
 # Test all headers
@@ -74,10 +69,10 @@ file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
 
 include(TestHeaders)
-if(RANGE_V3_NO_HEADER_CHECK)
-  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
-else()
+if(RANGE_V3_HEADER_CHECKS)
   add_custom_target(headers ALL SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
+else()
+  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
 generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 
@@ -91,7 +86,7 @@ file(STRINGS ${CMAKE_CURRENT_BINARY_DIR}/include/range/v3/version.hpp RANGE_V3_O
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/include/range/v3/version.hpp RANGE_V3_NEW_VERSION_HPP)
 
 # If the new version.hpp is materially different from the one in the source
-# directory, update it, amend the most recent commit, and tag the commit.
+# directory, update it, commit, and tag.
 if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   # Check that README.md and Version.cmake are the only changed file:
   execute_process(
@@ -111,7 +106,7 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" add -u
   )
   execute_process(
-    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" commit --amend --no-edit
+    COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" commit -m "${RANGE_V3_VERSION}"
   )
   execute_process(
     COMMAND ${GIT_EXECUTABLE} -C "${CMAKE_CURRENT_SOURCE_DIR}" tag -f -a "${RANGE_V3_VERSION}" -m "${RANGE_V3_VERSION}"

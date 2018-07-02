@@ -142,20 +142,20 @@ namespace test_weak_output
     template<typename I>
     struct cursor
     {
-    private:
-        friend ranges::range_access;
-        I it_;
-        void write(ranges::value_type_t<I> v) const { *it_ = v; }
-        void next() { ++it_; }
-    public:
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
             using ranges::basic_mixin<cursor>::basic_mixin;
-            mixin(I i) : mixin(cursor{i}) {}
+            explicit mixin(I i) : mixin(cursor{i}) {}
         };
+
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
+
+        void write(ranges::value_type_t<I> v) const { *it_ = v; }
+        void next() { ++it_; }
+    private:
+        I it_;
     };
 
     CONCEPT_assert(ranges::detail::OutputCursor<cursor<char *>, char>());
