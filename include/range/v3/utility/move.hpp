@@ -63,8 +63,7 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
-#if (defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5) || defined(_MSC_VER)
-            // Workaround unclassified GCC4 bug
+#if RANGES_BROKEN_CPO_LOOKUP
             void iter_move(); // unqualified name lookup block
 #endif
 
