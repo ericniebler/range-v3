@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -41,7 +42,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            Val value_;
+            semiregular_t<Val> value_;
             std::ptrdiff_t n_;
 
             struct cursor
@@ -104,19 +105,20 @@ namespace ranges
             struct repeat_n_fn
             {
                 template<typename Val,
-                    CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                    CONCEPT_REQUIRES_(CopyConstructible<Val>() && std::is_object<Val>())>
                 repeat_n_view<Val> operator()(Val value, std::ptrdiff_t n) const
                 {
                     return repeat_n_view<Val>{std::move(value), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
-                    CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && std::is_object<Val>()))>
                 void operator()(Val, std::ptrdiff_t) const
                 {
-                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
-                        "The value passed to view::repeat_n must be SemiRegular; that is, it needs "
-                        "to be default constructible, copy and move constructible, and destructible.");
+                    CONCEPT_ASSERT_MSG(std::is_object<Val>(),
+                        "The value passed to view::repeat must be an object.");
+                    CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
+                        "The value passed to view::repeat must be CopyConstructible.");
                 }
             #endif
             };
