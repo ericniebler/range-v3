@@ -15,11 +15,11 @@
 #define RANGES_V3_VIEW_REPEAT_HPP
 
 #include <utility>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -41,7 +41,7 @@ namespace ranges
           : view_facade<repeat_view<Val>, infinite>
         {
         private:
-            Val value_;
+            semiregular_t<Val> value_;
             friend range_access;
 
             struct cursor
@@ -92,19 +92,20 @@ namespace ranges
             struct repeat_fn
             {
                 template<typename Val,
-                    CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                    CONCEPT_REQUIRES_(CopyConstructible<Val>() && std::is_object<Val>())>
                 repeat_view<Val> operator()(Val value) const
                 {
                     return repeat_view<Val>{std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
-                    CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                    CONCEPT_REQUIRES_(!(CopyConstructible<Val>() && std::is_object<Val>()))>
                 void operator()(Val) const
                 {
-                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
-                        "The value passed to view::repeat must be SemiRegular; that is, it needs "
-                        "to be default constructible, copy and move constructible, and destructible.");
+                    CONCEPT_ASSERT_MSG(std::is_object<Val>(),
+                        "The value passed to view::repeat must be an object.");
+                    CONCEPT_ASSERT_MSG(CopyConstructible<Val>(),
+                        "The value passed to view::repeat must be CopyConstructible.");
                 }
             #endif
             };
