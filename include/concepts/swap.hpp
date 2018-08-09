@@ -49,13 +49,32 @@
             constexpr auto &name = ::concepts::detail::static_const<type>::value;\
         }                                                                       \
     }
-#else  // RANGES_CXX_INLINE_VARIABLES >= 201606L
+#else  // CONCEPTS_CXX_INLINE_VARIABLES >= 201606L
 #define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
     inline namespace function_objects                                           \
     {                                                                           \
         inline constexpr type name{};                                           \
     }
-#endif // RANGES_CXX_INLINE_VARIABLES
+#endif // CONCEPTS_CXX_INLINE_VARIABLES
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
+#if defined(__GNUC__) || defined(__clang__)
+#define CONCEPTS_PRAGMA(X) _Pragma(#X)
+#define CONCEPTS_DIAGNOSTIC_IGNORE_PRAGMAS \
+    CONCEPTS_PRAGMA(GCC diagnostic ignored "-Wpragmas")
+#define CONCEPTS_DIAGNOSTIC_IGNORE(X) \
+    CONCEPTS_DIAGNOSTIC_IGNORE_PRAGMAS \
+    CONCEPTS_PRAGMA(GCC diagnostic ignored "-Wunknown-pragmas") \
+    CONCEPTS_PRAGMA(GCC diagnostic ignored X)
+#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
+    CONCEPTS_DIAGNOSTIC_IGNORE("-Wunknown-warning-option") \
+    CONCEPTS_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
+#else
+#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#endif
+#endif // MSVC/Generic configuration switch
 
 namespace concepts
 {
@@ -112,6 +131,7 @@ namespace concepts
         {
             T tmp((T &&) t);
             t = (U &&) u;
+            CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
             return tmp;
         }
 

@@ -52,7 +52,7 @@ namespace ranges
             // produces the penultimate iterator. stride_view_base specializes on
             // that distinction so that only Bidirectional stride views have the
             // data member "offset_".
-            template<typename Rng, bool = BidirectionalRange<Rng>()>
+            template<typename Rng, bool = BidirectionalRange<Rng>>
             struct stride_view_base
               : stride_view_adaptor<Rng>
             {
@@ -60,10 +60,11 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 stride_view_base(Rng &&rng, range_difference_type_t<Rng> const stride)
                     noexcept(std::is_nothrow_constructible<stride_view_adaptor<Rng>, Rng>::value &&
-                        noexcept(std::declval<stride_view_base &>().calc_offset(SizedRange<Rng>())))
+                        noexcept(std::declval<stride_view_base &>().calc_offset(
+                            meta::bool_<SizedRange<Rng>>{})))
                   : stride_view_adaptor<Rng>{std::move(rng)},
                     stride_{(RANGES_EXPECT(0 < stride), stride)},
-                    offset_{calc_offset(SizedRange<Rng>())}
+                    offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
                 {}
             protected:
                 RANGES_CXX14_CONSTEXPR
@@ -140,7 +141,7 @@ namespace ranges
             // either (1) Rng is sized, so we can pre-calculate offset_, or (2)
             // Rng is not Bidirectional, so it does not need offset_.
             static constexpr bool const_iterable =
-                Range<Rng const>() && (SizedRange<Rng>() || !BidirectionalRange<Rng>());
+                Range<Rng const> && (SizedRange<Rng> || !BidirectionalRange<Rng>);
 
             struct adaptor : adaptor_base
             {
@@ -164,7 +165,7 @@ namespace ranges
                         rng_->set_offset(delta);
                     }
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>)
                 (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Rng> &it)
                     noexcept(noexcept(ranges::advance(it, 0),
                         it != ranges::begin(std::declval<Rng &>()),
@@ -184,7 +185,7 @@ namespace ranges
                     ranges::advance(it, delta);
                 }
                 CONCEPT_template(class Other)(
-                    requires SizedSentinel<Other, iterator_t<Rng>>())
+                    requires SizedSentinel<Other, iterator_t<Rng>>)
                 (RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng>) distance_to(
                     iterator_t<Rng> const &here, Other const &there) const
                     noexcept(noexcept(there - here))
@@ -196,7 +197,7 @@ namespace ranges
                         delta += rng_->stride_ - 1;
                     return delta / rng_->stride_;
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>)
                 (RANGES_CXX14_CONSTEXPR void) advance(
                     iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(
@@ -230,17 +231,13 @@ namespace ranges
                     }
                 }
             };
-            CONCEPT_requires(True<const_iterable>())
-            (constexpr adaptor) begin_adaptor() const
-                noexcept(std::is_nothrow_constructible<adaptor, stride_view const &>::value &&
-                    std::is_nothrow_move_constructible<adaptor>::value)
+            CONCEPT_requires(const_iterable)
+            (constexpr adaptor) begin_adaptor() const noexcept
             {
                 return adaptor{*this};
             }
-            CONCEPT_requires(!True<const_iterable>())
-            (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor()
-                noexcept(std::is_nothrow_constructible<adaptor, stride_view &>::value &&
-                    std::is_nothrow_move_constructible<adaptor>::value)
+            CONCEPT_requires(not const_iterable)
+            (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() noexcept
             {
                 return adaptor{*this};
             }
@@ -249,29 +246,23 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // BoundedView, adapt it anyway.
-            CONCEPT_requires(True<const_iterable>() && BoundedRange<Rng>())
-            (constexpr adaptor) end_adaptor() const
-                noexcept(std::is_nothrow_constructible<adaptor, stride_view const &>::value &&
-                    std::is_nothrow_move_constructible<adaptor>::value)
+            CONCEPT_requires(const_iterable && BoundedRange<Rng>)
+            (constexpr adaptor) end_adaptor() const noexcept
             {
                 return adaptor{*this};
             }
-            CONCEPT_requires(True<!const_iterable>() && BoundedRange<Rng>())
-            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor()
-                noexcept(std::is_nothrow_constructible<adaptor, stride_view &>::value &&
-                    std::is_nothrow_move_constructible<adaptor>::value)
+            CONCEPT_requires(not const_iterable && BoundedRange<Rng>)
+            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() noexcept
             {
                 return adaptor{*this};
             }
-            CONCEPT_requires(True<const_iterable>() && !BoundedRange<Rng>())
-            (constexpr adaptor_base) end_adaptor() const
-                noexcept(std::is_nothrow_constructible<adaptor_base, stride_view const &>::value)
+            CONCEPT_requires(const_iterable && !BoundedRange<Rng>)
+            (constexpr adaptor_base) end_adaptor() const noexcept
             {
                 return {};
             }
-            CONCEPT_requires(True<!const_iterable>() && !BoundedRange<Rng>())
-            (RANGES_CXX14_CONSTEXPR adaptor_base) end_adaptor()
-                noexcept(std::is_nothrow_constructible<adaptor_base, stride_view &>::value)
+            CONCEPT_requires(not const_iterable && !BoundedRange<Rng>)
+            (RANGES_CXX14_CONSTEXPR adaptor_base) end_adaptor() noexcept
             {
                 return {};
             }
@@ -288,13 +279,13 @@ namespace ranges
                     Rng, range_difference_type_t<Rng>>::value)
               : detail::stride_view_base<Rng>{std::move(rng), stride}
             {}
-            CONCEPT_requires(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>)
             (constexpr range_size_type_t<Rng>) size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return size_(ranges::size(this->base()));
             }
-            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
             (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
@@ -309,7 +300,7 @@ namespace ranges
             private:
                 friend view_access;
                 CONCEPT_template(typename Difference)(
-                    requires Integral<Difference>())
+                    requires Integral<Difference>)
                 (RANGES_CXX14_CONSTEXPR
                 static auto) bind(stride_fn stride, Difference step)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -318,7 +309,7 @@ namespace ranges
                 )
             public:
                 CONCEPT_template(typename Rng)(
-                    requires InputRange<Rng>())
+                    requires InputRange<Rng>)
                 (constexpr auto) operator()(Rng &&rng, range_difference_type_t<Rng> step) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -329,10 +320,10 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
                 CONCEPT_template(typename Difference)(
-                    requires !Integral<Difference>())
+                    requires not Integral<Difference>)
                 (static detail::null_pipe) bind(stride_fn, const Difference &)
                 {
-                    CONCEPT_assert_msg(Integral<Difference>(),
+                    CONCEPT_assert_msg(Integral<Difference>,
                         "The value to be used as the step in a call to view::stride must be a "
                         "model of the Integral concept that is convertible to the range's "
                         "difference type.");
@@ -340,13 +331,13 @@ namespace ranges
                 }
             public:
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !InputRange<Rng>())
+                    requires not InputRange<Rng>)
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object to be operated on by view::stride should be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(Integral<T>(),
+                    CONCEPT_assert_msg(Integral<T>,
                         "The value to be used as the step in a call to view::stride must be a "
                         "model of the Integral concept that is convertible to the range's "
                         "difference type.");

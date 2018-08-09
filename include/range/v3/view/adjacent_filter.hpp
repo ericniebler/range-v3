@@ -38,8 +38,8 @@ namespace ranges
             (
                 template(typename Rng, typename Pred)
                 concept AdjacentFilter,
-                    ForwardRange<Rng>() &&
-                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>()
+                    ForwardRange<Rng> &&
+                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
             );
         }
         /// \endcond
@@ -60,8 +60,8 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using Base = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>(), Rng>;
-                using Parent = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>(), adjacent_filter_view>;
+                using Base = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>, Rng>;
+                using Parent = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>, adjacent_filter_view>;
                 Parent *rng_;
             public:
                 adaptor() = default;
@@ -77,7 +77,7 @@ namespace ranges
                         if(invoke(pred, *prev, *it))
                             break;
                 }
-                CONCEPT_requires(BidirectionalRange<Base>())
+                CONCEPT_requires(BidirectionalRange<Base>)
                 (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Base> &it) const
                 {
                     auto const first = ranges::begin(rng_->base());
@@ -94,22 +94,22 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
-            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>())
+            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>)
             (constexpr adaptor) begin_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>())
+            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>)
             (constexpr adaptor) end_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(!detail::AdjacentFilter<Rng const, Pred const>())
+            CONCEPT_requires(not detail::AdjacentFilter<Rng const, Pred const>)
             (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() noexcept
             {
                 return {*this};
             }
-            CONCEPT_requires(!detail::AdjacentFilter<Rng const, Pred const>())
+            CONCEPT_requires(not detail::AdjacentFilter<Rng const, Pred const>)
             (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() noexcept
             {
                 return {*this};
@@ -141,7 +141,7 @@ namespace ranges
                 )
             public:
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires detail::AdjacentFilter<Rng, Pred>())
+                    requires detail::AdjacentFilter<Rng, Pred>)
                 (RANGES_CXX14_CONSTEXPR auto) operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -150,12 +150,12 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
-                    requires !detail::AdjacentFilter<Rng, Pred>())
+                    requires not detail::AdjacentFilter<Rng, Pred>)
                 (void) operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>,
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

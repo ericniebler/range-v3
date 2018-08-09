@@ -53,13 +53,13 @@ namespace ranges
                     std::is_nothrow_move_constructible<range_value_type_t<Rng>>::value)
               : intersperse_view::view_adaptor{detail::move(rng)}, val_(detail::move(val))
             {}
-            CONCEPT_requires(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>)
             (constexpr range_size_type_t<Rng>) size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return size_(ranges::size(this->base()));
             }
-            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
             (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
@@ -89,7 +89,7 @@ namespace ranges
                 {
                     return toggle_ ? *it : val_;
                 }
-                CONCEPT_requires(Sentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                CONCEPT_requires(Sentinel<iterator_t<Rng>, iterator_t<Rng>>)
                 (constexpr bool) equal(iterator_t<Rng> const &it0, iterator_t<Rng> const &it1,
                     cursor_adaptor const &other) const
                     noexcept(noexcept(it0 == it1))
@@ -103,7 +103,7 @@ namespace ranges
                         ++it;
                     toggle_ = !toggle_;
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>)
                 (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Rng> &it)
                     noexcept(noexcept(--it))
                 {
@@ -111,14 +111,14 @@ namespace ranges
                     if(toggle_)
                         --it;
                 }
-                CONCEPT_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
+                CONCEPT_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>)
                 (constexpr range_difference_type_t<Rng>) distance_to(iterator_t<Rng> const &it,
                     iterator_t<Rng> const &other_it, cursor_adaptor const &other) const
                     noexcept(noexcept(other_it - it))
                 {
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>)
                 (RANGES_CXX14_CONSTEXPR
                 void) advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(ranges::advance(it, n)))
@@ -140,37 +140,37 @@ namespace ranges
                     it == sent
                 )
             };
-            CONCEPT_requires(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>)
             (constexpr cursor_adaptor) begin_adaptor() const
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view const&>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_requires(!Range<Rng const>())
+            CONCEPT_requires(not Range<Rng const>)
             (RANGES_CXX14_CONSTEXPR cursor_adaptor) begin_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_requires(Range<Rng const>() && BoundedRange<Rng>() &&
-                !SinglePass<iterator_t<Rng>>())
+            CONCEPT_requires(Range<Rng const> && BoundedRange<Rng> &&
+                !SinglePass<iterator_t<Rng>>)
             (constexpr cursor_adaptor) end_adaptor() const
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view const&>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_requires(!Range<Rng const>() && BoundedRange<Rng>() &&
-                !SinglePass<iterator_t<Rng>>())
+            CONCEPT_requires(not Range<Rng const> && BoundedRange<Rng> &&
+                !SinglePass<iterator_t<Rng>>)
             (RANGES_CXX14_CONSTEXPR cursor_adaptor) end_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value)
             {
                 return cursor_adaptor{*this};
             }
-            CONCEPT_requires(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
+            CONCEPT_requires(not BoundedRange<Rng> || SinglePass<iterator_t<Rng>>)
             (constexpr sentinel_adaptor) end_adaptor() const noexcept
             {
                 return {};
@@ -185,30 +185,31 @@ namespace ranges
 
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename T = range_value_type_t<Rng>)
+                (concept IntersperseViewConcept)(Rng, T),
+                    InputRange<Rng> &&
+                    ConvertibleTo<T, range_value_type_t<Rng>> &&
+                    ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>> &&
+                    Semiregular<range_value_type_t<Rng>>
+            );
+
             struct intersperse_fn
             {
             private:
                 friend view_access;
                 CONCEPT_template(typename T)(
-                    requires Copyable<T>())
+                    requires Copyable<T>)
                 (static auto) bind(intersperse_fn intersperse, T t)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     make_pipeable(std::bind(intersperse, std::placeholders::_1, std::move(t)))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T = range_value_type_t<Rng>)
-                    (concept Constraint)(Rng, T),
-                        InputRange<Rng>() &&
-                        ConvertibleTo<T, range_value_type_t<Rng>>() &&
-                        ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>>() &&
-                        Semiregular<range_value_type_t<Rng>>()
-                );
 
                 CONCEPT_template(typename Rng)(
-                    requires Constraint<Rng>())
+                    requires IntersperseViewConcept<Rng>)
                 (constexpr auto) operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -217,20 +218,20 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Constraint<Rng, T>())
+                    requires not IntersperseViewConcept<Rng, T>)
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::intersperse operates must be a model of the "
                         "InputRange concept.");
                     using V = range_value_type_t<Rng>;
-                    CONCEPT_assert_msg(ConvertibleTo<T, V>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, V>,
                         "The value to intersperse in the range must be convertible to the range's "
                         "value type.");
-                    CONCEPT_assert_msg(ConvertibleTo<range_reference_t<Rng>, V>(),
+                    CONCEPT_assert_msg(ConvertibleTo<range_reference_t<Rng>, V>,
                         "The range's reference type must be convertible to the range's "
                         "value type.");
-                    CONCEPT_assert_msg(Semiregular<V>(),
+                    CONCEPT_assert_msg(Semiregular<V>,
                         "The range on which view::intersperse operates must have a value type that "
                         "models the Semiregular concept; that is, it must be default constructible, "
                         "copy and move constructible, and destructible.");

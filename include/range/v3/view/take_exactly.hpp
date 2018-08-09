@@ -37,11 +37,11 @@ namespace ranges
         {
             template<typename Rng>
             struct is_random_access_bounded_
-              : meta::bool_<(bool) RandomAccessRange<Rng>() && (bool) BoundedRange<Rng>()>
+              : meta::bool_<(bool) RandomAccessRange<Rng> && (bool) BoundedRange<Rng>>
             {};
 
             // BUGBUG Per the discussion in https://github.com/ericniebler/stl2/issues/63, it's
-            // unclear if we can infer anything from RandomAccessRange<Rng>() && BoundedRange<Rng>()
+            // unclear if we can infer anything from RandomAccessRange<Rng> && BoundedRange<Rng>
             template<typename Rng,
                 bool IsRandomAccessBounded /*= is_random_access_bounded_<Rng>::value*/>
             struct take_exactly_view_
@@ -65,7 +65,7 @@ namespace ranges
                     return {ranges::begin(rng_), n_};
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>())
+                    requires Range<BaseRng const>)
                 (counted_iterator<iterator_t<BaseRng const>>) begin() const
                 {
                     return {ranges::begin(rng_), n_};
@@ -102,7 +102,7 @@ namespace ranges
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
-                    RANGES_EXPECT(!(bool)SizedRange<Rng>() || n <= ranges::distance(rng_));
+                    RANGES_EXPECT(!(bool)SizedRange<Rng> || n <= ranges::distance(rng_));
                 }
                 iterator_t<Rng> begin()
                 {
@@ -113,13 +113,13 @@ namespace ranges
                     return next(ranges::begin(rng_), n_);
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>())
+                    requires Range<BaseRng const>)
                 (iterator_t<BaseRng const>) begin() const
                 {
                     return ranges::begin(rng_);
                 }
                 CONCEPT_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>())
+                    requires Range<BaseRng const>)
                 (iterator_t<BaseRng const>) end() const
                 {
                     return next(ranges::begin(rng_), n_);
@@ -159,7 +159,7 @@ namespace ranges
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires !View<uncvref_t<Rng>>() && True<std::is_lvalue_reference<Rng>>())
+                    requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
                 (static iterator_range<iterator_t<Rng>>)
                 invoke_(Rng &&rng, range_difference_type_t<Rng> n, random_access_range_tag)
                 {
@@ -167,7 +167,7 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename Int)(
-                    requires Integral<Int>())
+                    requires Integral<Int>)
                 (static auto) bind(take_exactly_fn take_exactly, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -175,10 +175,10 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Int)(
-                    requires !Integral<Int>())
+                    requires not Integral<Int>)
                 (static detail::null_pipe) bind(take_exactly_fn, Int)
                 {
-                    CONCEPT_assert_msg(Integral<Int>(),
+                    CONCEPT_assert_msg(Integral<Int>,
                         "The object passed to view::take must be a model of the Integral concept.");
                     return {};
                 }
@@ -186,7 +186,7 @@ namespace ranges
 
             public:
                 CONCEPT_template(typename Rng)(
-                    requires InputRange<Rng>())
+                    requires InputRange<Rng>)
                 (auto) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -195,13 +195,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !InputRange<Rng>())
+                    requires not InputRange<Rng>)
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<T>(),
+                    CONCEPT_assert_msg(InputRange<T>,
                         "The object on which view::take operates must be a model of the InputRange "
                         "concept.");
-                    CONCEPT_assert_msg(Integral<T>(),
+                    CONCEPT_assert_msg(Integral<T>,
                         "The second argument to view::take must be a model of the Integral concept.");
                 }
             #endif

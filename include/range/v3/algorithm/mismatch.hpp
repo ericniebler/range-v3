@@ -39,9 +39,9 @@ namespace ranges
             template(typename I1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)
             (concept Mismatchable)(I1, I2, C, P1, P2),
-                InputIterator<I1>() &&
-                InputIterator<I2>() &&
-                IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>()
+                InputIterator<I1> &&
+                InputIterator<I2> &&
+                IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>
         );
 
         /// \addtogroup group-algorithms
@@ -50,7 +50,7 @@ namespace ranges
         {
             CONCEPT_template(typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)(
-                requires Mismatchable<I1, I2, C, P1, P2>() && Sentinel<S1, I1>())
+                requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1>)
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
             operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -63,8 +63,8 @@ namespace ranges
 
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)(
-                requires Mismatchable<I1, I2, C, P1, P2>() && Sentinel<S1, I1>() &&
-                    Sentinel<S2, I2>())
+                requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1> &&
+                    Sentinel<S2, I2>)
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -79,8 +79,8 @@ namespace ranges
                 typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>)( // [*] See below
-                requires InputRange<Rng1>() && Iterator<I2>() &&
-                    Mismatchable<I1, I2, C, P1, P2>())
+                requires InputRange<Rng1> && Iterator<I2> &&
+                    Mismatchable<I1, I2, C, P1, P2>)
             (tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(I2)>)
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -93,8 +93,8 @@ namespace ranges
                 typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
-                requires InputRange<Rng1>() && InputRange<Rng2>() &&
-                    Mismatchable<I1, I2, C, P1, P2>())
+                requires InputRange<Rng1> && InputRange<Rng2> &&
+                    Mismatchable<I1, I2, C, P1, P2>)
             (tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>)>)
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

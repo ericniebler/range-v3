@@ -104,17 +104,17 @@ namespace ranges
             struct repeat_n_fn
             {
                 CONCEPT_template(typename Val)(
-                    requires Semiregular<Val>())
+                    requires Semiregular<Val>)
                 (repeat_n_view<Val>) operator()(Val value, std::ptrdiff_t n) const
                 {
                     return repeat_n_view<Val>{std::move(value), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Val)(
-                    requires !Semiregular<Val>())
+                    requires not Semiregular<Val>)
                 (void) operator()(Val, std::ptrdiff_t) const
                 {
-                    CONCEPT_assert_msg(Semiregular<Val>(),
+                    CONCEPT_assert_msg(Semiregular<Val>,
                         "The value passed to view::repeat_n must be Semiregular; that is, it needs "
                         "to be default constructible, copy and move constructible, and destructible.");
                 }

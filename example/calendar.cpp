@@ -109,7 +109,7 @@ namespace ranges
         using type = date::duration_type::duration_rep::int_type;
     };
 }
-CONCEPT_assert(Incrementable<date>());
+CONCEPT_assert(Incrementable<date>);
 
 auto
 dates(unsigned short start, unsigned short stop)
@@ -189,7 +189,7 @@ namespace cal_example
     template<class Rng>
     class chunk_view : public view_adaptor<chunk_view<Rng>, Rng>
     {
-        CONCEPT_assert(ForwardRange<Rng>());
+        CONCEPT_assert(ForwardRange<Rng>);
         ranges::range_difference_type_t<Rng> n_;
         friend range_access;
         class adaptor;
@@ -290,7 +290,7 @@ struct interleave_view<Rngs>::cursor
                                                  ranges::end)
                                             .in1();
     }
-    CONCEPT_requires(ForwardRange<range_value_type_t<Rngs>>())
+    CONCEPT_requires(ForwardRange<range_value_type_t<Rngs>>)
     (bool) equal(cursor const& that) const
     {
         return n_ == that.n_ && its_ == that.its_;
@@ -317,7 +317,7 @@ transpose()
 {
     return make_pipeable([](auto &&rngs) {
         using Rngs = decltype(rngs);
-        CONCEPT_assert(ForwardRange<Rngs>());
+        CONCEPT_assert(ForwardRange<Rngs>);
         return std::forward<Rngs>(rngs)
             | interleave()
             | chunk(static_cast<std::size_t>(distance(rngs)));

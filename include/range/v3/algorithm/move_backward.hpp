@@ -35,8 +35,8 @@ namespace ranges
         struct move_backward_fn
         {
             CONCEPT_template(typename I, typename S, typename O)(
-                requires BidirectionalIterator<I>() && Sentinel<S, I>() &&
-                    BidirectionalIterator<O>() && IndirectlyMovable<I, O>())
+                requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                    BidirectionalIterator<O> && IndirectlyMovable<I, O>)
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I begin, S end_, O out) const
             {
@@ -48,8 +48,8 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O,
                 typename I = iterator_t<Rng>)(
-                requires BidirectionalRange<Rng>() && BidirectionalIterator<O>() &&
-                    IndirectlyMovable<I, O>())
+                requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
+                    IndirectlyMovable<I, O>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out) const
             {

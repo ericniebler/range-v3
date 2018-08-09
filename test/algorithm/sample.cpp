@@ -35,7 +35,7 @@
 namespace
 {
     CONCEPT_template(typename I, typename S)(
-        requires ranges::Sentinel<S, I>())
+        requires ranges::Sentinel<S, I>)
     (bool) in_sequence(I first, I mid, S last)
     {
         for (; first != mid; ++first)

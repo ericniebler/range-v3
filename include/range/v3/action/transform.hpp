@@ -31,12 +31,20 @@ namespace ranges
         /// @{
         namespace action
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename F, typename P = ident)
+                (concept TransformActionConcept)(Rng, F, P),
+                    InputRange<Rng> &&
+                    Transformable1<iterator_t<Rng>, iterator_t<Rng>, F, P>
+            );
+
             struct transform_fn
             {
             private:
                 friend action_access;
                 CONCEPT_template(typename F, typename P = ident)(
-                    requires !Range<F>())
+                    requires not Range<F>)
                 (static auto) bind(transform_fn transform, F fun, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -44,16 +52,8 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename F, typename P = ident)
-                    (concept Concept)(Rng, F, P),
-                        InputRange<Rng>() &&
-                        Transformable1<iterator_t<Rng>, iterator_t<Rng>, F, P>()
-                );
-
                 CONCEPT_template(typename Rng, typename F, typename P = ident)(
-                    requires Concept<Rng, F, P>())
+                    requires TransformActionConcept<Rng, F, P>)
                 (Rng) operator()(Rng &&rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
@@ -62,23 +62,23 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename F, typename P = ident)(
-                    requires !Concept<Rng, F, P>())
+                    requires not TransformActionConcept<Rng, F, P>)
                 (void) operator()(Rng &&, F &&, P && = P{}) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::transform operates must be a model of the "
                         "InputRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(IndirectInvocable<P, I>(),
+                    CONCEPT_assert_msg(IndirectInvocable<P, I>,
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_assert_msg(IndirectInvocable<F, projected<I, P>>(),
+                    CONCEPT_assert_msg(IndirectInvocable<F, projected<I, P>>,
                         "The function argument to action::transform must be callable with "
                         "the result of the projection argument, or with objects of the range's "
                         "common reference type if no projection is specified.");
                     CONCEPT_assert_msg(Writable<iterator_t<Rng>,
                             invoke_result_t<F&,
-                                invoke_result_t<P&, range_common_reference_t<Rng>>>>(),
+                                invoke_result_t<P&, range_common_reference_t<Rng>>>>,
                         "The result type of the function passed to action::transform must "
                         "be writable back into the source range.");
                 }

@@ -30,8 +30,8 @@ namespace ranges
         namespace adl_push_front_detail
         {
             CONCEPT_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont>() &&
-                    Constructible<range_value_type_t<Cont>, T>())
+                requires LvalueContainerLike<Cont> &&
+                    Constructible<range_value_type_t<Cont>, T>)
             (decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
                 push_front(std::declval<T>()))))
             push_front(Cont &&cont, T &&t)
@@ -40,7 +40,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename Cont, typename Rng)(
-                requires LvalueContainerLike<Cont>() && Range<Rng>())
+                requires LvalueContainerLike<Cont> && Range<Rng>)
             (decltype(static_cast<void>(ranges::insert(
                 std::declval<Cont &>(),
                 std::declval<iterator_t<Cont>>(),
@@ -49,6 +49,19 @@ namespace ranges
             {
                 ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
             }
+
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                concept PushFrontActionConcept,
+                    requires (Rng &&rng, T &&t)
+                    (
+                        push_front(rng, (T &&) t)
+                    ) &&
+                    InputRange<Rng> &&
+                        (Constructible<range_value_type_t<Rng>, T> ||
+                        Range<T>)
+            );
 
             struct push_front_fn
             {
@@ -61,21 +74,8 @@ namespace ranges
                     std::bind(push_front, std::placeholders::_1, bind_forward<T>(val))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T)
-                    concept Concept,
-                        requires (Rng &&rng, T &&t)
-                        {
-                            ((void)push_front(rng, (T &&) t), 42)
-                        } &&
-                        InputRange<Rng>() &&
-                            (Constructible<range_value_type_t<Rng>, T>() ||
-                            Range<T>())
-                );
-
                 CONCEPT_template(typename Rng, typename T)(
-                    requires Concept<Rng, T>())
+                    requires PushFrontActionConcept<Rng, T>)
                 (Rng) operator()(Rng &&rng, T &&t) const
                 {
                     push_front(rng, static_cast<T &&>(t));
@@ -84,15 +84,15 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Concept<Rng, T>())
+                    requires not PushFrontActionConcept<Rng, T>)
                 (void) operator()(Rng &&rng, T &&t) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::push_front operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(meta::or_<
+                    CONCEPT_assert_msg(Or<
                         Constructible<range_value_type_t<Rng>, T>,
-                        Range<T>>(),
+                        Range<T>>,
                         "The object to be inserted with action::push_front must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");

@@ -57,6 +57,23 @@ namespace ranges
             /// \relates make_action_fn
             RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
+            CONCEPT_def
+            (
+                template(typename Action, typename Rng, typename...Rest)
+                (concept ActionConcept)(Action, Rng, Rest...),
+                    Range<Rng> &&
+                    Invocable<Action const&, Rng, Rest...>
+            );
+
+            CONCEPT_def
+            (
+                template(typename Action, typename Rng)
+                concept ActionPipeConcept,
+                    Range<Rng> &&
+                    Invocable<Action &, Rng> &&
+                    !std::is_reference<Rng>::value
+            );
+
             template<typename Action>
             struct action : pipeable<action<Action>>
             {
@@ -64,26 +81,9 @@ namespace ranges
                 Action action_;
                 friend pipeable_access;
 
-                CONCEPT_def
-                (
-                    template(typename Rng, typename...Rest)
-                    (concept ActionConcept)(Rng, Rest...),
-                        Range<Rng>() &&
-                        Invocable<Action const&, Rng, Rest...>()
-                );
-
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept ActionPipeConcept,
-                        Range<Rng>() &&
-                        Invocable<Action &, Rng>() &&
-                        !True<std::is_reference<Rng>>()
-                );
-
                 // Piping requires things are passed by value.
                 CONCEPT_template(typename Rng, typename Act)(
-                    requires ActionPipeConcept<Rng>())
+                    requires ActionPipeConcept<Action, Rng>)
                 (static auto) pipe(Rng &&rng, Act &&act)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -93,14 +93,14 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 CONCEPT_template(typename Rng, typename Act)(
-                    requires !ActionPipeConcept<Rng>())
+                    requires not ActionPipeConcept<Action, Rng>)
                 (static void) pipe(Rng &&, Act &&)
                 {
-                    CONCEPT_assert_msg(Range<Rng>(),
+                    CONCEPT_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
-                    CONCEPT_assert_msg(Invocable<Action&, Rng>(),
+                    CONCEPT_assert_msg(Invocable<Action&, Rng>,
                         "This action is not callable with this range type.");
                     static_assert(!std::is_reference<Rng>(),
                         "You can't pipe an lvalue into an action. Try using std::move on the argument, "
@@ -117,7 +117,7 @@ namespace ranges
 
                 // Calling directly requires things are passed by reference.
                 CONCEPT_template(typename Rng, typename...Rest)(
-                    requires ActionConcept<Rng &, Rest...>())
+                    requires ActionConcept<Action, Rng &, Rest...>)
                 (auto) operator()(Rng &rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -138,10 +138,10 @@ namespace ranges
             };
 
             CONCEPT_template(typename Rng, typename Action)(
-                requires True<is_pipeable<Action>>() && Range<Rng &>() &&
-                    Invocable<bitwise_or, ref_t<Rng &>, Action &>() &&
+                requires is_pipeable<Action>::value && Range<Rng &> &&
+                    Invocable<bitwise_or, ref_t<Rng &>, Action &> &&
                     Same<ref_t<Rng &>,
-                        invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>())
+                        invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>)
             (Rng &) operator|=(Rng &rng, Action &&action)
             {
                 ref(rng) | action;

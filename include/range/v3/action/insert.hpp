@@ -33,8 +33,8 @@ namespace ranges
         namespace adl_insert_detail
         {
             CONCEPT_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont>() &&
-                    Constructible<range_value_type_t<Cont>, T>())
+                requires LvalueContainerLike<Cont> &&
+                    Constructible<range_value_type_t<Cont>, T>)
             (auto) insert(Cont &&cont, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -43,7 +43,7 @@ namespace ranges
 
             CONCEPT_template(typename Cont, typename I, typename S,
                 typename C = common_iterator_t<I, S>)(
-                requires LvalueContainerLike<Cont>() && Sentinel<S, I>() && !Range<S>())
+                requires LvalueContainerLike<Cont> && Sentinel<S, I> && !Range<S>)
             (auto) insert(Cont &&cont, I i, S j)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -52,7 +52,7 @@ namespace ranges
 
             CONCEPT_template(typename Cont, typename Rng,
                 typename C = range_common_iterator_t<Rng>)(
-                requires LvalueContainerLike<Cont>() && Range<Rng>())
+                requires LvalueContainerLike<Cont> && Range<Rng>)
             (auto) insert(Cont &&cont, Rng &&rng)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -60,8 +60,8 @@ namespace ranges
             )
 
             CONCEPT_template(typename Cont, typename I, typename T)(
-                requires LvalueContainerLike<Cont>() && Iterator<I>() &&
-                    Constructible<range_value_type_t<Cont>, T>())
+                requires LvalueContainerLike<Cont> && Iterator<I> &&
+                    Constructible<range_value_type_t<Cont>, T>)
             (auto) insert(Cont &&cont, I p, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -69,8 +69,8 @@ namespace ranges
             )
 
             CONCEPT_template(typename Cont, typename I, typename N, typename T)(
-                requires LvalueContainerLike<Cont>() && Iterator<I>() && Integral<N>() &&
-                    Constructible<range_value_type_t<Cont>, T>())
+                requires LvalueContainerLike<Cont> && Iterator<I> && Integral<N> &&
+                    Constructible<range_value_type_t<Cont>, T>)
             (auto) insert(Cont &&cont, I p, N n, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -81,8 +81,8 @@ namespace ranges
             namespace detail
             {
                 CONCEPT_template(typename Cont, typename P)(
-                    requires Container<Cont>() && Iterator<P>() &&
-                        RandomAccessReservable<Cont>())
+                    requires Container<Cont> && Iterator<P> &&
+                        RandomAccessReservable<Cont>)
                 (iterator_t<Cont>) insert_reserve_helper(
                     Cont &cont, P const p, range_size_type_t<Cont> const delta)
                 {
@@ -104,7 +104,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
-                    requires Sentinel<S, I>() && !Range<S>())
+                    requires Sentinel<S, I> && !Range<S>)
                 (auto) insert_impl(Cont &&cont, P p, I i, S j, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -113,7 +113,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
-                    requires SizedSentinel<S, I>() && RandomAccessReservable<Cont>() && !Range<S>())
+                    requires SizedSentinel<S, I> && RandomAccessReservable<Cont> && !Range<S>)
                 (auto) insert_impl(Cont &&cont_, P p, I i, S j, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         ranges::begin(unwrap_reference(cont_)), C{i}, C{j}))
@@ -126,7 +126,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
-                    requires Range<Rng>())
+                    requires Range<Rng>)
                 (auto) insert_impl(Cont &&cont, I p, Rng &&rng, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -135,7 +135,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
-                    requires RandomAccessReservable<Cont>() && SizedRange<Rng>())
+                    requires RandomAccessReservable<Cont> && SizedRange<Rng>)
                 (auto) insert_impl(Cont &&cont_, I p, Rng &&rng, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         begin(unwrap_reference(cont_)), C{ranges::begin(rng)}, C{ranges::end(rng)}))
@@ -150,8 +150,8 @@ namespace ranges
 
             CONCEPT_template(typename Cont, typename P, typename I, typename S,
                 typename C = common_iterator_t<I, S>)(
-                requires LvalueContainerLike<Cont>() && Iterator<P>() &&
-                    Sentinel<S, I>() && !Range<S>())
+                requires LvalueContainerLike<Cont> && Iterator<P> &&
+                    Sentinel<S, I> && !Range<S>)
             (auto) insert(Cont &&cont, P p, I i, S j)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -160,12 +160,12 @@ namespace ranges
                     std::move(p),
                     std::move(i),
                     std::move(j),
-                    RandomAccessReservable<Cont>() && SizedSentinel<S, I>())
+                    meta::bool_<RandomAccessReservable<Cont> && SizedSentinel<S, I>>{})
             )
 
             CONCEPT_template(typename Cont, typename I, typename Rng,
                 typename C = range_common_iterator_t<Rng>)(
-                requires LvalueContainerLike<Cont>() && Iterator<I>() && Range<Rng>())
+                requires LvalueContainerLike<Cont> && Iterator<I> && Range<Rng>)
             (auto) insert(Cont &&cont, I p, Rng &&rng)
             RANGES_DECLTYPE_AUTO_RETURN
             (
@@ -173,13 +173,13 @@ namespace ranges
                     static_cast<Cont &&>(cont),
                     std::move(p),
                     static_cast<Rng &&>(rng),
-                    RandomAccessReservable<Cont>() && SizedRange<Rng>())
+                    meta::bool_<RandomAccessReservable<Cont> && SizedRange<Rng>>{})
             )
 
             struct insert_fn
             {
                 CONCEPT_template(typename Rng, typename T)(
-                    requires Range<Rng>() && Constructible<range_value_type_t<Rng>, T>())
+                    requires Range<Rng> && Constructible<range_value_type_t<Rng>, T>)
                 (auto) operator()(Rng &&rng, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -187,7 +187,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename Rng2)(
-                    requires Range<Rng>() && Range<Rng2>())
+                    requires Range<Rng> && Range<Rng2>)
                 (auto) operator()(Rng &&rng, Rng2 &&rng2) const ->
                     decltype(insert(static_cast<Rng &&>(rng), static_cast<Rng2 &&>(rng2)))
                 {
@@ -197,7 +197,7 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename Rng, typename T)(
-                    requires Range<Rng>())
+                    requires Range<Rng>)
                 (auto) operator()(Rng &&rng, std::initializer_list<T> rng2) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -205,7 +205,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename S)(
-                    requires Range<Rng>() && Sentinel<S, I>() && !Range<S>())
+                    requires Range<Rng> && Sentinel<S, I> && !Range<S>)
                 (auto) operator()(Rng &&rng, I i, S j) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -213,8 +213,8 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename T)(
-                    requires Range<Rng>() && Iterator<I>() &&
-                        Constructible<range_value_type_t<Rng>, T>())
+                    requires Range<Rng> && Iterator<I> &&
+                        Constructible<range_value_type_t<Rng>, T>)
                 (auto) operator()(Rng &&rng, I p, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -222,7 +222,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename Rng2)(
-                    requires Range<Rng>() && Iterator<I>() && Range<Rng2>())
+                    requires Range<Rng> && Iterator<I> && Range<Rng2>)
                 (decltype(insert(std::declval<Rng>(), std::declval<I>(), std::declval<Rng2>())))
                 operator()(Rng &&rng, I p, Rng2 &&rng2) const
                 {
@@ -232,7 +232,7 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename Rng, typename I, typename T)(
-                    requires Range<Rng>() && Iterator<I>())
+                    requires Range<Rng> && Iterator<I>)
                 (auto) operator()(Rng &&rng, I p, std::initializer_list<T> rng2) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -240,8 +240,8 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename N, typename T)(
-                    requires Range<Rng>() && Iterator<I>() && Integral<N>() &&
-                        Constructible<range_value_type_t<Rng>, T>())
+                    requires Range<Rng> && Iterator<I> && Integral<N> &&
+                        Constructible<range_value_type_t<Rng>, T>)
                 (auto) operator()(Rng &&rng, I p, N n, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -249,8 +249,8 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename P, typename I, typename S)(
-                    requires Range<Rng>() && Iterator<P>() && Sentinel<S, I>() &&
-                                      !Range<S>())
+                    requires Range<Rng> && Iterator<P> && Sentinel<S, I> &&
+                                      !Range<S>)
                 (auto) operator()(Rng &&rng, P p, I i, S j) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -274,12 +274,12 @@ namespace ranges
             template(typename Rng, typename... Rest)
             (concept InsertableRange)(Rng, Rest...),
                 requires (Rng &&rng, Rest &&... rest)
-                {
-                    ((void)ranges::insert(
+                (
+                    ranges::insert(
                         static_cast<Rng &&>(rng),
-                        static_cast<Rest &&>(rest)...), 42)
-                } &&
-                Range<Rng>()
+                        static_cast<Rest &&>(rest)...)
+                ) &&
+                Range<Rng>
         );
     }
 }

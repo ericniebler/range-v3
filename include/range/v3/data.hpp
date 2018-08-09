@@ -33,7 +33,7 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng,
                     typename Ptr = decltype(begin(std::declval<Rng &>())))(
-                    requires True(std::is_pointer<Ptr>()))
+                    requires std::is_pointer<Ptr>())
                 (static constexpr Ptr) impl(Rng &rng, detail::priority_tag<0>)
                     noexcept(noexcept(begin(rng)))
                 {
@@ -41,7 +41,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename Rng,
                     typename Ptr = detail::decay_t<decltype(data(std::declval<Rng &>()))>)(
-                    requires True(std::is_pointer<Ptr>()))
+                    requires std::is_pointer<Ptr>())
                 (static constexpr Ptr) impl(Rng &rng, detail::priority_tag<1>)
                     noexcept(noexcept(data(rng)))
                 {
@@ -49,7 +49,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename Rng,
                     typename Ptr = detail::decay_t<decltype(std::declval<Rng &>().data())>)(
-                    requires True(std::is_pointer<Ptr>()))
+                    requires std::is_pointer<Ptr>())
                 (static constexpr Ptr) impl(Rng &rng, detail::priority_tag<2>)
                     noexcept(noexcept(rng.data()))
                 {

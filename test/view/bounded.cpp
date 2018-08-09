@@ -37,7 +37,7 @@ int main()
         ::models<BoundedViewConcept>(aux::copy(rng2));
         ::models<InputIteratorConcept>(rng2.begin());
         CONCEPT_assert(Same<typename std::iterator_traits<decltype(rng2.begin())>::iterator_category,
-                            std::input_iterator_tag>());
+                            std::input_iterator_tag>);
         ::models_not<ForwardIteratorConcept>(rng2.begin());
         ::check_equal(rng2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
     }
@@ -109,9 +109,9 @@ int main()
         int const data[] = {1,2,3,4};
         auto rng = debug_input_view<int const>{data} | view::bounded;
         using Rng = decltype(rng);
-        CONCEPT_assert(InputView<Rng>());
-        CONCEPT_assert(!ForwardRange<Rng>());
-        CONCEPT_assert(BoundedRange<Rng>());
+        CONCEPT_assert(InputView<Rng>);
+        CONCEPT_assert(!ForwardRange<Rng>);
+        CONCEPT_assert(BoundedRange<Rng>);
         ::check_equal(rng, {1,2,3,4});
     }
 

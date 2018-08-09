@@ -25,13 +25,11 @@ int main()
     ::models<ForwardRangeConcept>(rng);
     ::models_not<BidirectionalRangeConcept>(rng);
     ::models_not<SizedRangeConcept>(rng);
-    ::models_not<OutputRangeConcept>(rng);
 
     ::models<BoundedRangeConcept>(crng);
     ::models<ForwardRangeConcept>(crng);
     ::models_not<BidirectionalRangeConcept>(crng);
     ::models_not<SizedRangeConcept>(crng);
-    ::models_not<OutputRangeConcept>(crng);
 
     ::models<ViewConcept>(aux::copy(rng));
     ::models<ViewConcept>(aux::copy(crng));

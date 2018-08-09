@@ -34,10 +34,10 @@ namespace ranges
         (
             template(typename I, typename O, typename T0, typename T1, typename P = ident)
             (concept ReplaceCopyable)(I, O, T0, T1, P),
-                InputIterator<I>() &&
-                OutputIterator<O, T1 const &>() &&
-                IndirectlyCopyable<I, O>() &&
-                IndirectRelation<equal_to, projected<I, P>, T0 const *>()
+                InputIterator<I> &&
+                OutputIterator<O, T1 const &> &&
+                IndirectlyCopyable<I, O> &&
+                IndirectRelation<equal_to, projected<I, P>, T0 const *>
         );
 
         /// \addtogroup group-algorithms
@@ -45,7 +45,7 @@ namespace ranges
         struct replace_copy_fn
         {
             CONCEPT_template(typename I, typename S, typename O, typename T0, typename T1, typename P = ident)(
-                requires ReplaceCopyable<I, O, T0, T1, P>() && Sentinel<S, I>())
+                requires ReplaceCopyable<I, O, T0, T1, P> && Sentinel<S, I>)
             (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {
                 for(; begin != end; ++begin, ++out)
@@ -61,7 +61,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O, typename T0, typename T1, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires ReplaceCopyable<I, O, T0, T1, P>() && Range<Rng>())
+                requires ReplaceCopyable<I, O, T0, T1, P> && Range<Rng>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
                 P proj = {}) const

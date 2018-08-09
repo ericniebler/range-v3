@@ -28,8 +28,8 @@ namespace ranges
         namespace adl_erase_detail
         {
             CONCEPT_template(typename Cont, typename I, typename S)(
-                requires LvalueContainerLike<Cont>() && ForwardIterator<I>() &&
-                    Sentinel<S, I>())
+                requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
+                    Sentinel<S, I>)
             (decltype(unwrap_reference(std::declval<Cont &>()).erase(std::declval<I>(), std::declval<S>())))
             erase(Cont &&cont, I begin, S end)
             {
@@ -39,8 +39,8 @@ namespace ranges
             struct erase_fn
             {
                 CONCEPT_template(typename Rng, typename I, typename S)(
-                    requires Range<Rng>() && ForwardIterator<I>() &&
-                        Sentinel<S, I>())
+                    requires Range<Rng> && ForwardIterator<I> &&
+                        Sentinel<S, I>)
                 (decltype(erase(std::declval<Rng>(), std::declval<I>(), std::declval<S>())))
                 operator()(Rng &&rng, I begin, S end) const
                 {
@@ -66,10 +66,10 @@ namespace ranges
             template(typename Rng, typename I, typename S)
             concept ErasableRange,
                 requires (Rng &&rng, I begin, S end)
-                {
+                (
                     ranges::erase(static_cast<Rng &&>(rng), begin, end)
-                } &&
-                Range<Rng>()
+                ) &&
+                Range<Rng>
         );
         /// @}
     }

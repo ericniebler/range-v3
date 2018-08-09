@@ -29,7 +29,7 @@ namespace ranges
         {
             /// \return `*begin(rng)`
             CONCEPT_template(typename Rng)(
-                requires ForwardRange<Rng>())
+                requires ForwardRange<Rng>)
             (constexpr range_reference_t<Rng>) operator()(Rng &&rng) const
             {
                 return *begin(rng);

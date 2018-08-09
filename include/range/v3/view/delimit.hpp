@@ -68,6 +68,14 @@ namespace ranges
 
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename Val)
+                concept Delimitable,
+                    Range<Rng> &&
+                    EqualityComparableWith<Val, range_common_reference_t<Rng>>
+            );
+
             struct delimit_impl_fn
             {
             private:
@@ -79,16 +87,8 @@ namespace ranges
                     make_pipeable(std::bind(delimit, std::placeholders::_1, std::move(value)))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename Val)
-                    concept Delimitable,
-                        Range<Rng>() &&
-                        EqualityComparableWith<Val, range_common_reference_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng, typename Val)(
-                    requires Delimitable<Rng, Val>())
+                    requires Delimitable<Rng, Val>)
                 (delimit_view<all_t<Rng>, Val>)
                 operator()(Rng &&rng, Val value) const
                 {
@@ -96,13 +96,13 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Val)(
-                    requires !Delimitable<Rng, Val>())
+                    requires not Delimitable<Rng, Val>)
                 (void)
                 operator()(Rng &&, Val) const
                 {
-                    CONCEPT_assert_msg(Range<Rng>(),
+                    CONCEPT_assert_msg(Range<Rng>,
                         "Rng must model the Range concept");
-                    CONCEPT_assert_msg(EqualityComparableWith<Val, range_common_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(EqualityComparableWith<Val, range_common_reference_t<Rng>>,
                         "The delimiting value type must be EqualityComparableWith to the "
                         "range's common reference type.");
                 }
@@ -114,7 +114,7 @@ namespace ranges
                 using view<delimit_impl_fn>::operator();
 
                 CONCEPT_template(typename I, typename Val)(
-                    requires InputIterator<I>())
+                    requires InputIterator<I>)
                 (delimit_view<iterator_range<I, unreachable>, Val>)
                 operator()(I begin, Val value) const
                 {

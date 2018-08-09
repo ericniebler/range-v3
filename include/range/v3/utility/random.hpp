@@ -104,14 +104,16 @@ namespace ranges
         (
             template(typename Gen)
             concept UniformRandomNumberGenerator,
-                requires
-                {
-                    uncvref_t<Gen>::min() ->* Same<_&&, invoke_result_t<Gen&>>(),
-                    uncvref_t<Gen>::max() ->* Same<_&&, invoke_result_t<Gen&>>()
-                } &&
-                Invocable<Gen &>() &&
-                UnsignedIntegral<invoke_result_t<Gen&>>() &&
-                True<(uncvref_t<Gen>::min() < uncvref_t<Gen>::max())>()
+                requires(int)
+                (
+                    uncvref_t<Gen>::min(),
+                    uncvref_t<Gen>::max(),
+                    concepts::requires_<Same<invoke_result_t<Gen&>, decltype(uncvref_t<Gen>::min())>>,
+                    concepts::requires_<Same<invoke_result_t<Gen&>, decltype(uncvref_t<Gen>::max())>>
+                ) &&
+                Invocable<Gen &> &&
+                UnsignedIntegral<invoke_result_t<Gen&>> &&
+                uncvref_t<Gen>::min() < uncvref_t<Gen>::max()
         );
         /// @}
 
@@ -121,7 +123,7 @@ namespace ranges
             namespace randutils
             {
                 CONCEPT_template(typename T)(
-                    requires Integral<T>())
+                    requires Integral<T>)
                 (RANGES_CXX14_CONSTEXPR std::uint32_t) crushto32(T value)
                 RANGES_INTENDED_MODULAR_ARITHMETIC
                 {
@@ -227,7 +229,7 @@ namespace ranges
                 }
 
                 CONCEPT_template(typename I)(
-                    requires UnsignedIntegral<I>())
+                    requires UnsignedIntegral<I>)
                 (constexpr I) fast_exp(I x, I power, I result = I{1})
                 {
                     return power == I{0} ? result
@@ -305,7 +307,7 @@ namespace ranges
                     std::size_t mix_rounds = 1 + (count <= 2)>
                 struct seed_seq_fe {
                 public:
-                    CONCEPT_assert(UnsignedIntegral<IntRep>());
+                    CONCEPT_assert(UnsignedIntegral<IntRep>);
                     typedef IntRep result_type;
 
                 private:
@@ -322,8 +324,8 @@ namespace ranges
                     std::array<IntRep, count> mixer_;
 
                     CONCEPT_template(typename I, typename S)(
-                        requires InputIterator<I>() && Sentinel<S, I>() &&
-                            ConvertibleTo<reference_t<I>, IntRep>())
+                        requires InputIterator<I> && Sentinel<S, I> &&
+                            ConvertibleTo<reference_t<I>, IntRep>)
                     (void) mix_entropy(I begin, S end)
                     {
                         auto hash_const = INIT_A;
@@ -363,15 +365,15 @@ namespace ranges
                     void operator=(const seed_seq_fe&)  = delete;
 
                     CONCEPT_template(typename T)(
-                        requires ConvertibleTo<T const&, IntRep>())()
+                        requires ConvertibleTo<T const&, IntRep>)()
                     seed_seq_fe(std::initializer_list<T> init)
                     {
                         seed(init.begin(), init.end());
                     }
 
                     CONCEPT_template(typename I, typename S)(
-                        requires InputIterator<I>() && Sentinel<S, I>() &&
-                            ConvertibleTo<reference_t<I>, IntRep>())()
+                        requires InputIterator<I> && Sentinel<S, I> &&
+                            ConvertibleTo<reference_t<I>, IntRep>)()
                     seed_seq_fe(I begin, S end)
                     {
                         seed(begin, end);
@@ -379,7 +381,7 @@ namespace ranges
 
                     // generating functions
                     CONCEPT_template(typename I, typename S)(
-                        requires RandomAccessIterator<I>() && Sentinel<S, I>())
+                        requires RandomAccessIterator<I> && Sentinel<S, I>)
                     (void) generate(I dest_begin, S dest_end) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
@@ -406,8 +408,8 @@ namespace ranges
                     }
 
                     CONCEPT_template(typename O)(
-                        requires WeaklyIncrementable<O>() &&
-                            IndirectlyCopyable<decltype(mixer_.begin()), O>())
+                        requires WeaklyIncrementable<O> &&
+                            IndirectlyCopyable<decltype(mixer_.begin()), O>)
                     (void) param(O dest) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
@@ -451,8 +453,8 @@ namespace ranges
                     }
 
                     CONCEPT_template(typename I, typename S)(
-                        requires InputIterator<I>() && Sentinel<S, I>() &&
-                            ConvertibleTo<reference_t<I>, IntRep>())
+                        requires InputIterator<I> && Sentinel<S, I> &&
+                            ConvertibleTo<reference_t<I>, IntRep>)
                     (void) seed(I begin, S end)
                     {
                         mix_entropy(begin, end);

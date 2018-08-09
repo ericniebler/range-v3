@@ -42,7 +42,7 @@ namespace ranges
               : storage<Ts, Is, Ts...>...
             {
                 static_assert(Same<meta::index_sequence<Is...>,
-                    meta::make_index_sequence<sizeof...(Is)>>(), "What madness is this?!?");
+                    meta::make_index_sequence<sizeof...(Is)>>, "What madness is this?!?");
 
                 compressed_tuple_() = default;
 

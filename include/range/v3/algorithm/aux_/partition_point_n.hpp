@@ -28,8 +28,8 @@ namespace ranges
         (
             template(typename I, typename C, typename P = ident)
             (concept PartitionPointable)(I, C, P),
-                ForwardIterator<I>() &&
-                IndirectPredicate<C, projected<I, P>>()
+                ForwardIterator<I> &&
+                IndirectPredicate<C, projected<I, P>>
         );
 
         namespace aux
@@ -37,7 +37,7 @@ namespace ranges
             struct partition_point_n_fn
             {
                 CONCEPT_template(typename I, typename C, typename P = ident)(
-                    requires PartitionPointable<I, C, P>())
+                    requires PartitionPointable<I, C, P>)
                 (I) operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const
                 {
                     if(0 < d)

@@ -64,9 +64,9 @@ void test_empty_set()
     CONCEPT_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_assert(RandomAccessView<Rng>());
-    CONCEPT_assert(BoundedRange<Rng>());
-    CONCEPT_assert(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>);
+    CONCEPT_assert(BoundedRange<Rng>);
+    CONCEPT_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
     CHECK(empty(rng));
 
@@ -105,9 +105,9 @@ void test_empty_range()
     CONCEPT_assert(range_cardinality<Rng>::value ==
         static_cast<cardinality>(0));
 
-    CONCEPT_assert(RandomAccessView<Rng>());
-    CONCEPT_assert(BoundedRange<Rng>());
-    CONCEPT_assert(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>);
+    CONCEPT_assert(BoundedRange<Rng>);
+    CONCEPT_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
 
     CONCEPT_assert(std::is_same<
@@ -154,13 +154,13 @@ void test_bug_823()
 {
     // https://github.com/ericniebler/range-v3/issues/823
     auto three = ranges::view::iota(0) | ranges::view::take_exactly(3);
-    CONCEPT_assert(ranges::RandomAccessView<decltype(three)>());
-    CONCEPT_assert(!ranges::RandomAccessView<const decltype(three)>());
+    CONCEPT_assert(ranges::RandomAccessView<decltype(three)>);
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(three)>);
 
     auto prod = ranges::view::cartesian_product(three, three);
-    CONCEPT_assert(ranges::RandomAccessView<decltype(prod)>());
-    CONCEPT_assert(!ranges::RandomAccessView<const decltype(prod)>());
-    CONCEPT_assert(ranges::SizedRange<decltype(prod)>());
+    CONCEPT_assert(ranges::RandomAccessView<decltype(prod)>);
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(prod)>);
+    CONCEPT_assert(ranges::SizedRange<decltype(prod)>);
     CHECK(ranges::size(prod) == 9u);
 
     {
@@ -173,8 +173,8 @@ void test_bug_823()
     }
 
     auto twoD = prod | ranges::view::chunk(3);
-    CONCEPT_assert(ranges::RandomAccessView<decltype(twoD)>());
-    CONCEPT_assert(!ranges::RandomAccessView<const decltype(twoD)>());
+    CONCEPT_assert(ranges::RandomAccessView<decltype(twoD)>);
+    CONCEPT_assert(!ranges::RandomAccessView<const decltype(twoD)>);
 
     {
         int i = 0;
@@ -213,9 +213,9 @@ int main()
         range_cardinality<decltype(some_ints)>::value *
         range_cardinality<decltype(some_strings)>::value);
 
-    CONCEPT_assert(RandomAccessView<Rng>());
-    CONCEPT_assert(BoundedRange<Rng>());
-    CONCEPT_assert(SizedRange<Rng>());
+    CONCEPT_assert(RandomAccessView<Rng>);
+    CONCEPT_assert(BoundedRange<Rng>);
+    CONCEPT_assert(SizedRange<Rng>);
     CHECK(size(rng) == size(some_ints) * size(some_strings));
 
     CONCEPT_assert(std::is_same<

@@ -103,7 +103,7 @@ namespace ranges
             public:
                 // Advance a certain number of steps:
                 CONCEPT_template(typename I)(
-                    requires Iterator<I>())
+                    requires Iterator<I>)
                 (RANGES_CXX14_CONSTEXPR
                 void) operator()(I &i, difference_type_t<I> n) const
                 {
@@ -113,14 +113,14 @@ namespace ranges
                 }
                 // Advance to a certain position:
                 CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I>() && Assignable<I&, S>())
+                    requires Sentinel<S, I> && Assignable<I&, S>)
                 (RANGES_CXX14_CONSTEXPR
                 void) operator()(I &i, S s) const
                 {
                     i = std::move(s);
                 }
                 CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I>() && !Assignable<I&, S>())
+                    requires Sentinel<S, I> && !Assignable<I&, S>)
                 (RANGES_CXX14_CONSTEXPR
                 void) operator()(I &i, S s) const
                 {
@@ -128,7 +128,7 @@ namespace ranges
                 }
                 // Advance a certain number of times, with a bound:
                 CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I>())
+                    requires Sentinel<S, I>)
                 (RANGES_CXX14_CONSTEXPR
                 difference_type_t<I>) operator()(I &it, difference_type_t<I> n, S bound) const
                 {
@@ -191,7 +191,7 @@ namespace ranges
             D advance_fn::bounded_(I &it, D n, S bound, sized_sentinel_tag,
                 Concept)
             {
-                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S> || 0 <= n));
                 D d = bound - it;
                 RANGES_EXPECT(0 <= n ? 0 <= d : 0 >= d);
                 if(0 <= n ? n >= d : n <= d)
@@ -207,14 +207,14 @@ namespace ranges
         struct next_fn
         {
             CONCEPT_template(typename I)(
-                requires Iterator<I>())
+                requires Iterator<I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it) const
             {
                 return ++it;
             }
             CONCEPT_template(typename I)(
-                requires Iterator<I>())
+                requires Iterator<I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it, difference_type_t<I> n) const
             {
@@ -222,7 +222,7 @@ namespace ranges
                 return it;
             }
             CONCEPT_template(typename I, typename S)(
-                requires Sentinel<S, I>())
+                requires Sentinel<S, I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it, S s) const
             {
@@ -230,7 +230,7 @@ namespace ranges
                 return it;
             }
             CONCEPT_template(typename I, typename S)(
-                requires Sentinel<S, I>())
+                requires Sentinel<S, I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it, difference_type_t<I> n, S bound) const
             {
@@ -246,7 +246,7 @@ namespace ranges
         struct prev_fn
         {
             CONCEPT_template(typename I)(
-                requires BidirectionalIterator<I>())
+                requires BidirectionalIterator<I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it, difference_type_t<I> n = 1) const
             {
@@ -254,7 +254,7 @@ namespace ranges
                 return it;
             }
             CONCEPT_template(typename I)(
-                requires BidirectionalIterator<I>())
+                requires BidirectionalIterator<I>)
             (RANGES_CXX14_CONSTEXPR
             I) operator()(I it, difference_type_t<I> n, I bound) const
             {
@@ -271,7 +271,7 @@ namespace ranges
         {
         private:
             CONCEPT_template(typename I, typename S, typename D)(
-                requires !SizedSentinel<I, I>())
+                requires not SizedSentinel<I, I>)
             (RANGES_CXX14_CONSTEXPR
             std::pair<D, I>) impl_i(I begin, S end, D d, sentinel_tag) const
             {
@@ -280,13 +280,13 @@ namespace ranges
                 return {d, begin};
             }
             CONCEPT_template(typename I, typename S, typename D)(
-                requires SizedSentinel<I, I>())
+                requires SizedSentinel<I, I>)
             (RANGES_CXX14_CONSTEXPR
             std::pair<D, I>) impl_i(I begin, S end_, D d, sentinel_tag) const
             {
                 I end = ranges::next(begin, end_);
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S> || 0 <= n));
                 return {n + d, end};
             }
             template<typename I, typename S, typename D>
@@ -294,12 +294,12 @@ namespace ranges
             std::pair<D, I> impl_i(I begin, S end, D d, sized_sentinel_tag) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S> || 0 <= n));
                 return {n + d, ranges::next(begin, end)};
             }
         public:
             CONCEPT_template(typename I, typename S, typename D = difference_type_t<I>)(
-                requires Iterator<I>() && Sentinel<S, I>() && Integral<D>())
+                requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             (RANGES_CXX14_CONSTEXPR
             std::pair<D, I>) operator()(I begin, S end, D d = 0) const
             {
@@ -326,12 +326,12 @@ namespace ranges
             D impl_i(I begin, S end, D d, sized_sentinel_tag) const
             {
                 auto n = static_cast<D>(end - begin);
-                RANGES_EXPECT(((bool)Same<I, S>() || 0 <= n));
+                RANGES_EXPECT(((bool)Same<I, S> || 0 <= n));
                 return n + d;
             }
         public:
             CONCEPT_template(typename I, typename S, typename D = difference_type_t<I>)(
-                requires Iterator<I>() && Sentinel<S, I>() && Integral<D>())
+                requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             (RANGES_CXX14_CONSTEXPR
             D) operator()(I begin, S end, D d = 0) const
             {
@@ -373,7 +373,7 @@ namespace ranges
             }
         public:
             CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I>() && Sentinel<S, I>())
+                requires InputIterator<I> && Sentinel<S, I>)
             (RANGES_CXX14_CONSTEXPR
             int) operator()(I begin, S end, difference_type_t<I> n) const
             {
@@ -390,7 +390,7 @@ namespace ranges
         struct iter_size_fn
         {
             CONCEPT_template(typename I, typename S)(
-                requires SizedSentinel<S, I>())
+                requires SizedSentinel<S, I>)
             (RANGES_CXX14_CONSTEXPR
             size_type_t<I>) operator()(I const& begin, S end) const
             {
@@ -565,7 +565,7 @@ namespace ranges
               : sout_(&s), delim_(d)
             {}
             CONCEPT_template(typename U, typename V = meta::if_<std::is_void<T>, U, T>)(
-                requires ConvertibleTo<U, V const&>())
+                requires ConvertibleTo<U, V const&>)
             (ostream_iterator&) operator=(U &&value)
             {
                 RANGES_EXPECT(sout_);
@@ -646,7 +646,7 @@ namespace ranges
             struct reverse_cursor
             {
             private:
-                CONCEPT_assert(BidirectionalIterator<I>());
+                CONCEPT_assert(BidirectionalIterator<I>);
                 friend range_access;
                 template<typename OtherI>
                 friend struct reverse_cursor;
@@ -703,13 +703,13 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_requires(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>)
                 (RANGES_CXX14_CONSTEXPR
                 void) advance(difference_type_t<I> n)
                 {
                     it_ -= n;
                 }
-                CONCEPT_requires(SizedSentinel<I, I>())
+                CONCEPT_requires(SizedSentinel<I, I>)
                 (RANGES_CXX14_CONSTEXPR
                 difference_type_t<I>)
                 distance_to(reverse_cursor const &that) const
@@ -725,7 +725,7 @@ namespace ranges
             public:
                 reverse_cursor() = default;
                 CONCEPT_template(typename U)(
-                    requires ConvertibleTo<U, I>())
+                    requires ConvertibleTo<U, I>)
                 (RANGES_CXX14_CONSTEXPR)
                 reverse_cursor(reverse_cursor<U> const &u)
                   : it_(u.base())
@@ -745,7 +745,7 @@ namespace ranges
         struct move_iterator
         {
         private:
-            CONCEPT_assert(InputIterator<I>());
+            CONCEPT_assert(InputIterator<I>);
             I current_ = detail::value_init{};
         public:
             using iterator_type = I;
@@ -759,12 +759,12 @@ namespace ranges
               : current_(i)
             {}
             CONCEPT_template(typename O)(
-                requires ConvertibleTo<O, I>())()
+                requires ConvertibleTo<O, I>)()
             move_iterator(move_iterator<O> const &i)
               : current_(i.base())
             {}
             CONCEPT_template(typename O)(
-                requires ConvertibleTo<O, I>())
+                requires ConvertibleTo<O, I>)
             (move_iterator &)operator=(move_iterator<O> const & i)
             {
                 current_ = i.base();
@@ -784,50 +784,50 @@ namespace ranges
                 ++current_;
                 return *this;
             }
-            CONCEPT_requires(!ForwardIterator<I>())
+            CONCEPT_requires(not ForwardIterator<I>)
             (void) operator++(int)
             {
                 ++current_;
             }
-            CONCEPT_requires(ForwardIterator<I>())
+            CONCEPT_requires(ForwardIterator<I>)
             (move_iterator) operator++(int)
             {
                 return move_iterator(current_++);
             }
-            CONCEPT_requires(BidirectionalIterator<I>())
+            CONCEPT_requires(BidirectionalIterator<I>)
             (move_iterator &)operator--()
             {
                 --current_;
                 return *this;
             }
-            CONCEPT_requires(BidirectionalIterator<I>())
+            CONCEPT_requires(BidirectionalIterator<I>)
             (move_iterator) operator--(int)
             {
                 return move_iterator(current_--);
             }
-            CONCEPT_requires(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>)
             (move_iterator) operator+(difference_type n) const
             {
                 return move_iterator(current_ + n);
             }
-            CONCEPT_requires(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>)
             (move_iterator &)operator+=(difference_type n)
             {
                 current_ += n;
                 return *this;
             }
-            CONCEPT_requires(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>)
             (move_iterator) operator-(difference_type n) const
             {
                 return move_iterator(current_ - n);
             }
-            CONCEPT_requires(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>)
             (move_iterator &)operator-=(difference_type n)
             {
                 current_ -= n;
                 return *this;
             }
-            CONCEPT_requires(RandomAccessIterator<I>())
+            CONCEPT_requires(RandomAccessIterator<I>)
             (reference) operator[](difference_type n) const
             {
                 return iter_move(current_ + n);
@@ -835,61 +835,61 @@ namespace ranges
         };
 
         CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparableWith<I1, I2>())
+            requires EqualityComparableWith<I1, I2>)
         (bool) operator==(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() == y.base();
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparableWith<I1, I2>())
+            requires EqualityComparableWith<I1, I2>)
         (bool) operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(x == y);
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>)
         (bool) operator<(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() < y.base();
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>)
         (bool) operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(y < x);
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>)
         (bool) operator>(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return y < x;
         }
         CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>())
+            requires StrictTotallyOrderedWith<I1, I2>)
         (bool) operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return !(x < y);
         }
 
         CONCEPT_template(typename I1, typename I2)(
-            requires SizedSentinel<I1, I2>())
+            requires SizedSentinel<I1, I2>)
         (difference_type_t<I2>) operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
         {
             return x.base() - y.base();
         }
         CONCEPT_template(typename I)(
-            requires RandomAccessIterator<I>())
+            requires RandomAccessIterator<I>)
         (move_iterator<I>) operator+(difference_type_t<I> n, move_iterator<I> const &x)
         {
             return x + n;
         }
 
-        CONCEPT_assert(InputIterator<move_iterator<int*>>());
+        //CONCEPT_assert(InputIterator<move_iterator<int*>>);
 
         struct make_move_iterator_fn
         {
             CONCEPT_template(typename I)(
-                requires InputIterator<I>())
+                requires InputIterator<I>)
             (constexpr move_iterator<I>) operator()(I it) const
             {
                 return move_iterator<I>{detail::move(it)};
@@ -911,12 +911,12 @@ namespace ranges
               : sent_(detail::move(s))
             {}
             CONCEPT_template(typename OS)(
-                requires ConvertibleTo<OS, S>())
+                requires ConvertibleTo<OS, S>)
             (constexpr explicit) move_sentinel(move_sentinel<OS> const &that)
               : sent_(that.base())
             {}
             CONCEPT_template(typename OS)(
-                requires ConvertibleTo<OS, S>())
+                requires ConvertibleTo<OS, S>)
             (move_sentinel &)operator=(move_sentinel<OS> const &that)
             {
                 sent_ = that.base();
@@ -929,25 +929,25 @@ namespace ranges
         };
 
         CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>())
+            requires Sentinel<S, I>)
         (bool) operator==(move_iterator<I> const &i, move_sentinel<S> const &s)
         {
             return i.base() == s.base();
         }
         CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>())
+            requires Sentinel<S, I>)
         (bool) operator==(move_sentinel<S> const &s, move_iterator<S> const &i)
         {
             return s.base() == i.base();
         }
         CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>())
+            requires Sentinel<S, I>)
         (bool) operator!=(move_iterator<S> const &i, move_sentinel<S> const &s)
         {
             return i.base() != s.base();
         }
         CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>())
+            requires Sentinel<S, I>)
         (bool) operator!=(move_sentinel<S> const &s, move_iterator<S> const &i)
         {
             return s.base() != i.base();
@@ -956,14 +956,14 @@ namespace ranges
         struct make_move_sentinel_fn
         {
             CONCEPT_template(typename I)(
-                requires InputIterator<I>())
+                requires InputIterator<I>)
             (constexpr move_iterator<I>) operator()(I i) const
             {
                 return move_iterator<I>{detail::move(i)};
             }
 
             CONCEPT_template(typename S)(
-                requires Semiregular<S>() && !InputIterator<S>())
+                requires Semiregular<S> && !InputIterator<S>)
             (constexpr move_sentinel<S>) operator()(S s) const
             {
                 return move_sentinel<S>{detail::move(s)};
@@ -975,7 +975,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename I, bool IsReadable = (bool) Readable<I>()>
+            template<typename I, bool IsReadable = (bool) Readable<I>>
             struct move_into_cursor_types
             {};
 
@@ -983,7 +983,7 @@ namespace ranges
             struct move_into_cursor_types<I, true>
             {
                 using value_type = value_type_t<I>;
-                using single_pass = SinglePass<I>;
+                using single_pass = meta::bool_<(bool)SinglePass<I>>;
             };
 
             template<typename I>
@@ -1015,45 +1015,45 @@ namespace ranges
                     ++it_;
                 }
                 CONCEPT_template(typename T)(
-                    requires Writable<I, aux::move_t<T>>())
+                    requires Writable<I, aux::move_t<T>>)
                 (void) write(T &&t) noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
                 CONCEPT_template(typename T)(
-                    requires Writable<I, aux::move_t<T>>())
+                    requires Writable<I, aux::move_t<T>>)
                 (void) write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
                 {
                     *it_ = std::move(t);
                 }
-                CONCEPT_requires(Readable<I>())
+                CONCEPT_requires(Readable<I>)
                 (reference_t<I>) read() const
                     noexcept(noexcept(*std::declval<I const&>()))
                 {
                     return *it_;
                 }
-                CONCEPT_requires(InputIterator<I>())
+                CONCEPT_requires(InputIterator<I>)
                 (bool) equal(move_into_cursor const &that) const
                 {
                     return it_ == that.it_;
                 }
-                CONCEPT_requires(BidirectionalIterator<I>())
+                CONCEPT_requires(BidirectionalIterator<I>)
                 (void) prev()
                 {
                     --it_;
                 }
-                CONCEPT_requires(RandomAccessIterator<I>())
+                CONCEPT_requires(RandomAccessIterator<I>)
                 (void) advance(difference_type_t<I> n)
                 {
                     it_ += n;
                 }
-                CONCEPT_requires(SizedSentinel<I, I>())
+                CONCEPT_requires(SizedSentinel<I, I>)
                 (difference_type_t<I>) distance_to(move_into_cursor const &that) const
                 {
                     return that.it_ - it_;
                 }
                 CONCEPT_template(typename II = I)(
-                    requires Same<I, II>() && Readable<II>())
+                    requires Same<I, II> && Readable<II>)
                 (RANGES_CXX14_CONSTEXPR
                 rvalue_reference_t<II const>) move() const
                     noexcept(noexcept(iter_move(std::declval<II const&>())))

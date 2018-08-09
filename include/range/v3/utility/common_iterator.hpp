@@ -55,9 +55,9 @@ namespace ranges
 #endif
         {
         private:
-            CONCEPT_assert(Iterator<I>());
-            CONCEPT_assert(Sentinel<S, I>());
-            CONCEPT_assert(!Same<I, S>());
+            CONCEPT_assert(Iterator<I>);
+            CONCEPT_assert(Sentinel<S, I>);
+            CONCEPT_assert(!Same<I, S>);
             variant<I, S> data_;
 
             friend variant<I, S> &detail::cidata<>(common_iterator<I, S> &);
@@ -96,7 +96,7 @@ namespace ranges
                 return j;
             }
             CONCEPT_template(typename J, typename R = reference_t<J>)(
-                requires True(std::is_reference<R>()))
+                requires std::is_reference<R>())
             (static meta::_t<std::add_pointer<R>>) operator_arrow_(J const &j, long) noexcept
             {
                 auto &&r = *j;
@@ -104,7 +104,7 @@ namespace ranges
             }
             CONCEPT_template(typename J, typename V = value_type_t<J>,
                 typename R = reference_t<J>)(
-                requires Constructible<V, R>())
+                requires Constructible<V, R>)
             (static arrow_proxy_) operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j))))
             {
                 return arrow_proxy_(*j);
@@ -120,14 +120,14 @@ namespace ranges
               : data_(emplaced_index<1>, std::move(s))
             {}
             CONCEPT_template(typename I2, typename S2)(
-                requires ConvertibleTo<I2, I>() && ConvertibleTo<S2, S>())()
+                requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)()
             common_iterator(common_iterator<I2, S2> const &that)
               : data_(detail::variant_core_access::make_empty<I, S>())
             {
                 detail::cidata(that).visit_i(emplace_fn{&data_});
             }
             CONCEPT_template(typename I2, typename S2)(
-                requires ConvertibleTo<I2, I>() && ConvertibleTo<S2, S>())
+                requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)
             (common_iterator &)operator=(common_iterator<I2, S2> const &that)
             {
                 detail::cidata(that).visit_i(emplace_fn{&data_});
@@ -139,14 +139,14 @@ namespace ranges
                 *ranges::get<0>(data_)
             )
             CONCEPT_template(typename I2 = I)(
-                requires Readable<I2 const>())
+                requires Readable<I2 const>)
             (reference_t<I>) operator*() const
             RANGES_AUTO_RETURN_NOEXCEPT
             (
                 *static_cast<I2 const &>(ranges::get<0>(data_))
             )
             CONCEPT_template(typename J = I)(
-                requires Readable<J>())
+                requires Readable<J>)
             (auto) operator->() const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -157,20 +157,20 @@ namespace ranges
                 ++ranges::get<0>(data_);
                 return *this;
             }
-            CONCEPT_requires(!ForwardIterator<I>())
+            CONCEPT_requires(not ForwardIterator<I>)
             (auto) operator++(int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::get<0>(data_)++
             )
-            CONCEPT_requires(ForwardIterator<I>())
+            CONCEPT_requires(ForwardIterator<I>)
             (common_iterator) operator++(int)
             {
                 return common_iterator(ranges::get<0>(data_)++);
             }
 
 #if !RANGES_BROKEN_CPO_LOOKUP
-            CONCEPT_requires(InputIterator<I>())
+            CONCEPT_requires(InputIterator<I>)
             (friend RANGES_CXX14_CONSTEXPR
             auto) iter_move(const common_iterator& i)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -178,7 +178,7 @@ namespace ranges
                 ranges::iter_move(ranges::get<0>(detail::cidata(i)))
             )
             CONCEPT_template(typename I2, typename S2)(
-                requires IndirectlySwappable<I2, I>())
+                requires IndirectlySwappable<I2, I>)
             (friend auto) iter_swap(
                 const common_iterator& x, common_iterator<I2, S2> const &y)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -194,7 +194,7 @@ namespace ranges
         namespace _common_iterator_
         {
             CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I>())
+                requires InputIterator<I>)
             (RANGES_CXX14_CONSTEXPR
             auto) iter_move(common_iterator<I, S> const &i)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -202,7 +202,7 @@ namespace ranges
                 ranges::iter_move(ranges::get<0>(detail::cidata(i)))
             )
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2)(
-                requires IndirectlySwappable<I2, I1>())
+                requires IndirectlySwappable<I2, I1>)
             (auto) iter_swap(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -214,8 +214,8 @@ namespace ranges
 #endif
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
-            requires Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
-                !EqualityComparableWith<I1, I2>())
+            requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
+                !EqualityComparableWith<I1, I2>)
         (bool) operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
@@ -224,8 +224,8 @@ namespace ranges
         }
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
-            requires Sentinel<S1, I2>() && Sentinel<S2, I1>() &&
-                EqualityComparableWith<I1, I2>())
+            requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
+                EqualityComparableWith<I1, I2>)
         (bool) operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
@@ -236,15 +236,15 @@ namespace ranges
         }
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
-            requires Sentinel<S1, I2>() && Sentinel<S2, I1>())
+            requires Sentinel<S1, I2> && Sentinel<S2, I1>)
         (bool) operator!=(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return !(x == y);
         }
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
-            requires SizedSentinel<I1, I2>() && SizedSentinel<S1, I2>() &&
-                SizedSentinel<S2, I1>())
+            requires SizedSentinel<I1, I2> && SizedSentinel<S1, I2> &&
+                SizedSentinel<S2, I1>)
         (difference_type_t<I2>) operator-(
             common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
@@ -258,7 +258,7 @@ namespace ranges
         template<typename I, typename S>
         struct value_type<common_iterator<I, S>>
           : meta::if_c<
-                (bool) Readable<I>(),
+                (bool) Readable<I>,
                 meta::defer<value_type_t, I>,
                 meta::nil_>
         {};
@@ -266,9 +266,9 @@ namespace ranges
         template<typename I, typename S>
         struct iterator_category<common_iterator<I, S>>
           : meta::if_c<
-                (bool) InputIterator<I>(),
+                (bool) InputIterator<I>,
                 meta::if_c<
-                    (bool) ForwardIterator<I>(),
+                    (bool) ForwardIterator<I>,
                     meta::id<forward_iterator_tag>,
                     meta::id<input_iterator_tag>>,
                 meta::nil_>
@@ -277,12 +277,12 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename I, bool = (bool) InputIterator<I>()>
+            template<typename I, bool = (bool) InputIterator<I>>
             struct common_iterator_std_traits
             {
                 using iterator_category =
                     meta::if_c<
-                        (bool) ForwardIterator<I>() &&
+                        (bool) ForwardIterator<I> &&
                             std::is_reference<reference_t<I>>::value,
                         std::forward_iterator_tag,
                         std::input_iterator_tag>;

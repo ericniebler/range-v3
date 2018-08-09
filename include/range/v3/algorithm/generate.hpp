@@ -32,9 +32,9 @@ namespace ranges
         struct generate_fn
         {
             CONCEPT_template(typename O, typename S, typename F)(
-                requires Invocable<F&>() &&
-                    OutputIterator<O, invoke_result_t<F &>>() &&
-                    Sentinel<S, O>())
+                requires Invocable<F&> &&
+                    OutputIterator<O, invoke_result_t<F &>> &&
+                    Sentinel<S, O>)
             (tagged_pair<tag::out(O), tag::fun(F)>)
             operator()(O begin, S end, F fun) const
             {
@@ -44,8 +44,8 @@ namespace ranges
             }
 
             CONCEPT_template(typename Rng, typename F, typename O = iterator_t<Rng>)(
-                requires Invocable<F&>() &&
-                    OutputRange<Rng, invoke_result_t<F &>>())
+                requires Invocable<F&> &&
+                    OutputRange<Rng, invoke_result_t<F &>>)
             (tagged_pair<tag::out(safe_iterator_t<Rng>), tag::fun(F)>)
             operator()(Rng &&rng, F fun) const
             {

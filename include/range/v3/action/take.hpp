@@ -32,29 +32,29 @@ namespace ranges
         /// @{
         namespace action
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                concept TakeActionConcept,
+                    ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                    ConvertibleTo<T, range_difference_type_t<Rng>>
+            );
+
             struct take_fn
             {
             private:
                 friend action_access;
                 CONCEPT_template(typename Int)(
-                    requires Integral<Int>())
+                    requires Integral<Int>)
                 (static auto) bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(take, std::placeholders::_1, n)
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T)
-                    concept Concept,
-                        ForwardRange<Rng>() &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>() &&
-                        ConvertibleTo<T, range_difference_type_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng, typename D)(
-                    requires Concept<Rng, D>())
+                    requires TakeActionConcept<Rng, D>)
                 (Rng) operator()(Rng &&rng, D &&d) const
                 {
                     range_difference_type_t<Rng> n = d;
@@ -65,17 +65,17 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Concept<Rng, T>())
+                    requires not TakeActionConcept<Rng, T>)
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::take operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>,
                         "The object on which action::take operates must allow element removal.");
-                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
                         "The stride argument to action::take must be convertible to the range's "
                         "difference type.");
                 }

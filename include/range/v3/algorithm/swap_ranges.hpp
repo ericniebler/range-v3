@@ -32,8 +32,8 @@ namespace ranges
         struct swap_ranges_fn
         {
             CONCEPT_template(typename I1, typename S1, typename I2)(
-                requires InputIterator<I1>() && Sentinel<S1, I1>() &&
-                    InputIterator<I2>() && IndirectlySwappable<I1, I2>())
+                requires InputIterator<I1> && Sentinel<S1, I1> &&
+                    InputIterator<I2> && IndirectlySwappable<I1, I2>)
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
             operator()(I1 begin1, S1 end1, I2 begin2) const
             {
@@ -43,9 +43,9 @@ namespace ranges
             }
 
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2)(
-                requires InputIterator<I1>() && Sentinel<S1, I1>() &&
-                    InputIterator<I2>() && Sentinel<S2, I2>() &&
-                    IndirectlySwappable<I1, I2>())
+                requires InputIterator<I1> && Sentinel<S1, I1> &&
+                    InputIterator<I2> && Sentinel<S2, I2> &&
+                    IndirectlySwappable<I1, I2>)
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {
@@ -57,8 +57,8 @@ namespace ranges
             CONCEPT_template(typename Rng1, typename I2_,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2_>)(
-                requires InputRange<Rng1>() && InputIterator<I2>() &&
-                    IndirectlySwappable<I1, I2>())
+                requires InputRange<Rng1> && InputIterator<I2> &&
+                    IndirectlySwappable<I1, I2>)
             (tagged_pair<tag::in1(I1), tag::in2(I2)>)
             operator()(Rng1 &&rng1, I2_ &&begin2) const
             {
@@ -68,8 +68,8 @@ namespace ranges
             CONCEPT_template(typename Rng1, typename Rng2,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
-                requires InputRange<Rng1>() && InputRange<Rng2>() &&
-                    IndirectlySwappable<I1, I2>())
+                requires InputRange<Rng1> && InputRange<Rng2> &&
+                    IndirectlySwappable<I1, I2>)
             (tagged_pair<
                 tag::in1(safe_iterator_t<Rng1>),
                 tag::in2(safe_iterator_t<Rng2>)>)

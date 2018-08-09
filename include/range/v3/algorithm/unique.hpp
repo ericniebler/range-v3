@@ -42,7 +42,7 @@ namespace ranges
             /// \pre `C` is a model of the `Relation` concept
             ///
             CONCEPT_template(typename I, typename S, typename C = equal_to, typename P = ident)(
-                requires Sortable<I, C, P>() && Sentinel<S, I>())
+                requires Sortable<I, C, P> && Sentinel<S, I>)
             (I) operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
@@ -59,7 +59,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Sortable<I, C, P>() && Range<Rng>())
+                requires Sortable<I, C, P> && Range<Rng>)
             (safe_iterator_t<Rng>)
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {

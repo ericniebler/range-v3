@@ -23,8 +23,8 @@ struct my_reverse_view
   : ranges::view_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
-    CONCEPT_assert(ranges::BidirectionalRange<BidiRange>());
-    CONCEPT_assert(ranges::BoundedRange<BidiRange>());
+    CONCEPT_assert(ranges::BidirectionalRange<BidiRange>);
+    CONCEPT_assert(ranges::BoundedRange<BidiRange>);
     friend ranges::range_access;
     using base_iterator_t = ranges::iterator_t<BidiRange>;
 
@@ -51,12 +51,12 @@ private:
         {
             return *ranges::prev(it);
         }
-        CONCEPT_requires(ranges::RandomAccessRange<BidiRange>())
+        CONCEPT_requires(ranges::RandomAccessRange<BidiRange>)
         (void) advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
         {
             it -= n;
         }
-        CONCEPT_requires(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
+        CONCEPT_requires(ranges::SizedSentinel<base_iterator_t, base_iterator_t>)
         (ranges::range_difference_type_t<BidiRange>)
         distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {

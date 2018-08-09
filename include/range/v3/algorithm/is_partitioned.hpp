@@ -40,8 +40,8 @@ namespace ranges
         (
             template(typename I, typename C, typename P = ident)
             (concept IsPartitionedable)(I, C, P),
-                InputIterator<I>() &&
-                IndirectPredicate<C, projected<I, P>>()
+                InputIterator<I> &&
+                IndirectPredicate<C, projected<I, P>>
         );
 
         /// \addtogroup group-algorithms
@@ -49,7 +49,7 @@ namespace ranges
         struct is_partitioned_fn
         {
             CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
-                requires IsPartitionedable<I, C, P>() && Sentinel<S, I>())
+                requires IsPartitionedable<I, C, P> && Sentinel<S, I>)
             (bool) operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
@@ -63,7 +63,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires IsPartitionedable<I, C, P>() && Range<Rng>())
+                requires IsPartitionedable<I, C, P> && Range<Rng>)
             (bool) operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

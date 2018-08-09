@@ -37,8 +37,8 @@ namespace ranges
             using aux::move_fn::operator();
 
             CONCEPT_template(typename I, typename S, typename O)(
-                requires InputIterator<I>() && Sentinel<S, I>() &&
-                    WeaklyIncrementable<O>() && IndirectlyMovable<I, O>())
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    WeaklyIncrementable<O> && IndirectlyMovable<I, O>)
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I begin, S end, O out) const
             {
@@ -49,8 +49,8 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O,
                 typename I = iterator_t<Rng>)(
-                requires InputRange<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectlyMovable<I, O>())
+                requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyMovable<I, O>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out) const
             {

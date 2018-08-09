@@ -34,13 +34,13 @@ namespace ranges
         (
             template(typename I, typename O, typename C = equal_to, typename P = ident)
             (concept UniqueCopyable)(I, O, C, P),
-                InputIterator<I>() &&
-                IndirectRelation<C, projected<I, P>>() &&
-                WeaklyIncrementable<O>() &&
-                IndirectlyCopyable<I, O>() && (
-                    ForwardIterator<I>() ||
-                    ForwardIterator<O>() ||
-                    IndirectlyCopyableStorable<I, O>())
+                InputIterator<I> &&
+                IndirectRelation<C, projected<I, P>> &&
+                WeaklyIncrementable<O> &&
+                IndirectlyCopyable<I, O> && (
+                    ForwardIterator<I> ||
+                    ForwardIterator<O> ||
+                    IndirectlyCopyableStorable<I, O>)
         );
 
         /// \addtogroup group-algorithms
@@ -123,22 +123,24 @@ namespace ranges
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `Relation` concept
             CONCEPT_template(typename I, typename S, typename O, typename C = equal_to, typename P = ident)(
-                requires UniqueCopyable<I, O, C, P>() && Sentinel<S, I>())
+                requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
             (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
-                    std::move(pred), std::move(proj), iterator_tag_of<I>(), ForwardIterator<O>());
+                    std::move(pred), std::move(proj), iterator_tag_of<I>(),
+                    meta::bool_<ForwardIterator<O>>{});
             }
 
             /// \overload
             CONCEPT_template(typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires UniqueCopyable<I, O, C, P>() && Range<Rng>())
+                requires UniqueCopyable<I, O, C, P> && Range<Rng>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
-                    std::move(pred), std::move(proj), iterator_tag_of<I>(), ForwardIterator<O>());
+                    std::move(pred), std::move(proj), iterator_tag_of<I>(),
+                    meta::bool_<ForwardIterator<O>>{});
             }
         };
 

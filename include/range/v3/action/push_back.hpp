@@ -30,8 +30,8 @@ namespace ranges
         namespace adl_push_back_detail
         {
             CONCEPT_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont>() &&
-                    Constructible<range_value_type_t<Cont>, T>())
+                requires LvalueContainerLike<Cont> &&
+                    Constructible<range_value_type_t<Cont>, T>)
             (decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
                 push_back(std::declval<T>()))))
             push_back(Cont &&cont, T &&t)
@@ -40,7 +40,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename Cont, typename Rng)(
-                requires LvalueContainerLike<Cont>() && Range<Rng>())
+                requires LvalueContainerLike<Cont> && Range<Rng>)
             (decltype(static_cast<void>(ranges::insert(
                 unwrap_reference(std::declval<Cont &>()),
                 std::declval<sentinel_t<Cont>>(),
@@ -49,6 +49,19 @@ namespace ranges
             {
                 ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng &&>(rng));
             }
+
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                concept PushBackActionConcept,
+                    requires (Rng &&rng, T &&t)
+                    (
+                        push_back(rng, (T &&) t)
+                    ) &&
+                    InputRange<Rng> && (
+                        Constructible<range_value_type_t<Rng>, T> ||
+                        Range<T>)
+            );
 
             struct push_back_fn
             {
@@ -61,21 +74,8 @@ namespace ranges
                     std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T)
-                    concept Concept,
-                        requires (Rng &&rng, T &&t)
-                        {
-                            ((void)push_back(rng, (T &&) t), 42)
-                        } &&
-                        InputRange<Rng>() && (
-                            Constructible<range_value_type_t<Rng>, T>() ||
-                            Range<T>())
-                );
-
                 CONCEPT_template(typename Rng, typename T)(
-                    requires Concept<Rng, T>())
+                    requires PushBackActionConcept<Rng, T>)
                 (Rng) operator()(Rng &&rng, T &&t) const
                 {
                     push_back(rng, static_cast<T &&>(t));
@@ -84,19 +84,21 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Concept<Rng, T>())
+                    requires not PushBackActionConcept<Rng, T>)
                 (void) operator()(Rng &&rng, T &&t) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::push_back operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(meta::or_<
+                    CONCEPT_assert_msg(Or<
                         Constructible<range_value_type_t<Rng>, T>,
-                        Range<T>>(),
+                        Range<T>>,
                         "The object to be inserted with action::push_back must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");
-                    push_back(rng, (T &&) t);
+                    //push_back(rng, (T &&) t);
+                    adl_insert_detail::insert(rng, end(rng), (T &&) t);
+                    adl_insert_detail::detail::insert_impl(rng, end(rng), (T &&) t, std::true_type{});
                 }
             #endif
             };

@@ -55,9 +55,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, int&>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), int &&> ());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, int&>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), int &&>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of difference between two finite ranges should be finite!");
 
@@ -81,9 +81,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>);
 
         static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of difference of infinite ranges should be unknown!");
 
@@ -106,9 +106,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of difference between a finite range and any other range should be finite!");
 
@@ -125,9 +125,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, range_rvalue_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, range_rvalue_reference_t<decltype(i1_infinite)>>);
 
         static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of difference between an infinite and finite range should be infinite!");
 
@@ -160,15 +160,15 @@ int main()
     {
         auto res1 = view::set_difference(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, int>());
-        CONCEPT_assert(Same<range_reference_t<R1>, const int&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, const int&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R1>, int>);
+        CONCEPT_assert(Same<range_reference_t<R1>, const int&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
 
         auto res2 = view::set_difference(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>());
-        CONCEPT_assert(Same<range_reference_t<R2>, const int&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, const int&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
+        CONCEPT_assert(Same<range_reference_t<R2>, const int&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
     }
 
     // test different orderings
@@ -199,9 +199,9 @@ int main()
                                          ident()
                                         );
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, S>());
-        CONCEPT_assert(Same<range_reference_t<R1>, S&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, S&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R1>, S>);
+        CONCEPT_assert(Same<range_reference_t<R1>, S&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, S&&>);
         ::check_equal(res1, {S{-20}, S{-10}, S{3}, S{20}});
 
         auto res2 = view::set_difference(view::ints(-2, 10), s_finite,
@@ -210,9 +210,9 @@ int main()
                                          [](const S& x){ return x.val; }
                                         );
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>());
-        CONCEPT_assert(Same<range_reference_t<R2>, int>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, int> ());
+        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
+        CONCEPT_assert(Same<range_reference_t<R2>, int>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, int>);
         ::check_equal(res2, {-2, -1, 0, 2, 4, 5, 7, 9});
     }
 
@@ -241,9 +241,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, MoveOnlyString>());
-        CONCEPT_assert(Same<range_reference_t<R>, MoveOnlyString &>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+        CONCEPT_assert(Same<range_value_type_t<R>, MoveOnlyString>);
+        CONCEPT_assert(Same<range_reference_t<R>, MoveOnlyString &>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
     }
 
     // WARNING: set_difference between two infinite ranges can create infinite loops!

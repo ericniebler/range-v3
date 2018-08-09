@@ -31,7 +31,7 @@ namespace ranges
         struct fill_n_fn
         {
             CONCEPT_template(typename O, typename V)(
-                requires OutputIterator<O, V const &>())
+                requires OutputIterator<O, V const &>)
             (O) operator()(O begin, difference_type_t<O> n, V const & val) const
             {
                 RANGES_EXPECT(n >= 0);

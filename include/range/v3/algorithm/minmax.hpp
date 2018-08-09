@@ -37,8 +37,8 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>, typename V = value_type_t<I>,
                 typename R = tagged_pair<tag::min(V), tag::max(V)>)(
-                requires InputRange<Rng>() && Copyable<V>() &&
-                    IndirectRelation<C, projected<I, P>>())
+                requires InputRange<Rng> && Copyable<V> &&
+                    IndirectRelation<C, projected<I, P>>)
             (RANGES_CXX14_CONSTEXPR
             R) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
@@ -88,7 +88,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename T, typename C = ordered_less, typename P = ident)(
-                requires IndirectRelation<C, projected<const T *, P>>())
+                requires IndirectRelation<C, projected<const T *, P>>)
             (constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>)
             operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
             {

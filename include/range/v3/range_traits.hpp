@@ -27,8 +27,11 @@ namespace ranges
     inline namespace v3
     {
         /// \cond
-        template<class T>
-        struct Range;
+        namespace detail
+        {
+            template<class T>
+            struct is_range_;
+        }
         /// \endcond
 
         /// \addtogroup group-core
@@ -69,7 +72,7 @@ namespace ranges
         using safe_iterator_t =
             meta::if_<
                 std::is_lvalue_reference<Rng>,
-                meta::if_c<(bool) Range<Rng>(), iterator_t<Rng>>,
+                meta::if_c<(bool) detail::is_range_<Rng>{}, iterator_t<Rng>>,
                 dangling<iterator_t<Rng>>>;
 
         /// \cond
@@ -109,7 +112,7 @@ namespace ranges
             RANGES_DEPRECATED("range_safe_sentinel_t is deprecated") =
                 meta::if_<
                     std::is_lvalue_reference<Rng>,
-                    meta::if_c<(bool) Range<Rng>(), sentinel_t<Rng>>,
+                    meta::if_c<(bool) detail::is_range_<Rng>{}, sentinel_t<Rng>>,
                     dangling<sentinel_t<Rng>>>;
 
         // Deprecated metafunctions

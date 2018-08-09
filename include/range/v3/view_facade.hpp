@@ -43,7 +43,7 @@ namespace ranges
 
             template<typename Derived>
             using facade_sentinel_t =
-                meta::if_<
+                meta::if_c<
                     Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
                     facade_iterator_t<Derived>,
                     end_cursor_t<Derived>>;
@@ -66,10 +66,18 @@ namespace ranges
         protected:
             friend range_access;
             using view_interface<Derived, Cardinality>::derived;
+            struct view_as_cursor : Derived {
+                view_as_cursor() = default;
+                explicit view_as_cursor(Derived const& derived)
+                  : Derived(derived)
+                {}
+                explicit operator bool() = delete;
+                explicit operator bool() const = delete;
+            };
             // Default implementations
-            Derived begin_cursor() const
+            view_as_cursor begin_cursor() const
             {
-                return derived();
+                return view_as_cursor{derived()};
             }
             constexpr default_sentinel end_cursor() const
             {
@@ -82,7 +90,7 @@ namespace ranges
             /// `b`.
             /// \return `ranges::v3::basic_iterator<B>(b)`
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (detail::facade_iterator_t<D>) begin()
             {
                 return detail::facade_iterator_t<D>{
@@ -90,7 +98,7 @@ namespace ranges
             }
             /// \overload
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (detail::facade_iterator_t<D const>) begin() const
             {
                 return detail::facade_iterator_t<D const>{
@@ -103,7 +111,7 @@ namespace ranges
             /// \return `ranges::v3::basic_iterator<E>(e)` if `E` is the same
             /// as `B` computed above for `begin()`; otherwise, return `e`.
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (detail::facade_sentinel_t<D>) end()
             {
                 return static_cast<detail::facade_sentinel_t<D>>(
@@ -111,7 +119,7 @@ namespace ranges
             }
             /// \overload
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (detail::facade_sentinel_t<D const>) end() const
             {
                 return static_cast<detail::facade_sentinel_t<D const>>(

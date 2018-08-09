@@ -120,7 +120,7 @@ namespace ranges
                 {
                     cursor *pos;
                     CONCEPT_template(typename I, std::size_t N)(
-                        requires Iterator<I>())
+                        requires Iterator<I>)
                     (void) operator()(indexed_element<I, N> it) const
                     {
                         RANGES_ASSERT(it.get() != end(std::get<N>(pos->rng_->rngs_)));
@@ -132,14 +132,14 @@ namespace ranges
                 {
                     cursor *pos;
                     CONCEPT_template(typename I)(
-                        requires BidirectionalIterator<I>())
+                        requires BidirectionalIterator<I>)
                     (void) operator()(indexed_element<I, 0> it) const
                     {
                         RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                         --it.get();
                     }
                     CONCEPT_template(typename I, std::size_t N)(
-                        requires True<N != 0>() && BidirectionalIterator<I>())
+                        requires N != 0 && BidirectionalIterator<I>)
                     (void) operator()(indexed_element<I, N> it) const
                     {
                         if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
@@ -158,13 +158,13 @@ namespace ranges
                     cursor *pos;
                     difference_type n;
                     CONCEPT_template(typename I)(
-                        requires RandomAccessIterator<I>())
+                        requires RandomAccessIterator<I>)
                     (void) operator()(indexed_element<I, cranges - 1> it) const
                     {
                         ranges::advance(it.get(), n);
                     }
                     CONCEPT_template(typename I, std::size_t N)(
-                        requires RandomAccessIterator<I>())
+                        requires RandomAccessIterator<I>)
                     (void) operator()(indexed_element<I, N> it) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
@@ -183,13 +183,13 @@ namespace ranges
                     cursor *pos;
                     difference_type n;
                     CONCEPT_template(typename I)(
-                        requires RandomAccessIterator<I>())
+                        requires RandomAccessIterator<I>)
                     (void) operator()(indexed_element<I, 0> it) const
                     {
                         ranges::advance(it.get(), n);
                     }
                     CONCEPT_template(typename I, std::size_t N)(
-                        requires RandomAccessIterator<I>())
+                        requires RandomAccessIterator<I>)
                     (void) operator()(indexed_element<I, N> it) const
                     {
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
@@ -233,7 +233,7 @@ namespace ranges
             public:
                 // BUGBUG what about rvalue_reference and common_reference?
                 using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
-                using single_pass = meta::strict_or<SinglePass<iterator_t<Rngs>>...>;
+                using single_pass = meta::or_c<SinglePass<iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view_t &rng, begin_tag)
                   : rng_(&rng), its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
@@ -253,7 +253,7 @@ namespace ranges
                 {
                     its_.visit_i(next_fun{this});
                 }
-                CONCEPT_requires(EqualityComparable<decltype(its_)>())
+                CONCEPT_requires(EqualityComparable<decltype(its_)>)
                 (bool) equal(cursor const &pos) const
                 {
                     return its_ == pos.its_;
@@ -263,12 +263,12 @@ namespace ranges
                     return its_.index() == cranges - 1 &&
                         ranges::get<cranges - 1>(its_) == pos.end_;
                 }
-                CONCEPT_requires(And(BidirectionalRange<Rngs>()...))
+                CONCEPT_requires(And<BidirectionalRange<Rngs>...>)
                 (void) prev()
                 {
                     its_.visit_i(prev_fun{this});
                 }
-                CONCEPT_requires(And(RandomAccessRange<Rngs>()...))
+                CONCEPT_requires(And<RandomAccessRange<Rngs>...>)
                 (void) advance(difference_type n)
                 {
                     if(n > 0)
@@ -276,8 +276,7 @@ namespace ranges
                     else if(n < 0)
                         its_.visit_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_requires(True(meta::and_c<(bool)
-                    SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>()...>()))
+                CONCEPT_requires(And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 (difference_type) distance_to(cursor const &that) const
                 {
                     if(its_.index() <= that.its_.index())
@@ -289,18 +288,18 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<false>, sentinel<false>>
+            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>...>, cursor<false>, sentinel<false>>
             end_cursor()
             {
                 return {*this, end_tag{}};
             }
-            CONCEPT_requires(And(Range<Rngs const>()...))
+            CONCEPT_requires(And<Range<Rngs const>...>)
             (cursor<true>) begin_cursor() const
             {
                 return {*this, begin_tag{}};
             }
-            CONCEPT_requires(And(Range<Rngs const>()...))
-            (meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<true>, sentinel<true>>)
+            CONCEPT_requires(And<Range<Rngs const>...>)
+            (meta::if_<meta::and_c<(bool)BoundedRange<Rngs>...>, cursor<true>, sentinel<true>>)
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -310,19 +309,19 @@ namespace ranges
             explicit concat_view(Rngs...rngs)
               : rngs_{std::move(rngs)...}
             {}
-            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value >= 0>())
+            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value >= 0)
             (constexpr size_type_) size() const
             {
                 return static_cast<size_type_>(detail::concat_cardinality<Rngs...>::value);
             }
-            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value < 0>() &&
-                And(SizedRange<Rngs const>()...))
+            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
+                And<SizedRange<Rngs const>...>)
             (RANGES_CXX14_CONSTEXPR size_type_) size() const
             {
                 return const_cast<concat_view *>(this)->size();
             }
-            CONCEPT_requires(True<detail::concat_cardinality<Rngs...>::value < 0>() &&
-                And(SizedRange<Rngs>()...))
+            CONCEPT_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
+                And<SizedRange<Rngs>...>)
             (RANGES_CXX14_CONSTEXPR size_type_) size()
             {
                 return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
@@ -336,7 +335,7 @@ namespace ranges
                 template<typename...Rngs>
                 concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
-                    static_assert(meta::and_c<(bool)InputRange<Rngs>()...>::value,
+                    static_assert(meta::and_c<(bool)InputRange<Rngs>...>::value,
                         "Expecting Input Ranges");
                     return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }

@@ -32,12 +32,12 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>()>
+            template<typename Rng, bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>>
             class size_tracker
             {
                 range_difference_type_t<Rng> size_;
             public:
-                CONCEPT_assert(ForwardRange<Rng>() || SizedRange<Rng>());
+                CONCEPT_assert(ForwardRange<Rng> || SizedRange<Rng>);
                 size_tracker() = default;
                 size_tracker(Rng &rng)
                   : size_(ranges::distance(rng))
@@ -170,9 +170,9 @@ namespace ranges
                 return cursor<false>{*this};
             }
             CONCEPT_template(class R = Rng)(
-                requires SizedRange<R const>() ||
-                    SizedSentinel<sentinel_t<R const>, iterator_t<R const>>() ||
-                    ForwardRange<R const>())
+                requires SizedRange<R const> ||
+                    SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
+                    ForwardRange<R const>)
             (cursor<true>) begin_cursor() const
             {
                 return cursor<true>{*this};
@@ -190,27 +190,27 @@ namespace ranges
 
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename URNG)
+                concept Constraint,
+                    InputRange<Rng> &&
+                    UniformRandomNumberGenerator<URNG> &&
+                    ConvertibleTo<
+                        invoke_result_t<URNG &>,
+                        range_difference_type_t<Rng>> &&
+                    (
+                        SizedRange<Rng> ||
+                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
+                        ForwardRange<Rng>)
+            );
+
             /// Returns a random sample of a range of length `size(range)`.
             class sample_fn
             {
-                CONCEPT_def
-                (
-                    template(typename Rng, typename URNG)
-                    concept Constraint,
-                        InputRange<Rng>() &&
-                        UniformRandomNumberGenerator<URNG>() &&
-                        ConvertibleTo<
-                            invoke_result_t<URNG &>,
-                            range_difference_type_t<Rng>>() &&
-                        (
-                            SizedRange<Rng>() ||
-                            SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>() ||
-                            ForwardRange<Rng>())
-                );
-
                 friend view_access;
                 CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(
-                    requires Integral<Size>() && UniformRandomNumberGenerator<URNG>())
+                    requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
                 (static auto) bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -219,7 +219,7 @@ namespace ranges
 
             public:
                 CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
-                    requires Constraint<Rng, URNG>())
+                    requires Constraint<Rng, URNG>)
                 (sample_view<all_t<Rng>, URNG>) operator()(
                     Rng &&rng, range_difference_type_t<Rng> sample_size,
                     URNG &generator = detail::get_random_engine()) const
@@ -231,25 +231,25 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
-                    requires !Constraint<Rng, URNG>())
+                    requires not Constraint<Rng, URNG>)
                 (void) operator()(Rng &&, URNG && = URNG{}) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::sample operates must satisfy the InputRange "
                         "concept.");
-                    CONCEPT_assert_msg(UniformRandomNumberGenerator<URNG>(),
+                    CONCEPT_assert_msg(UniformRandomNumberGenerator<URNG>,
                         "The generator passed to view::sample must satisfy the "
                         "UniformRandomNumberGenerator concept.");
-                    CONCEPT_assert_msg(meta::or_<
+                    CONCEPT_assert_msg(Or<
                         SizedRange<Rng>,
                         SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
-                        ForwardRange<Rng>>(),
+                        ForwardRange<Rng>>,
                         "The underlying range for view::sample must either satisfy the SizedRange"
                         "concept, have iterator and sentinel types that satisfy the "
                         "SizedSentinel concept, or be a forward range.");
                     CONCEPT_assert_msg(ConvertibleTo<
                         invoke_result_t<URNG &>,
-                        range_difference_type_t<Rng>>(),
+                        range_difference_type_t<Rng>>,
                         "The random generator passed to view::sample has to have a return type "
                         "convertible to the base iterator difference type.");
                 }

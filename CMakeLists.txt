@@ -21,13 +21,17 @@ include(CTest)
 
 enable_testing()
 
-add_library(concepts INTERFACE)
-target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
-target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+add_definitions(-D_GLIBCXX20_CONSTEXPR=)
 
 add_library(meta INTERFACE)
 target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+
+add_library(concepts INTERFACE)
+target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
+target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
+target_compile_features(concepts INTERFACE cxx_std_14)
+target_link_libraries(concepts INTERFACE meta)
 
 add_library(range-v3 INTERFACE)
 target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)

@@ -47,8 +47,8 @@ int main()
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
     auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng2));
-    CONCEPT_assert(Same<range_value_type_t<decltype(rng2)>, int>());
-    CONCEPT_assert(Same<decltype(iter_move(begin(rng2))), int &&>());
+    CONCEPT_assert(Same<range_value_type_t<decltype(rng2)>, int>);
+    CONCEPT_assert(Same<decltype(iter_move(begin(rng2))), int &&>);
     models<BoundedViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
     models<RandomAccessViewConcept>(aux::copy(rng2));
@@ -85,8 +85,8 @@ int main()
     auto mutable_rng = view::transform(rgi, [cnt](int) mutable { return cnt++;});
     ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
     CHECK(cnt == 100);
-    CONCEPT_assert(View<decltype(mutable_rng)>());
-    CONCEPT_assert(!View<decltype(mutable_rng) const>());
+    CONCEPT_assert(View<decltype(mutable_rng)>);
+    CONCEPT_assert(!View<decltype(mutable_rng) const>);
 
     // Test iter_transform by transforming a zip view to select one element.
     {
@@ -112,9 +112,9 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, MoveOnlyString>());
-        CONCEPT_assert(Same<range_reference_t<R2>, MoveOnlyString &>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
+        CONCEPT_assert(Same<range_value_type_t<R2>, MoveOnlyString>);
+        CONCEPT_assert(Same<range_reference_t<R2>, MoveOnlyString &>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>);
     }
 
     // two range transform
@@ -124,9 +124,9 @@ int main()
 
         auto rng = view::transform(v0, v1, [](std::string& s0, std::string& s1){return std::tie(s0, s1);});
         using R = decltype(rng);
-        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string&, std::string&>>());
-        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string&, std::string&>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string&, std::string&>>);
+        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string&, std::string&>>);
 
         using T = std::tuple<std::string, std::string>;
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
@@ -146,9 +146,9 @@ int main()
 
         auto rng = view::iter_transform(v0, v1, fun);
         using R = decltype(rng);
-        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string, std::string>>());
-        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, common_tuple<std::string&&, std::string&&>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string, std::string>>);
+        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, common_tuple<std::string&&, std::string&&>>);
 
         using T = std::tuple<std::string, std::string>;
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
@@ -170,9 +170,9 @@ int main()
         auto rng = view::transform(std::move(r0), std::move(r1),
             [](std::string &s0, std::string &s1){ return std::tie(s0, s1); });
         using R = decltype(rng);
-        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string &, std::string &>>());
-        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string &, std::string &>>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string &, std::string &>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, std::tuple<std::string &, std::string &>>);
+        CONCEPT_assert(Same<range_reference_t<R>, std::tuple<std::string &, std::string &>>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string &, std::string &>>);
 
         using T = std::tuple<std::string, std::string>;
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});

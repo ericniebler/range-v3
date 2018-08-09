@@ -35,8 +35,8 @@ int main()
             int cnt = 0;
             auto mutable_rng = view::exclusive_scan(rgi, 0, [cnt](int i, int j) mutable {return i + j + cnt++;});
             ::check_equal(mutable_rng, {0, 1, 4, 9, 16, 25, 36, 49, 64, 81});
-            CONCEPT_assert(View<decltype(mutable_rng)>());
-            CONCEPT_assert(!View<decltype(mutable_rng) const>());
+            CONCEPT_assert(View<decltype(mutable_rng)>);
+            CONCEPT_assert(!View<decltype(mutable_rng) const>);
         }
     }
 

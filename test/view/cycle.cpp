@@ -31,7 +31,7 @@ void test_const_forward_range(Rng const &rng)
 {
     auto r = rng | view::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!BoundedRange<decltype(r)>{}, "");
+    static_assert(!BoundedRange<decltype(r)>, "");
     CHECK(distance(r | view::take_exactly(0)) == 0);
     CHECK(distance(r | view::take_exactly(1)) == 1);
     CHECK(distance(r | view::take_exactly(2)) == 2);
@@ -74,7 +74,7 @@ void test_const_forward_reversed_range(Rng const &rng)
 
     auto r = rng | view::reverse | view::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!BoundedRange<decltype(r)>{}, "");
+    static_assert(!BoundedRange<decltype(r)>, "");
 
     CHECK(distance(r | view::take_exactly(0)) == 0);
     CHECK(distance(r | view::take_exactly(1)) == 1);
@@ -124,9 +124,9 @@ template<typename Rng>
 void test_forward_it(Rng const &rng)
 {
     auto r = rng | view::cycle;
-    static_assert(ForwardRange<decltype(r)>{}, "");
+    static_assert(ForwardRange<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(ForwardIterator<decltype(f)>{}, "");
+    static_assert(ForwardIterator<decltype(f)>, "");
 
     CHECK((*f) == 0);
     auto n = next(f, 1);
@@ -138,9 +138,9 @@ void test_bidirectional_it(Rng const &rng)
 {
     test_forward_it(rng);
     auto r = rng | view::cycle;
-    static_assert(BidirectionalRange<decltype(r)>{}, "");
+    static_assert(BidirectionalRange<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(BidirectionalIterator<decltype(f)>{}, "");
+    static_assert(BidirectionalIterator<decltype(f)>, "");
 
     CHECK((*f) == 0);
     auto n = next(f, 1);
@@ -156,9 +156,9 @@ void test_random_access_it(Rng const &rng)
 {
     test_bidirectional_it(rng);
     auto r = rng | view::cycle;
-    static_assert(RandomAccessRange<decltype(r)>{}, "");
+    static_assert(RandomAccessRange<decltype(r)>, "");
     auto f = begin(r);
-    static_assert(RandomAccessIterator<decltype(f)>{}, "");
+    static_assert(RandomAccessIterator<decltype(f)>, "");
     auto m = begin(r) + 1;
     auto l = begin(r) + 2;
     auto f1 = begin(r) + 3;

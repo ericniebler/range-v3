@@ -48,9 +48,9 @@ namespace ranges
         (
             template(typename I, typename C, typename P = ident)
             (concept StablePartitionable)(I, C, P),
-                ForwardIterator<I>() &&
-                Permutable<I>() &&
-                IndirectPredicate<C, projected<I, P>>()
+                ForwardIterator<I> &&
+                Permutable<I> &&
+                IndirectPredicate<C, projected<I, P>>
         );
 
         /// \addtogroup group-algorithms
@@ -266,7 +266,7 @@ namespace ranges
 
         public:
             CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
-                requires StablePartitionable<I, C, P>() && Sentinel<S, I>())
+                requires StablePartitionable<I, C, P> && Sentinel<S, I>)
             (I) operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
@@ -276,7 +276,7 @@ namespace ranges
             // BUGBUG Can this be optimized if Rng has O1 size?
             CONCEPT_template(typename Rng, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires StablePartitionable<I, C, P>() && Range<Rng>())
+                requires StablePartitionable<I, C, P> && Range<Rng>)
             (safe_iterator_t<Rng>) operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

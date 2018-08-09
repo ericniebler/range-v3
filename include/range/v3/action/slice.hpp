@@ -32,33 +32,33 @@ namespace ranges
         /// @{
         namespace action
         {
-            struct slice_fn
+            CONCEPT_def
+            (
+                template(typename Rng, typename T, typename U)
+                concept SliceActionConcept,
+                    ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                    ConvertibleTo<T, range_difference_type_t<Rng>> &&
+                    ConvertibleTo<U, range_difference_type_t<Rng>>
+            );
+
+        struct slice_fn
             {
             private:
                 friend action_access;
                 CONCEPT_template(typename D)(
-                    requires Integral<D>())
+                    requires Integral<D>)
                 (static auto) bind(slice_fn slice, D from, D to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(slice, std::placeholders::_1, from, to)
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T, typename U)
-                    concept Concept,
-                        ForwardRange<Rng>() &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>() &&
-                        ConvertibleTo<T, range_difference_type_t<Rng>>() &&
-                        ConvertibleTo<U, range_difference_type_t<Rng>>()
-                );
-
                 // TODO support slice from end.
                 CONCEPT_template(typename Rng,
                     typename I = iterator_t<Rng>,
                     typename D = range_difference_type_t<Rng>)(
-                    requires Concept<Rng, D, D>())
+                    requires SliceActionConcept<Rng, D, D>)
                 (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const
                 {
@@ -70,18 +70,18 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T, typename U)(
-                    requires !Concept<Rng, T, U>())
+                    requires not SliceActionConcept<Rng, T, U>)
                 (void) operator()(Rng &&, T &&, U &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::slice operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::slice operates must allow element "
                         "removal.");
-                    CONCEPT_assert_msg(meta::and_<ConvertibleTo<T, range_difference_type_t<Rng>>,
-                            ConvertibleTo<U, range_difference_type_t<Rng>>>(),
+                    CONCEPT_assert_msg(And<ConvertibleTo<T, range_difference_type_t<Rng>>,
+                            ConvertibleTo<U, range_difference_type_t<Rng>>>,
                         "The bounds passed to action::slice must be convertible to the range's "
                         "difference type. TODO slicing from the end with 'end-2' syntax is not "
                         "supported yet, sorry!");

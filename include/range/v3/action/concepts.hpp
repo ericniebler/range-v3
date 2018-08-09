@@ -55,9 +55,9 @@ namespace ranges
         (
             template(typename T)
             concept SemiContainer,
-                ForwardRange<T>() && DefaultConstructible<uncvref_t<T>>() &&
-                Movable<uncvref_t<T>>() &&
-                !View<T>()
+                ForwardRange<T> && DefaultConstructible<uncvref_t<T>> &&
+                Movable<uncvref_t<T>> &&
+                !View<T>
         );
 
         // std::vector is a Container, std::array is not
@@ -65,11 +65,11 @@ namespace ranges
         (
             template(typename T)
             concept Container,
-                SemiContainer<T>() &&
+                SemiContainer<T> &&
                 Constructible<
                     uncvref_t<T>,
                     detail::movable_input_iterator<range_value_type_t<T>>,
-                    detail::movable_input_iterator<range_value_type_t<T>>>()
+                    detail::movable_input_iterator<range_value_type_t<T>>>
         );
 
         CONCEPT_def
@@ -77,12 +77,14 @@ namespace ranges
             template(typename C)
             concept Reservable,
                 requires (C &c, C const &cc, range_size_type_t<C> s)
-                {
-                    cc.capacity() ->* Same<_&&, range_size_type_t<C>>(),
-                    cc.max_size() ->* Same<_&&, range_size_type_t<C>>(),
-                    ((void)c.reserve(s), 42)
-                } &&
-                Container<C>() && SizedRange<C>()
+                (
+                    c.reserve(s),
+                    cc.capacity(),
+                    cc.max_size(),
+                    concepts::requires_<Same<decltype(cc.capacity()), range_size_type_t<C>>>,
+                    concepts::requires_<Same<decltype(cc.max_size()), range_size_type_t<C>>>
+                ) &&
+                Container<C> && SizedRange<C>
         );
 
         CONCEPT_def
@@ -90,31 +92,31 @@ namespace ranges
             template(typename C, typename I)
             concept ReserveAndAssignable,
                 requires (C &c, I i)
-                {
-                    ((void) c.assign(i, i), 42)
-                } &&
-                Reservable<C>() && InputIterator<I>()
+                (
+                    c.assign(i, i)
+                ) &&
+                Reservable<C> && InputIterator<I>
         );
 
         CONCEPT_def
         (
             template(typename C)
             concept RandomAccessReservable,
-                Reservable<C>() && RandomAccessRange<C>()
+                Reservable<C> && RandomAccessRange<C>
         );
 
         /// \cond
         namespace detail
         {
             CONCEPT_template(typename T)(
-                requires Container<T>())
+                requires Container<T>)
             (std::true_type) is_lvalue_container_like(T &) noexcept
             {
                 return {};
             }
 
             CONCEPT_template(typename T)(
-                requires Container<T>())
+                requires Container<T>)
             (meta::not_<std::is_rvalue_reference<T>>)
             is_lvalue_container_like(reference_wrapper<T>) noexcept
             {
@@ -122,7 +124,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename T)(
-                requires Container<T>())
+                requires Container<T>)
             (std::true_type) is_lvalue_container_like(std::reference_wrapper<T>) noexcept
             {
                 return {};
@@ -134,8 +136,12 @@ namespace ranges
         (
             template(typename T)
             concept LvalueContainerLike,
-                ForwardRange<T>() &&
-                True(detail::is_lvalue_container_like(std::declval<T>()))
+                requires (T &&t)
+                (
+                    concepts::implicitly_convertible_to<std::true_type>(
+                        detail::is_lvalue_container_like((T &&) t))
+                ) &&
+                ForwardRange<T>
         );
         /// @}
     }

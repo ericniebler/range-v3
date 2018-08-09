@@ -40,8 +40,8 @@ namespace ranges
 
             template<typename Rng>
             using caching = std::integral_constant<cache,
-                RandomAccessRange<Rng>() && SizedRange<Rng>() ? cache::none :
-                BidirectionalRange<Rng>() && BoundedRange<Rng>() ? cache::last :
+                RandomAccessRange<Rng> && SizedRange<Rng> ? cache::none :
+                BidirectionalRange<Rng> && BoundedRange<Rng> ? cache::last :
                 cache::first>;
         }
 
@@ -54,7 +54,7 @@ namespace ranges
             using uncounted_t = decltype(
                 ranges::uncounted(std::declval<iterator_t<Rng>&>()));
 
-            template<typename Rng, bool = (bool) RandomAccessRange<Rng>()>
+            template<typename Rng, bool = (bool) RandomAccessRange<Rng>>
             struct trailing
             {
                 trailing() = default;
@@ -70,7 +70,7 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>)
                 (void) prev()
                 {
                     --it_;
@@ -108,19 +108,19 @@ namespace ranges
                     caching<Rng>::value != cache::none>
             {
             public:
-                CONCEPT_assert(ForwardRange<Rng>());
+                CONCEPT_assert(ForwardRange<Rng>);
                 sv_base() = default;
                 sv_base(Rng rng, range_difference_type_t<Rng> n)
                 : sv_base::view_adaptor(std::move(rng)), n_(n)
                 {
                     RANGES_ASSERT(0 < n_);
                 }
-                CONCEPT_requires(SizedRange<Rng const>())
+                CONCEPT_requires(SizedRange<Rng const>)
                 (range_size_type_t<Rng>) size() const
                 {
                     return size_(ranges::size(this->base()));
                 }
-                CONCEPT_requires(SizedRange<Rng>() && !SizedRange<Rng const>())
+                CONCEPT_requires(SizedRange<Rng> && !SizedRange<Rng const>)
                 (range_size_type_t<Rng>) size()
                 {
                     return size_(ranges::size(this->base()));
@@ -197,13 +197,13 @@ namespace ranges
                     ++it;
                     base_t::next();
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>)
                 (void) prev(iterator_t<Rng>& it)
                 {
                     base_t::prev();
                     --it;
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>)
                 (void) advance(iterator_t<Rng>& it, range_difference_type_t<Rng> n)
                 {
                     it += n;
@@ -214,7 +214,7 @@ namespace ranges
             {
                 return {*this};
             }
-            meta::if_<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor() const
+            meta::if_c<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor() const
             {
                 return {*this};
             }
@@ -330,7 +330,7 @@ namespace ranges
             private:
                 friend view_access;
                 CONCEPT_template(typename Int)(
-                    requires Integral<Int>())
+                    requires Integral<Int>)
                 (static auto) bind(sliding_fn sliding, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -338,7 +338,7 @@ namespace ranges
                 )
             public:
                 CONCEPT_template(typename Rng)(
-                    requires ForwardRange<Rng>())
+                    requires ForwardRange<Rng>)
                 (sliding_view<all_t<Rng>>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
@@ -348,21 +348,21 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
                 CONCEPT_template(typename Int)(
-                    requires !Integral<Int>())
+                    requires not Integral<Int>)
                 (static detail::null_pipe) bind(sliding_fn, Int)
                 {
-                    CONCEPT_assert_msg(Integral<Int>(),
+                    CONCEPT_assert_msg(Integral<Int>,
                         "The object passed to view::sliding must be Integral");
                     return {};
                 }
             public:
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !(ForwardRange<Rng>() && Integral<T>()))
+                    requires not (ForwardRange<Rng> && Integral<T>))
                 (void) operator()(Rng &&, T) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The first argument to view::sliding must be a model of the ForwardRange concept");
-                    CONCEPT_assert_msg(Integral<T>(),
+                    CONCEPT_assert_msg(Integral<T>,
                         "The second argument to view::sliding must be a model of the Integral concept");
                 }
             #endif

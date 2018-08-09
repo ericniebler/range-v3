@@ -34,31 +34,30 @@ namespace ranges
         /// @{
         namespace action
         {
+            template<typename Rng>
+            using join_action_value_t_ =
+                meta::if_c<
+                    (bool) ranges::Container<range_value_type_t<Rng>>,
+                    range_value_type_t<Rng>,
+                    std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
+
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept JoinActionConcept,
+                    InputRange<Rng> &&
+                    InputRange<range_value_type_t<Rng>> &&
+                    Semiregular<join_action_value_t_<Rng>>
+            );
+
             struct join_fn
             {
-            private:
-                template<typename Rng>
-                using join_value_t =
-                    meta::if_c<
-                        (bool) ranges::Container<range_value_type_t<Rng>>(),
-                        range_value_type_t<Rng>,
-                        std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
-
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept Joinable,
-                        InputRange<Rng>() &&
-                        InputRange<range_value_type_t<Rng>>() &&
-                        Semiregular<join_value_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires Joinable<Rng>())
-                (join_value_t<Rng>) operator()(Rng &&rng) const
+                    requires JoinActionConcept<Rng>)
+                (join_action_value_t_<Rng>) operator()(Rng &&rng) const
                 {
-                    join_value_t<Rng> ret;
+                    join_action_value_t_<Rng> ret;
                     auto end = ranges::end(rng);
                     for(auto it = begin(rng); it != end; ++it)
                         push_back(ret, *it);
@@ -67,13 +66,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !Joinable<Rng>())
+                    requires not JoinActionConcept<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::join operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(InputRange<range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(InputRange<range_value_type_t<Rng>>,
                         "The Range on which action::join operates must have a value type that "
                         "models the InputRange concept.");
                 }

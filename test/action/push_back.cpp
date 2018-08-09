@@ -87,7 +87,7 @@ int main()
         ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7});
         v |= push_back(rg);
         ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7,9,8,7});
-
+    
         std::list<int> s;
         s |= push_back(
             view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));

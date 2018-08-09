@@ -37,12 +37,12 @@ namespace ranges
         (
             template(typename I, typename O0, typename O1, typename C, typename P = ident)
             (concept PartitionCopyable)(I, O0, O1, C, P),
-                InputIterator<I>() &&
-                WeaklyIncrementable<O0>() &&
-                WeaklyIncrementable<O1>() &&
-                IndirectlyCopyable<I, O0>() &&
-                IndirectlyCopyable<I, O1>() &&
-                IndirectPredicate<C, projected<I, P>>()
+                InputIterator<I> &&
+                WeaklyIncrementable<O0> &&
+                WeaklyIncrementable<O1> &&
+                IndirectlyCopyable<I, O0> &&
+                IndirectlyCopyable<I, O1> &&
+                IndirectPredicate<C, projected<I, P>>
         );
 
         /// \addtogroup group-algorithms
@@ -50,7 +50,7 @@ namespace ranges
         struct partition_copy_fn
         {
             CONCEPT_template(typename I, typename S, typename O0, typename O1, typename C, typename P = ident)(
-                requires PartitionCopyable<I, O0, O1, C, P>() && Sentinel<S, I>())
+                requires PartitionCopyable<I, O0, O1, C, P> && Sentinel<S, I>)
             (tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>)
             operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const
             {
@@ -73,7 +73,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O0, typename O1, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires PartitionCopyable<I, O0, O1, C, P>() && Range<Rng>())
+                requires PartitionCopyable<I, O0, O1, C, P> && Range<Rng>)
             (tagged_tuple<tag::in(safe_iterator_t<Rng>), tag::out1(O0), tag::out2(O1)>)
             operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
             {

@@ -86,28 +86,28 @@ namespace ranges
 
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename G)
+                concept GenerateViewConcept,
+                    Invocable<G&> &&
+                    MoveConstructible<G> &&
+                    std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
+                    Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>> &&
+                    Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>
+            );
+
             struct generate_fn
             {
-                CONCEPT_def
-                (
-                    template(typename G)
-                    concept Concept,
-                        Invocable<G&>() &&
-                        MoveConstructible<G>() &&
-                        True<std::is_object<detail::decay_t<invoke_result_t<G &>>>>() &&
-                        Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>>() &&
-                        Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>()
-                );
-
                 CONCEPT_template(typename G)(
-                    requires Concept<G>())
+                    requires GenerateViewConcept<G>)
                 (generate_view<G>) operator()(G g) const
                 {
                     return generate_view<G>{std::move(g)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename G)(
-                    requires !Concept<G>())
+                    requires not GenerateViewConcept<G>)
                 (void) operator()(G) const
                 {
                     check<G>();
@@ -115,18 +115,18 @@ namespace ranges
                 template<typename G>
                 static void check()
                 {
-                    CONCEPT_assert_msg(Invocable<G&>(),
+                    CONCEPT_assert_msg(Invocable<G&>,
                         "The function object G must be callable with no arguments.");
-                    CONCEPT_assert_msg(MoveConstructible<G>(),
+                    CONCEPT_assert_msg(MoveConstructible<G>,
                         "The function object G must be MoveConstructible.");
                     using T = invoke_result_t<G &>;
                     using D = detail::decay_t<T>;
                     CONCEPT_assert_msg(std::is_object<D>(),
                         "The return type of the function object G must decay to an object type.");
-                    CONCEPT_assert_msg(Constructible<D, T>(),
+                    CONCEPT_assert_msg(Constructible<D, T>,
                         "The decayed return type of the function object G must be Constructible from the "
                         "return type of G.");
-                    CONCEPT_assert_msg(Assignable<D&, T>(),
+                    CONCEPT_assert_msg(Assignable<D&, T>,
                         "The decayed return type of the function object G must be Assignable from the "
                         "return type of G.");
                 }

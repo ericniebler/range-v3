@@ -62,7 +62,7 @@ namespace ranges
           , private _tagged_::adl_hook<tagged<Base, Tags...>>
 #endif
         {
-            CONCEPT_assert(Same<Base, uncvref_t<Base>>());
+            CONCEPT_assert(Same<Base, uncvref_t<Base>>);
             using base_t = meta::_t<_tagged_::chain<Base, 0, Tags...>>;
 
             template<typename Other>
@@ -72,12 +72,12 @@ namespace ranges
         public:
             tagged() = default;
             using base_t::base_t;
-            CONCEPT_requires(MoveConstructible<Base>())
+            CONCEPT_requires(MoveConstructible<Base>)
             (constexpr) tagged(Base && that)
                 noexcept(std::is_nothrow_move_constructible<Base>::value)
               : base_t(detail::move(that))
             {}
-            CONCEPT_requires(CopyConstructible<Base>())
+            CONCEPT_requires(CopyConstructible<Base>)
             (constexpr) tagged(Base const &that)
                 noexcept(std::is_nothrow_copy_constructible<Base>::value)
               : base_t(that)
@@ -218,12 +218,12 @@ namespace ranges
                 getter(getter &&) = default;                                         \
                 getter(getter const &) = default;                                    \
                 using Next::Next;                                                    \
-                CONCEPT_requires(MoveConstructible<Untagged>())                      \
+                CONCEPT_requires(MoveConstructible<Untagged>)                      \
                 (constexpr) getter(Untagged && that)                                 \
                     noexcept(std::is_nothrow_move_constructible<Untagged>::value)    \
                   : Next(detail::move(that))                                         \
                 {}                                                                   \
-                CONCEPT_requires(CopyConstructible<Untagged>())                      \
+                CONCEPT_requires(CopyConstructible<Untagged>)                      \
                 (constexpr) getter(Untagged const &that)                             \
                     noexcept(std::is_nothrow_copy_constructible<Untagged>::value)    \
                   : Next(that)                                                       \

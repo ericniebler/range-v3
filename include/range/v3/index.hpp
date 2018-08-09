@@ -33,15 +33,15 @@ namespace ranges
             (
                 template(typename Rng, typename T)
                 class CompatibleDifferenceType,
-                    ConvertibleTo<T, range_difference_type_t<Rng>>()
+                    ConvertibleTo<T, range_difference_type_t<Rng>>
             );
 
             CONCEPT_def
             (
                 template(typename Rng, typename T)
                 class Indexable,
-                    RandomAccessRange<Rng>() &&
-                    CompatibleDifferenceType<Rng, T>()
+                    RandomAccessRange<Rng> &&
+                    CompatibleDifferenceType<Rng, T>
             );
         }  // namespace index_detail
         /// \endcond
@@ -53,20 +53,20 @@ namespace ranges
         {
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
-                requires RandomAccessRange<Rng>())
+                requires RandomAccessRange<Rng>)
             (RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 noexcept(noexcept(ranges::begin(rng)[n]))
             {
-                RANGES_EXPECT(!(bool)SizedRange<Rng>() || n < ranges::distance(rng));
+                RANGES_EXPECT(!(bool)SizedRange<Rng> || n < ranges::distance(rng));
                 return ranges::begin(rng)[n];
             }
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng, typename T, typename Self = index_fn,
                      typename D = range_difference_type_t<Rng>)(
-                requires RandomAccessRange<Rng>() &&
-                                  !Same<uncvref_t<T>, D>() &&
-                                  ConvertibleTo<T, D>())
+                requires RandomAccessRange<Rng> &&
+                                  !Same<uncvref_t<T>, D> &&
+                                  ConvertibleTo<T, D>)
             (RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng, T &&t) const
                 noexcept(noexcept(ranges::begin(rng)[D()]))
@@ -76,12 +76,12 @@ namespace ranges
 
             // /// \cond
             // CONCEPT_template(typename R, typename T)(
-            //     requires !index_detail::Indexable<R, T>())
+            //     requires not index_detail::Indexable<R, T>)
             // (void) operator()(R &&, T &&) const
             // {
-            //     CONCEPT_assert_msg(RandomAccessRange<R>(),
+            //     CONCEPT_assert_msg(RandomAccessRange<R>,
             //         "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-            //     CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>(),
+            //     CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
             //         "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             // }
             // /// \endcond

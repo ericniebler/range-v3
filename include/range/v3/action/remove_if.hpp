@@ -33,12 +33,21 @@ namespace ranges
         /// @{
         namespace action
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename C, typename P = ident)
+                (concept RemoveIfActionConcept)(Rng, C, P),
+                    ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                    RemovableIf<iterator_t<Rng>, C, P>
+            );
+
             struct remove_if_fn
             {
             private:
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
-                    requires !Range<C>())
+                    requires not Range<C>)
                 (static auto) bind(remove_if_fn remove_if, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -46,17 +55,8 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename C, typename P = ident)
-                    (concept Concept)(Rng, C, P),
-                        ForwardRange<Rng>() &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>() &&
-                        RemovableIf<iterator_t<Rng>, C, P>()
-                );
-
                 CONCEPT_template(typename Rng, typename C, typename P = ident)(
-                    requires Concept<Rng, C, P>())
+                    requires RemoveIfActionConcept<Rng, C, P>)
                 (Rng) operator()(Rng &&rng, C pred, P proj = P{}) const
                 {
                     auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
@@ -66,24 +66,24 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C, typename P = ident)(
-                    requires !Concept<Rng, C, P>())
+                    requires not RemoveIfActionConcept<Rng, C, P>)
                 (void) operator()(Rng &&, C &&, P && = P{}) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::remove_if operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::remove_if operates must allow element "
                         "removal.");
-                    CONCEPT_assert_msg(IndirectInvocable<P, I>(),
+                    CONCEPT_assert_msg(IndirectInvocable<P, I>,
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_assert_msg(IndirectPredicate<C, projected<I, P>>(),
+                    CONCEPT_assert_msg(IndirectPredicate<C, projected<I, P>>,
                         "The predicate passed to action::remove_if must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");
-                    CONCEPT_assert_msg(Permutable<I>(),
+                    CONCEPT_assert_msg(Permutable<I>,
                         "The iterator type of the range passed to action::remove_if must allow its "
                         "elements to be permutaed; that is, the values must be movable and the "
                         "iterator must be mutable.");

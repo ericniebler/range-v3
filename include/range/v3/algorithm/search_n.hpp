@@ -43,8 +43,8 @@ namespace ranges
         (
             template(typename I, typename V, typename C = equal_to, typename P = ident)
             (concept Searchnable)(I, V, C, P),
-                ForwardIterator<I>() &&
-                IndirectRelation<C, projected<I, P>, V const *>()
+                ForwardIterator<I> &&
+                IndirectRelation<C, projected<I, P>, V const *>
         );
 
         /// \addtogroup group-algorithms
@@ -121,13 +121,13 @@ namespace ranges
             }
         public:
             CONCEPT_template(typename I, typename S, typename V, typename C = equal_to, typename P = ident)(
-                requires Searchnable<I, V, C, P>() && Sentinel<S, I>())
+                requires Searchnable<I, V, C, P> && Sentinel<S, I>)
             (I) operator()(I begin, S end, difference_type_t<I> count, V const &val,
                 C pred = C{}, P proj = P{}) const
             {
                 if(count <= 0)
                     return begin;
-                if(SizedSentinel<S, I>())
+                if(SizedSentinel<S, I>)
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
                 else
@@ -137,14 +137,14 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Searchnable<I, V, C, P>() && Range<Rng>())
+                requires Searchnable<I, V, C, P> && Range<Rng>)
             (safe_iterator_t<Rng>)
             operator()(Rng &&rng, difference_type_t<I> count, V const &val, C pred = C{},
                 P proj = P{}) const
             {
                 if(count <= 0)
                     return begin(rng);
-                if(SizedRange<Rng>())
+                if(SizedRange<Rng>)
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);
                 else

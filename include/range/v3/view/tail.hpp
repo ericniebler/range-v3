@@ -63,13 +63,13 @@ namespace ranges
             tail_view(Rng rng)
               : rng_(static_cast<Rng &&>(rng))
             {
-                CONCEPT_assert(InputRange<Rng>());
+                CONCEPT_assert(InputRange<Rng>);
             }
             iterator begin()
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            CONCEPT_requires(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>)
             (iterator) begin() const
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
@@ -78,12 +78,12 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_requires(Range<Rng const>())
+            CONCEPT_requires(Range<Rng const>)
             (sentinel) end() const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_requires(SizedView<Rng>())
+            CONCEPT_requires(SizedView<Rng>)
             (constexpr size_type_) size() const
             {
                 return range_cardinality<Rng>::value >= 0
@@ -105,7 +105,7 @@ namespace ranges
             struct tail_fn
             {
                 CONCEPT_template(typename Rng)(
-                    requires InputRange<Rng>())
+                    requires InputRange<Rng>)
                 (meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>)
                 operator()(Rng &&rng) const
                 {
@@ -114,10 +114,10 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !InputRange<Rng>())
+                    requires not InputRange<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::tail is to operate must be a model of the "
                         "InputRange concept.");
                 }

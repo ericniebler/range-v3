@@ -37,8 +37,8 @@ namespace ranges
             using aux::copy_fn::operator();
 
             CONCEPT_template(typename I, typename S, typename O)(
-                requires InputIterator<I>() && Sentinel<S, I>() &&
-                    WeaklyIncrementable<O>() && IndirectlyCopyable<I, O>())
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             (RANGES_CXX14_CONSTEXPR
             tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I begin, S end, O out) const
@@ -49,8 +49,8 @@ namespace ranges
             }
 
             CONCEPT_template(typename Rng, typename O)(
-                requires InputRange<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>())
+                requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O>)
             (RANGES_CXX14_CONSTEXPR
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out) const

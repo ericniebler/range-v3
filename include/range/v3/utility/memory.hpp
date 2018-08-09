@@ -47,7 +47,7 @@ namespace ranges
             };
 
             CONCEPT_template(typename T, typename... Args)(
-                requires !True(std::is_array<T>()))
+                requires not std::is_array<T>())
             (std::unique_ptr<T>) make_unique(Args &&... args)
             {
                 return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
@@ -61,7 +61,7 @@ namespace ranges
         struct raw_storage_iterator
         {
         private:
-            CONCEPT_assert(OutputIterator<O, Val>());
+            CONCEPT_assert(OutputIterator<O, Val>);
             CONCEPT_assert(std::is_lvalue_reference<reference_t<O>>());
             O out_;
         public:
@@ -74,13 +74,13 @@ namespace ranges
             {
                 return *this;
             }
-            CONCEPT_requires(CopyConstructible<Val>())
+            CONCEPT_requires(CopyConstructible<Val>)
             (raw_storage_iterator &)operator=(Val const & val)
             {
                 ::new((void*) std::addressof(*out_)) Val(val);
                 return *this;
             }
-            CONCEPT_requires(MoveConstructible<Val>())
+            CONCEPT_requires(MoveConstructible<Val>)
             (raw_storage_iterator &)operator=(Val &&val)
             {
                 ::new((void*) std::addressof(*out_)) Val(std::move(val));
@@ -91,12 +91,12 @@ namespace ranges
                 ++out_;
                 return *this;
             }
-            CONCEPT_requires(!ForwardIterator<O>())
+            CONCEPT_requires(not ForwardIterator<O>)
             (void) operator++(int)
             {
                 ++out_;
             }
-            CONCEPT_requires(ForwardIterator<O>())
+            CONCEPT_requires(ForwardIterator<O>)
             (raw_storage_iterator) operator++(int)
             {
                 auto tmp = *this;
@@ -113,7 +113,7 @@ namespace ranges
         struct iterator_wrapper
         {
         private:
-            CONCEPT_assert(Iterator<I>());
+            CONCEPT_assert(Iterator<I>);
             mutable I *i_ = nullptr;
         public:
             using difference_type = difference_type_t<I>;
@@ -153,7 +153,7 @@ namespace ranges
         };
 
         CONCEPT_template(typename I)(
-            requires Iterator<I>())
+            requires Iterator<I>)
         (iterator_wrapper<I>) iter_ref(I &i)
         {
             return i;
@@ -161,7 +161,7 @@ namespace ranges
 
         template<typename I>
         struct iterator_category<iterator_wrapper<I>>
-          : meta::if_<
+          : meta::if_c<
                 InputIterator<I>,
                 meta::id<input_iterator_tag>,
                 meta::nil_>
@@ -169,7 +169,7 @@ namespace ranges
 
         template<typename I>
         struct value_type<iterator_wrapper<I>>
-          : meta::if_<
+          : meta::if_c<
                 InputIterator<I>,
                 meta::defer<value_type_t, I>,
                 meta::nil_>

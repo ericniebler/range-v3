@@ -74,8 +74,16 @@ namespace ranges
             (
                 template(typename Rng)
                 concept ViewableRange,
-                    Range<Rng>() &&
-                    (True<std::is_lvalue_reference<Rng>>() || View<uncvref_t<Rng>>())
+                    Range<Rng> &&
+                    (std::is_lvalue_reference<Rng>::value || View<uncvref_t<Rng>>)
+            );
+
+            CONCEPT_def
+            (
+                template(typename View, typename Rng, typename ...Rest)
+                (concept ViewConcept)(View, Rng, Rest...),
+                    ViewableRange<Rng> &&
+                    Invocable<View&, Rng, Rest...>
             );
 
             template<typename View>
@@ -85,17 +93,9 @@ namespace ranges
                 View view_;
                 friend pipeable_access;
 
-                CONCEPT_def
-                (
-                    template(typename Rng, typename ...Rest)
-                    (concept ViewConcept)(Rng, Rest...),
-                        ViewableRange<Rng>() &&
-                        Invocable<View&, Rng, Rest...>()
-                );
-
                 // Piping requires range arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename Vw)(
-                    requires ViewConcept<Rng>())
+                    requires ViewConcept<View, Rng>)
                 (static auto) pipe(Rng &&rng, Vw &&v)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -105,16 +105,16 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 CONCEPT_template(typename Rng, typename Vw)(
-                    requires !ViewConcept<Rng>())
+                    requires not ViewConcept<View, Rng>)
                 (static void) pipe(Rng &&, Vw &&)
                 {
-                    CONCEPT_assert_msg(Range<Rng>(),
+                    CONCEPT_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
-                    CONCEPT_assert_msg(Invocable<View&, Rng>(),
+                    CONCEPT_assert_msg(Invocable<View&, Rng>,
                         "This view is not callable with this range type.");
-                    static_assert((bool)ranges::View<Rng>() || std::is_lvalue_reference<Rng>(),
+                    static_assert((bool)ranges::View<Rng> || std::is_lvalue_reference<Rng>(),
                         "You can't pipe an rvalue container into a view. First, save the container into "
                         "a named variable, and then pipe it to the view.");
                 }
@@ -128,7 +128,7 @@ namespace ranges
 
                 // Calling directly requires View arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename...Rest)(
-                    requires ViewConcept<Rng, Rest...>())
+                    requires ViewConcept<View, Rng, Rest...>)
                 (auto) operator()(Rng &&rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (

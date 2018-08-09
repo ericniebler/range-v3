@@ -48,8 +48,8 @@ namespace ranges
                 CONCEPT_template(typename I, typename B, typename C = ordered_less, typename P = ident,
                     typename VI = iter_common_reference_t<I>,
                     typename VB = iter_common_reference_t<B>)(
-                    requires Same<VI, VB>() && IndirectlyCopyable<I, B>() &&
-                        Mergeable<B, I, I, C, P, P>())
+                    requires Same<VI, VB> && IndirectlyCopyable<I, B> &&
+                        Mergeable<B, I, I, C, P, P>)
                 (I) operator()(I begin0, difference_type_t<I> n0,
                              I begin1, difference_type_t<I> n1,
                              B buff, C r = C{}, P p = P{}) const

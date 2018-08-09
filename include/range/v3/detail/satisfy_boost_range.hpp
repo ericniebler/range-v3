@@ -41,14 +41,14 @@ namespace boost                                                                 
     template<typename... Ts>                                                    \
     struct range_mutable_iterator<                                              \
         view_name<Ts...>,                                                       \
-        ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...>>()>>         \
+        ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...>>>>           \
     {                                                                           \
         using type = ::ranges::iterator_t<view_name<Ts...>>;                    \
     };                                                                          \
     template<typename... Ts>                                                    \
     struct range_const_iterator<                                                \
         view_name<Ts...>,                                                       \
-        ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...> const>()>>   \
+        ::meta::if_c<(bool)::ranges::BoundedRange<view_name<Ts...> const>>>     \
     {                                                                           \
         using type = ::ranges::iterator_t<view_name<Ts...> const>;              \
     };                                                                          \
@@ -60,7 +60,7 @@ namespace boost                                                                 
     template<typename... Ts>                                                    \
     struct range_size<view_name<Ts...>>                                         \
       : ::meta::if_c<                                                           \
-            (bool)::ranges::BoundedRange<view_name<Ts...>>(),                   \
+            (bool)::ranges::BoundedRange<view_name<Ts...>>,                     \
             ::meta::defer<::ranges::range_size_type_t, view_name<Ts...>>,       \
             ::meta::nil_>                                                       \
     {                                                                           \
@@ -68,7 +68,7 @@ namespace boost                                                                 
     template<typename... Ts>                                                    \
     struct range_size<view_name<Ts...> const>                                   \
       : ::meta::if_c<                                                           \
-            (bool)::ranges::BoundedRange<view_name<Ts...> const>(),             \
+            (bool)::ranges::BoundedRange<view_name<Ts...> const>,               \
             ::meta::defer<::ranges::range_size_type_t, view_name<Ts...> const>, \
             ::meta::nil_>                                                       \
     {                                                                           \

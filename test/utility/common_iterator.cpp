@@ -51,14 +51,14 @@ namespace {
         {
             int i = 42;
             auto ci = ranges::common_iterator<int*, ranges::unreachable>{&i};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>());
+            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &i);
         }
         // the expression i.operator->() is well-formed
         {
             using I = ranges::basic_iterator<silly_arrow_cursor>;
             auto ci = ranges::common_iterator<I, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<I, decltype(ci.operator->())>());
+            CONCEPT_assert(ranges::Same<I, decltype(ci.operator->())>);
 #if !defined(__clang__) || !defined(__c2__) // Don't trigger VSO#364731
             CHECK(ci.operator->().operator->() == 42);
 #endif
@@ -66,13 +66,13 @@ namespace {
         // the expression *i is a glvalue [lvalue case]
         {
             auto ci = ranges::common_iterator<lvalue_iterator, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>());
+            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // the expression *i is a glvalue [xvalue case]
         {
             auto ci = ranges::common_iterator<xvalue_iterator, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>());
+            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // Otherwise, returns a proxy object
@@ -93,12 +93,12 @@ int main() {
             ranges::ForwardIterator<
                 ranges::common_iterator<
                     bidirectional_iterator<const char *>,
-                    sentinel<const char *>>>());
+                    sentinel<const char *>>>);
         CONCEPT_assert(
             !ranges::BidirectionalIterator<
                 ranges::common_iterator<
                     bidirectional_iterator<const char *>,
-                    sentinel<const char *>>>());
+                    sentinel<const char *>>>);
         CONCEPT_assert(
             std::is_same<
                 ranges::common_reference<
@@ -124,7 +124,7 @@ int main() {
                     sentinel<int*, true> >,
                 ranges::common_iterator<
                     forward_iterator<int*>,
-                    sentinel<int*, true> > >());
+                    sentinel<int*, true> > >);
         CONCEPT_assert(
             ranges::SizedSentinel<
                 ranges::common_iterator<
@@ -132,7 +132,7 @@ int main() {
                     sentinel<int*, true> >,
                 ranges::common_iterator<
                     random_access_iterator<int*>,
-                    sentinel<int*, true> > >());
+                    sentinel<int*, true> > >);
         CONCEPT_assert(
             !ranges::SizedSentinel<
                 ranges::common_iterator<
@@ -140,7 +140,7 @@ int main() {
                     sentinel<int*, false> >,
                 ranges::common_iterator<
                     random_access_iterator<int*>,
-                    sentinel<int*, false> > >());
+                    sentinel<int*, false> > >);
     }
     {
         int rgi[] {0,1,2,3,4,5,6,7,8,9};

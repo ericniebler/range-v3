@@ -30,7 +30,7 @@ int main()
     auto && rng = rgi | view::const_;
     has_type<int &>(*begin(rgi));
     has_type<int const &>(*begin(rng));
-    CONCEPT_assert(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>());
+    CONCEPT_assert(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>);
     models<BoundedViewConcept>(aux::copy(rng));
     models<SizedViewConcept>(aux::copy(rng));
     models<RandomAccessViewConcept>(aux::copy(rng));
@@ -40,7 +40,7 @@ int main()
 
     auto && rng2 = view::counted(forward_iterator<int*>(rgi), 4) | view::const_;
     has_type<int const &>(*begin(rng2));
-    CONCEPT_assert(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>());
+    CONCEPT_assert(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>);
     models<ForwardViewConcept>(aux::copy(rng2));
     models_not<BidirectionalViewConcept>(aux::copy(rng2));
     models_not<BoundedViewConcept>(aux::copy(rng2));
@@ -79,7 +79,7 @@ int main()
 
     {
         auto rng = debug_input_view<int>{rgi} | view::const_;
-        CONCEPT_assert(Same<int const&, range_reference_t<decltype(rng)>>());
+        CONCEPT_assert(Same<int const&, range_reference_t<decltype(rng)>>);
         ::check_equal(rng, rgi);
     }
 

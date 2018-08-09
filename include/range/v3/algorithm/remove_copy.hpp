@@ -34,10 +34,10 @@ namespace ranges
         (
             template(typename I, typename O, typename T, typename P = ident)
             (concept RemoveCopyable)(I, O, T, P),
-                InputIterator<I>() &&
-                WeaklyIncrementable<O>() &&
-                IndirectRelation<equal_to, projected<I, P>, T const *>() &&
-                IndirectlyCopyable<I, O>()
+                InputIterator<I> &&
+                WeaklyIncrementable<O> &&
+                IndirectRelation<equal_to, projected<I, P>, T const *> &&
+                IndirectlyCopyable<I, O>
         );
 
         /// \addtogroup group-algorithms
@@ -45,7 +45,7 @@ namespace ranges
         struct remove_copy_fn
         {
             CONCEPT_template(typename I, typename S, typename O, typename T, typename P = ident)(
-                requires RemoveCopyable<I, O, T, P>() && Sentinel<S, I>())
+                requires RemoveCopyable<I, O, T, P> && Sentinel<S, I>)
             (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end, O out, T const &val, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
@@ -62,7 +62,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires RemoveCopyable<I, O, T, P>() && InputRange<Rng>())
+                requires RemoveCopyable<I, O, T, P> && InputRange<Rng>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>) operator()(Rng &&rng, O out, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));

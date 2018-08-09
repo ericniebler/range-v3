@@ -45,17 +45,17 @@ int main()
     int cnt = 0;
     auto mutable_only = view::drop_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
     ::check_equal(mutable_only, {5,6,7,8,9});
-    CONCEPT_assert(View<decltype(mutable_only)>());
-    CONCEPT_assert(!View<decltype(mutable_only) const>());
+    CONCEPT_assert(View<decltype(mutable_only)>);
+    CONCEPT_assert(!View<decltype(mutable_only) const>);
 
     {
         // Check with move-only subview
         auto rng = debug_input_view<const int>{rgi} | view::drop_while([](int i){ return i < 4; });
         using R = decltype(rng);
-        CONCEPT_assert(InputView<R>());
-        CONCEPT_assert(!ForwardRange<R>());
-        CONCEPT_assert(!BoundedRange<R>());
-        CONCEPT_assert(Same<int const&, range_reference_t<R>>());
+        CONCEPT_assert(InputView<R>);
+        CONCEPT_assert(!ForwardRange<R>);
+        CONCEPT_assert(!BoundedRange<R>);
+        CONCEPT_assert(Same<int const&, range_reference_t<R>>);
         ::check_equal(rng, {4,5,6,7,8,9});
     }
 

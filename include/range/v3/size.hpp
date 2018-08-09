@@ -47,7 +47,7 @@ namespace ranges
                 CONCEPT_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
                     typename N = decltype(aux::copy(std::declval<R &>().size())))(
-                    requires Integral<N>())
+                    requires Integral<N>)
                 (static constexpr N) impl_(R &r, int)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -58,7 +58,7 @@ namespace ranges
                 CONCEPT_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
                     typename N = decltype(aux::copy(size(std::declval<R &>()))))(
-                    requires Integral<N>())
+                    requires Integral<N>)
                 (static constexpr N) impl_(R &r, long)
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -66,7 +66,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())))(
-                    requires ForwardIterator<I>())
+                    requires ForwardIterator<I>)
                 (static RANGES_CXX14_CONSTEXPR auto) impl_(R &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (

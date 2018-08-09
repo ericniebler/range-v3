@@ -43,8 +43,8 @@ namespace ranges
             /// \pre `F` models `Predicate<X>`, where `X` is the result type
             ///      of `Invocable<P, V>`
             CONCEPT_template(typename I, typename S, typename F, typename P = ident)(
-                requires InputIterator<I>() && Sentinel<S, I>() &&
-                    IndirectPredicate<F, projected<I, P> >())
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectPredicate<F, projected<I, P>>)
             (I) operator()(I begin, S end, F pred, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
@@ -56,8 +56,8 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename Rng, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires InputRange<Rng>() &&
-                    IndirectPredicate<F, projected<I, P>>())
+                requires InputRange<Rng> &&
+                    IndirectPredicate<F, projected<I, P>>)
             (safe_iterator_t<Rng>) operator()(Rng &&rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

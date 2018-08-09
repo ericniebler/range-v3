@@ -34,9 +34,9 @@ namespace ranges
         (
             template(typename I, typename T, typename P = ident)
             (concept Removable)(I, T, P),
-                ForwardIterator<I>() &&
-                IndirectRelation<equal_to, projected<I, P>, T const *>() &&
-                Permutable<I>()
+                ForwardIterator<I> &&
+                IndirectRelation<equal_to, projected<I, P>, T const *> &&
+                Permutable<I>
         );
 
         /// \addtogroup group-algorithms
@@ -44,7 +44,7 @@ namespace ranges
         struct remove_fn
         {
             CONCEPT_template(typename I, typename S, typename T, typename P = ident)(
-                requires Removable<I, T, P>() && Sentinel<S, I>())
+                requires Removable<I, T, P> && Sentinel<S, I>)
             (I) operator()(I begin, S end, T const &val, P proj = P{}) const
             {
                 begin = find(std::move(begin), end, val, std::ref(proj));
@@ -64,7 +64,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Removable<I, T, P>() && ForwardRange<Rng>())
+                requires Removable<I, T, P> && ForwardRange<Rng>)
             (safe_iterator_t<Rng>) operator()(Rng &&rng, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

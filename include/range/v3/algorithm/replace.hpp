@@ -32,9 +32,9 @@ namespace ranges
         (
             template(typename I, typename T0, typename T1, typename P = ident)
             (concept Replaceable)(I, T0, T1, P),
-                InputIterator<I>() &&
-                IndirectRelation<equal_to, projected<I, P>, T0 const *>() &&
-                Writable<I, T1 const &>()
+                InputIterator<I> &&
+                IndirectRelation<equal_to, projected<I, P>, T0 const *> &&
+                Writable<I, T1 const &>
         );
 
         /// \addtogroup group-algorithms
@@ -42,7 +42,7 @@ namespace ranges
         struct replace_fn
         {
             CONCEPT_template(typename I, typename S, typename T0, typename T1, typename P = ident)(
-                requires Replaceable<I, T0, T1, P>() && Sentinel<S, I>())
+                requires Replaceable<I, T0, T1, P> && Sentinel<S, I>)
             (I) operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {
                 for(; begin != end; ++begin)
@@ -53,7 +53,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename T0, typename T1, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Replaceable<I, T0, T1, P>() && Range<Rng>())
+                requires Replaceable<I, T0, T1, P> && Range<Rng>)
             (safe_iterator_t<Rng>)
             operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {

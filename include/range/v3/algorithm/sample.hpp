@@ -34,22 +34,22 @@ namespace ranges
 {
     inline namespace v3
     {
+        CONCEPT_def
+        (
+            template(typename I, typename S, typename O, typename Gen)
+            concept SampleAlgoConcept,
+                InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                IndirectlyCopyable<I, O> && UniformRandomNumberGenerator<Gen> &&
+                ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>
+        );
+
         /// \addtogroup group-algorithms
         /// @{
         class sample_fn
         {
-            CONCEPT_def
-            (
-                template(typename I, typename S, typename O, typename Gen)
-                concept Constraint,
-                    InputIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O>() && UniformRandomNumberGenerator<Gen>() &&
-                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>()
-            );
-
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
-                requires Constraint<I, S, O, Gen>())
+                requires SampleAlgoConcept<I, S, O, Gen>)
             (static tagged_pair<tag::in(I), tag::out(O)>)
             sized_impl(I first, S last, difference_type_t<I> pop_size,
                 O out, difference_type_t<I> n, Gen &&gen)
@@ -71,8 +71,8 @@ namespace ranges
         public:
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
-                requires (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
-                    Constraint<I, S, O, Gen>())
+                requires SampleAlgoConcept<I, S, O, Gen> &&
+                    (ForwardIterator<I> || SizedSentinel<S, I>))
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I first, S last, O out, difference_type_t<I> n,
                 Gen &&gen = detail::get_random_engine()) const
@@ -83,9 +83,8 @@ namespace ranges
             }
             CONCEPT_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<O>() &&
-                    !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
-                    Constraint<I, S, O, Gen>())
+                requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
+                    !(ForwardIterator<I> || SizedSentinel<S, I>) )
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I first, S last, O out, difference_type_t<I> n,
                 Gen &&gen = detail::get_random_engine()) const
@@ -115,9 +114,9 @@ namespace ranges
             }
             CONCEPT_template(typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&)(
-                requires (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
-                    (ForwardRange<ORng>() || SizedRange<ORng>()) &&
-                    Constraint<I, S, iterator_t<ORng>, Gen>())
+                requires SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
+                    (ForwardIterator<I> || SizedSentinel<S, I>) &&
+                    (ForwardRange<ORng> || SizedRange<ORng>))
             (tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)
             operator()(I first, S last, ORng &&out,
                 Gen &&gen = detail::get_random_engine()) const
@@ -128,10 +127,10 @@ namespace ranges
             }
             CONCEPT_template(typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<iterator_t<ORng>>() &&
-                    !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
-                    (ForwardRange<ORng>() || SizedRange<ORng>()) &&
-                    Constraint<I, S, iterator_t<ORng>, Gen>())
+                requires RandomAccessIterator<iterator_t<ORng>> &&
+                    SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
+                    !(ForwardIterator<I> || SizedSentinel<S, I>) &&
+                    (ForwardRange<ORng> || SizedRange<ORng>))
             (tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)
             operator()(I first, S last, ORng &&out,
                 Gen &&gen = detail::get_random_engine()) const
@@ -141,9 +140,9 @@ namespace ranges
             }
             CONCEPT_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<O>() &&
-                    !(ForwardRange<Rng>() || SizedRange<Rng>()) &&
-                    Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())
+                requires RandomAccessIterator<O> &&
+                    SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
+                    !(ForwardRange<Rng> || SizedRange<Rng>))
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
                 Gen &&gen = detail::get_random_engine()) const
@@ -153,8 +152,8 @@ namespace ranges
             }
             CONCEPT_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
-                requires (ForwardRange<Rng>() || SizedRange<Rng>()) &&
-                    Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())
+                requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
+                    (ForwardRange<Rng> || SizedRange<Rng>))
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
                 Gen &&gen = detail::get_random_engine()) const
@@ -164,11 +163,11 @@ namespace ranges
             }
             CONCEPT_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<iterator_t<ORng>>() &&
-                    !(ForwardRange<IRng>() || SizedRange<IRng>()) &&
-                    (ForwardRange<ORng>() || SizedRange<ORng>()) &&
-                    Constraint<iterator_t<IRng>, sentinel_t<IRng>,
-                        iterator_t<ORng>, Gen>())
+                requires RandomAccessIterator<iterator_t<ORng>> &&
+                    SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
+                        iterator_t<ORng>, Gen> &&
+                    !(ForwardRange<IRng> || SizedRange<IRng>) &&
+                    (ForwardRange<ORng> || SizedRange<ORng>))
             (tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>)
@@ -180,10 +179,10 @@ namespace ranges
             }
             CONCEPT_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
-                requires (ForwardRange<IRng>() || SizedRange<IRng>()) &&
-                    (ForwardRange<ORng>() || SizedRange<ORng>()) &&
-                    Constraint<iterator_t<IRng>, sentinel_t<IRng>,
-                        iterator_t<ORng>, Gen>())
+                requires SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
+                        iterator_t<ORng>, Gen> &&
+                    (ForwardRange<IRng> || SizedRange<IRng>) &&
+                    (ForwardRange<ORng> || SizedRange<ORng>))
             (tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>)

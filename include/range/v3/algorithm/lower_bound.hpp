@@ -34,7 +34,7 @@ namespace ranges
         struct lower_bound_fn
         {
             CONCEPT_template(typename I, typename S, typename V, typename C = ordered_less, typename P = ident)(
-                requires Sentinel<S, I>() && BinarySearchable<I, V, C, P>())
+                requires Sentinel<S, I> && BinarySearchable<I, V, C, P>)
             (I) operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
             {
                 return partition_point(std::move(begin), std::move(end),
@@ -43,7 +43,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename V, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Range<Rng>() && BinarySearchable<I, V, C, P>())
+                requires Range<Rng> && BinarySearchable<I, V, C, P>)
             (safe_iterator_t<Rng>) operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
             {
                 return partition_point(rng,

@@ -45,15 +45,15 @@ namespace ranges
         struct cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
-                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>
+                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>>
         {
         private:
-            CONCEPT_assert(ForwardRange<Rng>());
+            CONCEPT_assert(ForwardRange<Rng>);
             friend range_access;
             Rng rng_;
 
             using cache_t = detail::non_propagating_cache<
-                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>;
+                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>>;
 
             template<bool IsConst>
             struct cursor
@@ -116,27 +116,28 @@ namespace ranges
                     RANGES_EXPECT(it_ != end);
                     if(++it_ == end)
                     {
-                        this->set_end_(BoundedRange<Rng>());
+                        this->set_end_(meta::bool_<BoundedRange<Rng>>{});
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>())
+                CONCEPT_requires(BidirectionalRange<Rng>)
                 (void) prev()
                 {
                     if(it_ == ranges::begin(rng_->rng_))
-                        it_ = this->get_end_(BoundedRange<Rng>());
+                        it_ = this->get_end_(meta::bool_<BoundedRange<Rng>>{});
                     --it_;
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>())
+                CONCEPT_requires(RandomAccessRange<Rng>)
                 (void) advance(difference_type_ n)
                 {
                     auto const begin = ranges::begin(rng_->rng_);
-                    auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
+                    auto const end = this->get_end_(
+                        meta::bool_<BoundedRange<Rng>>{}, meta::bool_<true>{});
                     auto const d = end - begin;
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
                 }
-                CONCEPT_requires(SizedSentinel<iterator, iterator>())
+                CONCEPT_requires(SizedSentinel<iterator, iterator>)
                 (difference_type_) distance_to(cursor const &that) const
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
@@ -148,7 +149,7 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CONCEPT_requires(BoundedRange<Rng const>())
+            CONCEPT_requires(BoundedRange<Rng const>)
             (cursor<true>) begin_cursor() const
             {
                 return cursor<true>{*this};
@@ -172,13 +173,10 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<class T>
-                using Concept = ForwardRange<T>;
-
             public:
                 /// \pre <tt>!empty(rng)</tt>
                 CONCEPT_template(typename Rng)(
-                    requires Concept<Rng>())
+                    requires ForwardRange<Rng>)
                 (cycled_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
                     return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -186,10 +184,10 @@ namespace ranges
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !Concept<Rng>())
+                    requires not ForwardRange<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which view::cycle operates must be a "
                         "model of the ForwardRange concept.");
                 }

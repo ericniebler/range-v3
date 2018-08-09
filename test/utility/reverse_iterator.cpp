@@ -237,23 +237,23 @@ int main() {
 
     static_assert(
         ranges::detail::BidirectionalCursor<
-        ranges::detail::reverse_cursor<bidirectional_iterator<const char *>>>{},
+        ranges::detail::reverse_cursor<bidirectional_iterator<const char *>>>,
         "");
     static_assert(
         ranges::detail::BidirectionalCursor<
-        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>{},
+        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>,
         "");
     static_assert(
         ranges::detail::RandomAccessCursor<
-        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>{},
+        ranges::detail::reverse_cursor<random_access_iterator<const char *>>>,
         "");
     static_assert(
         ranges::BidirectionalIterator<
-            ranges::reverse_iterator<bidirectional_iterator<const char *>>>{},
+            ranges::reverse_iterator<bidirectional_iterator<const char *>>>,
         "");
     static_assert(
         ranges::RandomAccessIterator<
-            ranges::reverse_iterator<random_access_iterator<const char *>>>{},
+            ranges::reverse_iterator<random_access_iterator<const char *>>>,
         "");
   }
   { // test

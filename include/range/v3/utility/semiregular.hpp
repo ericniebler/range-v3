@@ -47,14 +47,14 @@ namespace ranges
                     this->construct_from(that.data_);
             }
             CONCEPT_template(typename U)(
-                requires !Same<uncvref_t<U>, semiregular>() &&
-                    Constructible<T, U>())
+                requires not defer::Same<uncvref_t<U>, semiregular> &&
+                    defer::Constructible<T, U>)
             (explicit constexpr) semiregular(U &&u)
                 noexcept(std::is_nothrow_constructible<T, U>::value)
               : semiregular(in_place, static_cast<U &&>(u))
             {}
             CONCEPT_template(typename... Args)(
-                requires Constructible<T, Args...>())
+                requires Constructible<T, Args...>)
             (constexpr) semiregular(in_place_t, Args &&...args)
                 noexcept(std::is_nothrow_constructible<T, Args...>::value)
               : data_(static_cast<Args &&>(args)...)
@@ -202,7 +202,7 @@ namespace ranges
         {
             semiregular() = default;
             CONCEPT_template(typename Arg)(
-                requires Constructible<ranges::reference_wrapper<T &>, Arg &>())()
+                requires Constructible<ranges::reference_wrapper<T &>, Arg &>)()
             semiregular(in_place_t, Arg &arg)
               : ranges::reference_wrapper<T &>(arg)
             {}
@@ -218,7 +218,7 @@ namespace ranges
         {
             semiregular() = default;
             CONCEPT_template(typename Arg)(
-                requires Constructible<ranges::reference_wrapper<T &&>, Arg>())()
+                requires Constructible<ranges::reference_wrapper<T &&>, Arg>)()
             semiregular(in_place_t, Arg &&arg)
               : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))
             {}
@@ -230,19 +230,19 @@ namespace ranges
 
         template<typename T>
         using semiregular_t =
-            meta::if_c<(bool) Semiregular<T>(), T, semiregular<T>>;
+            meta::if_c<(bool) Semiregular<T>, T, semiregular<T>>;
 
         template<typename T>
         using movesemiregular_t =
             meta::if_c<
-                (bool) (Movable<T>() && DefaultConstructible<T>()),
+                (bool) (Movable<T> && DefaultConstructible<T>),
                 T,
                 semiregular<T>>;
 
         template<typename T, bool IsConst = false>
         using semiregular_ref_or_val_t =
             meta::if_c<
-                (bool) Semiregular<T>(),
+                (bool) Semiregular<T>,
                 meta::if_c<IsConst, T, reference_wrapper<T>>,
                 reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
 

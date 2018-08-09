@@ -61,7 +61,7 @@ namespace
     {}
 
     template<typename Rng,
-        bool = RandomAccessRange<Rng>() || (BidirectionalRange<Rng>() && BoundedRange<Rng>())>
+        bool = RandomAccessRange<Rng> || (BidirectionalRange<Rng> && BoundedRange<Rng>)>
     struct size_compare
     {
         iterator_t<Rng> iter1_;
@@ -81,14 +81,14 @@ namespace
         Base v = view::iota(0,N);
         auto rng = v | view::sliding(K);
         using Adapted = decltype(rng);
-        test_size(rng, SizedRange<Base>());
+        test_size(rng, meta::bool_<SizedRange<Base>>{});
 
         CONCEPT_assert(Same<
             iterator_tag_of<iterator_t<Base>>,
-            iterator_tag_of<iterator_t<Adapted>>>());
+            iterator_tag_of<iterator_t<Adapted>>>);
 
         auto it = ranges::begin(rng);
-        test_bounded(rng, BoundedRange<Base>());
+        test_bounded(rng, meta::bool_<BoundedRange<Base>>{});
 
         for (auto i = 0; i <= N - K; ++i)
         {
@@ -96,7 +96,7 @@ namespace
         }
         CHECK(it == ranges::end(rng));
 
-        test_prev(rng, it, BidirectionalRange<Base>());
+        test_prev(rng, it, meta::bool_<BidirectionalRange<Base>>{});
 
         if (!ranges::v3::detail::broken_ebo)
         {
@@ -117,7 +117,7 @@ int main()
         auto rng = view::repeat(5) | view::sliding(K);
         ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
-        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>);
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 3
         // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78047
         {
@@ -155,7 +155,7 @@ int main()
         auto rng = view::iota(0, K) | view::cycle | view::sliding(K);
         ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
-        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>);
         for (auto i = 0; i < 42; ++i)
         {
             ::check_equal(*it++, {0,1,2});
@@ -171,7 +171,7 @@ int main()
         auto rng = view::iota(0,7) | view::cycle | view::sliding(K);
         //[0,1,2],[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,0],[6,0,1],...
         auto it = rng.begin();
-        CONCEPT_assert(RandomAccessIterator<decltype(it)>());
+        CONCEPT_assert(RandomAccessIterator<decltype(it)>);
         ::check_equal(*it, {0,1,2});
         ::check_equal(*next(it, 2), {2,3,4});
         ::check_equal(*next(it,16), {2,3,4});

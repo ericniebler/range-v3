@@ -30,6 +30,14 @@ namespace ranges
         /// @{
         namespace action
         {
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept ReverseActionConcept,
+                    BidirectionalRange<Rng> &&
+                    Permutable<iterator_t<Rng>>
+            );
+
             /// Reversed the source range in-place.
             struct reverse_fn
             {
@@ -37,16 +45,8 @@ namespace ranges
                 friend action_access;
 
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept Reversible,
-                        BidirectionalRange<Rng>() &&
-                        Permutable<iterator_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires Reversible<Rng>())
+                    requires ReverseActionConcept<Rng>)
                 (Rng) operator()(Rng &&rng) const
                 {
                     ranges::reverse(rng);
@@ -55,13 +55,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !Reversible<Rng>())
+                    requires not ReverseActionConcept<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(BidirectionalRange<Rng>(),
+                    CONCEPT_assert_msg(BidirectionalRange<Rng>,
                         "The object on which action::reverse operates must be a model of the "
                         "BidirectionalRange concept.");
-                    CONCEPT_assert_msg(Permutable<iterator_t<Rng>>(),
+                    CONCEPT_assert_msg(Permutable<iterator_t<Rng>>,
                         "The iterator type of the range passed to action::reverse must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");

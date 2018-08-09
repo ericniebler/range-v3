@@ -54,9 +54,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, int&>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), int &&> ());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, int&>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), int &&>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
@@ -75,9 +75,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>);
 
         static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of intersection of infinite ranges should be unknown!");
 
@@ -94,9 +94,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>());
-        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>());
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R>, int>);
+        CONCEPT_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>);
+        CONCEPT_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
@@ -110,9 +110,9 @@ int main()
 
         using R2 = decltype(res2);
 
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>());
-        CONCEPT_assert(Same<range_reference_t<R2>, range_reference_t<decltype(i1_infinite)>>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, range_rvalue_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
+        CONCEPT_assert(Same<range_reference_t<R2>, range_reference_t<decltype(i1_infinite)>>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, range_rvalue_reference_t<decltype(i1_infinite)>>);
 
         static_assert(range_cardinality<decltype(res2)>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
@@ -135,15 +135,15 @@ int main()
     {
         auto res1 = view::set_intersection(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, int>());
-        CONCEPT_assert(Same<range_reference_t<R1>, const int&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, const int&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R1>, int>);
+        CONCEPT_assert(Same<range_reference_t<R1>, const int&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
 
         auto res2 = view::set_intersection(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>());
-        CONCEPT_assert(Same<range_reference_t<R2>, const int&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, const int&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
+        CONCEPT_assert(Same<range_reference_t<R2>, const int&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
     }
 
     // test different orderings
@@ -174,9 +174,9 @@ int main()
                                            ident()
                                           );
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, S>());
-        CONCEPT_assert(Same<range_reference_t<R1>, S&>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, S&&> ());
+        CONCEPT_assert(Same<range_value_type_t<R1>, S>);
+        CONCEPT_assert(Same<range_reference_t<R1>, S&>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, S&&>);
         ::check_equal(res1, {S{1}, S{3}, S{6}, S{8}});
 
         auto res2 = view::set_intersection(view::ints(-2, 10), s_finite,
@@ -185,9 +185,9 @@ int main()
                                            [](const S& x){ return x.val; }
                                           );
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>());
-        CONCEPT_assert(Same<range_reference_t<R2>, int>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, int> ());
+        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
+        CONCEPT_assert(Same<range_reference_t<R2>, int>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, int>);
         ::check_equal(res2, {1, 3, 6, 8});
     }
 
@@ -206,9 +206,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, MoveOnlyString>());
-        CONCEPT_assert(Same<range_reference_t<R>, MoveOnlyString &>());
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+        CONCEPT_assert(Same<range_value_type_t<R>, MoveOnlyString>);
+        CONCEPT_assert(Same<range_reference_t<R>, MoveOnlyString &>);
+        CONCEPT_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
     }
 
     {

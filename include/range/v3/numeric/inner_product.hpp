@@ -33,21 +33,21 @@ namespace ranges
             template(typename I1, typename I2, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident)
             (concept InnerProductable)(I1, I2, T, BOp1, BOp2, P1, P2),
-                InputIterator<I1>() &&
-                InputIterator<I2>() &&
-                Invocable<P1&, value_type_t<I1>>() &&
-                Invocable<P2&, value_type_t<I2>>() &&
+                InputIterator<I1> &&
+                InputIterator<I2> &&
+                Invocable<P1&, value_type_t<I1>> &&
+                Invocable<P2&, value_type_t<I2>> &&
                 Invocable<
                     BOp2&,
                     invoke_result_t<P1&, value_type_t<I1>>,
-                    invoke_result_t<P2&, value_type_t<I2>>>() &&
+                    invoke_result_t<P2&, value_type_t<I2>>> &&
                 Invocable<
                     BOp1&,
                     T,
                     invoke_result_t<
                         BOp2&,
                         invoke_result_t<P1&, value_type_t<I1>>,
-                        invoke_result_t<P2&, value_type_t<I2>>>>() &&
+                        invoke_result_t<P2&, value_type_t<I2>>>> &&
                 Assignable<
                     T&,
                     invoke_result_t<
@@ -56,7 +56,7 @@ namespace ranges
                         invoke_result_t<
                             BOp2&,
                             invoke_result_t<P1&, value_type_t<I1>>,
-                            invoke_result_t<P2&, value_type_t<I2>>>>>()
+                            invoke_result_t<P2&, value_type_t<I2>>>>>
         );
 
         struct inner_product_fn
@@ -64,9 +64,9 @@ namespace ranges
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident)(
-                requires Sentinel<S1, I1>() &&
-                    Sentinel<S2, I2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
+                requires Sentinel<S1, I1> &&
+                    Sentinel<S2, I2> &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
             (T) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -78,8 +78,8 @@ namespace ranges
             CONCEPT_template(typename I1, typename S1, typename I2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident)(
-                requires Sentinel<S1, I1>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
+                requires Sentinel<S1, I1> &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
             (T) operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -91,8 +91,8 @@ namespace ranges
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>)(
-                requires Range<Rng1>() && Iterator<I2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
+                requires Range<Rng1> && Iterator<I2> &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
             (T) operator()(Rng1 &&rng1, I2Ref &&begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -104,9 +104,9 @@ namespace ranges
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
-                requires Range<Rng1>() &&
-                    Range<Rng2>() &&
-                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>())
+                requires Range<Rng1> &&
+                    Range<Rng2> &&
+                    InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
             (T) operator()(Rng1 &&rng1, Rng2 &&rng2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

@@ -116,13 +116,13 @@ namespace ranges
                 ranges::end(rng.base())
             )
             CONCEPT_template(typename I)(
-                requires EqualityComparable<I>())
+                requires EqualityComparable<I>)
             (static bool) equal(I const &it0, I const &it1)
             {
                 return it0 == it1;
             }
             CONCEPT_template(typename I)(
-                requires Iterator<I>())
+                requires Iterator<I>)
             (static reference_t<I>) read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
                 noexcept(noexcept(reference_t<I>(*it)))
@@ -130,31 +130,31 @@ namespace ranges
                 return *it;
             }
             CONCEPT_template(typename I)(
-                requires Iterator<I>())
+                requires Iterator<I>)
             (static void) next(I &it)
             {
                 ++it;
             }
             CONCEPT_template(typename I)(
-                requires BidirectionalIterator<I>())
+                requires BidirectionalIterator<I>)
             (static void) prev(I &it)
             {
                 --it;
             }
             CONCEPT_template(typename I)(
-                requires RandomAccessIterator<I>())
+                requires RandomAccessIterator<I>)
             (static void) advance(I &it, difference_type_t<I> n)
             {
                 it += n;
             }
             CONCEPT_template(typename I)(
-                requires SizedSentinel<I, I>())
+                requires SizedSentinel<I, I>)
             (static difference_type_t<I>) distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
             CONCEPT_template(typename I, typename S)(
-                requires Sentinel<S, I>())
+                requires Sentinel<S, I>)
             (static constexpr bool) empty(I const &it, S const &end)
             {
                 return it == end;
@@ -174,7 +174,15 @@ namespace ranges
             using compressed_pair<BaseSent, Adapt>::first;
             using compressed_pair<BaseSent, Adapt>::second;
         public:
+        #if __GNUC__
+            adaptor_sentinel() = default;
+            constexpr adaptor_sentinel(BaseSent sent, Adapt adapt)
+              : compressed_pair<BaseSent, Adapt>{
+                    static_cast<BaseSent &&>(sent), static_cast<Adapt &&>(adapt)}
+            {}
+        #else
             using compressed_pair<BaseSent, Adapt>::compressed_pair;
+        #endif
 
             // All sentinels into adapted ranges have a base() member for fetching
             // the underlying sentinel.
@@ -194,7 +202,7 @@ namespace ranges
             friend range_access;
             using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
             using single_pass = meta::bool_<
-                (bool)range_access::single_pass_t<Adapt>() || (bool)SinglePass<BaseIter>()>;
+                (bool)range_access::single_pass_t<Adapt>() || (bool)SinglePass<BaseIter>>;
             struct mixin
               : basic_mixin<adaptor_cursor>
             {
@@ -219,7 +227,7 @@ namespace ranges
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 static_assert(
-                    CommonReference<R &&, V &>(),
+                    CommonReference<R &&, V &>,
                     "In your adaptor, you've specified a value type that does not "
                     "share a common reference type with the return type of read.");
                 return second().read(first());
@@ -322,11 +330,11 @@ namespace ranges
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 using R = decltype(second().read(first()));
                 static_assert(
-                    CommonReference<X &&, V const &>(),
+                    CommonReference<X &&, V const &>,
                     "In your adaptor, the result of your iter_move member function does "
                     "not share a common reference with your value type.");
                 static_assert(
-                    CommonReference<R &&, X &&>(),
+                    CommonReference<R &&, X &&>,
                     "In your adaptor, the result of your iter_move member function does "
                     "not share a common reference with the result of your read member "
                     "function.");
@@ -354,7 +362,7 @@ namespace ranges
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
                 static_assert(
-                    CommonReference<X &&, V const &>(),
+                    CommonReference<X &&, V const &>,
                     "In your adaptor, you've specified a value type that does not share a common "
                     "reference type with the result of moving the result of the read member "
                     "function. Consider defining an iter_move function in your adaptor.");
@@ -368,7 +376,14 @@ namespace ranges
                 return iter_move_(42);
             }
         public:
+        #ifdef __GNUC__ // BUGBUG unknown error, testing on gcc-trunk 2018-07-04
+            adaptor_cursor() = default;
+            constexpr adaptor_cursor(BaseIter base_iter, Adapt adapt)
+              : base_t{static_cast<BaseIter &&>(base_iter), static_cast<Adapt &&>(adapt)}
+            {}
+        #else
             using base_t::base_t;
+        #endif
         };
 
         template<typename D>
@@ -377,10 +392,9 @@ namespace ranges
 
         template<typename D>
         using adaptor_sentinel_t =
-            meta::if_<
-                meta::and_<
-                    Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>>,
-                    Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>>,
+            meta::if_c<
+                Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>> &&
+                    Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>,
                 adaptor_cursor_t<D>,
                 adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 
@@ -418,7 +432,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::begin_cursor_(std::declval<D &>())))
             begin_cursor()
                 noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D &>())))
@@ -426,7 +440,7 @@ namespace ranges
                 return view_adaptor::begin_cursor_(derived());
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && Range<base_range_t const>())
+                requires Same<D, Derived> && Range<base_range_t const>)
             (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))
             begin_cursor() const
                 noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>())))
@@ -445,7 +459,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>())
+                requires Same<D, Derived>)
             (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::end_cursor_(std::declval<D &>())))
             end_cursor()
                 noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D &>())))
@@ -453,7 +467,7 @@ namespace ranges
                 return view_adaptor::end_cursor_(derived());
             }
             CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived>() && Range<base_range_t const>())
+                requires Same<D, Derived> && Range<base_range_t const>)
             (RANGES_CXX14_CONSTEXPR decltype(view_adaptor::end_cursor_(std::declval<D const &>())))
             end_cursor() const
                 noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D const &>())))

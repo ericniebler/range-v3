@@ -36,8 +36,8 @@ namespace ranges
             /// \pre `Rng` is a model of the `Range` concept
             /// \pre `C` is a model of the `BinaryPredicate` concept
             CONCEPT_template(typename I, typename S, typename C = equal_to, typename P = ident)(
-                requires ForwardIterator<I>() && Sentinel<S, I>() &&
-                    IndirectRelation<C, projected<I, P>>())
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectRelation<C, projected<I, P>>)
             (I)
             operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
@@ -53,8 +53,8 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires ForwardRange<Rng>() &&
-                    IndirectRelation<C, projected<I, P>>())
+                requires ForwardRange<Rng> &&
+                    IndirectRelation<C, projected<I, P>>)
             (safe_iterator_t<Rng>)
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {

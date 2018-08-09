@@ -37,11 +37,11 @@ int main()
     {
         auto rng = v | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_assert(RandomAccessView<R>());
-        CONCEPT_assert(!ContiguousRange<R>());
-        CONCEPT_assert(BoundedRange<R>());
-        CONCEPT_assert(SizedRange<R>());
-        CONCEPT_assert(Range<R const>());
+        CONCEPT_assert(RandomAccessView<R>);
+        CONCEPT_assert(!ContiguousRange<R>);
+        CONCEPT_assert(BoundedRange<R>);
+        CONCEPT_assert(SizedRange<R>);
+        CONCEPT_assert(Range<R const>);
         ::check_equal(rng | view::reverse,
                     {48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0});
     }
@@ -51,11 +51,11 @@ int main()
         copy(v, ostream_iterator<int>{str, " "});
         auto rng = istream<int>(str) | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_assert(InputView<R>());
-        CONCEPT_assert(!ForwardRange<R>());
-        CONCEPT_assert(!BoundedRange<R>());
-        CONCEPT_assert(!SizedRange<R>());
-        CONCEPT_assert(!Range<R const>());
+        CONCEPT_assert(InputView<R>);
+        CONCEPT_assert(!ForwardRange<R>);
+        CONCEPT_assert(!BoundedRange<R>);
+        CONCEPT_assert(!SizedRange<R>);
+        CONCEPT_assert(!Range<R const>);
         check_equal(rng, {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
     }
 
@@ -64,11 +64,11 @@ int main()
         copy(v, back_inserter(li));
         auto rng = li | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_assert(BidirectionalView<R>());
-        CONCEPT_assert(!RandomAccessRange<R>());
-        CONCEPT_assert(BoundedRange<R>());
-        CONCEPT_assert(SizedRange<R>());
-        CONCEPT_assert(Range<R const>());
+        CONCEPT_assert(BidirectionalView<R>);
+        CONCEPT_assert(!RandomAccessRange<R>);
+        CONCEPT_assert(BoundedRange<R>);
+        CONCEPT_assert(SizedRange<R>);
+        CONCEPT_assert(Range<R const>);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
         ::check_equal(rng | view::reverse,
@@ -107,11 +107,11 @@ int main()
         int const some_ints[] = {0,1,2,3,4,5,6,7};
         auto rng = debug_input_view<int const>{some_ints} | view::stride(2);
         using R = decltype(rng);
-        CONCEPT_assert(InputView<R>());
-        CONCEPT_assert(!ForwardRange<R>());
-        CONCEPT_assert(!BoundedRange<R>());
-        CONCEPT_assert(SizedRange<R>());
-        CONCEPT_assert(!Range<R const>());
+        CONCEPT_assert(InputView<R>);
+        CONCEPT_assert(!ForwardRange<R>);
+        CONCEPT_assert(!BoundedRange<R>);
+        CONCEPT_assert(SizedRange<R>);
+        CONCEPT_assert(!Range<R const>);
         ::check_equal(rng, {0,2,4,6});
     }
 
@@ -121,11 +121,11 @@ int main()
         iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
-        CONCEPT_assert(BidirectionalView<R>());
-        CONCEPT_assert(!RandomAccessRange<R>());
-        CONCEPT_assert(BoundedRange<R>());
-        CONCEPT_assert(!SizedRange<R>());
-        CONCEPT_assert(!Range<R const>());
+        CONCEPT_assert(BidirectionalView<R>);
+        CONCEPT_assert(!RandomAccessRange<R>);
+        CONCEPT_assert(BoundedRange<R>);
+        CONCEPT_assert(!SizedRange<R>);
+        CONCEPT_assert(!Range<R const>);
         CHECK((*--rng.end()) == 48);
         ::check_equal(rng,
                     {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});

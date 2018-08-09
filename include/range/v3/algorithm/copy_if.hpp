@@ -35,9 +35,9 @@ namespace ranges
         struct copy_if_fn
         {
             CONCEPT_template(typename I, typename S, typename O, typename F, typename P = ident)(
-                requires InputIterator<I>() && Sentinel<S, I>() &&
-                    WeaklyIncrementable<O>() && IndirectPredicate<F, projected<I, P> >() &&
-                    IndirectlyCopyable<I, O>())
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    WeaklyIncrementable<O> && IndirectPredicate<F, projected<I, P>> &&
+                    IndirectlyCopyable<I, O>)
             (tagged_pair<tag::in(I), tag::out(O)>)
             operator()(I begin, S end, O out, F pred, P proj = P{}) const
             {
@@ -55,8 +55,8 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename O, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires InputRange<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectPredicate<F, projected<I, P> >() && IndirectlyCopyable<I, O>())
+                requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                    IndirectPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
             (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {

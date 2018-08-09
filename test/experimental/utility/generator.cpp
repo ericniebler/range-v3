@@ -28,34 +28,38 @@
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 
+#ifdef __clang__
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
+#endif
+
 template<bool Condition>
 using maybe_sized_generator = meta::if_c<Condition,
     meta::quote<ranges::experimental::sized_generator>,
     meta::quote<ranges::experimental::generator>>;
 
+CONCEPT_def
+(
+    template(typename Rng)
+    concept CoroConcept,
+        ranges::InputRange<Rng> &&
+        (std::is_reference<ranges::range_reference_t<Rng>>::value ||
+            ranges::CopyConstructible<ranges::range_reference_t<Rng>>)
+);
+
 struct coro_fn
 {
 private:
-    CONCEPT_def
-    (
-        template(typename Rng)
-        concept Constraint,
-            ranges::InputRange<Rng>() &&
-            (ranges::True(std::is_reference<ranges::range_reference_t<Rng>>()) ||
-                ranges::CopyConstructible<ranges::range_reference_t<Rng>>())
-    );
-
     template<typename V>
     using generator_for = meta::invoke<
-        maybe_sized_generator<(bool) ranges::SizedRange<V>()>,
+        maybe_sized_generator<(bool) ranges::SizedRange<V>>,
         ranges::range_reference_t<V>,
         ranges::range_value_type_t<V>>;
 
     CONCEPT_template(typename V)(
-        requires Constraint<V>() && ranges::View<V>())
+        requires CoroConcept<V> && ranges::View<V>)
     (static generator_for<V>) impl(V v)
     {
-        if /* constexpr */ (ranges::SizedRange<V>())
+        if /* constexpr */ (ranges::SizedRange<V>)
             co_await static_cast<ranges::experimental::generator_size>(ranges::distance(v));
         auto first = ranges::begin(v);
         auto const last = ranges::end(v);
@@ -65,9 +69,9 @@ private:
 public:
     CONCEPT_template(typename Rng)(
         requires
-            !ranges::True(meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>()) &&
-            !ranges::True(meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>()) &&
-            Constraint<Rng>())
+            not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>::value &&
+            not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>::value &&
+            CoroConcept<Rng>)
     (generator_for<ranges::view::all_t<Rng>>) operator()(Rng &&rng) const
     {
         return impl(ranges::view::all(static_cast<Rng &&>(rng)));
@@ -112,7 +116,7 @@ ranges::experimental::sized_generator<int &> h(int const n)
 }
 
 CONCEPT_template(class T)(
-    requires ranges::WeaklyIncrementable<T>())
+    requires ranges::WeaklyIncrementable<T>)
 (ranges::experimental::generator<T>) iota_generator(T t)
 {
     for (;; ++t)
@@ -120,9 +124,9 @@ CONCEPT_template(class T)(
 }
 
 CONCEPT_template(class T, class S)(
-    requires ranges::WeaklyIncrementable<T>() &&
-        ranges::WeaklyEqualityComparableWith<T, S>() &&
-        !ranges::SizedIncrementableSentinel<S, T>())
+    requires ranges::WeaklyIncrementable<T> &&
+        ranges::WeaklyEqualityComparableWith<T, S> &&
+        !ranges::SizedIncrementableSentinel<S, T>)
 (ranges::experimental::generator<T>) iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
@@ -130,7 +134,7 @@ CONCEPT_template(class T, class S)(
 }
 
 CONCEPT_template(class T, class S)(
-    requires ranges::SizedIncrementableSentinel<S, T>())
+    requires ranges::SizedIncrementableSentinel<S, T>)
 (ranges::experimental::sized_generator<T>) iota_generator(T t, S const s)
 {
     co_await static_cast<ranges::experimental::generator_size>(s - t);
@@ -139,8 +143,8 @@ CONCEPT_template(class T, class S)(
 }
 
 CONCEPT_template(class V, class F)(
-    requires ranges::InputView<V>() &&
-        ranges::IndirectPredicate<F, ranges::iterator_t<V>>())
+    requires ranges::InputView<V> &&
+        ranges::IndirectPredicate<F, ranges::iterator_t<V>>)
 (ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_type_t<V>>)
 filter(V view, F f)
 {
@@ -152,14 +156,14 @@ filter(V view, F f)
 }
 
 CONCEPT_template(class V, class F)(
-    requires ranges::InputView<V>() &&
-        ranges::IndirectInvocable<F, ranges::iterator_t<V>>())
+    requires ranges::InputView<V> &&
+        ranges::IndirectInvocable<F, ranges::iterator_t<V>>)
 (meta::invoke<
-    maybe_sized_generator<(bool) ranges::SizedRange<V>()>,
+    maybe_sized_generator<(bool) ranges::SizedRange<V>>,
     ranges::indirect_result_of_t<F &(ranges::iterator_t<V>)>>)
 transform(V view, F f)
 {
-    if /* constexpr */ (ranges::SizedRange<V>())
+    if /* constexpr */ (ranges::SizedRange<V>)
         co_await static_cast<ranges::experimental::generator_size>(ranges::distance(view));
     RANGES_FOR(auto &&i, view)
         co_yield ranges::invoke(f, i);

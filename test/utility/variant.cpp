@@ -79,7 +79,7 @@ int main()
         int i = 42;
         std::string s = "hello world";
         variant<int&, std::string&> v{emplaced_index<0>, i};
-        CONCEPT_assert(!DefaultConstructible<variant<int&, std::string&>>());
+        CONCEPT_assert(!DefaultConstructible<variant<int&, std::string&>>);
         CHECK(v.index() == 0u);
         CHECK(get<0>(v) == 42);
         CHECK(&get<0>(v) == &i);

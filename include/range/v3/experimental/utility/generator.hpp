@@ -121,8 +121,8 @@ namespace ranges
             {
                 std::exception_ptr except_ = nullptr;
 
-                CONCEPT_assert(meta::or_<std::is_reference<Reference>,
-                    CopyConstructible<Reference>>());
+                CONCEPT_assert(Or<std::is_reference<Reference>::value,
+                    CopyConstructible<Reference>>);
 
                 generator_promise *get_return_object() noexcept
                 {
@@ -144,8 +144,8 @@ namespace ranges
                     RANGES_EXPECT(except_);
                 }
                 CONCEPT_template(typename Arg)(
-                    requires ConvertibleTo<Arg, Reference>() &&
-                        True<std::is_assignable<semiregular_t<Reference> &, Arg>>())
+                    requires ConvertibleTo<Arg, Reference> &&
+                        std::is_assignable<semiregular_t<Reference> &, Arg>::value)
                 (std::experimental::suspend_always) yield_value(Arg &&arg)
                     noexcept(std::is_nothrow_assignable<semiregular_t<Reference> &, Arg>::value)
                 {

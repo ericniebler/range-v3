@@ -44,9 +44,9 @@ namespace ranges
             template(typename I1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)
             (concept Searchable)(I1, I2, C, P1, P2),
-                ForwardIterator<I1>() &&
-                ForwardIterator<I2>() &&
-                Comparable<I1, I2, C, P1, P2>()
+                ForwardIterator<I1> &&
+                ForwardIterator<I2> &&
+                Comparable<I1, I2, C, P1, P2>
         );
 
         /// \addtogroup group-algorithms
@@ -125,15 +125,15 @@ namespace ranges
         public:
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2,
                 typename C = equal_to, typename P1 = ident, typename P2 = ident)(
-                requires Searchable<I1, I2, C, P1, P2>() &&
-                    Sentinel<S1, I1>() &&
-                    Sentinel<S2, I2>())
+                requires Searchable<I1, I2, C, P1, P2> &&
+                    Sentinel<S1, I1> &&
+                    Sentinel<S2, I2>)
             (I1) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 if(begin2 == end2)
                     return begin1;
-                if(SizedSentinel<S1, I1>() && SizedSentinel<S2, I2>())
+                if(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
                     return search_fn::sized_impl(std::move(begin1), std::move(end1),
                         distance(begin1, end1), std::move(begin2), std::move(end2),
                         distance(begin2, end2), pred, proj1, proj2);
@@ -146,16 +146,16 @@ namespace ranges
                 typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
-                requires Searchable<I1, I2, C, P1, P2>() &&
-                    Range<Rng1>() &&
-                    Range<Rng2>())
+                requires Searchable<I1, I2, C, P1, P2> &&
+                    Range<Rng1> &&
+                    Range<Rng2>)
             (safe_iterator_t<Rng1>)
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
                 if(empty(rng2))
                     return begin(rng1);
-                if(SizedRange<Rng1>() && SizedRange<Rng2>())
+                if(SizedRange<Rng1> && SizedRange<Rng2>)
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);
                 else

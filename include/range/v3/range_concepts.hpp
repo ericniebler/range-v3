@@ -68,47 +68,50 @@ namespace ranges
         ///
         /// Range concepts below
         ///
-
         CONCEPT_def
         (
             template(typename T)
             concept Range,
-                Sentinel<sentinel_t<T>, iterator_t<T>>()
+                //Sentinel<sentinel_t<T>, iterator_t<T>>
+                requires (T& t)
+                (
+                    ranges::end(t)
+                )
         );
 
         CONCEPT_def
         (
             template(typename T, typename V)
             concept OutputRange,
-                Range<T>() && OutputIterator<iterator_t<T>, V>()
+                Range<T> && OutputIterator<iterator_t<T>, V>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept InputRange,
-                Range<T>() && InputIterator<iterator_t<T>>()
+                Range<T> && InputIterator<iterator_t<T>>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept ForwardRange,
-                InputRange<T>() && ForwardIterator<iterator_t<T>>()
+                InputRange<T> && ForwardIterator<iterator_t<T>>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept BidirectionalRange,
-                ForwardRange<T>() && BidirectionalIterator<iterator_t<T>>()
+                ForwardRange<T> && BidirectionalIterator<iterator_t<T>>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept RandomAccessRange,
-                BidirectionalRange<T>() && RandomAccessIterator<iterator_t<T>>()
+                BidirectionalRange<T> && RandomAccessIterator<iterator_t<T>>
         );
 
         /// \cond
@@ -126,17 +129,17 @@ namespace ranges
         (
             template(typename T)
             concept ContiguousRange,
-                RandomAccessRange<T>() &&
-                Same<range_value_type_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>>() &&
-                Same<detail::data_reference_t<T>, range_reference_t<T>>()
+                RandomAccessRange<T> &&
+                Same<range_value_type_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>> &&
+                Same<detail::data_reference_t<T>, range_reference_t<T>>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept BoundedRange,
-                Range<T>() &&
-                Same<iterator_t<T>, sentinel_t<T>>()
+                Range<T> &&
+                Same<iterator_t<T>, sentinel_t<T>>
         );
 
         CONCEPT_def
@@ -144,10 +147,11 @@ namespace ranges
             template(typename T)
             concept SizedRange,
                 requires (T &t)
-                {
-                    size(t) ->* Integral<_>()
-                } &&
-                Range<T>() && !True<disable_sized_range<uncvref_t<T>>>()
+                (
+                    size(t),
+                    concepts::requires_<Integral<decltype(size(t))>>
+                ) &&
+                Range<T> && !disable_sized_range<uncvref_t<T>>::value
         );
 
         ///
@@ -158,50 +162,50 @@ namespace ranges
         (
             template(typename T)
             concept View,
-                Range<T>() && Movable<T>() && DefaultConstructible<T>() &&
-                True<detail::view_predicate_<T>>()
+                Range<T> && Movable<T> && DefaultConstructible<T> &&
+                detail::view_predicate_<T>::value
         );
 
         CONCEPT_def
         (
             template(typename T, typename V)
             concept OutputView,
-                View<T>() && OutputRange<T, V>()
+                View<T> && OutputRange<T, V>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept InputView,
-                View<T>() && InputRange<T>()
+                View<T> && InputRange<T>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept ForwardView,
-                View<T>() && ForwardRange<T>()
+                View<T> && ForwardRange<T>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept BidirectionalView,
-                View<T>() && BidirectionalRange<T>()
+                View<T> && BidirectionalRange<T>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept RandomAccessView,
-                View<T>() && RandomAccessRange<T>()
+                View<T> && RandomAccessRange<T>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept ContiguousView,
-                RandomAccessView<T>() && ContiguousRange<T>()
+                RandomAccessView<T> && ContiguousRange<T>
         );
 
         // Additional concepts for checking additional orthogonal properties
@@ -209,14 +213,14 @@ namespace ranges
         (
             template(typename T)
             concept BoundedView,
-                View<T>() && BoundedRange<T>()
+                View<T> && BoundedRange<T>
         );
 
         CONCEPT_def
         (
             template(typename T)
             concept SizedView,
-                View<T>() && SizedRange<T>()
+                View<T> && SizedRange<T>
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,7 +329,7 @@ namespace ranges
               : meta::_t<meta::if_<
                     meta::is_trait<enable_view<T>>,
                     enable_view<T>,
-                    meta::bool_<view_like<T>() || (bool) DerivedFrom<T, view_base>()>>>
+                    meta::bool_<view_like<T>() || (bool) DerivedFrom<T, view_base>>>>
             {};
 
             template<typename T>
@@ -355,7 +359,12 @@ namespace ranges
 
             template<typename T>
             struct is_view_
-              : meta::bool_<(bool)View<T>()>
+              : meta::bool_<(bool)View<T>>
+            {};
+
+            template<typename T>
+            struct is_range_
+              : meta::bool_<(bool)Range<T>>
             {};
         }
         /// \endcond

@@ -27,24 +27,24 @@
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
+CONCEPT_def
+(
+    template(typename T, typename U)
+    concept BothRanges,
+        ranges::InputRange<T> && ranges::InputRange<U>
+);
+
 struct check_equal_fn
 {
-    CONCEPT_def
-    (
-        template(typename T, typename U)
-        concept BothRanges,
-            ranges::InputRange<T>() && ranges::InputRange<U>()
-    );
-
     CONCEPT_template(typename T, typename U)(
-        requires !BothRanges<T, U>())
+        requires not BothRanges<T, U>)
     (void) operator()(T &&actual, U &&expected) const
     {
         CHECK((T &&) actual == (U &&) expected);
     }
 
     CONCEPT_template(typename Rng1, typename Rng2)(
-        requires BothRanges<Rng1, Rng2>())
+        requires BothRanges<Rng1, Rng2>)
     (void) operator()(Rng1 &&actual, Rng2 &&expected) const
     {
         auto begin0 = ranges::begin(actual);
@@ -58,7 +58,7 @@ struct check_equal_fn
     }
 
     CONCEPT_template(typename Rng, typename Val)(
-        requires ranges::InputRange<Rng>())
+        requires ranges::InputRange<Rng>)
     (void) operator()(Rng &&actual, std::initializer_list<Val> && expected) const
     {
         (*this)(actual, expected);

@@ -78,15 +78,15 @@ int main()
 
     {
         any_view<int> ints = view::ints;
-        CONCEPT_assert(InputView<decltype(ints)>());
-        CONCEPT_assert(!ForwardView<decltype(ints)>());
+        CONCEPT_assert(InputView<decltype(ints)>);
+        CONCEPT_assert(!ForwardView<decltype(ints)>);
         ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
     {
         any_view<int> ints = view::ints | view::take_exactly(5);
-        CONCEPT_assert(InputView<decltype(ints)>());
-        CONCEPT_assert(!RandomAccessView<decltype(ints)>());
-        CONCEPT_assert(!SizedView<decltype(ints)>());
+        CONCEPT_assert(InputView<decltype(ints)>);
+        CONCEPT_assert(!RandomAccessView<decltype(ints)>);
+        CONCEPT_assert(!SizedView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::input, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::none, "");
     }
@@ -104,15 +104,15 @@ RANGES_DIAGNOSTIC_POP
 #else
         any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
 #endif
-        CONCEPT_assert(RandomAccessView<decltype(ints)>());
-        CONCEPT_assert(SizedView<decltype(ints)>());
+        CONCEPT_assert(RandomAccessView<decltype(ints)>);
+        CONCEPT_assert(SizedView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::random_access, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
         any_view<int, category::bidirectional> ints = view::ints;
-        CONCEPT_assert(BidirectionalView<decltype(ints)>());
-        CONCEPT_assert(!RandomAccessView<decltype(ints)>());
+        CONCEPT_assert(BidirectionalView<decltype(ints)>);
+        CONCEPT_assert(!RandomAccessView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::bidirectional, "");
     }
     {

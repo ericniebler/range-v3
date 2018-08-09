@@ -32,29 +32,29 @@ namespace ranges
         /// @{
         namespace action
         {
+            CONCEPT_def
+            (
+                template(typename Rng, typename T)
+                concept DropActionConcept,
+                    ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                    ConvertibleTo<T, range_difference_type_t<Rng>>
+            );
+
             struct drop_fn
             {
             private:
                 friend action_access;
                 CONCEPT_template(typename Int)(
-                    requires Integral<Int>())
+                    requires Integral<Int>)
                 (static auto) bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(drop, std::placeholders::_1, n)
                 )
             public:
-                CONCEPT_def
-                (
-                    template(typename Rng, typename T)
-                    concept Concept,
-                        ForwardRange<Rng>() &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>() &&
-                        ConvertibleTo<T, range_difference_type_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires Concept<Rng, range_difference_type_t<Rng>>())
+                    requires DropActionConcept<Rng, range_difference_type_t<Rng>>)
                 (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
@@ -64,16 +64,16 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
-                    requires !Concept<Rng, T>())
+                    requires not DropActionConcept<Rng, T>)
                 (void) operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>(),
+                    CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::drop operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>(),
+                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>(),
+                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

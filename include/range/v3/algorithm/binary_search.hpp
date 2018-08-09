@@ -40,7 +40,7 @@ namespace ranges
             /// \pre `Rng` is a model of the `Range` concept
             CONCEPT_template(typename I, typename S, typename V2, typename C = ordered_less,
                 typename P = ident)(
-                requires Sentinel<S, I>() && BinarySearchable<I, V2, C, P>())
+                requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
             (bool)
             operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {
@@ -51,7 +51,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Range<Rng>() && BinarySearchable<I, V2, C, P>())
+                requires Range<Rng> && BinarySearchable<I, V2, C, P>)
             (bool)
             operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
             {

@@ -32,21 +32,21 @@ namespace ranges
         namespace detail
         {
             CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I>() && Sentinel<S, I>())
+                requires InputIterator<I> && Sentinel<S, I>)
             (I) next_to_if(I i, S s, std::true_type)
             {
                 return ranges::next(i, s);
             }
 
             CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I>() && Sentinel<S, I>())
+                requires InputIterator<I> && Sentinel<S, I>)
             (S) next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
             CONCEPT_template(bool B, typename I, typename S)(
-                requires InputIterator<I>() && Sentinel<S, I>())
+                requires InputIterator<I> && Sentinel<S, I>)
             (meta::if_c<B, I, S>) next_to_if(I i, S s)
             {
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
@@ -160,12 +160,12 @@ namespace ranges
         public:
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
                 typename P = ident)(
-                requires ForwardIterator<I1>() && Sentinel<S1, I1>() &&
-                    ForwardIterator<I2>() && Sentinel<S2, I2>() &&
-                    IndirectRelation<R, projected<I1, P>, I2>())
+                requires ForwardIterator<I1> && Sentinel<S1, I1> &&
+                    ForwardIterator<I2> && Sentinel<S2, I2> &&
+                    IndirectRelation<R, projected<I1, P>, I2>)
             (I1) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
-                constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
+                constexpr bool Bidi = BidirectionalIterator<I1> && BidirectionalIterator<I2>;
                 return find_end_fn::impl(
                     begin1, detail::next_to_if<Bidi>(begin1, end1),
                     begin2, detail::next_to_if<Bidi>(begin2, end2),
@@ -176,8 +176,8 @@ namespace ranges
             CONCEPT_template(typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
-                requires ForwardRange<Rng1>() && ForwardRange<Rng2>() &&
-                    IndirectRelation<R, projected<I1, P>, I2>())
+                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+                    IndirectRelation<R, projected<I1, P>, I2>)
             (safe_iterator_t<Rng1>) operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

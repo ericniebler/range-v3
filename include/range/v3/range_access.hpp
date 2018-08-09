@@ -59,133 +59,6 @@ namespace ranges
             template<typename Cur>
             using mixin_base_t = meta::_t<mixin_base_<Cur>>;
 
-            //
-            // Concepts that the range cursor must model
-            //
-            CONCEPT_def
-            (
-                template(typename T)
-                concept Cursor,
-                    Semiregular<T>() && Semiregular<mixin_base_t<T>>() &&
-                    Constructible<mixin_base_t<T>, T>() &&
-                    Constructible<mixin_base_t<T>, T const &>()
-                    // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
-                    //   which perfectly-returns the contained cursor object and does not throw
-                    //   exceptions.
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept HasCursorNext,
-                    requires (T &t)
-                    {
-                        (((void) t.next()), 0)
-                    }
-            );
-
-            CONCEPT_def
-            (
-                template(typename S, typename C)
-                concept CursorSentinel,
-                    requires (S &s, C &c)
-                    {
-                        (c.equal(s)) ->* ConvertibleTo<_&&, bool>()
-                    } &&
-                    Semiregular<S>() && Cursor<C>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept ReadableCursor,
-                    requires (T &t)
-                    {
-                        t.read()
-                    }
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept HasCursorArrow,
-                    requires (T const &t)
-                    {
-                        t.arrow()
-                    }
-            );
-
-            CONCEPT_def
-            (
-                template(typename T, typename U)
-                concept WritableCursor,
-                    requires (T &t, U &&u)
-                    {
-                        (t.write((U &&) u), 0)
-                    }
-            );
-
-            CONCEPT_def
-            (
-                template(typename S, typename C)
-                concept SizedCursorSentinel,
-                    requires (S &s, C &c)
-                    {
-                        (c.distance_to(s)) ->* SignedIntegral<_>()
-                    } &&
-                    CursorSentinel<S, C>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T, typename U)
-                concept OutputCursor,
-                    WritableCursor<T, U>() && Cursor<T>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept InputCursor,
-                    ReadableCursor<T>() && Cursor<T>() && HasCursorNext<T>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept ForwardCursor,
-                    InputCursor<T>() && CursorSentinel<T, T>() &&
-                    !True<single_pass_t<uncvref_t<T>>>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept BidirectionalCursor,
-                    requires (T &t)
-                    {
-                        (t.prev(), 0)
-                    } &&
-                    ForwardCursor<T>()
-            );
-
-            CONCEPT_def
-            (
-                template(typename T)
-                concept RandomAccessCursor,
-                    requires (T &t)
-                    {
-                        (t.advance(t.distance_to(t)), 0)
-                    } &&
-                    BidirectionalCursor<T>() && SizedCursorSentinel<T, T>()
-            );
-            CONCEPT_def
-            (
-                template(typename T)
-                concept InfiniteCursor,
-                    True<typename T::is_infinite>()
-            );
-
             template<typename Rng>
             static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, long)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -357,91 +230,160 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T>
-            using Cursor = range_access::Cursor<T>;
-
-            template<typename S, typename C>
-            using CursorSentinel =
-                range_access::CursorSentinel<S, C>;
-
-            template<typename T>
-            using ReadableCursor =
-                range_access::ReadableCursor<T>;
-
-            template<typename T, typename U>
-            using WritableCursor =
-                range_access::WritableCursor<T, U>;
-
-            template<typename T>
-            using HasCursorNext =
-                range_access::HasCursorNext<T>;
-
-            template<typename T>
-            using HasCursorArrow =
-                range_access::HasCursorArrow<T>;
-
-            template<typename S, typename C>
-            using SizedCursorSentinel =
-                range_access::SizedCursorSentinel<S, C>;
-
-            template<typename T, typename U>
-            using OutputCursor =
-                range_access::OutputCursor<T, U>;
-
-            template<typename T>
-            using InputCursor =
-                range_access::InputCursor<T>;
-
-            template<typename T>
-            using ForwardCursor =
-                range_access::ForwardCursor<T>;
-
-            template<typename T>
-            using BidirectionalCursor =
-                range_access::BidirectionalCursor<T>;
-
-            template<typename T>
-            using RandomAccessCursor =
-                range_access::RandomAccessCursor<T>;
-
-            template<typename T>
-            using InfiniteCursor =
-                range_access::InfiniteCursor<T>;
+            //
+            // Concepts that the range cursor must model
+            //
+            CONCEPT_def
+            (
+                template(typename T)
+                concept Cursor,
+                    Semiregular<T> && Semiregular<range_access::mixin_base_t<T>> &&
+                    Constructible<range_access::mixin_base_t<T>, T> &&
+                    Constructible<range_access::mixin_base_t<T>, T const &>
+                    // Axiom: mixin_base_t<T> has a member get(), accessible to derived classes,
+                    //   which perfectly-returns the contained cursor object and does not throw
+                    //   exceptions.
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept HasCursorNext,
+                    requires (T &t)
+                    (
+                        range_access::next(t)
+                    )
+            );
+            CONCEPT_def
+            (
+                template(typename S, typename C)
+                concept CursorSentinel,
+                    requires (S &s, C &c)
+                    (
+                        range_access::equal(c, s),
+                        concepts::requires_<ConvertibleTo<decltype(
+                            range_access::equal(c, s)), bool>>
+                    ) &&
+                    Semiregular<S> && Cursor<C>
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept ReadableCursor,
+                    requires (T &t)
+                    (
+                        range_access::read(t)
+                    )
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept HasCursorArrow,
+                    requires (T const &t)
+                    (
+                        range_access::arrow(t)
+                    )
+            );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept WritableCursor,
+                    requires (T &t, U &&u)
+                    (
+                        range_access::write(t, (U &&) u)
+                    )
+            );
+            CONCEPT_def
+            (
+                template(typename S, typename C)
+                concept SizedCursorSentinel,
+                    requires (S &s, C &c)
+                    (
+                        range_access::distance_to(c, s),
+                        concepts::requires_<SignedIntegral<decltype(
+                            range_access::distance_to(c, s))>>
+                    ) &&
+                    CursorSentinel<S, C>
+            );
+            CONCEPT_def
+            (
+                template(typename T, typename U)
+                concept OutputCursor,
+                    WritableCursor<T, U> && Cursor<T>
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept InputCursor,
+                    ReadableCursor<T> && Cursor<T> && HasCursorNext<T>
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept ForwardCursor,
+                    InputCursor<T> && CursorSentinel<T, T> &&
+                    !range_access::single_pass_t<uncvref_t<T>>::value
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept BidirectionalCursor,
+                    requires (T &t)
+                    (
+                        range_access::prev(t)
+                    ) &&
+                    ForwardCursor<T>
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept RandomAccessCursor,
+                    requires (T &t)
+                    (
+                        range_access::advance(t, range_access::distance_to(t, t))
+                    ) &&
+                    BidirectionalCursor<T> && SizedCursorSentinel<T, T>
+            );
+            CONCEPT_def
+            (
+                template(typename T)
+                concept InfiniteCursor,
+                    T::is_infinite::value
+            );
 
             using cursor_tag =
-                concepts::tag<range_access::CursorConcept>;
+                concepts::tag<CursorConcept>;
 
             using input_cursor_tag =
-                concepts::tag<range_access::InputCursorConcept, cursor_tag>;
+                concepts::tag<InputCursorConcept, cursor_tag>;
 
             using forward_cursor_tag =
-                concepts::tag<range_access::ForwardCursorConcept, input_cursor_tag>;
+                concepts::tag<ForwardCursorConcept, input_cursor_tag>;
 
             using bidirectional_cursor_tag =
-                concepts::tag<range_access::BidirectionalCursorConcept, forward_cursor_tag>;
+                concepts::tag<BidirectionalCursorConcept, forward_cursor_tag>;
 
             using random_access_cursor_tag =
-                concepts::tag<range_access::RandomAccessCursorConcept, bidirectional_cursor_tag>;
+                concepts::tag<RandomAccessCursorConcept, bidirectional_cursor_tag>;
 
             template<typename T>
             using cursor_tag_of =
                 concepts::tag_of<
                     meta::list<
-                        range_access::RandomAccessCursorConcept,
-                        range_access::BidirectionalCursorConcept,
-                        range_access::ForwardCursorConcept,
-                        range_access::InputCursorConcept,
-                        range_access::CursorConcept>,
+                        RandomAccessCursorConcept,
+                        BidirectionalCursorConcept,
+                        ForwardCursorConcept,
+                        InputCursorConcept,
+                        CursorConcept>,
                     T>;
 
-            template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
+            template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>>
             struct is_writable_cursor_
               : std::true_type
             {};
 
             template<typename Cur>
             struct is_writable_cursor_<Cur, true>
-              : meta::bool_<(bool) WritableCursor<Cur, range_access::cursor_value_t<Cur>>()>
+              : meta::bool_<(bool) WritableCursor<Cur, range_access::cursor_value_t<Cur>>>
             {};
 
             template<typename Cur>

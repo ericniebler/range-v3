@@ -50,7 +50,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>,
                 typename I = iterator_t<Rng>)(
-                requires Integral<D>() && Range<Rng>())
+                requires Integral<D> && Range<Rng>)
             (std::pair<D, I>) operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
@@ -84,7 +84,7 @@ namespace ranges
             using iter_distance_fn::operator();
 
             CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
-                requires Integral<D>() && Range<Rng>())
+                requires Integral<D> && Range<Rng>)
             (RANGES_CXX14_CONSTEXPR
             D) operator()(Rng &&rng, D d = 0) const
             {
@@ -105,13 +105,13 @@ namespace ranges
         {
         private:
             CONCEPT_template(typename Rng)(
-                requires !True(is_infinite<Rng>()))
+                requires not is_infinite<Rng>())
             (int) impl_r(Rng &rng, range_difference_type_t<Rng> n, range_tag) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
             }
             CONCEPT_template(typename Rng)(
-                requires True(is_infinite<Rng>()))
+                requires is_infinite<Rng>())
             (int) impl_r(Rng &, range_difference_type_t<Rng>, range_tag) const
             {
                 // Infinite ranges are always compared to be larger than a finite number.
@@ -132,7 +132,7 @@ namespace ranges
             using iter_distance_compare_fn::operator();
 
             CONCEPT_template(typename Rng)(
-                requires Range<Rng>())
+                requires Range<Rng>)
             (int) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             {
                 return this->impl_r(rng, n, sized_range_tag_of<Rng>());

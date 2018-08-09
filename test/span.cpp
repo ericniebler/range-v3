@@ -698,7 +698,7 @@ void test_case_iterator_comparisons()
     {
         span<int> s = a;
         auto it = s.begin();
-        CONCEPT_assert(ranges::Same<decltype(it), span<int>::iterator>());
+        CONCEPT_assert(ranges::Same<decltype(it), span<int>::iterator>);
         auto it2 = it + 1;
 
         CHECK(it == it);
@@ -1092,6 +1092,6 @@ int main() {
     test_case_interop_with_std_regex();
     test_case_default_constructible();
 
-    CONCEPT_assert(ranges::ContiguousView<span<int>>());
-    CONCEPT_assert(ranges::ContiguousView<span<int, 42>>());
+    CONCEPT_assert(ranges::ContiguousView<span<int>>);
+    CONCEPT_assert(ranges::ContiguousView<span<int, 42>>);
 }

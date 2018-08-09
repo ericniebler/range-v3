@@ -68,22 +68,22 @@ namespace ranges
         struct join_view<Rng, void>
           : view_facade<join_view<Rng, void>, detail::join_cardinality<Rng>::value>
         {
-            CONCEPT_assert(InputRange<Rng>());
-            CONCEPT_assert(InputRange<range_reference_t<Rng>>());
+            CONCEPT_assert(InputRange<Rng>);
+            CONCEPT_assert(InputRange<range_reference_t<Rng>>);
             using size_type = common_type_t<range_size_type_t<Rng>, range_size_type_t<range_reference_t<Rng>>>;
 
             join_view() = default;
             explicit join_view(Rng rng)
               : outer_(view::all(std::move(rng)))
             {}
-            CONCEPT_requires(True<detail::join_cardinality<Rng>::value >= 0>())
+            CONCEPT_requires(detail::join_cardinality<Rng>::value >= 0)
             (constexpr size_type) size() const
             {
                 return detail::join_cardinality<Rng>::value;
             }
-            CONCEPT_requires(True<detail::join_cardinality<Rng>::value < 0>() &&
-                True<range_cardinality<Rng>::value >= 0>() && ForwardRange<Rng>() &&
-                SizedRange<range_reference_t<Rng>>())
+            CONCEPT_requires(detail::join_cardinality<Rng>::value < 0 &&
+                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
+                SizedRange<range_reference_t<Rng>>)
             (RANGES_CXX14_CONSTEXPR size_type) size()
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0});
@@ -159,13 +159,13 @@ namespace ranges
         struct join_view
           : view_facade<join_view<Rng, ValRng>, detail::join_cardinality<Rng, ValRng>::value>
         {
-            CONCEPT_assert(InputRange<Rng>());
-            CONCEPT_assert(InputRange<range_reference_t<Rng>>());
-            CONCEPT_assert(ForwardRange<ValRng>());
-            CONCEPT_assert(Common<range_value_type_t<range_reference_t<Rng>>, range_value_type_t<ValRng>>());
+            CONCEPT_assert(InputRange<Rng>);
+            CONCEPT_assert(InputRange<range_reference_t<Rng>>);
+            CONCEPT_assert(ForwardRange<ValRng>);
+            CONCEPT_assert(Common<range_value_type_t<range_reference_t<Rng>>, range_value_type_t<ValRng>>);
             CONCEPT_assert(Semiregular<common_type_t<
                 range_value_type_t<range_reference_t<Rng>>,
-                range_value_type_t<ValRng>>>());
+                range_value_type_t<ValRng>>>);
             using size_type = common_type_t<range_size_type_t<Rng>, range_size_type_t<range_value_type_t<Rng>>>;
 
             join_view() = default;
@@ -173,14 +173,14 @@ namespace ranges
               : outer_(view::all(std::move(rng)))
               , val_(view::all(std::move(val)))
             {}
-            CONCEPT_requires(True<detail::join_cardinality<Rng, ValRng>::value >= 0>())
+            CONCEPT_requires(detail::join_cardinality<Rng, ValRng>::value >= 0)
             (constexpr size_type) size() const
             {
                 return detail::join_cardinality<Rng, ValRng>::value;
             }
-            CONCEPT_requires(True<detail::join_cardinality<Rng, ValRng>::value < 0>() &&
-                True<range_cardinality<Rng>::value >= 0>() && ForwardRange<Rng>() &&
-                SizedRange<range_reference_t<Rng>>() && SizedRange<ValRng>())
+            CONCEPT_requires(detail::join_cardinality<Rng, ValRng>::value < 0 &&
+                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
+                SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
             (size_type) size() const
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0}) +
@@ -299,43 +299,43 @@ namespace ranges
 
         namespace view
         {
+            // Don't forget to update view::for_each whenever this set
+            // of concepts changes
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept JoinableRange,
+                    InputRange<Rng> && InputRange<range_reference_t<Rng>>
+            );
+
             struct join_fn
             {
-                // Don't forget to update view::for_each whenever this set
-                // of concepts changes
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept JoinableRange,
-                        InputRange<Rng>() && InputRange<range_reference_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires JoinableRange<Rng>())
+                    requires JoinableRange<Rng>)
                 (join_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
                     return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
                 CONCEPT_template(typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>)(
-                    requires JoinableRange<Rng>())
+                    requires JoinableRange<Rng>)
                 (join_view<all_t<Rng>, single_view<Val>>) operator()(Rng &&rng, meta::id_t<Val> v) const
                 {
-                    CONCEPT_assert_msg(Semiregular<Val>(),
+                    CONCEPT_assert_msg(Semiregular<Val>,
                         "To join a range of ranges with a value, the value type must be a model of "
                         "the Semiregular concept; that is, it must have a default constructor, "
                         "copy and move constructors, and a destructor.");
                     return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
                 }
                 CONCEPT_template(typename Rng, typename ValRng)(
-                    requires JoinableRange<Rng>() && ForwardRange<ValRng>())
+                    requires JoinableRange<Rng> && ForwardRange<ValRng>)
                 (join_view<all_t<Rng>, all_t<ValRng>>) operator()(Rng &&rng, ValRng &&val) const
                 {
                     CONCEPT_assert_msg(Common<range_value_type_t<ValRng>,
-                        range_value_type_t<range_reference_t<Rng>>>(),
+                        range_value_type_t<range_reference_t<Rng>>>,
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type.");
                     CONCEPT_assert_msg(Semiregular<common_type_t<
-                        range_value_type_t<ValRng>, range_value_type_t<range_reference_t<Rng>>>>(),
+                        range_value_type_t<ValRng>, range_value_type_t<range_reference_t<Rng>>>>,
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type, and that value type must model the Semiregular "
                         "concept; that is, it must have a default constructor, copy and move "
@@ -345,7 +345,7 @@ namespace ranges
             private:
                friend view_access;
                CONCEPT_template(typename T)(
-                   requires !JoinableRange<T>())
+                   requires not JoinableRange<T>)
                (static auto) bind(join_fn join, T &&t)
                RANGES_DECLTYPE_AUTO_RETURN
                (

@@ -68,13 +68,13 @@ namespace ranges
                     typename indirect_view::view_adaptor, Rng>::value)
               : indirect_view::view_adaptor{detail::move(rng)}
             {}
-            CONCEPT_requires(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>)
             (constexpr range_size_type_t<Rng>) size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_requires(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
             (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
@@ -84,18 +84,18 @@ namespace ranges
 
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept ReadableRange,
+                    InputRange<Rng> &&
+                    Readable<range_value_type_t<Rng>>
+            );
+
             struct indirect_fn
             {
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept ReadableRange,
-                        InputRange<Rng>() &&
-                        Readable<range_value_type_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires ReadableRange<Rng>())
+                    requires ReadableRange<Rng>)
                 (constexpr auto) operator()(Rng &&rng) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -103,13 +103,13 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !ReadableRange<Rng>())
+                    requires not ReadableRange<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument to view::indirect must be a model of the InputRange "
                         "concept");
-                    CONCEPT_assert_msg(Readable<range_value_type_t<Rng>>(),
+                    CONCEPT_assert_msg(Readable<range_value_type_t<Rng>>,
                         "The value type of the range passed to view::indirect must be a model "
                         "of the Readable concept.");
                 }

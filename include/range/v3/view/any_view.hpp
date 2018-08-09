@@ -97,11 +97,11 @@ namespace ranges
         template<typename Rng>
         constexpr category get_categories() noexcept
         {
-            return (InputRange<Rng>()         ? category::input         : category::none) |
-                   (ForwardRange<Rng>()       ? category::forward       : category::none) |
-                   (BidirectionalRange<Rng>() ? category::bidirectional : category::none) |
-                   (RandomAccessRange<Rng>()  ? category::random_access : category::none) |
-                   (SizedRange<Rng>()         ? category::sized         : category::none);
+            return (InputRange<Rng>         ? category::input         : category::none) |
+                   (ForwardRange<Rng>       ? category::forward       : category::none) |
+                   (BidirectionalRange<Rng> ? category::bidirectional : category::none) |
+                   (RandomAccessRange<Rng>  ? category::random_access : category::none) |
+                   (SizedRange<Rng>         ? category::sized         : category::none);
         }
 
         /// \cond
@@ -149,7 +149,7 @@ namespace ranges
             (
                 template(typename Rng, typename Ref)
                 concept AnyCompatibleRange,
-                    ConvertibleTo<range_reference_t<Rng>, Ref>()
+                    ConvertibleTo<range_reference_t<Rng>, Ref>
             );
 
             template<typename Rng, typename = void>
@@ -235,8 +235,8 @@ namespace ranges
                     tag::current(iterator_t<Rng>)>
               , private any_view_sentinel_impl<Rng>
             {
-                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_assert(!Sized || (bool)SizedRange<Rng>());
+                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>);
+                CONCEPT_assert(!Sized || (bool)SizedRange<Rng>);
 
                 explicit any_input_view_impl(Rng rng_)
                   : tagged_t{std::move(rng_), iterator_t<Rng>{}}
@@ -306,7 +306,7 @@ namespace ranges
             struct any_cursor_impl
               : any_cloneable_cursor_interface<Ref, Cat>
             {
-                CONCEPT_assert(ConvertibleTo<reference_t<I>, Ref>());
+                CONCEPT_assert(ConvertibleTo<reference_t<I>, Ref>);
                 CONCEPT_assert((Cat & category::forward) == category::forward);
 
                 any_cursor_impl() = default;
@@ -388,8 +388,8 @@ namespace ranges
             public:
                 any_cursor() = default;
                 CONCEPT_template(typename Rng)(
-                    requires !Same<detail::decay_t<Rng>, any_cursor>() &&
-                        ForwardRange<Rng>() && AnyCompatibleRange<Rng, Ref>())
+                    requires not ranges::defer::Same<detail::decay_t<Rng>, any_cursor> &&
+                        ranges::defer::ForwardRange<Rng> && defer::AnyCompatibleRange<Rng, Ref>)
                 (explicit) any_cursor(Rng &&rng)
                   : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
                 {}
@@ -423,19 +423,19 @@ namespace ranges
                     RANGES_EXPECT(ptr_);
                     ptr_->next();
                 }
-                CONCEPT_requires(True<(Cat & category::bidirectional) == category::bidirectional>())
+                CONCEPT_requires(True<> && (Cat & category::bidirectional) == category::bidirectional)
                 (void) prev()
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->prev();
                 }
-                CONCEPT_requires(True<(Cat & category::random_access) == category::random_access>())
+                CONCEPT_requires(True<> && (Cat & category::random_access) == category::random_access)
                 (void) advance(std::ptrdiff_t n)
                 {
                     RANGES_EXPECT(ptr_);
                     ptr_->advance(n);
                 }
-                CONCEPT_requires(True<(Cat & category::random_access) == category::random_access>())
+                CONCEPT_requires(True<> && (Cat & category::random_access) == category::random_access)
                 (std::ptrdiff_t) distance_to(any_cursor const &that) const
                 {
                     RANGES_EXPECT(!ptr_ == !that.ptr_);
@@ -470,8 +470,8 @@ namespace ranges
               , private any_view_sentinel_impl<Rng>
             {
                 CONCEPT_assert((Cat & category::forward) == category::forward);
-                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>());
-                CONCEPT_assert((Cat & category::sized) == category::none || (bool)SizedRange<Rng>());
+                CONCEPT_assert(AnyCompatibleRange<Rng, Ref>);
+                CONCEPT_assert((Cat & category::sized) == category::none || (bool)SizedRange<Rng>);
 
                 any_view_impl() = default;
                 any_view_impl(Rng rng)
@@ -515,9 +515,9 @@ namespace ranges
 
             any_view() = default;
             CONCEPT_template(typename Rng)(
-                requires !Same<detail::decay_t<Rng>, any_view>() &&
-                    InputRange<Rng>() &&
-                    detail::AnyCompatibleRange<Rng, Ref>())()
+                requires not defer::Same<detail::decay_t<Rng>, any_view> &&
+                    defer::InputRange<Rng> &&
+                    detail::defer::AnyCompatibleRange<Rng, Ref>)()
             any_view(Rng &&rng)
               : any_view(static_cast<Rng &&>(rng),
                   meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
@@ -533,7 +533,7 @@ namespace ranges
                 return *this;
             }
 
-            CONCEPT_requires(True<(Cat & category::sized) == category::sized>())
+            CONCEPT_requires(True<> && (Cat & category::sized) == category::sized)
             (std::size_t) size() const
             {
                 return ptr_ ? ptr_->size() : 0;
@@ -573,14 +573,14 @@ namespace ranges
 
             any_view() = default;
             CONCEPT_template(typename Rng)(
-                requires !Same<detail::decay_t<Rng>, any_view>() &&
-                    InputRange<Rng>() &&
-                    detail::AnyCompatibleRange<Rng, Ref>())()
+                requires not defer::Same<detail::decay_t<Rng>, any_view> &&
+                    defer::InputRange<Rng> &&
+                    detail::defer::AnyCompatibleRange<Rng, Ref>)()
             any_view(Rng &&rng)
               : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
 
-            CONCEPT_requires(True<(Cat & category::sized) == category::sized>())
+            CONCEPT_requires(True<> && (Cat & category::sized) == category::sized)
             (std::size_t) size() const
             {
                 return ptr_ ? ptr_->size() : 0;
@@ -603,7 +603,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CONCEPT_template(typename Rng)(
-            requires View<Rng>())()
+            requires View<Rng>)()
         any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif
 

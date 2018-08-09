@@ -223,9 +223,9 @@ namespace
             return a.i_ >= b.i_;
         }
     };
-    CONCEPT_assert(ranges::DefaultConstructible<Int>());
-    CONCEPT_assert(ranges::Movable<Int>());
-    CONCEPT_assert(ranges::StrictTotallyOrdered<Int>());
+    CONCEPT_assert(ranges::DefaultConstructible<Int>);
+    CONCEPT_assert(ranges::Movable<Int>);
+    CONCEPT_assert(ranges::StrictTotallyOrdered<Int>);
 }
 
 int main()

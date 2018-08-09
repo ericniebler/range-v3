@@ -352,12 +352,6 @@ namespace ranges
         }
         /// \endcond
 
-        namespace legacy_concepts
-        {
-            template<typename Concept, typename...Ts>
-            struct models;
-        }
-
         struct begin_tag {};
         struct end_tag {};
         struct copy_tag {};
@@ -779,7 +773,11 @@ namespace concepts
     inline namespace v1
     {
         inline namespace defs
-        {}
+        {
+            namespace lazy
+            {}
+            namespace defer = lazy;
+        }
     }
 }
 
@@ -789,6 +787,10 @@ namespace ranges
     {
         namespace concepts = ::concepts;
         using namespace ::concepts::defs;
+        namespace lazy
+        {
+            using namespace ::concepts::defs::lazy;
+        }
     }
 }
 

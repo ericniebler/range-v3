@@ -38,7 +38,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename T)(
-                requires MoveConstructible<T>())
+                requires MoveConstructible<T>)
             (RANGES_CXX14_CONSTEXPR T)
             get_first_second_helper(T& t, std::false_type)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
@@ -77,8 +77,8 @@ namespace ranges
             (
                 template(typename T)
                 concept PairLike,
-                    Invocable<get_first const&, T>() &&
-                    Invocable<get_second const&, T>()
+                    Invocable<get_first const&, T> &&
+                    Invocable<get_second const&, T>
             );
         }
         /// \endcond
@@ -87,60 +87,60 @@ namespace ranges
         /// @{
         namespace view
         {
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept KeysViewConcept,
+                    InputRange<Rng> &&
+                    detail::PairLike<range_reference_t<Rng>>
+            );
+
             struct keys_fn
             {
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept Concept,
-                        InputRange<Rng>() &&
-                        detail::PairLike<range_reference_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires Concept<Rng>())
+                    requires KeysViewConcept<Rng>)
                 (keys_range_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !Concept<Rng>())
+                    requires not KeysViewConcept<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument of view::keys must be a model of the InputRange concept.");
-                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>,
                         "The value type of the range passed to view::keys must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }
             #endif
             };
 
+            CONCEPT_def
+            (
+                template(typename Rng)
+                concept ValuesViewConcept,
+                    InputRange<Rng> &&
+                    detail::PairLike<range_reference_t<Rng>>
+            );
+
             struct values_fn
             {
-                CONCEPT_def
-                (
-                    template(typename Rng)
-                    concept Concept,
-                    InputRange<Rng>() &&
-                    detail::PairLike<range_reference_t<Rng>>()
-                );
-
                 CONCEPT_template(typename Rng)(
-                    requires Concept<Rng>())
+                    requires ValuesViewConcept<Rng>)
                 (values_view<all_t<Rng>>) operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
-                    requires !Concept<Rng>())
+                    requires not ValuesViewConcept<Rng>)
                 (void) operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>(),
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument of view::values must be a model of the InputRange concept.");
-                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>(),
+                    CONCEPT_assert_msg(detail::PairLike<range_reference_t<Rng>>,
                         "The value type of the range passed to view::values must look like a std::pair; "
                         "That is, it must have first and second data members.");
                 }

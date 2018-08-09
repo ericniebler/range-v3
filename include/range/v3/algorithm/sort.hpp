@@ -177,8 +177,8 @@ namespace ranges
 
         public:
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires Sortable<I, C, P>() && RandomAccessIterator<I>() &&
-                    Sentinel<S, I>())
+                requires Sortable<I, C, P> && RandomAccessIterator<I> &&
+                    Sentinel<S, I>)
             (I) operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
                 I end = ranges::next(begin, std::move(end_));
@@ -192,7 +192,7 @@ namespace ranges
 
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
-                requires Sortable<I, C, P>() && RandomAccessRange<Rng>())
+                requires Sortable<I, C, P> && RandomAccessRange<Rng>)
             (safe_iterator_t<Rng>) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

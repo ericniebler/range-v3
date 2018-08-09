@@ -35,7 +35,7 @@ namespace ranges
         {
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
-                requires RandomAccessRange<Rng>() && SizedRange<Rng>())
+                requires RandomAccessRange<Rng> && SizedRange<Rng>)
             (RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             {
@@ -45,11 +45,15 @@ namespace ranges
             }
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
-                requires RandomAccessRange<Rng>() && !SizedRange<Rng>())
-            (attribute(RANGES_DEPRECATED(
+                requires RandomAccessRange<Rng> && !SizedRange<Rng>)
+            // (attribute(RANGES_DEPRECATED(
+            //     "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
+            //     "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
+            //     "Use ranges::index for unchecked access instead!"))
+            (RANGES_DEPRECATED(
                 "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
                 "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
-                "Use ranges::index for unchecked access instead!"))
+                "Use ranges::index for unchecked access instead!")
             RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             RANGES_AUTO_RETURN_NOEXCEPT
@@ -60,9 +64,9 @@ namespace ranges
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng, typename T, typename Self = at_fn,
                      typename D = range_difference_type_t<Rng>)(
-                requires RandomAccessRange<Rng>() &&
-                                  !Same<uncvref_t<T>, D>() &&
-                                  ConvertibleTo<T, D>())
+                requires RandomAccessRange<Rng> &&
+                                  !Same<uncvref_t<T>, D> &&
+                                  ConvertibleTo<T, D>)
             (RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng, T &&t) const
             RANGES_AUTO_RETURN_NOEXCEPT
@@ -72,12 +76,12 @@ namespace ranges
 
             /// \cond
             CONCEPT_template(typename R, typename T)(
-                requires !index_detail::Indexable<R, T>())
+                requires not index_detail::Indexable<R, T>)
             (void) operator()(R &&, T &&) const
             {
-                CONCEPT_assert_msg(RandomAccessRange<R>(),
+                CONCEPT_assert_msg(RandomAccessRange<R>,
                     "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-                CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>(),
+                CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
                     "ranges::at(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             }
 

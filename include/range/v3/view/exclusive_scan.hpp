@@ -26,15 +26,15 @@ namespace ranges {
             (
                 template(typename Rng, typename T, typename Fun)
                 concept ExclusiveScanConstraint3,
-                    Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>()
+                    Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>
             );
 
             CONCEPT_def
             (
                 template(typename Rng, typename T, typename Fun)
                 concept ExclusiveScanConstraint2,
-                    Invocable<Fun &, T, range_reference_t<Rng>>() &&
-                    ExclusiveScanConstraint3<Rng, T, Fun>()
+                    Invocable<Fun &, T, range_reference_t<Rng>> &&
+                    ExclusiveScanConstraint3<Rng, T, Fun>
             );
         }
         /// \endcond
@@ -43,9 +43,9 @@ namespace ranges {
         (
             template(typename Rng, typename T, typename Fun)
             concept ExclusiveScanConstraint,
-                InputRange<Rng>() &&
-                CopyConstructible<T>() &&
-                detail::ExclusiveScanConstraint2<Rng, T, Fun>()
+                InputRange<Rng> &&
+                CopyConstructible<T> &&
+                detail::ExclusiveScanConstraint2<Rng, T, Fun>
         );
 
         /// \addtogroup group-views
@@ -56,12 +56,12 @@ namespace ranges {
         {
         private:
             friend range_access;
-            CONCEPT_assert(ExclusiveScanConstraint<Rng, T, Fun>());
+            CONCEPT_assert(ExclusiveScanConstraint<Rng, T, Fun>);
 
             semiregular_t<T> init_;
             semiregular_t<Fun> fun_;
-            using single_pass = SinglePass<iterator_t<Rng>>;
-            using use_sentinel_t = meta::or_<meta::not_<BoundedRange<Rng>>, single_pass>;
+            using single_pass = meta::bool_<SinglePass<iterator_t<Rng>>>;
+            using use_sentinel_t = meta::bool_<!BoundedRange<Rng> || single_pass{}>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -116,12 +116,12 @@ namespace ranges {
             {
                 return {*this};
             }
-            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>())
+            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
             (adaptor<true>) begin_adaptor() const
             {
                 return {*this};
             }
-            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>())
+            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
             (meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>) end_adaptor() const
             {
                 return {*this};
@@ -134,12 +134,12 @@ namespace ranges {
               , init_(std::move(init))
               , fun_(std::move(fun))
             {}
-            CONCEPT_requires(SizedRange<Rng const>())
+            CONCEPT_requires(SizedRange<Rng const>)
             (range_size_type_t<Rng>) size() const
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_requires(SizedRange<Rng>())
+            CONCEPT_requires(SizedRange<Rng>)
             (range_size_type_t<Rng>) size()
             {
                 return ranges::size(this->base());
@@ -161,7 +161,7 @@ namespace ranges {
                 )
             public:
                 CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
-                    requires ExclusiveScanConstraint<Rng, T, Fun>())
+                    requires ExclusiveScanConstraint<Rng, T, Fun>)
                 (exclusive_scan_view<all_t<Rng>, T, Fun>)
                 operator()(Rng &&rng, T init, Fun fun = Fun{}) const
                 {
@@ -170,21 +170,21 @@ namespace ranges {
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
-                    requires not ExclusiveScanConstraint<Rng, T, Fun>())
+                    requires not ExclusiveScanConstraint<Rng, T, Fun>)
                 (void) operator()(Rng &&, T, Fun = Fun{}) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>,
                         "The first argument passed to view::exclusive_scan must be a model of the "
                         "InputRange concept.");
-                    CONSEPT_ASSERT_MSG(CopyConstructible<T>(),
+                    CONSEPT_ASSERT_MSG(CopyConstructible<T>,
                         "The second argument passed to view::exclusive_scan must be a model of the "
                         "CopyConstructible concept.");
-                    CONCEPT_ASSERT_MSG(Invocable<Fun &, T, range_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(Invocable<Fun &, T, range_reference_t<Rng>>,
                         "The third argument passed to view::exclusive_scan must be invokable with "
                         "the init value passed as the first argument, and "
                         "a value from the range passed as the second argument.");
                     CONCEPT_ASSERT_MSG(
-                        Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>(),
+                        Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>,
                         "The result of invoking the third argument must be assignable to the init "
                         "value.");
                 }

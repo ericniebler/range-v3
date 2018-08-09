@@ -30,7 +30,7 @@ namespace ranges
         {
             /// \return `*prev(end(rng))`
             CONCEPT_template(typename Rng)(
-                requires BoundedRange<Rng>() && BidirectionalRange<Rng>())
+                requires BoundedRange<Rng> && BidirectionalRange<Rng>)
             (RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng>) operator()(Rng &&rng) const
             {
