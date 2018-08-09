@@ -21,7 +21,7 @@ env:
     - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
     - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.gz"
     - BOOST_VERSION="1_63_0"
-    - CMAKE_VERSION="3.6.3"
+    - CMAKE_VERSION="3.12.0"
 
 cache:
   directories:
@@ -228,7 +228,7 @@ before_install:
   - |
     if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
       if [ -z "$(ls -A ${DEPS_DIR}/cmake-${CMAKE_VERSION}/cached)" ]; then
-        CMAKE_URL="https://cmake.org/files/v3.6/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
+        CMAKE_URL="https://cmake.org/files/v3.12/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
         mkdir -p ${DEPS_DIR}/cmake-${CMAKE_VERSION}
         travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar --strip-components=1 -xz -C ${DEPS_DIR}/cmake-${CMAKE_VERSION}
         touch ${DEPS_DIR}/cmake-${CMAKE_VERSION}/cached
