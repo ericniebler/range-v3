@@ -28,6 +28,17 @@ namespace ranges
 {
     inline namespace v3
     {
+
+    /// \cond
+    namespace _end_ {
+    template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+    detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist) {
+        RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
+        return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
+    }
+    }
+    /// \endcond
+
         /// \addtogroup group-actions
         /// @{
         namespace action
@@ -36,47 +47,100 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
-                static auto bind(slice_fn slice, D from, D to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(slice, std::placeholders::_1, from, to)
-                )
+
+              // Overloads for the pipe syntax: rng | view::slice(from,to)
+              template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+              static auto bind(slice_fn slice, D from, D to)
+              RANGES_DECLTYPE_AUTO_RETURN
+              (
+                  std::bind(slice, std::placeholders::_1, from, to)
+              )
+              template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+              static auto bind(slice_fn slice, D from, detail::from_end_<D> to)
+              RANGES_DECLTYPE_AUTO_RETURN
+              (
+                  std::bind(slice, std::placeholders::_1, from, to)
+              )
+              template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+              static auto bind(slice_fn slice, detail::from_end_<D> from, detail::from_end_<D> to)
+              RANGES_DECLTYPE_AUTO_RETURN
+              (
+                  std::bind(slice, std::placeholders::_1, from, to)
+              )
+              template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+              static auto bind(slice_fn slice, D from, const end_fn &to)
+              RANGES_DECLTYPE_AUTO_RETURN
+              (
+                  std::bind(slice, std::placeholders::_1, from, to)
+              )
+              template<typename D, CONCEPT_REQUIRES_(Integral<D>())>
+              static auto bind(slice_fn slice, detail::from_end_<D> from, const end_fn &to)
+              RANGES_DECLTYPE_AUTO_RETURN
+              (
+                  std::bind(slice, std::placeholders::_1, from, to)
+              )
             public:
-                struct ConceptImpl
-                {
-                    template<typename Rng, typename T, typename U,
-                        typename I = iterator_t<Rng>,
-                        typename D = range_difference_type_t<Rng>>
-                    auto requires_() -> decltype(
-                        concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::model_of<concepts::ConvertibleTo, T, D>(),
-                            concepts::model_of<concepts::ConvertibleTo, U, D>()
-                        ));
-                };
 
-                template<typename Rng, typename T, typename U>
-                using Concept = concepts::models<ConceptImpl, Rng, T, U>;
-
-                // TODO support slice from end.
-                template<typename Rng,
-                    typename I = iterator_t<Rng>,
-                    typename D = range_difference_type_t<Rng>,
-                    CONCEPT_REQUIRES_(Concept<Rng, D, D>())>
-                Rng operator()(Rng && rng, range_difference_type_t<Rng> from,
-                    range_difference_type_t<Rng> to) const
+              template<typename Rng,
+                  typename I = iterator_t<Rng>,
+                  typename D = range_difference_type_t<Rng>,
+                  CONCEPT_REQUIRES_(ForwardRange<Rng>() && ErasableRange<Rng, I, I>())>
+              Rng operator()(Rng &&rng, D from, D to) const
                 {
-                    RANGES_EXPECT(from <= to);
+                    RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
                     ranges::action::erase(rng, next(begin(rng), to), end(rng));
                     ranges::action::erase(rng, begin(rng), next(begin(rng), from));
-                    return static_cast<Rng&&>(rng);
+                    return static_cast<Rng &&>(rng);
                 }
+
+              template<typename Rng,
+                  typename I = iterator_t<Rng>,
+                  typename D = range_difference_type_t<Rng>,
+                  CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && ErasableRange<Rng, I, I>())>
+              Rng operator()(Rng &&rng, D from, detail::from_end_<D> to) const {
+                  RANGES_EXPECT(0 <= from && to.dist_ <= 0);
+                  ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                  ranges::action::erase(rng, prev(end(rng), -to.dist_), end(rng));
+                  return static_cast<Rng &&>(rng);
+              }
+
+              template<typename Rng,
+                  typename I = iterator_t<Rng>,
+                  typename D = range_difference_type_t<Rng>,
+                  CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && ErasableRange<Rng, I, I>())>
+              Rng operator()(Rng &&rng, detail::from_end_<D> from, detail::from_end_<D> to) const {
+                  RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
+                  ranges::action::erase(rng, begin(rng), prev(end(rng), -from.dist_));
+                  ranges::action::erase(rng, prev(end(rng), -to.dist_), end(rng));
+                  return static_cast<Rng &&>(rng);
+              }
+
+              template<typename Rng,
+                  typename I = iterator_t<Rng>,
+                  typename D = range_difference_type_t<Rng>,
+                  CONCEPT_REQUIRES_(ForwardRange<Rng>() && ErasableRange<Rng, I, I>())>
+              Rng operator()(Rng &&rng, D from, const end_fn &) const {
+                  RANGES_EXPECT(0 <= from);
+                  ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                  return static_cast<Rng &&>(rng);
+              }
+
+              template<typename Rng,
+                  typename I = iterator_t<Rng>,
+                  typename D = range_difference_type_t<Rng>,
+                  CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && ErasableRange<Rng, I, I>())>
+              Rng operator()(Rng &&rng, detail::from_end_<D> from, const end_fn &) const {
+                  RANGES_EXPECT(from.dist_ <= 0);
+                  ranges::action::erase(rng, begin(rng), prev(end(rng), -from.dist_));
+                  return static_cast<Rng &&>(rng);
+              }
+
+              template<typename A>
+              using is_end_type = meta::or_<meta::is<A, detail::from_end_>, std::is_same<A, end_fn>>;
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T, typename U,
-                    CONCEPT_REQUIRES_(!Concept<Rng, T, U>())>
+                    CONCEPT_REQUIRES_(!ForwardRange<Rng>())>
                 void operator()(Rng &&, T &&, U &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
@@ -86,11 +150,11 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::slice operates must allow element "
                         "removal.");
-                    CONCEPT_ASSERT_MSG(meta::and_<ConvertibleTo<T, range_difference_type_t<Rng>>,
-                            ConvertibleTo<U, range_difference_type_t<Rng>>>(),
-                        "The bounds passed to action::slice must be convertible to the range's "
-                        "difference type. TODO slicing from the end with 'end-2' syntax is not "
-                        "supported yet, sorry!");
+                    CONCEPT_ASSERT_MSG(meta::or_<BidirectionalRange<Rng>,
+                        meta::negate<meta::or_<is_end_type<T>, is_end_type<U>>>>(),
+                        "To slice from the end the object on which action::slice operates it must be a model"
+                        "of the BidirectionalRange concept.");
+
                 }
             #endif
             };
