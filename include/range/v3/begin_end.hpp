@@ -199,6 +199,13 @@ namespace ranges
                 (
                     Fn()(ref.get())
                 )
+
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(Int dist) const
+                {
+                  RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
+                  return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
+                }
             };
         }
         /// \endcond

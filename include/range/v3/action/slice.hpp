@@ -28,17 +28,6 @@ namespace ranges
 {
     inline namespace v3
     {
-
-    /// \cond
-    namespace _end_ {
-    template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-    detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist) {
-        RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
-        return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
-    }
-    }
-    /// \endcond
-
         /// \addtogroup group-actions
         /// @{
         namespace action
