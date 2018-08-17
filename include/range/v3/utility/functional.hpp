@@ -217,6 +217,12 @@ namespace ranges
               : refines<Invocable>
             {
                 // Axiom: equality_preserving(invoke(f, args...))
+                template<typename Fun, typename... Args>
+                using result_t = result_of_t<meta::_t<std::remove_reference<Fun>> const &(Args &&...)>;
+
+                template<typename Fun, typename... Args>
+                auto requires_() ->
+                    meta::void_<result_of_t<meta::_t<std::remove_reference<Fun>> const &(Args &&...)>>;
             };
 
             struct Predicate
