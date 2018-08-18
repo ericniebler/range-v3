@@ -36,7 +36,7 @@ struct count_equal
 {
     static unsigned count;
     template<class T>
-    bool operator()(const T& x, const T& y)
+    bool operator()(const T& x, const T& y) const
         {++count; return x == y;}
 };
 
