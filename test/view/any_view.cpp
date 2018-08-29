@@ -9,9 +9,11 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <map>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/map.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/any_view.hpp>
@@ -170,6 +172,14 @@ RANGES_DIAGNOSTIC_POP
             ten_ints.begin(), std::ptrdiff_t(ten_ints.size())
         }};
         ::check_equal(v, ten_ints);
+    }
+
+    // Regression test for #880
+    {
+        std::map<int, int> mm{ {0, 1}, {2, 3} };
+        ranges::any_view<int, ranges::category::forward | ranges::category::sized> as_any =
+            mm | ranges::view::keys;
+        (void)as_any;
     }
 
     test_polymorphic_downcast();
