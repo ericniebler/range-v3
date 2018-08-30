@@ -219,7 +219,8 @@ matrix:
 before_install:
   - export CHECKOUT_PATH=`pwd`;
   - |
-    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    set
+    if [ "$TRAVIS_OS_NAME" == "osx" -o "$TRAVIS_OS_NAME" == "max os x" ]; then
       brew update
       brew install valgrind
       brew install gnu-sed --with-default-names
