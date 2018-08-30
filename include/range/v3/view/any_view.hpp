@@ -587,7 +587,8 @@ namespace ranges
             }
         private:
             template<typename Rng>
-            using impl_t = detail::any_input_view_impl<view::all_t<Rng>, Ref>;
+            using impl_t = detail::any_input_view_impl<view::all_t<Rng>, Ref,
+                (Cat & category::sized) == category::sized>;
 
             detail::any_input_cursor<Ref> begin_cursor()
             {
@@ -598,7 +599,9 @@ namespace ranges
                 return detail::any_input_cursor<Ref>{*ptr_};
             }
 
-            std::shared_ptr<detail::any_input_view_interface<Ref>> ptr_;
+            std::shared_ptr<detail::any_input_view_interface<Ref,
+                (Cat & category::sized) == category::sized>>
+            ptr_;
         };
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17

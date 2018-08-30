@@ -59,9 +59,7 @@ namespace {
             using I = ranges::basic_iterator<silly_arrow_cursor>;
             auto ci = ranges::common_iterator<I, ranges::unreachable>{};
             CONCEPT_assert(ranges::Same<I, decltype(ci.operator->())>);
-#if !defined(__clang__) || !defined(__c2__) // Don't trigger VSO#364731
             CHECK(ci.operator->().operator->() == 42);
-#endif
         }
         // the expression *i is a glvalue [lvalue case]
         {

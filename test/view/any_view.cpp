@@ -110,6 +110,13 @@ RANGES_DIAGNOSTIC_POP
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
+        any_view<int, category::input | category::sized> ints = view::ints | view::take_exactly(10);
+        CONCEPT_assert(InputView<decltype(ints)>);
+        CONCEPT_assert(SizedView<decltype(ints)>);
+        static_assert((get_categories<decltype(ints)>() & category::input) == category::input, "");
+        static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
+    }
+    {
         any_view<int, category::bidirectional> ints = view::ints;
         CONCEPT_assert(BidirectionalView<decltype(ints)>);
         CONCEPT_assert(!RandomAccessView<decltype(ints)>);
