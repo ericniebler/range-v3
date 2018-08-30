@@ -40,16 +40,13 @@
     _Pragma("GCC diagnostic ignored \"-Wpragmas\"") \
     _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"") \
     _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"") \
+    _Pragma("GCC diagnostic ignored \"-Waddress\"") \
     /**/
 #define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END \
     _Pragma("GCC diagnostic pop")
 #else
 #define CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END
-// #pragma GCC diagnostic push
-// #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-// #pragma GCC diagnostic ignored "-Wpragmas"
-// #pragma GCC diagnostic ignored "-Wc++2a-compat"
 #endif
 
 CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
@@ -167,9 +164,9 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_DECL_DEF_1(TPARAM, NAME, ...)                                \
     CONCEPT_PP_EVAL2(                                                           \
         CONCEPT_PP_DECL_DEF_IMPL,                                               \
-        TPARAM,                                                                \
+        TPARAM,                                                                 \
         CONCEPT_PP_DECL_DEF_NAME NAME,                                          \
-        __VA_ARGS__)                                                           \
+        __VA_ARGS__)                                                            \
     /**/
 // The defn is of the form:
 //   template(class A, class B)
@@ -217,7 +214,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                       \
     inline namespace _eager_ {                                                 \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
-        concept bool NAME = CONCEPT_PP_DEF_IMPL(__VA_ARGS__)(__VA_ARGS__);      \
+        concept bool NAME = CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);      \
     }                                                                          \
     namespace defer = _eager_;                                                 \
     namespace lazy {                                                           \
@@ -264,8 +261,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
         using Concept = CONCEPT_PP_CAT(NAME, Concept);                          \
         CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
-        static auto Requires_ CONCEPT_PP_DEF_IMPL(__VA_ARGS__)(__VA_ARGS__);    \
-        CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
+        static auto Requires_ CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);    \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
         struct Eval {                                                          \
             template <class C_ = Concept>                                      \
@@ -276,6 +272,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
             explicit constexpr operator bool() const noexcept {                \
                 return Eval::impl(0);                                          \
             }                                                                  \
+            CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                 \
             constexpr auto operator!() const noexcept {                        \
                 return ::concepts::detail::Not<Eval>{};                \
             }                                                                  \
@@ -355,7 +352,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CONCEPT_TEMPLATE_AUX_3_requires
 #define CONCEPT_TEMPLATE_AUX_4(...)                                             \
-    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__)(__VA_ARGS__)                            \
+    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                            \
     /**/
 #define CONCEPT_TEMPLATE_AUX_5(REQUIRES, ...)                                   \
     CONCEPT_PP_CAT(                                                             \
@@ -385,7 +382,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CONCEPT_TEMPLATE_AUX_3_requires
 #define CONCEPT_TEMPLATE_AUX_4(...)                                             \
-    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__)(__VA_ARGS__)                            \
+    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                            \
     /**/
 #define CONCEPT_TEMPLATE_AUX_5(REQUIRES, ...)                                   \
     CONCEPT_PP_CAT(                                                             \
@@ -494,7 +491,6 @@ namespace concepts
                 }
             };
         } // namespace detail
-
 
         template <class T>
         constexpr bool implicitly_convertible_to(T) {
