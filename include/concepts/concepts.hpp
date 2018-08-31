@@ -26,11 +26,6 @@
 #include <concepts/swap.hpp>
 #include <concepts/type_traits.hpp>
 
-// BUGBUG
-#if defined(__clang__)
-#pragma GCC diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-#endif
-
 // disable buggy compatibility warning about "requires" and "concept" being
 // C++20 keywords.
 #if defined(__clang__) || defined(__GNUC__)
@@ -40,7 +35,6 @@
     _Pragma("GCC diagnostic ignored \"-Wpragmas\"") \
     _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"") \
     _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"") \
-    _Pragma("GCC diagnostic ignored \"-Waddress\"") \
     /**/
 #define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END \
     _Pragma("GCC diagnostic pop")
@@ -260,37 +254,37 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     struct CONCEPT_PP_CAT(NAME, Concept) {                                      \
         using Concept = CONCEPT_PP_CAT(NAME, Concept);                          \
         CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
-        static auto Requires_ CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);    \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
-        struct Eval {                                                          \
-            template <class C_ = Concept>                                      \
-            static constexpr decltype(                                         \
-                !&C_::template Requires_<CONCEPT_PP_EXPAND ARGS>)               \
-            impl(int) noexcept { return true; }                                \
-            static constexpr bool impl(long) noexcept { return false; }        \
-            explicit constexpr operator bool() const noexcept {                \
-                return Eval::impl(0);                                          \
-            }                                                                  \
-            CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                 \
-            constexpr auto operator!() const noexcept {                        \
-                return ::concepts::detail::Not<Eval>{};                \
-            }                                                                  \
-            template <class That>                                              \
-            constexpr auto operator&&(That) const noexcept {                   \
-                return ::concepts::detail::And<Eval, That>{};          \
-            }                                                                  \
-        };                                                                     \
-    };                                                                         \
-    CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                      \
+        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
+        static auto Requires_ CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);   \
+        CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
+        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
+        struct Eval {                                                           \
+            template <class C_ = Concept>                                       \
+            static constexpr decltype(                                          \
+                &C_::template Requires_<CONCEPT_PP_EXPAND ARGS>, true)          \
+            impl(int) noexcept { return true; }                                 \
+            static constexpr bool impl(long) noexcept { return false; }         \
+            explicit constexpr operator bool() const noexcept {                 \
+                return Eval::impl(0);                                           \
+            }                                                                   \
+            constexpr auto operator!() const noexcept {                         \
+                return ::concepts::detail::Not<Eval>{};                         \
+            }                                                                   \
+            template <class That>                                               \
+            constexpr auto operator&&(That) const noexcept {                    \
+                return ::concepts::detail::And<Eval, That>{};                   \
+            }                                                                   \
+        };                                                                      \
+    };                                                                          \
+    CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                     \
     CONCEPT_INLINE_VAR constexpr bool NAME =                                    \
-        (bool)CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};     \
-    namespace lazy {                                                           \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                  \
+        (bool)CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};    \
+    namespace lazy {                                                            \
+        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
         CONCEPT_INLINE_VAR constexpr auto NAME =                                \
-            CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};       \
-    }                                                                          \
-    namespace defer = lazy                                                    \
+            CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};      \
+    }                                                                           \
+    namespace defer = lazy                                                      \
     /**/
 #endif
 

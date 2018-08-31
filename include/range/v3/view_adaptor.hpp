@@ -54,6 +54,7 @@ namespace ranges
             struct adaptor_value_type_2_
               : compressed_pair<BaseIter, Adapt>
             {
+                adaptor_value_type_2_() = default;
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
             };
 
@@ -64,6 +65,7 @@ namespace ranges
                 meta::void_<decltype(Adapt::read(std::declval<BaseIter const &>(), adaptor_base_current_mem_fn{}))>>
               : compressed_pair<BaseIter, Adapt>
             {
+                adaptor_value_type_2_() = default;
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
                 using value_type = value_type_t<BaseIter>;
             };
@@ -72,6 +74,7 @@ namespace ranges
             struct adaptor_value_type_
               : adaptor_value_type_2_<BaseIter, Adapt>
             {
+                adaptor_value_type_() = default;
                 using adaptor_value_type_2_<BaseIter, Adapt>::adaptor_value_type_2_;
             };
 
@@ -79,6 +82,7 @@ namespace ranges
             struct adaptor_value_type_<BaseIter, Adapt, meta::void_<typename Adapt::value_type>>
               : compressed_pair<BaseIter, Adapt>
             {
+                adaptor_value_type_() = default;
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
                 using value_type = typename Adapt::value_type;
             };
@@ -376,14 +380,8 @@ namespace ranges
                 return iter_move_(42);
             }
         public:
-        #ifdef __GNUC__ // BUGBUG unknown error, testing on gcc-trunk 2018-07-04
             adaptor_cursor() = default;
-            constexpr adaptor_cursor(BaseIter base_iter, Adapt adapt)
-              : base_t{static_cast<BaseIter &&>(base_iter), static_cast<Adapt &&>(adapt)}
-            {}
-        #else
             using base_t::base_t;
-        #endif
         };
 
         template<typename D>

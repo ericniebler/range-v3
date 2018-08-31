@@ -37,10 +37,26 @@ namespace ranges
 
         namespace _tagged_
         {
+            template <class Base>
+            struct wrap_base : Base
+            {
+                wrap_base() = default;
+                using Base::Base;
+                CONCEPT_requires(MoveConstructible<Base>)
+                (constexpr) wrap_base(Base&& base)
+                    noexcept(std::is_nothrow_move_constructible<Base>::value)
+                  : Base(static_cast<Base&&>(base))
+                {}
+                CONCEPT_requires(CopyConstructible<Base>)
+                (constexpr) wrap_base(Base const& base)
+                    noexcept(std::is_nothrow_copy_constructible<Base>::value)
+                  : Base(base)
+                {}
+            };
             template<typename Base, std::size_t, typename...>
             struct chain
             {
-                using type = Base;
+                using type = wrap_base<Base>;
             };
             template<typename Base, std::size_t I, typename First, typename... Rest>
             struct chain<Base, I, First, Rest...>
@@ -72,16 +88,6 @@ namespace ranges
         public:
             tagged() = default;
             using base_t::base_t;
-            CONCEPT_requires(MoveConstructible<Base>)
-            (constexpr) tagged(Base && that)
-                noexcept(std::is_nothrow_move_constructible<Base>::value)
-              : base_t(detail::move(that))
-            {}
-            CONCEPT_requires(CopyConstructible<Base>)
-            (constexpr) tagged(Base const &that)
-                noexcept(std::is_nothrow_copy_constructible<Base>::value)
-              : base_t(that)
-            {}
             template<typename Other, typename = meta::if_<can_convert<Other>>>
             constexpr tagged(tagged<Other, Tags...> && that)
                 noexcept(std::is_nothrow_constructible<Base, Other>::value)
@@ -218,16 +224,6 @@ namespace ranges
                 getter(getter &&) = default;                                         \
                 getter(getter const &) = default;                                    \
                 using Next::Next;                                                    \
-                CONCEPT_requires(MoveConstructible<Untagged>)                      \
-                (constexpr) getter(Untagged && that)                                 \
-                    noexcept(std::is_nothrow_move_constructible<Untagged>::value)    \
-                  : Next(detail::move(that))                                         \
-                {}                                                                   \
-                CONCEPT_requires(CopyConstructible<Untagged>)                      \
-                (constexpr) getter(Untagged const &that)                             \
-                    noexcept(std::is_nothrow_copy_constructible<Untagged>::value)    \
-                  : Next(that)                                                       \
-                {}                                                                   \
                 getter &operator=(getter &&) = default;                              \
                 getter &operator=(getter const &) = default;                         \
                 RANGES_CXX14_CONSTEXPR                                               \
