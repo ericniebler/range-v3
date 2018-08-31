@@ -38,11 +38,11 @@ target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_link_libraries(range-v3 INTERFACE concepts meta)
 
+include(CTest) # invokes enable_testing() and defines BUILD_TESTING variable, defaulting to ON
 include(TestHeaders)
 include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
-include(CTest)
 
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
