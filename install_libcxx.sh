@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TRUNK_VERSION="6.0.0"
+TRUNK_VERSION="7.0.0"
 
 set -e
 
@@ -40,7 +40,7 @@ if [ ${COMPILER} != "clang" ]; then
 fi
 
 if [ -z ${VERSION+x} ]; then
-    echo "libc++ version is not set. To set the libc++ version: ./install_libcxx.sh -v X.Y.Z"
+    echo "Malformed libc++ version - I give up."
     exit 4
 fi
 
@@ -70,6 +70,8 @@ else
     tar -xf libcxxabi-${VERSION}.src.tar.xz -C llvm-source/projects/libcxxabi --strip-components=1
 fi
 
+TARGET=`pwd`/llvm
+mkdir "${TARGET}"
 mkdir llvm-build
 cd llvm-build
 
@@ -77,23 +79,25 @@ cd llvm-build
 # - only ASAN is enabled for clang/libc++ versions < 4.x
 if [[ $VERSION == *"3."* ]]; then
     cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} \
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="${TARGET}" \
           ../llvm-source
     if [[ $SANITIZER == "Address;Undefined" ]]; then
         ASAN_FLAGS="-fsanitize=address"
         cmake -DCMAKE_CXX_FLAGS="${ASAN_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${ASAN_FLAGS}" ../llvm-source
     fi
     make cxx -j2 VERBOSE=1
-    sudo cp -r lib/* /usr/lib/
-    sudo cp -r include/c++ /usr/include/
+    mkdir "${TARGET}/lib"
+    mkdir "${TARGET}/include"
+    cp -r lib/* "${TARGET}/lib"
+    cp -r include/c++ "${TARGET}/include"
 else
     cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} \
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="${TARGET}" \
           -DLIBCXX_ABI_UNSTABLE=ON \
           -DLLVM_USE_SANITIZER=${SANITIZER} \
           ../llvm-source
     make cxx -j2 VERBOSE=1
-    sudo make install-cxxabi install-cxx
+    make install-cxxabi install-cxx
 fi
 
 exit 0
