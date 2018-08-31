@@ -14,7 +14,7 @@
 # - Louis Dionne's Hana: https://github.com/ldionne/hana
 # - Paul Fultz II's FIT: https://github.com/pfultz2/Fit
 language: cpp
-sudo: false
+sudo: true
 script: cmake
 
 git:
@@ -67,7 +67,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-3.7
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.7 # main'
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.7 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
     - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
