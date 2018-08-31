@@ -14,13 +14,15 @@
 # - Louis Dionne's Hana: https://github.com/ldionne/hana
 # - Paul Fultz II's FIT: https://github.com/pfultz2/Fit
 language: cpp
+sudo: false
 script: cmake
+
+git:
+  depth: 1
 
 env:
   global:
     - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
-    - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.gz"
-    - BOOST_VERSION="1_63_0"
     - CMAKE_VERSION="3.6.3"
 
 cache:
@@ -43,21 +45,16 @@ matrix:
         apt:
           packages:
             - clang-3.6
-            - g++-5
+            - libstdc++-5-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
 
     - env: CLANG_VERSION=3.6 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
       addons: *clang36
 
     # clang 3.7 C++11/14 Release libc++
-    #
-    # ASAN disabled: cmake'ing libc++-3.7 with -fsanitize=address fails with:
-    #   CMake Error at projects/libcxx/CMakeLists.txt:164 (message):
-    #     c++11 is required by libc++ but is not supported by the compiler
     - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=11 LIBCXX=On
       os: linux
       addons: &clang37
@@ -65,13 +62,14 @@ matrix:
           packages:
             - util-linux
             - clang-3.7
-            - g++-5
+            - libstdc++-5-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-trusty-3.7
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.7 # main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    # ASAN disabled (see above):
     - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
       addons: *clang37
@@ -84,11 +82,10 @@ matrix:
           packages:
             - util-linux
             - clang-3.8
-            - g++-5
+            - libstdc++-5-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
 
     - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
@@ -102,11 +99,10 @@ matrix:
           packages:
             - util-linux
             - clang-3.9
-            - g++-5
+            - libstdc++-6-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.9
 
     - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
@@ -120,11 +116,13 @@ matrix:
           packages:
             - util-linux
             - clang-5.0
-            - g++-6
+            - libstdc++-6-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
+            - llvm-toolchain-trusty-5.0
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
     - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
       os: linux
@@ -150,11 +148,12 @@ matrix:
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z MSAN=On LIBCXX=On CLANG_MODULES=On
-      os: linux
-      addons: *clang5
+    # Module build is on the floor
+    # - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z MSAN=On LIBCXX=On CLANG_MODULES=On
+    #   os: linux
+    #   addons: *clang5
 
-      # gcc-4.9 C++11/C++14 Release
+    # gcc-4.9 C++11/C++14 Release
     - env: GCC_VERSION=4.9 BUILD_TYPE=Release CPP=11
       os: linux
       addons: &gcc49
@@ -169,7 +168,7 @@ matrix:
       os: linux
       addons: *gcc49
 
-      # gcc-5 C++11/C++14 Release
+    # gcc-5 C++11/C++14 Release
     - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=11
       os: linux
       addons: &gcc5
@@ -217,95 +216,70 @@ matrix:
 
 # Install dependencies
 before_install:
-  - export CHECKOUT_PATH=`pwd`;
+  - set -e
   - |
     if [ "$TRAVIS_OS_NAME" == "osx" ]; then
       brew update
-      brew install valgrind
-      brew install gnu-sed --with-default-names
-      brew install gnu-which --with-default-names
+      brew install gnu-sed
+      brew install gnu-which
+      brew upgrade cmake
+      export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    elif [ "$BUILD_TYPE" == "Release" -a "$ASAN" != "On" -a "$MSAN" != "On" ]; then
+      USE_VALGRIND=On
     fi
   - |
     if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-      if [ -z "$(ls -A ${DEPS_DIR}/cmake-${CMAKE_VERSION}/cached)" ]; then
+      if [ -f ${DEPS_DIR}/cmake-${CMAKE_VERSION}/cached ]; then
+        echo "Using cached cmake version ${CMAKE_VERSION}."
+      else
         CMAKE_URL="https://cmake.org/files/v3.6/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
         mkdir -p ${DEPS_DIR}/cmake-${CMAKE_VERSION}
         travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar --strip-components=1 -xz -C ${DEPS_DIR}/cmake-${CMAKE_VERSION}
         touch ${DEPS_DIR}/cmake-${CMAKE_VERSION}/cached
-      else
-        echo "Using cached cmake version ${CMAKE_VERSION}."
       fi
       export PATH="${DEPS_DIR}/cmake-${CMAKE_VERSION}/bin:${PATH}"
-    else
-      if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
     fi
   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
-  - which $CXX
+  - which $CXX && $CXX --version
   - which $CC
-  - which valgrind
-  - $CXX --version
+  - if [ "$USE_VALGRIND" == "On" ]; then which valgrind; fi
   - if [ "$ASAN" == "On" ]; then export SANITIZER="Address;Undefined"; fi
   - if [ "$MSAN" == "On" ]; then export SANITIZER="MemoryWithOrigins"; fi
-  - if [ -n "$CLANG_VERSION" ]; then sudo PATH="${PATH}" CXX="$CXX" CC="$CC" ./install_libcxx.sh; fi
-
-  # Download and install Boost
-  # Adapted from Boost.Compute (under the Boost License)
-  # Copyright Jakub Szuppe 2016.
-  - |
-    if [[ ${TRAVIS_OS_NAME} == "linux" && ${BOOST} == "On" ]]; then
-      if [ ! -f "${DEPS_DIR}/boost/${BOOST_VERSION}_cached" ]; then
-        # create dirs for source and install
-        mkdir -p ${DEPS_DIR}/boost${BOOST_VERSION}
-        mkdir -p ${DEPS_DIR}/boost
-        rm -rf ${DEPS_DIR}/boost/*
-        # download
-        travis_retry wget --no-check-certificate --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${DEPS_DIR}/boost${BOOST_VERSION}
-        pushd ${DEPS_DIR}/boost${BOOST_VERSION}
-        # configure and install
-        ./bootstrap.sh --prefix=${DEPS_DIR}/boost/ --with-libraries=program_options,date_time
-        ./b2 toolset=clang cxxflags="-stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/" linkflags="-stdlib=libc++"
-        ./b2 -d0 install
-        popd
-        touch ${DEPS_DIR}/boost/${BOOST_VERSION}_cached
-      else
-        echo 'Using cached Boost ${BOOST_VERSION} libraries.'
-      fi
-    fi
+  - if [ -n "$CLANG_VERSION" ]; then PATH="${PATH}" CXX="$CXX" CC="$CC" ./install_libcxx.sh; fi
 
 install:
-  - cd $CHECKOUT_PATH
-
   # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
   # It is fixed in valgrind 3.10 so this won't be necessary if someone
   # replaces the current valgrind (3.7) with valgrind-3.10
-  - if [ "$BUILD_TYPE" == "Release" -a "$ASAN" != "On" ]; then sed -i 's/march=native/msse4.2/' cmake/ranges_flags.cmake; fi
-  - mkdir -p build
-  - cd build
+  - if [ "$USE_VALGRIND" == "On" ]; then sed -i 's/march=native/msse4.2/' cmake/ranges_flags.cmake; fi
+
   - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
   - |
     if [ "$LIBCXX" == "On" ]; then
-      CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"
-      CXX_LINKER_FLAGS="${CXX_LINKER_FLAGS} -lc++abi"
+      CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem ${TRAVIS_BUILD_DIR}/llvm/include/c++/v1/ -Wno-unused-command-line-argument"
+      CXX_LINKER_FLAGS="${CXX_LINKER_FLAGS} -L ${TRAVIS_BUILD_DIR}/llvm/lib -Wl,-rpath,${TRAVIS_BUILD_DIR}/llvm/lib -lc++abi"
+      if [ -n "$CLANG_VERSION" ]; then
+        if [ "$ASAN" == "On" ]; then
+          CXX_FLAGS="${CXX_FLAGS} -fsanitize=address"
+        elif [ "$MSAN" == "On" ]; then
+          CXX_FLAGS="${CXX_FLAGS} -fsanitize=memory"
+        fi
+      fi
     fi
-  # Required to test the C++ compiler since libc++ is compiled with ASan enabled:
-  - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" -a "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address"; fi
-  # Required to test the C++ compiler since libc++ is compiled with MSan enabled:
-  - if [ -n "$CLANG_VERSION" -a "$MSAN" == "On" -a "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=memory"; fi
+
+  - mkdir -p build
+  # This cd works, but causes the shell to exit on OSX with set -e. I don't even.
+  - set +e; cd build; set -e; pwd
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_HEADER_CHECKS=$HEADERS -DRANGES_VERBOSE_BUILD=On -DRANGES_ASAN=$ASAN -DRANGES_MSAN=$MSAN -Wdev
-  - cat CMakeFiles/CMakeError.log
-  - cat CMakeFiles/CMakeOutput.log
-  - |
-    if [ "$BOOST" == "On" ]; then
-      export LD_LIBRARY_PATH=$DEPS_DIR/boost/lib:$LD_LIBRARY_PATH
-      cmake .. -DRANGES_BUILD_CALENDAR_EXAMPLE=On -DBOOST_ROOT=${DEPS_DIR}/boost
-    fi
-  - if [ "$CLANG_MODULES" == "On" -a "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="/usr/include/c++/v1/module.modulemap"; fi
+  - cat CMakeFiles/CMakeError.log || true
+  - cat CMakeFiles/CMakeOutput.log || true
+  - if [ "$CLANG_MODULES" == "On" -a "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="${TRAVIS_BUILD_DIR}/llvm/include/c++/v1/module.modulemap"; fi
+
   - make -j2 VERBOSE=1
 
 script:
-  # Only enable valgrind for non-ASAN Release builds (keep this in sync with line 309)
-  - if [ "$BUILD_TYPE" == "Release" -a "$ASAN" != "On" -a "$MSAN" != "On" ]; then CTEST_FLAGS="-D ExperimentalMemCheck"; fi
+  - if [ "$USE_VALGRIND" == "On" ]; then CTEST_FLAGS="-D ExperimentalMemCheck"; fi
   - ctest -j2 -VV ${CTEST_FLAGS}
 
 notifications:
