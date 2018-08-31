@@ -13,15 +13,15 @@ project(Range-v3 CXX)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 
-include(TestHeaders)
-include(ranges_options)
-include(ranges_env)
-include(ranges_flags)
-include(CTest)
+# include(TestHeaders)
+# include(ranges_options)
+# include(ranges_env)
+# include(ranges_flags)
+# include(CTest)
 
-enable_testing()
+# enable_testing()
 
-add_definitions(-D_GLIBCXX20_CONSTEXPR=)
+# add_definitions(-D_GLIBCXX20_CONSTEXPR=)
 
 add_library(meta INTERFACE)
 target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
@@ -37,6 +37,12 @@ add_library(range-v3 INTERFACE)
 target_include_directories(range-v3 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(range-v3 SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 target_link_libraries(range-v3 INTERFACE concepts meta)
+
+include(TestHeaders)
+include(ranges_options)
+include(ranges_env)
+include(ranges_flags)
+include(CTest)
 
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
