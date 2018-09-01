@@ -203,7 +203,8 @@ namespace ranges
                     ++it1_;
                     ++it2_;
                 }
-                bool equal(cursor const &that) const
+                CONCEPT_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
+                (bool) equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // transformed ranges to be of different lengths, stopping when the first

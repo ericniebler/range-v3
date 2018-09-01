@@ -148,7 +148,8 @@ namespace ranges
                     ++it1_;
                     satisfy();
                 }
-                bool equal(set_difference_cursor const &that) const
+                CONCEPT_requires(ForwardRange<Rng1>)
+                (bool) equal(set_difference_cursor const &that) const
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges
                 }
@@ -313,7 +314,8 @@ namespace ranges
                     ++it2_;
                     satisfy();
                 }
-                bool equal(set_intersection_cursor const &that) const
+                CONCEPT_requires(ForwardRange<Rng1>)
+                (bool) equal(set_intersection_cursor const &that) const
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges;
                 }
@@ -516,7 +518,8 @@ namespace ranges
                     }
                     satisfy();
                 }
-                bool equal(set_union_cursor const &that) const
+                CONCEPT_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
+                (bool) equal(set_union_cursor const &that) const
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
@@ -737,7 +740,8 @@ namespace ranges
                             break;
                     }
                 }
-                bool equal(set_symmetric_difference_cursor const &that) const
+                CONCEPT_requires(ForwardRange<R1> && ForwardRange<R2>)
+                (bool) equal(set_symmetric_difference_cursor const &that) const
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
