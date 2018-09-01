@@ -50,44 +50,44 @@ namespace ranges
          *  \relates ranges::v3::category
          *  \{
          */
-        constexpr category operator& (category lhs, category rhs) noexcept
+        constexpr category operator&(category lhs, category rhs) noexcept
         {
             return static_cast<category>(
                 static_cast<meta::_t<std::underlying_type<category>>>(lhs) &
                 static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator| (category lhs, category rhs) noexcept
+        constexpr category operator|(category lhs, category rhs) noexcept
         {
             return static_cast<category>(
                 static_cast<meta::_t<std::underlying_type<category>>>(lhs) |
                 static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator^ (category lhs, category rhs) noexcept
+        constexpr category operator^(category lhs, category rhs) noexcept
         {
             return static_cast<category>(
                 static_cast<meta::_t<std::underlying_type<category>>>(lhs) ^
                 static_cast<meta::_t<std::underlying_type<category>>>(rhs));
         }
 
-        constexpr category operator~ (category lhs) noexcept
+        constexpr category operator~(category lhs) noexcept
         {
             return static_cast<category>(
                 ~static_cast<meta::_t<std::underlying_type<category>>>(lhs));
         }
 
-        RANGES_CXX14_CONSTEXPR category & operator&= (category & lhs, category rhs) noexcept
+        RANGES_CXX14_CONSTEXPR category &operator&=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs & rhs);
         }
 
-        RANGES_CXX14_CONSTEXPR category & operator|= (category & lhs, category rhs) noexcept
+        RANGES_CXX14_CONSTEXPR category &operator|=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs | rhs);
         }
 
-        RANGES_CXX14_CONSTEXPR category & operator^= (category & lhs, category rhs) noexcept
+        RANGES_CXX14_CONSTEXPR category &operator^=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs ^ rhs);
         }
@@ -285,14 +285,14 @@ namespace ranges
 
             template<typename Ref, category Cat>
             struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::bidirectional>>
-              : any_cursor_interface<Ref, category::forward>
+              : any_cursor_interface<Ref, (Cat & ~category::mask) | category::forward>
             {
                 virtual void prev() = 0;
             };
 
             template<typename Ref, category Cat>
             struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::random_access>>
-              : any_cursor_interface<Ref, category::bidirectional>
+              : any_cursor_interface<Ref, (Cat & ~category::mask) | category::bidirectional>
             {
                 virtual void advance(std::ptrdiff_t) = 0;
                 virtual std::ptrdiff_t distance_to(any_cursor_interface const &) const = 0;
@@ -314,7 +314,7 @@ namespace ranges
                   : it_{std::move(it)}
                 {}
             private:
-                using Forward = any_cursor_interface<Ref, category::forward>;
+                using Forward = any_cursor_interface<Ref, (Cat & ~category::mask) | category::forward>;
 
                 I it_;
 
