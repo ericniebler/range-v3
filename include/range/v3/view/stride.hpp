@@ -52,15 +52,20 @@ namespace ranges
             // produces the penultimate iterator. stride_view_base specializes on
             // that distinction so that only Bidirectional stride views have the
             // data member "offset_".
-            template<typename Rng, bool = BidirectionalRange<Rng>>
-            struct stride_view_base
+            template<typename Rng, bool BidiRange>
+            struct stride_view_base_;
+            template<typename Rng>
+            using stride_view_base = stride_view_base_<Rng, (bool) BidirectionalRange<Rng>>;
+
+            template<typename Rng, bool /*= BidirectionalRange<Rng>*/>
+            struct stride_view_base_
               : stride_view_adaptor<Rng>
             {
-                stride_view_base() = default;
+                stride_view_base_() = default;
                 RANGES_CXX14_CONSTEXPR
-                stride_view_base(Rng &&rng, range_difference_type_t<Rng> const stride)
+                stride_view_base_(Rng &&rng, range_difference_type_t<Rng> const stride)
                     noexcept(std::is_nothrow_constructible<stride_view_adaptor<Rng>, Rng>::value &&
-                        noexcept(std::declval<stride_view_base &>().calc_offset(
+                        noexcept(std::declval<stride_view_base_ &>().calc_offset(
                             meta::bool_<SizedRange<Rng>>{})))
                   : stride_view_adaptor<Rng>{std::move(rng)},
                     stride_{(RANGES_EXPECT(0 < stride), stride)},
@@ -89,7 +94,7 @@ namespace ranges
             private:
                 RANGES_CXX14_CONSTEXPR
                 range_difference_type_t<Rng> calc_offset(std::true_type)
-                    noexcept(noexcept(ranges::distance(std::declval<stride_view_base &>().base())))
+                    noexcept(noexcept(ranges::distance(std::declval<stride_view_base_ &>().base())))
                 {
                     if(auto const rem = ranges::distance(this->base()) % stride_)
                         return stride_ - rem;
@@ -104,11 +109,11 @@ namespace ranges
             };
 
             template<typename Rng>
-            struct stride_view_base<Rng, false>
+            struct stride_view_base_<Rng, false>
               : stride_view_adaptor<Rng>
             {
-                stride_view_base() = default;
-                constexpr stride_view_base(Rng &&rng, range_difference_type_t<Rng> const stride)
+                stride_view_base_() = default;
+                constexpr stride_view_base_(Rng &&rng, range_difference_type_t<Rng> const stride)
                     noexcept(std::is_nothrow_constructible<stride_view_adaptor<Rng>, Rng>::value)
                   : stride_view_adaptor<Rng>{std::move(rng)},
                     stride_{(RANGES_EXPECT(0 < stride), stride)}

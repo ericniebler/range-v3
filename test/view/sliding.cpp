@@ -60,20 +60,23 @@ namespace
     void test_prev(Adapted&, iterator_t<Adapted> const&, std::false_type)
     {}
 
-    template<typename Rng,
-        bool = RandomAccessRange<Rng> || (BidirectionalRange<Rng> && BoundedRange<Rng>)>
-    struct size_compare
+    template<typename Rng, bool>
+    struct size_compare_
     {
         iterator_t<Rng> iter1_;
         iterator_t<Rng> iter2_;
         range_difference_type_t<Rng> dist_;
     };
     template<typename Rng>
-    struct size_compare<Rng, true>
+    struct size_compare_<Rng, true>
     {
         iterator_t<Rng> iter1_;
         range_difference_type_t<Rng> dist_;
     };
+
+    template<typename Rng>
+    using size_compare =
+        size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && BoundedRange<Rng>)>;
 
     template<typename Base>
     void test_finite()

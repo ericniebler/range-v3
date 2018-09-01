@@ -40,10 +40,10 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Rng, bool = (bool) ForwardRange<Rng>>
-        struct chunk_view
+        template<typename Rng, bool IsForwardRange>
+        struct chunk_view_
           : view_adaptor<
-                chunk_view<Rng>,
+                chunk_view_<Rng, IsForwardRange>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
@@ -84,7 +84,7 @@ namespace ranges
                 }
             public:
                 adaptor() = default;
-                constexpr adaptor(constify<chunk_view> &cv)
+                constexpr adaptor(constify<chunk_view_> &cv)
                   : box<offset_t>{0}
                   , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
                   , end_(ranges::end(cv.base()))
@@ -162,9 +162,9 @@ namespace ranges
                 return static_cast<range_size_type_t<Rng>>(base_size);
             }
         public:
-            chunk_view() = default;
-            constexpr chunk_view(Rng rng, range_difference_type_t<Rng> n)
-              : chunk_view::view_adaptor(detail::move(rng))
+            chunk_view_() = default;
+            constexpr chunk_view_(Rng rng, range_difference_type_t<Rng> n)
+              : chunk_view_::view_adaptor(detail::move(rng))
               , n_((RANGES_EXPECT(0 < n), n))
             {}
             CONCEPT_requires(SizedRange<Rng const>)
@@ -182,9 +182,9 @@ namespace ranges
         };
 
         template<typename Rng>
-        struct chunk_view<Rng, false>
+        struct chunk_view_<Rng, false>
           : view_facade<
-                chunk_view<Rng, false>,
+                chunk_view_<Rng, false>,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
@@ -235,7 +235,7 @@ namespace ranges
 
                     using value_type = range_value_type_t<Rng>;
 
-                    chunk_view *rng_ = nullptr;
+                    chunk_view_ *rng_ = nullptr;
 
                     RANGES_CXX14_CONSTEXPR
                     bool done() const noexcept
@@ -279,7 +279,7 @@ namespace ranges
                     }
                 public:
                     inner_view() = default;
-                    constexpr explicit inner_view(chunk_view &view) noexcept
+                    constexpr explicit inner_view(chunk_view_ &view) noexcept
                       : rng_{&view}
                     {}
                     CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
@@ -291,13 +291,13 @@ namespace ranges
                     }
                 };
 
-                chunk_view *rng_ = nullptr;
+                chunk_view_ *rng_ = nullptr;
 
             public:
                 using value_type = inner_view;
 
                 outer_cursor() = default;
-                constexpr explicit outer_cursor(chunk_view &view) noexcept
+                constexpr explicit outer_cursor(chunk_view_ &view) noexcept
                   : rng_{&view}
                 {}
                 RANGES_CXX14_CONSTEXPR
@@ -355,9 +355,9 @@ namespace ranges
                 return static_cast<range_size_type_t<Rng>>(base_size);
             }
         public:
-            chunk_view() = default;
+            chunk_view_() = default;
             RANGES_CXX14_CONSTEXPR
-            chunk_view(Rng rng, range_difference_type_t<Rng> n)
+            chunk_view_(Rng rng, range_difference_type_t<Rng> n)
               : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
             {}
             CONCEPT_requires(SizedRange<Rng const>)
@@ -374,6 +374,13 @@ namespace ranges
             {
                 return size_(ranges::distance(base()));
             }
+        };
+
+        template<typename Rng>
+        struct chunk_view
+          : chunk_view_<Rng, (bool) ForwardRange<Rng>>
+        {
+            using chunk_view::chunk_view_::chunk_view_;
         };
 
         namespace view

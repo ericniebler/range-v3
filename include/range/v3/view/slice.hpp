@@ -71,7 +71,7 @@ namespace ranges
                 return next(ranges::begin(rng), i);
             }
 
-            template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>>
+            template<typename Rng, bool IsRandomAccess>
             struct slice_view_
               : view_facade<slice_view<Rng>, finite>
             {
@@ -188,9 +188,9 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct slice_view
-          : detail::slice_view_<Rng>
+          : detail::slice_view_<Rng, (bool) RandomAccessRange<Rng>>
         {
-            using detail::slice_view_<Rng>::slice_view_;
+            using detail::slice_view_<Rng, (bool) RandomAccessRange<Rng>>::slice_view_;
         };
 
         namespace view

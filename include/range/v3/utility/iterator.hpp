@@ -975,16 +975,19 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename I, bool IsReadable = (bool) Readable<I>>
-            struct move_into_cursor_types
+            template<typename I, bool IsReadable>
+            struct move_into_cursor_types_
             {};
 
             template<typename I>
-            struct move_into_cursor_types<I, true>
+            struct move_into_cursor_types_<I, true>
             {
                 using value_type = value_type_t<I>;
                 using single_pass = meta::bool_<(bool)SinglePass<I>>;
             };
+
+            template<typename I>
+            using move_into_cursor_types = move_into_cursor_types_<I, (bool) Readable<I>>;
 
             template<typename I>
             struct move_into_cursor

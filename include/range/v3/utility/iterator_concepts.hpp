@@ -262,7 +262,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename I, bool IsReadable = (bool) Readable<I>>
+            template<typename I, bool IsReadable>
             struct exclusively_writable_
             {
                 template<typename T>
@@ -281,11 +281,14 @@ namespace ranges
                         meta::bool_<(bool) Writable<I, T>>,
                         meta::not_<meta::is_trait<meta::defer<assignable_res_t, reference_t<I>, T>>>>;
             };
+
+            template<typename I>
+            using exclusively_writable = exclusively_writable_<I, (bool) Readable<I>>;
         }
         /// \endcond
 
         template<typename I, typename T>
-        using ExclusivelyWritable_ = meta::invoke<detail::exclusively_writable_<I>, T>;
+        using ExclusivelyWritable_ = meta::invoke<detail::exclusively_writable<I>, T>;
 
         namespace detail
         {

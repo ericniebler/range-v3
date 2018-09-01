@@ -376,7 +376,7 @@ namespace ranges
                         CursorConcept>,
                     T>;
 
-            template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>>
+            template<typename Cur, bool Readable>
             struct is_writable_cursor_
               : std::true_type
             {};
@@ -388,7 +388,7 @@ namespace ranges
 
             template<typename Cur>
             struct is_writable_cursor
-              : detail::is_writable_cursor_<Cur>
+              : detail::is_writable_cursor_<Cur, (bool) ReadableCursor<Cur>>
             {};
         }
         /// \endcond
