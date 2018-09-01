@@ -178,15 +178,7 @@ namespace ranges
             using compressed_pair<BaseSent, Adapt>::first;
             using compressed_pair<BaseSent, Adapt>::second;
         public:
-        #if __GNUC__
-            adaptor_sentinel() = default;
-            constexpr adaptor_sentinel(BaseSent sent, Adapt adapt)
-              : compressed_pair<BaseSent, Adapt>{
-                    static_cast<BaseSent &&>(sent), static_cast<Adapt &&>(adapt)}
-            {}
-        #else
             using compressed_pair<BaseSent, Adapt>::compressed_pair;
-        #endif
 
             // All sentinels into adapted ranges have a base() member for fetching
             // the underlying sentinel.
