@@ -98,7 +98,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires DropWhileViewConcept<Rng, Pred>)
-                (drop_while_view<all_t<Rng>, Pred>)
+                drop_while_view<all_t<Rng>, Pred>
                 operator()(Rng &&rng, Pred pred) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
@@ -106,7 +106,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Pred)(
                     requires not DropWhileViewConcept<Rng, Pred>)
-                (void) operator()(Rng &&, Pred) const
+                void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The first argument to view::drop_while must be a model of the "

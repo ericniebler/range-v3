@@ -40,7 +40,7 @@ namespace ranges
         {
             CONCEPT_template(typename T, typename U)(
                 requires EqualityComparableWith<T, U>)
-            (constexpr bool) operator()(T &&t, U &&u) const
+            constexpr bool operator()(T &&t, U &&u) const
             {
                 return (T &&) t == (U &&) u;
             }
@@ -51,7 +51,7 @@ namespace ranges
         {
             CONCEPT_template(typename T, typename U)(
                 requires EqualityComparableWith<T, U>)
-            (constexpr bool) operator()(T &&t, U &&u) const
+            constexpr bool operator()(T &&t, U &&u) const
             {
                 return (T &&) t != (U &&) u;
             }
@@ -62,7 +62,7 @@ namespace ranges
         {
             CONCEPT_template(typename T, typename U)(
                 requires StrictTotallyOrderedWith<T, U>)
-            (constexpr bool) operator()(T &&t, U &&u) const
+            constexpr bool operator()(T &&t, U &&u) const
             {
                 return (T &&) t < (U &&) u;
             }
@@ -243,13 +243,13 @@ namespace ranges
             FD pred_;
         public:
             CONCEPT_requires(DefaultConstructible<FD>)
-            (constexpr) logical_negate_()
+            constexpr logical_negate_()
                 noexcept(std::is_nothrow_default_constructible<FD>::value)
             {}
             CONCEPT_template(typename T,
                 typename U = meta::if_c<!Same<detail::decay_t<T>, logical_negate_>, T>)(
                 requires Constructible<FD, U>)
-            (explicit constexpr) logical_negate_(T &&pred)
+            explicit constexpr logical_negate_(T &&pred)
               : pred_(static_cast<T &&>(pred))
             {}
 
@@ -258,7 +258,7 @@ namespace ranges
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD &, Args...>)
-            (RANGES_CXX14_CONSTEXPR auto) operator()(Args &&...args)
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args)
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
             {
@@ -267,7 +267,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD const &, Args...>)
-            (constexpr auto) operator()(Args &&...args) const
+            constexpr auto operator()(Args &&...args) const
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
             {
@@ -276,7 +276,7 @@ namespace ranges
 #else // ^^^ GCC <= 4.8 / GCC > 4.8 vvvv
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD &, Args...>)
-            (RANGES_CXX14_CONSTEXPR auto) operator()(Args &&...args) &
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
             {
@@ -285,7 +285,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD const &, Args...>)
-            (constexpr auto) operator()(Args &&...args) const &
+            constexpr auto operator()(Args &&...args) const &
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
             {
@@ -294,7 +294,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD, Args...>)
-            (RANGES_CXX14_CONSTEXPR auto) operator()(Args &&...args) &&
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD>(), static_cast<Args &&>(args)...))
             {
@@ -303,7 +303,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename ...Args)(
                 requires Predicate<FD const, Args...>)
-            (RANGES_CXX14_CONSTEXPR auto) operator()(Args &&...args) const &&
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) const &&
             RANGES_DECLTYPE_NOEXCEPT(
                 !invoke(std::declval<FD const>(), static_cast<Args &&>(args)...))
             {
@@ -319,7 +319,7 @@ namespace ranges
         {
             CONCEPT_template(typename Pred, typename FD = detail::decay_t<Pred>)(
                 requires MoveConstructible<FD> && Constructible<FD, Pred>)
-            (constexpr logical_negate_<FD>) operator()(Pred &&pred) const
+            constexpr logical_negate_<FD> operator()(Pred &&pred) const
             {
                 return logical_negate_<FD>{(Pred &&) pred};
             }
@@ -688,7 +688,7 @@ namespace ranges
         // Evaluate the pipe with an argument
         CONCEPT_template(typename Arg, typename Pipe)(
             requires not is_pipeable<Arg>() && is_pipeable<Pipe>())
-        (decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(), std::declval<Pipe &>())))
+        decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(), std::declval<Pipe &>()))
         operator|(Arg &&arg, Pipe pipe)
         {
             return pipeable_access::impl<Pipe>::pipe(static_cast<Arg &&>(arg), pipe);
@@ -697,7 +697,7 @@ namespace ranges
         // Compose two pipes
         CONCEPT_template(typename Pipe0, typename Pipe1)(
             requires is_pipeable<Pipe0>() && is_pipeable<Pipe1>())
-        (decltype(make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))
+        decltype(make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>()))
         operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
@@ -730,7 +730,7 @@ namespace ranges
         {
             CONCEPT_template(typename T)(
                 requires not is_reference_wrapper_t<T>())
-            (reference_wrapper<T>) operator()(T &t) const
+            reference_wrapper<T> operator()(T &t) const
             {
                 return {t};
             }
@@ -759,7 +759,7 @@ namespace ranges
         {
             CONCEPT_template(typename T)(
                 requires not is_reference_wrapper<T>())
-            (T &&)operator()(T &&t) const noexcept
+            T && operator()(T &&t) const noexcept
             {
                 return static_cast<T &&>(t);
             }
@@ -819,14 +819,14 @@ namespace ranges
         {
             CONCEPT_template(typename F)(
                 requires std::is_bind_expression<uncvref_t<F>>::value)
-            (detail::protect<uncvref_t<F>>) operator()(F &&f) const
+            detail::protect<uncvref_t<F>> operator()(F &&f) const
             {
                 return {static_cast<F &&>(f)};
             }
             /// \overload
             CONCEPT_template(typename F)(
                 requires not std::is_bind_expression<uncvref_t<F>>::value)
-            (F) operator()(F &&f) const
+            F operator()(F &&f) const
             {
                 return static_cast<F &&>(f);
             }

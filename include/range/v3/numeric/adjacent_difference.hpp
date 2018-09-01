@@ -51,7 +51,7 @@ namespace ranges
                 typename BOp = minus, typename P = ident)(
                 requires Sentinel<S, I> && Sentinel<S2, O> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            (tagged_pair<tag::in(I), tag::out(O)>)
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                        P proj = P{}) const
             {
@@ -80,7 +80,7 @@ namespace ranges
                 typename P = ident)(
                 requires Sentinel<S, I> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            (tagged_pair<tag::in(I), tag::out(O)>)
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(std::move(begin), std::move(end), std::move(result),
@@ -91,7 +91,7 @@ namespace ranges
                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
                 requires Range<Rng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), static_cast<ORef &&>(result), std::move(bop),
@@ -103,8 +103,8 @@ namespace ranges
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>),
-                tag::out(safe_iterator_t<ORng>)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>),
+                tag::out(safe_iterator_t<ORng>)>
             operator()(Rng &&rng, ORng &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), begin(result), end(result),

@@ -45,7 +45,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
                     requires not Range<C>)
-                (static auto) bind(unique_fn unique, C pred, P proj = P{})
+                static auto bind(unique_fn unique, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
@@ -54,7 +54,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident)(
                     requires UniqueActionConcept<Rng, C, P>)
-                (Rng) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+                Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
                     auto it = ranges::unique(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, end(rng));
@@ -64,7 +64,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident)(
                     requires not UniqueActionConcept<Rng, C, P>)
-                (void) operator()(Rng &&, C && = C{}, P && = P{}) const
+                void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::unique operates must be a model of the "

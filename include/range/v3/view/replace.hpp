@@ -102,7 +102,7 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
                     requires Same<V1, V2>)
-                (static auto) bind(replace_fn replace, Val1 old_value, Val2 new_value)
+                static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(replace, std::placeholders::_1,
@@ -114,7 +114,7 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
                     requires not Same<V1, V2>)
-                (static detail::null_pipe) bind(replace_fn, Val1, Val2)
+                static detail::null_pipe bind(replace_fn, Val1, Val2)
                 {
                     CONCEPT_assert_msg(Same<V1, V2>,
                         "The two values passed to view::replace must have the same type.");
@@ -124,7 +124,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Val1, typename Val2)(
                     requires ReplaceViewConcept<Rng, Val1, Val2>)
-                (replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)
+                replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
                 operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const
                 {
                     return {all(static_cast<Rng &&>(rng)),
@@ -135,7 +135,7 @@ namespace ranges
                 // For error reporting
                 CONCEPT_template(typename Rng, typename Val1, typename Val2)(
                     requires not ReplaceViewConcept<Rng, Val1, Val2>)
-                (void) operator()(Rng &&, Val1 &&, Val2 &&) const
+                void operator()(Rng &&, Val1 &&, Val2 &&) const
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
                     using V2 = detail::decay_t<unwrap_reference_t<Val2>>;

@@ -32,8 +32,8 @@ namespace ranges
             CONCEPT_template(typename Cont, typename T)(
                 requires LvalueContainerLike<Cont> &&
                     Constructible<range_value_type_t<Cont>, T>)
-            (decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
-                push_back(std::declval<T>()))))
+            decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
+                push_back(std::declval<T>())))
             push_back(Cont &&cont, T &&t)
             {
                 unwrap_reference(cont).push_back(static_cast<T &&>(t));
@@ -41,10 +41,10 @@ namespace ranges
 
             CONCEPT_template(typename Cont, typename Rng)(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
-            (decltype(static_cast<void>(ranges::insert(
+            decltype(static_cast<void>(ranges::insert(
                 unwrap_reference(std::declval<Cont &>()),
                 std::declval<sentinel_t<Cont>>(),
-                std::declval<Rng>()))))
+                std::declval<Rng>())))
             push_back(Cont &&cont, Rng &&rng)
             {
                 ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng &&>(rng));
@@ -76,7 +76,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename T)(
                     requires PushBackActionConcept<Rng, T>)
-                (Rng) operator()(Rng &&rng, T &&t) const
+                Rng operator()(Rng &&rng, T &&t) const
                 {
                     push_back(rng, static_cast<T &&>(t));
                     return static_cast<Rng &&>(rng);
@@ -85,7 +85,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not PushBackActionConcept<Rng, T>)
-                (void) operator()(Rng &&rng, T &&t) const
+                void operator()(Rng &&rng, T &&t) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::push_back operates must be a model of the "

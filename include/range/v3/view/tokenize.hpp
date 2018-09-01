@@ -66,7 +66,7 @@ namespace ranges
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
             CONCEPT_requires(Range<Rng const &>)
-            (iterator) begin() const
+            iterator begin() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }

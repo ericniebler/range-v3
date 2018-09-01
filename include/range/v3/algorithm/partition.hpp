@@ -99,7 +99,7 @@ namespace ranges
         public:
             CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
                 requires Partitionable<I, C, P> && Sentinel<S, I>)
-            (I) operator()(I begin, S end, C pred, P proj = P{}) const
+            I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
                     std::move(proj), iterator_tag_of<I>());
@@ -108,7 +108,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Partitionable<I, C, P> && Range<Rng>)
-            (safe_iterator_t<Rng>) operator()(Rng &&rng, C pred, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),
                     std::move(proj), iterator_tag_of<I>());

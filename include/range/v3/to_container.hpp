@@ -77,7 +77,7 @@ namespace ranges
             private:
                 CONCEPT_template(typename Cont, typename Rng)(
                     requires not ToContainerReserve<Cont, Rng>)
-                (Cont) impl(Rng &&rng) const
+                Cont impl(Rng &&rng) const
                 {
                     using I = range_common_iterator_t<Rng>;
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
@@ -85,7 +85,7 @@ namespace ranges
 
                 CONCEPT_template(typename Cont, typename Rng)(
                     requires ToContainerReserve<Cont, Rng>)
-                (Cont) impl(Rng &&rng) const
+                Cont impl(Rng &&rng) const
                 {
                     Cont c;
                     auto const size = ranges::size(rng);
@@ -104,7 +104,7 @@ namespace ranges
                 CONCEPT_template(typename Rng,
                     typename Cont = meta::invoke<ToContainer, range_value_type_t<Rng>>)(
                     requires InputRange<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
-                (Cont) operator()(Rng &&rng) const
+                Cont operator()(Rng &&rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
@@ -133,7 +133,7 @@ namespace ranges
         CONCEPT_template(template<typename...> class ContT, typename Rng,
             typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>)(
             requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
-        (Cont) to_(Rng &&rng)
+        Cont to_(Rng &&rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
@@ -142,7 +142,7 @@ namespace ranges
         CONCEPT_template(template<typename...> class ContT, typename T,
             typename Cont = meta::invoke<meta::quote<ContT>, T>)(
             requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
-        (Cont) to_(std::initializer_list<T> list)
+        Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<ContT>();
         }
@@ -157,7 +157,7 @@ namespace ranges
         /// \overload
         CONCEPT_template(typename Cont, typename Rng)(
             requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
-        (Cont) to_(Rng &&rng)
+        Cont to_(Rng &&rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
@@ -165,7 +165,7 @@ namespace ranges
         /// \overload
         CONCEPT_template(typename Cont, typename T)(
             requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
-        (Cont) to_(std::initializer_list<T> list)
+        Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<Cont>();
         }

@@ -73,13 +73,13 @@ namespace ranges
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires Range<BaseRng const>)
-            (adaptor<true>) begin_adaptor() const
+            adaptor<true> begin_adaptor() const
             {
                 return {};
             }
             CONCEPT_template(typename BaseRng = Rng)(
                 requires Range<BaseRng const>)
-            (sentinel_adaptor<true>) end_adaptor() const
+            sentinel_adaptor<true> end_adaptor() const
             {
                 return {};
             }
@@ -101,14 +101,14 @@ namespace ranges
 
                 CONCEPT_template(typename Rng)(
                     requires not SizedRange<Rng> && !is_infinite<Rng>::value)
-                (static take_view<all_t<Rng>>) invoke_(Rng &&rng, range_difference_type_t<Rng> n)
+                static take_view<all_t<Rng>> invoke_(Rng &&rng, range_difference_type_t<Rng> n)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
 
                 CONCEPT_template(typename Rng)(
                     requires SizedRange<Rng> || is_infinite<Rng>::value)
-                (static auto) invoke_(Rng &&rng, range_difference_type_t<Rng> n)
+                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_exactly(
@@ -118,7 +118,7 @@ namespace ranges
 
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>)
-                (static auto) bind(take_fn take, Int n)
+                static auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(take, std::placeholders::_1, n))
@@ -127,7 +127,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Int)(
                     requires not Integral<Int>)
-                (static detail::null_pipe) bind(take_fn, Int)
+                static detail::null_pipe bind(take_fn, Int)
                 {
                     CONCEPT_assert_msg(Integral<Int>,
                         "The object passed to view::take must be a model of the Integral concept.");
@@ -138,7 +138,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>)
-                (auto) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_fn::invoke_(static_cast<Rng &&>(rng), n)
@@ -147,7 +147,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not InputRange<Rng>)
-                (void) operator()(Rng &&, T &&) const
+                void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::take operates must be a model of the InputRange "

@@ -50,28 +50,28 @@ namespace ranges
                 // to move a container into a split and have elements moved into the result.
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires view::SplitOnFunction<Rng, Fun>)
-                (std::vector<split_value_t<Rng>>) operator()(Rng &&rng, Fun fun) const
+                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
                 {
                     return view::split(rng, std::move(fun))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires view::SplitOnPredicate<Rng, Fun>)
-                (std::vector<split_value_t<Rng>>) operator()(Rng &&rng, Fun fun) const
+                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
                 {
                     return view::split(rng, std::move(fun))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
                 CONCEPT_template(typename Rng)(
                     requires view::SplitOnElement<Rng>)
-                (std::vector<split_value_t<Rng>>) operator()(Rng &&rng, range_value_type_t<Rng> val) const
+                std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 {
                     return view::split(rng, std::move(val))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
                 CONCEPT_template(typename Rng, typename Sub)(
                     requires view::SplitOnSubRange<Rng, Sub>)
-                (std::vector<split_value_t<Rng>>) operator()(Rng &&rng, Sub &&sub) const
+                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Sub &&sub) const
                 {
                     return view::split(rng, static_cast<Sub &&>(sub))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
@@ -80,7 +80,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not ConvertibleTo<T, range_value_type_t<Rng>>)
-                (void) operator()(Rng &&, T &&) const volatile
+                void operator()(Rng &&, T &&) const volatile
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::split operates must be a model of the "

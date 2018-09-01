@@ -35,7 +35,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename T)(
                 requires LvalueContainerLike<Cont> &&
                     Constructible<range_value_type_t<Cont>, T>)
-            (auto) insert(Cont &&cont, T &&t)
+            auto insert(Cont &&cont, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 unwrap_reference(cont).insert(static_cast<T &&>(t))
@@ -44,7 +44,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename I, typename S,
                 typename C = common_iterator_t<I, S>)(
                 requires LvalueContainerLike<Cont> && Sentinel<S, I> && !Range<S>)
-            (auto) insert(Cont &&cont, I i, S j)
+            auto insert(Cont &&cont, I i, S j)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 unwrap_reference(cont).insert(C{i}, C{j})
@@ -53,7 +53,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename Rng,
                 typename C = range_common_iterator_t<Rng>)(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
-            (auto) insert(Cont &&cont, Rng &&rng)
+            auto insert(Cont &&cont, Rng &&rng)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 unwrap_reference(cont).insert(C{ranges::begin(rng)}, C{ranges::end(rng)})
@@ -62,7 +62,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename I, typename T)(
                 requires LvalueContainerLike<Cont> && Iterator<I> &&
                     Constructible<range_value_type_t<Cont>, T>)
-            (auto) insert(Cont &&cont, I p, T &&t)
+            auto insert(Cont &&cont, I p, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 unwrap_reference(cont).insert(p, static_cast<T &&>(t))
@@ -71,7 +71,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename I, typename N, typename T)(
                 requires LvalueContainerLike<Cont> && Iterator<I> && Integral<N> &&
                     Constructible<range_value_type_t<Cont>, T>)
-            (auto) insert(Cont &&cont, I p, N n, T &&t)
+            auto insert(Cont &&cont, I p, N n, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 unwrap_reference(cont).insert(p, n, static_cast<T &&>(t))
@@ -83,7 +83,7 @@ namespace ranges
                 CONCEPT_template(typename Cont, typename P)(
                     requires Container<Cont> && Iterator<P> &&
                         RandomAccessReservable<Cont>)
-                (iterator_t<Cont>) insert_reserve_helper(
+                iterator_t<Cont> insert_reserve_helper(
                     Cont &cont, P const p, range_size_type_t<Cont> const delta)
                 {
                     auto const old_size = ranges::size(cont);
@@ -105,7 +105,7 @@ namespace ranges
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
                     requires Sentinel<S, I> && !Range<S>)
-                (auto) insert_impl(Cont &&cont, P p, I i, S j, std::false_type)
+                auto insert_impl(Cont &&cont, P p, I i, S j, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     unwrap_reference(cont).insert(p, C{i}, C{j})
@@ -114,7 +114,7 @@ namespace ranges
                 CONCEPT_template(typename Cont, typename P, typename I, typename S,
                     typename C = common_iterator_t<I, S>)(
                     requires SizedSentinel<S, I> && RandomAccessReservable<Cont> && !Range<S>)
-                (auto) insert_impl(Cont &&cont_, P p, I i, S j, std::true_type) ->
+                auto insert_impl(Cont &&cont_, P p, I i, S j, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         ranges::begin(unwrap_reference(cont_)), C{i}, C{j}))
                 {
@@ -127,7 +127,7 @@ namespace ranges
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
                     requires Range<Rng>)
-                (auto) insert_impl(Cont &&cont, I p, Rng &&rng, std::false_type)
+                auto insert_impl(Cont &&cont, I p, Rng &&rng, std::false_type)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     unwrap_reference(cont).insert(p, C{ranges::begin(rng)}, C{ranges::end(rng)})
@@ -136,7 +136,7 @@ namespace ranges
                 CONCEPT_template(typename Cont, typename I, typename Rng,
                     typename C = range_common_iterator_t<Rng>)(
                     requires RandomAccessReservable<Cont> && SizedRange<Rng>)
-                (auto) insert_impl(Cont &&cont_, I p, Rng &&rng, std::true_type) ->
+                auto insert_impl(Cont &&cont_, I p, Rng &&rng, std::true_type) ->
                     decltype(unwrap_reference(cont_).insert(
                         begin(unwrap_reference(cont_)), C{ranges::begin(rng)}, C{ranges::end(rng)}))
                 {
@@ -152,7 +152,7 @@ namespace ranges
                 typename C = common_iterator_t<I, S>)(
                 requires LvalueContainerLike<Cont> && Iterator<P> &&
                     Sentinel<S, I> && !Range<S>)
-            (auto) insert(Cont &&cont, P p, I i, S j)
+            auto insert(Cont &&cont, P p, I i, S j)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(
@@ -166,7 +166,7 @@ namespace ranges
             CONCEPT_template(typename Cont, typename I, typename Rng,
                 typename C = range_common_iterator_t<Rng>)(
                 requires LvalueContainerLike<Cont> && Iterator<I> && Range<Rng>)
-            (auto) insert(Cont &&cont, I p, Rng &&rng)
+            auto insert(Cont &&cont, I p, Rng &&rng)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(
@@ -180,7 +180,7 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng, typename T)(
                     requires Range<Rng> && Constructible<range_value_type_t<Rng>, T>)
-                (auto) operator()(Rng &&rng, T &&t) const
+                auto operator()(Rng &&rng, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), static_cast<T &&>(t))
@@ -188,7 +188,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename Rng2)(
                     requires Range<Rng> && Range<Rng2>)
-                (auto) operator()(Rng &&rng, Rng2 &&rng2) const ->
+                auto operator()(Rng &&rng, Rng2 &&rng2) const ->
                     decltype(insert(static_cast<Rng &&>(rng), static_cast<Rng2 &&>(rng2)))
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -198,7 +198,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename T)(
                     requires Range<Rng>)
-                (auto) operator()(Rng &&rng, std::initializer_list<T> rng2) const
+                auto operator()(Rng &&rng, std::initializer_list<T> rng2) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), rng2)
@@ -206,7 +206,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename I, typename S)(
                     requires Range<Rng> && Sentinel<S, I> && !Range<S>)
-                (auto) operator()(Rng &&rng, I i, S j) const
+                auto operator()(Rng &&rng, I i, S j) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), std::move(i), std::move(j))
@@ -215,7 +215,7 @@ namespace ranges
                 CONCEPT_template(typename Rng, typename I, typename T)(
                     requires Range<Rng> && Iterator<I> &&
                         Constructible<range_value_type_t<Rng>, T>)
-                (auto) operator()(Rng &&rng, I p, T &&t) const
+                auto operator()(Rng &&rng, I p, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), std::move(p), static_cast<T &&>(t))
@@ -223,7 +223,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename I, typename Rng2)(
                     requires Range<Rng> && Iterator<I> && Range<Rng2>)
-                (decltype(insert(std::declval<Rng>(), std::declval<I>(), std::declval<Rng2>())))
+                decltype(insert(std::declval<Rng>(), std::declval<I>(), std::declval<Rng2>()))
                 operator()(Rng &&rng, I p, Rng2 &&rng2) const
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -233,7 +233,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng, typename I, typename T)(
                     requires Range<Rng> && Iterator<I>)
-                (auto) operator()(Rng &&rng, I p, std::initializer_list<T> rng2) const
+                auto operator()(Rng &&rng, I p, std::initializer_list<T> rng2) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), std::move(p), rng2)
@@ -242,7 +242,7 @@ namespace ranges
                 CONCEPT_template(typename Rng, typename I, typename N, typename T)(
                     requires Range<Rng> && Iterator<I> && Integral<N> &&
                         Constructible<range_value_type_t<Rng>, T>)
-                (auto) operator()(Rng &&rng, I p, N n, T &&t) const
+                auto operator()(Rng &&rng, I p, N n, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), std::move(p), n, static_cast<T &&>(t))
@@ -251,7 +251,7 @@ namespace ranges
                 CONCEPT_template(typename Rng, typename P, typename I, typename S)(
                     requires Range<Rng> && Iterator<P> && Sentinel<S, I> &&
                                       !Range<S>)
-                (auto) operator()(Rng &&rng, P p, I i, S j) const
+                auto operator()(Rng &&rng, P p, I i, S j) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     insert(static_cast<Rng &&>(rng), std::move(p), std::move(i), std::move(j))

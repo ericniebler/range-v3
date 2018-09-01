@@ -96,7 +96,7 @@ namespace ranges
                 // Piping requires range arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename Vw)(
                     requires ViewConcept<View, Rng>)
-                (static auto) pipe(Rng &&rng, Vw &&v)
+                static auto pipe(Rng &&rng, Vw &&v)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     v.view_(static_cast<Rng &&>(rng))
@@ -106,7 +106,7 @@ namespace ranges
                 // For better error messages:
                 CONCEPT_template(typename Rng, typename Vw)(
                     requires not ViewConcept<View, Rng>)
-                (static void) pipe(Rng &&, Vw &&)
+                static void pipe(Rng &&, Vw &&)
                 {
                     CONCEPT_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");
@@ -129,7 +129,7 @@ namespace ranges
                 // Calling directly requires View arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename...Rest)(
                     requires ViewConcept<View, Rng, Rest...>)
-                (auto) operator()(Rng &&rng, Rest &&... rest) const
+                auto operator()(Rng &&rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...)

@@ -118,7 +118,7 @@ namespace ranges
         public:
             any() noexcept = default;
             CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
-                requires Copyable<T> && !Same<T, any>)()
+                requires Copyable<T> && !Same<T, any>)
             any(TRef &&t)
               : ptr_(new impl<T>(static_cast<TRef &&>(t)))
             {}
@@ -134,7 +134,7 @@ namespace ranges
             }
             CONCEPT_template(typename TRef, typename T = detail::decay_t<TRef>)(
                 requires Copyable<T> && !Same<T, any>)
-            (any &)operator=(TRef &&t)
+            any &operator=(TRef &&t)
             {
                 any{static_cast<TRef &&>(t)}.swap(*this);
                 return *this;

@@ -49,15 +49,15 @@ namespace ranges
                 }
             public:
                 CONCEPT_requires(DefaultConstructible<T>)
-                (constexpr) indexed_datum(meta::nil_ = {})
+                constexpr indexed_datum(meta::nil_ = {})
                   : data_{}
                 {}
-                CONCEPT_requires(MoveConstructible<T>)()
+                CONCEPT_requires(MoveConstructible<T>)
                 indexed_datum(indexed_datum &&that)
                 {
                     std::uninitialized_copy_n(std::make_move_iterator(that.data_), N, data_);
                 }
-                CONCEPT_requires(CopyConstructible<T>)()
+                CONCEPT_requires(CopyConstructible<T>)
                 indexed_datum(indexed_datum const &that)
                 {
                     std::uninitialized_copy_n(that.data_, N, data_);
@@ -66,7 +66,7 @@ namespace ranges
                 // \pre Requires DefaultConstructible<T> || distance(first, last) == N
                 CONCEPT_template(typename I, typename S)(
                     requires Sentinel<S, I> && InputIterator<I> &&
-                        Constructible<T, reference_t<I>>)()
+                        Constructible<T, reference_t<I>>)
                 indexed_datum(I first, S last)
                 {
                     T *p = detail::uninitialized_copy(first, last, data_);
@@ -76,17 +76,17 @@ namespace ranges
                 // \pre Requires DefaultConstructible<T> || distance(r) == N
                 CONCEPT_template(typename R)(
                     requires InputRange<R> && Constructible<T, range_reference_t<R>>)
-                (explicit) indexed_datum(R &&r)
+                explicit indexed_datum(R &&r)
                   : indexed_datum{ranges::begin(r), ranges::end(r)}
                 {}
                 CONCEPT_requires(Assignable<T &, T>)
-                (indexed_datum &)operator=(indexed_datum &&that)
+                indexed_datum &operator=(indexed_datum &&that)
                 {
                     ranges::move(that.data_, data_);
                     return *this;
                 }
                 CONCEPT_requires(Assignable<T &, T const &>)
-                (indexed_datum &)operator=(indexed_datum const &that)
+                indexed_datum &operator=(indexed_datum const &that)
                 {
                     ranges::copy(that.data_, data_);
                     return *this;
@@ -95,7 +95,7 @@ namespace ranges
                 CONCEPT_template(typename R)(
                     requires InputRange<R> &&
                         Assignable<T &, range_reference_t<R>>)
-                (indexed_datum &)operator=(R &&r)
+                indexed_datum &operator=(R &&r)
                 {
                     ranges::copy(r, data_);
                     return *this;

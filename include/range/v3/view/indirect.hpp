@@ -69,13 +69,13 @@ namespace ranges
               : indirect_view::view_adaptor{detail::move(rng)}
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (constexpr range_size_type_t<Rng>) size() const
+            constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
                 return ranges::size(this->base());
@@ -96,7 +96,7 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires ReadableRange<Rng>)
-                (constexpr auto) operator()(Rng &&rng) const
+                constexpr auto operator()(Rng &&rng) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
@@ -104,7 +104,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not ReadableRange<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument to view::indirect must be a model of the InputRange "

@@ -67,7 +67,7 @@ namespace ranges
             {
                 CONCEPT_template(typename I)(
                     requires Iterator<I>)
-                (counted_view<I>) operator()(I it, difference_type_t<I> n) const
+                counted_view<I> operator()(I it, difference_type_t<I> n) const
                 {
                     return {std::move(it), n};
                 }

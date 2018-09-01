@@ -99,12 +99,12 @@ namespace ranges
                 return {fun_};
             }
             CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>>)
-            (adaptor<true>) begin_adaptor() const
+            adaptor<true> begin_adaptor() const
             {
                 return {fun_};
             }
             CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>>)
-            (meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>) end_adaptor() const
+            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};
             }
@@ -115,12 +115,12 @@ namespace ranges
               , fun_(std::move(fun))
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (constexpr range_size_type_t<Rng>) size() const
+            constexpr range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(SizedRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
@@ -204,7 +204,7 @@ namespace ranges
                     ++it2_;
                 }
                 CONCEPT_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
-                (bool) equal(cursor const &that) const
+                bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // transformed ranges to be of different lengths, stopping when the first
@@ -219,13 +219,13 @@ namespace ranges
                     return it1_ == s.end1_ || it2_ == s.end2_;
                 }
                 CONCEPT_requires(BidirectionalRange<Rng1> && BidirectionalRange<Rng2>)
-                (void) prev()
+                void prev()
                 {
                     --it1_;
                     --it2_;
                 }
                 CONCEPT_requires(RandomAccessRange<Rng1> && RandomAccessRange<Rng2>)
-                (void) advance(difference_type n)
+                void advance(difference_type n)
                 {
                     ranges::advance(it1_, n);
                     ranges::advance(it2_, n);
@@ -233,7 +233,7 @@ namespace ranges
                 CONCEPT_requires(
                     SizedSentinel<iterator_t<Rng1>, iterator_t<Rng1>> &&
                     SizedSentinel<iterator_t<Rng2>, iterator_t<Rng2>>)
-                (difference_type) distance_to(cursor const &that) const
+                difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -264,12 +264,12 @@ namespace ranges
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
             CONCEPT_requires(Range<Rng1 const> && Range<Rng2 const>)
-            (cursor) begin_cursor() const
+            cursor begin_cursor() const
             {
                 return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
             }
             CONCEPT_requires(Range<Rng1 const> && Range<Rng2 const>)
-            (end_cursor_t) end_cursor() const
+            end_cursor_t end_cursor() const
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
@@ -288,19 +288,19 @@ namespace ranges
               , rng2_(std::move(rng2))
             {}
             CONCEPT_requires(my_cardinality >= 0)
-            (constexpr size_type_) size() const
+            constexpr size_type_ size() const
             {
                 return static_cast<size_type_>(my_cardinality);
             }
             CONCEPT_requires(my_cardinality < 0 &&
                 SizedRange<Rng1 const> && SizedRange<Rng2 const>)
-            (constexpr size_type_) size() const
+            constexpr size_type_ size() const
             {
                 return size_(*this);
             }
             CONCEPT_requires(my_cardinality < 0 &&
                 SizedRange<Rng1> && SizedRange<Rng2>)
-            (RANGES_CXX14_CONSTEXPR size_type_) size()
+            RANGES_CXX14_CONSTEXPR size_type_ size()
             {
                 return size_(*this);
             }
@@ -355,14 +355,14 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires IterTansformableRange<Rng, Fun>)
-                (iter_transform_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
+                iter_transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
 
                 CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
                     requires IterTansformableRanges<Rng1, Rng2, Fun>)
-                (iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)
+                iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
                 {
                     return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)), std::move(fun)};
@@ -371,7 +371,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires not IterTansformableRange<Rng, Fun>)
-                (void) operator()(Rng &&, Fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::iter_transform operates must be a model of the "
@@ -395,7 +395,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
                     requires not IterTansformableRanges<Rng1, Rng2, Fun>)
-                (void) operator()(Rng1 &&, Rng2 &&, Fun) const
+                void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,
                         "The first object on which view::iter_transform operates must be a model of the "
@@ -471,14 +471,14 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires TransformableRange<Rng, Fun>)
-                (transform_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
+                transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
 
                 CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
                     requires TransformableRanges<Rng1, Rng2, Fun>)
-                (transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)
+                transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
                 operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
                 {
                     return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)),
@@ -488,7 +488,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires not TransformableRange<Rng, Fun>)
-                (void) operator()(Rng &&, Fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::transform operates must be a model of the "
@@ -508,7 +508,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng1, typename Rng2, typename Fun)(
                     requires not TransformableRanges<Rng1, Rng2, Fun>)
-                (void) operator()(Rng1 &&, Rng2 &&, Fun) const
+                void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,
                         "The first object on which view::transform operates must be a model of the "

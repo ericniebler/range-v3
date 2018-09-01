@@ -59,7 +59,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires ForEachViewConcept<Rng, Fun>)
-                (auto) operator()(Rng &&rng, Fun fun) const
+                auto operator()(Rng &&rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     join(transform(static_cast<Rng &&>(rng), std::move(fun)))
@@ -68,7 +68,7 @@ namespace ranges
         #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires not ForEachViewConcept<Rng, Fun>)
-                (void) operator()(Rng &&, Fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::for_each operates must be a model of the "
@@ -97,7 +97,7 @@ namespace ranges
         {
             CONCEPT_template(typename V)(
                 requires CopyConstructible<V>)
-            (single_view<V>) operator()(V v) const
+            single_view<V> operator()(V v) const
             {
                 return view::single(std::move(v));
             }
@@ -105,7 +105,7 @@ namespace ranges
         #ifndef RANGES_DOXYGEN_INVOKED
             CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
                 requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-            (void) operator()(Arg &&) const
+            void operator()(Arg &&) const
             {
                 CONCEPT_assert_msg(CopyConstructible<Val>,
                     "The object passed to yield must be a model of the CopyConstructible "
@@ -125,7 +125,7 @@ namespace ranges
         {
             CONCEPT_template(typename Rng)(
                 requires View<Rng>)
-            (Rng) operator()(Rng rng) const
+            Rng operator()(Rng rng) const
             {
                 return rng;
             }
@@ -168,7 +168,7 @@ namespace ranges
             requires Range<Rng> && CopyConstructible<Fun> &&
                 Invocable<Fun&, range_common_reference_t<Rng>> &&
                 Range<invoke_result_t<Fun&, range_common_reference_t<Rng>>>)
-        (auto) operator >>= (Rng &&rng, Fun fun) ->
+        auto operator >>= (Rng &&rng, Fun fun) ->
             decltype(view::for_each(static_cast<Rng &&>(rng), std::move(fun)))
         {
             return view::for_each(static_cast<Rng &&>(rng), std::move(fun));

@@ -59,7 +59,7 @@ namespace ranges
                 /// If it's a view already, pass it though.
                 CONCEPT_template(typename T)(
                     requires View<uncvref_t<T>>)
-                (static T) from_range(T &&t)
+                static T from_range(T &&t)
                 {
                     return static_cast<T &&>(t);
                 }
@@ -69,7 +69,7 @@ namespace ranges
                 CONCEPT_template(typename T,
                     typename SIRC = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>)(
                     requires not View<uncvref_t<T>>)
-                (static decltype(all_fn::from_container(std::declval<T&>(), sized_range_tag_of<T>(), SIRC())))
+                static decltype(all_fn::from_container(std::declval<T&>(), sized_range_tag_of<T>(), SIRC()))
                 from_range(T &&t)
                 {
                     static_assert(std::is_lvalue_reference<T>::value,
@@ -82,7 +82,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename T)(
                     requires Range<T>)
-                (decltype(all_fn::from_range(std::declval<T>())))
+                decltype(all_fn::from_range(std::declval<T>()))
                 operator()(T &&t) const
                 {
                     return all_fn::from_range(static_cast<T &&>(t));
@@ -90,7 +90,7 @@ namespace ranges
 
                 CONCEPT_template(typename T)(
                     requires Range<T &>)
-                (ranges::reference_wrapper<T>)
+                ranges::reference_wrapper<T>
                 operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());

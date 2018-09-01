@@ -39,7 +39,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<C, projected<I, P>>)
-            (tagged_pair<tag::min(I), tag::max(I)>)
+            tagged_pair<tag::min(I), tag::max(I)>
             operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 tagged_pair<tag::min(I), tag::max(I)> result{begin, begin};
@@ -85,9 +85,9 @@ namespace ranges
                 typename I = iterator_t<Rng>)(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<C, projected<I, P>>)
-            (meta::if_<std::is_lvalue_reference<Rng>,
+            meta::if_<std::is_lvalue_reference<Rng>,
                 tagged_pair<tag::min(I), tag::max(I)>,
-                dangling<tagged_pair<tag::min(I), tag::max(I)>>>)
+                dangling<tagged_pair<tag::min(I), tag::max(I)>>>
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

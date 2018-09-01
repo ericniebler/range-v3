@@ -66,7 +66,7 @@ namespace ranges
                             ranges::begin(rng2_), ranges::end(rng2_)};
                 }
                 CONCEPT_requires(Range<Rng1 const> && Range<Rng2 const>)
-                (cursor<true>) begin_cursor() const
+                cursor<true> begin_cursor() const
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
@@ -149,7 +149,7 @@ namespace ranges
                     satisfy();
                 }
                 CONCEPT_requires(ForwardRange<Rng1>)
-                (bool) equal(set_difference_cursor const &that) const
+                bool equal(set_difference_cursor const &that) const
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges
                 }
@@ -199,7 +199,7 @@ namespace ranges
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires SetDifferenceViewConcept<Rng1, Rng2, C, P1, P2>)
-                (set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
@@ -216,7 +216,7 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires not SetDifferenceViewConcept<Rng1, Rng2, C, P1, P2>)
-                (void) operator()(Rng1 &&, Rng2 &&, C, P1, P2) const
+                void operator()(Rng1 &&, Rng2 &&, C, P1, P2) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,
                         "The first parameter of view::set_difference "
@@ -315,7 +315,7 @@ namespace ranges
                     satisfy();
                 }
                 CONCEPT_requires(ForwardRange<Rng1>)
-                (bool) equal(set_intersection_cursor const &that) const
+                bool equal(set_intersection_cursor const &that) const
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges;
                 }
@@ -363,7 +363,7 @@ namespace ranges
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires SetIntersectionViewConcept<Rng1, Rng2, C, P1, P2>)
-                (set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
@@ -380,7 +380,7 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires not SetIntersectionViewConcept<Rng1, Rng2, C, P1, P2>)
-                (void) operator()(Rng1 &&, Rng2 &&,
+                void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,
@@ -519,7 +519,7 @@ namespace ranges
                     satisfy();
                 }
                 CONCEPT_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
-                (bool) equal(set_union_cursor const &that) const
+                bool equal(set_union_cursor const &that) const
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
@@ -575,7 +575,7 @@ namespace ranges
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires SetUnionViewConcept<Rng1, Rng2, C, P1, P2>)
-                (set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
@@ -592,7 +592,7 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires not SetUnionViewConcept<Rng1, Rng2, C, P1, P2>)
-                (void) operator()(Rng1 &&, Rng2 &&,
+                void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,
@@ -741,7 +741,7 @@ namespace ranges
                     }
                 }
                 CONCEPT_requires(ForwardRange<R1> && ForwardRange<R2>)
-                (bool) equal(set_symmetric_difference_cursor const &that) const
+                bool equal(set_symmetric_difference_cursor const &that) const
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
@@ -798,7 +798,7 @@ namespace ranges
                 CONCEPT_template(typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident)(
                     requires SetSymmetricDifferenceViewConcept<Rng1, Rng2, C, P1, P2>)
-                (set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)
+                set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>
                 operator()(Rng1 &&rng1, Rng2 &&rng2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
                 {
@@ -815,7 +815,7 @@ namespace ranges
                     typename I1 = iterator_t<Rng1>,
                     typename I2 = iterator_t<Rng2>)(
                     requires not SetSymmetricDifferenceViewConcept<Rng1, Rng2, C, P1, P2>)
-                (void) operator()(Rng1 &&, Rng2 &&,
+                void operator()(Rng1 &&, Rng2 &&,
                     C, P1, P2) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng1>,

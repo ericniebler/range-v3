@@ -55,7 +55,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng)(
                     requires JoinActionConcept<Rng>)
-                (join_action_value_t_<Rng>) operator()(Rng &&rng) const
+                join_action_value_t_<Rng> operator()(Rng &&rng) const
                 {
                     join_action_value_t_<Rng> ret;
                     auto end = ranges::end(rng);
@@ -67,7 +67,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not JoinActionConcept<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::join operates must be a model of the "

@@ -101,14 +101,14 @@ namespace ranges
             {
                 CONCEPT_template(typename G)(
                     requires GenerateViewConcept<G>)
-                (generate_view<G>) operator()(G g) const
+                generate_view<G> operator()(G g) const
                 {
                     return generate_view<G>{std::move(g)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename G)(
                     requires not GenerateViewConcept<G>)
-                (void) operator()(G) const
+                void operator()(G) const
                 {
                     check<G>();
                 }

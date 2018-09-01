@@ -67,7 +67,7 @@ namespace ranges
                 requires Sentinel<S1, I1> &&
                     Sentinel<S2, I2> &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
-            (T) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
+            T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
@@ -80,7 +80,7 @@ namespace ranges
                 typename P1 = ident, typename P2 = ident)(
                 requires Sentinel<S1, I1> &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
-            (T) operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
+            T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable{},
@@ -93,7 +93,7 @@ namespace ranges
                 typename I2 = uncvref_t<I2Ref>)(
                 requires Range<Rng1> && Iterator<I2> &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
-            (T) operator()(Rng1 &&rng1, I2Ref &&begin2, T init, BOp1 bop1 = BOp1{},
+            T operator()(Rng1 &&rng1, I2Ref &&begin2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), static_cast<I2Ref &&>(begin2), std::move(init),
@@ -107,7 +107,7 @@ namespace ranges
                 requires Range<Rng1> &&
                     Range<Rng2> &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>)
-            (T) operator()(Rng1 &&rng1, Rng2 &&rng2, T init, BOp1 bop1 = BOp1{},
+            T operator()(Rng1 &&rng1, Rng2 &&rng2, T init, BOp1 bop1 = BOp1{},
                 BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(init),

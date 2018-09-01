@@ -39,9 +39,8 @@ namespace ranges
                 // tuple value
                 CONCEPT_template(typename ...Its)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                //(attribute([[noreturn]])
-                ([[noreturn]]
-                std::tuple<value_type_t<Its>...>)
+                [[noreturn]]
+                std::tuple<value_type_t<Its>...>
                 operator()(copy_tag, Its...) const
                 {
                     RANGES_EXPECT(false);
@@ -50,7 +49,7 @@ namespace ranges
                 // tuple reference
                 CONCEPT_template(typename ...Its)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                (common_tuple<reference_t<Its>...>)
+                common_tuple<reference_t<Its>...>
                 operator()(Its const &...its) const
                     noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
                 {
@@ -60,7 +59,7 @@ namespace ranges
                 // tuple rvalue reference
                 CONCEPT_template(typename ...Its)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                (common_tuple<rvalue_reference_t<Its>...>)
+                common_tuple<rvalue_reference_t<Its>...>
                 operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
                         noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value)
@@ -71,9 +70,8 @@ namespace ranges
                 // pair value
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1> && Readable<It2>)
-                //(attribute([[noreturn]])
-                ([[noreturn]]
-                std::pair<value_type_t<It1>, value_type_t<It2>>)
+                [[noreturn]]
+                std::pair<value_type_t<It1>, value_type_t<It2>>
                 operator()(copy_tag, It1, It2) const
                 {
                     RANGES_EXPECT(false);
@@ -82,7 +80,7 @@ namespace ranges
                 // pair reference
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1> && Readable<It2>)
-                (common_pair<reference_t<It1>, reference_t<It2>>)
+                common_pair<reference_t<It1>, reference_t<It2>>
                 operator()(It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(reference_t<It1>(*it1)) &&
                              noexcept(reference_t<It2>(*it2)))
@@ -93,7 +91,7 @@ namespace ranges
                 // pair rvalue reference
                 CONCEPT_template(typename It1, typename It2)(
                     requires Readable<It1> && Readable<It2>)
-                (common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>)
+                common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>
                 operator()(move_tag, It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
                              noexcept(rvalue_reference_t<It2>(iter_move(it2))))
@@ -131,7 +129,7 @@ namespace ranges
             {
                 CONCEPT_template(typename...Rngs)(
                     requires ZipViewConcept<Rngs...>)
-                (zip_view<all_t<Rngs>...>) operator()(Rngs &&... rngs) const
+                zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_assert(And<Range<Rngs>...>);
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
@@ -140,7 +138,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename...Rngs)(
                     requires not ZipViewConcept<Rngs...>)
-                (void) operator()(Rngs &&...) const
+                void operator()(Rngs &&...) const
                 {
                     CONCEPT_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::zip must model the InputRange "

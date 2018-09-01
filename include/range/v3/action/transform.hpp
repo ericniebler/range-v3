@@ -45,7 +45,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename F, typename P = ident)(
                     requires not Range<F>)
-                (static auto) bind(transform_fn transform, F fun, P proj = P{})
+                static auto bind(transform_fn transform, F fun, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
@@ -54,7 +54,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename F, typename P = ident)(
                     requires TransformActionConcept<Rng, F, P>)
-                (Rng) operator()(Rng &&rng, F fun, P proj = P{}) const
+                Rng operator()(Rng &&rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                     return static_cast<Rng &&>(rng);
@@ -63,7 +63,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename F, typename P = ident)(
                     requires not TransformActionConcept<Rng, F, P>)
-                (void) operator()(Rng &&, F &&, P && = P{}) const
+                void operator()(Rng &&, F &&, P && = P{}) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which action::transform operates must be a model of the "

@@ -38,7 +38,7 @@ namespace ranges
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> && IndirectPredicate<F, projected<I, P>> &&
                     IndirectlyCopyable<I, O>)
-            (tagged_pair<tag::in(I), tag::out(O)>)
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O out, F pred, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
@@ -57,7 +57,7 @@ namespace ranges
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

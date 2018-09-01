@@ -117,12 +117,12 @@ namespace ranges {
                 return {*this};
             }
             CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
-            (adaptor<true>) begin_adaptor() const
+            adaptor<true> begin_adaptor() const
             {
                 return {*this};
             }
             CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
-            (meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>) end_adaptor() const
+            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {*this};
             }
@@ -135,12 +135,12 @@ namespace ranges {
               , fun_(std::move(fun))
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (range_size_type_t<Rng>) size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(SizedRange<Rng>)
-            (range_size_type_t<Rng>) size()
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
@@ -162,7 +162,7 @@ namespace ranges {
             public:
                 CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
-                (exclusive_scan_view<all_t<Rng>, T, Fun>)
+                exclusive_scan_view<all_t<Rng>, T, Fun>
                 operator()(Rng &&rng, T init, Fun fun = Fun{}) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
@@ -171,7 +171,7 @@ namespace ranges {
 #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
                     requires not ExclusiveScanConstraint<Rng, T, Fun>)
-                (void) operator()(Rng &&, T, Fun = Fun{}) const
+                void operator()(Rng &&, T, Fun = Fun{}) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>,
                         "The first argument passed to view::exclusive_scan must be a model of the "

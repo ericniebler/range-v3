@@ -66,12 +66,12 @@ namespace ranges
               : move_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (range_size_type_t<Rng>) size() const
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(SizedRange<Rng>)
-            (range_size_type_t<Rng>) size()
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
@@ -83,14 +83,14 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>)
-                (move_view<all_t<Rng>>) operator()(Rng &&rng) const
+                move_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not InputRange<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument passed to view::move must be a model of the InputRange "

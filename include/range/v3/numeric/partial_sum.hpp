@@ -71,7 +71,7 @@ namespace ranges
                 typename BOp = plus, typename P = ident)(
                 requires Sentinel<S1, I> && Sentinel<S2, O> &&
                     PartialSummable<I, O, BOp, P>)
-            (tagged_pair<tag::in(I), tag::out(O)>)
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
                 using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
@@ -96,7 +96,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename O, typename BOp = plus,
                 typename P = ident)(
                 requires Sentinel<S, I> && PartialSummable<I, O, BOp, P>)
-            (tagged_pair<tag::in(I), tag::out(O)>)
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(std::move(begin), std::move(end), std::move(result),
@@ -107,7 +107,7 @@ namespace ranges
                 typename P = ident, typename I = iterator_t<Rng>,
                 typename O = uncvref_t<ORef>)(
                 requires Range<Rng> && PartialSummable<I, O, BOp, P>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), static_cast<ORef &&>(result),
@@ -119,8 +119,8 @@ namespace ranges
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&
                     PartialSummable<I, O, BOp, P>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>),
-                tag::out(safe_iterator_t<ORng>)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>),
+                tag::out(safe_iterator_t<ORng>)>
             operator()(Rng &&rng, ORng &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), begin(result), end(result),

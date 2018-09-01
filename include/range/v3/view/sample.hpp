@@ -173,7 +173,7 @@ namespace ranges
                 requires SizedRange<R const> ||
                     SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
                     ForwardRange<R const>)
-            (cursor<true>) begin_cursor() const
+            cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};
             }
@@ -211,7 +211,7 @@ namespace ranges
                 friend view_access;
                 CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(
                     requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
-                (static auto) bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
+                static auto bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(fn, std::placeholders::_1, n, bind_forward<URNG &>(urng)))
@@ -220,7 +220,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
                     requires Constraint<Rng, URNG>)
-                (sample_view<all_t<Rng>, URNG>) operator()(
+                sample_view<all_t<Rng>, URNG> operator()(
                     Rng &&rng, range_difference_type_t<Rng> sample_size,
                     URNG &generator = detail::get_random_engine()) const
                 {
@@ -232,7 +232,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
                     requires not Constraint<Rng, URNG>)
-                (void) operator()(Rng &&, URNG && = URNG{}) const
+                void operator()(Rng &&, URNG && = URNG{}) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::sample operates must satisfy the InputRange "

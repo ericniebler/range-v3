@@ -43,12 +43,12 @@ namespace ranges
                 wrap_base() = default;
                 using Base::Base;
                 CONCEPT_requires(MoveConstructible<Base>)
-                (constexpr) wrap_base(Base&& base)
+                constexpr wrap_base(Base&& base)
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
                   : Base(static_cast<Base&&>(base))
                 {}
                 CONCEPT_requires(CopyConstructible<Base>)
-                (constexpr) wrap_base(Base const& base)
+                constexpr wrap_base(Base const& base)
                     noexcept(std::is_nothrow_copy_constructible<Base>::value)
                   : Base(base)
                 {}

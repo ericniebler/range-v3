@@ -123,7 +123,7 @@ namespace ranges
             }
             CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>,
                 sentinel_t<Rng>> && Range<Rng const>)
-            (cursor<true>) begin_cursor() const
+            cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
@@ -190,7 +190,7 @@ namespace ranges
 
                     CONCEPT_template(class S)(
                         requires Sentinel<S, iterator_t<Rng>>)
-                    (std::pair<bool, iterator_t<Rng>>)
+                    std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
                     {
                         auto where = ranges::find_if_not(cur, end, std::ref(pred_));
@@ -204,7 +204,7 @@ namespace ranges
 
                     CONCEPT_template(class S)(
                         requires Sentinel<S, iterator_t<Rng>>)
-                    (std::pair<bool, iterator_t<Rng>>)
+                    std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
                     {
                         RANGES_EXPECT(cur != end);
@@ -225,7 +225,7 @@ namespace ranges
                     {}
                     CONCEPT_template(class S)(
                         requires Sentinel<S, iterator_t<Rng>>)
-                    (std::pair<bool, iterator_t<Rng>>)
+                    std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
                     {
                         using P = std::pair<bool, iterator_t<Rng>>;
@@ -246,25 +246,25 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires SplitOnFunction<Rng, Fun>)
-                (split_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
+                split_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires SplitOnPredicate<Rng, Fun>)
-                (split_view<all_t<Rng>, predicate_pred<Rng, Fun>>) operator()(Rng &&rng, Fun fun) const
+                split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 CONCEPT_template(typename Rng)(
                     requires SplitOnElement<Rng>)
-                (split_view<all_t<Rng>, element_pred<Rng>>) operator()(Rng &&rng, range_value_type_t<Rng> val) const
+                split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
                 }
                 CONCEPT_template(typename Rng, typename Sub)(
                     requires SplitOnSubRange<Rng, Sub>)
-                (split_view<all_t<Rng>, subrange_pred<Rng, Sub>>) operator()(Rng &&rng, Sub &&sub) const
+                split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng &&rng, Sub &&sub) const
                 {
                     return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
                 }
@@ -272,7 +272,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not ConvertibleTo<T, range_value_type_t<Rng>>)
-                (void) operator()(Rng &&, T &&) const volatile
+                void operator()(Rng &&, T &&) const volatile
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which view::split operates must be a model of the "

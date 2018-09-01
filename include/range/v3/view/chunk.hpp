@@ -105,15 +105,15 @@ namespace ranges
                     offset() = ranges::advance(it, n_, end_);
                 }
                 CONCEPT_requires(BidirectionalRange<constify<Rng>>)
-                (RANGES_CXX14_CONSTEXPR
-                void) prev(iterator_t<constify<Rng>> &it)
+                RANGES_CXX14_CONSTEXPR
+                void prev(iterator_t<constify<Rng>> &it)
                 {
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
                 CONCEPT_requires(CanSizedSentinel)
-                (RANGES_CXX14_CONSTEXPR
-                range_difference_type_t<Rng>) distance_to(iterator_t<constify<Rng>> const &here,
+                RANGES_CXX14_CONSTEXPR
+                range_difference_type_t<Rng> distance_to(iterator_t<constify<Rng>> const &here,
                     iterator_t<constify<Rng>> const &there, adaptor const &that) const
                 {
                     auto const delta = (there - here) + (that.offset() - offset());
@@ -123,8 +123,8 @@ namespace ranges
                     return delta / n_;
                 }
                 CONCEPT_requires(RandomAccessRange<constify<Rng>>)
-                (RANGES_CXX14_CONSTEXPR
-                void) advance(iterator_t<constify<Rng>> &it, range_difference_type_t<Rng> n)
+                RANGES_CXX14_CONSTEXPR
+                void advance(iterator_t<constify<Rng>> &it, range_difference_type_t<Rng> n)
                 {
                     using Limits = std::numeric_limits<range_difference_type_t<Rng>>;
                     if(0 < n)
@@ -150,7 +150,7 @@ namespace ranges
                 return adaptor{*this};
             }
             CONCEPT_requires(ForwardRange<Rng const>)
-            (constexpr adaptor) begin_adaptor() const
+            constexpr adaptor begin_adaptor() const
             {
                 return adaptor{*this};
             }
@@ -168,14 +168,14 @@ namespace ranges
               , n_((RANGES_EXPECT(0 < n), n))
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size() const
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size() const
             {
                 return size_(ranges::distance(this->base()));
             }
             CONCEPT_requires(SizedRange<Rng> && !SizedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size()
             {
                 return size_(ranges::distance(this->base()));
             }
@@ -270,8 +270,8 @@ namespace ranges
                             rng_->remainder() = 0;
                     }
                     CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
-                    (RANGES_CXX14_CONSTEXPR
-                    range_difference_type_t<Rng>) distance_to(default_sentinel) const
+                    RANGES_CXX14_CONSTEXPR
+                    range_difference_type_t<Rng> distance_to(default_sentinel) const
                     {
                         RANGES_EXPECT(rng_);
                         auto const d = ranges::end(rng_->base()) - rng_->it();
@@ -283,8 +283,8 @@ namespace ranges
                       : rng_{&view}
                     {}
                     CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
-                    (RANGES_CXX14_CONSTEXPR
-                    range_size_type_t<Rng>) size()
+                    RANGES_CXX14_CONSTEXPR
+                    range_size_type_t<Rng> size()
                     {
                         auto const d = distance_to(default_sentinel{});
                         return static_cast<range_size_type_t<Rng>>(d);
@@ -325,8 +325,8 @@ namespace ranges
                     rng_->remainder() = rng_->n();
                 }
                 CONCEPT_requires(SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
-                (RANGES_CXX14_CONSTEXPR
-                range_difference_type_t<Rng>) distance_to(default_sentinel) const
+                RANGES_CXX14_CONSTEXPR
+                range_difference_type_t<Rng> distance_to(default_sentinel) const
                 {
                     RANGES_EXPECT(rng_);
                     auto d = ranges::end(rng_->base()) - rng_->it();
@@ -361,15 +361,15 @@ namespace ranges
               : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size() const
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::distance(std::declval<Rng const &>())))
             {
                 return size_(ranges::distance(base()));
             }
             CONCEPT_requires(SizedRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR
-            range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR
+            range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::distance(std::declval<Rng &>())))
             {
                 return size_(ranges::distance(base()));
@@ -394,7 +394,7 @@ namespace ranges
                 friend view_access;
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>)
-                (static auto) bind(chunk_fn chunk, Int n)
+                static auto bind(chunk_fn chunk, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(chunk, std::placeholders::_1, n))
@@ -402,7 +402,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng)(
                     requires InputRange<Rng>)
-                (chunk_view<all_t<Rng>>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                chunk_view<all_t<Rng>> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
@@ -412,7 +412,7 @@ namespace ranges
             private:
                 CONCEPT_template(typename Int)(
                     requires not Integral<Int>)
-                (static detail::null_pipe) bind(chunk_fn, Int)
+                static detail::null_pipe bind(chunk_fn, Int)
                 {
                     CONCEPT_assert_msg(Integral<Int>,
                         "The object passed to view::chunk must be Integral");
@@ -421,7 +421,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename T)(
                     requires not (InputRange<Rng> && Integral<T>))
-                (void) operator()(Rng &&, T) const
+                void operator()(Rng &&, T) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The first argument to view::chunk must satisfy the InputRange concept");

@@ -54,8 +54,8 @@ namespace ranges
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
                 requires RandomAccessRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 noexcept(noexcept(ranges::begin(rng)[n]))
             {
                 RANGES_EXPECT(!(bool)SizedRange<Rng> || n < ranges::distance(rng));
@@ -67,8 +67,8 @@ namespace ranges
                 requires RandomAccessRange<Rng> &&
                                   !Same<uncvref_t<T>, D> &&
                                   ConvertibleTo<T, D>)
-            (RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng>) operator()(Rng &&rng, T &&t) const
+            RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng> operator()(Rng &&rng, T &&t) const
                 noexcept(noexcept(ranges::begin(rng)[D()]))
             {
                 return Self{}((Rng &&) rng, static_cast<D>((T &&) t));

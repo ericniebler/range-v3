@@ -106,14 +106,14 @@ namespace ranges
             {
                 CONCEPT_template(typename Val)(
                     requires CopyConstructible<Val> && std::is_object<Val>::value)
-                (repeat_n_view<Val>) operator()(Val value, std::ptrdiff_t n) const
+                repeat_n_view<Val> operator()(Val value, std::ptrdiff_t n) const
                 {
                     return repeat_n_view<Val>{std::move(value), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Val)(
                     requires not (CopyConstructible<Val> && std::is_object<Val>::value))
-                (void) operator()(Val, std::ptrdiff_t) const
+                void operator()(Val, std::ptrdiff_t) const
                 {
                     CONCEPT_assert_msg(std::is_object<Val>::value,
                         "The value passed to view::repeat must be an object.");

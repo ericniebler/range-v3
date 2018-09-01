@@ -35,7 +35,7 @@ namespace ranges
             CONCEPT_template(typename I, typename F, typename P = ident)(
                 requires InputIterator<I> &&
                     MoveIndirectInvocable<F, projected<I, P>>)
-            (I) operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
+            I operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
             {
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
@@ -48,7 +48,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename F, typename P = ident)(
                 requires InputRange<Rng> &&
                     MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
-            (safe_iterator_t<Rng>)
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, range_difference_type_t<Rng> n, F fun, P proj = P{}) const
             {
                 if (SizedRange<Rng>)

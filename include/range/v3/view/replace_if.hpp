@@ -61,7 +61,7 @@ namespace ranges
 
                 CONCEPT_template(typename I)(
                     requires not Invocable<Pred const&, reference_t<I>>)
-                (common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)
+                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i)
                 {
                     auto &&x = *i;
@@ -71,7 +71,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename I)(
                     requires Invocable<Pred const&, reference_t<I>>)
-                (common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)
+                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i) const
                 {
                     auto &&x = *i;
@@ -82,7 +82,7 @@ namespace ranges
 
                 CONCEPT_template(typename I)(
                     requires not Invocable<Pred const&, rvalue_reference_t<I>>)
-                (common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)
+                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i)
                 {
                     auto &&x = iter_move(i);
@@ -92,7 +92,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename I)(
                     requires Invocable<Pred const&, rvalue_reference_t<I>>)
-                (common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)
+                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);
@@ -133,7 +133,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Pred, typename Val)(
                     requires ReplaceIfViewConcept<Rng, Pred, Val>)
-                (replace_if_view<all_t<Rng>, Pred, Val>)
+                replace_if_view<all_t<Rng>, Pred, Val>
                 operator()(Rng &&rng, Pred pred, Val new_value) const
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(pred), std::move(new_value)}};
@@ -142,7 +142,7 @@ namespace ranges
                 // For error reporting
                 CONCEPT_template(typename Rng, typename Pred, typename Val)(
                     requires not ReplaceIfViewConcept<Rng, Pred, Val>)
-                (void) operator()(Rng &&, Pred, Val) const
+                void operator()(Rng &&, Pred, Val) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::replace_if operates must be a model of the "

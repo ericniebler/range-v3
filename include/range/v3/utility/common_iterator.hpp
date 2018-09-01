@@ -97,7 +97,7 @@ namespace ranges
             }
             CONCEPT_template(typename J, typename R = reference_t<J>)(
                 requires std::is_reference<R>())
-            (static meta::_t<std::add_pointer<R>>) operator_arrow_(J const &j, long) noexcept
+            static meta::_t<std::add_pointer<R>> operator_arrow_(J const &j, long) noexcept
             {
                 auto &&r = *j;
                 return std::addressof(r);
@@ -105,7 +105,7 @@ namespace ranges
             CONCEPT_template(typename J, typename V = value_type_t<J>,
                 typename R = reference_t<J>)(
                 requires Constructible<V, R>)
-            (static arrow_proxy_) operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j))))
+            static arrow_proxy_ operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j))))
             {
                 return arrow_proxy_(*j);
             }
@@ -120,7 +120,7 @@ namespace ranges
               : data_(emplaced_index<1>, std::move(s))
             {}
             CONCEPT_template(typename I2, typename S2)(
-                requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)()
+                requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)
             common_iterator(common_iterator<I2, S2> const &that)
               : data_(detail::variant_core_access::make_empty<I, S>())
             {
@@ -128,7 +128,7 @@ namespace ranges
             }
             CONCEPT_template(typename I2, typename S2)(
                 requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)
-            (common_iterator &)operator=(common_iterator<I2, S2> const &that)
+            common_iterator & operator=(common_iterator<I2, S2> const &that)
             {
                 detail::cidata(that).visit_i(emplace_fn{&data_});
                 return *this;
@@ -140,14 +140,14 @@ namespace ranges
             )
             CONCEPT_template(typename I2 = I)(
                 requires Readable<I2 const>)
-            (reference_t<I>) operator*() const
+            reference_t<I> operator*() const
             RANGES_AUTO_RETURN_NOEXCEPT
             (
                 *static_cast<I2 const &>(ranges::get<0>(data_))
             )
             CONCEPT_template(typename J = I)(
                 requires Readable<J>)
-            (auto) operator->() const
+            auto operator->() const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 common_iterator::operator_arrow_((J const &) ranges::get<0>(data_), 42)
@@ -158,13 +158,13 @@ namespace ranges
                 return *this;
             }
             CONCEPT_requires(not ForwardIterator<I>)
-            (auto) operator++(int)
+            auto operator++(int)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::get<0>(data_)++
             )
             CONCEPT_requires(ForwardIterator<I>)
-            (common_iterator) operator++(int)
+            common_iterator operator++(int)
             {
                 return common_iterator(ranges::get<0>(data_)++);
             }
@@ -179,7 +179,7 @@ namespace ranges
             )
             CONCEPT_template(typename I2, typename S2)(
                 requires IndirectlySwappable<I2, I>)
-            (friend auto) iter_swap(
+            friend auto iter_swap(
                 const common_iterator& x, common_iterator<I2, S2> const &y)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -195,15 +195,15 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S)(
                 requires InputIterator<I>)
-            (RANGES_CXX14_CONSTEXPR
-            auto) iter_move(common_iterator<I, S> const &i)
+            RANGES_CXX14_CONSTEXPR
+            auto iter_move(common_iterator<I, S> const &i)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::iter_move(ranges::get<0>(detail::cidata(i)))
             )
             CONCEPT_template(typename I1, typename S1, typename I2, typename S2)(
                 requires IndirectlySwappable<I2, I1>)
-            (auto) iter_swap(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+            auto iter_swap(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 ranges::iter_swap(
@@ -216,7 +216,7 @@ namespace ranges
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
                 !EqualityComparableWith<I1, I2>)
-        (bool) operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
                 (detail::cidata(y).index() == 1u || ranges::get<0>(detail::cidata(y)) == ranges::get<1>(detail::cidata(x))) :
@@ -226,7 +226,7 @@ namespace ranges
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
                 EqualityComparableWith<I1, I2>)
-        (bool) operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        bool operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?
                 (detail::cidata(y).index() == 1u || ranges::get<0>(detail::cidata(y)) == ranges::get<1>(detail::cidata(x))) :
@@ -237,7 +237,7 @@ namespace ranges
 
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires Sentinel<S1, I2> && Sentinel<S2, I1>)
-        (bool) operator!=(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
+        bool operator!=(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return !(x == y);
         }
@@ -245,7 +245,7 @@ namespace ranges
         CONCEPT_template(typename I1, typename I2, typename S1, typename S2)(
             requires SizedSentinel<I1, I2> && SizedSentinel<S1, I2> &&
                 SizedSentinel<S2, I1>)
-        (difference_type_t<I2>) operator-(
+        difference_type_t<I2> operator-(
             common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
         {
             return detail::cidata(x).index() == 1u ?

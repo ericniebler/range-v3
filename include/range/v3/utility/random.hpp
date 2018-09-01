@@ -124,7 +124,7 @@ namespace ranges
             {
                 CONCEPT_template(typename T)(
                     requires Integral<T>)
-                (RANGES_CXX14_CONSTEXPR std::uint32_t) crushto32(T value)
+                RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
                 RANGES_INTENDED_MODULAR_ARITHMETIC
                 {
                     if(sizeof(T) <= 4)
@@ -230,7 +230,7 @@ namespace ranges
 
                 CONCEPT_template(typename I)(
                     requires UnsignedIntegral<I>)
-                (constexpr I) fast_exp(I x, I power, I result = I{1})
+                constexpr I fast_exp(I x, I power, I result = I{1})
                 {
                     return power == I{0} ? result
                         : randutils::fast_exp(x * x, power >> 1, result * (power & I{1} ? x : 1));
@@ -326,7 +326,7 @@ namespace ranges
                     CONCEPT_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<reference_t<I>, IntRep>)
-                    (void) mix_entropy(I begin, S end)
+                    void mix_entropy(I begin, S end)
                     {
                         auto hash_const = INIT_A;
                         auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC
@@ -365,7 +365,7 @@ namespace ranges
                     void operator=(const seed_seq_fe&)  = delete;
 
                     CONCEPT_template(typename T)(
-                        requires ConvertibleTo<T const&, IntRep>)()
+                        requires ConvertibleTo<T const&, IntRep>)
                     seed_seq_fe(std::initializer_list<T> init)
                     {
                         seed(init.begin(), init.end());
@@ -373,7 +373,7 @@ namespace ranges
 
                     CONCEPT_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
-                            ConvertibleTo<reference_t<I>, IntRep>)()
+                            ConvertibleTo<reference_t<I>, IntRep>)
                     seed_seq_fe(I begin, S end)
                     {
                         seed(begin, end);
@@ -382,7 +382,7 @@ namespace ranges
                     // generating functions
                     CONCEPT_template(typename I, typename S)(
                         requires RandomAccessIterator<I> && Sentinel<S, I>)
-                    (void) generate(I dest_begin, S dest_end) const
+                    void generate(I dest_begin, S dest_end) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
                         auto src_begin = mixer_.begin();
@@ -410,7 +410,7 @@ namespace ranges
                     CONCEPT_template(typename O)(
                         requires WeaklyIncrementable<O> &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
-                    (void) param(O dest) const
+                    void param(O dest) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
                         const IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
@@ -455,7 +455,7 @@ namespace ranges
                     CONCEPT_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<reference_t<I>, IntRep>)
-                    (void) seed(I begin, S end)
+                    void seed(I begin, S end)
                     {
                         mix_entropy(begin, end);
                         // For very small sizes, we do some additional mixing.  For normal

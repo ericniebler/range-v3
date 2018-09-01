@@ -34,7 +34,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<C, projected<I, P>>)
-            (I) operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 if(begin != end)
                     for(auto tmp = next(begin); tmp != end; ++tmp)
@@ -47,7 +47,7 @@ namespace ranges
                 typename I = iterator_t<Rng>)(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<C, projected<I, P>>)
-            (safe_iterator_t<Rng>) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

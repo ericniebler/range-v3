@@ -91,7 +91,7 @@ namespace ranges
             /// \return `ranges::v3::basic_iterator<B>(b)`
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>)
-            (detail::facade_iterator_t<D>) begin()
+            detail::facade_iterator_t<D> begin()
             {
                 return detail::facade_iterator_t<D>{
                     range_access::begin_cursor(derived(), 42)};
@@ -99,7 +99,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>)
-            (detail::facade_iterator_t<D const>) begin() const
+            detail::facade_iterator_t<D const> begin() const
             {
                 return detail::facade_iterator_t<D const>{
                     range_access::begin_cursor(derived(), 42)};
@@ -112,7 +112,7 @@ namespace ranges
             /// as `B` computed above for `begin()`; otherwise, return `e`.
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>)
-            (detail::facade_sentinel_t<D>) end()
+            detail::facade_sentinel_t<D> end()
             {
                 return static_cast<detail::facade_sentinel_t<D>>(
                     range_access::end_cursor(derived(), 42));
@@ -120,7 +120,7 @@ namespace ranges
             /// \overload
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived>)
-            (detail::facade_sentinel_t<D const>) end() const
+            detail::facade_sentinel_t<D const> end() const
             {
                 return static_cast<detail::facade_sentinel_t<D const>>(
                     range_access::end_cursor(derived(), 42));

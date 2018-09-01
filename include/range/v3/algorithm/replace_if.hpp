@@ -43,7 +43,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename C, typename T, typename P = ident)(
                 requires ReplaceIfable<I, C, T, P> && Sentinel<S, I>)
-            (I) operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
+            I operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
             {
                 for(; begin != end; ++begin)
                     if(invoke(pred, invoke(proj, *begin)))
@@ -54,7 +54,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ReplaceIfable<I, C, T, P> && Range<Rng>)
-            (safe_iterator_t<Rng>)
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, C pred, T const & new_value, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));

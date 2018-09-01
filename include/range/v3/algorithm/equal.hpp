@@ -49,8 +49,8 @@ namespace ranges
             CONCEPT_template(typename I0, typename S0, typename I1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Comparable<I0, I1, C, P0, P1>)
-            (RANGES_CXX14_CONSTEXPR
-            bool) operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{},
+            RANGES_CXX14_CONSTEXPR
+            bool operator()(I0 begin0, S0 end0, I1 begin1, C pred = C{},
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
                 for(; begin0 != end0; ++begin0, ++begin1)
@@ -63,8 +63,8 @@ namespace ranges
                 typename C = equal_to, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                     Comparable<I0, I1, C, P0, P1>)
-            (RANGES_CXX14_CONSTEXPR
-            bool) operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
+            RANGES_CXX14_CONSTEXPR
+            bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{},
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
                 if RANGES_CONSTEXPR_IF(SizedSentinel<S0, I0> && SizedSentinel<S1, I1>)
@@ -80,8 +80,8 @@ namespace ranges
                 typename I1 = uncvref_t<I1Ref>)(
                 requires Range<Rng0> && Iterator<I1> &&
                     Comparable<I0, I1, C, P0, P1>)
-            (RANGES_CXX14_CONSTEXPR
-            bool) operator()(Rng0 &&rng0, I1Ref &&begin1, C pred = C{}, P0 proj0 = P0{},
+            RANGES_CXX14_CONSTEXPR
+            bool operator()(Rng0 &&rng0, I1Ref &&begin1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), (I1Ref &&) begin1, std::move(pred),
@@ -94,8 +94,8 @@ namespace ranges
                 typename I1 = iterator_t<Rng1>)(
                 requires Range<Rng0> && Range<Rng1> &&
                     Comparable<I0, I1, C, P0, P1>)
-            (RANGES_CXX14_CONSTEXPR
-            bool) operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
+            RANGES_CXX14_CONSTEXPR
+            bool operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 if RANGES_CONSTEXPR_IF (SizedRange<Rng0> && SizedRange<Rng1>)

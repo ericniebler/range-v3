@@ -47,7 +47,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename D)(
                     requires Integral<D>)
-                (static auto) bind(stride_fn stride, D step)
+                static auto bind(stride_fn stride, D step)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(stride, std::placeholders::_1, step)
@@ -55,7 +55,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
                     requires StrideActionConcept<Rng, D>)
-                (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> const step) const
+                Rng operator()(Rng &&rng, range_difference_type_t<Rng> const step) const
                 {
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
@@ -80,7 +80,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not StrideActionConcept<Rng, T>)
-                (void) operator()(Rng &&, T &&) const
+                void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::stride operates must be a model of the "

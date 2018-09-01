@@ -94,7 +94,7 @@ namespace ranges
             CONCEPT_template(typename Fun)(
                 requires CopyConstructible<Fun> && Invocable<Fun&> &&
                     ConvertibleTo<invoke_result_t<Fun&>, any_input_view<Ref>>)
-            (explicit) recursive_range_fn(Fun fun)
+            explicit recursive_range_fn(Fun fun)
               : fun_{[=]{return view::concat(invoke(fun), view::empty<value_type>());}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;

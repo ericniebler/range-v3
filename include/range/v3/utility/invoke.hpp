@@ -196,7 +196,7 @@ namespace ranges
             CONCEPT_template(typename U)(
                 requires Constructible<base_, U> &&
                     !Same<uncvref_t<U>, reference_wrapper>)
-            (constexpr) reference_wrapper(U &&u)
+            constexpr reference_wrapper(U &&u)
                 noexcept(std::is_nothrow_constructible<base_, U>::value)
               : detail::reference_wrapper_<T>{static_cast<U &&>(u)}
             {}
@@ -208,7 +208,7 @@ namespace ranges
             {
                 return get();
             }
-            CONCEPT_requires(not std::is_rvalue_reference<T>())()
+            CONCEPT_requires(not std::is_rvalue_reference<T>())
             operator std::reference_wrapper<type> () const noexcept
             {
                 return {get()};

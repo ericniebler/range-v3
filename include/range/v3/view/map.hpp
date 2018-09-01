@@ -39,7 +39,7 @@ namespace ranges
 
             CONCEPT_template(typename T)(
                 requires MoveConstructible<T>)
-            (RANGES_CXX14_CONSTEXPR T)
+            RANGES_CXX14_CONSTEXPR T
             get_first_second_helper(T& t, std::false_type)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
             {
@@ -99,14 +99,14 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires KeysViewConcept<Rng>)
-                (keys_range_view<all_t<Rng>>) operator()(Rng &&rng) const
+                keys_range_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not KeysViewConcept<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument of view::keys must be a model of the InputRange concept.");
@@ -129,14 +129,14 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires ValuesViewConcept<Rng>)
-                (values_view<all_t<Rng>>) operator()(Rng &&rng) const
+                values_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not ValuesViewConcept<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The argument of view::values must be a model of the InputRange concept.");

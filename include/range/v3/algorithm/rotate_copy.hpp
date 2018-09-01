@@ -37,7 +37,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename O, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
                     IndirectlyCopyable<I, O>)
-            (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, I middle, S end, O out) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, I middle, S end, O out) const
             {
                 auto res = copy(middle, std::move(end), std::move(out));
                 return {
@@ -50,7 +50,7 @@ namespace ranges
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && WeaklyIncrementable<O> &&
                     IndirectlyCopyable<I, O>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, I middle, O out) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));

@@ -100,7 +100,7 @@ namespace ranges
 
             CONCEPT_template(typename I, typename S, typename O)(
                 requires not SizedSentinel<S, I>)
-            (O) uninitialized_copy(I first, S last, O out)
+            O uninitialized_copy(I first, S last, O out)
             {
                 for(; first != last; ++first, ++out)
                     ::new((void *) std::addressof(*out)) value_type_t<O>(*first);
@@ -109,7 +109,7 @@ namespace ranges
 
             CONCEPT_template(typename I, typename S, typename O)(
                 requires SizedSentinel<S, I>)
-            (O) uninitialized_copy(I first, S last, O out)
+            O uninitialized_copy(I first, S last, O out)
             {
                 return std::uninitialized_copy_n(first, (last - first), out);
             }
@@ -127,13 +127,13 @@ namespace ranges
                 T datum_;
             public:
                 CONCEPT_requires(DefaultConstructible<T>)
-                (constexpr) indexed_datum()
+                constexpr indexed_datum()
                     noexcept(std::is_nothrow_default_constructible<T>::value)
                   : datum_{}
                 {}
                 CONCEPT_template(typename... Ts)(
                     requires Constructible<T, Ts...>)
-                (constexpr) indexed_datum(Ts &&... ts)
+                constexpr indexed_datum(Ts &&... ts)
                     noexcept(std::is_nothrow_constructible<T, Ts...>::value)
                   : datum_(static_cast<Ts &&>(ts)...)
                 {}
@@ -569,27 +569,27 @@ namespace ranges
 
         public:
             CONCEPT_requires(DefaultConstructible<datum_t<0>>)
-            (constexpr) variant()
+            constexpr variant()
                 noexcept(std::is_nothrow_default_constructible<datum_t<0>>::value)
               : variant{emplaced_index<0>}
             {}
             CONCEPT_template(std::size_t N, typename...Args)(
                 requires Constructible<datum_t<N>, Args...>)
-            (constexpr) variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
+            constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
                 noexcept(std::is_nothrow_constructible<datum_t<N>, Args...>::value)
               : detail::variant_data<Ts...>{meta::size_t<N>{}, static_cast<Args &&>(args)...}
               , index_(N)
             {}
             CONCEPT_template(std::size_t N, typename T, typename...Args)(
                 requires Constructible<datum_t<N>, std::initializer_list<T> &, Args...>)
-            (constexpr) variant(RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il, Args &&...args)
+            constexpr variant(RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il, Args &&...args)
                 noexcept(std::is_nothrow_constructible<datum_t<N>, std::initializer_list<T> &, Args...>::value)
               : detail::variant_data<Ts...>{meta::size_t<N>{}, il, static_cast<Args &&>(args)...}
               , index_(N)
             {}
             CONCEPT_template(std::size_t N)(
                 requires Constructible<datum_t<N>, meta::nil_>)
-            (constexpr) variant(RANGES_EMPLACED_INDEX_T(N), meta::nil_)
+            constexpr variant(RANGES_EMPLACED_INDEX_T(N), meta::nil_)
                 noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
               : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}, index_(N)
             {}
@@ -621,7 +621,7 @@ namespace ranges
             }
             CONCEPT_template(std::size_t N, typename ...Args)(
                 requires Constructible<datum_t<N>, Args...>)
-            (void) emplace(Args &&...args)
+            void emplace(Args &&...args)
             {
                 this->clear_();
                 detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
@@ -675,7 +675,7 @@ namespace ranges
 
         CONCEPT_template(typename...Ts, typename...Us)(
             requires And<EqualityComparableWith<Ts, Us>...>)
-        (bool) operator==(variant<Ts...> const &lhs, variant<Us...> const &rhs)
+        bool operator==(variant<Ts...> const &lhs, variant<Us...> const &rhs)
         {
             return (!lhs.valid() && !rhs.valid()) ||
                 (lhs.index() == rhs.index() &&
@@ -687,7 +687,7 @@ namespace ranges
 
         CONCEPT_template(typename...Ts, typename...Us)(
             requires And<EqualityComparableWith<Ts, Us>...>)
-        (bool) operator!=(variant<Ts...> const &lhs, variant<Us...> const &rhs)
+        bool operator!=(variant<Ts...> const &lhs, variant<Us...> const &rhs)
         {
             return !(lhs == rhs);
         }

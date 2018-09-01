@@ -104,7 +104,7 @@ namespace ranges
             CONCEPT_template(typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)(
                 requires Sentinel<S1, I1> && IsPermutationable<I1, I2, C, P1, P2>)
-            (bool) operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
+            bool operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
                 // shorten sequences as much as possible by lopping off any equal parts
@@ -151,7 +151,7 @@ namespace ranges
                 typename C = equal_to, typename P1 = ident, typename P2 = ident)(
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     IsPermutationable<I1, I2, C, P1, P2>)
-            (bool) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
+            bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 if(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
@@ -168,7 +168,7 @@ namespace ranges
                 typename I2 = uncvref_t<I2Ref>)(
                 requires ForwardRange<Rng1> && Iterator<I2> &&
                     IsPermutationable<I1, I2, C, P1, P2>)
-            (bool) operator()(Rng1 &&rng1, I2Ref &&begin2,
+            bool operator()(Rng1 &&rng1, I2Ref &&begin2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), (I2Ref &&) begin2, std::move(pred),
@@ -180,7 +180,7 @@ namespace ranges
                 typename I2 = iterator_t<Rng2>)(
                 requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
                     IsPermutationable<I1, I2, C, P1, P2>)
-            (bool) operator()(Rng1 &&rng1, Rng2 &&rng2,
+            bool operator()(Rng1 &&rng1, Rng2 &&rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 if(SizedRange<Rng1> && SizedRange<Rng2>)
@@ -201,7 +201,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
-            (bool) operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            bool operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
                 if(begin == end_)
                     return false;
@@ -231,7 +231,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires BidirectionalRange<Rng> && Sortable<I, C, P>)
-            (bool) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -246,7 +246,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
-            (bool) operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            bool operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
             {
                 if(begin == end_)
                     return false;
@@ -276,7 +276,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires BidirectionalRange<Rng> && Sortable<I, C, P>)
-            (bool) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

@@ -47,7 +47,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename Int)(
                     requires Integral<Int>)
-                (static auto) bind(take_fn take, Int n)
+                static auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(take, std::placeholders::_1, n)
@@ -55,7 +55,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename D)(
                     requires TakeActionConcept<Rng, D>)
-                (Rng) operator()(Rng &&rng, D &&d) const
+                Rng operator()(Rng &&rng, D &&d) const
                 {
                     range_difference_type_t<Rng> n = d;
                     RANGES_EXPECT(n >= 0);
@@ -66,7 +66,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not TakeActionConcept<Rng, T>)
-                (void) operator()(Rng &&, T &&) const
+                void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::take operates must be a model of the "

@@ -99,7 +99,7 @@ namespace ranges
             }
             CONCEPT_requires(Invocable<Fun const&, range_common_reference_t<Rng>,
                 range_common_reference_t<Rng>> && Range<Rng const>)
-            (cursor<true>) begin_cursor() const
+            cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
@@ -134,7 +134,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires GroupByViewConcept<Rng, Fun>)
-                (group_by_view<all_t<Rng>, Fun>) operator()(Rng &&rng, Fun fun) const
+                group_by_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
@@ -142,7 +142,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Fun)(
                     requires not GroupByViewConcept<Rng, Fun>)
-                (void) operator()(Rng &&, Fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which view::group_by operates must be a model of the "

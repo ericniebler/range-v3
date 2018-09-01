@@ -37,7 +37,7 @@ namespace ranges
                 requires RandomAccessIterator<I> && Sentinel<S, I> &&
                     Permutable<I> && UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
-            (I) operator()(I const begin, S const end,
+            I operator()(I const begin, S const end,
                 Gen &&gen = detail::get_random_engine()) const
             {
                 auto mid = begin;
@@ -58,7 +58,7 @@ namespace ranges
                 requires RandomAccessRange<Rng> && Permutable<I> &&
                     UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
-            (safe_iterator_t<Rng>)
+            safe_iterator_t<Rng>
             operator()(Rng &&rng, Gen &&rand = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));

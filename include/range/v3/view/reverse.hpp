@@ -51,14 +51,14 @@ namespace ranges
               : reverse_view::view_adaptor{detail::move(rng)}
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (constexpr range_size_type_t<Rng>) size() const
+            constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return ranges::size(this->base());
             }
             CONCEPT_requires(not SizedRange<Rng const> && (SizedRange<Rng> ||
                 SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>))
-            (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
                 noexcept(noexcept(std::declval<reverse_view &>().size_(
                     meta::bool_<SizedRange<Rng>>{})))
             {
@@ -68,7 +68,7 @@ namespace ranges
             friend range_access;
 
             CONCEPT_requires(BoundedRange<Rng const>)
-            (constexpr iterator_t<Rng>) get_end() const
+            constexpr iterator_t<Rng> get_end() const
                 noexcept(noexcept(ranges::end(std::declval<Rng const &>())))
             {
                 return ranges::end(this->base());
@@ -92,7 +92,7 @@ namespace ranges
                 return *end_;
             }
             CONCEPT_requires(not BoundedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR iterator_t<Rng>) get_end()
+            RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end()
                 noexcept(noexcept(std::declval<reverse_view &>().get_end_(
                     meta::bool_<BoundedRange<Rng>>{})))
             {
@@ -145,8 +145,8 @@ namespace ranges
                     ++it;
                 }
                 CONCEPT_requires(RandomAccessRange<Rng>)
-                (RANGES_CXX14_CONSTEXPR
-                void) advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
+                RANGES_CXX14_CONSTEXPR
+                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
                     noexcept(noexcept(ranges::advance(it, -n)))
                 {
                     RANGES_ASSERT(n <= it - ranges::begin(rng_->base()));
@@ -154,7 +154,7 @@ namespace ranges
                     ranges::advance(it, -n);
                 }
                 CONCEPT_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>)
-                (RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng>)
+                RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng>
                 distance_to(iterator_t<Rng> const &here, iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                     noexcept(noexcept(here - there))
@@ -164,22 +164,22 @@ namespace ranges
                 }
             };
             CONCEPT_requires(BoundedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() const noexcept
+            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() const noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(BoundedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() const noexcept
+            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() const noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(not BoundedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR adaptor) begin_adaptor() noexcept
+            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
             {
                 return {*this};
             }
             CONCEPT_requires(not BoundedRange<Rng const>)
-            (RANGES_CXX14_CONSTEXPR adaptor) end_adaptor() noexcept
+            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
             {
                 return {*this};
             }
@@ -210,11 +210,11 @@ namespace ranges
                 // Avoid GCC5 bug that ODR-uses std::declval?!?
                 CONCEPT_template(typename Rng)(
                     requires BidirectionalRange<Rng>)
-                (RANGES_CXX14_CONSTEXPR auto)
+                RANGES_CXX14_CONSTEXPR auto
 #else
                 CONCEPT_template(typename Rng)(
                     requires BidirectionalRange<Rng>)
-                (constexpr auto)
+                constexpr auto
 #endif
                 operator()(Rng &&rng) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -225,7 +225,7 @@ namespace ranges
                 // For error reporting
                 CONCEPT_template(typename Rng)(
                     requires not BidirectionalRange<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(BidirectionalRange<Rng>,
                         "The object on which view::reverse operates must model the "

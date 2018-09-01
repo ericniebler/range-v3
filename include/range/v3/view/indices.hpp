@@ -38,7 +38,7 @@ namespace ranges
 
                 CONCEPT_template(typename Val)(
                     requires Integral<Val>)
-                (auto) operator()(Val from, Val to) const
+                auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     detail::take_exactly_view_<iota_view<Val>, true>
@@ -47,7 +47,7 @@ namespace ranges
 
                 CONCEPT_template(typename Val, typename Self = indices_fn)(
                     requires Integral<Val>)
-                (auto) operator()(Val to) const
+                auto operator()(Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     Self{}(Val(), to)
@@ -56,14 +56,14 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Val)(
                     requires not Integral<Val>)
-                (void) operator()(Val) const
+                void operator()(Val) const
                 {
                     CONCEPT_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
                 }
                 CONCEPT_template(typename Val)(
                     requires not Integral<Val>)
-                (void) operator()(Val, Val) const
+                void operator()(Val, Val) const
                 {
                     CONCEPT_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
@@ -77,7 +77,7 @@ namespace ranges
             {
                 CONCEPT_template(typename Val)(
                     requires Integral<Val>)
-                (auto) operator()(Val from, Val to) const
+                auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     detail::take_exactly_view_<iota_view<Val>, true>
@@ -86,7 +86,7 @@ namespace ranges
 
                 CONCEPT_template(typename Val, typename Self = closed_indices_fn)(
                     requires Integral<Val>)
-                (auto) operator()(Val to) const
+                auto operator()(Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     Self{}(Val(), to)
@@ -95,14 +95,14 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Val)(
                     requires not Integral<Val>)
-                (void) operator()(Val) const
+                void operator()(Val) const
                 {
                     CONCEPT_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");
                 }
                 CONCEPT_template(typename Val)(
                     requires not Integral<Val>)
-                (void) operator()(Val, Val) const
+                void operator()(Val, Val) const
                 {
                     CONCEPT_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");

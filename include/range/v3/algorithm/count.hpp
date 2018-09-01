@@ -34,7 +34,7 @@ namespace ranges
             CONCEPT_template(typename I, typename S, typename V, typename P = ident)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<equal_to, projected<I, P>, V const *>)
-            (difference_type_t<I>)
+            difference_type_t<I>
             operator()(I begin, S end, V const & val, P proj = P{}) const
             {
                 difference_type_t<I> n = 0;
@@ -48,7 +48,7 @@ namespace ranges
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> &&
                     IndirectRelation<equal_to, projected<I, P>, V const *>)
-            (difference_type_t<I>)
+            difference_type_t<I>
             operator()(Rng &&rng, V const & val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

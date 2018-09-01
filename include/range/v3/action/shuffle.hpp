@@ -49,7 +49,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename Gen)(
                     requires UniformRandomNumberGenerator<Gen>)
-                (static auto) bind(shuffle_fn shuffle, Gen &&gen)
+                static auto bind(shuffle_fn shuffle, Gen &&gen)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen))
@@ -57,7 +57,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Gen)(
                     requires ShuffleActionConcept<Rng, Gen>)
-                (Rng) operator()(Rng &&rng, Gen &&gen) const
+                Rng operator()(Rng &&rng, Gen &&gen) const
                 {
                     ranges::shuffle(rng, static_cast<Gen &&>(gen));
                     return static_cast<Rng &&>(rng);
@@ -66,7 +66,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Gen)(
                     requires not ShuffleActionConcept<Rng, Gen>)
-                (void) operator()(Rng &&, Gen &&) const
+                void operator()(Rng &&, Gen &&) const
                 {
                     CONCEPT_assert_msg(RandomAccessRange<Rng>,
                         "The object on which action::shuffle operates must be a model of the "

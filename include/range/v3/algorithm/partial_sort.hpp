@@ -35,7 +35,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
-            (I) operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
+            I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
                 make_heap(begin, middle, std::ref(pred), std::ref(proj));
                 auto const len = middle - begin;
@@ -55,7 +55,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Sortable<I, C, P> && RandomAccessRange<Rng>)
-            (safe_iterator_t<Rng>) operator()(Rng &&rng, I middle, C pred = C{},
+            safe_iterator_t<Rng> operator()(Rng &&rng, I middle, C pred = C{},
                 P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),

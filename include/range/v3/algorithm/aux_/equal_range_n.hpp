@@ -36,7 +36,7 @@ namespace ranges
             {
                 CONCEPT_template(typename I, typename V, typename R = ordered_less, typename P = ident)(
                     requires BinarySearchable<I, V, R, P>)
-                (iterator_range<I>)
+                iterator_range<I>
                 operator()(I begin, difference_type_t<I> dist, V const & val, R pred = R{},
                     P proj = P{}) const
                 {

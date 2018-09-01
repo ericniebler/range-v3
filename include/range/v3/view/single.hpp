@@ -102,7 +102,7 @@ namespace ranges
             {
                 CONCEPT_template(typename Val)(
                     requires CopyConstructible<Val>)
-                (single_view<Val>) operator()(Val value) const
+                single_view<Val> operator()(Val value) const
                 {
                     return single_view<Val>{std::move(value)};
                 }
@@ -110,7 +110,7 @@ namespace ranges
                 // For error reporting
                 CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
                     requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-                (void) operator()(Arg &&) const
+                void operator()(Arg &&) const
                 {
                     CONCEPT_assert_msg(CopyConstructible<Val>,
                         "The object passed to view::single must be a model of the CopyConstructible "

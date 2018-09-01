@@ -128,7 +128,7 @@ namespace ranges
                 requires Searchable<I1, I2, C, P1, P2> &&
                     Sentinel<S1, I1> &&
                     Sentinel<S2, I2>)
-            (I1) operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
+            I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 if(begin2 == end2)
@@ -149,7 +149,7 @@ namespace ranges
                 requires Searchable<I1, I2, C, P1, P2> &&
                     Range<Rng1> &&
                     Range<Rng2>)
-            (safe_iterator_t<Rng1>)
+            safe_iterator_t<Rng1>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {

@@ -36,8 +36,8 @@ namespace ranges
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng)(
                 requires RandomAccessRange<Rng> && SizedRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             {
                 // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
                 check_throw(rng, n);
@@ -50,12 +50,12 @@ namespace ranges
             //     "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
             //     "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
             //     "Use ranges::index for unchecked access instead!"))
-            (RANGES_DEPRECATED(
+            RANGES_DEPRECATED(
                 "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
                 "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
                 "Use ranges::index for unchecked access instead!")
             RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng>) operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             RANGES_AUTO_RETURN_NOEXCEPT
             (
                 index(std::forward<Rng>(rng), n)
@@ -67,8 +67,8 @@ namespace ranges
                 requires RandomAccessRange<Rng> &&
                                   !Same<uncvref_t<T>, D> &&
                                   ConvertibleTo<T, D>)
-            (RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng>) operator()(Rng &&rng, T &&t) const
+            RANGES_CXX14_CONSTEXPR
+            range_reference_t<Rng> operator()(Rng &&rng, T &&t) const
             RANGES_AUTO_RETURN_NOEXCEPT
             (
                 Self{}((Rng &&) rng, static_cast<D>((T &&) t))
@@ -77,7 +77,7 @@ namespace ranges
             /// \cond
             CONCEPT_template(typename R, typename T)(
                 requires not index_detail::Indexable<R, T>)
-            (void) operator()(R &&, T &&) const
+            void operator()(R &&, T &&) const
             {
                 CONCEPT_assert_msg(RandomAccessRange<R>,
                     "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");

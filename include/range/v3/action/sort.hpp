@@ -44,7 +44,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename C, typename P = ident)(
                     requires not Range<C>)
-                (static auto) bind(sort_fn sort, C pred, P proj = P{})
+                static auto bind(sort_fn sort, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
@@ -54,7 +54,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires SortActionConcept<Rng, C, P>)
-                (Rng) operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+                Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));
                     return static_cast<Rng &&>(rng);
@@ -63,7 +63,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident)(
                     requires not SortActionConcept<Rng, C, P>)
-                (void) operator()(Rng &&, C && = C{}, P && = P{}) const
+                void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::sort operates must be a model of the "

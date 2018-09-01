@@ -88,7 +88,7 @@ namespace ranges
     #else
         CONCEPT_template(typename Val)(
             requires DefaultConstructible<Val>)
-        (struct) istream_fn
+        struct istream_fn
         {
             istream_range<Val> operator()(std::istream & sin) const
             {

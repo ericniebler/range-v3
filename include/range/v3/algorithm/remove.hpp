@@ -45,7 +45,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename T, typename P = ident)(
                 requires Removable<I, T, P> && Sentinel<S, I>)
-            (I) operator()(I begin, S end, T const &val, P proj = P{}) const
+            I operator()(I begin, S end, T const &val, P proj = P{}) const
             {
                 begin = find(std::move(begin), end, val, std::ref(proj));
                 if(begin != end)
@@ -65,7 +65,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Removable<I, T, P> && ForwardRange<Rng>)
-            (safe_iterator_t<Rng>) operator()(Rng &&rng, T const &val, P proj = P{}) const
+            safe_iterator_t<Rng> operator()(Rng &&rng, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }

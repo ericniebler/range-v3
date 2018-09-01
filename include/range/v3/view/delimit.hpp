@@ -89,7 +89,7 @@ namespace ranges
             public:
                 CONCEPT_template(typename Rng, typename Val)(
                     requires Delimitable<Rng, Val>)
-                (delimit_view<all_t<Rng>, Val>)
+                delimit_view<all_t<Rng>, Val>
                 operator()(Rng &&rng, Val value) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(value)};
@@ -97,7 +97,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename Val)(
                     requires not Delimitable<Rng, Val>)
-                (void)
+                void
                 operator()(Rng &&, Val) const
                 {
                     CONCEPT_assert_msg(Range<Rng>,
@@ -115,7 +115,7 @@ namespace ranges
 
                 CONCEPT_template(typename I, typename Val)(
                     requires InputIterator<I>)
-                (delimit_view<iterator_range<I, unreachable>, Val>)
+                delimit_view<iterator_range<I, unreachable>, Val>
                 operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};

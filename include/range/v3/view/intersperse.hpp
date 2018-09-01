@@ -54,13 +54,13 @@ namespace ranges
               : intersperse_view::view_adaptor{detail::move(rng)}, val_(detail::move(val))
             {}
             CONCEPT_requires(SizedRange<Rng const>)
-            (constexpr range_size_type_t<Rng>) size() const
+            constexpr range_size_type_t<Rng> size() const
                 noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return size_(ranges::size(this->base()));
             }
             CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
-            (RANGES_CXX14_CONSTEXPR range_size_type_t<Rng>) size()
+            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
                 return size_(ranges::size(this->base()));
@@ -90,7 +90,7 @@ namespace ranges
                     return toggle_ ? *it : val_;
                 }
                 CONCEPT_requires(Sentinel<iterator_t<Rng>, iterator_t<Rng>>)
-                (constexpr bool) equal(iterator_t<Rng> const &it0, iterator_t<Rng> const &it1,
+                constexpr bool equal(iterator_t<Rng> const &it0, iterator_t<Rng> const &it1,
                     cursor_adaptor const &other) const
                     noexcept(noexcept(it0 == it1))
                 {
@@ -104,7 +104,7 @@ namespace ranges
                     toggle_ = !toggle_;
                 }
                 CONCEPT_requires(BidirectionalRange<Rng>)
-                (RANGES_CXX14_CONSTEXPR void) prev(iterator_t<Rng> &it)
+                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it)
                     noexcept(noexcept(--it))
                 {
                     toggle_ = !toggle_;
@@ -112,15 +112,15 @@ namespace ranges
                         --it;
                 }
                 CONCEPT_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>)
-                (constexpr range_difference_type_t<Rng>) distance_to(iterator_t<Rng> const &it,
+                constexpr range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &it,
                     iterator_t<Rng> const &other_it, cursor_adaptor const &other) const
                     noexcept(noexcept(other_it - it))
                 {
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
                 CONCEPT_requires(RandomAccessRange<Rng>)
-                (RANGES_CXX14_CONSTEXPR
-                void) advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
+                RANGES_CXX14_CONSTEXPR
+                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(ranges::advance(it, n)))
                 {
                     ranges::advance(it, n >= 0 ? (n + toggle_) / 2 : (n - !toggle_) / 2);
@@ -141,14 +141,14 @@ namespace ranges
                 )
             };
             CONCEPT_requires(Range<Rng const>)
-            (constexpr cursor_adaptor) begin_adaptor() const
+            constexpr cursor_adaptor begin_adaptor() const
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view const&>::value)
             {
                 return cursor_adaptor{*this};
             }
             CONCEPT_requires(not Range<Rng const>)
-            (RANGES_CXX14_CONSTEXPR cursor_adaptor) begin_adaptor()
+            RANGES_CXX14_CONSTEXPR cursor_adaptor begin_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value)
             {
@@ -156,7 +156,7 @@ namespace ranges
             }
             CONCEPT_requires(Range<Rng const> && BoundedRange<Rng> &&
                 !SinglePass<iterator_t<Rng>>)
-            (constexpr cursor_adaptor) end_adaptor() const
+            constexpr cursor_adaptor end_adaptor() const
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view const&>::value)
             {
@@ -164,14 +164,14 @@ namespace ranges
             }
             CONCEPT_requires(not Range<Rng const> && BoundedRange<Rng> &&
                 !SinglePass<iterator_t<Rng>>)
-            (RANGES_CXX14_CONSTEXPR cursor_adaptor) end_adaptor()
+            RANGES_CXX14_CONSTEXPR cursor_adaptor end_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value)
             {
                 return cursor_adaptor{*this};
             }
             CONCEPT_requires(not BoundedRange<Rng> || SinglePass<iterator_t<Rng>>)
-            (constexpr sentinel_adaptor) end_adaptor() const noexcept
+            constexpr sentinel_adaptor end_adaptor() const noexcept
             {
                 return {};
             }
@@ -201,7 +201,7 @@ namespace ranges
                 friend view_access;
                 CONCEPT_template(typename T)(
                     requires Copyable<T>)
-                (static auto) bind(intersperse_fn intersperse, T t)
+                static auto bind(intersperse_fn intersperse, T t)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     make_pipeable(std::bind(intersperse, std::placeholders::_1, std::move(t)))
@@ -210,7 +210,7 @@ namespace ranges
 
                 CONCEPT_template(typename Rng)(
                     requires IntersperseViewConcept<Rng>)
-                (constexpr auto) operator()(Rng &&rng, range_value_type_t<Rng> val) const
+                constexpr auto operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     intersperse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), std::move(val)}
@@ -219,7 +219,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T)(
                     requires not IntersperseViewConcept<Rng, T>)
-                (void) operator()(Rng &&, T &&) const
+                void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_assert_msg(InputRange<Rng>,
                         "The object on which view::intersperse operates must be a model of the "

@@ -48,7 +48,7 @@ namespace ranges
                 friend action_access;
                 CONCEPT_template(typename D)(
                     requires Integral<D>)
-                (static auto) bind(slice_fn slice, D from, D to)
+                static auto bind(slice_fn slice, D from, D to)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(slice, std::placeholders::_1, from, to)
@@ -59,7 +59,7 @@ namespace ranges
                     typename I = iterator_t<Rng>,
                     typename D = range_difference_type_t<Rng>)(
                     requires SliceActionConcept<Rng, D, D>)
-                (Rng) operator()(Rng &&rng, range_difference_type_t<Rng> from,
+                Rng operator()(Rng &&rng, range_difference_type_t<Rng> from,
                     range_difference_type_t<Rng> to) const
                 {
                     RANGES_EXPECT(from <= to);
@@ -71,7 +71,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng, typename T, typename U)(
                     requires not SliceActionConcept<Rng, T, U>)
-                (void) operator()(Rng &&, T &&, U &&) const
+                void operator()(Rng &&, T &&, U &&) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which action::slice operates must be a model of the "

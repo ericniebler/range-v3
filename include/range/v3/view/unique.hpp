@@ -43,14 +43,14 @@ namespace ranges
             {
                 CONCEPT_template(typename Rng)(
                     requires UniqueViewConcept<Rng>)
-                (unique_view<all_t<Rng>>) operator()(Rng &&rng) const
+                unique_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename Rng)(
                     requires not UniqueViewConcept<Rng>)
-                (void) operator()(Rng &&) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "The object on which view::unique operates must be a model the "

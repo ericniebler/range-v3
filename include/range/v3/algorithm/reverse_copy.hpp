@@ -46,7 +46,7 @@ namespace ranges
         {
             CONCEPT_template(typename I, typename S, typename O)(
                 requires Sentinel<S, I> && ReverseCopyable<I, O>)
-            (tagged_pair<tag::in(I), tag::out(O)>) operator()(I begin, S end_, O out) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
                 I end = ranges::next(begin, end_), res = end;
                 for(; begin != end; ++out)
@@ -57,7 +57,7 @@ namespace ranges
             CONCEPT_template(typename Rng, typename O,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && ReverseCopyable<I, O>)
-            (tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>) operator()(Rng &&rng, O out) const
+            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }
