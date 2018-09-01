@@ -39,7 +39,7 @@ matrix:
     #  https://llvm.org/bugs/show_bug.cgi?id=22757
 
     # clang 3.6 C++17/14 Release libc++
-    - env: CLANG_VERSION=3.6 BUILD_TYPE=Release CPP=17 LIBCXX=On
+    - env: CLANG_VERSION=3.6 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
       addons: &clang36
         apt:
@@ -50,12 +50,8 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
-    - env: CLANG_VERSION=3.6 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
-      os: linux
-      addons: *clang36
-
     # clang 3.7 C++17/14 Release libc++
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=17 LIBCXX=On
+    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
       os: linux
       addons: &clang37
         apt:
@@ -69,10 +65,6 @@ matrix:
             - llvm-toolchain-trusty-3.7
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.7 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-
-    - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On
-      os: linux
-      addons: *clang37
 
     # clang 3.8 C++17/14 Release libc++
     - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=17 LIBCXX=On
@@ -152,21 +144,6 @@ matrix:
     # - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z MSAN=On LIBCXX=On CLANG_MODULES=On
     #   os: linux
     #   addons: *clang5
-
-    # gcc-4.9 C++17/C++14 Release
-    - env: GCC_VERSION=4.9 BUILD_TYPE=Release CPP=17
-      os: linux
-      addons: &gcc49
-        apt:
-          packages:
-            - g++-4.9
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - env: GCC_VERSION=4.9 BUILD_TYPE=Release CPP=14 HEADERS=On
-      os: linux
-      addons: *gcc49
 
     # gcc-5 C++17/C++14 Release
     - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=17
