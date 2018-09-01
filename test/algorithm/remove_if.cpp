@@ -68,7 +68,7 @@ test_range()
 
 struct pred
 {
-    bool operator()(const std::unique_ptr<int>& i) {return *i == 2;}
+    bool operator()(const std::unique_ptr<int>& i) const {return *i == 2;}
 };
 
 template<class Iter, class Sent = Iter>
