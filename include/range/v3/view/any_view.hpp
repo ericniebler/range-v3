@@ -606,7 +606,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CONCEPT_template(typename Rng)(
-            requires View<Rng>)()
+            requires View<Rng>)
         any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif
 

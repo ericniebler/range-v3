@@ -342,13 +342,13 @@ namespace ranges
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value < cardinality{})()
+                range_cardinality<Rng>::value < cardinality{})
         span(Rng &&rng) ->
             span<detail::element_t<Rng>>;
 
         CONCEPT_template(typename Rng)(
             requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value >= cardinality{})()
+                range_cardinality<Rng>::value >= cardinality{})
         span(Rng &&rng) ->
             span<detail::element_t<Rng>,
                 static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;

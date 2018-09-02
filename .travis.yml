@@ -191,6 +191,69 @@ matrix:
       os: linux
       addons: *gcc6
 
+    # gcc-7 C++17/14/1z Debug/Release
+    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=17
+      os: linux
+      addons: &gcc7
+        apt:
+          packages:
+            - g++-7
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+
+    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=17
+      os: linux
+      addons: *gcc7
+
+    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=14
+      os: linux
+      addons: *gcc7
+
+    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=14
+      os: linux
+      addons: *gcc7
+
+    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=1z HEADERS=On
+      os: linux
+      addons: *gcc7
+
+    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=1z
+      os: linux
+      addons: *gcc7
+
+
+    # gcc-8 C++17/14/1z Debug/Release
+    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=17
+      os: linux
+      addons: &gcc8
+        apt:
+          packages:
+            - g++-8
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=17
+      os: linux
+      addons: *gcc8
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=14
+      os: linux
+      addons: *gcc8
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=14
+      os: linux
+      addons: *gcc8
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=1z HEADERS=On
+      os: linux
+      addons: *gcc8
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=1z
+      os: linux
+      addons: *gcc8
+
 # Install dependencies
 before_install:
   - set -e

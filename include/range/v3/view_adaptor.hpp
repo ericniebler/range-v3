@@ -178,7 +178,14 @@ namespace ranges
             using compressed_pair<BaseSent, Adapt>::first;
             using compressed_pair<BaseSent, Adapt>::second;
         public:
+            // Uninvestigated gcc ICE
+            #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 9
+            adaptor_sentinel(BaseSent sent, Adapt adapt)
+              : adaptor_sentinel::compressed_pair{std::move(sent), std::move(adapt)}
+            {}
+            #else
             using compressed_pair<BaseSent, Adapt>::compressed_pair;
+            #endif
 
             // All sentinels into adapted ranges have a base() member for fetching
             // the underlying sentinel.
@@ -373,7 +380,14 @@ namespace ranges
             }
         public:
             adaptor_cursor() = default;
+            // Uninvestigated gcc ICE
+            #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 9
+            adaptor_cursor(BaseIter iter, Adapt adapt)
+              : base_t{std::move(iter), std::move(adapt)}
+            {}
+            #else
             using base_t::base_t;
+            #endif
         };
 
         template<typename D>

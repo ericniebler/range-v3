@@ -219,8 +219,8 @@ namespace ranges
 
 #if !RANGES_BROKEN_CPO_LOOKUP
             CONCEPT_requires(InputIterator<I>)
-            (friend RANGES_CXX14_CONSTEXPR
-            rvalue_reference_t<I>) iter_move(const counted_iterator& i)
+            friend RANGES_CXX14_CONSTEXPR
+            rvalue_reference_t<I> iter_move(const counted_iterator& i)
             RANGES_AUTO_RETURN_NOEXCEPT
             (
                 ranges::iter_move(i.current_)
