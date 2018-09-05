@@ -17,6 +17,7 @@
 #include <functional>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <utility>
 
 #include <range/v3/range_fwd.hpp>
@@ -203,8 +204,10 @@ namespace ranges
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(Int dist) const
                 {
-                  RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
-                  return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
+                    using T = meta::_t<std::make_signed<Int>>;
+                    RANGES_EXPECT(0 <= dist);
+                    RANGES_EXPECT(dist <= static_cast<Int>(std::numeric_limits<T>::max()));
+                    return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
                 }
             };
         }
