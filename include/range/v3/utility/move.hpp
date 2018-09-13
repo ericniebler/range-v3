@@ -93,7 +93,7 @@ namespace ranges
 
                 template<typename I,
                     typename = meta::if_c<!is_adl_indirectly_movable_<I &>::value>,
-                    typename R = decltype(*std::declval<I &>())>
+                    typename R = reference_t<I>>
                 auto operator()(I &&i) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (

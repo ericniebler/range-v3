@@ -111,7 +111,7 @@ namespace ranges
                 using value_t = concepts::Readable::value_t<iterator_t<T>>;
 
                 template<typename T>
-                using reference_t = concepts::Readable::reference_t<iterator_t<T>>;
+                using reference_t = ranges::reference_t<iterator_t<T>>;
 
                 template<typename T>
                 using rvalue_reference_t = concepts::Readable::rvalue_reference_t<iterator_t<T>>;
