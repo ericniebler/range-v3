@@ -134,10 +134,10 @@ namespace ranges
                         meta::_t<value_type<I>> &,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_assignable<
-                        decltype(*std::declval<O &>()),
+                        reference_t<O>,
                         meta::_t<value_type<I>>>::value &&
                     std::is_assignable<
-                        decltype(*std::declval<O &>()),
+                        reference_t<O>,
                         decltype(iter_move(std::declval<I &>()))>::value>;
 
             template<typename I, typename O>
@@ -151,10 +151,10 @@ namespace ranges
                         meta::_t<value_type<I>> &,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_nothrow_assignable<
-                        decltype(*std::declval<O &>()),
+                        reference_t<O>,
                         meta::_t<value_type<I>>>::value &&
                     std::is_nothrow_assignable<
-                        decltype(*std::declval<O &>()),
+                        reference_t<O>,
                         decltype(iter_move(std::declval<I &>()))>::value>;
         }
         /// \endcond

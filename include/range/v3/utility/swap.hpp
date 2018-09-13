@@ -247,8 +247,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
-                    is_swappable_with<decltype(*std::declval<I0 &>()),
-                                      decltype(*std::declval<I1 &>())>::value>
+                    is_swappable_with<reference_t<I0>, reference_t<I1>>::value>
                 operator()(I0 &&a, I1 &&b) const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
@@ -264,9 +263,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
-                    !is_swappable_with<
-                        decltype(*std::declval<I0 &>()),
-                        decltype(*std::declval<I1 &>())>::value &&
+                    !is_swappable_with<reference_t<I0>, reference_t<I1>>::value &&
                     is_indirectly_movable<I0, I1>::value &&
                     is_indirectly_movable<I1, I0>::value>
                 operator()(I0 &&a, I1 &&b) const
