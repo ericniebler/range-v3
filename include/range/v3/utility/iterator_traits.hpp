@@ -31,9 +31,6 @@ namespace ranges
         using value_type_t = concepts::Readable::value_t<I>;
 
         template<typename I>
-        using reference_t = concepts::Readable::reference_t<I>;
-
-        template<typename I>
         using rvalue_reference_t = concepts::Readable::rvalue_reference_t<I>;
 
         template<typename I>

@@ -141,12 +141,7 @@ namespace ranges
             {
             private:
                 template<typename I,
-                    typename R = decltype(*std::declval<I &>()),
-                    typename = R&>
-                using reference_t_ = R;
-
-                template<typename I,
-                    typename = reference_t_<I>,
+                    typename = reference_t<I>,
                     typename R = decltype(iter_move(std::declval<I &>())),
                     typename = R&>
                 using rvalue_reference_t_ = R;
@@ -154,9 +149,6 @@ namespace ranges
                 // Associated types
                 template<typename I>
                 using value_t = meta::_t<value_type<I>>;
-
-                template<typename I>
-                using reference_t = reference_t_<I>;
 
                 template<typename I>
                 using rvalue_reference_t = rvalue_reference_t_<I>;
@@ -178,9 +170,6 @@ namespace ranges
 
             struct Writable
             {
-                template<typename Out>
-                using reference_t = Readable::reference_t<Out>;
-
                 template<typename Out, typename T>
                 auto requires_(Out &&o, T &&t) -> decltype(
                     concepts::valid_expr(
@@ -222,7 +211,7 @@ namespace ranges
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
-                        concepts::model_of<Writable, O, Readable::reference_t<I>>()
+                        concepts::model_of<Writable, O, reference_t<I>>()
                     ));
             };
 
@@ -233,10 +222,8 @@ namespace ranges
                 auto requires_() -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Copyable, Readable::value_t<I>>(),
-                        concepts::model_of<Constructible, Readable::value_t<I>,
-                            Readable::reference_t<I>>(),
-                        concepts::model_of<Assignable, Readable::value_t<I> &,
-                            Readable::reference_t<I>>(),
+                        concepts::model_of<Constructible, Readable::value_t<I>, reference_t<I>>(),
+                        concepts::model_of<Assignable, Readable::value_t<I> &, reference_t<I>>(),
                         concepts::model_of<Writable, O, Readable::common_reference_t<I>>(),
                         concepts::model_of<Writable, O, Readable::value_t<I> const &>()
                     ));
@@ -489,7 +476,7 @@ namespace ranges
                 using invoke =
                     meta::and_<
                         Writable<I, T>,
-                        meta::not_<meta::is_trait<meta::defer<assignable_res_t, concepts::Readable::reference_t<I>, T>>>>;
+                        meta::not_<meta::is_trait<meta::defer<assignable_res_t, reference_t<I>, T>>>>;
             };
         }
         /// \endcond
@@ -502,7 +489,7 @@ namespace ranges
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
-                meta::list<concepts::Readable::value_t<I> &, concepts::Readable::reference_t<I> /*&&*/>;
+                meta::list<concepts::Readable::value_t<I> &, reference_t<I> /*&&*/>;
 
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
@@ -573,7 +560,7 @@ namespace ranges
         using indirect_invoke_result_t =
             meta::if_c<
                 meta::and_c<(bool) Readable<Is>()...>::value,
-                invoke_result_t<Fun, concepts::Readable::reference_t<Is>...>>;
+                invoke_result_t<Fun, reference_t<Is>...>>;
 
         template<typename Fun, typename... Is>
         struct indirect_invoke_result
