@@ -31,7 +31,7 @@ cache:
 
 matrix:
   include:
-    - env: BUILD_TYPE=Release CPP=17 SYSTEM_LIBCXX=On
+    - env: BUILD_TYPE=Release CPP=1z SYSTEM_LIBCXX=On
       os: osx
       compiler: clang
 
@@ -67,7 +67,7 @@ matrix:
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
     # clang 3.8 C++17/14 Release libc++
-    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=17 LIBCXX=On
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=1z LIBCXX=On
       os: linux
       addons: &clang38
         apt:
@@ -84,7 +84,7 @@ matrix:
       addons: *clang38
 
     # clang 3.9 C++17/14 Release libc++
-    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=17 LIBCXX=On
+    - env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=1z LIBCXX=On
       os: linux
       addons: &clang39
         apt:
@@ -101,7 +101,7 @@ matrix:
       addons: *clang39
 
     # clang 5 C++17/14/1z Debug/Release-ASAN libc++, 17 Debug libstdc++
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=17 LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z LIBCXX=On
       os: linux
       addons: &clang5
         apt:
@@ -116,7 +116,7 @@ matrix:
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=17 ASAN=On LIBCXX=On
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On HEADERS=On
       os: linux
       addons: *clang5
 
@@ -128,15 +128,7 @@ matrix:
       os: linux
       addons: *clang5
 
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=1z LIBCXX=On HEADERS=On
-      os: linux
-      addons: *clang5
-
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z ASAN=On LIBCXX=On
-      os: linux
-      addons: *clang5
-
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=17
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *clang5
 
@@ -146,7 +138,7 @@ matrix:
     #   addons: *clang5
 
     # gcc-5 C++17/C++14 Release
-    - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=17
+    - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: &gcc5
         apt:
@@ -161,7 +153,7 @@ matrix:
       addons: *gcc5
 
     # gcc-6 C++17/14/1z Debug/Release
-    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=17
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=1z
       os: linux
       addons: &gcc6
         apt:
@@ -171,23 +163,15 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
-    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=17
+    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc6
 
-    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=14
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=14 HEADERS=On
       os: linux
       addons: *gcc6
 
     - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=14
-      os: linux
-      addons: *gcc6
-
-    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=1z HEADERS=On
-      os: linux
-      addons: *gcc6
-
-    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc6
 
@@ -196,7 +180,7 @@ matrix:
       addons: *gcc6
 
     # gcc-7 C++17/14/1z Debug/Release
-    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=17
+    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=1z
       os: linux
       addons: &gcc7
         apt:
@@ -206,23 +190,15 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
-    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=17
+    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc7
 
-    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=14
+    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=14 HEADERS=On
       os: linux
       addons: *gcc7
 
     - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=14
-      os: linux
-      addons: *gcc7
-
-    - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=1z HEADERS=On
-      os: linux
-      addons: *gcc7
-
-    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc7
 
@@ -231,7 +207,7 @@ matrix:
       addons: *gcc7
 
     # gcc-8 C++17/14/1z Debug/Release
-    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=17
+    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=1z
       os: linux
       addons: &gcc8
         apt:
@@ -241,23 +217,15 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
-    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=17
+    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc8
 
-    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=14
+    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=14 HEADERS=On
       os: linux
       addons: *gcc8
 
     - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=14
-      os: linux
-      addons: *gcc8
-
-    - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=1z HEADERS=On
-      os: linux
-      addons: *gcc8
-
-    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=1z
       os: linux
       addons: *gcc8
 
