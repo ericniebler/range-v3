@@ -197,7 +197,7 @@ namespace ranges
         } // namespace detail
 
         template<std::size_t N, typename... Ts, typename... Args>
-        meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args...>>
+        meta::if_c<(bool) Constructible<detail::variant_datum_t<N, Ts...>, Args...>>
         emplace(variant<Ts...>&, Args &&...);
 
         namespace detail
@@ -731,7 +731,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // emplace
         template<std::size_t N, typename... Ts, typename... Args>
-        meta::if_c<Constructible<detail::variant_datum_t<N, Ts...>, Args...>>
+        meta::if_c<(bool) Constructible<detail::variant_datum_t<N, Ts...>, Args...>>
         emplace(variant<Ts...> &var, Args &&...args)
         {
             var.template emplace<N>(static_cast<Args &&>(args)...);

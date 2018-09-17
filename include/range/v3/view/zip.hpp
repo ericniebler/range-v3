@@ -37,11 +37,10 @@ namespace ranges
             struct indirect_zip_fn_
             {
                 // tuple value
-                CONCEPT_template(typename ...Its)(
+                template<typename ...Its>
+                [[noreturn]] auto operator()(copy_tag, Its...) const ->
+                    CONCEPT_return_type(std::tuple<value_type_t<Its>...>)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                [[noreturn]]
-                std::tuple<value_type_t<Its>...>
-                operator()(copy_tag, Its...) const
                 {
                     RANGES_EXPECT(false);
                 }
@@ -68,11 +67,10 @@ namespace ranges
                 }
 
                 // pair value
-                CONCEPT_template(typename It1, typename It2)(
+                template<typename It1, typename It2>
+                [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
+                CONCEPT_return_type(std::pair<value_type_t<It1>, value_type_t<It2>>)(
                     requires Readable<It1> && Readable<It2>)
-                [[noreturn]]
-                std::pair<value_type_t<It1>, value_type_t<It2>>
-                operator()(copy_tag, It1, It2) const
                 {
                     RANGES_EXPECT(false);
                 }

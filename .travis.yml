@@ -191,6 +191,10 @@ matrix:
       os: linux
       addons: *gcc6
 
+    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=1z CONCEPTS=On
+      os: linux
+      addons: *gcc6
+
     # gcc-7 C++17/14/1z Debug/Release
     - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=17
       os: linux
@@ -222,6 +226,9 @@ matrix:
       os: linux
       addons: *gcc7
 
+    - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=1z CONCEPTS=On
+      os: linux
+      addons: *gcc7
 
     # gcc-8 C++17/14/1z Debug/Release
     - env: GCC_VERSION=8 BUILD_TYPE=Debug CPP=17
@@ -251,6 +258,10 @@ matrix:
       addons: *gcc8
 
     - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=1z
+      os: linux
+      addons: *gcc8
+
+    - env: GCC_VERSION=8 BUILD_TYPE=Release CPP=1z CONCEPTS=On
       os: linux
       addons: *gcc8
 
@@ -311,7 +322,7 @@ install:
   - mkdir -p build
   # This cd works, but causes the shell to exit on OSX with set -e. I don't even.
   - set +e; cd build; set -e; pwd
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_HEADER_CHECKS=$HEADERS -DRANGES_VERBOSE_BUILD=On -DRANGES_ASAN=$ASAN -DRANGES_MSAN=$MSAN -Wdev
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_HEADER_CHECKS=$HEADERS -DRANGE_V3_PREFER_REAL_CONCEPTS=$CONCEPTS -DRANGES_VERBOSE_BUILD=On -DRANGES_ASAN=$ASAN -DRANGES_MSAN=$MSAN -Wdev
   - cat CMakeFiles/CMakeError.log || true
   - cat CMakeFiles/CMakeOutput.log || true
   - if [ "$CLANG_MODULES" == "On" -a "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="${TRAVIS_BUILD_DIR}/llvm/include/c++/v1/module.modulemap"; fi

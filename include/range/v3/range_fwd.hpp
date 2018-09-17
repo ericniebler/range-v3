@@ -329,7 +329,7 @@ namespace ranges
             template<typename T, typename = int T::*>
             char (&is_function_impl_(priority_tag<3>))[4];
 
-            template <typename T>
+            template<typename T>
             struct is_function
               : meta::bool_<sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1>
             {};
@@ -412,10 +412,6 @@ namespace ranges
 
         template<typename I, typename S>
         struct common_iterator;
-
-        template<typename I, typename S>
-        using common_iterator_t =
-            meta::if_<std::is_same<I, S>, I, common_iterator<I, S>>;
 
         template<typename First, typename Second>
         struct compressed_pair;
@@ -776,7 +772,8 @@ namespace concepts
         {
             namespace lazy
             {}
-            namespace defer = lazy;
+            namespace defer
+            {}
         }
     }
 }
@@ -790,6 +787,10 @@ namespace ranges
         namespace lazy
         {
             using namespace ::concepts::defs::lazy;
+        }
+        namespace defer
+        {
+            using namespace ::concepts::defs::defer;
         }
     }
 }

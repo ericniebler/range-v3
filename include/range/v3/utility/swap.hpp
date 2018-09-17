@@ -60,7 +60,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<class Derived>
+            template<typename Derived>
             struct member_swap
             {
                 friend RANGES_CXX14_CONSTEXPR void swap(Derived &a, Derived &b)

@@ -34,6 +34,25 @@ namespace ranges
             {
                 return std::tuple<Us...>{adl_get<Is>(static_cast<Tup &&>(tup))...};
             }
+            template<std::size_t N, typename ...Ts>
+            struct args_
+            {
+                template<typename ...Us>
+                args_(
+                    args_<N, Us...>,
+                    meta::if_c<meta::and_c<std::is_constructible<Ts, Us>::value...>::value> * = nullptr)
+                {}
+                template<typename ...Us>
+                meta::if_c<
+                    meta::and_c<std::is_assignable<Ts &, Us>::value...>::value,
+                    args_ &>
+                operator=(args_<N, Us...>)
+                {
+                    return *this;
+                }
+            };
+            template<typename ...Ts>
+            using args = args_<sizeof...(Ts), Ts...>;
         }
         /// \endcond
 
@@ -57,49 +76,49 @@ namespace ranges
             };
         public:
             // Construction
-            CONCEPT_requires(And<DefaultConstructible<Ts>...>)
+            CONCEPT_requires(DefaultConstructible<std::tuple<Ts...>>)
             common_tuple()
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
               : std::tuple<Ts...>{}
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
             explicit common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : std::tuple<Ts...>{static_cast<Us &&>(us)...}
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us &>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us &...>>)
             common_tuple(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us const &>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us const &...>>)
             common_tuple(std::tuple<Us...> const &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
             common_tuple(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us &>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us &...>>)
             common_tuple(common_tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us const &>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us const &...>>)
             common_tuple(common_tuple<Us...> const &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
               : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             CONCEPT_template(typename...Us)(
-                requires And<Constructible<Ts, Us>...>)
+                requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
             common_tuple(common_tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
               : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
@@ -116,7 +135,7 @@ namespace ranges
 
             // Assignment
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts &, Us &>...>)
+                requires Assignable<detail::args<Ts...> &, detail::args<Us &...>>)
             common_tuple & operator=(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             {
@@ -124,7 +143,7 @@ namespace ranges
                 return *this;
             }
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts &, Us const &>...>)
+                requires Assignable<detail::args<Ts...> &, detail::args<Us const &...>>)
             common_tuple & operator=(std::tuple<Us...> const & that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             {
@@ -132,7 +151,7 @@ namespace ranges
                 return *this;
             }
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts &, Us>...>)
+                requires Assignable<detail::args<Ts...> &, detail::args<Us...>>)
             common_tuple & operator=(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
             {
@@ -141,7 +160,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts const &, Us &>...>)
+                requires Assignable<detail::args<Ts const...> &, detail::args<Us &...>>)
             common_tuple const & operator=(std::tuple<Us...> &that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
             {
@@ -149,7 +168,7 @@ namespace ranges
                 return *this;
             }
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts const &, Us const &>...>)
+                requires Assignable<detail::args<Ts const...> &, detail::args<Us const &...>>)
             common_tuple const & operator=(std::tuple<Us...> const & that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
             {
@@ -157,7 +176,7 @@ namespace ranges
                 return *this;
             }
             CONCEPT_template(typename...Us)(
-                requires And<Assignable<Ts const &, Us &&>...>)
+                requires Assignable<detail::args<Ts const...> &, detail::args<Us...>>)
             common_tuple const & operator=(std::tuple<Us...> &&that) const
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
             {
@@ -167,21 +186,21 @@ namespace ranges
 
             // Conversion
             CONCEPT_template(typename ...Us)(
-                requires And<Constructible<Us, Ts &>...>)
+                requires Constructible<detail::args<Us...>, detail::args<Ts &...>>)
             operator std::tuple<Us...> () &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
             {
                 return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             CONCEPT_template(typename ...Us)(
-                requires And<Constructible<Us, Ts const &>...>)
+                requires Constructible<detail::args<Us...>, detail::args<Ts const &...>>)
             operator std::tuple<Us...> () const &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
             {
                 return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             CONCEPT_template(typename ...Us)(
-                requires And<Constructible<Us, Ts>...>)
+                requires Constructible<detail::args<Us...>, detail::args<Ts...>>)
             operator std::tuple<Us...> () &&
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts>::value...>::value)
             {

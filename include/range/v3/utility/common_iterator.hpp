@@ -45,7 +45,7 @@ namespace ranges
         }
 
 #if RANGES_BROKEN_CPO_LOOKUP
-        namespace _common_iterator_ { template <typename> struct adl_hook {}; }
+        namespace _common_iterator_ { template<typename> struct adl_hook {}; }
 #endif
 
         template<typename I, typename S>
@@ -96,7 +96,7 @@ namespace ranges
                 return j;
             }
             CONCEPT_template(typename J, typename R = reference_t<J>)(
-                requires std::is_reference<R>())
+                requires std::is_reference<R>::value)
             static meta::_t<std::add_pointer<R>> operator_arrow_(J const &j, long) noexcept
             {
                 auto &&r = *j;
@@ -170,46 +170,52 @@ namespace ranges
             }
 
 #if !RANGES_BROKEN_CPO_LOOKUP
-            CONCEPT_requires(InputIterator<I>)
+            template<typename I_ = I>
             friend RANGES_CXX14_CONSTEXPR
-            auto iter_move(const common_iterator& i)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_move(ranges::get<0>(detail::cidata(i)))
-            )
-            CONCEPT_template(typename I2, typename S2)(
-                requires IndirectlySwappable<I2, I>)
+            auto iter_move(common_iterator const &i)
+                noexcept(detail::has_nothrow_iter_move<I>::value) ->
+                CONCEPT_broken_friend_return_type(rvalue_reference_t<I>)(
+                    requires InputIterator<I_>)
+            {
+                return ranges::iter_move(ranges::get<0>(detail::cidata(i)));
+            }
+            template<typename I2, typename S2>
             friend auto iter_swap(
-                const common_iterator& x, common_iterator<I2, S2> const &y)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_swap(
+                common_iterator const &x, common_iterator<I2, S2> const &y)
+                noexcept(is_nothrow_indirectly_swappable<I, I2>::value) ->
+                CONCEPT_broken_friend_return_type(void)(
+                    requires IndirectlySwappable<I2, I>)
+            {
+                return ranges::iter_swap(
                     ranges::get<0>(detail::cidata(x)),
-                    ranges::get<0>(detail::cidata(y)))
-            )
+                    ranges::get<0>(detail::cidata(y)));
+            }
 #endif
         };
 
 #if RANGES_BROKEN_CPO_LOOKUP
         namespace _common_iterator_
         {
-            CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I>)
+            template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             auto iter_move(common_iterator<I, S> const &i)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_move(ranges::get<0>(detail::cidata(i)))
-            )
-            CONCEPT_template(typename I1, typename S1, typename I2, typename S2)(
-                requires IndirectlySwappable<I2, I1>)
-            auto iter_swap(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_swap(
+                noexcept(detail::has_nothrow_iter_move<I>::value) ->
+                CONCEPT_broken_friend_return_type(rvalue_reference_t<I>)(
+                    requires InputIterator<I>)
+            {
+                return ranges::iter_move(ranges::get<0>(detail::cidata(i)));
+            }
+            template<typename I1, typename S1, typename I2, typename S2>
+            auto iter_swap(common_iterator<I1, S1> const &x,
+                           common_iterator<I2, S2> const &y)
+                noexcept(is_nothrow_indirectly_swappable<I1, I2>::value) ->
+                CONCEPT_broken_friend_return_type(void)(
+                    requires IndirectlySwappable<I1, I2>)
+            {
+                return ranges::iter_swap(
                     ranges::get<0>(detail::cidata(x)),
-                    ranges::get<0>(detail::cidata(y)))
-            )
+                    ranges::get<0>(detail::cidata(y)));
+            }
         }
 #endif
 

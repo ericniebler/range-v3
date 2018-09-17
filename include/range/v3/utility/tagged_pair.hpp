@@ -37,7 +37,7 @@ namespace ranges
 
         namespace _tagged_
         {
-            template <class Base>
+            template<typename Base>
             struct wrap_base : Base
             {
                 wrap_base() = default;
@@ -66,7 +66,7 @@ namespace ranges
             };
 
 #if RANGES_BROKEN_CPO_LOOKUP
-            template <typename> struct adl_hook {};
+            template<typename> struct adl_hook {};
 #endif
         }
         /// \endcond

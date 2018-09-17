@@ -189,7 +189,7 @@ namespace ranges
                     }
                     ranges::advance(it, delta);
                 }
-                CONCEPT_template(class Other)(
+                CONCEPT_template(typename Other)(
                     requires SizedSentinel<Other, iterator_t<Rng>>)
                 RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> distance_to(
                     iterator_t<Rng> const &here, Other const &there) const

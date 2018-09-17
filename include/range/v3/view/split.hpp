@@ -188,7 +188,7 @@ namespace ranges
                 {
                     semiregular_t<Pred> pred_;
 
-                    CONCEPT_template(class S)(
+                    CONCEPT_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
@@ -202,7 +202,7 @@ namespace ranges
                 {
                     range_value_type_t<Rng> val_;
 
-                    CONCEPT_template(class S)(
+                    CONCEPT_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
@@ -223,7 +223,7 @@ namespace ranges
                     subrange_pred(Sub &&sub)
                       : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
                     {}
-                    CONCEPT_template(class S)(
+                    CONCEPT_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const

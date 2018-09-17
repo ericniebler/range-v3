@@ -28,16 +28,16 @@
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
-    template<class Key, class Compare /*= less<Key>*/, class Alloc /*= allocator<Key>*/>
+    template<typename Key, typename Compare /*= less<Key>*/, typename Alloc /*= allocator<Key>*/>
     class set;
 
-    template<class Key, class Compare /*= less<Key>*/, class Alloc /*= allocator<Key>*/>
+    template<typename Key, typename Compare /*= less<Key>*/, typename Alloc /*= allocator<Key>*/>
     class multiset;
 
-    template<class Key, class Hash /*= hash<Key>*/, class Pred /*= equal_to<Key>*/, class Alloc /*= allocator<Key>*/>
+    template<typename Key, typename Hash /*= hash<Key>*/, typename Pred /*= equal_to<Key>*/, typename Alloc /*= allocator<Key>*/>
     class unordered_set;
 
-    template<class Key, class Hash /*= hash<Key>*/, class Pred /*= equal_to<Key>*/, class Alloc /*= allocator<Key>*/>
+    template<typename Key, typename Hash /*= hash<Key>*/, typename Pred /*= equal_to<Key>*/, typename Alloc /*= allocator<Key>*/>
     class unordered_multiset;
 RANGES_END_NAMESPACE_STD
 #else
@@ -337,22 +337,22 @@ namespace ranges
               : std::false_type
             {};
 
-            template<class Key, class Compare, class Alloc>
+            template<typename Key, typename Compare, typename Alloc>
             struct view_predicate_<std::set<Key, Compare, Alloc>>
               : std::false_type
             {};
 
-            template<class Key, class Compare, class Alloc>
+            template<typename Key, typename Compare, typename Alloc>
             struct view_predicate_<std::multiset<Key, Compare, Alloc>>
               : std::false_type
             {};
 
-            template<class Key, class Hash, class Pred, class Alloc>
+            template<typename Key, typename Hash, typename Pred, typename Alloc>
             struct view_predicate_<std::unordered_set<Key, Hash, Pred, Alloc>>
               : std::false_type
             {};
 
-            template<class Key, class Hash, class Pred, class Alloc>
+            template<typename Key, typename Hash, typename Pred, typename Alloc>
             struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
               : std::false_type
             {};

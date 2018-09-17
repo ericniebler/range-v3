@@ -103,7 +103,7 @@ namespace ranges
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived> &&
                     Cardinality < 0 && Cardinality != infinite &&
-                    ForwardRange<D>)
+                    Range<D> && ForwardIterator<iterator_t<D>>)
             RANGES_CXX14_CONSTEXPR bool empty()
                 noexcept(noexcept(bool(ranges::begin(std::declval<D &>()) ==
                     ranges::end(std::declval<D &>()))))
@@ -113,7 +113,7 @@ namespace ranges
             CONCEPT_template(typename D = Derived)(
                 requires Same<D, Derived> &&
                     Cardinality < 0 && Cardinality != infinite &&
-                    ForwardRange<D const>)
+                    Range<D const> && ForwardIterator<iterator_t<D const>>)
             constexpr bool empty() const
                 noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
                     ranges::end(std::declval<D const &>()))))
@@ -530,23 +530,26 @@ namespace ranges
                 return sout;
             }
 
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && InputRange<D const>)
-            friend std::ostream & operator<<(std::ostream &sout, Derived const &rng)
+            template<typename D = Derived>
+            friend auto operator<<(std::ostream &sout, Derived const &rng) ->
+                CONCEPT_broken_friend_return_type(std::ostream&)(
+                    requires Same<D, Derived> && InputRange<D const>)
             {
                 return view_interface::print_(sout, rng);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && !Range<D const> && InputRange<D>)
-            friend std::ostream & operator<<(std::ostream &sout, Derived &rng)
+            template<typename D = Derived>
+            friend auto operator<<(std::ostream &sout, Derived &rng) ->
+                CONCEPT_broken_friend_return_type(std::ostream&)(
+                    requires Same<D, Derived> && not Range<D const> && InputRange<D>)
             {
                 return view_interface::print_(sout, rng);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && !Range<D const> && InputRange<D>)
-            friend std::ostream & operator<<(std::ostream &sout, Derived &&rng)
+            template<typename D = Derived>
+            friend auto operator<<(std::ostream &sout, Derived &&rng) ->
+                CONCEPT_broken_friend_return_type(std::ostream&)(
+                    requires Same<D, Derived> && not Range<D const> && InputRange<D>)
             {
                 return view_interface::print_(sout, rng);
             }

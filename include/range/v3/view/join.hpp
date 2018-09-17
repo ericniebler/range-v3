@@ -327,7 +327,9 @@ namespace ranges
                     return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
                 }
                 CONCEPT_template(typename Rng, typename ValRng)(
-                    requires JoinableRange<Rng> && ForwardRange<ValRng>)
+                    // For some reason, this gives gcc problems:
+                    //requires JoinableRange<Rng> && ForwardRange<ValRng>)
+                    requires JoinableRange<Rng> && Range<ValRng> && ForwardIterator<iterator_t<ValRng>>)
                 join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng &&rng, ValRng &&val) const
                 {
                     CONCEPT_assert_msg(Common<range_value_type_t<ValRng>,

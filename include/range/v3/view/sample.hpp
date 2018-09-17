@@ -169,7 +169,7 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CONCEPT_template(class R = Rng)(
+            CONCEPT_template(typename R = Rng)(
                 requires SizedRange<R const> ||
                     SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
                     ForwardRange<R const>)

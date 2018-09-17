@@ -315,7 +315,7 @@ namespace ranges
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
             // Readables. Return all the results as a list.
-            template<class...Is>
+            template<typename...Is>
             using iter_args_lists_ =
                 meta::push_back<
                     meta::cartesian_product<
@@ -542,12 +542,12 @@ namespace ranges
 
 namespace __gnu_debug
 {
-    CONCEPT_template(class I1, class I2, class Seq)(
+    CONCEPT_template(typename I1, typename I2, typename Seq)(
         requires not ::ranges::SizedSentinel<I1, I2>)
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
-    CONCEPT_template(class I1, class Seq)(
+    CONCEPT_template(typename I1, typename Seq)(
         requires not ::ranges::SizedSentinel<I1, I1>)
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;

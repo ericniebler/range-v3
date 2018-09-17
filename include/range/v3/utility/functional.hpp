@@ -198,9 +198,9 @@ namespace ranges
         (
             template(typename Fun, typename... Args)
             (concept Invocable)(Fun, Args...),
-                requires (int)
+                requires (Fun&& fn)
                 (
-                    True<invoke_result_t<Fun, Args...>>
+                    invoke(static_cast<Fun &&>(fn), std::declval<Args>()...)
                 )
         );
 
@@ -687,7 +687,7 @@ namespace ranges
 
         // Evaluate the pipe with an argument
         CONCEPT_template(typename Arg, typename Pipe)(
-            requires not is_pipeable<Arg>() && is_pipeable<Pipe>())
+            requires not is_pipeable<Arg>::value && is_pipeable<Pipe>::value)
         decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(), std::declval<Pipe &>()))
         operator|(Arg &&arg, Pipe pipe)
         {
@@ -696,7 +696,7 @@ namespace ranges
 
         // Compose two pipes
         CONCEPT_template(typename Pipe0, typename Pipe1)(
-            requires is_pipeable<Pipe0>() && is_pipeable<Pipe1>())
+            requires is_pipeable<Pipe0>::value && is_pipeable<Pipe1>::value)
         decltype(make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>()))
         operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
@@ -729,7 +729,7 @@ namespace ranges
         struct ref_fn : pipeable<ref_fn>
         {
             CONCEPT_template(typename T)(
-                requires not is_reference_wrapper_t<T>())
+                requires not is_reference_wrapper_t<T>::value)
             reference_wrapper<T> operator()(T &t) const
             {
                 return {t};
@@ -758,7 +758,7 @@ namespace ranges
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {
             CONCEPT_template(typename T)(
-                requires not is_reference_wrapper<T>())
+                requires not is_reference_wrapper<T>::value)
             T && operator()(T &&t) const noexcept
             {
                 return static_cast<T &&>(t);

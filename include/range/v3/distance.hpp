@@ -105,13 +105,13 @@ namespace ranges
         {
         private:
             CONCEPT_template(typename Rng)(
-                requires not is_infinite<Rng>())
+                requires not is_infinite<Rng>::value)
             int impl_r(Rng &rng, range_difference_type_t<Rng> n, range_tag) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
             }
             CONCEPT_template(typename Rng)(
-                requires is_infinite<Rng>())
+                requires is_infinite<Rng>::value)
             int impl_r(Rng &, range_difference_type_t<Rng>, range_tag) const
             {
                 // Infinite ranges are always compared to be larger than a finite number.

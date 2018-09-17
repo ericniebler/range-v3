@@ -80,8 +80,8 @@ namespace ranges
                     CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::slice operates must allow element "
                         "removal.");
-                    CONCEPT_assert_msg(And<ConvertibleTo<T, range_difference_type_t<Rng>>,
-                            ConvertibleTo<U, range_difference_type_t<Rng>>>,
+                    CONCEPT_assert_msg((bool) ConvertibleTo<T, range_difference_type_t<Rng>> &&
+                            (bool) ConvertibleTo<U, range_difference_type_t<Rng>>,
                         "The bounds passed to action::slice must be convertible to the range's "
                         "difference type. TODO slicing from the end with 'end-2' syntax is not "
                         "supported yet, sorry!");

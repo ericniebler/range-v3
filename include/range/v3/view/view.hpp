@@ -105,7 +105,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 CONCEPT_template(typename Rng, typename Vw)(
-                    requires not ViewConcept<View, Rng>)
+                    requires not ViewConcept<View const, Rng>)
                 static void pipe(Rng &&, Vw &&)
                 {
                     CONCEPT_assert_msg(Range<Rng>,
@@ -128,7 +128,7 @@ namespace ranges
 
                 // Calling directly requires View arguments or lvalue containers.
                 CONCEPT_template(typename Rng, typename...Rest)(
-                    requires ViewConcept<View, Rng, Rest...>)
+                    requires ViewConcept<View const, Rng, Rest...>)
                 auto operator()(Rng &&rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (

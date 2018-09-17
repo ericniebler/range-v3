@@ -29,13 +29,19 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<class T>
+            template<typename T>
             struct is_range_;
+
+            template<typename I, typename S>
+            using common_iterator_t = meta::if_c<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
         }
         /// \endcond
 
         /// \addtogroup group-core
         /// @{
+        template<typename I, typename S>
+        using common_iterator_t =
+            meta::if_<std::is_same<I, S>, I, detail::common_iterator_t<I, S>>;
 
         // Aliases (SFINAE-able)
         template<typename Rng>

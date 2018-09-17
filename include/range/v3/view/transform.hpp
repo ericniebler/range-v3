@@ -273,7 +273,7 @@ namespace ranges
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
-            template<class Self>
+            template<typename Self>
             static constexpr size_type_ size_(Self& self)
             {
                 return ranges::min(

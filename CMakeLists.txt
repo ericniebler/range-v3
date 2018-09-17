@@ -10,18 +10,10 @@ get_directory_property(is_subproject PARENT_DIRECTORY)
 
 project(Range-v3 CXX)
 
+option(RANGE_V3_PREFER_REAL_CONCEPTS "Use real concepts instead of emulation if the compiler supports it" ON)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
-
-# include(TestHeaders)
-# include(ranges_options)
-# include(ranges_env)
-# include(ranges_flags)
-# include(CTest)
-
-# enable_testing()
-
-# add_definitions(-D_GLIBCXX20_CONSTEXPR=)
 
 add_library(meta INTERFACE)
 target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
@@ -30,7 +22,6 @@ target_include_directories(meta SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_P
 add_library(concepts INTERFACE)
 target_include_directories(concepts INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
 target_include_directories(concepts SYSTEM INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-target_compile_features(concepts INTERFACE cxx_std_14)
 target_link_libraries(concepts INTERFACE meta)
 
 add_library(range-v3 INTERFACE)
@@ -47,12 +38,17 @@ include(ranges_flags)
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
 
-# Test for coroutine TS support
+# Test for coroutine TS and concepts support
 include(CheckCXXSourceCompiles)
 
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
 set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
+unset(CMAKE_REQUIRED_FLAGS)
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/concepts_test_code.cpp" RANGE_V3_CONCEPTS_TEST_CODE)
+set(CMAKE_REQUIRED_FLAGS "-fconcepts")
+check_cxx_source_compiles("${RANGE_V3_CONCEPTS_TEST_CODE}" RANGE_V3_HAS_FCONCEPTS)
 unset(CMAKE_REQUIRED_FLAGS)
 
 add_subdirectory(doc)

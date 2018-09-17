@@ -90,13 +90,17 @@ namespace test_random_access
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
-        bool equal(cursor<I> const &that) const { return that.it_ == it_; }
+        CONCEPT_template(class J)(
+            requires ranges::Sentinel<J, I>)
+        bool equal(cursor<J> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         void prev() { --it_; }
         void advance(ranges::difference_type_t<I> n) {
             it_ += n;
         }
-        ranges::difference_type_t<I> distance_to(cursor<I> const &that) const {
+        CONCEPT_template(class J)(
+            requires ranges::SizedSentinel<J, I>)
+        ranges::difference_type_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };
@@ -328,9 +332,13 @@ namespace test_forward_sized
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
         auto read() const -> decltype(*it_) { return *it_; }
-        bool equal(cursor<I> const &that) const { return that.it_ == it_; }
+        CONCEPT_template(class J)(
+            requires ranges::Sentinel<J, I>)
+        bool equal(cursor<J> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
-        ranges::difference_type_t<I> distance_to(cursor<I> const &that) const {
+        CONCEPT_template(class J)(
+            requires ranges::SizedSentinel<J, I>)
+        ranges::difference_type_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };

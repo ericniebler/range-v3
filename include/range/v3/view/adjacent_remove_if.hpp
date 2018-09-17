@@ -170,7 +170,7 @@ namespace ranges
                     CONCEPT_assert_msg(ForwardRange<Rng>,
                         "Rng must model the ForwardRange concept");
                     CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>,
-                        iterator_t<Rng>>(),
+                        iterator_t<Rng>>,
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

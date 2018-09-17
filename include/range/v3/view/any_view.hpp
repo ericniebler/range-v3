@@ -113,14 +113,14 @@ namespace ranges
             struct any_ref
             {
                 any_ref() = default;
-                template<class T>
+                template<typename T>
                 constexpr any_ref(T &obj) noexcept
                   : obj_{std::addressof(obj)}
 #ifndef NDEBUG
                   , info_{&typeid(rtti_tag<T>)}
 #endif
                 {}
-                template<class T>
+                template<typename T>
                 T &get() const noexcept
                 {
                     RANGES_ASSERT(obj_ && info_ && *info_ == typeid(rtti_tag<T>));

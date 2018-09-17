@@ -27,7 +27,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<class T>
+            template<typename T>
             struct is_char_type_
                 : std::false_type
             {};
@@ -52,7 +52,7 @@ namespace ranges
                 : std::true_type
             {};
 
-            template<class T>
+            template<typename T>
             using is_char_type = is_char_type_<meta::_t<std::remove_cv<T>>>;
         }
         /// \endcond
@@ -67,7 +67,7 @@ namespace ranges
             {
                 // Fixed-length
                 CONCEPT_template(typename Char, std::size_t N)(
-                    requires detail::is_char_type<Char>())
+                    requires detail::is_char_type<Char>::value)
                 ranges::iterator_range<Char *> operator()(Char (&sz)[N]) const
                 {
                     return {&sz[0], &sz[N-1]};
@@ -75,7 +75,7 @@ namespace ranges
 
                 // Null-terminated
                 CONCEPT_template(typename Char)(
-                    requires detail::is_char_type<Char>())
+                    requires detail::is_char_type<Char>::value)
                 ranges::delimit_view<
                     ranges::iterator_range<Char *, ranges::unreachable>,
                     meta::_t<std::remove_cv<Char>>>

@@ -208,7 +208,7 @@ namespace ranges
                     return {all(static_cast<Rng &&>(rng)), from, count};
                 }
                 CONCEPT_template(typename Rng)(
-                    requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>())
+                    requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
                 static iterator_range<iterator_t<Rng>>
                 invoke_(Rng &&rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
                     random_access_range_tag, bounded_range_tag = {})

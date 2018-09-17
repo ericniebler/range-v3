@@ -28,7 +28,7 @@ namespace ranges
             /// \addtogroup group-views
             /// @{
 
-            template <typename T>
+            template<typename T>
             struct linear_distribute_view
               : view_facade<linear_distribute_view<T>, finite>
             {
@@ -92,7 +92,7 @@ namespace ranges
             struct linear_distribute_fn
             {
                 CONCEPT_template(typename T)(
-                    requires std::is_arithmetic<T>())
+                    requires std::is_arithmetic<T>::value)
                 constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -101,7 +101,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CONCEPT_template(typename T)(
-                    requires not std::is_arithmetic<T>())
+                    requires not std::is_arithmetic<T>::value)
                 void operator()(T, T, std::ptrdiff_t) const
                 {
                     CONCEPT_assert_msg(std::is_arithmetic<T>(),

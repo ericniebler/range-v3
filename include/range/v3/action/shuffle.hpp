@@ -81,7 +81,7 @@ namespace ranges
                         "UniformRandomNumberGenerator concept.");
                     CONCEPT_assert_msg(ConvertibleTo<
                         invoke_result_t<Gen &>,
-                        difference_type_t<I>>(),
+                        difference_type_t<I>>,
                         "The random generator passed to action::shuffle has to have a return type "
                         "convertible to the container iterator difference type.");
                 }

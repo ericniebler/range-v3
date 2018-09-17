@@ -218,24 +218,27 @@ namespace ranges
             }
 
 #if !RANGES_BROKEN_CPO_LOOKUP
-            CONCEPT_requires(InputIterator<I>)
+            template<typename I_ = I>
             friend RANGES_CXX14_CONSTEXPR
-            rvalue_reference_t<I> iter_move(const counted_iterator& i)
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_move(i.current_)
-            )
-
-            CONCEPT_template(typename I2)(
-                requires IndirectlySwappable<I2, I>)
-            friend void iter_swap(
-                const counted_iterator& x, counted_iterator<I2> const &y)
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_swap(x.current_, _counted_iterator_::access::current(y))
-            )
-
-            friend void advance(counted_iterator& i, difference_type_t<I> n)
+            auto iter_move(counted_iterator const &i)
+                noexcept(detail::has_nothrow_iter_move<I>::value) ->
+                CONCEPT_broken_friend_return_type(rvalue_reference_t<I>)(
+                    requires InputIterator<I_>)
+            {
+                return ranges::iter_move(i.current_);
+            }
+            template<typename I2, typename S2>
+            friend auto iter_swap(counted_iterator const &x,
+                                  counted_iterator<I2> const &y)
+                noexcept(is_nothrow_indirectly_swappable<I, I2>::value) ->
+                CONCEPT_broken_friend_return_type(void)(
+                    requires IndirectlySwappable<I2, I>)
+            {
+                return ranges::iter_swap(
+                    x.current_,
+                    _counted_iterator_::access::current(y));
+            }
+            friend void advance(counted_iterator &i, difference_type_t<I> n)
             {
                 RANGES_EXPECT(i.cnt_ >= n);
                 ranges::advance(i.current_, n);
@@ -247,26 +250,26 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
         namespace _counted_iterator_
         {
-            CONCEPT_template(typename I)(
-                requires InputIterator<I>)
+            template<typename I>
             RANGES_CXX14_CONSTEXPR
-            rvalue_reference_t<I> iter_move(counted_iterator<I> const &i)
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_move(_counted_iterator_::access::current(i))
-            )
-
-            CONCEPT_template(typename I1, typename I2)(
-                requires IndirectlySwappable<I2, I1>)
-            void iter_swap(
-                counted_iterator<I1> const &x, counted_iterator<I2> const &y)
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_swap(
+            auto iter_move(counted_iterator<I> const &i)
+                noexcept(detail::has_nothrow_iter_move<I>::value) ->
+                CONCEPT_broken_friend_return_type(rvalue_reference_t<I>)(
+                    requires InputIterator<I>)
+            {
+                return ranges::iter_move(_counted_iterator_::access::current(i));
+            }
+            template<typename I1, typename I2>
+            auto iter_swap(counted_iterator<I1> const &x,
+                           counted_iterator<I2> const &y)
+                noexcept(is_nothrow_indirectly_swappable<I1, I2>::value) ->
+                CONCEPT_broken_friend_return_type(void)(
+                    requires IndirectlySwappable<I2, I1>)
+            {
+                return ranges::iter_swap(
                     _counted_iterator_::access::current(x),
-                    _counted_iterator_::access::current(y))
-            )
-
+                    _counted_iterator_::access::current(y));
+            }
             template<typename I>
             void advance(counted_iterator<I> &i, difference_type_t<I> n)
             {

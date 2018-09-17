@@ -130,8 +130,13 @@ namespace ranges
             meta::_t<upgrade_iterator_category<typename T::iterator_category>>
             iterator_category_helper(T *);
 
-            template<class T>
+            template<typename T>
             using iterator_category_ = decltype(detail::iterator_category_helper(_nullptr_v<T>()));
+
+            template<typename I>
+            struct has_nothrow_iter_move
+              : meta::bool_<noexcept(rvalue_reference_t<I>(ranges::iter_move(std::declval<I &>())))>
+            {};
         } // namespace detail
         /// \endcond
 

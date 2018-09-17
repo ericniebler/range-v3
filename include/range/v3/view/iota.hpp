@@ -34,7 +34,7 @@ namespace ranges
     {
         CONCEPT_def
         (
-            template(class I)
+            template(typename I)
             concept BidirectionalIncrementable,
                 requires (I i)
                 (
@@ -48,7 +48,7 @@ namespace ranges
 
         CONCEPT_def
         (
-            template(class S, class I)
+            template(typename S, typename I)
             concept SizedIncrementableSentinel,
                 requires (I i, S s)
                 (
@@ -64,7 +64,7 @@ namespace ranges
 
         CONCEPT_def
         (
-            template(class I)
+            template(typename I)
             concept RandomAccessIncrementable,
                 requires (I i)
                 (
@@ -575,32 +575,9 @@ namespace ranges
             #endif
             };
 
-            struct closed_ints_fn
-            {
-                CONCEPT_template(typename Val)(
-                    requires Integral<Val>)
-                //(attribute(RANGES_DEPRECATED("view::closed_ints is deprecated; use view::closed_indices instead!"))
-                RANGES_DEPRECATED("view::closed_ints is deprecated; use view::closed_indices instead!")
-                detail::take_exactly_view_<iota_view<Val>, true> operator()(Val from, Val to) const
-                {
-                    return {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
-                }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val, Val) const
-                {
-                    CONCEPT_assert_msg(Integral<Val>,
-                        "The object passed to view::closed_ints must be Integral");
-                }
-            #endif
-            };
-
             /// \relates ints_fn
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(ints_fn, ints)
-
-            RANGES_INLINE_VARIABLE(closed_ints_fn, closed_ints)
         }
         /// @}
     }

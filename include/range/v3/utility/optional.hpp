@@ -474,7 +474,7 @@ namespace ranges
         (
             template(typename U, typename T)
             concept OptionalShouldConvertAssign,
-                OptionalShouldConvert<U> &&
+                OptionalShouldConvert<U, T> &&
                 !(Assignable<T &, optional<U> &> ||
                 Assignable<T &, optional<U> &&> ||
                 Assignable<T &, optional<U> const &> ||
@@ -520,9 +520,9 @@ namespace ranges
               : base_t(in_place, static_cast<U &&>(v))
             {}
             CONCEPT_template(typename U = T)(
-                requires not defer::Same<detail::decay_t<U>, in_place_t>,
-                    !defer::Same<detail::decay_t<U>, optional>,
-                    defer::Constructible<T, U>,
+                requires not defer::Same<detail::decay_t<U>, in_place_t> &&
+                    !defer::Same<detail::decay_t<U>, optional> &&
+                    defer::Constructible<T, U> &&
                     !defer::ConvertibleTo<U, T>)
             explicit constexpr optional(U &&v)
               : base_t(in_place, static_cast<U &&>(v))
@@ -578,7 +578,7 @@ namespace ranges
 
             CONCEPT_template(typename U = T)(
                 requires not defer::Same<optional, detail::decay_t<U>> &&
-                    !(defer::And<std::is_scalar<T>::value> && defer::Same<T, detail::decay_t<U>>) &&
+                    !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
                     defer::Constructible<T, U> &&
                     defer::Assignable<T &, U>)
             RANGES_CXX14_CONSTEXPR

@@ -30,7 +30,7 @@ namespace ranges
         namespace adl_push_front_detail
         {
             CONCEPT_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont> &&
+                requires LvalueContainerLike<Cont> && !Range<T> &&
                     Constructible<range_value_type_t<Cont>, T>)
             decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
                 push_front(std::declval<T>())))
@@ -59,8 +59,7 @@ namespace ranges
                         push_front(rng, (T &&) t)
                     ) &&
                     InputRange<Rng> &&
-                        (Constructible<range_value_type_t<Rng>, T> ||
-                        Range<T>)
+                        (Range<T> || Constructible<range_value_type_t<Rng>, T>)
             );
 
             struct push_front_fn
@@ -91,8 +90,8 @@ namespace ranges
                         "The object on which action::push_front operates must be a model of the "
                         "InputRange concept.");
                     CONCEPT_assert_msg(Or<
-                        Constructible<range_value_type_t<Rng>, T>,
-                        Range<T>>,
+                        Range<T>,
+                        Constructible<range_value_type_t<Rng>, T>>,
                         "The object to be inserted with action::push_front must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");

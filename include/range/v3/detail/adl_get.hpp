@@ -24,7 +24,7 @@ namespace ranges
         {
             namespace _adl_get_
             {
-                template<class> void get();
+                template<typename> void get();
 
                 template<std::size_t I, typename Tuple>
                 constexpr auto adl_get(Tuple &&t)

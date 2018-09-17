@@ -254,7 +254,7 @@ namespace ranges
 
             using end_cursor_t =
                 meta::if_c<
-                    And<BoundedRange<Rngs>..., !SinglePass<iterator_t<Rngs>>...>,
+                    concepts::and_v<(bool) BoundedRange<Rngs>..., !(bool) SinglePass<iterator_t<Rngs>>...>,
                     cursor,
                     sentinel>;
 

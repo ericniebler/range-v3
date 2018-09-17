@@ -682,8 +682,10 @@ namespace ranges
                 {
                     return it_;
                 }
+                CONCEPT_template(typename J)(
+                    requires Sentinel<J, I>)
                 RANGES_CXX14_CONSTEXPR
-                bool equal(reverse_cursor const& that) const
+                bool equal(reverse_cursor<J> const& that) const
                 {
                     return it_ == that.it_;
                 }
@@ -703,10 +705,11 @@ namespace ranges
                 {
                     it_ -= n;
                 }
-                CONCEPT_requires(SizedSentinel<I, I>)
+                CONCEPT_template(typename J)(
+                    requires SizedSentinel<J, I>)
                 RANGES_CXX14_CONSTEXPR
                 difference_type_t<I>
-                distance_to(reverse_cursor const &that) const
+                distance_to(reverse_cursor<J> const &that) const
                 {
                     return it_ - that.base();
                 }

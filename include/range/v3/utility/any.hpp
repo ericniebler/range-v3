@@ -67,15 +67,15 @@ namespace ranges
         {
         private:
             template<typename T>
-            friend meta::if_c<std::is_reference<T>() || Copyable<T>, T>
+            friend meta::if_c<std::is_reference<T>() || (bool) Copyable<T>, T>
             any_cast(any &);
 
             template<typename T>
-            friend meta::if_c<std::is_reference<T>() || Copyable<T>, T>
+            friend meta::if_c<std::is_reference<T>() || (bool) Copyable<T>, T>
             any_cast(any const &);
 
             template<typename T>
-            friend meta::if_c<std::is_reference<T>() || Copyable<T>, T>
+            friend meta::if_c<std::is_reference<T>() || (bool) Copyable<T>, T>
             any_cast(any &&);
 
             template<typename T>
@@ -92,7 +92,7 @@ namespace ranges
                 virtual std::type_info const & type() const noexcept = 0;
             };
 
-            template<class T>
+            template<typename T>
             struct impl final : interface
             {
             private:

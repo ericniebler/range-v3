@@ -32,50 +32,63 @@ namespace ranges
         /// \cond
         namespace adl_insert_detail
         {
-            CONCEPT_template(typename Cont, typename T)(
+            template<typename Cont, typename ...Args>
+            using insert_result_t =
+                decltype(unwrap_reference(std::declval<Cont>())
+                    .insert(std::declval<Args>()...));
+
+            template<typename Cont, typename T>
+            auto insert(Cont &&cont, T &&t) -> CONCEPT_return_type(
+                insert_result_t<Cont&, T>)(
                 requires LvalueContainerLike<Cont> &&
-                    Constructible<range_value_type_t<Cont>, T>)
-            auto insert(Cont &&cont, T &&t)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                unwrap_reference(cont).insert(static_cast<T &&>(t))
-            )
+                    (!Range<T> && Constructible<range_value_type_t<Cont>, T>))
+            {
+                return unwrap_reference(cont).insert(static_cast<T &&>(t));
+            }
 
-            CONCEPT_template(typename Cont, typename I, typename S,
-                typename C = common_iterator_t<I, S>)(
+            template<typename Cont, typename I, typename S>
+            auto insert(Cont &&cont, I i, S j) -> CONCEPT_return_type(
+                insert_result_t<
+                    Cont&,
+                    common_iterator_t<I, S>,
+                    common_iterator_t<I, S>>)(
                 requires LvalueContainerLike<Cont> && Sentinel<S, I> && !Range<S>)
-            auto insert(Cont &&cont, I i, S j)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                unwrap_reference(cont).insert(C{i}, C{j})
-            )
+            {
+                return unwrap_reference(cont).insert(
+                    common_iterator_t<I, S>{i},
+                    common_iterator_t<I, S>{j});
+            }
 
-            CONCEPT_template(typename Cont, typename Rng,
-                typename C = range_common_iterator_t<Rng>)(
+            template<typename Cont, typename Rng>
+            auto insert(Cont &&cont, Rng &&rng) -> CONCEPT_return_type(
+                insert_result_t<
+                    Cont&,
+                    range_common_iterator_t<Rng>,
+                    range_common_iterator_t<Rng>>)(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
-            auto insert(Cont &&cont, Rng &&rng)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                unwrap_reference(cont).insert(C{ranges::begin(rng)}, C{ranges::end(rng)})
-            )
+            {
+                return unwrap_reference(cont).insert(
+                    range_common_iterator_t<Rng>{ranges::begin(rng)},
+                    range_common_iterator_t<Rng>{ranges::end(rng)});
+            }
 
-            CONCEPT_template(typename Cont, typename I, typename T)(
+            template<typename Cont, typename I, typename T>
+            auto insert(Cont &&cont, I p, T &&t) -> CONCEPT_return_type(
+                insert_result_t<Cont&, I, T>)(
                 requires LvalueContainerLike<Cont> && Iterator<I> &&
-                    Constructible<range_value_type_t<Cont>, T>)
-            auto insert(Cont &&cont, I p, T &&t)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                unwrap_reference(cont).insert(p, static_cast<T &&>(t))
-            )
+                    (!Range<T> && Constructible<range_value_type_t<Cont>, T>))
+            {
+                return unwrap_reference(cont).insert(p, static_cast<T &&>(t));
+            }
 
-            CONCEPT_template(typename Cont, typename I, typename N, typename T)(
-                requires LvalueContainerLike<Cont> && Iterator<I> && Integral<N> &&
-                    Constructible<range_value_type_t<Cont>, T>)
-            auto insert(Cont &&cont, I p, N n, T &&t)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                unwrap_reference(cont).insert(p, n, static_cast<T &&>(t))
-            )
+            template<typename Cont, typename I, typename N, typename T>
+            auto insert(Cont &&cont, I p, N n, T &&t) -> CONCEPT_return_type(
+                insert_result_t<Cont&, I, N, T>)(
+                requires LvalueContainerLike<Cont> && Iterator<I> &&
+                    Integral<N> && Constructible<range_value_type_t<Cont>, T>)
+            {
+                return unwrap_reference(cont).insert(p, n, static_cast<T &&>(t));
+            }
 
             /// \cond
             namespace detail
@@ -179,7 +192,8 @@ namespace ranges
             struct insert_fn
             {
                 CONCEPT_template(typename Rng, typename T)(
-                    requires Range<Rng> && Constructible<range_value_type_t<Rng>, T>)
+                    requires Range<Rng> && !Range<T> &&
+                        Constructible<range_value_type_t<Rng>, T>)
                 auto operator()(Rng &&rng, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -213,7 +227,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename T)(
-                    requires Range<Rng> && Iterator<I> &&
+                    requires Range<Rng> && Iterator<I> && !Range<T> &&
                         Constructible<range_value_type_t<Rng>, T>)
                 auto operator()(Rng &&rng, I p, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -240,7 +254,7 @@ namespace ranges
                 )
 
                 CONCEPT_template(typename Rng, typename I, typename N, typename T)(
-                    requires Range<Rng> && Iterator<I> && Integral<N> &&
+                    requires Range<Rng> && Iterator<I> && Integral<N> && !Range<T> &&
                         Constructible<range_value_type_t<Rng>, T>)
                 auto operator()(Rng &&rng, I p, N n, T &&t) const
                 RANGES_DECLTYPE_AUTO_RETURN

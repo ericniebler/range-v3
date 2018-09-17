@@ -132,6 +132,8 @@ namespace ranges
                     "Your readable and writable cursor must have a value type and a reference "
                     "type that share a common reference type. See the ranges::common_reference "
                     "type trait.");
+            public:
+                // BUGBUG make these private:
                 RANGES_CXX14_CONSTEXPR
                 reference_t_ read_() const
                     noexcept(noexcept(reference_t_(range_access::read(std::declval<Cur const &>()))))
@@ -144,7 +146,6 @@ namespace ranges
                 {
                     range_access::write(*cur_, (T &&) t);
                 }
-            public:
                 basic_proxy_reference_() = default;
                 basic_proxy_reference_(basic_proxy_reference_ const &) = default;
                 CONCEPT_template(typename OtherCur)(
@@ -185,7 +186,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename OtherCur)(
                     requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference_ & operator=(basic_proxy_reference<OtherCur> && that)
                 {
@@ -193,7 +194,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename OtherCur)(
                     requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference_ & operator=(basic_proxy_reference<OtherCur> const &that)
                 {
@@ -202,7 +203,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename OtherCur)(
                     requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference_ const & operator=(basic_proxy_reference<OtherCur> && that) const
                 {
@@ -210,7 +211,7 @@ namespace ranges
                 }
                 CONCEPT_template(typename OtherCur)(
                     requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
                 RANGES_CXX14_CONSTEXPR
                 basic_proxy_reference_ const & operator=(basic_proxy_reference<OtherCur> const &that) const
                 {
@@ -233,49 +234,62 @@ namespace ranges
                     this->write_((T &&) t);
                     return *this;
                 }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator==(basic_proxy_reference_ const &x, value_t_ const &y)
-                {
-                    return x.read_() == y;
-                }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator!=(basic_proxy_reference_ const &x, value_t_ const &y)
-                {
-                    return !(x == y);
-                }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator==(value_t_ const &x, basic_proxy_reference_ const &y)
-                {
-                    return x == y.read_();
-                }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator!=(value_t_ const &x, basic_proxy_reference_ const &y)
-                {
-                    return !(x == y);
-                }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator==(basic_proxy_reference_ const &x, basic_proxy_reference_ const &y)
-                {
-                    return x.read_() == y.read_();
-                }
-                CONCEPT_template(typename V = value_t_)(
-                    requires ReadableCursor<Cur> && EqualityComparable<V>)
-                RANGES_CXX14_CONSTEXPR
-                friend bool operator!=(basic_proxy_reference_ const &x, basic_proxy_reference_ const &y)
-                {
-                    return !(x == y);
-                }
             };
+
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator==(basic_proxy_reference_<Cur, Readable> const &x,
+                typename cursor_traits<Cur>::value_t_ const &y)
+            {
+                return x.read_() == y;
+            }
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator!=(basic_proxy_reference_<Cur, Readable> const &x,
+                typename cursor_traits<Cur>::value_t_ const &y)
+            {
+                return !(x == y);
+            }
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator==(typename cursor_traits<Cur>::value_t_ const &x,
+                basic_proxy_reference_<Cur, Readable> const &y)
+            {
+                return x == y.read_();
+            }
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator!=(typename cursor_traits<Cur>::value_t_ const &x,
+                basic_proxy_reference_<Cur, Readable> const &y)
+            {
+                return !(x == y);
+            }
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator==(basic_proxy_reference_<Cur, Readable> const &x,
+                basic_proxy_reference_<Cur, Readable> const &y)
+            {
+                return x.read_() == y.read_();
+            }
+            CONCEPT_template(typename Cur, bool Readable,
+                typename V = typename cursor_traits<Cur>::value_t_)(
+                requires ReadableCursor<Cur> && EqualityComparable<V>)
+            RANGES_CXX14_CONSTEXPR
+            bool operator!=(basic_proxy_reference_<Cur, Readable> const &x,
+                basic_proxy_reference_<Cur, Readable> const &y)
+            {
+                return !(x == y);
+            }
 
             auto iter_cat(input_cursor_tag) ->
                 ranges::input_iterator_tag;
@@ -289,7 +303,7 @@ namespace ranges
             template<typename Cur, bool Readable /*= (bool) ReadableCursor<Cur>*/>
             struct iterator_associated_types_base_
             {
-            protected:
+            //protected:
                 using reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_tag_t = concepts::tag<detail::OutputCursorConcept, cursor_tag>;
@@ -305,7 +319,7 @@ namespace ranges
             template<typename Cur>
             struct iterator_associated_types_base_<Cur, true>
             {
-            protected:
+            //protected:
                 using cursor_tag_t = detail::cursor_tag_of<Cur>;
                 using reference_t =
                     meta::if_<
@@ -365,7 +379,7 @@ namespace ranges
         };
 
 #if RANGES_BROKEN_CPO_LOOKUP
-        namespace _basic_iterator_ { template <typename> struct adl_hook {}; }
+        namespace _basic_iterator_ { template<typename> struct adl_hook {}; }
 #endif
 
         template<typename Cur>
@@ -409,7 +423,7 @@ namespace ranges
             using mixin_t::mixin_t;
 
             CONCEPT_template(typename T)(
-                requires not defer::Same<uncvref_t<T>, basic_iterator>() &&
+                requires not defer::Same<uncvref_t<T>, basic_iterator> &&
                     !detail::defer::HasCursorNext<Cur> &&
                     detail::defer::WritableCursor<Cur, T>)
             RANGES_CXX14_CONSTEXPR
@@ -421,7 +435,7 @@ namespace ranges
             }
 
             CONCEPT_template(typename T)(
-                requires not defer::Same<uncvref_t<T>, basic_iterator>() &&
+                requires not defer::Same<uncvref_t<T>, basic_iterator> &&
                     !detail::defer::HasCursorNext<Cur> &&
                     detail::defer::WritableCursor<Cur const, T>)
             RANGES_CXX14_CONSTEXPR
@@ -511,48 +525,6 @@ namespace ranges
                 ++*this;
             }
 
-            CONCEPT_template(class Cur2)(
-                requires detail::CursorSentinel<Cur2, Cur>)
-            friend constexpr bool operator==(basic_iterator const &left,
-                basic_iterator<Cur2> const &right)
-            {
-                return range_access::equal(left.pos(), range_access::pos(right));
-            }
-            CONCEPT_template(class Cur2)(
-                requires detail::CursorSentinel<Cur2, Cur>)
-            friend constexpr bool operator!=(basic_iterator const &left,
-                basic_iterator<Cur2> const &right)
-            {
-                return !(left == right);
-            }
-            CONCEPT_template(class S)(
-                requires detail::CursorSentinel<S, Cur>)
-            friend constexpr bool operator==(basic_iterator const &left,
-                S const &right)
-            {
-                return range_access::equal(left.pos(), right);
-            }
-            CONCEPT_template(class S)(
-                requires detail::CursorSentinel<S, Cur>)
-            friend constexpr bool operator!=(basic_iterator const &left,
-                S const &right)
-            {
-                return !(left == right);
-            }
-            CONCEPT_template(class S)(
-                requires detail::CursorSentinel<S, Cur>)
-            friend constexpr bool operator==(S const &left,
-                basic_iterator const &right)
-            {
-                return right == left;
-            }
-            CONCEPT_template(class S)(
-                requires detail::CursorSentinel<S, Cur>)
-            friend constexpr bool operator!=(S const &left,
-                basic_iterator const &right)
-            {
-                return right != left;
-            }
             CONCEPT_requires(detail::BidirectionalCursor<Cur>)
             RANGES_CXX14_CONSTEXPR
             basic_iterator & operator--()
@@ -577,80 +549,10 @@ namespace ranges
             }
             CONCEPT_requires(detail::RandomAccessCursor<Cur>)
             RANGES_CXX14_CONSTEXPR
-            friend basic_iterator operator+(basic_iterator left, difference_type n)
-            {
-                left += n;
-                return left;
-            }
-            CONCEPT_requires(detail::RandomAccessCursor<Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend basic_iterator operator+(difference_type n, basic_iterator right)
-            {
-                right += n;
-                return right;
-            }
-            CONCEPT_requires(detail::RandomAccessCursor<Cur>)
-            RANGES_CXX14_CONSTEXPR
             basic_iterator & operator-=(difference_type n)
             {
                 range_access::advance(pos(), -n);
                 return *this;
-            }
-            CONCEPT_requires(detail::RandomAccessCursor<Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend basic_iterator operator-(basic_iterator left, difference_type n)
-            {
-                left -= n;
-                return left;
-            }
-            CONCEPT_template(typename Cur2)(
-                requires detail::SizedCursorSentinel<Cur2, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend difference_type operator-(basic_iterator<Cur2> const &left,
-                basic_iterator const &right)
-            {
-                return range_access::distance_to(right.pos(), range_access::pos(left));
-            }
-            CONCEPT_template(typename S)(
-                requires detail::SizedCursorSentinel<S, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend difference_type operator-(S const &left,
-                basic_iterator const &right)
-            {
-                return range_access::distance_to(right.pos(), left);
-            }
-            CONCEPT_template(typename S)(
-                requires detail::SizedCursorSentinel<S, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend difference_type operator-(basic_iterator const &left,
-                S const &right)
-            {
-                return -(right - left);
-            }
-            // symmetric comparisons
-            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend bool operator<(basic_iterator const &left, basic_iterator const &right)
-            {
-                return 0 < (right - left);
-            }
-            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend bool operator<=(basic_iterator const &left, basic_iterator const &right)
-            {
-                return 0 <= (right - left);
-            }
-            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend bool operator>(basic_iterator const &left, basic_iterator const &right)
-            {
-                return (right - left) < 0;
-            }
-            CONCEPT_requires(detail::SizedCursorSentinel<Cur, Cur>)
-            RANGES_CXX14_CONSTEXPR
-            friend bool operator>=(basic_iterator const &left, basic_iterator const &right)
-            {
-                return (right - left) <= 0;
             }
             CONCEPT_requires(detail::RandomAccessCursor<Cur>)
             RANGES_CXX14_CONSTEXPR
@@ -672,6 +574,131 @@ namespace ranges
             )
 #endif
         };
+
+        CONCEPT_template(typename Cur, typename Cur2)(
+            requires detail::CursorSentinel<Cur2, Cur>)
+        constexpr bool operator==(basic_iterator<Cur> const &left,
+            basic_iterator<Cur2> const &right)
+        {
+            return range_access::equal(range_access::pos(left), range_access::pos(right));
+        }
+        CONCEPT_template(typename Cur, typename Cur2)(
+            requires detail::CursorSentinel<Cur2, Cur>)
+        constexpr bool operator!=(basic_iterator<Cur> const &left,
+            basic_iterator<Cur2> const &right)
+        {
+            return !(left == right);
+        }
+        CONCEPT_template(typename Cur, typename S)(
+            requires detail::CursorSentinel<S, Cur>)
+        constexpr bool operator==(basic_iterator<Cur> const &left,
+            S const &right)
+        {
+            return range_access::equal(range_access::pos(left), right);
+        }
+        CONCEPT_template(typename Cur, typename S)(
+            requires detail::CursorSentinel<S, Cur>)
+        constexpr bool operator!=(basic_iterator<Cur> const &left,
+            S const &right)
+        {
+            return !(left == right);
+        }
+        CONCEPT_template(typename S, typename Cur)(
+            requires detail::CursorSentinel<S, Cur>)
+        constexpr bool operator==(S const &left,
+            basic_iterator<Cur> const &right)
+        {
+            return right == left;
+        }
+        CONCEPT_template(typename S, typename Cur)(
+            requires detail::CursorSentinel<S, Cur>)
+        constexpr bool operator!=(S const &left,
+            basic_iterator<Cur> const &right)
+        {
+            return right != left;
+        }
+
+        CONCEPT_template(typename Cur)(
+            requires detail::RandomAccessCursor<Cur>)
+        RANGES_CXX14_CONSTEXPR
+        basic_iterator<Cur> operator+(basic_iterator<Cur> left,
+            typename basic_iterator<Cur>::difference_type n)
+        {
+            left += n;
+            return left;
+        }
+        CONCEPT_template(typename Cur)(
+            requires detail::RandomAccessCursor<Cur>)
+        RANGES_CXX14_CONSTEXPR
+        basic_iterator<Cur> operator+(typename basic_iterator<Cur>::difference_type n,
+            basic_iterator<Cur> right)
+        {
+            right += n;
+            return right;
+        }
+        CONCEPT_template(typename Cur)(
+            requires detail::RandomAccessCursor<Cur>)
+        RANGES_CXX14_CONSTEXPR
+        basic_iterator<Cur> operator-(basic_iterator<Cur> left,
+            typename basic_iterator<Cur>::difference_type n)
+        {
+            left -= n;
+            return left;
+        }
+        CONCEPT_template(typename Cur2, typename Cur)(
+            requires detail::SizedCursorSentinel<Cur2, Cur>)
+        RANGES_CXX14_CONSTEXPR
+        typename basic_iterator<Cur>::difference_type
+        operator-(basic_iterator<Cur2> const &left,
+            basic_iterator<Cur> const &right)
+        {
+            return range_access::distance_to(range_access::pos(right), range_access::pos(left));
+        }
+        CONCEPT_template(typename S, typename Cur)(
+            requires detail::SizedCursorSentinel<S, Cur>)
+        RANGES_CXX14_CONSTEXPR
+        typename basic_iterator<Cur>::difference_type
+        operator-(S const &left, basic_iterator<Cur> const &right)
+        {
+            return range_access::distance_to(range_access::pos(right), left);
+        }
+        CONCEPT_template(typename Cur, typename S)(
+            requires detail::SizedCursorSentinel<S, Cur>)
+        RANGES_CXX14_CONSTEXPR
+        typename basic_iterator<Cur>::difference_type
+        operator-(basic_iterator<Cur> const &left, S const &right)
+        {
+            return -(right - left);
+        }
+        // Asymmetric comparisons
+        CONCEPT_template(typename Left, typename Right)(
+            requires detail::SizedCursorSentinel<Right, Left>)
+        RANGES_CXX14_CONSTEXPR
+        bool operator<(basic_iterator<Left> const &left, basic_iterator<Right> const &right)
+        {
+            return 0 < (right - left);
+        }
+        CONCEPT_template(typename Left, typename Right)(
+            requires detail::SizedCursorSentinel<Right, Left>)
+        RANGES_CXX14_CONSTEXPR
+        bool operator<=(basic_iterator<Left> const &left, basic_iterator<Right> const &right)
+        {
+            return 0 <= (right - left);
+        }
+        CONCEPT_template(typename Left, typename Right)(
+            requires detail::SizedCursorSentinel<Right, Left>)
+        RANGES_CXX14_CONSTEXPR
+        bool operator>(basic_iterator<Left> const &left, basic_iterator<Right> const &right)
+        {
+            return (right - left) < 0;
+        }
+        CONCEPT_template(typename Left, typename Right)(
+            requires detail::SizedCursorSentinel<Right, Left>)
+        RANGES_CXX14_CONSTEXPR
+        bool operator>=(basic_iterator<Left> const &left, basic_iterator<Right> const &right)
+        {
+            return (right - left) <= 0;
+        }
 
 #if RANGES_BROKEN_CPO_LOOKUP
         namespace _basic_iterator_

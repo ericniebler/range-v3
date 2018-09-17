@@ -51,7 +51,7 @@ void test_iota_minus() {
     CHECK(detail::iota_minus_(I(max), I(max)) == D(0));
 }
 
-template <typename U>
+template<typename U>
 void test_wrap_around() {
     using namespace ranges;
     auto max = std::numeric_limits<U>::max();

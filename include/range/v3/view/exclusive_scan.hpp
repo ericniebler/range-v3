@@ -26,7 +26,7 @@ namespace ranges {
             (
                 template(typename Rng, typename T, typename Fun)
                 concept ExclusiveScanConstraint3,
-                    Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>
+                    Assignable<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
             );
 
             CONCEPT_def
@@ -173,18 +173,18 @@ namespace ranges {
                     requires not ExclusiveScanConstraint<Rng, T, Fun>)
                 void operator()(Rng &&, T, Fun = Fun{}) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<Rng>,
+                    CONCEPT_assert_msg(InputRange<Rng>,
                         "The first argument passed to view::exclusive_scan must be a model of the "
                         "InputRange concept.");
-                    CONSEPT_ASSERT_MSG(CopyConstructible<T>,
+                    CONCEPT_assert_msg(CopyConstructible<T>,
                         "The second argument passed to view::exclusive_scan must be a model of the "
                         "CopyConstructible concept.");
-                    CONCEPT_ASSERT_MSG(Invocable<Fun &, T, range_reference_t<Rng>>,
+                    CONCEPT_assert_msg(Invocable<Fun &, T, range_reference_t<Rng>>,
                         "The third argument passed to view::exclusive_scan must be invokable with "
                         "the init value passed as the first argument, and "
                         "a value from the range passed as the second argument.");
-                    CONCEPT_ASSERT_MSG(
-                        Assignable<T &, result_of_t<Fun &(T &&, range_reference_t<Rng> &&)>>,
+                    CONCEPT_assert_msg(
+                        Assignable<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>,
                         "The result of invoking the third argument must be assignable to the init "
                         "value.");
                 }

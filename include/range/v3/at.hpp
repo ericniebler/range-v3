@@ -43,23 +43,6 @@ namespace ranges
                 check_throw(rng, n);
                 return ranges::begin(rng)[n];
             }
-            /// \return `begin(rng)[n]`
-            CONCEPT_template(typename Rng)(
-                requires RandomAccessRange<Rng> && !SizedRange<Rng>)
-            // (attribute(RANGES_DEPRECATED(
-            //     "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
-            //     "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
-            //     "Use ranges::index for unchecked access instead!"))
-            RANGES_DEPRECATED(
-                "Checked indexed range access (ranges::at) on !SizedRanges is deprecated! "
-                "This version performs unchecked access (the range size cannot be computed in O(1) for !SizedRanges)! "
-                "Use ranges::index for unchecked access instead!")
-            RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                index(std::forward<Rng>(rng), n)
-            )
 
             /// \return `begin(rng)[n]`
             CONCEPT_template(typename Rng, typename T, typename Self = at_fn,
@@ -86,7 +69,7 @@ namespace ranges
             }
 
         private:
-            template<class Rng>
+            template<typename Rng>
             RANGES_CXX14_CONSTEXPR
             static void check_throw(Rng &&rng, range_difference_type_t<Rng> n)
             {

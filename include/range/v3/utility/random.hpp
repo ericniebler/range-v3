@@ -155,7 +155,7 @@ namespace ranges
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 6
                 inline
 #else
-                template<class = void>
+                template<typename = void>
 #endif
                 std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
                 {
