@@ -22,6 +22,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
+#include <range/v3/utility/iterator.hpp>
 
 namespace ranges
 {
@@ -55,7 +56,7 @@ namespace ranges
                 CONCEPT_REQUIRES(MoveConstructible<T>())
                 indexed_datum(indexed_datum &&that)
                 {
-                    std::uninitialized_copy_n(std::make_move_iterator(that.data_), N, data_);
+                    std::uninitialized_copy_n(make_move_iterator(that.data_), N, data_);
                 }
                 CONCEPT_REQUIRES(CopyConstructible<T>())
                 indexed_datum(indexed_datum const &that)

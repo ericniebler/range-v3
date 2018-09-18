@@ -679,9 +679,7 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 I arrow() const
                 {
-                    I tmp(it_);
-                    --tmp;
-                    return tmp;
+                    return ranges::prev(it_);
                 }
                 RANGES_CXX14_CONSTEXPR
                 I base() const
@@ -720,7 +718,7 @@ namespace ranges
                 auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    iter_move(it_)
+                    iter_move(ranges::prev(it_))
                 )
             public:
                 reverse_cursor() = default;
