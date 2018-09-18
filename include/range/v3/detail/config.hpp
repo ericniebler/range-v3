@@ -401,7 +401,10 @@ namespace ranges
 #endif // RANGES_CXX_INLINE_VARIABLES
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES
-#ifdef __cpp_deduction_guides
+#if defined(__clang__) && defined(__apple_build_version__)
+// Apple's clang version doesn't do deduction guides very well.
+#define RANGES_CXX_DEDUCTION_GUIDES 0
+#elif defined(__cpp_deduction_guides)
 #define RANGES_CXX_DEDUCTION_GUIDES __cpp_deduction_guides
 #else
 #define RANGES_CXX_DEDUCTION_GUIDES RANGES_CXX_FEATURE(DEDUCTION_GUIDES)

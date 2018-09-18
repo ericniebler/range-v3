@@ -264,7 +264,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
         CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
         struct Eval {                                                           \
-            template<typename C_ = Concept>                                       \
+            template<typename C_ = Concept>                                     \
             static constexpr decltype(                                          \
                 &C_::template Requires_<CONCEPT_PP_EXPAND ARGS>, true)          \
             impl(int) noexcept { return true; }                                 \
@@ -275,7 +275,7 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
             constexpr auto operator!() const noexcept {                         \
                 return ::concepts::detail::Not<Eval>{};                         \
             }                                                                   \
-            template<typename That>                                               \
+            template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept {                    \
                 return ::concepts::detail::And<Eval, That>{};                   \
             }                                                                   \
@@ -553,7 +553,7 @@ namespace concepts
             CONCEPT_def(
                 template (class T, template<typename...> class Trait, typename... Args)
                 (concept Satisfies)(T, Trait, Args...),
-                    static_cast<bool>(Trait<T>::type::value)
+                    static_cast<bool>(Trait<T, Args...>::type::value)
             );
 
             CONCEPT_def(

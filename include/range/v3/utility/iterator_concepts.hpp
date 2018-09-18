@@ -157,8 +157,9 @@ namespace ranges
                     concepts::requires_<Same<difference_type_t<I>, decltype(s - i)>>,
                     concepts::requires_<Same<difference_type_t<I>, decltype(i - s)>>
                 ) &&
-                Sentinel<S, I> &&
-                !disable_sized_sentinel<uncvref_t<S>, uncvref_t<I>>::value
+                // Short-circuit the test for Sentinel if we're emulating concepts:
+                (!defer::Satisfies<uncvref_t<S>, disable_sized_sentinel, uncvref_t<I>> &&
+                defer::Sentinel<S, I>)
         );
 
         CONCEPT_def
