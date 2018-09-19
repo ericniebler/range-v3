@@ -63,18 +63,18 @@ namespace ranges
                     if(len1 <= len2)
                     {
                         auto p = ranges::move(begin, middle, tmpbuf.begin()).second;
-                        merge(make_move_iterator(buf), make_move_sentinel(p.base().base()),
+                        merge(make_move_iterator(buf), make_move_iterator(p.base().base()),
                             make_move_iterator(std::move(middle)),
-                            make_move_sentinel(std::move(end)), std::move(begin),
+                            make_move_iterator(std::move(end)), std::move(begin),
                             std::ref(pred), std::ref(proj), std::ref(proj));
                     }
                     else
                     {
                         auto p = ranges::move(middle, end, tmpbuf.begin()).second;
-                        using RBi = std::reverse_iterator<I>;
-                        using Rv = std::reverse_iterator<value_type_t<I> *>;
+                        using RBi = ranges::reverse_iterator<I>;
+                        using Rv = ranges::reverse_iterator<value_type_t<I> *>;
                         merge(make_move_iterator(RBi{std::move(middle)}),
-                            make_move_sentinel(RBi{std::move(begin)}),
+                            make_move_iterator(RBi{std::move(begin)}),
                             make_move_iterator(Rv{p.base().base()}),
                             make_move_iterator(Rv{buf}), RBi{std::move(end)},
                             not_fn(std::ref(pred)), std::ref(proj), std::ref(proj));
