@@ -7,7 +7,8 @@
                 "/usr/local/include",
                 "/Users/eniebler/llvm-install/lib/clang/6.0.0/include",
                 "/usr/include",
-                "${workspaceRoot}/include"
+                "${workspaceRoot}/include",
+                "/usr/local/opt/boost@1.67/incluse"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -17,7 +18,8 @@
                     "/usr/local/include",
                     "/Users/eniebler/llvm-install/lib/clang/6.0.0/include",
                     "/usr/include",
-                    "${workspaceRoot}/include"
+                    "${workspaceRoot}/include",
+                    "/usr/local/opt/boost@1.67/incluse"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
