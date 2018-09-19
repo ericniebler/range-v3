@@ -24,17 +24,18 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#if !defined(__clang__) || !defined(_MSVC_STL_VERSION) // Avoid #890
 void test_bug632()
 {
-	const std::vector<double> scores = { 3.0, 1.0, 2.0 };
-	std::vector<int> indices = { 0, 1, 2 };
+    const std::vector<double> scores = { 3.0, 1.0, 2.0 };
+    std::vector<int> indices = { 0, 1, 2 };
 
-	indices |= ranges::action::stable_sort(
-		ranges::less{},
-		[&] (const int &x) { return scores[ (std::size_t)x ]; }
-	);
+    indices |= ranges::action::stable_sort(
+        ranges::less{},
+        [&] (const int &x) { return scores[ (std::size_t)x ]; }
+    );
 
-	::check_equal( indices, {1, 2, 0} );
+    ::check_equal( indices, {1, 2, 0} );
 }
 
 int main()
@@ -82,3 +83,6 @@ int main()
 
     return ::test_result();
 }
+#else // Avoid #890
+int main() {}
+#endif // Avoid #890

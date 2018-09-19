@@ -35,12 +35,14 @@ namespace
 {
     std::mt19937 gen;
 
+#if !defined(__clang__) || !defined(_MSVC_STL_VERSION) // Avoid #890
     struct indirect_less
     {
         template<class P>
         bool operator()(const P& x, const P& y)
             {return *x < *y;}
     };
+#endif // Avoid #890
 
     template<class RI>
     void
@@ -194,6 +196,7 @@ int main()
     test_larger_sorts(1000);
     test_larger_sorts(1009);
 
+#if !defined(__clang__) || !defined(_MSVC_STL_VERSION) // Avoid #890
     // Check move-only types
     {
         std::vector<std::unique_ptr<int> > v(1000);
@@ -235,6 +238,7 @@ int main()
             CHECK((std::size_t)v[i].j == v.size() - i - 1);
         }
     }
+#endif // Avoid #890
 
     return ::test_result();
 }
