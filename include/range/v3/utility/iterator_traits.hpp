@@ -55,11 +55,6 @@ namespace ranges
         namespace detail
         {
             template<typename I,
-                typename R = decltype(*std::declval<I &>()),
-                typename = R&>
-            using reference_t = R;
-
-            template<typename I,
                 typename = reference_t<I>,
                 typename R = decltype(iter_move(std::declval<I &>())),
                 typename = R&>
@@ -159,9 +154,6 @@ namespace ranges
         // iterator traits
         template<typename I>
         using value_type_t = meta::_t<value_type<I>>;
-
-        template<typename I>
-        using reference_t = detail::reference_t<I>;
 
         template<typename I>
         using rvalue_reference_t = detail::rvalue_reference_t<I>;

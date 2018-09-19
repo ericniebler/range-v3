@@ -931,19 +931,19 @@ namespace ranges
         }
         CONCEPT_template(typename I, typename S)(
             requires Sentinel<S, I>)
-        bool operator==(move_sentinel<S> const &s, move_iterator<S> const &i)
+        bool operator==(move_sentinel<S> const &s, move_iterator<I> const &i)
         {
             return s.base() == i.base();
         }
         CONCEPT_template(typename I, typename S)(
             requires Sentinel<S, I>)
-        bool operator!=(move_iterator<S> const &i, move_sentinel<S> const &s)
+        bool operator!=(move_iterator<I> const &i, move_sentinel<S> const &s)
         {
             return i.base() != s.base();
         }
         CONCEPT_template(typename I, typename S)(
             requires Sentinel<S, I>)
-        bool operator!=(move_sentinel<S> const &s, move_iterator<S> const &i)
+        bool operator!=(move_sentinel<S> const &s, move_iterator<I> const &i)
         {
             return s.base() != i.base();
         }

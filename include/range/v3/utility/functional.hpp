@@ -14,19 +14,20 @@
 #ifndef RANGES_V3_UTILITY_FUNCTIONAL_HPP
 #define RANGES_V3_UTILITY_FUNCTIONAL_HPP
 
-#include <memory> // std::addressof
-#include <utility>
 #include <functional> // std::reference_wrapper
-#include <type_traits>
 #include <initializer_list>
+#include <memory> // std::addressof
+#include <type_traits>
+#include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/associated_types.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/move.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invoke.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 
 RANGES_DISABLE_WARNINGS
 
@@ -491,7 +492,7 @@ namespace ranges
             // value_type (needs no impl)
             template<typename ...Its>
             [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                invoke_result_t<Fn &, decltype(*std::declval<Its>())...>
+                invoke_result_t<Fn &, reference_t<Its>...>
             {
                 RANGES_EXPECT(false);
             }

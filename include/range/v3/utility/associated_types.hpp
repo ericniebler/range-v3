@@ -74,6 +74,20 @@ namespace ranges
         {};
 
         ////////////////////////////////////////////////////////////////////////////////////////
+        /// \cond
+        namespace detail
+        {
+            template<typename I,
+                typename R = decltype(*std::declval<I &>()),
+                typename = R&>
+            using reference_t_ = R;
+        }
+        /// \endcond
+
+        template<typename R>
+        using reference_t = detail::reference_t_<R>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////
         template<typename T>
         struct size_type
           : meta::lazy::let<std::make_unsigned<meta::lazy::_t<difference_type<T>>>>
