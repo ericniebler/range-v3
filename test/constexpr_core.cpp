@@ -22,32 +22,6 @@
 #include "array.hpp"
 #include "test_iterators.hpp"
 
-// This is necessary since advance is a customization point, std::advance is imported for
-// non-range-v3 iterators, and it is not constexpr:
-template<typename T, typename I = random_access_iterator<T>>
-RANGES_CXX14_CONSTEXPR
-void advance(random_access_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
-}
-
-template<typename T, typename I = bidirectional_iterator<T>>
-RANGES_CXX14_CONSTEXPR
-void advance(bidirectional_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
-}
-
-template<typename T, typename I = forward_iterator<T>>
-RANGES_CXX14_CONSTEXPR
-void advance(forward_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
-}
-
-template<typename T, typename I = input_iterator<T>>
-RANGES_CXX14_CONSTEXPR
-void advance(input_iterator<T> & i, ranges::difference_type_t<I> n) {
-    ranges::adl_advance_detail::advance_impl(i, n, ranges::iterator_concept<I>{});
-}
-
 // Test sequence 1,2,3,4
 template<typename It>
 RANGES_CXX14_CONSTEXPR auto test_it_back(It, It end,

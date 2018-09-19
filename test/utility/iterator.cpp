@@ -10,6 +10,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <list>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -156,6 +157,22 @@ CONCEPT_ASSERT(IndirectlySwappable<int *, int *>());
 CONCEPT_ASSERT(IndirectlyMovable<int const *, int *>());
 CONCEPT_ASSERT(!IndirectlySwappable<int const *, int const *>());
 CONCEPT_ASSERT(!IndirectlyMovable<int const *, int const *>());
+
+namespace Boost
+{
+    struct S {}; // just to have a type from Boost namespace
+    template<typename I, typename D>
+    void advance(I&, D)
+    {}
+}
+
+// Regression test for https://github.com/ericniebler/range-v3/issues/845
+void test_845()
+{
+    std::list<std::pair<Boost::S, int>> v = { {Boost::S{}, 0} };
+    auto itr = v.begin();
+    ranges::advance(itr, 1); // Should not create ambiguity
+}
 
 int main()
 {
