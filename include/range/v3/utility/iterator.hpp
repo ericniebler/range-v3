@@ -83,33 +83,36 @@ namespace ranges
                     Concept);
             public:
                 // Advance a certain number of steps:
-                CONCEPT_template(typename I)(
-                    requires Iterator<I>)
+                template<typename I>
                 RANGES_CXX14_CONSTEXPR
-                void operator()(I &i, difference_type_t<I> n) const
+                auto operator()(I &i, difference_type_t<I> n) const ->
+                    CONCEPT_return_type(void)(requires Iterator<I>)
                 {
                     advance_fn::n_(i, n, 0);
                 }
                 // Advance to a certain position:
-                CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I> && Assignable<I&, S>)
+                template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
-                void operator()(I &i, S s) const
+                auto operator()(I &i, S s) const ->
+                    CONCEPT_return_type(void)(
+                        requires Sentinel<S, I> && Assignable<I&, S>)
                 {
                     i = std::move(s);
                 }
-                CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I> && !Assignable<I&, S>)
+                template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
-                void operator()(I &i, S s) const
+                auto operator()(I &i, S s) const ->
+                    CONCEPT_return_type(void)(
+                        requires Sentinel<S, I> && !Assignable<I&, S>)
                 {
                     advance_fn::to_(i, std::move(s), sentinel_tag_of<S, I>());
                 }
                 // Advance a certain number of times, with a bound:
-                CONCEPT_template(typename I, typename S)(
-                    requires Sentinel<S, I>)
+                template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
-                difference_type_t<I> operator()(I &it, difference_type_t<I> n, S bound) const
+                auto operator()(I &it, difference_type_t<I> n, S bound) const ->
+                    CONCEPT_return_type(difference_type_t<I>)(
+                        requires Sentinel<S, I>)
                 {
                     return advance_fn::bounded_(it, n, std::move(bound),
                         sentinel_tag_of<S, I>(), iterator_tag_of<I>());
@@ -229,29 +232,33 @@ namespace ranges
 
         struct next_fn
         {
-            CONCEPT_template(typename I)(
-                requires Iterator<I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it) const
+            template<typename I>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it) const ->
+                CONCEPT_return_type(I)(requires Iterator<I>)
             {
                 return ++it;
             }
-            CONCEPT_template(typename I)(
-                requires Iterator<I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it, difference_type_t<I> n) const
+            template<typename I>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it, difference_type_t<I> n) const ->
+                CONCEPT_return_type(I)(requires Iterator<I>)
             {
                 advance(it, n);
                 return it;
             }
-            CONCEPT_template(typename I, typename S)(
-                requires Sentinel<S, I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it, S s) const
+            template<typename I, typename S>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it, S s) const ->
+                CONCEPT_return_type(I)(requires Sentinel<S, I>)
             {
                 advance(it, std::move(s));
                 return it;
             }
-            CONCEPT_template(typename I, typename S)(
-                requires Sentinel<S, I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it, difference_type_t<I> n, S bound) const
+            template<typename I, typename S>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it, difference_type_t<I> n, S bound) const ->
+                CONCEPT_return_type(I)(requires Sentinel<S, I>)
             {
                 advance(it, n, std::move(bound));
                 return it;
@@ -264,16 +271,18 @@ namespace ranges
 
         struct prev_fn
         {
-            CONCEPT_template(typename I)(
-                requires BidirectionalIterator<I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it, difference_type_t<I> n = 1) const
+            template<typename I>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it, difference_type_t<I> n = 1) const ->
+                CONCEPT_return_type(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n);
                 return it;
             }
-            CONCEPT_template(typename I)(
-                requires BidirectionalIterator<I>)
-            RANGES_CXX14_CONSTEXPR I operator()(I it, difference_type_t<I> n, I bound) const
+            template<typename I>
+            RANGES_CXX14_CONSTEXPR
+            auto operator()(I it, difference_type_t<I> n, I bound) const ->
+                CONCEPT_return_type(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n, std::move(bound));
                 return it;
@@ -287,19 +296,21 @@ namespace ranges
         struct iter_enumerate_fn
         {
         private:
-            CONCEPT_template(typename I, typename S, typename D)(
-                requires not SizedSentinel<I, I>)
+            template<typename I, typename S, typename D>
             RANGES_CXX14_CONSTEXPR
-            std::pair<D, I> impl_i(I begin, S end, D d, sentinel_tag) const
+            auto impl_i(I begin, S end, D d, sentinel_tag) const ->
+                CONCEPT_return_type(std::pair<D, I>)(
+                    requires not SizedSentinel<I, I>)
             {
                 for(; begin != end; ++begin)
                     ++d;
                 return {d, begin};
             }
-            CONCEPT_template(typename I, typename S, typename D)(
-                requires SizedSentinel<I, I>)
+            template<typename I, typename S, typename D>
             RANGES_CXX14_CONSTEXPR
-            std::pair<D, I> impl_i(I begin, S end_, D d, sentinel_tag) const
+            auto impl_i(I begin, S end_, D d, sentinel_tag) const ->
+                CONCEPT_return_type(std::pair<D, I>)(
+                    requires SizedSentinel<I, I>)
             {
                 I end = ranges::next(begin, end_);
                 auto n = static_cast<D>(end - begin);
@@ -315,10 +326,11 @@ namespace ranges
                 return {n + d, ranges::next(begin, end)};
             }
         public:
-            CONCEPT_template(typename I, typename S, typename D = difference_type_t<I>)(
-                requires Iterator<I> && Sentinel<S, I> && Integral<D>)
+            template<typename I, typename S, typename D = difference_type_t<I>>
             RANGES_CXX14_CONSTEXPR
-            std::pair<D, I> operator()(I begin, S end, D d = 0) const
+            auto operator()(I begin, S end, D d = 0) const ->
+                CONCEPT_return_type(std::pair<D, I>)(
+                    requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             {
                 return this->impl_i(std::move(begin), std::move(end), d,
                     sentinel_tag_of<S, I>());
@@ -347,10 +359,11 @@ namespace ranges
                 return n + d;
             }
         public:
-            CONCEPT_template(typename I, typename S, typename D = difference_type_t<I>)(
-                requires Iterator<I> && Sentinel<S, I> && Integral<D>)
+            template<typename I, typename S, typename D = difference_type_t<I>>
             RANGES_CXX14_CONSTEXPR
-            D operator()(I begin, S end, D d = 0) const
+            auto operator()(I begin, S end, D d = 0) const ->
+                CONCEPT_return_type(D)(
+                    requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             {
                 return this->impl_i(std::move(begin), std::move(end), d,
                     sentinel_tag_of<S, I>());
@@ -389,10 +402,11 @@ namespace ranges
                 return  0;
             }
         public:
-            CONCEPT_template(typename I, typename S)(
-                requires InputIterator<I> && Sentinel<S, I>)
+            template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            int operator()(I begin, S end, difference_type_t<I> n) const
+            auto operator()(I begin, S end, difference_type_t<I> n) const ->
+                CONCEPT_return_type(int)(
+                    requires InputIterator<I> && Sentinel<S, I>)
             {
                 return this->impl_i(std::move(begin), std::move(end), n,
                     sentinel_tag_of<S, I>());
@@ -406,10 +420,11 @@ namespace ranges
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
         {
-            CONCEPT_template(typename I, typename S)(
-                requires SizedSentinel<S, I>)
+            template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
-            size_type_t<I> operator()(I const& begin, S end) const
+            auto operator()(I const& begin, S end) const ->
+                CONCEPT_return_type(size_type_t<I>)(
+                    requires SizedSentinel<S, I>)
             {
                 difference_type_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
@@ -581,9 +596,10 @@ namespace ranges
             ostream_iterator(ostream_type &s, Char const *d = nullptr) noexcept
               : sout_(&s), delim_(d)
             {}
-            CONCEPT_template(typename U, typename V = meta::if_<std::is_void<T>, U, T>)(
-                requires ConvertibleTo<U, V const&>)
-            ostream_iterator& operator=(U &&value)
+            template<typename U>
+            auto operator=(U &&value) ->
+                CONCEPT_return_type(ostream_iterator &)(
+                    requires ConvertibleTo<U, meta::if_<std::is_void<T>, U, T> const&>)
             {
                 RANGES_EXPECT(sout_);
                 *sout_ << value;
@@ -703,10 +719,11 @@ namespace ranges
                 {
                     return it_;
                 }
-                CONCEPT_template(typename J)(
-                    requires Sentinel<J, I>)
+                template<typename J>
                 RANGES_CXX14_CONSTEXPR
-                bool equal(reverse_cursor<J> const& that) const
+                auto equal(reverse_cursor<J> const& that) const ->
+                    CONCEPT_return_type(bool)(
+                        requires Sentinel<J, I>)
                 {
                     return it_ == that.it_;
                 }
@@ -726,11 +743,11 @@ namespace ranges
                 {
                     it_ -= n;
                 }
-                CONCEPT_template(typename J)(
-                    requires SizedSentinel<J, I>)
+                template<typename J>
                 RANGES_CXX14_CONSTEXPR
-                difference_type_t<I>
-                distance_to(reverse_cursor<J> const &that) const
+                auto distance_to(reverse_cursor<J> const &that) const ->
+                    CONCEPT_return_type(difference_type_t<I>)(
+                        requires SizedSentinel<J, I>)
                 {
                     return it_ - that.base();
                 }
@@ -781,9 +798,10 @@ namespace ranges
             move_iterator(move_iterator<O> const &i)
               : current_(i.base())
             {}
-            CONCEPT_template(typename O)(
-                requires ConvertibleTo<O, I>)
-            move_iterator & operator=(move_iterator<O> const & i)
+            template<typename O>
+            auto operator=(move_iterator<O> const & i) ->
+                CONCEPT_return_type(move_iterator &)(
+                    requires ConvertibleTo<O, I>)
             {
                 current_ = i.base();
                 return *this;
@@ -852,63 +870,70 @@ namespace ranges
             }
         };
 
-        CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparableWith<I1, I2>)
-        bool operator==(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator==(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires EqualityComparableWith<I1, I2>)
         {
             return x.base() == y.base();
         }
-        CONCEPT_template(typename I1, typename I2)(
-            requires EqualityComparableWith<I1, I2>)
-        bool operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires EqualityComparableWith<I1, I2>)
         {
             return !(x == y);
         }
-        CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>)
-        bool operator<(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator<(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<I1, I2>)
         {
             return x.base() < y.base();
         }
-        CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>)
-        bool operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<I1, I2>)
         {
             return !(y < x);
         }
-        CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>)
-        bool operator>(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator>(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<I1, I2>)
         {
             return y < x;
         }
-        CONCEPT_template(typename I1, typename I2)(
-            requires StrictTotallyOrderedWith<I1, I2>)
-        bool operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<I1, I2>)
         {
             return !(x < y);
         }
 
-        CONCEPT_template(typename I1, typename I2)(
-            requires SizedSentinel<I1, I2>)
-        difference_type_t<I2> operator-(move_iterator<I1> const &x, move_iterator<I2> const &y)
+        template<typename I1, typename I2>
+        auto operator-(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
+            CONCEPT_return_type(difference_type_t<I2>)(
+                requires SizedSentinel<I1, I2>)
         {
             return x.base() - y.base();
         }
-        CONCEPT_template(typename I)(
-            requires RandomAccessIterator<I>)
-        move_iterator<I> operator+(difference_type_t<I> n, move_iterator<I> const &x)
+        template<typename I>
+        auto operator+(difference_type_t<I> n, move_iterator<I> const &x) ->
+            CONCEPT_return_type(move_iterator<I>)(
+                requires RandomAccessIterator<I>)
         {
             return x + n;
         }
 
-        //CONCEPT_assert(InputIterator<move_iterator<int*>>);
-
         struct make_move_iterator_fn
         {
-            CONCEPT_template(typename I)(
-                requires InputIterator<I>)
-            constexpr move_iterator<I> operator()(I it) const
+            template<typename I>
+            constexpr auto operator()(I it) const ->
+                CONCEPT_return_type(move_iterator<I>)(
+                    requires InputIterator<I>)
             {
                 return move_iterator<I>{detail::move(it)};
             }
@@ -933,9 +958,10 @@ namespace ranges
             constexpr explicit move_sentinel(move_sentinel<OS> const &that)
               : sent_(that.base())
             {}
-            CONCEPT_template(typename OS)(
-                requires ConvertibleTo<OS, S>)
-            move_sentinel & operator=(move_sentinel<OS> const &that)
+            template<typename OS>
+            auto operator=(move_sentinel<OS> const &that) ->
+                CONCEPT_return_type(move_sentinel &)(
+                    requires ConvertibleTo<OS, S>)
             {
                 sent_ = that.base();
                 return *this;
@@ -946,43 +972,49 @@ namespace ranges
             }
         };
 
-        CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>)
-        bool operator==(move_iterator<I> const &i, move_sentinel<S> const &s)
+        template<typename I, typename S>
+        auto operator==(move_iterator<I> const &i, move_sentinel<S> const &s) ->
+            CONCEPT_return_type(bool)(
+                requires Sentinel<S, I>)
         {
             return i.base() == s.base();
         }
-        CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>)
-        bool operator==(move_sentinel<S> const &s, move_iterator<I> const &i)
+        template<typename I, typename S>
+        auto operator==(move_sentinel<S> const &s, move_iterator<I> const &i) ->
+            CONCEPT_return_type(bool)(
+                requires Sentinel<S, I>)
         {
             return s.base() == i.base();
         }
-        CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>)
-        bool operator!=(move_iterator<I> const &i, move_sentinel<S> const &s)
+        template<typename I, typename S>
+        auto operator!=(move_iterator<I> const &i, move_sentinel<S> const &s) ->
+            CONCEPT_return_type(bool)(
+                requires Sentinel<S, I>)
         {
             return i.base() != s.base();
         }
-        CONCEPT_template(typename I, typename S)(
-            requires Sentinel<S, I>)
-        bool operator!=(move_sentinel<S> const &s, move_iterator<I> const &i)
+        template<typename I, typename S>
+        auto operator!=(move_sentinel<S> const &s, move_iterator<I> const &i) ->
+            CONCEPT_return_type(bool)(
+                requires Sentinel<S, I>)
         {
             return s.base() != i.base();
         }
 
         struct make_move_sentinel_fn
         {
-            CONCEPT_template(typename I)(
-                requires InputIterator<I>)
-            constexpr move_iterator<I> operator()(I i) const
+            template<typename I>
+            constexpr auto operator()(I i) const ->
+                CONCEPT_return_type(move_iterator<I>)(
+                    requires InputIterator<I>)
             {
                 return move_iterator<I>{detail::move(i)};
             }
 
-            CONCEPT_template(typename S)(
-                requires Semiregular<S> && !InputIterator<S>)
-            constexpr move_sentinel<S> operator()(S s) const
+            template<typename S>
+            constexpr auto operator()(S s) const ->
+                CONCEPT_return_type(move_sentinel<S>)(
+                    requires Semiregular<S> && !InputIterator<S>)
             {
                 return move_sentinel<S>{detail::move(s)};
             }
@@ -1035,15 +1067,17 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_template(typename T)(
-                    requires Writable<I, aux::move_t<T>>)
-                void write(T &&t) noexcept(noexcept(*it_ = std::move(t)))
+                template<typename T>
+                auto write(T &&t) noexcept(noexcept(*it_ = std::move(t))) ->
+                    CONCEPT_return_type(void)(
+                        requires Writable<I, aux::move_t<T>>)
                 {
                     *it_ = std::move(t);
                 }
-                CONCEPT_template(typename T)(
-                    requires Writable<I, aux::move_t<T>>)
-                void write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
+                template<typename T>
+                auto write(T &&t) const noexcept(noexcept(*it_ = std::move(t))) ->
+                    CONCEPT_return_type(void)(
+                        requires Writable<I, aux::move_t<T>>)
                 {
                     *it_ = std::move(t);
                 }
@@ -1073,11 +1107,11 @@ namespace ranges
                 {
                     return that.it_ - it_;
                 }
-                CONCEPT_template(typename II = I)(
-                    requires Same<I, II> && Readable<II>)
+                template<typename II = I const>
                 RANGES_CXX14_CONSTEXPR
-                rvalue_reference_t<II const> move() const
-                    noexcept(noexcept(iter_move(std::declval<II const&>())))
+                auto move() const noexcept(has_nothrow_iter_move<II>::value) ->
+                    CONCEPT_return_type(rvalue_reference_t<II>)(
+                        requires Same<I const, II> && Readable<II>)
                 {
                     return iter_move(it_);
                 }

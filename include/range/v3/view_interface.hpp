@@ -100,23 +100,25 @@ namespace ranges
             {
                 return Cardinality == 0;
             }
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> &&
-                    Cardinality < 0 && Cardinality != infinite &&
-                    Range<D> && ForwardIterator<iterator_t<D>>)
-            RANGES_CXX14_CONSTEXPR bool empty()
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto empty()
                 noexcept(noexcept(bool(ranges::begin(std::declval<D &>()) ==
-                    ranges::end(std::declval<D &>()))))
+                    ranges::end(std::declval<D &>())))) ->
+                CONCEPT_return_type(bool)(
+                    requires Same<D, Derived> &&
+                        Cardinality < 0 && Cardinality != infinite &&
+                        Range<D> && ForwardIterator<iterator_t<D>>)
             {
                 return bool(ranges::begin(derived()) == ranges::end(derived()));
             }
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> &&
-                    Cardinality < 0 && Cardinality != infinite &&
-                    Range<D const> && ForwardIterator<iterator_t<D const>>)
-            constexpr bool empty() const
+            template<typename D = Derived>
+            constexpr auto empty() const
                 noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
-                    ranges::end(std::declval<D const &>()))))
+                    ranges::end(std::declval<D const &>())))) ->
+                CONCEPT_return_type(bool)(
+                    requires Same<D, Derived> &&
+                        Cardinality < 0 && Cardinality != infinite &&
+                        Range<D const> && ForwardIterator<iterator_t<D const>>)
             {
                 return bool(ranges::begin(derived()) == ranges::end(derived()));
             }
@@ -135,81 +137,91 @@ namespace ranges
                 return !ranges::empty(derived());
             }
             /// Access the size of the range, if it can be determined:
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && Cardinality >= 0)
-            static constexpr range_size_type_t<D> size() noexcept
+            template<typename D = Derived>
+            static constexpr auto size() noexcept ->
+                CONCEPT_return_type(range_size_type_t<D>)(
+                    requires Same<D, Derived> && Cardinality >= 0)
             {
                 return static_cast<range_size_type_t<D>>(Cardinality);
             }
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && Cardinality < 0 &&
-                    SizedSentinel<sentinel_t<D>, iterator_t<D>> &&
-                    ForwardRange<D>)
-            RANGES_CXX14_CONSTEXPR range_size_type_t<D> size()
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto size() ->
+                CONCEPT_return_type(range_size_type_t<D>)(
+                    requires Same<D, Derived> && Cardinality < 0 &&
+                        SizedSentinel<sentinel_t<D>, iterator_t<D>> &&
+                        ForwardRange<D>)
             {
                 return iter_size(derived().begin(), derived().end());
             }
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && Cardinality < 0 &&
-                    SizedSentinel<sentinel_t<D const>, iterator_t<D const>> &&
-                    ForwardRange<D const>)
-            constexpr range_size_type_t<D> size() const
+            template<typename D = Derived>
+            constexpr auto size() const ->
+                CONCEPT_return_type(range_size_type_t<D>)(
+                    requires Same<D, Derived> && Cardinality < 0 &&
+                        SizedSentinel<sentinel_t<D const>, iterator_t<D const>> &&
+                        ForwardRange<D const>)
             {
                 return iter_size(derived().begin(), derived().end());
             }
             /// Access the first element in a range:
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && ForwardRange<D>)
-            RANGES_CXX14_CONSTEXPR range_reference_t<D> front()
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto front() ->
+                CONCEPT_return_type(range_reference_t<D>)(
+                    requires Same<D, Derived> && ForwardRange<D>)
             {
                 return *derived().begin();
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && ForwardRange<D const>)
-            constexpr range_reference_t<D const> front() const
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto front() const ->
+                CONCEPT_return_type(range_reference_t<D const>)(
+                    requires Same<D, Derived> && ForwardRange<D const>)
             {
                 return *derived().begin();
             }
             /// Access the last element in a range:
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> &&
-                    BoundedRange<D> &&
-                    BidirectionalRange<D>)
-            RANGES_CXX14_CONSTEXPR range_reference_t<D> back()
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto back() ->
+                CONCEPT_return_type(range_reference_t<D>)(
+                    requires Same<D, Derived> &&
+                        BoundedRange<D> &&
+                        BidirectionalRange<D>)
             {
                 return *prev(derived().end());
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> &&
-                    BoundedRange<D const> &&
-                    BidirectionalRange<D const>)
-            constexpr range_reference_t<D const> back() const
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR auto back() const ->
+                CONCEPT_return_type(range_reference_t<D const>)(
+                    requires Same<D, Derived> &&
+                        BoundedRange<D const> &&
+                        BidirectionalRange<D const>)
             {
                 return *prev(derived().end());
             }
             /// Simple indexing:
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && RandomAccessRange<D>)
-            RANGES_CXX14_CONSTEXPR range_reference_t<D>
-            operator[](range_difference_type_t<D> n)
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](range_difference_type_t<D> n) ->
+                CONCEPT_return_type(range_reference_t<D>)(
+                    requires Same<D, Derived> && RandomAccessRange<D>)
             {
                 return derived().begin()[n];
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && RandomAccessRange<D const>)
-            constexpr range_reference_t<D const>
-            operator[](range_difference_type_t<D> n) const
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](range_difference_type_t<D> n) const ->
+                CONCEPT_return_type(range_reference_t<D const>)(
+                    requires Same<D, Derived> && RandomAccessRange<D const>)
             {
                 return derived().begin()[n];
             }
             /// Returns a reference to the element at specified location pos, with bounds checking.
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> && RandomAccessRange<D> && SizedRange<D>)
-            RANGES_CXX14_CONSTEXPR range_reference_t<D>
-            at(range_difference_type_t<D> n)
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR
+            auto at(range_difference_type_t<D> n) ->
+                CONCEPT_return_type(range_reference_t<D>)(
+                    requires Same<D, Derived> && RandomAccessRange<D> && SizedRange<D>)
             {
                 using size_type = range_size_type_t<Derived>;
                 if (n < 0 || size_type(n) >= ranges::size(derived()))
@@ -219,12 +231,13 @@ namespace ranges
                 return derived().begin()[n];
             }
             /// \overload
-            CONCEPT_template(typename D = Derived)(
-                requires Same<D, Derived> &&
-                    RandomAccessRange<D const> &&
-                    SizedRange<D const>)
-            RANGES_CXX14_CONSTEXPR range_reference_t<D const>
-            at(range_difference_type_t<D> n) const
+            template<typename D = Derived>
+            RANGES_CXX14_CONSTEXPR
+            auto at(range_difference_type_t<D> n) const ->
+                CONCEPT_return_type(range_reference_t<D const>)(
+                    requires Same<D, Derived> &&
+                        RandomAccessRange<D const> &&
+                        SizedRange<D const>)
             {
                 using size_type = range_size_type_t<Derived>;
                 if (n < 0 || size_type(n) >= ranges::size(derived()))
@@ -235,262 +248,217 @@ namespace ranges
             }
             /// Python-ic slicing:
             //      rng[{4,6}]
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>> offs) & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D &,
                         range_difference_type_t<D>,
-                        range_difference_type_t<D>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D &,
-                range_difference_type_t<D>,
-                range_difference_type_t<D>>
-            operator[](detail::slice_bounds<range_difference_type_t<D>> offs) &
+                        range_difference_type_t<D>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            constexpr
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>> offs) const & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D const &,
                         range_difference_type_t<D>,
-                        range_difference_type_t<D>>)
-            constexpr
-            invoke_result_t<
-                Slice,
-                D const &,
-                range_difference_type_t<D>,
-                range_difference_type_t<D>>
-            operator[](detail::slice_bounds<range_difference_type_t<D>> offs) const &
+                        range_difference_type_t<D>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>> offs) && ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D,
                         range_difference_type_t<D>,
-                        range_difference_type_t<D>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D,
-                range_difference_type_t<D>,
-                range_difference_type_t<D>>
-            operator[](detail::slice_bounds<range_difference_type_t<D>> offs) &&
+                        range_difference_type_t<D>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
             //      rng[{4,end-2}]
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    range_difference_type_t<D>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D &,
                         range_difference_type_t<D>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D &,
-                range_difference_type_t<D>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    range_difference_type_t<D>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) &
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    range_difference_type_t<D>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) const & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D const &,
                         range_difference_type_t<D>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            constexpr
-            invoke_result_t<
-                Slice,
-                D const &,
-                range_difference_type_t<D>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    range_difference_type_t<D>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) const &
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    range_difference_type_t<D>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) && ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D,
                         range_difference_type_t<D>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D,
-                range_difference_type_t<D>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    range_difference_type_t<D>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) &&
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
             //      rng[{end-4,end-2}]
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    detail::from_end_<range_difference_type_t<D>>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D &,
                         detail::from_end_<range_difference_type_t<D>>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D &,
-                detail::from_end_<range_difference_type_t<D>>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    detail::from_end_<range_difference_type_t<D>>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) &
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    detail::from_end_<range_difference_type_t<D>>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) const & ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D const &,
                         detail::from_end_<range_difference_type_t<D>>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            constexpr
-            invoke_result_t<
-                Slice,
-                D const &,
-                detail::from_end_<range_difference_type_t<D>>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    detail::from_end_<range_difference_type_t<D>>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) const &
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
+                detail::slice_bounds<
+                    detail::from_end_<range_difference_type_t<D>>,
+                    detail::from_end_<range_difference_type_t<D>>> offs) && ->
+                CONCEPT_return_type(
+                    invoke_result_t<
                         Slice,
                         D,
                         detail::from_end_<range_difference_type_t<D>>,
-                        detail::from_end_<range_difference_type_t<D>>>)
-            RANGES_CXX14_CONSTEXPR
-            invoke_result_t<
-                Slice,
-                D,
-                detail::from_end_<range_difference_type_t<D>>,
-                detail::from_end_<range_difference_type_t<D>>>
-            operator[](
-                detail::slice_bounds<
-                    detail::from_end_<range_difference_type_t<D>>,
-                    detail::from_end_<range_difference_type_t<D>>> offs) &&
+                        detail::from_end_<range_difference_type_t<D>>>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
             //      rng[{4,end}]
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<Slice, D &, range_difference_type_t<D>, end_fn>)
-            RANGES_CXX14_CONSTEXPR invoke_result_t<Slice, D &, range_difference_type_t<D>, end_fn>
-            operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) &
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) & ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D &, range_difference_type_t<D>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<Slice, D const &, range_difference_type_t<D>, end_fn>)
-            constexpr invoke_result_t<Slice, D const &, range_difference_type_t<D>, end_fn>
-            operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) const &
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) const & ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D const &, range_difference_type_t<D>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<Slice, D, range_difference_type_t<D>, end_fn>)
-            RANGES_CXX14_CONSTEXPR invoke_result_t<Slice, D, range_difference_type_t<D>, end_fn>
-            operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) &&
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) && ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D, range_difference_type_t<D>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
             //      rng[{end-4,end}]
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<Slice, D &, detail::from_end_<range_difference_type_t<D>>, end_fn>)
+            template<typename D = Derived, typename Slice = view::slice_fn>
             RANGES_CXX14_CONSTEXPR
-            invoke_result_t<Slice, D &, detail::from_end_<range_difference_type_t<D>>, end_fn>
-            operator[](
-                detail::slice_bounds<detail::from_end_<range_difference_type_t<D>>, end_fn> offs) &
+            auto operator[](
+                detail::slice_bounds<detail::from_end_<range_difference_type_t<D>>, end_fn> offs) & ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D &, detail::from_end_<range_difference_type_t<D>>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
-                        Slice,
-                        D const &,
-                        detail::from_end_<range_difference_type_t<D>>,
-                        end_fn>)
-            constexpr
-            invoke_result_t<
-                Slice,
-                D const &,
-                detail::from_end_<range_difference_type_t<D>>,
-                end_fn>
-            operator[](
+            template<typename D = Derived, typename Slice = view::slice_fn>
+            RANGES_CXX14_CONSTEXPR
+            auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
-                    end_fn> offs) const &
+                    end_fn> offs) const & ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D const &, detail::from_end_<range_difference_type_t<D>>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
             /// \overload
-            CONCEPT_template(typename D = Derived, typename Slice = view::slice_fn)(
-                requires Same<D, Derived> &&
-                    Invocable<
-                        Slice,
-                        D,
-                        detail::from_end_<range_difference_type_t<D>>,
-                        end_fn>)
+            template<typename D = Derived, typename Slice = view::slice_fn>
             RANGES_CXX14_CONSTEXPR
-            invoke_result_t<Slice, D, detail::from_end_<range_difference_type_t<D>>, end_fn>
-            operator[](
+            auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
-                    end_fn> offs) &&
+                    end_fn> offs) && ->
+                CONCEPT_return_type(
+                    invoke_result_t<Slice, D, detail::from_end_<range_difference_type_t<D>>, end_fn>)(
+                    requires Same<D, Derived>)
             {
                 return Slice{}(detail::move(derived()), offs.from, offs.to);
             }
@@ -510,9 +478,10 @@ namespace ranges
             }
             /// \brief Print a range to an ostream
         private:
-            CONCEPT_template(typename Stream, typename Rng)(
-                requires Same<Derived, meta::_t<std::remove_cv<Rng>>>)
-            static Stream & print_(Stream &sout, Rng &rng)
+            template<typename Stream, typename Rng>
+            static auto print_(Stream &sout, Rng &rng) ->
+                CONCEPT_return_type(Stream &)(
+                    requires Same<Derived, meta::_t<std::remove_cv<Rng>>>)
             {
                 sout << '[';
                 auto it = ranges::begin(rng);
@@ -532,7 +501,7 @@ namespace ranges
 
             template<typename D = Derived>
             friend auto operator<<(std::ostream &sout, Derived const &rng) ->
-                CONCEPT_broken_friend_return_type(std::ostream&)(
+                CONCEPT_broken_friend_return_type(std::ostream &)(
                     requires Same<D, Derived> && InputRange<D const>)
             {
                 return view_interface::print_(sout, rng);
@@ -540,7 +509,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived>
             friend auto operator<<(std::ostream &sout, Derived &rng) ->
-                CONCEPT_broken_friend_return_type(std::ostream&)(
+                CONCEPT_broken_friend_return_type(std::ostream &)(
                     requires Same<D, Derived> && not Range<D const> && InputRange<D>)
             {
                 return view_interface::print_(sout, rng);
@@ -548,7 +517,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived>
             friend auto operator<<(std::ostream &sout, Derived &&rng) ->
-                CONCEPT_broken_friend_return_type(std::ostream&)(
+                CONCEPT_broken_friend_return_type(std::ostream &)(
                     requires Same<D, Derived> && not Range<D const> && InputRange<D>)
             {
                 return view_interface::print_(sout, rng);

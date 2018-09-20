@@ -134,51 +134,57 @@ namespace ranges
             }
 
             // Assignment
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts...> &, detail::args<Us &...>>)
-            common_tuple & operator=(std::tuple<Us...> &that)
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> &that)
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value) ->
+                CONCEPT_return_type(common_tuple &)(
+                    requires Assignable<detail::args<Ts...> &, detail::args<Us &...>>)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
                 return *this;
             }
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts...> &, detail::args<Us const &...>>)
-            common_tuple & operator=(std::tuple<Us...> const & that)
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> const & that)
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value) ->
+                CONCEPT_return_type(common_tuple &)(
+                    requires Assignable<detail::args<Ts...> &, detail::args<Us const &...>>)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
                 return *this;
             }
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts...> &, detail::args<Us...>>)
-            common_tuple & operator=(std::tuple<Us...> &&that)
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> &&that)
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us>::value...>::value) ->
+                CONCEPT_return_type(common_tuple &)(
+                    requires Assignable<detail::args<Ts...> &, detail::args<Us...>>)
             {
                 (void)tuple_transform(base(), std::move(that), element_assign_{});
                 return *this;
             }
 
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts const...> &, detail::args<Us &...>>)
-            common_tuple const & operator=(std::tuple<Us...> &that) const
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> &that) const
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &>::value...>::value) ->
+                CONCEPT_return_type(common_tuple const &)(
+                    requires Assignable<detail::args<Ts const...> &, detail::args<Us &...>>)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
                 return *this;
             }
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts const...> &, detail::args<Us const &...>>)
-            common_tuple const & operator=(std::tuple<Us...> const & that) const
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> const & that) const
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us const &>::value...>::value) ->
+                CONCEPT_return_type(common_tuple const &)(
+                    requires Assignable<detail::args<Ts const...> &, detail::args<Us const &...>>)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
                 return *this;
             }
-            CONCEPT_template(typename...Us)(
-                requires Assignable<detail::args<Ts const...> &, detail::args<Us...>>)
-            common_tuple const & operator=(std::tuple<Us...> &&that) const
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value)
+            template<typename...Us>
+            auto operator=(std::tuple<Us...> &&that) const
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts const &, Us &&>::value...>::value) ->
+                CONCEPT_return_type(common_tuple const &)(
+                    requires Assignable<detail::args<Ts const...> &, detail::args<Us...>>)
             {
                 (void)tuple_transform(base(), std::move(that), element_assign_{});
                 return *this;
@@ -256,21 +262,21 @@ namespace ranges
 
         // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)\
-        CONCEPT_template(typename...Ts, typename...Us)(\
-            requires And<CONCEPT<Ts, Us>...>)\
-        bool operator OP(common_tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        template<typename...Ts, typename...Us>\
+        auto operator OP(common_tuple<Ts...> const &a, common_tuple<Us...> const &b) ->\
+            CONCEPT_return_type(bool)(requires And<CONCEPT<Ts, Us>...>)\
         {\
             return a.base() OP b.base();\
         }\
-        CONCEPT_template(typename...Ts, typename...Us)(\
-            requires And<CONCEPT<Ts, Us>...>)\
-        bool operator OP(std::tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        template<typename...Ts, typename...Us>\
+        auto operator OP(std::tuple<Ts...> const &a, common_tuple<Us...> const &b) ->\
+            CONCEPT_return_type(bool)(requires And<CONCEPT<Ts, Us>...>)\
         {\
             return a OP b.base();\
         }\
-        CONCEPT_template(typename...Ts, typename...Us)(\
-            requires And<CONCEPT<Ts, Us>...>)\
-        bool operator OP(common_tuple<Ts...> const &a, std::tuple<Us...> const &b)\
+        template<typename...Ts, typename...Us>\
+        auto operator OP(common_tuple<Ts...> const &a, std::tuple<Us...> const &b) ->\
+            CONCEPT_return_type(bool)(requires And<CONCEPT<Ts, Us>...>)\
         {\
             return a.base() OP b;\
         }\
@@ -374,62 +380,68 @@ namespace ranges
             }
 
             // Assignment
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F &, F2 &> && Assignable<S &, S2 &>)
-            common_pair & operator=(std::pair<F2, S2> &that)
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> &that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &>::value &&
-                         std::is_nothrow_assignable<S &, S2 &>::value)
+                         std::is_nothrow_assignable<S &, S2 &>::value) ->
+                CONCEPT_return_type(common_pair &)(
+                    requires Assignable<F &, F2 &> && Assignable<S &, S2 &>)
             {
                 this->first = that.first;
                 this->second = that.second;
                 return *this;
             }
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F &, F2 const &> && Assignable<S &, S2 const &>)
-            common_pair & operator=(std::pair<F2, S2> const & that)
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> const & that)
                 noexcept(std::is_nothrow_assignable<F &, F2 const &>::value &&
-                         std::is_nothrow_assignable<S &, S2 const &>::value)
+                         std::is_nothrow_assignable<S &, S2 const &>::value) ->
+                CONCEPT_return_type(common_pair &)(
+                    requires Assignable<F &, F2 const &> && Assignable<S &, S2 const &>)
             {
                 this->first = that.first;
                 this->second = that.second;
                 return *this;
             }
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F &, F2> && Assignable<S &, S2>)
-            common_pair & operator=(std::pair<F2, S2> &&that)
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_assignable<F &, F2>::value &&
-                         std::is_nothrow_assignable<S &, S2>::value)
+                         std::is_nothrow_assignable<S &, S2>::value) ->
+                CONCEPT_return_type(common_pair &)(
+                    requires Assignable<F &, F2> && Assignable<S &, S2>)
             {
                 this->first = static_cast<F2 &&>(that.first);
                 this->second = static_cast<S2 &&>(that.second);
                 return *this;
             }
 
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F const &, F2 &> && Assignable<S const &, S2 &>)
-            common_pair const & operator=(std::pair<F2, S2> &that) const
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> &that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 &>::value &&
-                         std::is_nothrow_assignable<S const &, S2 &>::value)
+                         std::is_nothrow_assignable<S const &, S2 &>::value) ->
+                CONCEPT_return_type(common_pair const &)(
+                    requires Assignable<F const &, F2 &> && Assignable<S const &, S2 &>)
             {
                 this->first = that.first;
                 this->second = that.second;
                 return *this;
             }
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F const &, F2 const &> && Assignable<S const &, S2 const &>)
-            common_pair const & operator=(std::pair<F2, S2> const & that) const
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> const & that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 const &>::value &&
-                         std::is_nothrow_assignable<S const &, S2 const &>::value)
+                         std::is_nothrow_assignable<S const &, S2 const &>::value) ->
+                CONCEPT_return_type(common_pair const &)(
+                    requires Assignable<F const &, F2 const &> && Assignable<S const &, S2 const &>)
             {
                 this->first = that.first;
                 this->second = that.second;
                 return *this;
             }
-            CONCEPT_template(typename F2, typename S2)(
-                requires Assignable<F const &, F2 &&> && Assignable<S const &, S2 &&>)
-            common_pair const & operator=(std::pair<F2, S2> &&that) const
+            template<typename F2, typename S2>
+            auto operator=(std::pair<F2, S2> &&that) const
                 noexcept(std::is_nothrow_assignable<F const &, F2 &&>::value &&
-                         std::is_nothrow_assignable<S const &, S2 &&>::value)
+                         std::is_nothrow_assignable<S const &, S2 &&>::value) ->
+                CONCEPT_return_type(common_pair const &)(
+                    requires Assignable<F const &, F2> && Assignable<S const &, S2>)
             {
                 this->first = static_cast<F2 &&>(that.first);
                 this->second = static_cast<S2 &&>(that.second);
@@ -438,58 +450,64 @@ namespace ranges
         };
 
         // Logical operators
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
-        bool operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
         {
             return a.first == b.first && a.second == b.second;
         }
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
-        bool operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
         {
             return a.first == b.first && a.second == b.second;
         }
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
-        bool operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires EqualityComparableWith<F1, F2> && EqualityComparableWith<S1, S2>)
         {
             return a.first == b.first && a.second == b.second;
         }
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
-        bool operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
-        bool operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(
-            requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
-        bool operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        template<typename F1, typename S1, typename F2, typename S2>
+        auto operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b) ->
+            CONCEPT_return_type(bool)(
+                requires StrictTotallyOrderedWith<F1, F2> && StrictTotallyOrderedWith<S1, S2>)
         {
             return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
         }
 #define LOGICAL_OP(OP, CONCEPT, RET)\
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
-            requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
-        bool operator OP(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        template<typename F1, typename S1, typename F2, typename S2>\
+        auto operator OP(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->\
+            CONCEPT_return_type(bool)(requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
         {\
             return RET;\
         }\
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
-            requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
-        bool operator OP(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        template<typename F1, typename S1, typename F2, typename S2>\
+        auto operator OP(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b) ->\
+            CONCEPT_return_type(bool)(requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
         {\
             return RET;\
         }\
-        CONCEPT_template(typename F1, typename S1, typename F2, typename S2)(\
-            requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
-        bool operator OP(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)\
+        template<typename F1, typename S1, typename F2, typename S2>\
+        auto operator OP(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b) ->\
+            CONCEPT_return_type(bool)(requires CONCEPT<F1, F2> && CONCEPT<S1, S2>)\
         {\
             return RET;\
         }\

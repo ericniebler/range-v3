@@ -93,10 +93,11 @@ namespace ranges
                     return *this;
                 }
                 // \pre Requires ranges::distance(r) <= N
-                CONCEPT_template(typename R)(
-                    requires InputRange<R> &&
-                        Assignable<T &, range_reference_t<R>>)
-                indexed_datum &operator=(R &&r)
+                template<typename R>
+                auto operator=(R &&r) ->
+                    CONCEPT_return_type(indexed_datum &)(
+                        requires InputRange<R> &&
+                            Assignable<T &, range_reference_t<R>>)
                 {
                     ranges::copy(r, data_);
                     return *this;

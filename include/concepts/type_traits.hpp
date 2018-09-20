@@ -103,10 +103,16 @@ namespace concepts
             using decay_t = typename std::decay<T>::type;
 
         #if !defined(__GNUC__) || defined(__clang__)
+            template<typename T, typename U, typename = void>
+            struct _builtin_common_2
+            {};
+            template<typename T, typename U>
+            struct _builtin_common_2<T, U, meta::void_<_cond_res<as_cref_t<T>, as_cref_t<U>>>>
+              : std::decay<_cond_res<as_cref_t<T>, as_cref_t<U>>>
+            {};
             template<typename T, typename U, typename /* = void */>
             struct _builtin_common
-              : meta::lazy::let<
-                    meta::defer<decay_t, meta::defer<_cond_res, as_cref_t<T>, as_cref_t<U>>>>
+              : _builtin_common_2<T, U>
             {};
             template<typename T, typename U>
             struct _builtin_common<T &&, U &&, meta::if_<meta::and_<

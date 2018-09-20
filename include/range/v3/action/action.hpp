@@ -82,19 +82,20 @@ namespace ranges
                 friend pipeable_access;
 
                 // Piping requires things are passed by value.
-                CONCEPT_template(typename Rng, typename Act)(
-                    requires ActionPipeConcept<Action, Rng>)
-                static auto pipe(Rng &&rng, Act &&act)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    invoke(act.action_, detail::move(rng))
-                )
+                template<typename Rng, typename Act>
+                static auto pipe(Rng &&rng, Act &&act) ->
+                    CONCEPT_return_type(invoke_result_t<Action &, Rng>)(
+                        requires ActionPipeConcept<Action, Rng>)
+                {
+                    return invoke(act.action_, detail::move(rng));
+                }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
-                CONCEPT_template(typename Rng, typename Act)(
-                    requires not ActionPipeConcept<Action, Rng>)
-                static void pipe(Rng &&, Act &&)
+                template<typename Rng, typename Act>
+                static auto pipe(Rng &&, Act &&) ->
+                    CONCEPT_return_type(void)(
+                        requires not ActionPipeConcept<Action, Rng>)
                 {
                     CONCEPT_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");
@@ -116,13 +117,13 @@ namespace ranges
                 {}
 
                 // Calling directly requires things are passed by reference.
-                CONCEPT_template(typename Rng, typename...Rest)(
-                    requires ActionConcept<Action, Rng &, Rest...>)
-                auto operator()(Rng &rng, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    invoke(action_, rng, static_cast<Rest &&>(rest)...)
-                )
+                template<typename Rng, typename ...Rest>
+                auto operator()(Rng &rng, Rest &&... rest) const ->
+                    CONCEPT_return_type(invoke_result_t<Action const &, Rng &, Rest...>)(
+                        requires ActionConcept<Action const, Rng &, Rest...>)
+                {
+                    return invoke(action_, rng, static_cast<Rest &&>(rest)...);
+                }
 
                 // Currying overload.
                 template<typename T, typename... Rest, typename A = Action>
@@ -137,12 +138,13 @@ namespace ranges
                 )
             };
 
-            CONCEPT_template(typename Rng, typename Action)(
-                requires is_pipeable<Action>::value && Range<Rng &> &&
+            template<typename Rng, typename Action>
+            auto operator|=(Rng &rng, Action &&action) ->
+                CONCEPT_return_type(Rng &)(
+                    requires is_pipeable<Action>::value && Range<Rng &> &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &> &&
                     Same<ref_t<Rng &>,
                         invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>)
-            Rng & operator|=(Rng &rng, Action &&action)
             {
                 ref(rng) | action;
                 return rng;

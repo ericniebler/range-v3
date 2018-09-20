@@ -114,12 +114,6 @@ namespace concepts
         struct is_nothrow_swappable_with;
 
         template<typename T, typename U = T>
-        struct is_indirectly_swappable;
-
-        template<typename T, typename U = T>
-        struct is_nothrow_indirectly_swappable;
-
-        template<typename T, typename U = T>
         CONCEPTS_CXX14_CONSTEXPR
         meta::if_c<
             std::is_move_constructible<T>::value &&

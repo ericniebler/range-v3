@@ -245,12 +245,9 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CONCEPT_PP_DEF_IMPL_1(...)                                              \
     CONCEPT_PP_CAT(CONCEPT_PP_DEF_IMPL_1_, __VA_ARGS__) ), int>                 \
     /**/
-#define CONCEPT_PP_DEF_IMPL_1_requires                                          \
-    CONCEPT_PP_DEF_IMPL_1_REQUIRES                                              \
-    /**/
-#define CONCEPT_PP_DEF_IMPL_1_REQUIRES(...)                                     \
+#define CONCEPT_PP_DEF_IMPL_1_requires(...)                                     \
     (__VA_ARGS__) -> std::enable_if_t<bool(                                     \
-        ::concepts::detail::requires_  CONCEPT_PP_DEF_REQUIRES_BODY             \
+        ::concepts::detail::requires_ CONCEPT_PP_DEF_REQUIRES_BODY              \
     /**/
  #define CONCEPT_PP_DEF_REQUIRES_BODY(...)                                      \
     <decltype(__VA_ARGS__, void())>()                                           \

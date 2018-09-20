@@ -197,10 +197,11 @@ namespace ranges
                         swap_(meta::bool_<can_swap_trivially>{}, that);
                     }
                 protected:
-                    CONCEPT_template(typename... Args)(
-                        requires Constructible<T, Args...>)
-                    T &construct_from(Args &&... args)
-                        noexcept(std::is_nothrow_constructible<T, Args...>::value)
+                    template<typename... Args>
+                    auto construct_from(Args &&... args)
+                        noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
+                        CONCEPT_return_type(T &)(
+                            requires Constructible<T, Args...>)
                     {
                         RANGES_EXPECT(!engaged_);
                         auto const address = static_cast<void *>(std::addressof(data_));
@@ -209,7 +210,8 @@ namespace ranges
                         return data_;
                     }
                     template<typename U>
-                    RANGES_CXX14_CONSTEXPR void assign_from(U &&that)
+                    RANGES_CXX14_CONSTEXPR
+                    void assign_from(U &&that)
                         noexcept(
                             std::is_nothrow_constructible<T,
                                 decltype(*static_cast<U &&>(that))>::value &&
@@ -293,9 +295,11 @@ namespace ranges
                             ranges::swap(ptr_, that.ptr_);
                     }
                 protected:
-                    CONCEPT_template(typename U)(
-                        requires ConvertibleTo<U &, T &>)
-                    RANGES_CXX14_CONSTEXPR T & construct_from(U &&ref) noexcept
+                    template<typename U>
+                    RANGES_CXX14_CONSTEXPR
+                    auto construct_from(U &&ref) noexcept ->
+                        CONCEPT_return_type(T &)(
+                            requires ConvertibleTo<U &, T &>)
                     {
                         RANGES_EXPECT(!ptr_);
                         ptr_ = std::addressof(ref);
@@ -576,15 +580,16 @@ namespace ranges
             optional &operator=(optional const &) = default;
             optional &operator=(optional &&) = default;
 
-            CONCEPT_template(typename U = T)(
-                requires not defer::Same<optional, detail::decay_t<U>> &&
-                    !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
-                    defer::Constructible<T, U> &&
-                    defer::Assignable<T &, U>)
+            template<typename U = T>
             RANGES_CXX14_CONSTEXPR
-            optional & operator=(U &&u)
+            auto operator=(U &&u)
                 noexcept(std::is_nothrow_constructible<T, U>::value &&
-                    std::is_nothrow_assignable<T &, U>::value)
+                    std::is_nothrow_assignable<T &, U>::value) ->
+                CONCEPT_return_type(optional &)(
+                    requires not defer::Same<optional, detail::decay_t<U>> &&
+                        !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
+                        defer::Constructible<T, U> &&
+                        defer::Assignable<T &, U>)
             {
                 if (has_value())
                     **this = static_cast<U &&>(u);
@@ -593,41 +598,45 @@ namespace ranges
                 return *this;
             }
 
-            CONCEPT_template(typename U)(
-                requires OptionalShouldConvertAssign<U, T> &&
-                    Constructible<T, const U &> &&
-                    Assignable<T &, const U &>)
+            template<typename U>
             RANGES_CXX14_CONSTEXPR
-            optional & operator=(optional<U> const &that)
+            auto operator=(optional<U> const &that) ->
+                CONCEPT_return_type(optional &)(
+                    requires OptionalShouldConvertAssign<U, T> &&
+                        Constructible<T, const U &> &&
+                        Assignable<T &, const U &>)
             {
                 base_t::assign_from(that);
                 return *this;
             }
 
-            CONCEPT_template(typename U)(
-                requires OptionalShouldConvertAssign<U, T> &&
-                    Constructible<T, U> &&
-                    Assignable<T &, U>)
+            template<typename U>
             RANGES_CXX14_CONSTEXPR
-            optional & operator=(optional<U> &&that)
+            auto operator=(optional<U> &&that) ->
+                CONCEPT_return_type(optional &)(
+                    requires OptionalShouldConvertAssign<U, T> &&
+                        Constructible<T, U> &&
+                        Assignable<T &, U>)
             {
                 base_t::assign_from(std::move(that));
                 return *this;
             }
 
-            CONCEPT_template(typename... Args)(
-                requires Constructible<T, Args...>)
-            T & emplace(Args &&... args)
-                noexcept(std::is_nothrow_constructible<T, Args...>::value)
+            template<typename... Args>
+            auto emplace(Args &&... args)
+                noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
+                CONCEPT_return_type(T &)(
+                    requires Constructible<T, Args...>)
             {
                 reset();
                 return base_t::construct_from(static_cast<Args &&>(args)...);
             }
-            CONCEPT_template(typename E, typename... Args)(
-                requires Constructible<T, std::initializer_list<E> &, Args &&...>)
-            T & emplace(std::initializer_list<E> il, Args &&... args)
+            template<typename E, typename... Args>
+            auto emplace(std::initializer_list<E> il, Args &&... args)
                 noexcept(std::is_nothrow_constructible<
-                    T, std::initializer_list<E> &, Args...>::value)
+                    T, std::initializer_list<E> &, Args...>::value) ->
+                CONCEPT_return_type(T &)(
+                    requires Constructible<T, std::initializer_list<E> &, Args &&...>)
             {
                 reset();
                 return base_t::construct_from(il, static_cast<Args &&>(args)...);
@@ -664,15 +673,17 @@ namespace ranges
                     detail::move(**this);
             }
 
-            CONCEPT_template(typename U)(
-                requires CopyConstructible<T> && ConvertibleTo<U, T>)
-            constexpr T value_or(U &&u) const &
+            template<typename U>
+            constexpr auto value_or(U &&u) const & ->
+                CONCEPT_return_type(T)(
+                    requires CopyConstructible<T> && ConvertibleTo<U, T>)
             {
                 return has_value() ? **this : static_cast<T>((U &&)u);
             }
-            CONCEPT_template(typename U)(
-                requires MoveConstructible<T> && ConvertibleTo<U, T>)
-            RANGES_CXX14_CONSTEXPR T value_or(U &&u) &&
+            template<typename U>
+            constexpr auto value_or(U &&u) && ->
+                CONCEPT_return_type(T)(
+                    requires MoveConstructible<T> && ConvertibleTo<U, T>)
             {
                 return has_value() ? detail::move(**this) : static_cast<T>((U &&)u);
             }

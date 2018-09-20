@@ -28,9 +28,10 @@ namespace ranges
         {
             struct copy_fn : copy_tag
             {
-                CONCEPT_template(typename T)(
-                    requires Constructible<detail::decay_t<T>, T>)
-                detail::decay_t<T> operator()(T &&t) const
+                template<typename T>
+                auto operator()(T &&t) const ->
+                    CONCEPT_return_type(detail::decay_t<T>)(
+                        requires Constructible<detail::decay_t<T>, T>)
                 {
                     return static_cast<T &&>(t);
                 }
@@ -42,9 +43,10 @@ namespace ranges
 
             /// \ingroup group-utility
             /// \sa `copy_fn`
-            CONCEPT_template(typename T)(
-                requires Constructible<detail::decay_t<T>, T>)
-            detail::decay_t<T> operator|(T &&t, copy_fn)
+            template<typename T>
+            auto operator|(T &&t, copy_fn) ->
+                CONCEPT_return_type(detail::decay_t<T>)(
+                    requires Constructible<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
             }

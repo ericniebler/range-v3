@@ -39,9 +39,10 @@ namespace ranges
         /// @{
         struct equal_to
         {
-            CONCEPT_template(typename T, typename U)(
-                requires EqualityComparableWith<T, U>)
-            constexpr bool operator()(T &&t, U &&u) const
+            template<typename T, typename U>
+            constexpr auto operator()(T &&t, U &&u) const ->
+                CONCEPT_return_type(bool)(
+                    requires EqualityComparableWith<T, U>)
             {
                 return (T &&) t == (U &&) u;
             }
@@ -50,9 +51,10 @@ namespace ranges
 
         struct not_equal_to
         {
-            CONCEPT_template(typename T, typename U)(
-                requires EqualityComparableWith<T, U>)
-            constexpr bool operator()(T &&t, U &&u) const
+            template<typename T, typename U>
+            constexpr auto operator()(T &&t, U &&u) const ->
+                CONCEPT_return_type(bool)(
+                    requires EqualityComparableWith<T, U>)
             {
                 return (T &&) t != (U &&) u;
             }
@@ -61,9 +63,10 @@ namespace ranges
 
         struct less
         {
-            CONCEPT_template(typename T, typename U)(
-                requires StrictTotallyOrderedWith<T, U>)
-            constexpr bool operator()(T &&t, U &&u) const
+            template<typename T, typename U>
+            constexpr auto operator()(T &&t, U &&u) const ->
+                CONCEPT_return_type(bool)(
+                    requires StrictTotallyOrderedWith<T, U>)
             {
                 return (T &&) t < (U &&) u;
             }
