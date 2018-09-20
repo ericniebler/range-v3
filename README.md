@@ -67,6 +67,12 @@ The code is known to work on the following compilers:
 Release Notes:
 --------------
 
+* **0.3.7** Sept 19, 2018
+  - Improved support for clang-cl (thanks to @CaseyCarter).
+  - Fix for `any_view<T, category::sized | category::input>` (see #869).
+  - Fix `iter_move` of a `ranges::reverse_iterator` (see #888).
+  - Fix `move_sentinel` comparisons (see #889).
+  - Avoid ambiguity created by `boost::advance` and `std::advance` (see #893).
 * **0.3.6** May 15, 2018
   - NEW: `view::exclusive_scan` (thanks to GitHub user @mitsutaka-takeda).
   - All views get non-`const` overloads of `.empty()` and `.size()` (see [ericniebler/stl2\#793](https://github.com/ericniebler/stl2/issues/793)).
