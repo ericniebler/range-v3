@@ -107,8 +107,6 @@ private:
     }
 public:
     function_ref() = default;
-    function_ref(function_ref &) = default;
-    function_ref(function_ref const &) = default;
     template<typename T>
     function_ref(T const &t)
       : data_(&t)
