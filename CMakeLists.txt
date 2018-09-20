@@ -39,7 +39,9 @@ set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
 unset(CMAKE_REQUIRED_FLAGS)
 
-add_subdirectory(doc)
+if(RANGE_V3_DOCS)
+  add_subdirectory(doc)
+endif()
 
 if(RANGE_V3_TESTS)
   add_subdirectory(test)
