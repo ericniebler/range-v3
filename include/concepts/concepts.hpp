@@ -1,5 +1,5 @@
 /// \file
-//  Concepts emulation library
+//  CPP, the Concepts PreProcessor library
 //
 //  Copyright Eric Niebler 2018-present
 //  Copyright (c) 2018-present, Facebook, Inc.
@@ -15,8 +15,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef CONCEPT_S_HPP
-#define CONCEPT_S_HPP
+#ifndef CPP_S_HPP
+#define CPP_S_HPP
 
 // clang-format off
 
@@ -29,77 +29,77 @@
 // disable buggy compatibility warning about "requires" and "concept" being
 // C++20 keywords.
 #if defined(__clang__) || defined(__GNUC__)
-#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN \
-    _Pragma("GCC diagnostic push") \
-    _Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
-    _Pragma("GCC diagnostic ignored \"-Wpragmas\"") \
-    _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"") \
-    _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"") \
+#define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                        \
+    _Pragma("GCC diagnostic push")                                              \
+    _Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"")                     \
+    _Pragma("GCC diagnostic ignored \"-Wpragmas\"")                             \
+    _Pragma("GCC diagnostic ignored \"-Wc++2a-compat\"")                        \
+    _Pragma("GCC diagnostic ignored \"-Wfloat-equal\"")                         \
     /**/
-#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END \
+#define CPP_PP_IGNORE_CXX2A_COMPAT_END                                          \
     _Pragma("GCC diagnostic pop")
 #else
-#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
-#define CONCEPT_PP_IGNORE_CXX2A_COMPAT_END
+#define CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
+#define CPP_PP_IGNORE_CXX2A_COMPAT_END
 #endif
 
-CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
+CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #if defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606
-#define CONCEPT_INLINE_VAR inline
+#define CPP_INLINE_VAR inline
 #else
-#define CONCEPT_INLINE_VAR
+#define CPP_INLINE_VAR
 #endif
 
 #ifdef __clang__
-#define CONCEPT_PP_IS_SAME(...) __is_same(__VA_ARGS__)
+#define CPP_PP_IS_SAME(...) __is_same(__VA_ARGS__)
 #elif defined(__GNUC__) && __GNUC__ >= 6
-#define CONCEPT_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#define CPP_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
 #else
-#define CONCEPT_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#define CPP_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
 #endif
 
 #if __COUNTER__ != __COUNTER__
-#define CONCEPT_COUNTER __COUNTER__
+#define CPP_COUNTER __COUNTER__
 #else
-#define CONCEPT_COUNTER __LINE__
+#define CPP_COUNTER __LINE__
 #endif
 
-#define CONCEPT_PP_CHECK(...) CONCEPT_PP_CHECK_N(__VA_ARGS__, 0,)
-#define CONCEPT_PP_CHECK_N(x, n, ...) n
-#define CONCEPT_PP_PROBE(x) x, 1,
+#define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
+#define CPP_PP_CHECK_N(x, n, ...) n
+#define CPP_PP_PROBE(x) x, 1,
 
-// CONCEPT_CXX_VA_OPT
-#ifndef CONCEPT_CXX_VA_OPT
+// CPP_CXX_VA_OPT
+#ifndef CPP_CXX_VA_OPT
 #if __cplusplus > 201703L
-#define CONCEPT_CXX_VA_OPT_(...) CONCEPT_PP_CHECK(__VA_OPT__(,) 1)
-#define CONCEPT_CXX_VA_OPT CONCEPT_CXX_VA_OPT_(~)
+#define CPP_CXX_VA_OPT_(...) CPP_PP_CHECK(__VA_OPT__(,) 1)
+#define CPP_CXX_VA_OPT CPP_CXX_VA_OPT_(~)
 #else
-#define CONCEPT_CXX_VA_OPT 0
+#define CPP_CXX_VA_OPT 0
 #endif
-#endif // CONCEPT_CXX_VA_OPT
+#endif // CPP_CXX_VA_OPT
 
-#define CONCEPT_PP_CAT_(X, ...)  X ## __VA_ARGS__
-#define CONCEPT_PP_CAT(X, ...)   CONCEPT_PP_CAT_(X, __VA_ARGS__)
-#define CONCEPT_PP_CAT2_(X, ...) X ## __VA_ARGS__
-#define CONCEPT_PP_CAT2(X, ...)  CONCEPT_PP_CAT2_(X, __VA_ARGS__)
+#define CPP_PP_CAT_(X, ...)  X ## __VA_ARGS__
+#define CPP_PP_CAT(X, ...)   CPP_PP_CAT_(X, __VA_ARGS__)
+#define CPP_PP_CAT2_(X, ...) X ## __VA_ARGS__
+#define CPP_PP_CAT2(X, ...)  CPP_PP_CAT2_(X, __VA_ARGS__)
 
-#define CONCEPT_PP_EVAL(X, ...) X(__VA_ARGS__)
-#define CONCEPT_PP_EVAL2(X, ...) X(__VA_ARGS__)
+#define CPP_PP_EVAL(X, ...) X(__VA_ARGS__)
+#define CPP_PP_EVAL2(X, ...) X(__VA_ARGS__)
 
-#define CONCEPT_PP_EXPAND(...) __VA_ARGS__
-#define CONCEPT_PP_EAT(...)
+#define CPP_PP_EXPAND(...) __VA_ARGS__
+#define CPP_PP_EAT(...)
 
-#define CONCEPT_PP_IS_PAREN(x) CONCEPT_PP_CHECK(CONCEPT_PP_IS_PAREN_PROBE x)
-#define CONCEPT_PP_IS_PAREN_PROBE(...) CONCEPT_PP_PROBE(~)
+#define CPP_PP_IS_PAREN(x) CPP_PP_CHECK(CPP_PP_IS_PAREN_PROBE x)
+#define CPP_PP_IS_PAREN_PROBE(...) CPP_PP_PROBE(~)
 
-#define CONCEPT_PP_COUNT(...)                                                   \
-    CONCEPT_PP_COUNT_(__VA_ARGS__,                                              \
+#define CPP_PP_COUNT(...)                                                       \
+    CPP_PP_COUNT_(__VA_ARGS__,                                                  \
         50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,            \
         30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,            \
         10,9,8,7,6,5,4,3,2,1,)                                                  \
         /**/
-#define CONCEPT_PP_COUNT_(                                                      \
+#define CPP_PP_COUNT_(                                                          \
     _1, _2, _3, _4, _5, _6, _7, _8, _9, _10,                                    \
     _11, _12, _13, _14, _15, _16, _17, _18, _19, _20,                           \
     _21, _22, _23, _24, _25, _26, _27, _28, _29, _30,                           \
@@ -108,25 +108,33 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     N                                                                           \
     /**/
 
-#define CONCEPT_PP_IIF(BIT) CONCEPT_PP_CAT_(CONCEPT_PP_IIF_, BIT)
-#define CONCEPT_PP_IIF_0(TRUE, ...) __VA_ARGS__
-#define CONCEPT_PP_IIF_1(TRUE, ...) TRUE
+#define CPP_PP_IIF(BIT) CPP_PP_CAT_(CPP_PP_IIF_, BIT)
+#define CPP_PP_IIF_0(TRUE, ...) __VA_ARGS__
+#define CPP_PP_IIF_1(TRUE, ...) TRUE
 
-#define CONCEPT_PP_EMPTY()
-#define CONCEPT_PP_COMMA() ,
-#define CONCEPT_PP_COMMA_IIF(X)                                                 \
-    CONCEPT_PP_IIF(X)(CONCEPT_PP_EMPTY, CONCEPT_PP_COMMA)()
+#define CPP_PP_LPAREN (
 
-#define CONCEPT_assert(...)                                                     \
+#define CPP_PP_NOT(BIT) CPP_PP_CAT_(CPP_PP_NOT_, BIT)
+#define CPP_PP_NOT_0 1
+#define CPP_PP_NOT_1 0
+
+#define CPP_PP_EMPTY()
+#define CPP_PP_COMMA() ,
+#define CPP_PP_COMMA_IIF(X)                                                     \
+    CPP_PP_IIF(X)(CPP_PP_EMPTY, CPP_PP_COMMA)()                                 \
+    /**/
+
+#define CPP_assert(...)                                                         \
     static_assert((bool) (__VA_ARGS__),                                         \
-        "Concept assertion failed : " #__VA_ARGS__)
-#define CONCEPT_assert_msg static_assert
+        "Concept assertion failed : " #__VA_ARGS__)                             \
+    /**/
+#define CPP_assert_msg static_assert
 
 ////////////////////////////////////////////////////////////////////////////////
-// CONCEPT_DEF
+// CPP_DEF
 //   For defining concepts with a syntax symilar to C++20. For example:
 //
-//     CONCEPT_DEF(
+//     CPP_DEF(
 //         // The Assignable concept from the C++20
 //         template(typename T, typename U)
 //         concept Assignable,
@@ -136,17 +144,17 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //             ) &&
 //             std::is_lvalue_reference_v<T>
 //     );
-#define CONCEPT_def(DECL, ...)                                                  \
-    CONCEPT_PP_EVAL(                                                            \
-        CONCEPT_PP_DECL_DEF,                                                    \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_DECL_, DECL),                             \
+#define CPP_def(DECL, ...)                                                      \
+    CPP_PP_EVAL(                                                                \
+        CPP_PP_DECL_DEF,                                                        \
+        CPP_PP_CAT(CPP_PP_DEF_DECL_, DECL),                                     \
         __VA_ARGS__)                                                            \
     /**/
-#define CONCEPT_PP_DECL_DEF_NAME(...)                                           \
-    CONCEPT_PP_CAT(CONCEPT_PP_DEF_, __VA_ARGS__),                               \
+#define CPP_PP_DECL_DEF_NAME(...)                                               \
+    CPP_PP_CAT(CPP_PP_DEF_, __VA_ARGS__),                                       \
     /**/
-#define CONCEPT_PP_DECL_DEF(TPARAM, NAME, ...)                                  \
-    CONCEPT_PP_CAT(CONCEPT_PP_DECL_DEF_, CONCEPT_PP_IS_PAREN(NAME))(            \
+#define CPP_PP_DECL_DEF(TPARAM, NAME, ...)                                      \
+    CPP_PP_CAT(CPP_PP_DECL_DEF_, CPP_PP_IS_PAREN(NAME))(                        \
         TPARAM,                                                                 \
         NAME,                                                                   \
         __VA_ARGS__)                                                            \
@@ -155,11 +163,11 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //   template(typename A, typename B = void, typename... Rest)
 //   (concept Name)(A, B, Rest...),
 //      // requirements...
-#define CONCEPT_PP_DECL_DEF_1(TPARAM, NAME, ...)                                \
-    CONCEPT_PP_EVAL2(                                                           \
-        CONCEPT_PP_DECL_DEF_IMPL,                                               \
+#define CPP_PP_DECL_DEF_1(TPARAM, NAME, ...)                                    \
+    CPP_PP_EVAL2(                                                               \
+        CPP_PP_DECL_DEF_IMPL,                                                   \
         TPARAM,                                                                 \
-        CONCEPT_PP_DECL_DEF_NAME NAME,                                          \
+        CPP_PP_DECL_DEF_NAME NAME,                                              \
         __VA_ARGS__)                                                            \
     /**/
 // The defn is of the form:
@@ -167,11 +175,11 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //   concept Name,
 //      // requirements...
 // Compute the template arguments (A, B) from the template introducer.
-#define CONCEPT_PP_DECL_DEF_0(TPARAM, NAME, ...)                                \
-    CONCEPT_PP_DECL_DEF_IMPL(                                                   \
+#define CPP_PP_DECL_DEF_0(TPARAM, NAME, ...)                                    \
+    CPP_PP_DECL_DEF_IMPL(                                                       \
         TPARAM,                                                                 \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, NAME),                                  \
-        (CONCEPT_PP_CAT(CONCEPT_PP_AUX_, TPARAM)),                              \
+        CPP_PP_CAT(CPP_PP_DEF_, NAME),                                          \
+        (CPP_PP_CAT(CPP_PP_AUX_, TPARAM)),                                      \
         __VA_ARGS__)                                                            \
     /**/
 // Expand the template definition into a struct and template alias like:
@@ -189,47 +197,47 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //    inline constexpr bool Name = NameConcept::is_satisfied_by<A, B>(0);
 #if defined(__cpp_concepts) && __cpp_concepts > 0
 // No requires expression
-#define CONCEPT_PP_DEF_IMPL_0(...)                                              \
+#define CPP_PP_DEF_IMPL_0(...)                                                  \
     __VA_ARGS__                                                                 \
     /**/
 // Requires expression
-#define CONCEPT_PP_DEF_IMPL_1(...)                                              \
-    CONCEPT_PP_CAT(CONCEPT_PP_DEF_IMPL_1_, __VA_ARGS__)                         \
+#define CPP_PP_DEF_IMPL_1(...)                                                  \
+    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__)                                 \
     /**/
-#define CONCEPT_PP_DEF_IMPL_1_requires                                          \
-    requires CONCEPT_PP_DEF_IMPL_1_REQUIRES                                     \
+#define CPP_PP_DEF_IMPL_1_requires                                              \
+    requires CPP_PP_DEF_IMPL_1_REQUIRES                                         \
     /**/
-#define CONCEPT_PP_DEF_IMPL_1_REQUIRES(...)                                     \
-    (__VA_ARGS__) CONCEPT_PP_DEF_IMPL_1_REQUIRES_BODY                           \
+#define CPP_PP_DEF_IMPL_1_REQUIRES(...)                                         \
+    (__VA_ARGS__) CPP_PP_DEF_IMPL_1_REQUIRES_BODY                               \
     /**/
-#define CONCEPT_PP_DEF_IMPL_1_REQUIRES_BODY(...)                                \
+#define CPP_PP_DEF_IMPL_1_REQUIRES_BODY(...)                                    \
     { __VA_ARGS__; }                                                            \
     /**/
-#define CONCEPT_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                       \
+#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
     inline namespace _eager_ {                                                  \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
-        concept bool NAME = CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);     \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
+        concept bool NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
-    struct CONCEPT_PP_CAT(NAME, Concept) {                                      \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
+    struct CPP_PP_CAT(NAME, Concept) {                                          \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
-            using Concept = CONCEPT_PP_CAT(NAME, Concept);                      \
+            using Concept = CPP_PP_CAT(NAME, Concept);                          \
             explicit constexpr operator bool() const noexcept {                 \
-                return (bool) _eager_::NAME<CONCEPT_PP_EXPAND ARGS>;            \
+                return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
                 return ::concepts::detail::Not<Eval>{};                         \
             }                                                                   \
-            template<typename That>                                               \
+            template<typename That>                                             \
             constexpr auto operator&&(That) const noexcept {                    \
                 return ::concepts::detail::And<Eval, That>{};                   \
             }                                                                   \
         };                                                                      \
     };                                                                          \
     namespace lazy {                                                            \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
-        CONCEPT_INLINE_VAR constexpr auto NAME =                                \
-            CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};      \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
+        CPP_INLINE_VAR constexpr auto NAME =                                    \
+            CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};              \
     }                                                                           \
     namespace defer {                                                           \
         using namespace _eager_;                                                \
@@ -238,32 +246,32 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #else
 // No requires expression:
-#define CONCEPT_PP_DEF_IMPL_0(...)                                              \
+#define CPP_PP_DEF_IMPL_0(...)                                                  \
     () -> std::enable_if_t<bool(__VA_ARGS__), int>                              \
     /**/
 // Requires expression:
-#define CONCEPT_PP_DEF_IMPL_1(...)                                              \
-    CONCEPT_PP_CAT(CONCEPT_PP_DEF_IMPL_1_, __VA_ARGS__) ), int>                 \
+#define CPP_PP_DEF_IMPL_1(...)                                                  \
+    CPP_PP_CAT(CPP_PP_DEF_IMPL_1_, __VA_ARGS__) ), int>                         \
     /**/
-#define CONCEPT_PP_DEF_IMPL_1_requires(...)                                     \
+#define CPP_PP_DEF_IMPL_1_requires(...)                                         \
     (__VA_ARGS__) -> std::enable_if_t<bool(                                     \
-        ::concepts::detail::requires_ CONCEPT_PP_DEF_REQUIRES_BODY              \
+        ::concepts::detail::requires_ CPP_PP_DEF_REQUIRES_BODY                  \
     /**/
- #define CONCEPT_PP_DEF_REQUIRES_BODY(...)                                      \
+ #define CPP_PP_DEF_REQUIRES_BODY(...)                                          \
     <decltype(__VA_ARGS__, void())>()                                           \
     /**/
-#define CONCEPT_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                       \
-    struct CONCEPT_PP_CAT(NAME, Concept) {                                      \
-        using Concept = CONCEPT_PP_CAT(NAME, Concept);                          \
-        CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN                                    \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
-        static auto Requires_ CONCEPT_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);   \
-        CONCEPT_PP_IGNORE_CXX2A_COMPAT_END                                      \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
+#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
+    struct CPP_PP_CAT(NAME, Concept) {                                          \
+        using Concept = CPP_PP_CAT(NAME, Concept);                              \
+        CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN                                        \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
+        static auto Requires_ CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);       \
+        CPP_PP_IGNORE_CXX2A_COMPAT_END                                          \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
             template<typename C_ = Concept>                                     \
             static constexpr decltype(                                          \
-                &C_::template Requires_<CONCEPT_PP_EXPAND ARGS>, true)          \
+                &C_::template Requires_<CPP_PP_EXPAND ARGS>, true)              \
             impl(int) noexcept { return true; }                                 \
             static constexpr bool impl(long) noexcept { return false; }         \
             explicit constexpr operator bool() const noexcept {                 \
@@ -278,13 +286,13 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
             }                                                                   \
         };                                                                      \
     };                                                                          \
-    CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                     \
-    CONCEPT_INLINE_VAR constexpr bool NAME =                                    \
-        (bool)CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};    \
+    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
+    CPP_INLINE_VAR constexpr bool NAME =                                        \
+        (bool)CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};            \
     namespace lazy {                                                            \
-        CONCEPT_PP_CAT(CONCEPT_PP_DEF_, TPARAM)                                 \
-        CONCEPT_INLINE_VAR constexpr auto NAME =                                \
-            CONCEPT_PP_CAT(NAME, Concept)::Eval<CONCEPT_PP_EXPAND ARGS>{};      \
+        CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
+        CPP_INLINE_VAR constexpr auto NAME =                                    \
+            CPP_PP_CAT(NAME, Concept)::Eval<CPP_PP_EXPAND ARGS>{};              \
     }                                                                           \
     namespace defer {                                                           \
         using namespace lazy;                                                   \
@@ -293,155 +301,211 @@ CONCEPT_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #endif
 
-#define CONCEPT_PP_REQUIRES_PROBE_requires                                      \
-    CONCEPT_PP_PROBE(~)                                                         \
+#define CPP_PP_REQUIRES_PROBE_requires                                          \
+    CPP_PP_PROBE(~)                                                             \
     /**/
-#define CONCEPT_PP_DEF_IMPL(REQUIRES, ...)                                      \
-    CONCEPT_PP_CAT(                                                             \
-        CONCEPT_PP_DEF_IMPL_,                                                   \
-        CONCEPT_PP_CHECK(CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_PROBE_, REQUIRES))) \
+#define CPP_PP_DEF_IMPL(REQUIRES, ...)                                          \
+    CPP_PP_CAT(                                                                 \
+        CPP_PP_DEF_IMPL_,                                                       \
+        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
     /**/
-#define CONCEPT_PP_DEF_DECL_template(...)                                       \
+#define CPP_PP_DEF_DECL_template(...)                                           \
     template(__VA_ARGS__),                                                      \
     /**/
-#define CONCEPT_PP_DEF_template(...)                                            \
+#define CPP_PP_DEF_template(...)                                                \
     template<__VA_ARGS__>                                                       \
     /**/
-#define CONCEPT_PP_DEF_concept
-#define CONCEPT_PP_DEF_class
-#define CONCEPT_PP_DEF_typename
-#define CONCEPT_PP_DEF_int
-#define CONCEPT_PP_DEF_bool
-#define CONCEPT_PP_DEF_size_t
-#define CONCEPT_PP_DEF_unsigned
-#define CONCEPT_PP_AUX_template(...)                                            \
-    CONCEPT_PP_CAT2(                                                            \
-        CONCEPT_PP_TPARAM_,                                                     \
-        CONCEPT_PP_COUNT(__VA_ARGS__))(__VA_ARGS__)                             \
+#define CPP_PP_DEF_concept
+#define CPP_PP_DEF_class
+#define CPP_PP_DEF_typename
+#define CPP_PP_DEF_int
+#define CPP_PP_DEF_bool
+#define CPP_PP_DEF_size_t
+#define CPP_PP_DEF_unsigned
+#define CPP_PP_AUX_template(...)                                                \
+    CPP_PP_CAT2(                                                                \
+        CPP_PP_TPARAM_,                                                         \
+        CPP_PP_COUNT(__VA_ARGS__))(__VA_ARGS__)                                 \
     /**/
-#define CONCEPT_PP_TPARAM_1(_1)                                                 \
-    CONCEPT_PP_CAT2(CONCEPT_PP_DEF_, _1)
-#define CONCEPT_PP_TPARAM_2(_1, ...)                                            \
-    CONCEPT_PP_CAT2(CONCEPT_PP_DEF_, _1), CONCEPT_PP_TPARAM_1(__VA_ARGS__)
-#define CONCEPT_PP_TPARAM_3(_1, ...)                                            \
-    CONCEPT_PP_CAT2(CONCEPT_PP_DEF_, _1), CONCEPT_PP_TPARAM_2(__VA_ARGS__)
-#define CONCEPT_PP_TPARAM_4(_1, ...)                                            \
-    CONCEPT_PP_CAT2(CONCEPT_PP_DEF_, _1), CONCEPT_PP_TPARAM_3(__VA_ARGS__)
-#define CONCEPT_PP_TPARAM_5(_1, ...)                                            \
-    CONCEPT_PP_CAT2(CONCEPT_PP_DEF_, _1), CONCEPT_PP_TPARAM_4(__VA_ARGS__)
+#define CPP_PP_TPARAM_1(_1)                                                     \
+    CPP_PP_CAT2(CPP_PP_DEF_, _1)
+#define CPP_PP_TPARAM_2(_1, ...)                                                \
+    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_1(__VA_ARGS__)
+#define CPP_PP_TPARAM_3(_1, ...)                                                \
+    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_2(__VA_ARGS__)
+#define CPP_PP_TPARAM_4(_1, ...)                                                \
+    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_3(__VA_ARGS__)
+#define CPP_PP_TPARAM_5(_1, ...)                                                \
+    CPP_PP_CAT2(CPP_PP_DEF_, _1), CPP_PP_TPARAM_4(__VA_ARGS__)
+
+#define CPP_PP_PROBE_EMPTY_PROBE_CPP_PP_PROBE_EMPTY                             \
+    CPP_PP_PROBE(~)                                                             \
+
+#define CPP_PP_PROBE_EMPTY()
+#define CPP_PP_IS_NOT_EMPTY(...)                                                \
+    CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_PROBE_EMPTY_PROBE_,                          \
+        CPP_PP_PROBE_EMPTY __VA_ARGS__ ()))                                     \
+    /**/
 
 ////////////////////////////////////////////////////////////////////////////////
-// CONCEPT_template
+// CPP_template
 // Usage:
-//   CONCEPT_template (class A, typename B)
+//   CPP_template (class A, typename B)
 //     (requires Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
 // or
-//   CONCEPT_template (class A, typename B)
+//   CPP_template (class A, typename B)
 //     (requires requires (expr1, expr2, expr3) && Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
 #if defined(__cpp_concepts) && __cpp_concepts > 0
-#define CONCEPT_template(...)                                                   \
-    template<__VA_ARGS__> CONCEPT_TEMPLATE_AUX_                                 \
+#define CPP_template(...)                                                       \
+    template<__VA_ARGS__> CPP_TEMPLATE_AUX_                                     \
     /**/
-#define CONCEPT_TEMPLATE_AUX_(...)                                              \
-    CONCEPT_TEMPLATE_AUX_4(CONCEPT_PP_CAT(CONCEPT_TEMPLATE_AUX_3_, __VA_ARGS__))\
+#define CPP_TEMPLATE_AUX_(...)                                                  \
+    CPP_TEMPLATE_AUX_4(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__))            \
     /**/
-#define CONCEPT_TEMPLATE_AUX_3_requires
-#define CONCEPT_TEMPLATE_AUX_4(...)                                             \
-    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                           \
+#define CPP_TEMPLATE_AUX_3_requires
+#define CPP_TEMPLATE_AUX_4(...)                                                 \
+    CPP_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                               \
     /**/
-#define CONCEPT_TEMPLATE_AUX_5(REQUIRES, ...)                                   \
-    CONCEPT_PP_CAT(                                                             \
-        CONCEPT_TEMPLATE_AUX_5_,                                                \
-        CONCEPT_PP_CHECK(CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_PROBE_, REQUIRES))) \
+#define CPP_TEMPLATE_AUX_5(REQUIRES, ...)                                       \
+    CPP_PP_CAT(                                                                 \
+        CPP_TEMPLATE_AUX_5_,                                                    \
+        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
     /**/
 // No requires expression:
-#define CONCEPT_TEMPLATE_AUX_5_0(...)                                           \
+#define CPP_TEMPLATE_AUX_5_0(...)                                               \
     requires __VA_ARGS__                                                        \
     /**/
 // Requires expression
-#define CONCEPT_TEMPLATE_AUX_5_1(...)                                           \
-    CONCEPT_PP_CAT(CONCEPT_TEMPLATE_AUX_6_, __VA_ARGS__)                        \
+#define CPP_TEMPLATE_AUX_5_1(...)                                               \
+    CPP_PP_CAT(CPP_TEMPLATE_AUX_6_, __VA_ARGS__)                                \
     /**/
-#define CONCEPT_TEMPLATE_AUX_6_requires(...)\
-    requires requires { __VA_ARGS__; }
+#define CPP_TEMPLATE_AUX_6_requires(...)                                        \
+    requires requires { __VA_ARGS__; }                                          \
+    /**/
+#define CPP_member
+#define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
+#define CPP_CTOR_IMPL_1_(...)                                                   \
+    (__VA_ARGS__) CPP_PP_EXPAND                                                 \
+    /**/
 #else
-#define CONCEPT_template(...)                                                   \
-    template<__VA_ARGS__ CONCEPT_TEMPLATE_AUX_
-#define CONCEPT_TEMPLATE_AUX_(...) ,                                            \
-    int (*CONCEPT_PP_CAT(_pushmi_concept_unique_, __LINE__))[                   \
-        CONCEPT_COUNTER] = nullptr,                                             \
-    std::enable_if_t<CONCEPT_PP_CAT(_pushmi_concept_unique_, __LINE__) ||       \
-        bool(CONCEPT_TEMPLATE_AUX_4(CONCEPT_PP_CAT(                             \
-            CONCEPT_TEMPLATE_AUX_3_, __VA_ARGS__))), int> = 0>                  \
+#define CPP_template(...)                                                       \
+    template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
     /**/
-#define CONCEPT_TEMPLATE_AUX_3_requires
-#define CONCEPT_TEMPLATE_AUX_4(...)                                             \
-    CONCEPT_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                           \
+#define CPP_TEMPLATE_AUX_(...) ,                                                \
+    bool (&CPP_true)(::concepts::detail::Nil) =                                 \
+        ::concepts::detail::CPP_true,                                           \
+    std::enable_if_t<                                                           \
+        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
+            CPP_TEMPLATE_AUX_3_, __VA_ARGS__))) &&                              \
+        CPP_true(::concepts::detail::Nil{}), int> = 0>                          \
     /**/
-#define CONCEPT_TEMPLATE_AUX_5(REQUIRES, ...)                                   \
-    CONCEPT_PP_CAT(                                                             \
-        CONCEPT_TEMPLATE_AUX_5_,                                                \
-        CONCEPT_PP_CHECK(CONCEPT_PP_CAT(CONCEPT_PP_REQUIRES_PROBE_, REQUIRES))) \
+#define CPP_TEMPLATE_AUX_3_requires
+#define CPP_TEMPLATE_AUX_4(...)                                                 \
+    CPP_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                               \
+    /**/
+#define CPP_TEMPLATE_AUX_5(REQUIRES, ...)                                       \
+    CPP_PP_CAT(                                                                 \
+        CPP_TEMPLATE_AUX_5_,                                                    \
+        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
     /**/
 // No requires expression:
-#define CONCEPT_TEMPLATE_AUX_5_0(...)                                           \
+#define CPP_TEMPLATE_AUX_5_0(...)                                               \
     __VA_ARGS__                                                                 \
     /**/
-#define CONCEPT_TEMPLATE_AUX_5_1(...)                                           \
-    CONCEPT_PP_CAT(CONCEPT_TEMPLATE_AUX_6_, __VA_ARGS__)                        \
+#define CPP_TEMPLATE_AUX_5_1(...)                                               \
+    CPP_PP_CAT(CPP_TEMPLATE_AUX_6_, __VA_ARGS__)                                \
     /**/
-#define CONCEPT_TEMPLATE_AUX_6_requires(...)                                    \
+#define CPP_TEMPLATE_AUX_6_requires(...)                                        \
     ::concepts::detail::requires_<decltype(__VA_ARGS__)>()                      \
     /**/
+#define CPP_member                                                              \
+    CPP_broken_friend_member                                                    \
+    /**/
+#define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
+#define CPP_CTOR_IMPL_1_(...)                                                   \
+    (__VA_ARGS__                                                                \
+        CPP_PP_COMMA_IIF(                                                       \
+            CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \
+    CPP_CTOR_REQUIRES                                                           \
+    /**/
+#define CPP_CTOR_PROBE_NOEXCEPT_noexcept                                        \
+    CPP_PP_PROBE(~)                                                             \
+    /**/
+#define CPP_CTOR_MAKE_PROBE(FIRST,...)                                          \
+    CPP_PP_CAT(CPP_CTOR_PROBE_NOEXCEPT_, FIRST)                                 \
+    /**/
+#define CPP_CTOR_REQUIRES(...)                                                  \
+    CPP_PP_CAT(CPP_CTOR_REQUIRES_,                                              \
+    CPP_PP_CHECK(CPP_CTOR_MAKE_PROBE(__VA_ARGS__,)))(__VA_ARGS__)               \
+    /**/
+// No noexcept-clause:
+#define CPP_CTOR_REQUIRES_0(...)                                                \
+    std::enable_if_t<                                                           \
+        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
+            CPP_TEMPLATE_AUX_3_, __VA_ARGS__))) &&                              \
+        CPP_true(::concepts::detail::Nil{}), ::concepts::detail::Nil> = {})     \
+    /**/
+// Yes noexcept-clause:
+#define CPP_CTOR_REQUIRES_1(...)                                                \
+    std::enable_if_t<                                                           \
+        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
+            CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(                                    \
+                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__)))) &&                      \
+        CPP_true(::concepts::detail::Nil{}), ::concepts::detail::Nil> = {})     \
+        CPP_PP_EXPAND(                                                          \
+            CPP_PP_CAT(CPP_CTOR_SHOW_NOEXCEPT_, __VA_ARGS__)))                  \
+    /**/
+#define CPP_CTOR_EAT_NOEXCEPT_noexcept(...)
+#define CPP_CTOR_SHOW_NOEXCEPT_noexcept(...)                                    \
+    noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \
+    /**/
 #endif
 
 
 #if defined(__cpp_concepts) && __cpp_concepts > 0
-#define CONCEPT_BROKEN_SUBSUMPTION(...)
-#define CONCEPT_TYPE_CONSTRAINT(...) __VA_ARGS__
-#else
-#define CONCEPT_BROKEN_SUBSUMPTION(...) __VA_ARGS__
-#define CONCEPT_TYPE_CONSTRAINT(...) class
-#endif
-
-
-#if defined(__cpp_concepts) && __cpp_concepts > 0
-#define CONCEPT_PP_CONSTRAINED_USING(REQUIRES, NAME, ...)                       \
+#define CPP_PP_CONSTRAINED_USING(REQUIRES, NAME, ...)                           \
     requires REQUIRES                                                           \
   using NAME __VA_ARGS__                                                        \
   /**/
 #else
-#define CONCEPT_PP_CONSTRAINED_USING(REQUIRES, NAME, ...)                       \
+#define CPP_PP_CONSTRAINED_USING(REQUIRES, NAME, ...)                           \
   using NAME std::enable_if_t<bool(REQUIRES), __VA_ARGS__>                      \
   /**/
 #endif
 
-#define CONCEPT_requires(...) CONCEPT_template(typename = void)(requires __VA_ARGS__)
+#define CPP_requires(...)                                                       \
+    CPP_template(typename...)(requires __VA_ARGS__)                             \
+    /**/
 
-#define CONCEPT_broken_friend_return_type(...)                                  \
+#define CPP_broken_friend_ret(...)                                              \
     ::concepts::detail::enable_if_t<__VA_ARGS__,                                \
-    CONCEPT_BROKEN_FRIEND_RETURN_TYPE_AUX_                                      \
+    CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                                          \
     /**/
-#define CONCEPT_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                             \
-    CONCEPT_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CONCEPT_PP_CAT(                    \
-        CONCEPT_TEMPLATE_AUX_2_, __VA_ARGS__))                                  \
+#define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                                 \
+    CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CPP_PP_CAT(                            \
+        CPP_TEMPLATE_AUX_2_, __VA_ARGS__))                                      \
     /**/
-#define CONCEPT_TEMPLATE_AUX_2_requires
-#define CONCEPT_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                           \
-    bool(__VA_ARGS__)>                                                          \
+#define CPP_TEMPLATE_AUX_2_requires
+#define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
+    (bool)(__VA_ARGS__) && CPP_true(::concepts::detail::Nil{})>                 \
+    /**/
+#define CPP_broken_friend_member                                                \
+    template<bool (&CPP_true)(::concepts::detail::Nil) =                        \
+        ::concepts::detail::CPP_true>                                           \
     /**/
 
 #if defined(__cpp_concepts) && __cpp_concepts > 0
-#define CONCEPT_return_type(...)                                                \
-    __VA_ARGS__ CONCEPT_PP_EXPAND                                               \
+#define CPP_ret(...)                                                            \
+    __VA_ARGS__ CPP_PP_EXPAND                                                   \
     /**/
 #else
-#define CONCEPT_return_type                                                     \
-    CONCEPT_broken_friend_return_type
+#define CPP_ret                                                                 \
+    CPP_broken_friend_ret                                                       \
+    /**/
 #endif
 
 namespace concepts 
@@ -453,10 +517,10 @@ namespace concepts
 
 #if defined(__cpp_fold_expressions) && __cpp_fold_expressions >= 201603
         template<bool...Bs>
-        CONCEPT_INLINE_VAR constexpr bool and_v = (Bs &&...);
+        CPP_INLINE_VAR constexpr bool and_v = (Bs &&...);
 
         template<bool...Bs>
-        CONCEPT_INLINE_VAR constexpr bool or_v = (Bs ||...);
+        CPP_INLINE_VAR constexpr bool or_v = (Bs ||...);
 #else
         namespace detail
         {
@@ -465,12 +529,12 @@ namespace concepts
         } // namespace detail
 
         template<bool...Bs>
-        CONCEPT_INLINE_VAR constexpr bool and_v =
-        CONCEPT_PP_IS_SAME(detail::bools<Bs..., true>, detail::bools<true, Bs...>);
+        CPP_INLINE_VAR constexpr bool and_v =
+        CPP_PP_IS_SAME(detail::bools<Bs..., true>, detail::bools<true, Bs...>);
 
         template<bool...Bs>
-        CONCEPT_INLINE_VAR constexpr bool or_v =
-        !CONCEPT_PP_IS_SAME(detail::bools<Bs..., false>, detail::bools<false, Bs...>);
+        CPP_INLINE_VAR constexpr bool or_v =
+        !CPP_PP_IS_SAME(detail::bools<Bs..., false>, detail::bools<false, Bs...>);
 #endif
 
         namespace detail
@@ -496,27 +560,46 @@ namespace concepts
                 }
             };
             template<typename T, typename U>
-            struct And {
-                static constexpr bool impl(std::false_type) noexcept { return false; }
-                static constexpr bool impl(std::true_type) noexcept { return (bool) U{}; }
-                explicit constexpr operator bool() const noexcept {
+            struct And
+            {
+                static constexpr bool impl(std::false_type) noexcept
+                {
+                    return false;
+                }
+                static constexpr bool impl(std::true_type) noexcept
+                {
+                    return (bool) U{};
+                }
+                explicit constexpr operator bool() const noexcept
+                {
                     return And::impl(bool_<(bool) T{}>{});
                 }
-                constexpr auto operator!() const noexcept {
+                constexpr auto operator!() const noexcept
+                {
                     return Not<And>{};
                 }
                 template<typename That>
-                constexpr auto operator&&(That) const noexcept {
+                constexpr auto operator&&(That) const noexcept
+                {
                     return detail::And<And, That>{};
                 }
             };
 
             template<typename T, bool Enable>
             using enable_if_t = std::enable_if_t<Enable, T>;
+
+            struct Nil
+            {};
+
+            inline constexpr bool CPP_true(Nil)
+            {
+                return true;
+            }
         } // namespace detail
 
         template<typename T>
-        constexpr bool implicitly_convertible_to(T) {
+        constexpr bool implicitly_convertible_to(T)
+        {
             return true;
         }
 
@@ -526,7 +609,7 @@ namespace concepts
         {}
 #else
         template<bool B>
-        CONCEPT_INLINE_VAR constexpr std::enable_if_t<B, int> requires_ = 0;
+        CPP_INLINE_VAR constexpr std::enable_if_t<B, int> requires_ = 0;
 #endif
 
         inline namespace defs
@@ -535,31 +618,31 @@ namespace concepts
             // Utility concepts
             ////////////////////////////////////////////////////////////////////////////////////////
             
-            CONCEPT_def(
+            CPP_def(
                 template(typename... Args)
                 (concept True)(Args...),
                     true
             );
 
-            CONCEPT_def(
+            CPP_def(
                 template(typename T, template<typename...> class C, typename... Args)
                 (concept Valid)(T, C, Args...),
                     True< C<T, Args...> >
             );
 
-            CONCEPT_def(
+            CPP_def(
                 template (class T, template<typename...> class Trait, typename... Args)
                 (concept Satisfies)(T, Trait, Args...),
                     static_cast<bool>(Trait<T, Args...>::type::value)
             );
 
-            CONCEPT_def(
+            CPP_def(
                 template (bool...Bs)
                 (concept And)(Bs...),
                     and_v<Bs...>
             );
 
-            CONCEPT_def(
+            CPP_def(
                 template (bool...Bs)
                 (concept Or)(Bs...),
                     or_v<Bs...>
@@ -569,22 +652,22 @@ namespace concepts
             // Core language concepts
             ////////////////////////////////////////////////////////////////////////////////////////
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename A, typename B)
                 concept Same,
-                    CONCEPT_PP_IS_SAME(A, B) && CONCEPT_PP_IS_SAME(B, A)
+                    CPP_PP_IS_SAME(A, B) && CPP_PP_IS_SAME(B, A)
             );
 
             /// \cond
-            CONCEPT_def
+            CPP_def
             (
                 template(typename From, typename To)
                 concept ImplicitlyConvertibleTo,
                     std::is_convertible<From, To>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename From, typename To)
                 concept ExplicitlyConvertibleTo,
@@ -595,7 +678,7 @@ namespace concepts
             );
             /// \endcond
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename From, typename To)
                 concept ConvertibleTo,
@@ -603,7 +686,7 @@ namespace concepts
                     ExplicitlyConvertibleTo<From, To>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept DerivedFrom,
@@ -611,7 +694,7 @@ namespace concepts
                     ConvertibleTo<T const volatile *, U const volatile *>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept CommonReference,
@@ -620,7 +703,7 @@ namespace concepts
                     ConvertibleTo<U, common_reference_t<T, U>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept Common,
@@ -637,14 +720,14 @@ namespace concepts
                             typename std::add_lvalue_reference<U const>::type>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Integral,
                     std::is_integral<T>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept SignedIntegral,
@@ -652,7 +735,7 @@ namespace concepts
                     std::is_signed<T>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept UnsignedIntegral,
@@ -660,7 +743,7 @@ namespace concepts
                     !SignedIntegral<T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept Assignable,
@@ -673,7 +756,7 @@ namespace concepts
                     std::is_lvalue_reference<T>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Swappable,
@@ -683,7 +766,7 @@ namespace concepts
                     )
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept SwappableWith,
@@ -700,7 +783,7 @@ namespace concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Comparison concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept WeaklyEqualityComparableWith,
@@ -713,14 +796,14 @@ namespace concepts
                     )
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept EqualityComparable,
                     WeaklyEqualityComparableWith<T, T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept EqualityComparableWith,
@@ -732,7 +815,7 @@ namespace concepts
                         common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept StrictTotallyOrdered,
@@ -746,7 +829,7 @@ namespace concepts
                     EqualityComparable<T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept StrictTotallyOrderedWith,
@@ -773,14 +856,14 @@ namespace concepts
             // Object concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Destructible,
                     std::is_nothrow_destructible<T>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename... Args)
                 (concept Constructible)(T, Args...),
@@ -788,14 +871,14 @@ namespace concepts
                     std::is_constructible<T, Args...>::value
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept DefaultConstructible,
                     Constructible<T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept MoveConstructible,
@@ -803,7 +886,7 @@ namespace concepts
                     ConvertibleTo<T, T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept CopyConstructible,
@@ -816,7 +899,7 @@ namespace concepts
                     ConvertibleTo<T const, T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Movable,
@@ -826,7 +909,7 @@ namespace concepts
                     Swappable<T>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Copyable,
@@ -839,7 +922,7 @@ namespace concepts
                     Assignable<T &, T const>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Semiregular,
@@ -849,7 +932,7 @@ namespace concepts
                 // http://www.stepanovpapers.com/DeSt98.pdf
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Regular,
@@ -882,6 +965,6 @@ namespace concepts
     } // namespace v1
 } // namespace concepts
 
-CONCEPT_PP_IGNORE_CXX2A_COMPAT_END
+CPP_PP_IGNORE_CXX2A_COMPAT_END
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

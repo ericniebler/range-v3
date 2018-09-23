@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         namespace action
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T)
                 concept TakeActionConcept,
@@ -45,7 +45,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CONCEPT_template(typename Int)(
+                CPP_template(typename Int)(
                     requires Integral<Int>)
                 static auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -53,7 +53,7 @@ namespace ranges
                     std::bind(take, std::placeholders::_1, n)
                 )
             public:
-                CONCEPT_template(typename Rng, typename D)(
+                CPP_template(typename Rng, typename D)(
                     requires TakeActionConcept<Rng, D>)
                 Rng operator()(Rng &&rng, D &&d) const
                 {
@@ -64,18 +64,18 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires not TakeActionConcept<Rng, T>)
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::take operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>,
+                    CPP_assert_msg(ErasableRange<Rng &, I, S>,
                         "The object on which action::take operates must allow element removal.");
-                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
                         "The stride argument to action::take must be convertible to the range's "
                         "difference type.");
                 }

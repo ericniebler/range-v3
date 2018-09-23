@@ -36,7 +36,7 @@ namespace ranges
         /// @{
         struct minmax_element_fn
         {
-            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<C, projected<I, P>>)
             tagged_pair<tag::min(I), tag::max(I)>
@@ -81,7 +81,7 @@ namespace ranges
                 return result;
             }
 
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<C, projected<I, P>>)

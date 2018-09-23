@@ -233,7 +233,7 @@ namespace ranges
             //
             // Concepts that the range cursor must model
             //
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept Cursor,
@@ -244,7 +244,7 @@ namespace ranges
                     //   which perfectly-returns the contained cursor object and does not throw
                     //   exceptions.
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept HasCursorNext,
@@ -253,7 +253,7 @@ namespace ranges
                         range_access::next(t)
                     )
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename S, typename C)
                 concept CursorSentinel,
@@ -265,7 +265,7 @@ namespace ranges
                     ) &&
                     Semiregular<S> && Cursor<C>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept ReadableCursor,
@@ -274,7 +274,7 @@ namespace ranges
                         range_access::read(t)
                     )
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept HasCursorArrow,
@@ -283,7 +283,7 @@ namespace ranges
                         range_access::arrow(t)
                     )
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept WritableCursor,
@@ -292,7 +292,7 @@ namespace ranges
                         range_access::write(t, (U &&) u)
                     )
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename S, typename C)
                 concept SizedCursorSentinel,
@@ -304,26 +304,26 @@ namespace ranges
                     ) &&
                     CursorSentinel<S, C>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T, typename U)
                 concept OutputCursor,
                     WritableCursor<T, U> && Cursor<T>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept InputCursor,
                     ReadableCursor<T> && Cursor<T> && HasCursorNext<T>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept ForwardCursor,
                     InputCursor<T> && CursorSentinel<T, T> &&
                     !range_access::single_pass_t<uncvref_t<T>>::value
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept BidirectionalCursor,
@@ -333,7 +333,7 @@ namespace ranges
                     ) &&
                     ForwardCursor<T>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept RandomAccessCursor,
@@ -343,7 +343,7 @@ namespace ranges
                     ) &&
                     BidirectionalCursor<T> && SizedCursorSentinel<T, T>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename T)
                 concept InfiniteCursor,

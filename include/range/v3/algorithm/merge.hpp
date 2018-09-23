@@ -48,7 +48,7 @@ namespace ranges
         /// @{
         struct merge_fn
         {
-            CONCEPT_template(typename I0, typename S0, typename I1, typename S1, typename O,
+            CPP_template(typename I0, typename S0, typename I1, typename S1, typename O,
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> &&
                     Sentinel<S1, I1> &&
@@ -75,7 +75,7 @@ namespace ranges
                 return make_tagged_tuple<tag::in1, tag::in2, tag::out>(t0.first, t1.first, t1.second);
             }
 
-            CONCEPT_template(typename Rng0, typename Rng1, typename O, typename C = ordered_less,
+            CPP_template(typename Rng0, typename Rng1, typename O, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
                 typename I1 = iterator_t<Rng1>)(

@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         namespace action
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept TakeWhileActionConcept,
@@ -46,7 +46,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CONCEPT_template(typename Fun)(
+                CPP_template(typename Fun)(
                     requires not Range<Fun>)
                 static auto bind(take_while_fn take_while, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -54,7 +54,7 @@ namespace ranges
                     std::bind(take_while, std::placeholders::_1, std::move(fun))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires TakeWhileActionConcept<Rng, Fun>)
                 Rng operator()(Rng &&rng, Fun fun) const
                 {
@@ -64,19 +64,19 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires not TakeWhileActionConcept<Rng, Fun>)
                 void operator()(Rng &&, Fun &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::take_while operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, S>,
+                    CPP_assert_msg(ErasableRange<Rng &, I, S>,
                         "The object on which action::take_while operates must allow element "
                         "removal.");
-                    CONCEPT_assert_msg(IndirectPredicate<Fun, I>,
+                    CPP_assert_msg(IndirectPredicate<Fun, I>,
                         "The function passed to action::take_while must be callable with objects "
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");

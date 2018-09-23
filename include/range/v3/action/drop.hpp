@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         namespace action
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T)
                 concept DropActionConcept,
@@ -45,7 +45,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CONCEPT_template(typename Int)(
+                CPP_template(typename Int)(
                     requires Integral<Int>)
                 static auto bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -53,7 +53,7 @@ namespace ranges
                     std::bind(drop, std::placeholders::_1, n)
                 )
             public:
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires DropActionConcept<Rng, range_difference_type_t<Rng>>)
                 Rng operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
@@ -63,17 +63,17 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires not DropActionConcept<Rng, T>)
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::drop operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
+                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

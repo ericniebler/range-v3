@@ -51,7 +51,7 @@ namespace ranges
                 template<typename I>
                 constexpr unbounded_view<I> operator()(I it) const
                 {
-                    CONCEPT_assert(InputIterator<I>);
+                    CPP_assert(InputIterator<I>);
                     return unbounded_view<I>{detail::move(it)};
                 }
             };

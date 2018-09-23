@@ -159,7 +159,7 @@ int main()
     {   // Regression test for https://stackoverflow.com/questions/49015671
         auto const str = "quick brown fox";
         auto rng = view::c_str(str) | view::split(' ');
-        CONCEPT_assert(ForwardRange<decltype(rng)>);
+        CPP_assert(ForwardRange<decltype(rng)>);
     }
 
     return test_result();

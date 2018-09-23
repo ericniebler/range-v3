@@ -73,8 +73,10 @@ namespace ranges
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>)
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it) const ->
+                    CPP_ret(void)(
+                        requires BidirectionalRange<Rng>)
                 {
                     rng_->satisfy_reverse(it);
                 }
@@ -86,14 +88,18 @@ namespace ranges
                 cache_begin();
                 return {*this};
             }
-            CONCEPT_requires(BoundedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() ->
+                CPP_ret(adaptor)(
+                    requires BoundedRange<Rng>)
             {
                 if(BidirectionalRange<Rng>) cache_begin();
                 return {*this};
             }
-            CONCEPT_requires(not BoundedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+                CPP_ret(adaptor_base)(
+                    requires not BoundedRange<Rng>)
             {
                 return {};
             }
@@ -134,7 +140,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred)
                 concept AdjacentRemoveIfConcept,
@@ -154,7 +160,7 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires AdjacentRemoveIfConcept<Rng, Pred>)
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -163,13 +169,13 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires not AdjacentRemoveIfConcept<Rng, Pred>)
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>,
+                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>,
                         iterator_t<Rng>>,
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");

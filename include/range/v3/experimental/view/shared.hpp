@@ -56,13 +56,17 @@ namespace ranges
                 }
 
                 // use the const-most size() function provided by the range
-                CONCEPT_requires(SizedRange<const Rng>)
-                range_size_type_t<Rng> size() const
+                CPP_member
+                auto size() const ->
+                    CPP_ret(range_size_type_t<Rng>)(
+                        requires SizedRange<Rng const>)
                 {
                     return ranges::size(*rng_ptr_);
                 }
-                CONCEPT_requires(SizedRange<Rng> && !SizedRange<const Rng>)
-                range_size_type_t<Rng> size()
+                CPP_member
+                auto size() const ->
+                    CPP_ret(range_size_type_t<Rng>)(
+                        requires SizedRange<Rng> && !SizedRange<Rng const>)
                 {
                     return ranges::size(*rng_ptr_);
                 }
@@ -77,17 +81,17 @@ namespace ranges
                 {
                 public:
 #ifndef RANGES_DOXYGEN_INVOKED
-                    CONCEPT_template(typename Rng)(
+                    CPP_template(typename Rng)(
                         requires not Range<Rng>)
                     void operator()(std::shared_ptr<Rng>) const
                     {
-                        CONCEPT_assert_msg(Range<Rng>,
+                        CPP_assert_msg(Range<Rng>,
                             "The object on which view::shared operates must be "
                             "a model of the Range concept.");
                     }
 #endif
 
-                    CONCEPT_template(typename Rng)(
+                    CPP_template(typename Rng)(
                         requires Range<Rng> && !View<Rng> && !std::is_reference<Rng>::value)
                     shared_view<Rng> operator()(Rng &&t) const
                     {
@@ -95,17 +99,17 @@ namespace ranges
                     }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                    CONCEPT_template(typename Rng)(
+                    CPP_template(typename Rng)(
                         requires not Range<Rng> || View<Rng> || std::is_reference<Rng>::value)
                     void operator()(Rng &&) const
                     {
-                        CONCEPT_assert_msg(Range<Rng>,
+                        CPP_assert_msg(Range<Rng>,
                             "The object on which view::shared operates must be "
                             "a model of the Range concept.");
-                        CONCEPT_assert_msg(!View<Rng>,
+                        CPP_assert_msg(!View<Rng>,
                             "view::shared cannot be constructed from a view. "
                             "Please copy the original view instead.");
-                        CONCEPT_assert_msg(!std::is_reference<Rng>::value,
+                        CPP_assert_msg(!std::is_reference<Rng>::value,
                             "view::shared needs an rvalue to build a shared "
                             "object.");
                     }

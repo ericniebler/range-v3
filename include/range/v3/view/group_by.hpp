@@ -97,7 +97,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_requires(Invocable<Fun const&, range_common_reference_t<Rng>,
+            CPP_requires(Invocable<Fun const&, range_common_reference_t<Rng>,
                 range_common_reference_t<Rng>> && Range<Rng const>)
             cursor<true> begin_cursor() const
             {
@@ -113,7 +113,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept GroupByViewConcept,
@@ -132,7 +132,7 @@ namespace ranges
                     make_pipeable(std::bind(group_by, std::placeholders::_1, std::move(fun)))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires GroupByViewConcept<Rng, Fun>)
                 group_by_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
@@ -140,14 +140,14 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires not GroupByViewConcept<Rng, Fun>)
                 void operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::group_by operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_assert_msg(IndirectRelation<Fun, iterator_t<Rng>>,
+                    CPP_assert_msg(IndirectRelation<Fun, iterator_t<Rng>>,
                         "The function passed to view::group_by must be callable with two arguments "
                         "of the range's common reference type, and its return type must be "
                         "convertible to bool.");

@@ -27,7 +27,7 @@ namespace ranges
         /// \cond
         namespace adl_erase_detail
         {
-            CONCEPT_template(typename Cont, typename I, typename S)(
+            CPP_template(typename Cont, typename I, typename S)(
                 requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
                     Sentinel<S, I>)
             decltype(unwrap_reference(std::declval<Cont &>()).erase(std::declval<I>(), std::declval<S>()))
@@ -38,7 +38,7 @@ namespace ranges
 
             struct erase_fn
             {
-                CONCEPT_template(typename Rng, typename I, typename S)(
+                CPP_template(typename Rng, typename I, typename S)(
                     requires Range<Rng> && ForwardIterator<I> &&
                         Sentinel<S, I>)
                 decltype(erase(std::declval<Rng>(), std::declval<I>(), std::declval<S>()))
@@ -61,7 +61,7 @@ namespace ranges
         /// \addtogroup group-concepts
         /// @{
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename Rng, typename I, typename S)
             concept ErasableRange,

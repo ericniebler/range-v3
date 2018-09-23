@@ -39,14 +39,14 @@ namespace ranges
                 // tuple value
                 template<typename ...Its>
                 [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                    CONCEPT_return_type(std::tuple<value_type_t<Its>...>)(
+                    CPP_ret(std::tuple<value_type_t<Its>...>)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
                     RANGES_EXPECT(false);
                 }
 
                 // tuple reference
-                CONCEPT_template(typename ...Its)(
+                CPP_template(typename ...Its)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 common_tuple<reference_t<Its>...>
                 operator()(Its const &...its) const
@@ -56,7 +56,7 @@ namespace ranges
                 }
 
                 // tuple rvalue reference
-                CONCEPT_template(typename ...Its)(
+                CPP_template(typename ...Its)(
                     requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 common_tuple<rvalue_reference_t<Its>...>
                 operator()(move_tag, Its const &...its) const
@@ -69,14 +69,14 @@ namespace ranges
                 // pair value
                 template<typename It1, typename It2>
                 [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
-                CONCEPT_return_type(std::pair<value_type_t<It1>, value_type_t<It2>>)(
+                CPP_ret(std::pair<value_type_t<It1>, value_type_t<It2>>)(
                     requires Readable<It1> && Readable<It2>)
                 {
                     RANGES_EXPECT(false);
                 }
 
                 // pair reference
-                CONCEPT_template(typename It1, typename It2)(
+                CPP_template(typename It1, typename It2)(
                     requires Readable<It1> && Readable<It2>)
                 common_pair<reference_t<It1>, reference_t<It2>>
                 operator()(It1 const &it1, It2 const &it2) const
@@ -87,7 +87,7 @@ namespace ranges
                 }
 
                 // pair rvalue reference
-                CONCEPT_template(typename It1, typename It2)(
+                CPP_template(typename It1, typename It2)(
                     requires Readable<It1> && Readable<It2>)
                 common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>
                 operator()(move_tag, It1 const &it1, It2 const &it2) const
@@ -116,7 +116,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename ...Rngs)
                 (concept ZipViewConcept)(Rngs...),
@@ -125,20 +125,20 @@ namespace ranges
 
             struct zip_fn
             {
-                CONCEPT_template(typename...Rngs)(
+                CPP_template(typename...Rngs)(
                     requires ZipViewConcept<Rngs...>)
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
-                    CONCEPT_assert(And<Range<Rngs>...>);
+                    CPP_assert(And<Range<Rngs>...>);
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename...Rngs)(
+                CPP_template(typename...Rngs)(
                     requires not ZipViewConcept<Rngs...>)
                 void operator()(Rngs &&...) const
                 {
-                    CONCEPT_assert_msg(And<InputRange<Rngs>...>,
+                    CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::zip must model the InputRange "
                         "concept");
                 }

@@ -29,14 +29,14 @@ namespace ranges
         /// \cond
         namespace index_detail
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T)
                 class CompatibleDifferenceType,
                     ConvertibleTo<T, range_difference_type_t<Rng>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T)
                 class Indexable,
@@ -52,7 +52,7 @@ namespace ranges
         struct index_fn
         {
             /// \return `begin(rng)[n]`
-            CONCEPT_template(typename Rng)(
+            CPP_template(typename Rng)(
                 requires RandomAccessRange<Rng>)
             RANGES_CXX14_CONSTEXPR
             range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
@@ -62,7 +62,7 @@ namespace ranges
                 return ranges::begin(rng)[n];
             }
             /// \return `begin(rng)[n]`
-            CONCEPT_template(typename Rng, typename T, typename Self = index_fn,
+            CPP_template(typename Rng, typename T, typename Self = index_fn,
                      typename D = range_difference_type_t<Rng>)(
                 requires RandomAccessRange<Rng> &&
                                   !Same<uncvref_t<T>, D> &&
@@ -75,13 +75,13 @@ namespace ranges
             }
 
             // /// \cond
-            // CONCEPT_template(typename R, typename T)(
+            // CPP_template(typename R, typename T)(
             //     requires not index_detail::Indexable<R, T>)
             // (void) operator()(R &&, T &&) const
             // {
-            //     CONCEPT_assert_msg(RandomAccessRange<R>,
+            //     CPP_assert_msg(RandomAccessRange<R>,
             //         "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-            //     CONCEPT_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
+            //     CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
             //         "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
             // }
             // /// \endcond

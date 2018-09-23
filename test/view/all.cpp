@@ -46,7 +46,7 @@ int main()
         CHECK(v.size() == size(rgi));
         CHECK(v.data_ == rgi);
         auto v2 = view::all(view::all(view::all(std::move(v))));
-        CONCEPT_assert(Same<decltype(v), decltype(v2)>);
+        CPP_assert(Same<decltype(v), decltype(v2)>);
         CHECK(!v.valid_);
         CHECK(v2.size() == size(rgi));
         CHECK(v2.data_ == rgi);

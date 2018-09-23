@@ -48,7 +48,7 @@ namespace ranges
         public:
             using iter_enumerate_fn::operator();
 
-            CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>,
+            CPP_template(typename Rng, typename D = range_difference_type_t<Rng>,
                 typename I = iterator_t<Rng>)(
                 requires Integral<D> && Range<Rng>)
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
@@ -83,7 +83,7 @@ namespace ranges
         public:
             using iter_distance_fn::operator();
 
-            CONCEPT_template(typename Rng, typename D = range_difference_type_t<Rng>)(
+            CPP_template(typename Rng, typename D = range_difference_type_t<Rng>)(
                 requires Integral<D> && Range<Rng>)
             RANGES_CXX14_CONSTEXPR
             D operator()(Rng &&rng, D d = 0) const
@@ -104,13 +104,13 @@ namespace ranges
         struct distance_compare_fn : iter_distance_compare_fn
         {
         private:
-            CONCEPT_template(typename Rng)(
+            CPP_template(typename Rng)(
                 requires not is_infinite<Rng>::value)
             int impl_r(Rng &rng, range_difference_type_t<Rng> n, range_tag) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
             }
-            CONCEPT_template(typename Rng)(
+            CPP_template(typename Rng)(
                 requires is_infinite<Rng>::value)
             int impl_r(Rng &, range_difference_type_t<Rng>, range_tag) const
             {
@@ -131,7 +131,7 @@ namespace ranges
         public:
             using iter_distance_compare_fn::operator();
 
-            CONCEPT_template(typename Rng)(
+            CPP_template(typename Rng)(
                 requires Range<Rng>)
             int operator()(Rng &&rng, range_difference_type_t<Rng> n) const
             {

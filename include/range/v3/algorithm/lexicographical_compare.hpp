@@ -30,7 +30,7 @@ namespace ranges
         /// @{
         struct lexicographical_compare_fn
         {
-            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+            CPP_template(typename I0, typename S0, typename I1, typename S1,
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                     Comparable<I0, I1, C, P0, P1>)
@@ -47,7 +47,7 @@ namespace ranges
                 return false;
             }
 
-            CONCEPT_template(typename Rng0, typename Rng1, typename C = ordered_less,
+            CPP_template(typename Rng0, typename Rng1, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
                 typename I1 = iterator_t<Rng1>)(

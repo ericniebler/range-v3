@@ -30,7 +30,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename T, typename P = ident)
             (concept Removable)(I, T, P),
@@ -43,7 +43,7 @@ namespace ranges
         /// @{
         struct remove_fn
         {
-            CONCEPT_template(typename I, typename S, typename T, typename P = ident)(
+            CPP_template(typename I, typename S, typename T, typename P = ident)(
                 requires Removable<I, T, P> && Sentinel<S, I>)
             I operator()(I begin, S end, T const &val, P proj = P{}) const
             {
@@ -62,7 +62,7 @@ namespace ranges
                 return begin;
             }
 
-            CONCEPT_template(typename Rng, typename T, typename P = ident,
+            CPP_template(typename Rng, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Removable<I, T, P> && ForwardRange<Rng>)
             safe_iterator_t<Rng> operator()(Rng &&rng, T const &val, P proj = P{}) const

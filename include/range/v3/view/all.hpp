@@ -57,7 +57,7 @@ namespace ranges
                 }
 
                 /// If it's a view already, pass it though.
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires View<uncvref_t<T>>)
                 static T from_range(T &&t)
                 {
@@ -66,7 +66,7 @@ namespace ranges
 
                 /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
-                CONCEPT_template(typename T,
+                CPP_template(typename T,
                     typename SIRC = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>)(
                     requires not View<uncvref_t<T>>)
                 static decltype(all_fn::from_container(std::declval<T&>(), sized_range_tag_of<T>(), SIRC()))
@@ -80,7 +80,7 @@ namespace ranges
                 // TODO handle char const * by turning it into a delimited range?
 
             public:
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires Range<T>)
                 decltype(all_fn::from_range(std::declval<T>()))
                 operator()(T &&t) const
@@ -88,7 +88,7 @@ namespace ranges
                     return all_fn::from_range(static_cast<T &&>(t));
                 }
 
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires Range<T &>)
                 ranges::reference_wrapper<T>
                 operator()(std::reference_wrapper<T> ref) const

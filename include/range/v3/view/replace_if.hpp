@@ -59,7 +59,7 @@ namespace ranges
                     RANGES_EXPECT(false);
                 }
 
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires not Invocable<Pred const&, reference_t<I>>)
                 common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i)
@@ -69,7 +69,7 @@ namespace ranges
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires Invocable<Pred const&, reference_t<I>>)
                 common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
                 operator()(I const &i) const
@@ -80,7 +80,7 @@ namespace ranges
                     return (decltype(x) &&) x;
                 }
 
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires not Invocable<Pred const&, rvalue_reference_t<I>>)
                 common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i)
@@ -90,7 +90,7 @@ namespace ranges
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires Invocable<Pred const&, rvalue_reference_t<I>>)
                 common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
@@ -108,7 +108,7 @@ namespace ranges
         /// @{
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred, typename Val)
                 concept ReplaceIfViewConcept,
@@ -131,7 +131,7 @@ namespace ranges
                         protect(std::move(pred)), std::move(new_value)))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred, typename Val)(
+                CPP_template(typename Rng, typename Pred, typename Val)(
                     requires ReplaceIfViewConcept<Rng, Pred, Val>)
                 replace_if_view<all_t<Rng>, Pred, Val>
                 operator()(Rng &&rng, Pred pred, Val new_value) const
@@ -140,26 +140,26 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CONCEPT_template(typename Rng, typename Pred, typename Val)(
+                CPP_template(typename Rng, typename Pred, typename Val)(
                     requires not ReplaceIfViewConcept<Rng, Pred, Val>)
                 void operator()(Rng &&, Pred, Val) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::replace_if operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
+                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
                         "The function passed to view::replace_if must be callable with "
                         "objects of the range's common reference type, and the result must be "
                         "convertible to bool.");
-                    CONCEPT_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                    CPP_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
                             range_value_type_t<Rng>>,
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
-                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
+                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
                             range_reference_t<Rng>>,
                         "The value passed to view::replace must share a reference with the "
                         "range's reference type.");
-                    CONCEPT_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
+                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
                             range_rvalue_reference_t<Rng>>,
                         "The value passed to view::replace must share a reference with the "
                         "range's rvalue reference type.");

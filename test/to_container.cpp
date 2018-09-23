@@ -42,22 +42,22 @@ int main()
 
     auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
         | to_<std::list>();
-    CONCEPT_assert(Same<decltype(lst0), std::list<int>>);
+    CPP_assert(Same<decltype(lst0), std::list<int>>);
     ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
 
     auto vec0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
         | to_vector | action::sort(std::greater<int>{});
-    CONCEPT_assert(Same<decltype(vec0), std::vector<int>>);
+    CPP_assert(Same<decltype(vec0), std::vector<int>>);
     ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
 
     auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
         | to_<std::vector<long>>() | action::sort(std::greater<long>{});
-    CONCEPT_assert(Same<decltype(vec1), std::vector<long>>);
+    CPP_assert(Same<decltype(vec1), std::vector<long>>);
     ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
 
     const std::size_t N = 4096;
     auto vl = view::iota(0, int{N}) | to_<vector_like<int>>();
-    CONCEPT_assert(Same<decltype(vl), vector_like<int>>);
+    CPP_assert(Same<decltype(vl), vector_like<int>>);
     CHECK(vl.reservation_count == std::size_t{1});
     CHECK(vl.last_reservation == N);
 

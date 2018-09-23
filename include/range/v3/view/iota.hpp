@@ -32,7 +32,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept BidirectionalIncrementable,
@@ -46,7 +46,7 @@ namespace ranges
                 Incrementable<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename S, typename I)
             concept SizedIncrementableSentinel,
@@ -62,7 +62,7 @@ namespace ranges
                 WeaklyIncrementable<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept RandomAccessIncrementable,
@@ -143,7 +143,7 @@ namespace ranges
             template<typename Val>
             using iota_difference_t = meta::_t<iota_difference<Val>>;
 
-            CONCEPT_template(typename To, typename From)(
+            CPP_template(typename To, typename From)(
                 requires SizedIncrementableSentinel<To, From>)
             auto iota_minus_(To const &to, From const &from)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -151,7 +151,7 @@ namespace ranges
                 to - from
             )
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires SignedIntegral<Val>)
             iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
             {
@@ -159,7 +159,7 @@ namespace ranges
                 return (D) v0 - (D) v1;
             }
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires UnsignedIntegral<Val>)
             iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
             {
@@ -169,7 +169,7 @@ namespace ranges
                     :  static_cast<D>(v0 - v1);
             }
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires SignedIntegral<Val>)
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
@@ -181,7 +181,7 @@ namespace ranges
                 return static_cast<D>(to) - static_cast<D>(from);
             }
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires UnsignedIntegral<Val>)
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
@@ -209,7 +209,7 @@ namespace ranges
                 return static_cast<D>(Val(to - from));
             }
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires Integral<Val>)
             RANGES_CXX14_CONSTEXPR
             iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
@@ -221,7 +221,7 @@ namespace ranges
                 return dist + D(1);
             }
 
-            CONCEPT_template(typename Val,
+            CPP_template(typename Val,
                 typename C = common_type_t<Val, iota_difference_t<Val>>)(
                 requires Integral<Val>)
             auto iota_plus(Val const &v, iota_difference_t<Val> n)
@@ -230,7 +230,7 @@ namespace ranges
                 static_cast<Val>(static_cast<C>(v) + static_cast<C>(n))
             )
 
-            CONCEPT_template(typename Val)(
+            CPP_template(typename Val)(
                 requires not Integral<Val>)
             auto iota_plus(Val const &v, iota_difference_t<Val> n)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -272,12 +272,12 @@ namespace ranges
             {
                 return done_;
             }
-            CONCEPT_requires(Incrementable<From>)
+            CPP_requires(Incrementable<From>)
             bool equal(closed_iota_view const &that) const
             {
                 return that.from_ == from_ && that.done_ == done_;
             }
-            CONCEPT_requires(BidirectionalIncrementable<From>)
+            CPP_requires(BidirectionalIncrementable<From>)
             void prev()
             {
                 if(done_)
@@ -315,17 +315,17 @@ namespace ranges
             {
                 return from_ == to_;
             }
-            CONCEPT_requires(Incrementable<From>)
+            CPP_requires(Incrementable<From>)
             bool equal(iota_view const &that) const
             {
                 return that.from_ == from_;
             }
-            CONCEPT_requires(BidirectionalIncrementable<From>)
+            CPP_requires(BidirectionalIncrementable<From>)
             void prev()
             {
                 --from_;
             }
-            CONCEPT_requires(SizedIncrementableSentinel<To, From>)
+            CPP_requires(SizedIncrementableSentinel<To, From>)
             void check_advance_(difference_type_ n)
             {
                 detail::ignore_unused(n);
@@ -335,13 +335,13 @@ namespace ranges
             void check_advance_(difference_type_) const
             {
             }
-            CONCEPT_requires(RandomAccessIncrementable<From>)
+            CPP_requires(RandomAccessIncrementable<From>)
             void advance(difference_type_ n)
             {
                 this->check_advance_(n);
                 from_ = detail::iota_plus(from_, n);
             }
-            CONCEPT_requires(RandomAccessIncrementable<From>)
+            CPP_requires(RandomAccessIncrementable<From>)
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus_(that.from_, from_);
@@ -376,22 +376,22 @@ namespace ranges
             {
                 return false;
             }
-            CONCEPT_requires(Incrementable<From>)
+            CPP_requires(Incrementable<From>)
             bool equal(iota_view const &that) const
             {
                 return that.value_ == value_;
             }
-            CONCEPT_requires(BidirectionalIncrementable<From>)
+            CPP_requires(BidirectionalIncrementable<From>)
             void prev()
             {
                 --value_;
             }
-            CONCEPT_requires(RandomAccessIncrementable<From>)
+            CPP_requires(RandomAccessIncrementable<From>)
             void advance(difference_type_ n)
             {
                 value_ = detail::iota_plus(value_, n);
             }
-            CONCEPT_requires(RandomAccessIncrementable<From>)
+            CPP_requires(RandomAccessIncrementable<From>)
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus_(that.value_, value_);
@@ -422,7 +422,7 @@ namespace ranges
                     return {std::move(from), std::move(to)};
                 }
             public:
-                CONCEPT_template(typename From)(
+                CPP_template(typename From)(
                     requires WeaklyIncrementable<From>)
                 iota_view<From> operator()(From value) const
                 {
@@ -438,25 +438,25 @@ namespace ranges
                 operator()(From from, To to) const;
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename From)(
+                CPP_template(typename From)(
                     requires not WeaklyIncrementable<From>)
                 void operator()(From) const
                 {
-                    CONCEPT_assert_msg(WeaklyIncrementable<From>,
+                    CPP_assert_msg(WeaklyIncrementable<From>,
                         "The object passed to view::iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
                 }
-                CONCEPT_template(typename From, typename To)(
+                CPP_template(typename From, typename To)(
                     requires not (WeaklyIncrementable<From> &&
                         WeaklyEqualityComparableWith<From, To>))
                 void operator()(From, To) const
                 {
-                    CONCEPT_assert_msg(WeaklyIncrementable<From>,
+                    CPP_assert_msg(WeaklyIncrementable<From>,
                         "The object passed to view::iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
-                    CONCEPT_assert_msg(WeaklyEqualityComparableWith<From, To>,
+                    CPP_assert_msg(WeaklyEqualityComparableWith<From, To>,
                         "The two arguments passed to view::iota must be WeaklyEqualityComparableWith "
                         "with == and !=");
                 }
@@ -497,7 +497,7 @@ namespace ranges
                     return {std::move(from), std::move(to)};
                 }
             public:
-                CONCEPT_template(typename From, typename To)(
+                CPP_template(typename From, typename To)(
                     requires WeaklyIncrementable<From> &&
                         WeaklyEqualityComparableWith<From, To>)
                 meta::if_c<
@@ -512,16 +512,16 @@ namespace ranges
                         incrementable_tag_of<From>{});
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename From, typename To)(
+                CPP_template(typename From, typename To)(
                     requires not (WeaklyIncrementable<From> &&
                         WeaklyEqualityComparableWith<From, To>))
                 void operator()(From, To) const
                 {
-                    CONCEPT_assert_msg(WeaklyIncrementable<From>,
+                    CPP_assert_msg(WeaklyIncrementable<From>,
                         "The object passed to view::closed_iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
-                    CONCEPT_assert_msg(WeaklyEqualityComparableWith<From, To>,
+                    CPP_assert_msg(WeaklyEqualityComparableWith<From, To>,
                         "The two arguments passed to view::closed_iota must be "
                         "WeaklyEqualityComparableWith with == and !=");
                 }
@@ -541,14 +541,14 @@ namespace ranges
             {
                 ints_fn() = default;
 
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires Integral<Val>)
                 iota_view<Val> operator()(Val value) const
                 {
                     return iota_view<Val>{value};
                 }
 
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires Integral<Val>)
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -558,18 +558,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::ints must be Integral");
                 }
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val, Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::ints must be Integral");
                 }
             #endif

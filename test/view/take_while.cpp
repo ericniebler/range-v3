@@ -37,8 +37,8 @@ int main()
     int cnt = 0;
     auto mutable_only = view::take_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
     ::check_equal(mutable_only, {0,1,2,3,4});
-    CONCEPT_assert(View<decltype(mutable_only)>);
-    CONCEPT_assert(!View<decltype(mutable_only) const>);
+    CPP_assert(View<decltype(mutable_only)>);
+    CPP_assert(!View<decltype(mutable_only) const>);
 
     {
         auto ns = view::generate([]() mutable {

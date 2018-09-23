@@ -30,7 +30,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename C = equal_to, typename P = ident)
             (concept UniqueCopyable)(I, O, C, P),
@@ -122,7 +122,7 @@ namespace ranges
             /// \pre InputView is a model of the `InputView` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `Relation` concept
-            CONCEPT_template(typename I, typename S, typename O, typename C = equal_to, typename P = ident)(
+            CPP_template(typename I, typename S, typename O, typename C = equal_to, typename P = ident)(
                 requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
@@ -132,7 +132,7 @@ namespace ranges
             }
 
             /// \overload
-            CONCEPT_template(typename Rng, typename O, typename C = equal_to, typename P = ident,
+            CPP_template(typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires UniqueCopyable<I, O, C, P> && Range<Rng>)
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>

@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         namespace action
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T, typename U)
                 concept SliceActionConcept,
@@ -46,7 +46,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CONCEPT_template(typename D)(
+                CPP_template(typename D)(
                     requires Integral<D>)
                 static auto bind(slice_fn slice, D from, D to)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -55,7 +55,7 @@ namespace ranges
                 )
             public:
                 // TODO support slice from end.
-                CONCEPT_template(typename Rng,
+                CPP_template(typename Rng,
                     typename I = iterator_t<Rng>,
                     typename D = range_difference_type_t<Rng>)(
                     requires SliceActionConcept<Rng, D, D>)
@@ -69,18 +69,18 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T, typename U)(
+                CPP_template(typename Rng, typename T, typename U)(
                     requires not SliceActionConcept<Rng, T, U>)
                 void operator()(Rng &&, T &&, U &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::slice operates must be a model of the "
                         "ForwardRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(ErasableRange<Rng &, I, I>,
+                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::slice operates must allow element "
                         "removal.");
-                    CONCEPT_assert_msg((bool) ConvertibleTo<T, range_difference_type_t<Rng>> &&
+                    CPP_assert_msg((bool) ConvertibleTo<T, range_difference_type_t<Rng>> &&
                             (bool) ConvertibleTo<U, range_difference_type_t<Rng>>,
                         "The bounds passed to action::slice must be convertible to the range's "
                         "difference type. TODO slicing from the end with 'end-2' syntax is not "

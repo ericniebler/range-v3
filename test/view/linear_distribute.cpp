@@ -27,8 +27,8 @@ int main()
     {
         auto irng = linear_distribute(0, 1, 2);
         CHECK(ranges::size(irng) == std::size_t{2});
-        CONCEPT_assert(ranges::ForwardRange<decltype(irng)>);
-        CONCEPT_assert(ranges::SizedRange<decltype(irng)>);
+        CPP_assert(ranges::ForwardRange<decltype(irng)>);
+        CPP_assert(ranges::SizedRange<decltype(irng)>);
         auto il = {0, 1};
         check_equal(irng, il);
     }
@@ -45,8 +45,8 @@ int main()
     }
     {
         auto frng = linear_distribute(0.0, 1.0, 11);
-        CONCEPT_assert(ranges::ForwardRange<decltype(frng)>);
-        CONCEPT_assert(ranges::SizedRange<decltype(frng)>);
+        CPP_assert(ranges::ForwardRange<decltype(frng)>);
+        CPP_assert(ranges::SizedRange<decltype(frng)>);
         CHECK(ranges::size(frng) == std::size_t{11});
         auto il = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
         CHECK(ranges::size(il) == std::size_t{11});

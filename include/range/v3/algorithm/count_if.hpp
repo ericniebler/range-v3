@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct count_if_fn
         {
-            CONCEPT_template(typename I, typename S, typename R, typename P = ident)(
+            CPP_template(typename I, typename S, typename R, typename P = ident)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectPredicate<R, projected<I, P>>)
             difference_type_t<I>
@@ -44,7 +44,7 @@ namespace ranges
                 return n;
             }
 
-            CONCEPT_template(typename Rng, typename R, typename P = ident,
+            CPP_template(typename Rng, typename R, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> && IndirectPredicate<R, projected<I, P>>)
             difference_type_t<I>

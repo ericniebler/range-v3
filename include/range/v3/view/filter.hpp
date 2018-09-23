@@ -33,8 +33,8 @@ namespace ranges
                 remove_if_view<all_t<Rng>, logical_negate<Pred>>
                 operator()(Rng &&rng, Pred pred) const
                 {
-                    CONCEPT_assert(Range<Rng>);
-                    CONCEPT_assert(IndirectPredicate<Pred, iterator_t<Rng>>);
+                    CPP_assert(Range<Rng>);
+                    CPP_assert(IndirectPredicate<Pred, iterator_t<Rng>>);
                     return {all(static_cast<Rng &&>(rng)), not_fn(std::move(pred))};
                 }
                 template<typename Pred>

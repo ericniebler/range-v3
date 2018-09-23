@@ -34,7 +34,7 @@ namespace ranges
         {
             struct equal_range_n_fn
             {
-                CONCEPT_template(typename I, typename V, typename R = ordered_less, typename P = ident)(
+                CPP_template(typename I, typename V, typename R = ordered_less, typename P = ident)(
                     requires BinarySearchable<I, V, R, P>)
                 iterator_range<I>
                 operator()(I begin, difference_type_t<I> dist, V const & val, R pred = R{},

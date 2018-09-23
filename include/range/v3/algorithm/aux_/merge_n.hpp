@@ -50,7 +50,7 @@ namespace ranges
         {
             struct merge_n_fn
             {
-                CONCEPT_template(typename I0, typename I1, typename O, typename C = ordered_less,
+                CPP_template(typename I0, typename I1, typename O, typename C = ordered_less,
                     typename P0 = ident, typename P1 = ident)(
                     requires Mergeable<I0, I1, O, C, P0, P1>)
                 tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>

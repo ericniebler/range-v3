@@ -39,7 +39,7 @@ namespace ranges
     inline namespace v3
     {
         /// ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename V, typename C = equal_to, typename P = ident)
             (concept Searchnable)(I, V, C, P),
@@ -120,7 +120,7 @@ namespace ranges
                 }
             }
         public:
-            CONCEPT_template(typename I, typename S, typename V, typename C = equal_to, typename P = ident)(
+            CPP_template(typename I, typename S, typename V, typename C = equal_to, typename P = ident)(
                 requires Searchnable<I, V, C, P> && Sentinel<S, I>)
             I operator()(I begin, S end, difference_type_t<I> count, V const &val,
                 C pred = C{}, P proj = P{}) const
@@ -135,7 +135,7 @@ namespace ranges
                         proj);
             }
 
-            CONCEPT_template(typename Rng, typename V, typename C = equal_to, typename P = ident,
+            CPP_template(typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Searchnable<I, V, C, P> && Range<Rng>)
             safe_iterator_t<Rng>

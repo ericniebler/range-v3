@@ -51,7 +51,7 @@ namespace ranges
         /// @{
 
         // std::array is a SemiContainer, native arrays are not.
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept SemiContainer,
@@ -61,7 +61,7 @@ namespace ranges
         );
 
         // std::vector is a Container, std::array is not
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept Container,
@@ -72,7 +72,7 @@ namespace ranges
                     detail::movable_input_iterator<range_value_type_t<T>>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C)
             concept Reservable,
@@ -87,7 +87,7 @@ namespace ranges
                 Container<C> && SizedRange<C>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename I)
             concept ReserveAndAssignable,
@@ -98,7 +98,7 @@ namespace ranges
                 Reservable<C> && InputIterator<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C)
             concept RandomAccessReservable,
@@ -110,7 +110,7 @@ namespace ranges
         {
             template<typename T>
             auto is_lvalue_container_like(T &) noexcept ->
-                CONCEPT_return_type(std::true_type)(
+                CPP_ret(std::true_type)(
                     requires Container<T>)
             {
                 return {};
@@ -118,7 +118,7 @@ namespace ranges
 
             template<typename T>
             auto is_lvalue_container_like(reference_wrapper<T>) noexcept ->
-              CONCEPT_return_type(meta::not_<std::is_rvalue_reference<T>>)(
+              CPP_ret(meta::not_<std::is_rvalue_reference<T>>)(
                   requires Container<T>)
             {
                 return {};
@@ -126,7 +126,7 @@ namespace ranges
 
             template<typename T>
             auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept ->
-                CONCEPT_return_type(std::true_type)(
+                CPP_ret(std::true_type)(
                     requires Container<T>)
             {
                 return {};
@@ -134,7 +134,7 @@ namespace ranges
         }
         /// \endcond
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept LvalueContainerLike,

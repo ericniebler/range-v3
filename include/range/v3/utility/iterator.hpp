@@ -86,7 +86,7 @@ namespace ranges
                 template<typename I>
                 RANGES_CXX14_CONSTEXPR
                 auto operator()(I &i, difference_type_t<I> n) const ->
-                    CONCEPT_return_type(void)(requires Iterator<I>)
+                    CPP_ret(void)(requires Iterator<I>)
                 {
                     advance_fn::n_(i, n, 0);
                 }
@@ -94,7 +94,7 @@ namespace ranges
                 template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
                 auto operator()(I &i, S s) const ->
-                    CONCEPT_return_type(void)(
+                    CPP_ret(void)(
                         requires Sentinel<S, I> && Assignable<I&, S>)
                 {
                     i = std::move(s);
@@ -102,7 +102,7 @@ namespace ranges
                 template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
                 auto operator()(I &i, S s) const ->
-                    CONCEPT_return_type(void)(
+                    CPP_ret(void)(
                         requires Sentinel<S, I> && !Assignable<I&, S>)
                 {
                     advance_fn::to_(i, std::move(s), sentinel_tag_of<S, I>());
@@ -111,7 +111,7 @@ namespace ranges
                 template<typename I, typename S>
                 RANGES_CXX14_CONSTEXPR
                 auto operator()(I &it, difference_type_t<I> n, S bound) const ->
-                    CONCEPT_return_type(difference_type_t<I>)(
+                    CPP_ret(difference_type_t<I>)(
                         requires Sentinel<S, I>)
                 {
                     return advance_fn::bounded_(it, n, std::move(bound),
@@ -235,14 +235,14 @@ namespace ranges
             template<typename I>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it) const ->
-                CONCEPT_return_type(I)(requires Iterator<I>)
+                CPP_ret(I)(requires Iterator<I>)
             {
                 return ++it;
             }
             template<typename I>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it, difference_type_t<I> n) const ->
-                CONCEPT_return_type(I)(requires Iterator<I>)
+                CPP_ret(I)(requires Iterator<I>)
             {
                 advance(it, n);
                 return it;
@@ -250,7 +250,7 @@ namespace ranges
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it, S s) const ->
-                CONCEPT_return_type(I)(requires Sentinel<S, I>)
+                CPP_ret(I)(requires Sentinel<S, I>)
             {
                 advance(it, std::move(s));
                 return it;
@@ -258,7 +258,7 @@ namespace ranges
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it, difference_type_t<I> n, S bound) const ->
-                CONCEPT_return_type(I)(requires Sentinel<S, I>)
+                CPP_ret(I)(requires Sentinel<S, I>)
             {
                 advance(it, n, std::move(bound));
                 return it;
@@ -274,7 +274,7 @@ namespace ranges
             template<typename I>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it, difference_type_t<I> n = 1) const ->
-                CONCEPT_return_type(I)(requires BidirectionalIterator<I>)
+                CPP_ret(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n);
                 return it;
@@ -282,7 +282,7 @@ namespace ranges
             template<typename I>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I it, difference_type_t<I> n, I bound) const ->
-                CONCEPT_return_type(I)(requires BidirectionalIterator<I>)
+                CPP_ret(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n, std::move(bound));
                 return it;
@@ -299,7 +299,7 @@ namespace ranges
             template<typename I, typename S, typename D>
             RANGES_CXX14_CONSTEXPR
             auto impl_i(I begin, S end, D d, sentinel_tag) const ->
-                CONCEPT_return_type(std::pair<D, I>)(
+                CPP_ret(std::pair<D, I>)(
                     requires not SizedSentinel<I, I>)
             {
                 for(; begin != end; ++begin)
@@ -309,7 +309,7 @@ namespace ranges
             template<typename I, typename S, typename D>
             RANGES_CXX14_CONSTEXPR
             auto impl_i(I begin, S end_, D d, sentinel_tag) const ->
-                CONCEPT_return_type(std::pair<D, I>)(
+                CPP_ret(std::pair<D, I>)(
                     requires SizedSentinel<I, I>)
             {
                 I end = ranges::next(begin, end_);
@@ -329,7 +329,7 @@ namespace ranges
             template<typename I, typename S, typename D = difference_type_t<I>>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I begin, S end, D d = 0) const ->
-                CONCEPT_return_type(std::pair<D, I>)(
+                CPP_ret(std::pair<D, I>)(
                     requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             {
                 return this->impl_i(std::move(begin), std::move(end), d,
@@ -362,7 +362,7 @@ namespace ranges
             template<typename I, typename S, typename D = difference_type_t<I>>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I begin, S end, D d = 0) const ->
-                CONCEPT_return_type(D)(
+                CPP_ret(D)(
                     requires Iterator<I> && Sentinel<S, I> && Integral<D>)
             {
                 return this->impl_i(std::move(begin), std::move(end), d,
@@ -405,7 +405,7 @@ namespace ranges
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I begin, S end, difference_type_t<I> n) const ->
-                CONCEPT_return_type(int)(
+                CPP_ret(int)(
                     requires InputIterator<I> && Sentinel<S, I>)
             {
                 return this->impl_i(std::move(begin), std::move(end), n,
@@ -423,7 +423,7 @@ namespace ranges
             template<typename I, typename S>
             RANGES_CXX14_CONSTEXPR
             auto operator()(I const& begin, S end) const ->
-                CONCEPT_return_type(size_type_t<I>)(
+                CPP_ret(size_type_t<I>)(
                     requires SizedSentinel<S, I>)
             {
                 difference_type_t<I> n = end - begin;
@@ -598,7 +598,7 @@ namespace ranges
             {}
             template<typename U>
             auto operator=(U &&value) ->
-                CONCEPT_return_type(ostream_iterator &)(
+                CPP_ret(ostream_iterator &)(
                     requires ConvertibleTo<U, meta::if_<std::is_void<T>, U, T> const&>)
             {
                 RANGES_EXPECT(sout_);
@@ -679,7 +679,7 @@ namespace ranges
             struct reverse_cursor
             {
             private:
-                CONCEPT_assert(BidirectionalIterator<I>);
+                CPP_assert(BidirectionalIterator<I>);
                 friend range_access;
                 template<typename OtherI>
                 friend struct reverse_cursor;
@@ -722,7 +722,7 @@ namespace ranges
                 template<typename J>
                 RANGES_CXX14_CONSTEXPR
                 auto equal(reverse_cursor<J> const& that) const ->
-                    CONCEPT_return_type(bool)(
+                    CPP_ret(bool)(
                         requires Sentinel<J, I>)
                 {
                     return it_ == that.it_;
@@ -737,16 +737,18 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CONCEPT_requires(RandomAccessIterator<I>)
+                CPP_member
                 RANGES_CXX14_CONSTEXPR
-                void advance(difference_type_t<I> n)
+                auto advance(difference_type_t<I> n) ->
+                    CPP_ret(void)(
+                        requires RandomAccessIterator<I>)
                 {
                     it_ -= n;
                 }
                 template<typename J>
                 RANGES_CXX14_CONSTEXPR
                 auto distance_to(reverse_cursor<J> const &that) const ->
-                    CONCEPT_return_type(difference_type_t<I>)(
+                    CPP_ret(difference_type_t<I>)(
                         requires SizedSentinel<J, I>)
                 {
                     return it_ - that.base();
@@ -759,7 +761,7 @@ namespace ranges
                 )
             public:
                 reverse_cursor() = default;
-                CONCEPT_template(typename U)(
+                CPP_template(typename U)(
                     requires ConvertibleTo<U, I>)
                 RANGES_CXX14_CONSTEXPR
                 reverse_cursor(reverse_cursor<U> const &u)
@@ -780,7 +782,7 @@ namespace ranges
         struct move_iterator
         {
         private:
-            CONCEPT_assert(InputIterator<I>);
+            CPP_assert(InputIterator<I>);
             I current_ = detail::value_init{};
         public:
             using iterator_type = I;
@@ -793,14 +795,14 @@ namespace ranges
             explicit move_iterator(I i)
               : current_(i)
             {}
-            CONCEPT_template(typename O)(
+            CPP_template(typename O)(
                 requires ConvertibleTo<O, I>)
             move_iterator(move_iterator<O> const &i)
               : current_(i.base())
             {}
             template<typename O>
             auto operator=(move_iterator<O> const & i) ->
-                CONCEPT_return_type(move_iterator &)(
+                CPP_ret(move_iterator &)(
                     requires ConvertibleTo<O, I>)
             {
                 current_ = i.base();
@@ -820,51 +822,69 @@ namespace ranges
                 ++current_;
                 return *this;
             }
-            CONCEPT_requires(not ForwardIterator<I>)
-            void operator++(int)
+            CPP_member
+            auto operator++(int) ->
+                CPP_ret(void)(
+                    requires not ForwardIterator<I>)
             {
                 ++current_;
             }
-            CONCEPT_requires(ForwardIterator<I>)
-            move_iterator operator++(int)
+            CPP_member
+            auto operator++(int) ->
+                CPP_ret(move_iterator)(
+                    requires ForwardIterator<I>)
             {
                 return move_iterator(current_++);
             }
-            CONCEPT_requires(BidirectionalIterator<I>)
-            move_iterator & operator--()
+            CPP_member
+            auto operator--() ->
+                CPP_ret(move_iterator &)(
+                    requires ForwardIterator<I>)
             {
                 --current_;
                 return *this;
             }
-            CONCEPT_requires(BidirectionalIterator<I>)
-            move_iterator operator--(int)
+            CPP_member
+            auto operator--(int) ->
+                CPP_ret(move_iterator)(
+                    requires BidirectionalIterator<I>)
             {
                 return move_iterator(current_--);
             }
-            CONCEPT_requires(RandomAccessIterator<I>)
-            move_iterator operator+(difference_type n) const
+            CPP_member
+            auto operator+(difference_type n) const ->
+                CPP_ret(move_iterator)(
+                    requires RandomAccessIterator<I>)
             {
                 return move_iterator(current_ + n);
             }
-            CONCEPT_requires(RandomAccessIterator<I>)
-            move_iterator & operator+=(difference_type n)
+            CPP_member
+            auto operator+=(difference_type n) ->
+                CPP_ret(move_iterator &)(
+                    requires RandomAccessIterator<I>)
             {
                 current_ += n;
                 return *this;
             }
-            CONCEPT_requires(RandomAccessIterator<I>)
-            move_iterator operator-(difference_type n) const
+            CPP_member
+            auto operator-(difference_type n) const ->
+                CPP_ret(move_iterator)(
+                    requires RandomAccessIterator<I>)
             {
                 return move_iterator(current_ - n);
             }
-            CONCEPT_requires(RandomAccessIterator<I>)
-            move_iterator & operator-=(difference_type n)
+            CPP_member
+            auto operator-=(difference_type n) ->
+                CPP_ret(move_iterator &)(
+                    requires RandomAccessIterator<I>)
             {
                 current_ -= n;
                 return *this;
             }
-            CONCEPT_requires(RandomAccessIterator<I>)
-            reference operator[](difference_type n) const
+            CPP_member
+            auto operator[](difference_type n) const ->
+                CPP_ret(reference)(
+                    requires RandomAccessIterator<I>)
             {
                 return iter_move(current_ + n);
             }
@@ -872,42 +892,42 @@ namespace ranges
 
         template<typename I1, typename I2>
         auto operator==(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires EqualityComparableWith<I1, I2>)
         {
             return x.base() == y.base();
         }
         template<typename I1, typename I2>
         auto operator!=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires EqualityComparableWith<I1, I2>)
         {
             return !(x == y);
         }
         template<typename I1, typename I2>
         auto operator<(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires StrictTotallyOrderedWith<I1, I2>)
         {
             return x.base() < y.base();
         }
         template<typename I1, typename I2>
         auto operator<=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires StrictTotallyOrderedWith<I1, I2>)
         {
             return !(y < x);
         }
         template<typename I1, typename I2>
         auto operator>(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires StrictTotallyOrderedWith<I1, I2>)
         {
             return y < x;
         }
         template<typename I1, typename I2>
         auto operator>=(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires StrictTotallyOrderedWith<I1, I2>)
         {
             return !(x < y);
@@ -915,14 +935,14 @@ namespace ranges
 
         template<typename I1, typename I2>
         auto operator-(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CONCEPT_return_type(difference_type_t<I2>)(
+            CPP_ret(difference_type_t<I2>)(
                 requires SizedSentinel<I1, I2>)
         {
             return x.base() - y.base();
         }
         template<typename I>
         auto operator+(difference_type_t<I> n, move_iterator<I> const &x) ->
-            CONCEPT_return_type(move_iterator<I>)(
+            CPP_ret(move_iterator<I>)(
                 requires RandomAccessIterator<I>)
         {
             return x + n;
@@ -932,7 +952,7 @@ namespace ranges
         {
             template<typename I>
             constexpr auto operator()(I it) const ->
-                CONCEPT_return_type(move_iterator<I>)(
+                CPP_ret(move_iterator<I>)(
                     requires InputIterator<I>)
             {
                 return move_iterator<I>{detail::move(it)};
@@ -953,14 +973,14 @@ namespace ranges
             constexpr explicit move_sentinel(S s)
               : sent_(detail::move(s))
             {}
-            CONCEPT_template(typename OS)(
+            CPP_template(typename OS)(
                 requires ConvertibleTo<OS, S>)
             constexpr explicit move_sentinel(move_sentinel<OS> const &that)
               : sent_(that.base())
             {}
             template<typename OS>
             auto operator=(move_sentinel<OS> const &that) ->
-                CONCEPT_return_type(move_sentinel &)(
+                CPP_ret(move_sentinel &)(
                     requires ConvertibleTo<OS, S>)
             {
                 sent_ = that.base();
@@ -974,28 +994,28 @@ namespace ranges
 
         template<typename I, typename S>
         auto operator==(move_iterator<I> const &i, move_sentinel<S> const &s) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires Sentinel<S, I>)
         {
             return i.base() == s.base();
         }
         template<typename I, typename S>
         auto operator==(move_sentinel<S> const &s, move_iterator<I> const &i) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires Sentinel<S, I>)
         {
             return s.base() == i.base();
         }
         template<typename I, typename S>
         auto operator!=(move_iterator<I> const &i, move_sentinel<S> const &s) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires Sentinel<S, I>)
         {
             return i.base() != s.base();
         }
         template<typename I, typename S>
         auto operator!=(move_sentinel<S> const &s, move_iterator<I> const &i) ->
-            CONCEPT_return_type(bool)(
+            CPP_ret(bool)(
                 requires Sentinel<S, I>)
         {
             return s.base() != i.base();
@@ -1005,7 +1025,7 @@ namespace ranges
         {
             template<typename I>
             constexpr auto operator()(I i) const ->
-                CONCEPT_return_type(move_iterator<I>)(
+                CPP_ret(move_iterator<I>)(
                     requires InputIterator<I>)
             {
                 return move_iterator<I>{detail::move(i)};
@@ -1013,7 +1033,7 @@ namespace ranges
 
             template<typename S>
             constexpr auto operator()(S s) const ->
-                CONCEPT_return_type(move_sentinel<S>)(
+                CPP_ret(move_sentinel<S>)(
                     requires Semiregular<S> && !InputIterator<S>)
             {
                 return move_sentinel<S>{detail::move(s)};
@@ -1069,48 +1089,58 @@ namespace ranges
                 }
                 template<typename T>
                 auto write(T &&t) noexcept(noexcept(*it_ = std::move(t))) ->
-                    CONCEPT_return_type(void)(
+                    CPP_ret(void)(
                         requires Writable<I, aux::move_t<T>>)
                 {
                     *it_ = std::move(t);
                 }
                 template<typename T>
                 auto write(T &&t) const noexcept(noexcept(*it_ = std::move(t))) ->
-                    CONCEPT_return_type(void)(
+                    CPP_ret(void)(
                         requires Writable<I, aux::move_t<T>>)
                 {
                     *it_ = std::move(t);
                 }
-                CONCEPT_requires(Readable<I>)
-                reference_t<I> read() const
-                    noexcept(noexcept(*std::declval<I const&>()))
+                CPP_member
+                auto read() const
+                    noexcept(noexcept(*std::declval<I const&>())) ->
+                    CPP_ret(reference_t<I>)(
+                        requires Readable<I>)
                 {
                     return *it_;
                 }
-                CONCEPT_requires(InputIterator<I>)
-                bool equal(move_into_cursor const &that) const
+                CPP_member
+                auto equal(move_into_cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires InputIterator<I>)
                 {
                     return it_ == that.it_;
                 }
-                CONCEPT_requires(BidirectionalIterator<I>)
-                void prev()
+                CPP_member
+                auto prev() ->
+                    CPP_ret(void)(
+                        requires BidirectionalIterator<I>)
                 {
                     --it_;
                 }
-                CONCEPT_requires(RandomAccessIterator<I>)
-                void advance(difference_type_t<I> n)
+                CPP_member
+                auto advance(difference_type_t<I> n) ->
+                    CPP_ret(void)(
+                        requires RandomAccessIterator<I>)
                 {
                     it_ += n;
                 }
-                CONCEPT_requires(SizedSentinel<I, I>)
-                difference_type_t<I> distance_to(move_into_cursor const &that) const
+                CPP_member
+                auto distance_to(move_into_cursor const &that) const ->
+                    CPP_ret(difference_type_t<I>)(
+                        requires SizedSentinel<I, I>)
                 {
                     return that.it_ - it_;
                 }
                 template<typename II = I const>
                 RANGES_CXX14_CONSTEXPR
                 auto move() const noexcept(has_nothrow_iter_move<II>::value) ->
-                    CONCEPT_return_type(rvalue_reference_t<II>)(
+                    CPP_ret(rvalue_reference_t<II>)(
                         requires Same<I const, II> && Readable<II>)
                 {
                     return iter_move(it_);

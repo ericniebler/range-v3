@@ -134,7 +134,7 @@ namespace ranges
             )
             template<typename F, typename... Args,
                 meta::if_c<!std::is_member_pointer<uncvref_t<F>>::value, int> = 0>
-            CONCEPT_PP_IIF(RANGES_CONSTEXPR_INVOKE)(CONCEPT_PP_EXPAND, CONCEPT_PP_EAT)(constexpr)
+            CPP_PP_IIF(RANGES_CONSTEXPR_INVOKE)(CPP_PP_EXPAND, CPP_PP_EAT)(constexpr)
             auto operator()(F &&fn, Args &&... args) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -193,7 +193,7 @@ namespace ranges
             using reference = meta::if_<std::is_reference<T>, T, T &>;
 
             constexpr reference_wrapper() = default;
-            CONCEPT_template(typename U)(
+            CPP_template(typename U)(
                 requires Constructible<base_, U> &&
                     !Same<uncvref_t<U>, reference_wrapper>)
             constexpr reference_wrapper(U &&u)
@@ -208,7 +208,7 @@ namespace ranges
             {
                 return get();
             }
-            CONCEPT_requires(not std::is_rvalue_reference<T>())
+            CPP_requires(not std::is_rvalue_reference<T>())
             operator std::reference_wrapper<type> () const noexcept
             {
                 return {get()};

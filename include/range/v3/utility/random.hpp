@@ -100,7 +100,7 @@ namespace ranges
     {
         /// \addtogroup group-concepts
         /// @{
-        CONCEPT_def
+        CPP_def
         (
             template(typename Gen)
             concept UniformRandomNumberGenerator,
@@ -122,7 +122,7 @@ namespace ranges
         {
             namespace randutils
             {
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires Integral<T>)
                 RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
                 RANGES_INTENDED_MODULAR_ARITHMETIC
@@ -159,7 +159,7 @@ namespace ranges
 #endif
                 std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
                 {
-                    CONCEPT_assert(seed_count >= weird_seed_sources);
+                    CPP_assert(seed_count >= weird_seed_sources);
                     std::array<std::uint32_t, seed_count> seeds;
                     auto it = seeds.begin();
 
@@ -228,7 +228,7 @@ namespace ranges
                     return seeds;
                 }
 
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires UnsignedIntegral<I>)
                 constexpr I fast_exp(I x, I power, I result = I{1})
                 {
@@ -307,7 +307,7 @@ namespace ranges
                     std::size_t mix_rounds = 1 + (count <= 2)>
                 struct seed_seq_fe {
                 public:
-                    CONCEPT_assert(UnsignedIntegral<IntRep>);
+                    CPP_assert(UnsignedIntegral<IntRep>);
                     typedef IntRep result_type;
 
                 private:
@@ -323,7 +323,7 @@ namespace ranges
 
                     std::array<IntRep, count> mixer_;
 
-                    CONCEPT_template(typename I, typename S)(
+                    CPP_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<reference_t<I>, IntRep>)
                     void mix_entropy(I begin, S end)
@@ -364,14 +364,14 @@ namespace ranges
                     seed_seq_fe(const seed_seq_fe&)     = delete;
                     void operator=(const seed_seq_fe&)  = delete;
 
-                    CONCEPT_template(typename T)(
+                    CPP_template(typename T)(
                         requires ConvertibleTo<T const&, IntRep>)
                     seed_seq_fe(std::initializer_list<T> init)
                     {
                         seed(init.begin(), init.end());
                     }
 
-                    CONCEPT_template(typename I, typename S)(
+                    CPP_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<reference_t<I>, IntRep>)
                     seed_seq_fe(I begin, S end)
@@ -380,7 +380,7 @@ namespace ranges
                     }
 
                     // generating functions
-                    CONCEPT_template(typename I, typename S)(
+                    CPP_template(typename I, typename S)(
                         requires RandomAccessIterator<I> && Sentinel<S, I>)
                     void generate(I dest_begin, S dest_end) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
@@ -407,7 +407,7 @@ namespace ranges
                         return count;
                     }
 
-                    CONCEPT_template(typename O)(
+                    CPP_template(typename O)(
                         requires WeaklyIncrementable<O> &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
                     void param(O dest) const
@@ -452,7 +452,7 @@ namespace ranges
                         ranges::copy(mixer_copy, dest);
                     }
 
-                    CONCEPT_template(typename I, typename S)(
+                    CPP_template(typename I, typename S)(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<reference_t<I>, IntRep>)
                     void seed(I begin, S end)

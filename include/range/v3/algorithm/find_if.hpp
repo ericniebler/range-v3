@@ -42,7 +42,7 @@ namespace ranges
             ///      value type of I.
             /// \pre `F` models `Predicate<X>`, where `X` is the result type
             ///      of `Invocable<P, V>`
-            CONCEPT_template(typename I, typename S, typename F, typename P = ident)(
+            CPP_template(typename I, typename S, typename F, typename P = ident)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectPredicate<F, projected<I, P>>)
             I operator()(I begin, S end, F pred, P proj = P{}) const
@@ -54,7 +54,7 @@ namespace ranges
             }
 
             /// \overload
-            CONCEPT_template(typename Rng, typename F, typename P = ident,
+            CPP_template(typename Rng, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> &&
                     IndirectPredicate<F, projected<I, P>>)

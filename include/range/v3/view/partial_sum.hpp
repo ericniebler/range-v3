@@ -91,14 +91,14 @@ namespace ranges
             {
                 return {*this};
             }
-            CONCEPT_requires(Range<Rng const> &&
+            CPP_requires(Range<Rng const> &&
                 Invocable<Fun const&, range_common_reference_t<Rng>,
                     range_common_reference_t<Rng>>)
             adaptor<true> begin_adaptor() const
             {
                 return {*this};
             }
-            CONCEPT_requires(Range<Rng const> &&
+            CPP_requires(Range<Rng const> &&
                 Invocable<Fun const&, range_common_reference_t<Rng>,
                     range_common_reference_t<Rng>>)
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
@@ -111,7 +111,7 @@ namespace ranges
               : partial_sum_view::view_adaptor{std::move(rng)}
               , fun_(std::move(fun))
             {}
-            CONCEPT_requires(SizedRange<Rng>)
+            CPP_requires(SizedRange<Rng>)
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -120,7 +120,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept PartialSumViewConcept,
@@ -144,25 +144,25 @@ namespace ranges
                         protect(std::move(fun))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires PartialSumViewConcept<Rng, Fun>)
                 partial_sum_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires not PartialSumViewConcept<Rng, Fun>)
                 void operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The first argument passed to view::partial_sum must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(IndirectInvocable<Fun, iterator_t<Rng>,
+                    CPP_assert_msg(IndirectInvocable<Fun, iterator_t<Rng>,
                         iterator_t<Rng>>,
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
-                    CONCEPT_assert_msg(ConvertibleTo<
+                    CPP_assert_msg(ConvertibleTo<
                         invoke_result_t<Fun &, range_common_reference_t<Rng>,
                             range_common_reference_t<Rng>>,
                         range_value_type_t<Rng>>,

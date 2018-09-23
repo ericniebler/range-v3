@@ -51,26 +51,26 @@ namespace {
         {
             int i = 42;
             auto ci = ranges::common_iterator<int*, ranges::unreachable>{&i};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
+            CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &i);
         }
         // the expression i.operator->() is well-formed
         {
             using I = ranges::basic_iterator<silly_arrow_cursor>;
             auto ci = ranges::common_iterator<I, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<I, decltype(ci.operator->())>);
+            CPP_assert(ranges::Same<I, decltype(ci.operator->())>);
             CHECK(ci.operator->().operator->() == 42);
         }
         // the expression *i is a glvalue [lvalue case]
         {
             auto ci = ranges::common_iterator<lvalue_iterator, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
+            CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // the expression *i is a glvalue [xvalue case]
         {
             auto ci = ranges::common_iterator<xvalue_iterator, ranges::unreachable>{};
-            CONCEPT_assert(ranges::Same<int*, decltype(ci.operator->())>);
+            CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // Otherwise, returns a proxy object
@@ -78,8 +78,8 @@ namespace {
             using I = ranges::basic_iterator<proxy_cursor>;
             auto ci = ranges::common_iterator<I, ranges::unreachable>{};
             using A = decltype(ci.operator->());
-            CONCEPT_assert(std::is_class<A>::value);
-            CONCEPT_assert(!std::is_same<I, A>::value);
+            CPP_assert(std::is_class<A>::value);
+            CPP_assert(!std::is_same<I, A>::value);
             CHECK(*ci.operator->().operator->() == 42);
         }
     }
@@ -87,17 +87,17 @@ namespace {
 
 int main() {
     {
-        CONCEPT_assert(
+        CPP_assert(
             ranges::ForwardIterator<
                 ranges::common_iterator<
                     bidirectional_iterator<const char *>,
                     sentinel<const char *>>>);
-        CONCEPT_assert(
+        CPP_assert(
             !ranges::BidirectionalIterator<
                 ranges::common_iterator<
                     bidirectional_iterator<const char *>,
                     sentinel<const char *>>>);
-        CONCEPT_assert(
+        CPP_assert(
             std::is_same<
                 ranges::common_reference<
                     ranges::common_iterator<
@@ -115,7 +115,7 @@ int main() {
                 >
             >::value);
         // Sized iterator range tests
-        CONCEPT_assert(
+        CPP_assert(
             !ranges::SizedSentinel<
                 ranges::common_iterator<
                     forward_iterator<int*>,
@@ -123,7 +123,7 @@ int main() {
                 ranges::common_iterator<
                     forward_iterator<int*>,
                     sentinel<int*, true> > >);
-        CONCEPT_assert(
+        CPP_assert(
             ranges::SizedSentinel<
                 ranges::common_iterator<
                     random_access_iterator<int*>,
@@ -131,7 +131,7 @@ int main() {
                 ranges::common_iterator<
                     random_access_iterator<int*>,
                     sentinel<int*, true> > >);
-        CONCEPT_assert(
+        CPP_assert(
             !ranges::SizedSentinel<
                 ranges::common_iterator<
                     random_access_iterator<int*>,

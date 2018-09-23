@@ -68,7 +68,7 @@ namespace ranges
         ///
         /// Range concepts below
         ///
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept Range,
@@ -79,35 +79,35 @@ namespace ranges
                 )
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T, typename V)
             concept OutputRange,
                 Range<T> && OutputIterator<iterator_t<T>, V>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept InputRange,
                 Range<T> && InputIterator<iterator_t<T>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept ForwardRange,
                 InputRange<T> && ForwardIterator<iterator_t<T>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept BidirectionalRange,
                 ForwardRange<T> && BidirectionalIterator<iterator_t<T>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept RandomAccessRange,
@@ -125,7 +125,7 @@ namespace ranges
         }
         /// \endcond
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept ContiguousRange,
@@ -134,7 +134,7 @@ namespace ranges
                 Same<detail::data_reference_t<T>, range_reference_t<T>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept BoundedRange,
@@ -142,7 +142,7 @@ namespace ranges
                 Same<iterator_t<T>, sentinel_t<T>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept SizedRange,
@@ -158,7 +158,7 @@ namespace ranges
         /// View concepts below
         ///
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept View,
@@ -166,42 +166,42 @@ namespace ranges
                 detail::view_predicate_<T>::value
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T, typename V)
             concept OutputView,
                 View<T> && OutputRange<T, V>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept InputView,
                 View<T> && InputRange<T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept ForwardView,
                 View<T> && ForwardRange<T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept BidirectionalView,
                 View<T> && BidirectionalRange<T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept RandomAccessView,
                 View<T> && RandomAccessRange<T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept ContiguousView,
@@ -209,14 +209,14 @@ namespace ranges
         );
 
         // Additional concepts for checking additional orthogonal properties
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept BoundedView,
                 View<T> && BoundedRange<T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename T)
             concept SizedView,

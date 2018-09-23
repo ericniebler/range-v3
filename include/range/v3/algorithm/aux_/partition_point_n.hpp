@@ -24,7 +24,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename C, typename P = ident)
             (concept PartitionPointable)(I, C, P),
@@ -36,7 +36,7 @@ namespace ranges
         {
             struct partition_point_n_fn
             {
-                CONCEPT_template(typename I, typename C, typename P = ident)(
+                CPP_template(typename I, typename C, typename P = ident)(
                     requires PartitionPointable<I, C, P>)
                 I operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const
                 {

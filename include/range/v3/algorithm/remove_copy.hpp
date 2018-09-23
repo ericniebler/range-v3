@@ -30,7 +30,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename T, typename P = ident)
             (concept RemoveCopyable)(I, O, T, P),
@@ -44,7 +44,7 @@ namespace ranges
         /// @{
         struct remove_copy_fn
         {
-            CONCEPT_template(typename I, typename S, typename O, typename T, typename P = ident)(
+            CPP_template(typename I, typename S, typename O, typename T, typename P = ident)(
                 requires RemoveCopyable<I, O, T, P> && Sentinel<S, I>)
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, T const &val, P proj = P{}) const
             {
@@ -60,7 +60,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            CONCEPT_template(typename Rng, typename O, typename T, typename P = ident,
+            CPP_template(typename Rng, typename O, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires RemoveCopyable<I, O, T, P> && InputRange<Rng>)
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out, T const &val, P proj = P{}) const

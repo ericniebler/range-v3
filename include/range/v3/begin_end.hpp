@@ -59,7 +59,7 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Iterator.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(aux::copy(std::declval<R &>().begin())))(
                     requires Iterator<I>)
                 static constexpr I impl_(R &r, int)
@@ -69,7 +69,7 @@ namespace ranges
                 )
 
                 // Use ADL if it returns Iterator.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(aux::copy(begin(std::declval<R &>()))))(
                     requires Iterator<I>)
                 static constexpr I impl_(R &r, long)
@@ -149,7 +149,7 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Sentinel.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(aux::copy(std::declval<R &>().end())))(
                     requires Sentinel<S, I>)
@@ -160,7 +160,7 @@ namespace ranges
                 )
 
                 // Use ADL if it returns Sentinel.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(aux::copy(end(std::declval<R &>()))))(
                     requires Sentinel<S, I>)
@@ -290,7 +290,7 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Iterator.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(aux::copy(std::declval<R &>().rbegin())))(
                     requires Iterator<I>)
                 static constexpr I impl_(R &r, int)
@@ -299,7 +299,7 @@ namespace ranges
                     r.rbegin()
                 )
 
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(ranges::end(std::declval<R &>())))(
                     requires Same<I, S> && BidirectionalIterator<I>)
@@ -367,7 +367,7 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Sentinel.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(ranges::rbegin(std::declval<R &>())),
                     typename S = decltype(aux::copy(std::declval<R &>().rend())))(
                     requires Sentinel<S, I>)
@@ -377,7 +377,7 @@ namespace ranges
                     r.rend()
                 )
 
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename I = decltype(ranges::begin(std::declval<R &>())),
                     typename S = decltype(ranges::end(std::declval<R &>())))(
                     requires Same<I, S> && BidirectionalIterator<I>)

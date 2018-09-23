@@ -36,7 +36,7 @@ namespace ranges
         {
             using aux::move_fn::operator();
 
-            CONCEPT_template(typename I, typename S, typename O)(
+            CPP_template(typename I, typename S, typename O)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> && IndirectlyMovable<I, O>)
             tagged_pair<tag::in(I), tag::out(O)>
@@ -47,7 +47,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            CONCEPT_template(typename Rng, typename O,
+            CPP_template(typename Rng, typename O,
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectlyMovable<I, O>)

@@ -48,8 +48,8 @@ int main()
     auto mutable_rng = view::partial_sum(rgi, [cnt](int i, int j) mutable { return i + j + cnt++;});
     ::check_equal(mutable_rng, {1, 3, 7, 13, 21, 31, 43, 57, 73, 91});
     CHECK(cnt == 0);
-    CONCEPT_assert(View<decltype(mutable_rng)>);
-    CONCEPT_assert(!View<decltype(mutable_rng) const>);
+    CPP_assert(View<decltype(mutable_rng)>);
+    CPP_assert(!View<decltype(mutable_rng) const>);
 
     {
         auto rng = debug_input_view<int const>{rgi} | view::partial_sum();

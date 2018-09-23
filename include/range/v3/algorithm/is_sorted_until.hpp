@@ -41,7 +41,7 @@ namespace ranges
             /// \pre `S` and `I` model the `Sentinel<S, I>` concept
             /// \pre `R` and `projected<I, P>` model the `IndirectRelation<R, projected<I, P>>` concept
             ///
-            CONCEPT_template(typename I, typename S, typename R = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename R = ordered_less, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<R, projected<I, P>>)
             I operator()(I begin, S end, R pred = R{}, P proj = P{}) const
@@ -59,7 +59,7 @@ namespace ranges
                 return i;
             }
 
-            CONCEPT_template(typename Rng, typename R = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename R = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<R, projected<I, P>>)

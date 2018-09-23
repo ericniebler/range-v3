@@ -121,7 +121,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_requires(Invocable<Fun const&, iterator_t<Rng>,
+            CPP_requires(Invocable<Fun const&, iterator_t<Rng>,
                 sentinel_t<Rng>> && Range<Rng const>)
             cursor<true> begin_cursor() const
             {
@@ -137,7 +137,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept SplitOnFunction,
@@ -149,7 +149,7 @@ namespace ranges
                         invoke_result_t<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
                         std::pair<bool, iterator_t<Rng>>>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept SplitOnPredicate,
@@ -157,14 +157,14 @@ namespace ranges
                     Predicate<Fun const&, range_reference_t<Rng>> &&
                     CopyConstructible<Fun>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng)
                 concept SplitOnElement,
                     ForwardRange<Rng> &&
                     Regular<range_value_type_t<Rng>>
             );
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Sub)
                 concept SplitOnSubRange,
@@ -188,7 +188,7 @@ namespace ranges
                 {
                     semiregular_t<Pred> pred_;
 
-                    CONCEPT_template(typename S)(
+                    CPP_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
@@ -202,7 +202,7 @@ namespace ranges
                 {
                     range_value_type_t<Rng> val_;
 
-                    CONCEPT_template(typename S)(
+                    CPP_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
@@ -223,7 +223,7 @@ namespace ranges
                     subrange_pred(Sub &&sub)
                       : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
                     {}
-                    CONCEPT_template(typename S)(
+                    CPP_template(typename S)(
                         requires Sentinel<S, iterator_t<Rng>>)
                     std::pair<bool, iterator_t<Rng>>
                     operator()(iterator_t<Rng> cur, S end) const
@@ -244,25 +244,25 @@ namespace ranges
                     }
                 };
             public:
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires SplitOnFunction<Rng, Fun>)
                 split_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires SplitOnPredicate<Rng, Fun>)
                 split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng &&rng, Fun fun) const
                 {
                     return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires SplitOnElement<Rng>)
                 split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng &&rng, range_value_type_t<Rng> val) const
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
                 }
-                CONCEPT_template(typename Rng, typename Sub)(
+                CPP_template(typename Rng, typename Sub)(
                     requires SplitOnSubRange<Rng, Sub>)
                 split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng &&rng, Sub &&sub) const
                 {
@@ -270,14 +270,14 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires not ConvertibleTo<T, range_value_type_t<Rng>>)
                 void operator()(Rng &&, T &&) const volatile
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_assert_msg(ConvertibleTo<T, range_value_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_value_type_t<Rng>>,
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "

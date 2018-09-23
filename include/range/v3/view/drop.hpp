@@ -54,17 +54,17 @@ namespace ranges
             template<typename BaseRng = Rng>
             iterator_t<BaseRng const> get_begin_(std::true_type, std::true_type) const
             {
-                CONCEPT_assert(RandomAccessRange<Rng const>);
+                CPP_assert(RandomAccessRange<Rng const>);
                 return next(ranges::begin(rng_), n_, ranges::end(rng_));
             }
             iterator_t<Rng> get_begin_(std::true_type, std::false_type)
             {
-                CONCEPT_assert(RandomAccessRange<Rng>);
+                CPP_assert(RandomAccessRange<Rng>);
                 return next(ranges::begin(rng_), n_, ranges::end(rng_));
             }
             iterator_t<Rng> get_begin_(std::false_type, detail::any)
             {
-                CONCEPT_assert(!RandomAccessRange<Rng>);
+                CPP_assert(!RandomAccessRange<Rng>);
                 using cache_t = detail::non_propagating_cache<
                     iterator_t<Rng>, drop_view<Rng>>;
                 auto &begin_ = static_cast<cache_t&>(*this);
@@ -79,36 +79,36 @@ namespace ranges
             {
                 RANGES_EXPECT(n >= 0);
             }
-            CONCEPT_requires(not RandomAccessRange<Rng const>)
+            CPP_requires(not RandomAccessRange<Rng const>)
             iterator_t<Rng> begin()
             {
                 return this->get_begin_(meta::bool_<RandomAccessRange<Rng>>{}, std::false_type{});
             }
-            CONCEPT_requires(not RandomAccessRange<Rng const>)
+            CPP_requires(not RandomAccessRange<Rng const>)
             sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_template(typename BaseRng = Rng)(
+            CPP_template(typename BaseRng = Rng)(
                 requires RandomAccessRange<BaseRng const>)
             iterator_t<BaseRng const> begin() const
             {
                 return this->get_begin_(std::true_type{}, std::true_type{});
             }
-            CONCEPT_template(typename BaseRng = Rng)(
+            CPP_template(typename BaseRng = Rng)(
                 requires RandomAccessRange<BaseRng const>)
             sentinel_t<BaseRng const> end() const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_requires(SizedRange<Rng const>)
+            CPP_requires(SizedRange<Rng const>)
             range_size_type_t<Rng> size() const
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);
                 return s < n ? 0 : s - n;
             }
-            CONCEPT_requires(not SizedRange<Rng const> && SizedRange<Rng>)
+            CPP_requires(not SizedRange<Rng const> && SizedRange<Rng>)
             range_size_type_t<Rng> size()
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
@@ -131,7 +131,7 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CONCEPT_template(typename Int)(
+                CPP_template(typename Int)(
                     requires Integral<Int>)
                 static auto bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -139,11 +139,11 @@ namespace ranges
                     make_pipeable(std::bind(drop, std::placeholders::_1, n))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Int)(
+                CPP_template(typename Int)(
                     requires not Integral<Int>)
                 static detail::null_pipe bind(drop_fn, Int)
                 {
-                    CONCEPT_assert_msg(Integral<Int>,
+                    CPP_assert_msg(Integral<Int>,
                         "The object passed to view::drop must be Integral");
                     return {};
                 }
@@ -154,7 +154,7 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value &&
                         SizedRange<Rng>)
                 static iterator_range<iterator_t<Rng>, sentinel_t<Rng>>
@@ -163,7 +163,7 @@ namespace ranges
                     return {begin(rng) + ranges::min(n, distance(rng)), end(rng)};
                 }
             public:
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires InputRange<Rng>)
                 auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -171,13 +171,13 @@ namespace ranges
                     drop_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires not (InputRange<Rng> && Integral<T>))
                 void operator()(Rng &&, T) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The first argument to view::drop must be a model of the InputRange concept");
-                    CONCEPT_assert_msg(Integral<T>,
+                    CPP_assert_msg(Integral<T>,
                         "The second argument to view::drop must be a model of the Integral concept");
                 }
             #endif

@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         struct shuffle_fn
         {
-            CONCEPT_template(typename I, typename S, typename Gen = detail::default_random_engine&)(
+            CPP_template(typename I, typename S, typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<I> && Sentinel<S, I> &&
                     Permutable<I> && UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
@@ -53,7 +53,7 @@ namespace ranges
                 return mid;
             }
 
-            CONCEPT_template(typename Rng, typename Gen = detail::default_random_engine&,
+            CPP_template(typename Rng, typename Gen = detail::default_random_engine&,
                 typename I = iterator_t<Rng>)(
                 requires RandomAccessRange<Rng> && Permutable<I> &&
                     UniformRandomNumberGenerator<Gen> &&

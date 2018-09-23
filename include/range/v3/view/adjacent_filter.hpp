@@ -34,7 +34,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred)
                 concept AdjacentFilter,
@@ -77,8 +77,10 @@ namespace ranges
                         if(invoke(pred, *prev, *it))
                             break;
                 }
-                CONCEPT_requires(BidirectionalRange<Base>)
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Base> &it) const
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Base> &it) const ->
+                    CPP_ret(void)(
+                        requires BidirectionalRange<Base>)
                 {
                     auto const first = ranges::begin(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -94,23 +96,31 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
-            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>)
-            constexpr adaptor begin_adaptor() const noexcept
+            CPP_member
+            constexpr auto begin_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires detail::AdjacentFilter<Rng const, Pred const>)
             {
                 return {*this};
             }
-            CONCEPT_requires(detail::AdjacentFilter<Rng const, Pred const>)
-            constexpr adaptor end_adaptor() const noexcept
+            CPP_member
+            constexpr auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires detail::AdjacentFilter<Rng const, Pred const>)
             {
                 return {*this};
             }
-            CONCEPT_requires(not detail::AdjacentFilter<Rng const, Pred const>)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            CPP_member
+            constexpr auto begin_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not detail::AdjacentFilter<Rng const, Pred const>)
             {
                 return {*this};
             }
-            CONCEPT_requires(not detail::AdjacentFilter<Rng const, Pred const>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
+            CPP_member
+            constexpr auto end_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not detail::AdjacentFilter<Rng const, Pred const>)
             {
                 return {*this};
             }
@@ -140,7 +150,7 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires detail::AdjacentFilter<Rng, Pred>)
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -149,13 +159,13 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires not detail::AdjacentFilter<Rng, Pred>)
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "Rng must model the ForwardRange concept");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>,
+                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>,
                         "Pred must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

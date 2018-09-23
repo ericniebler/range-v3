@@ -41,7 +41,7 @@ namespace ranges
             /// \pre `S` is a model of the `Sentinel` concept
             /// \pre `C` is a model of the `Relation` concept
             ///
-            CONCEPT_template(typename I, typename S, typename C = equal_to, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = equal_to, typename P = ident)(
                 requires Sortable<I, C, P> && Sentinel<S, I>)
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
@@ -57,7 +57,7 @@ namespace ranges
                 return begin;
             }
 
-            CONCEPT_template(typename Rng, typename C = equal_to, typename P = ident,
+            CPP_template(typename Rng, typename C = equal_to, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Sortable<I, C, P> && Range<Rng>)
             safe_iterator_t<Rng>

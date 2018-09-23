@@ -39,7 +39,7 @@ namespace ranges
         namespace detail
         {
             /// \cond
-            CONCEPT_def
+            CPP_def
             (
                 template(typename R)
                 concept RA_and_Sized,
@@ -58,8 +58,8 @@ namespace ranges
           : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
-            CONCEPT_assert(View<Rng>);
-            CONCEPT_assert(!BoundedView<Rng>);
+            CPP_assert(View<Rng>);
+            CPP_assert(!BoundedView<Rng>);
 
             Rng rng_;
 
@@ -71,13 +71,13 @@ namespace ranges
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
             }
-            CONCEPT_template(typename R = Rng const)(
+            CPP_template(typename R = Rng const)(
                 requires Range<R &>)
             sentinel_t<R> end_(std::false_type) const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_template(typename R = Rng const)(
+            CPP_template(typename R = Rng const)(
                 requires Range<R &>)
             iterator_t<R> end_(std::true_type) const
             {
@@ -106,26 +106,26 @@ namespace ranges
                 return detail::bounded_iterator_t<Rng>{
                     end_(meta::bool_<detail::RA_and_Sized<Rng>>{})};
             }
-            CONCEPT_requires(SizedRange<Rng>)
+            CPP_requires(SizedRange<Rng>)
             range_size_type_t<Rng> size()
             {
                 return ranges::size(rng_);
             }
 
-            CONCEPT_template(typename R = Rng const)(
+            CPP_template(typename R = Rng const)(
                 requires Range<R &>)
             detail::bounded_iterator_t<R> begin() const
             {
                 return detail::bounded_iterator_t<R>{ranges::begin(rng_)};
             }
-            CONCEPT_template(typename R = Rng const)(
+            CPP_template(typename R = Rng const)(
                 requires Range<R &>)
             detail::bounded_iterator_t<R> end() const
             {
                 return detail::bounded_iterator_t<R>{
                     end_(meta::bool_<detail::RA_and_Sized<R>>{})};
             }
-            CONCEPT_requires(SizedRange<Rng const>)
+            CPP_requires(SizedRange<Rng const>)
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(rng_);
@@ -136,24 +136,24 @@ namespace ranges
         {
             struct bounded_fn
             {
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires Range<Rng> && !BoundedRange<Rng>)
                 bounded_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return bounded_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires Range<Rng> && BoundedRange<Rng>)
                 all_t<Rng> operator()(Rng &&rng) const
                 {
                     return all(static_cast<Rng &&>(rng));
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires not Range<Rng>)
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(Range<Rng>,
+                    CPP_assert_msg(Range<Rng>,
                         "Rng is not a model of the Range concept");
                 }
             #endif

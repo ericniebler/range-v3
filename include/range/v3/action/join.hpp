@@ -41,7 +41,7 @@ namespace ranges
                     range_value_type_t<Rng>,
                     std::vector<range_value_type_t<range_value_type_t<Rng>>>>;
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng)
                 concept JoinActionConcept,
@@ -53,7 +53,7 @@ namespace ranges
             struct join_fn
             {
             public:
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires JoinActionConcept<Rng>)
                 join_action_value_t_<Rng> operator()(Rng &&rng) const
                 {
@@ -65,14 +65,14 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires not JoinActionConcept<Rng>)
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which action::join operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(InputRange<range_value_type_t<Rng>>,
+                    CPP_assert_msg(InputRange<range_value_type_t<Rng>>,
                         "The Range on which action::join operates must have a value type that "
                         "models the InputRange concept.");
                 }

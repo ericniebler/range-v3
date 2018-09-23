@@ -45,7 +45,7 @@ namespace ranges
         {
             // stable, 2-3 compares, 0-2 swaps
 
-            CONCEPT_template(typename I, typename C, typename P)(
+            CPP_template(typename I, typename C, typename P)(
                 requires ForwardIterator<I> &&
                     IndirectRelation<C, projected<I, P>>)
             unsigned sort3(I x, I y, I z, C &pred, P &proj)
@@ -81,7 +81,7 @@ namespace ranges
                 return r;
             }                                                             // x <= y && y <= z
 
-            CONCEPT_template(typename I, typename C, typename P)(
+            CPP_template(typename I, typename C, typename P)(
                 requires BidirectionalIterator<I> &&
                     IndirectRelation<C, projected<I, P>>)
             void selection_sort(I begin, I end, C &pred, P &proj)
@@ -101,7 +101,7 @@ namespace ranges
         /// @{
         struct nth_element_fn
         {
-            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires RandomAccessIterator<I> && Sortable<I, C, P>)
             I operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const
             {
@@ -290,7 +290,7 @@ namespace ranges
                 return end_orig;
             }
 
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires RandomAccessRange<Rng> &&
                     Sortable<I, C, P>)

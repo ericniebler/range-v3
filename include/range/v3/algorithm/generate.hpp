@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct generate_fn
         {
-            CONCEPT_template(typename O, typename S, typename F)(
+            CPP_template(typename O, typename S, typename F)(
                 requires Invocable<F&> &&
                     OutputIterator<O, invoke_result_t<F &>> &&
                     Sentinel<S, O>)
@@ -43,7 +43,7 @@ namespace ranges
                 return {detail::move(begin), detail::move(fun)};
             }
 
-            CONCEPT_template(typename Rng, typename F, typename O = iterator_t<Rng>)(
+            CPP_template(typename Rng, typename F, typename O = iterator_t<Rng>)(
                 requires Invocable<F&> &&
                     OutputRange<Rng, invoke_result_t<F &>>)
             tagged_pair<tag::out(safe_iterator_t<Rng>), tag::fun(F)>

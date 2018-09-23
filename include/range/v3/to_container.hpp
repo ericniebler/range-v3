@@ -38,14 +38,14 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Cont)
                 concept HasAllocatorType,
                     True<typename Cont::allocator_type>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Cont)
                 concept ConvertibleToContainerImpl,
@@ -54,7 +54,7 @@ namespace ranges
                     Constructible<Cont, range_common_iterator_t<Rng>, range_common_iterator_t<Rng>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Cont)
                 concept ConvertibleToContainer,
@@ -62,7 +62,7 @@ namespace ranges
                     defer::ConvertibleToContainerImpl<Rng, Cont>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename C, typename R)
                 concept ToContainerReserve,
@@ -75,7 +75,7 @@ namespace ranges
               : pipeable<to_container_fn<ToContainer>>
             {
             private:
-                CONCEPT_template(typename Cont, typename Rng)(
+                CPP_template(typename Cont, typename Rng)(
                     requires not ToContainerReserve<Cont, Rng>)
                 Cont impl(Rng &&rng) const
                 {
@@ -83,7 +83,7 @@ namespace ranges
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
-                CONCEPT_template(typename Cont, typename Rng)(
+                CPP_template(typename Cont, typename Rng)(
                     requires ToContainerReserve<Cont, Rng>)
                 Cont impl(Rng &&rng) const
                 {
@@ -101,7 +101,7 @@ namespace ranges
                 }
 
             public:
-                CONCEPT_template(typename Rng,
+                CPP_template(typename Rng,
                     typename Cont = meta::invoke<ToContainer, range_value_type_t<Rng>>)(
                     requires InputRange<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
                 Cont operator()(Rng &&rng) const
@@ -130,7 +130,7 @@ namespace ranges
         }
 
         /// \overload
-        CONCEPT_template(template<typename...> class ContT, typename Rng,
+        CPP_template(template<typename...> class ContT, typename Rng,
             typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>)(
             requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
         Cont to_(Rng &&rng)
@@ -139,7 +139,7 @@ namespace ranges
         }
 
         /// \overload
-        CONCEPT_template(template<typename...> class ContT, typename T,
+        CPP_template(template<typename...> class ContT, typename T,
             typename Cont = meta::invoke<meta::quote<ContT>, T>)(
             requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
         Cont to_(std::initializer_list<T> list)
@@ -155,7 +155,7 @@ namespace ranges
         }
 
         /// \overload
-        CONCEPT_template(typename Cont, typename Rng)(
+        CPP_template(typename Cont, typename Rng)(
             requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
         Cont to_(Rng &&rng)
         {
@@ -163,7 +163,7 @@ namespace ranges
         }
 
         /// \overload
-        CONCEPT_template(typename Cont, typename T)(
+        CPP_template(typename Cont, typename T)(
             requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
         Cont to_(std::initializer_list<T> list)
         {

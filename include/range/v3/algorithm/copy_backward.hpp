@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         struct copy_backward_fn
         {
-            CONCEPT_template(typename I, typename S, typename O)(
+            CPP_template(typename I, typename S, typename O)(
                 requires BidirectionalIterator<I> && Sentinel<S, I> &&
                     BidirectionalIterator<O> && IndirectlyCopyable<I, O>)
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
@@ -43,7 +43,7 @@ namespace ranges
                 return {end, out};
             }
 
-            CONCEPT_template(typename Rng, typename O)(
+            CPP_template(typename Rng, typename O)(
                 requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
                     IndirectlyCopyable<iterator_t<Rng>, O>)
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>

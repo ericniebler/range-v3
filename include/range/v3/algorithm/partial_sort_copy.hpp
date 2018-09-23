@@ -30,7 +30,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename C = ordered_less, typename PI = ident, typename PO = ident)
             (concept PartialSortCopyConcept)(I, O, C, PI, PO),
@@ -45,7 +45,7 @@ namespace ranges
         /// @{
         struct partial_sort_copy_fn
         {
-            CONCEPT_template(typename I, typename SI, typename O, typename SO, typename C = ordered_less,
+            CPP_template(typename I, typename SI, typename O, typename SO, typename C = ordered_less,
                 typename PI = ident, typename PO = ident)(
                 requires PartialSortCopyConcept<I, O, C, PI, PO> &&
                     Sentinel<SI, I> && Sentinel<SO, O>)
@@ -73,7 +73,7 @@ namespace ranges
                 return r;
             }
 
-            CONCEPT_template(typename InRng, typename OutRng, typename C = ordered_less,
+            CPP_template(typename InRng, typename OutRng, typename C = ordered_less,
                 typename PI = ident, typename PO = ident,
                 typename I = iterator_t<InRng>,
                 typename O = iterator_t<OutRng>)(

@@ -34,7 +34,7 @@ namespace ranges
     {
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Fun)
                 concept ForEachViewConcept,
@@ -57,7 +57,7 @@ namespace ranges
                 )
 
             public:
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires ForEachViewConcept<Rng, Fun>)
                 auto operator()(Rng &&rng, Fun fun) const
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -66,21 +66,21 @@ namespace ranges
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Fun)(
+                CPP_template(typename Rng, typename Fun)(
                     requires not ForEachViewConcept<Rng, Fun>)
                 void operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::for_each operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         CopyConstructible<Fun>,
                         "The function passed to view::for_each must be CopyConstructible.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Invocable<Fun&, range_reference_t<Rng>>,
                         "The function passed to view::for_each must be callable with an argument "
                         "of the range's reference type.");
-                    CONCEPT_assert_msg(InputRange<invoke_result_t<
+                    CPP_assert_msg(InputRange<invoke_result_t<
                         Fun&, range_reference_t<Rng>>>,
                         "To use view::for_each, the function F must return a model of the InputRange "
                         "concept.");
@@ -95,7 +95,7 @@ namespace ranges
 
         struct yield_fn
         {
-            CONCEPT_template(typename V)(
+            CPP_template(typename V)(
                 requires CopyConstructible<V>)
             single_view<V> operator()(V v) const
             {
@@ -103,14 +103,14 @@ namespace ranges
             }
 
         #ifndef RANGES_DOXYGEN_INVOKED
-            CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
+            CPP_template(typename Arg, typename Val = detail::decay_t<Arg>)(
                 requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
             void operator()(Arg &&) const
             {
-                CONCEPT_assert_msg(CopyConstructible<Val>,
+                CPP_assert_msg(CopyConstructible<Val>,
                     "The object passed to yield must be a model of the CopyConstructible "
                     "concept; that is, it needs to be copy and move constructible, and destructible.");
-                CONCEPT_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
+                CPP_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
                     "The object type passed to yield must be initializable from the "
                     "actual argument expression.");
             }
@@ -123,7 +123,7 @@ namespace ranges
 
         struct yield_from_fn
         {
-            CONCEPT_template(typename Rng)(
+            CPP_template(typename Rng)(
                 requires View<Rng>)
             Rng operator()(Rng rng) const
             {
@@ -153,7 +153,7 @@ namespace ranges
             template<typename F>
             generate_n_view<F> operator()(bool b, F f) const
             {
-                CONCEPT_assert(Invocable<F&>);
+                CPP_assert(Invocable<F&>);
                 return view::generate_n(std::move(f), b ? 1 : 0);
             }
         };
@@ -164,7 +164,7 @@ namespace ranges
         /// @}
 
         /// \cond
-        CONCEPT_template(typename Rng, typename Fun)(
+        CPP_template(typename Rng, typename Fun)(
             requires Range<Rng> && CopyConstructible<Fun> &&
                 Invocable<Fun&, range_common_reference_t<Rng>> &&
                 Range<invoke_result_t<Fun&, range_common_reference_t<Rng>>>)

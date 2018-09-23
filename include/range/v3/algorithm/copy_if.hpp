@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         struct copy_if_fn
         {
-            CONCEPT_template(typename I, typename S, typename O, typename F, typename P = ident)(
+            CPP_template(typename I, typename S, typename O, typename F, typename P = ident)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> && IndirectPredicate<F, projected<I, P>> &&
                     IndirectlyCopyable<I, O>)
@@ -53,7 +53,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            CONCEPT_template(typename Rng, typename O, typename F, typename P = ident,
+            CPP_template(typename Rng, typename O, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)

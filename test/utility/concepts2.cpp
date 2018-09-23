@@ -234,14 +234,14 @@ static_assert(concepts::EqualityComparableWith<int, int>, "");
 static_assert(concepts::EqualityComparableWith<int, IntComparable>, "");
 static_assert(concepts::EqualityComparableWith<int &, IntComparable &>, "");
 
-CONCEPT_template(class T)
+CPP_template(class T)
     (requires concepts::Regular<T>)
 constexpr bool is_regular(T&&)
 {
     return true;
 }
 
-CONCEPT_template(class T)
+CPP_template(class T)
     (requires not concepts::Regular<T>)
 constexpr bool is_regular(T&&)
 {

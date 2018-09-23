@@ -31,7 +31,7 @@ namespace ranges
         {
             class data_fn
             {
-                CONCEPT_template(typename Rng,
+                CPP_template(typename Rng,
                     typename Ptr = decltype(begin(std::declval<Rng &>())))(
                     requires std::is_pointer<Ptr>::value)
                 static constexpr Ptr impl(Rng &rng, detail::priority_tag<0>)
@@ -39,7 +39,7 @@ namespace ranges
                 {
                     return begin(rng);
                 }
-                CONCEPT_template(typename Rng,
+                CPP_template(typename Rng,
                     typename Ptr = detail::decay_t<decltype(data(std::declval<Rng &>()))>)(
                     requires std::is_pointer<Ptr>::value)
                 static constexpr Ptr impl(Rng &rng, detail::priority_tag<1>)
@@ -47,7 +47,7 @@ namespace ranges
                 {
                     return data(rng);
                 }
-                CONCEPT_template(typename Rng,
+                CPP_template(typename Rng,
                     typename Ptr = detail::decay_t<decltype(std::declval<Rng &>().data())>)(
                     requires std::is_pointer<Ptr>::value)
                 static constexpr Ptr impl(Rng &rng, detail::priority_tag<2>)

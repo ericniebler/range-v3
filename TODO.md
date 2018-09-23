@@ -1,7 +1,7 @@
 * Add contiguous iterator utilities. How about `is_contiguous_iterator` and `as_contiguous_range`:
 
     ```
-    CONCEPT_template(typename I, typename S)(
+    CPP_template(typename I, typename S)(
         requires RandomAccessIterator<I>() &&
             SizedSentinel<S, I>() &&
             is_contiguous_iterator<I>())

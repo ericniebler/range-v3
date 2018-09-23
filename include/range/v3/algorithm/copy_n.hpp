@@ -36,7 +36,7 @@ namespace ranges
         /// @{
         struct copy_n_fn
         {
-            CONCEPT_template(typename I, typename O, typename P = ident)(
+            CPP_template(typename I, typename O, typename P = ident)(
                 requires InputIterator<I> && WeaklyIncrementable<O> &&
                     IndirectlyCopyable<I, O>)
             tagged_pair<tag::in(I), tag::out(O)>

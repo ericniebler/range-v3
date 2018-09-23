@@ -28,7 +28,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename C, typename T, typename P = ident)
             (concept ReplaceIfable)(I, C, T, P),
@@ -41,7 +41,7 @@ namespace ranges
         /// @{
         struct replace_if_fn
         {
-            CONCEPT_template(typename I, typename S, typename C, typename T, typename P = ident)(
+            CPP_template(typename I, typename S, typename C, typename T, typename P = ident)(
                 requires ReplaceIfable<I, C, T, P> && Sentinel<S, I>)
             I operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
             {
@@ -51,7 +51,7 @@ namespace ranges
                 return begin;
             }
 
-            CONCEPT_template(typename Rng, typename C, typename T, typename P = ident,
+            CPP_template(typename Rng, typename C, typename T, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ReplaceIfable<I, C, T, P> && Range<Rng>)
             safe_iterator_t<Rng>

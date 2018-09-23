@@ -31,21 +31,21 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            CONCEPT_template(typename I, typename S)(
+            CPP_template(typename I, typename S)(
                 requires InputIterator<I> && Sentinel<S, I>)
             I next_to_if(I i, S s, std::true_type)
             {
                 return ranges::next(i, s);
             }
 
-            CONCEPT_template(typename I, typename S)(
+            CPP_template(typename I, typename S)(
                 requires InputIterator<I> && Sentinel<S, I>)
             S next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
-            CONCEPT_template(bool B, typename I, typename S)(
+            CPP_template(bool B, typename I, typename S)(
                 requires InputIterator<I> && Sentinel<S, I>)
             meta::if_c<B, I, S> next_to_if(I i, S s)
             {
@@ -158,7 +158,7 @@ namespace ranges
             }
 
         public:
-            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
+            CPP_template(typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
                 typename P = ident)(
                 requires ForwardIterator<I1> && Sentinel<S1, I1> &&
                     ForwardIterator<I2> && Sentinel<S2, I2> &&
@@ -173,7 +173,7 @@ namespace ranges
                     iterator_tag_of<I1>(), iterator_tag_of<I2>());
             }
 
-            CONCEPT_template(typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,
+            CPP_template(typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(
                 requires ForwardRange<Rng1> && ForwardRange<Rng2> &&

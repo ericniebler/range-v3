@@ -66,7 +66,7 @@ namespace ranges
             struct c_str_fn
             {
                 // Fixed-length
-                CONCEPT_template(typename Char, std::size_t N)(
+                CPP_template(typename Char, std::size_t N)(
                     requires detail::is_char_type<Char>::value)
                 ranges::iterator_range<Char *> operator()(Char (&sz)[N]) const
                 {
@@ -74,7 +74,7 @@ namespace ranges
                 }
 
                 // Null-terminated
-                CONCEPT_template(typename Char)(
+                CPP_template(typename Char)(
                     requires detail::is_char_type<Char>::value)
                 ranges::delimit_view<
                     ranges::iterator_range<Char *, ranges::unreachable>,

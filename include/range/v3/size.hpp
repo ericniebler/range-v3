@@ -44,7 +44,7 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Integral.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
                     typename N = decltype(aux::copy(std::declval<R &>().size())))(
                     requires Integral<N>)
@@ -55,7 +55,7 @@ namespace ranges
                 )
 
                 // Use ADL if it returns Integral.
-                CONCEPT_template(typename R,
+                CPP_template(typename R,
                     typename = meta::if_c<!disable_sized_range<R>()>,
                     typename N = decltype(aux::copy(size(std::declval<R &>()))))(
                     requires Integral<N>)
@@ -65,7 +65,7 @@ namespace ranges
                     size(r)
                 )
 
-                CONCEPT_template(typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())))(
+                CPP_template(typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())))(
                     requires ForwardIterator<I>)
                 static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT

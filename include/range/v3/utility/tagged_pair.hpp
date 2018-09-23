@@ -42,12 +42,12 @@ namespace ranges
             {
                 wrap_base() = default;
                 using Base::Base;
-                CONCEPT_requires(MoveConstructible<Base>)
+                CPP_requires(MoveConstructible<Base>)
                 constexpr wrap_base(Base&& base)
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
                   : Base(static_cast<Base&&>(base))
                 {}
-                CONCEPT_requires(CopyConstructible<Base>)
+                CPP_requires(CopyConstructible<Base>)
                 constexpr wrap_base(Base const& base)
                     noexcept(std::is_nothrow_copy_constructible<Base>::value)
                   : Base(base)
@@ -78,7 +78,7 @@ namespace ranges
           , private _tagged_::adl_hook<tagged<Base, Tags...>>
 #endif
         {
-            CONCEPT_assert(Same<Base, uncvref_t<Base>>);
+            CPP_assert(Same<Base, uncvref_t<Base>>);
             using base_t = meta::_t<_tagged_::chain<Base, 0, Tags...>>;
 
             template<typename Other>

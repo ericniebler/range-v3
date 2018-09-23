@@ -46,7 +46,7 @@ namespace ranges
                 }
             };
 
-            CONCEPT_template(typename T, typename... Args)(
+            CPP_template(typename T, typename... Args)(
                 requires not std::is_array<T>::value)
             std::unique_ptr<T> make_unique(Args &&... args)
             {
@@ -61,8 +61,8 @@ namespace ranges
         struct raw_storage_iterator
         {
         private:
-            CONCEPT_assert(OutputIterator<O, Val>);
-            CONCEPT_assert(std::is_lvalue_reference<reference_t<O>>());
+            CPP_assert(OutputIterator<O, Val>);
+            CPP_assert(std::is_lvalue_reference<reference_t<O>>());
             O out_;
         public:
             using difference_type = difference_type_t<O>;
@@ -74,14 +74,18 @@ namespace ranges
             {
                 return *this;
             }
-            CONCEPT_requires(CopyConstructible<Val>)
-            raw_storage_iterator &operator=(Val const & val)
+            CPP_member
+            auto operator=(Val const & val) ->
+                CPP_ret(raw_storage_iterator &)(
+                    requires CopyConstructible<Val>)
             {
                 ::new((void*) std::addressof(*out_)) Val(val);
                 return *this;
             }
-            CONCEPT_requires(MoveConstructible<Val>)
-            raw_storage_iterator &operator=(Val &&val)
+            CPP_member
+            auto operator=(Val &&val) ->
+                CPP_ret(raw_storage_iterator &)(
+                    requires MoveConstructible<Val>)
             {
                 ::new((void*) std::addressof(*out_)) Val(std::move(val));
                 return *this;
@@ -91,13 +95,17 @@ namespace ranges
                 ++out_;
                 return *this;
             }
-            CONCEPT_requires(not ForwardIterator<O>)
-            void operator++(int)
+            CPP_member
+            auto operator++(int) ->
+                CPP_ret(void)(
+                    requires not ForwardIterator<O>)
             {
                 ++out_;
             }
-            CONCEPT_requires(ForwardIterator<O>)
-            raw_storage_iterator operator++(int)
+            CPP_member
+            auto operator++(int) ->
+                CPP_ret(raw_storage_iterator)(
+                    requires ForwardIterator<O>)
             {
                 auto tmp = *this;
                 ++out_;
@@ -113,7 +121,7 @@ namespace ranges
         struct iterator_wrapper
         {
         private:
-            CONCEPT_assert(Iterator<I>);
+            CPP_assert(Iterator<I>);
             mutable I *i_ = nullptr;
         public:
             using difference_type = difference_type_t<I>;
@@ -152,9 +160,10 @@ namespace ranges
             }
         };
 
-        CONCEPT_template(typename I)(
-            requires Iterator<I>)
-        iterator_wrapper<I> iter_ref(I &i)
+        template<typename I>
+        auto iter_ref(I &i) ->
+            CPP_ret(iterator_wrapper<I>)(
+                requires Iterator<I>)
         {
             return i;
         }

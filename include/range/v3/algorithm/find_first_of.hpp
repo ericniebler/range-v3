@@ -36,7 +36,7 @@ namespace ranges
             // losing information. E.g., if begin0 == end0, we can return begin0 immediately.
             // If we returned pair<I0,I1>, we would need to do an O(N) scan to find the
             // end position.
-            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+            CPP_template(typename I0, typename S0, typename I1, typename S1,
                      typename R = equal_to, typename P0 = ident, typename P1 = ident)(
                      requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                         ForwardIterator<I1> && AsymmetricallyComparable<I0, I1, R, P0, P1>)
@@ -50,7 +50,7 @@ namespace ranges
                 return begin0;
             }
 
-            CONCEPT_template(typename Rng0, typename Rng1, typename R = equal_to,
+            CPP_template(typename Rng0, typename Rng1, typename R = equal_to,
                      typename P0 = ident, typename P1 = ident,
                      typename I0 = iterator_t<Rng0>,
                      typename I1 = iterator_t<Rng1>)(

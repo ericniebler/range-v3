@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         struct partial_sort_fn
         {
-            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
             I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
@@ -52,7 +52,7 @@ namespace ranges
                 return i;
             }
 
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Sortable<I, C, P> && RandomAccessRange<Rng>)
             safe_iterator_t<Rng> operator()(Rng &&rng, I middle, C pred = C{},

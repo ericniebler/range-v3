@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         struct min_fn
         {
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>, typename V = value_type_t<I>)(
                 requires InputRange<Rng> && Copyable<V> &&
                     IndirectRelation<C, projected<I, P>>)
@@ -51,7 +51,7 @@ namespace ranges
                 return result;
             }
 
-            CONCEPT_template(typename T, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename T, typename C = ordered_less, typename P = ident)(
                 requires IndirectRelation<C, projected<const T *, P>>)
             constexpr T const &operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
             {

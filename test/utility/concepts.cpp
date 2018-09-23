@@ -272,7 +272,7 @@ struct myview {
     const char *begin();
     const char *end();
 };
-CONCEPT_assert(ranges::View<myview>);
+CPP_assert(ranges::View<myview>);
 
 int main()
 {

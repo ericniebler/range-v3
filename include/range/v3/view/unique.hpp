@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng)
                 concept UniqueViewConcept,
@@ -41,21 +41,21 @@ namespace ranges
 
             struct unique_fn
             {
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires UniqueViewConcept<Rng>)
                 unique_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires not UniqueViewConcept<Rng>)
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::unique operates must be a model the "
                         "ForwardRange concept.");
-                    CONCEPT_assert_msg(EqualityComparable<range_value_type_t<Rng>>,
+                    CPP_assert_msg(EqualityComparable<range_value_type_t<Rng>>,
                         "The value type of the range passed to view::unique must be "
                         "EqualityComparable.");
                 }

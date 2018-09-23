@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         struct minmax_fn
         {
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>, typename V = value_type_t<I>,
                 typename R = tagged_pair<tag::min(V), tag::max(V)>)(
                 requires InputRange<Rng> && Copyable<V> &&
@@ -87,7 +87,7 @@ namespace ranges
                 return result;
             }
 
-            CONCEPT_template(typename T, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename T, typename C = ordered_less, typename P = ident)(
                 requires IndirectRelation<C, projected<const T *, P>>)
             constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>
             operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const

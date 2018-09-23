@@ -35,7 +35,7 @@ int main()
         int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         auto rng = view::counted(forward_iterator<int*>{rgi}, 10);
         rng.size();
-        CONCEPT_assert(SizedView<decltype(rng)>);
+        CPP_assert(SizedView<decltype(rng)>);
         auto i = rng.begin();
         auto b = i.base();
         auto c = i.count();
@@ -67,7 +67,7 @@ int main()
     {
         // Regression test: ensure that we can post-increment a counted_iterator<I>
         // when decltype(declval<I &>()++) is void.
-        CONCEPT_assert(ranges::InputIterator<fortytwo_erator>);
+        CPP_assert(ranges::InputIterator<fortytwo_erator>);
         ranges::counted_iterator<fortytwo_erator> c{{}, 42};
         c++;
     }

@@ -46,14 +46,14 @@ namespace ranges
                 if (that.engaged_)
                     this->construct_from(that.data_);
             }
-            CONCEPT_template(typename U)(
+            CPP_template(typename U)(
                 requires not defer::Same<uncvref_t<U>, semiregular> &&
                     defer::Constructible<T, U>)
             explicit constexpr semiregular(U &&u)
                 noexcept(std::is_nothrow_constructible<T, U>::value)
               : semiregular(in_place, static_cast<U &&>(u))
             {}
-            CONCEPT_template(typename... Args)(
+            CPP_template(typename... Args)(
                 requires Constructible<T, Args...>)
             constexpr semiregular(in_place_t, Args &&...args)
                 noexcept(std::is_nothrow_constructible<T, Args...>::value)
@@ -201,7 +201,7 @@ namespace ranges
           : private ranges::reference_wrapper<T &>
         {
             semiregular() = default;
-            CONCEPT_template(typename Arg)(
+            CPP_template(typename Arg)(
                 requires Constructible<ranges::reference_wrapper<T &>, Arg &>)
             semiregular(in_place_t, Arg &arg)
               : ranges::reference_wrapper<T &>(arg)
@@ -217,7 +217,7 @@ namespace ranges
           : private ranges::reference_wrapper<T &&>
         {
             semiregular() = default;
-            CONCEPT_template(typename Arg)(
+            CPP_template(typename Arg)(
                 requires Constructible<ranges::reference_wrapper<T &&>, Arg>)
             semiregular(in_place_t, Arg &&arg)
               : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))

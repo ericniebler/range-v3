@@ -35,8 +35,9 @@ namespace ranges
         {
             mutable T value;
 
-            CONCEPT_requires(std::is_default_constructible<T>::value)
-            constexpr mutable_()
+            CPP_member
+            constexpr CPP_ctor(mutable_)()(
+                requires std::is_default_constructible<T>::value)
               : value{}
             {}
             constexpr explicit mutable_(T const &t)
@@ -148,23 +149,24 @@ namespace ranges
         {
             Element value;
         public:
-            CONCEPT_requires(std::is_default_constructible<Element>::value)
-            constexpr box()
+            CPP_member
+            constexpr CPP_ctor(box)()(
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
+                requires std::is_default_constructible<Element>::value)
               : value{}
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr CPP_ctor(box)(E &&e)(
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && defer::ConvertibleTo<E, Element>)
-            constexpr box(E &&e)
-                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E &&>(e))
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr explicit CPP_ctor(box)(E &&e)(
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && !defer::ConvertibleTo<E, Element>)
-            constexpr explicit box(E &&e)
-                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E &&>(e))
             {}
 
@@ -187,23 +189,24 @@ namespace ranges
           : Element
         {
         public:
-            CONCEPT_requires(std::is_default_constructible<Element>::value)
-            constexpr box()
+            CPP_member
+            constexpr CPP_ctor(box)()(
                 noexcept(std::is_nothrow_default_constructible<Element>::value)
+                requires std::is_default_constructible<Element>::value)
               : Element{}
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr CPP_ctor(box)(E &&e)(
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && defer::ConvertibleTo<E, Element>)
-            constexpr box(E &&e)
-                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E &&>(e))
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr explicit CPP_ctor(box)(E &&e)(
+                noexcept(std::is_nothrow_constructible<Element, E>::value)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && !defer::ConvertibleTo<E, Element>)
-            constexpr explicit box(E &&e)
-                noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E &&>(e))
             {}
 
@@ -228,15 +231,17 @@ namespace ranges
         public:
             constexpr box() noexcept
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr CPP_ctor(box)(E &&)(
+                noexcept(true)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && defer::ConvertibleTo<E, Element>)
-            constexpr box(E &&) noexcept
             {}
-            CONCEPT_template(typename E)(
+            template<typename E>
+            constexpr explicit CPP_ctor(box)(E &&)(
+                noexcept(true)
                 requires not defer::Same<box, detail::decay_t<E>> &&
                     defer::Constructible<Element, E> && !defer::ConvertibleTo<E, Element>)
-            constexpr explicit box(E &&) noexcept
             {}
 
             RANGES_CXX14_CONSTEXPR Element &get() & noexcept

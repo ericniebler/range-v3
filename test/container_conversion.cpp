@@ -88,8 +88,8 @@ int main()
 
     // set
 
-    CONCEPT_assert(Range<std::set<int>>);
-    CONCEPT_assert(!View<std::set<int>>);
+    CPP_assert(Range<std::set<int>>);
+    CPP_assert(!View<std::set<int>>);
     std::set<int> s = view::ints | view::take(10);
     ::check_equal(s, {0,1,2,3,4,5,6,7,8,9});
 

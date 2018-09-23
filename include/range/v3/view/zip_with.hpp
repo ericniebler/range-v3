@@ -73,7 +73,7 @@ namespace ranges
 
             struct _advance_
             {
-                CONCEPT_template(typename I)(
+                CPP_template(typename I)(
                     requires Iterator<I>)
                 void operator()(I & i, difference_type_t<I> n) const
                 {
@@ -188,7 +188,7 @@ namespace ranges
                 {
                     tuple_for_each(its_, detail::inc);
                 }
-                CONCEPT_requires(And<Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+                CPP_requires(And<Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
@@ -209,18 +209,18 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CONCEPT_requires(And<BidirectionalRange<Rngs>...>)
+                CPP_requires(And<BidirectionalRange<Rngs>...>)
                 void prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
-                CONCEPT_requires(And<RandomAccessRange<Rngs>...>)
+                CPP_requires(And<RandomAccessRange<Rngs>...>)
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
-                CONCEPT_requires(And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+                CPP_requires(And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -266,12 +266,12 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_requires(And<Range<Rngs const>...>)
+            CPP_requires(And<Range<Rngs const>...>)
             cursor begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_requires(And<Range<Rngs const>...>)
+            CPP_requires(And<Range<Rngs const>...>)
             end_cursor_t end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
@@ -286,7 +286,7 @@ namespace ranges
               : fun_(std::move(fun))
               , rngs_{std::move(rngs)...}
             {}
-            CONCEPT_requires(And<SizedRange<Rngs>...>)
+            CPP_requires(And<SizedRange<Rngs>...>)
             constexpr size_type_ size() const
             {
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
@@ -315,7 +315,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Fun, typename ...Rngs)
                 (concept IterZipWithViewConcept)(Fun, Rngs...),
@@ -328,7 +328,7 @@ namespace ranges
 
             struct iter_zip_with_fn
             {
-                CONCEPT_template(typename...Rngs, typename Fun)(
+                CPP_template(typename...Rngs, typename Fun)(
                     requires IterZipWithViewConcept<Fun, Rngs...>)
                 iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
@@ -339,25 +339,25 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Fun, typename...Rngs)(
+                CPP_template(typename Fun, typename...Rngs)(
                     requires not IterZipWithViewConcept<Fun, Rngs...>)
                 void operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_assert_msg(And<InputRange<Rngs>...>,
+                    CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::iter_zip_with must model the InputRange "
                         "concept");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         CopyConstructible<Fun>,
                         "The function object passed to view::iter_zip_with must be CopyConstructible.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Invocable<Fun&, iterator_t<Rngs>...>,
                         "The function passed to view::iter_zip_with must be callable with arguments "
                         "of the ranges' iterator types.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
                         "The function passed to view::iter_zip_with must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Invocable<Fun&, move_tag, iterator_t<Rngs>...>,
                         "The function passed to view::iter_zip_with must be callable with "
                         "move_tag and arguments of the ranges' iterator types.");
@@ -369,7 +369,7 @@ namespace ranges
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(iter_zip_with_fn, iter_zip_with)
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Fun, typename ...Rngs)
                 (concept ZipWithViewConcept)(Fun, Rngs...),
@@ -380,7 +380,7 @@ namespace ranges
 
             struct zip_with_fn
             {
-                CONCEPT_template(typename...Rngs, typename Fun)(
+                CPP_template(typename...Rngs, typename Fun)(
                     requires ZipWithViewConcept<Fun, Rngs...>)
                 zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
@@ -391,17 +391,17 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Fun, typename...Rngs)(
+                CPP_template(typename Fun, typename...Rngs)(
                     requires not ZipWithViewConcept<Fun, Rngs...>)
                 void operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_assert_msg(And<InputRange<Rngs>...>,
+                    CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::zip_with must model the InputRange "
                         "concept");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         CopyConstructible<Fun>,
                         "The function object passed to view::zip_with must be CopyConstructible.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Invocable<Fun&, range_reference_t<Rngs> &&...>,
                         "The function passed to view::zip_with must be callable with arguments "
                         "of the ranges' reference types.");

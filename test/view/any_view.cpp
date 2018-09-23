@@ -37,39 +37,39 @@ namespace
         struct unrelated {};
         struct incomplete;
 
-        CONCEPT_assert(can_convert_to<B *, void *>());
-        CONCEPT_assert(can_convert_to<A *, void *>());
-        CONCEPT_assert(can_convert_to<B *, A *>());
-        CONCEPT_assert(can_convert_to<A *, B *>());
-        CONCEPT_assert(!can_convert_to<int, int>());
-        CONCEPT_assert(!can_convert_to<A const *, A *>());
-        CONCEPT_assert(!can_convert_to<A *, unrelated *>());
-        CONCEPT_assert(!can_convert_to<unrelated *, A *>());
-        CONCEPT_assert(!can_convert_to<incomplete *, incomplete *>());
+        CPP_assert(can_convert_to<B *, void *>());
+        CPP_assert(can_convert_to<A *, void *>());
+        CPP_assert(can_convert_to<B *, A *>());
+        CPP_assert(can_convert_to<A *, B *>());
+        CPP_assert(!can_convert_to<int, int>());
+        CPP_assert(!can_convert_to<A const *, A *>());
+        CPP_assert(!can_convert_to<A *, unrelated *>());
+        CPP_assert(!can_convert_to<unrelated *, A *>());
+        CPP_assert(!can_convert_to<incomplete *, incomplete *>());
 
-        CONCEPT_assert(can_convert_to<B &, A &>());
-        CONCEPT_assert(can_convert_to<A &, B &>());
-        CONCEPT_assert(!can_convert_to<A &, unrelated &>());
-        CONCEPT_assert(!can_convert_to<unrelated &, A &>());
-        CONCEPT_assert(!can_convert_to<incomplete &, incomplete &>());
+        CPP_assert(can_convert_to<B &, A &>());
+        CPP_assert(can_convert_to<A &, B &>());
+        CPP_assert(!can_convert_to<A &, unrelated &>());
+        CPP_assert(!can_convert_to<unrelated &, A &>());
+        CPP_assert(!can_convert_to<incomplete &, incomplete &>());
 
 #if !defined(__GNUC__) || defined(__clang__) || __GNUC__ > 4
-        CONCEPT_assert(can_convert_to<B &&, A &&>());
-        CONCEPT_assert(can_convert_to<B &, A &&>());
+        CPP_assert(can_convert_to<B &&, A &&>());
+        CPP_assert(can_convert_to<B &, A &&>());
 #endif // old GCC dynamic_cast bug
-        CONCEPT_assert(!can_convert_to<B &&, A &>());
-        CONCEPT_assert(can_convert_to<A &&, B &&>());
-        CONCEPT_assert(!can_convert_to<A &&, B &>());
-        CONCEPT_assert(can_convert_to<A &, B &&>());
-        CONCEPT_assert(!can_convert_to<A &&, unrelated &&>());
-        CONCEPT_assert(!can_convert_to<A &&, unrelated &>());
-        CONCEPT_assert(!can_convert_to<A &, unrelated &&>());
-        CONCEPT_assert(!can_convert_to<unrelated &&, A &&>());
-        CONCEPT_assert(!can_convert_to<unrelated &&, A &>());
-        CONCEPT_assert(!can_convert_to<unrelated &, A &&>());
-        CONCEPT_assert(!can_convert_to<incomplete &&, incomplete &&>());
-        CONCEPT_assert(!can_convert_to<incomplete &&, incomplete &>());
-        CONCEPT_assert(!can_convert_to<incomplete &, incomplete &&>());
+        CPP_assert(!can_convert_to<B &&, A &>());
+        CPP_assert(can_convert_to<A &&, B &&>());
+        CPP_assert(!can_convert_to<A &&, B &>());
+        CPP_assert(can_convert_to<A &, B &&>());
+        CPP_assert(!can_convert_to<A &&, unrelated &&>());
+        CPP_assert(!can_convert_to<A &&, unrelated &>());
+        CPP_assert(!can_convert_to<A &, unrelated &&>());
+        CPP_assert(!can_convert_to<unrelated &&, A &&>());
+        CPP_assert(!can_convert_to<unrelated &&, A &>());
+        CPP_assert(!can_convert_to<unrelated &, A &&>());
+        CPP_assert(!can_convert_to<incomplete &&, incomplete &&>());
+        CPP_assert(!can_convert_to<incomplete &&, incomplete &>());
+        CPP_assert(!can_convert_to<incomplete &, incomplete &&>());
     }
 } // unnamed namespace
 
@@ -80,15 +80,15 @@ int main()
 
     {
         any_view<int> ints = view::ints;
-        CONCEPT_assert(InputView<decltype(ints)>);
-        CONCEPT_assert(!ForwardView<decltype(ints)>);
+        CPP_assert(InputView<decltype(ints)>);
+        CPP_assert(!ForwardView<decltype(ints)>);
         ::check_equal(std::move(ints) | view::take(10), ten_ints);
     }
     {
         any_view<int> ints = view::ints | view::take_exactly(5);
-        CONCEPT_assert(InputView<decltype(ints)>);
-        CONCEPT_assert(!RandomAccessView<decltype(ints)>);
-        CONCEPT_assert(!SizedView<decltype(ints)>);
+        CPP_assert(InputView<decltype(ints)>);
+        CPP_assert(!RandomAccessView<decltype(ints)>);
+        CPP_assert(!SizedView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::input, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::none, "");
     }
@@ -106,22 +106,22 @@ RANGES_DIAGNOSTIC_POP
 #else
         any_view<int, category::random_access | category::sized> ints = view::ints | view::take_exactly(5);
 #endif
-        CONCEPT_assert(RandomAccessView<decltype(ints)>);
-        CONCEPT_assert(SizedView<decltype(ints)>);
+        CPP_assert(RandomAccessView<decltype(ints)>);
+        CPP_assert(SizedView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::random_access, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
         any_view<int, category::input | category::sized> ints = view::ints | view::take_exactly(10);
-        CONCEPT_assert(InputView<decltype(ints)>);
-        CONCEPT_assert(SizedView<decltype(ints)>);
+        CPP_assert(InputView<decltype(ints)>);
+        CPP_assert(SizedView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::input) == category::input, "");
         static_assert((get_categories<decltype(ints)>() & category::sized) == category::sized, "");
     }
     {
         any_view<int, category::bidirectional> ints = view::ints;
-        CONCEPT_assert(BidirectionalView<decltype(ints)>);
-        CONCEPT_assert(!RandomAccessView<decltype(ints)>);
+        CPP_assert(BidirectionalView<decltype(ints)>);
+        CPP_assert(!RandomAccessView<decltype(ints)>);
         static_assert((get_categories<decltype(ints)>() & category::random_access) == category::bidirectional, "");
     }
     {

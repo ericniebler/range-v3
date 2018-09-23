@@ -75,7 +75,7 @@ namespace ranges
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>)
+                CPP_requires(BidirectionalRange<Rng>)
                 RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
                     noexcept(noexcept(std::declval<remove_if_view &>().satisfy_reverse(it)))
                 {
@@ -92,12 +92,12 @@ namespace ranges
                 cache_begin();
                 return {*this};
             }
-            CONCEPT_requires(not BoundedRange<Rng>)
+            CPP_requires(not BoundedRange<Rng>)
             constexpr adaptor_base end_adaptor() const noexcept
             {
                 return {};
             }
-            CONCEPT_requires(BoundedRange<Rng>)
+            CPP_requires(BoundedRange<Rng>)
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
                 noexcept(noexcept(std::declval<remove_if_view &>().cache_begin()))
             {
@@ -144,7 +144,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred)
                 concept SearchableRange,
@@ -164,7 +164,7 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires SearchableRange<Rng, Pred>)
                 RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -173,14 +173,14 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires not SearchableRange<Rng, Pred>)
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The first argument to view::remove_if must be a model of the "
                         "InputRange concept");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
+                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
                         "The second argument to view::remove_if must be callable with "
                         "a value of the range, and the return type must be convertible "
                         "to bool");

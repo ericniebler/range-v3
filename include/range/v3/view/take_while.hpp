@@ -65,7 +65,7 @@ namespace ranges
             {
                 return {pred_};
             }
-            CONCEPT_requires(Invocable<Pred const&, iterator_t<Rng>>)
+            CPP_requires(Invocable<Pred const&, iterator_t<Rng>>)
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};
@@ -91,7 +91,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred)
                 concept IterPredicateRange,
@@ -112,31 +112,31 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires IterPredicateRange<Rng, Pred>)
                 iter_take_while_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires not IterPredicateRange<Rng, Pred>)
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::take_while operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(Predicate<Pred&, iterator_t<Rng>>,
+                    CPP_assert_msg(Predicate<Pred&, iterator_t<Rng>>,
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's iterator type, and its result type must be convertible to "
                         "bool.");
-                    CONCEPT_assert_msg(CopyConstructible<Pred>,
+                    CPP_assert_msg(CopyConstructible<Pred>,
                         "The function object passed to view::take_while must be CopyConstructible.");
                 }
             #endif
             };
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Pred)
                 concept IndirectPredicateRange,
@@ -156,21 +156,21 @@ namespace ranges
                         protect(std::move(pred))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires IndirectPredicateRange<Rng, Pred>)
                 take_while_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Pred)(
+                CPP_template(typename Rng, typename Pred)(
                     requires not IndirectPredicateRange<Rng, Pred>)
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::take_while operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
+                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's common reference type, and its result type must be "
                         "convertible to bool.");

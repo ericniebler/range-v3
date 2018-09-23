@@ -32,7 +32,7 @@ namespace ranges
             struct linear_distribute_view
               : view_facade<linear_distribute_view<T>, finite>
             {
-                CONCEPT_assert(std::is_arithmetic<T>());
+                CPP_assert(std::is_arithmetic<T>());
             private:
                 friend range_access;
 
@@ -91,7 +91,7 @@ namespace ranges
             /// If `n == 1` returns `to`.
             struct linear_distribute_fn
             {
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires std::is_arithmetic<T>::value)
                 constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -100,11 +100,11 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename T)(
+                CPP_template(typename T)(
                     requires not std::is_arithmetic<T>::value)
                 void operator()(T, T, std::ptrdiff_t) const
                 {
-                    CONCEPT_assert_msg(std::is_arithmetic<T>(),
+                    CPP_assert_msg(std::is_arithmetic<T>(),
                         "The object passed to view::linear_distribute must model the Arithmetic "
                         "concept; that is, it must be one of the native integer of floating-point types");
                 }

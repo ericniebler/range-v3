@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct max_element_fn
         {
-            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<C, projected<I, P>>)
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
@@ -43,7 +43,7 @@ namespace ranges
                 return begin;
             }
 
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<C, projected<I, P>>)

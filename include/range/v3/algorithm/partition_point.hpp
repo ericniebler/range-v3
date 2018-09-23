@@ -44,7 +44,7 @@ namespace ranges
 
         struct partition_point_fn
         {
-            CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
+            CPP_template(typename I, typename S, typename C, typename P = ident)(
                 requires PartitionPointable<I, C, P> &&
                     Sentinel<S, I> && !SizedSentinel<S, I>)
             I operator()(I begin, S end, C pred, P proj = P{}) const
@@ -67,7 +67,7 @@ namespace ranges
                 }
             }
 
-            CONCEPT_template(typename I, typename S, typename C, typename P = ident)(
+            CPP_template(typename I, typename S, typename C, typename P = ident)(
                 requires PartitionPointable<I, C, P> &&
                     SizedSentinel<S, I>)
             I operator()(I begin, S end, C pred, P proj = P{}) const
@@ -77,7 +77,7 @@ namespace ranges
                     std::move(begin), len, std::move(pred), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename C, typename P = ident,
+            CPP_template(typename Rng, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && !SizedRange<Rng> &&
                     PartitionPointable<I, C, P>)
@@ -87,7 +87,7 @@ namespace ranges
                     begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename C, typename P = ident,
+            CPP_template(typename Rng, typename C, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires SizedRange<Rng> && PartitionPointable<I, C, P>)
             safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const

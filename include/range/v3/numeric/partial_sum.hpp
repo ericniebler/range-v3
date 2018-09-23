@@ -47,7 +47,7 @@ namespace ranges
         /// \endcond
 
         // axiom: BOp is associative over values of I.
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename BOp)
             concept IndirectSemigroup,
@@ -56,7 +56,7 @@ namespace ranges
                 IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename BOp = plus, typename P = ident)
             (concept PartialSummable)(I, O, BOp, P),
@@ -67,7 +67,7 @@ namespace ranges
 
         struct partial_sum_fn
         {
-            CONCEPT_template(typename I, typename S1, typename O, typename S2,
+            CPP_template(typename I, typename S1, typename O, typename S2,
                 typename BOp = plus, typename P = ident)(
                 requires Sentinel<S1, I> && Sentinel<S2, O> &&
                     PartialSummable<I, O, BOp, P>)
@@ -93,7 +93,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            CONCEPT_template(typename I, typename S, typename O, typename BOp = plus,
+            CPP_template(typename I, typename S, typename O, typename BOp = plus,
                 typename P = ident)(
                 requires Sentinel<S, I> && PartialSummable<I, O, BOp, P>)
             tagged_pair<tag::in(I), tag::out(O)>
@@ -103,7 +103,7 @@ namespace ranges
                                unreachable{}, std::move(bop), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename ORef, typename BOp = plus,
+            CPP_template(typename Rng, typename ORef, typename BOp = plus,
                 typename P = ident, typename I = iterator_t<Rng>,
                 typename O = uncvref_t<ORef>)(
                 requires Range<Rng> && PartialSummable<I, O, BOp, P>)
@@ -114,7 +114,7 @@ namespace ranges
                                std::move(bop), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename ORng, typename BOp = plus,
+            CPP_template(typename Rng, typename ORng, typename BOp = plus,
                 typename P = ident, typename I = iterator_t<Rng>,
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&

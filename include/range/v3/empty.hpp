@@ -46,7 +46,7 @@ namespace ranges
                 )
 
                 // Fall further back to begin == end.
-                CONCEPT_template(typename R)(
+                CPP_template(typename R)(
                     requires ForwardRange<R>)
                 static constexpr bool impl_(R &r, detail::priority_tag<0>)
                 RANGES_AUTO_RETURN_NOEXCEPT

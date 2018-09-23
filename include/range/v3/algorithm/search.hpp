@@ -39,7 +39,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)
@@ -123,7 +123,7 @@ namespace ranges
                 }
             }
         public:
-            CONCEPT_template(typename I1, typename S1, typename I2, typename S2,
+            CPP_template(typename I1, typename S1, typename I2, typename S2,
                 typename C = equal_to, typename P1 = ident, typename P2 = ident)(
                 requires Searchable<I1, I2, C, P1, P2> &&
                     Sentinel<S1, I1> &&
@@ -142,7 +142,7 @@ namespace ranges
                         std::move(begin2), std::move(end2), pred, proj1, proj2);
             }
 
-            CONCEPT_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
+            CPP_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(

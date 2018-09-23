@@ -36,7 +36,7 @@ namespace ranges
         {
             using aux::copy_fn::operator();
 
-            CONCEPT_template(typename I, typename S, typename O)(
+            CPP_template(typename I, typename S, typename O)(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             RANGES_CXX14_CONSTEXPR
@@ -48,7 +48,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            CONCEPT_template(typename Rng, typename O)(
+            CPP_template(typename Rng, typename O)(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectlyCopyable<iterator_t<Rng>, O>)
             RANGES_CXX14_CONSTEXPR

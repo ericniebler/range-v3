@@ -34,7 +34,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename F, typename P = ident)
             (concept Transformable1)(I, O, F, P),
@@ -45,7 +45,7 @@ namespace ranges
         );
 
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I0, typename I1, typename O, typename F, typename P0 = ident, typename P1 = ident)
             (concept Transformable2)(I0, I1, O, F, P0, P1),
@@ -61,7 +61,7 @@ namespace ranges
         struct transform_fn
         {
             // Single-range variant
-            CONCEPT_template(typename I, typename S, typename O, typename F, typename P = ident)(
+            CPP_template(typename I, typename S, typename O, typename F, typename P = ident)(
                 requires Sentinel<S, I> && Transformable1<I, O, F, P>)
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O out, F fun, P proj = P{}) const
@@ -71,7 +71,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            CONCEPT_template(typename Rng, typename O, typename F, typename P = ident,
+            CPP_template(typename Rng, typename O, typename F, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && Transformable1<I, O, F, P>)
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
@@ -82,7 +82,7 @@ namespace ranges
             }
 
             // Double-range variant, 4-iterator version
-            CONCEPT_template(typename I0, typename S0, typename I1, typename S1, typename O, typename F,
+            CPP_template(typename I0, typename S0, typename I1, typename S1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                     Transformable2<I0, I1, O, F, P0, P1>)
@@ -95,7 +95,7 @@ namespace ranges
                 return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{begin0, begin1, out};
             }
 
-            CONCEPT_template(typename Rng0, typename Rng1, typename O, typename F,
+            CPP_template(typename Rng0, typename Rng1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
                 typename I1 = iterator_t<Rng1>)(
@@ -113,7 +113,7 @@ namespace ranges
             }
 
             // Double-range variant, 3-iterator version
-            CONCEPT_template(typename I0, typename S0, typename I1, typename O, typename F,
+            CPP_template(typename I0, typename S0, typename I1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> &&
                     Transformable2<I0, I1, O, F, P0, P1>)
@@ -125,7 +125,7 @@ namespace ranges
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
 
-            CONCEPT_template(typename Rng0, typename I1Ref, typename O, typename F,
+            CPP_template(typename Rng0, typename I1Ref, typename O, typename F,
                 typename P0 = ident, typename P1 = ident, typename I1 = uncvref_t<I1Ref>,
                 typename I0 = iterator_t<Rng0>)(
                 requires Range<Rng0> && Iterator<I1> &&

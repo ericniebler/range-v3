@@ -132,6 +132,6 @@ int main()
     {
         // Regression test for #367
         using CP = common_pair<int, int>;
-        CONCEPT_assert(Same<common_type_t<CP, CP>, CP>);
+        CPP_assert(Same<common_type_t<CP, CP>, CP>);
     }
 }

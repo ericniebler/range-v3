@@ -22,10 +22,10 @@
 #define GCC_4_8_WORKAROUND 1
 #endif
 
-CONCEPT_assert(ranges::Constructible<ranges::reference_wrapper<int>, int&>);
-CONCEPT_assert(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>);
-CONCEPT_assert(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>);
-CONCEPT_assert(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>);
+CPP_assert(ranges::Constructible<ranges::reference_wrapper<int>, int&>);
+CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>);
+CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>);
+CPP_assert(ranges::Constructible<ranges::reference_wrapper<int &&>, int&&>);
 
 namespace
 {
@@ -168,8 +168,8 @@ namespace
             CHECK(a.i == 0);
             ranges::invoke(&A::i, &a) = 1;
             CHECK(a.i == 1);
-            CONCEPT_assert(ranges::Same<decltype(ranges::invoke(&A::i, ca)), const int&>);
-            CONCEPT_assert(ranges::Same<decltype(ranges::invoke(&A::i, &ca)), const int&>);
+            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, ca)), const int&>);
+            CPP_assert(ranges::Same<decltype(ranges::invoke(&A::i, &ca)), const int&>);
         }
 
         {
@@ -261,12 +261,12 @@ int main()
 #ifdef _WIN32
     {
         // Ensure that Invocable accepts pointers to functions with non-default calling conventions.
-        CONCEPT_assert(ranges::Invocable<void(__cdecl*)()>);
-        CONCEPT_assert(ranges::Invocable<void(__stdcall*)()>);
-        CONCEPT_assert(ranges::Invocable<void(__fastcall*)()>);
-        CONCEPT_assert(ranges::Invocable<void(__thiscall*)()>);
+        CPP_assert(ranges::Invocable<void(__cdecl*)()>);
+        CPP_assert(ranges::Invocable<void(__stdcall*)()>);
+        CPP_assert(ranges::Invocable<void(__fastcall*)()>);
+        CPP_assert(ranges::Invocable<void(__thiscall*)()>);
 #ifndef __MINGW32__
-        CONCEPT_assert(ranges::Invocable<void(__vectorcall*)()>);
+        CPP_assert(ranges::Invocable<void(__vectorcall*)()>);
 #endif
     }
 #endif // _WIN32

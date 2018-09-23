@@ -88,14 +88,14 @@ void test_case_size_optimization()
 void test_case_from_nullptr_constructor()
 {
     // This implementation doesn't support the silly nullptr_t constructor.
-    CONCEPT_assert(!std::is_constructible<span<int>, std::nullptr_t>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<int>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<const int>, std::nullptr_t>::value);
 
-    CONCEPT_assert(!std::is_constructible<span<int, 0>, std::nullptr_t>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 0>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<int, 0>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<const int, 0>, std::nullptr_t>::value);
 
-    CONCEPT_assert(!std::is_constructible<span<int, 1>, std::nullptr_t>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 1>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<int, 1>, std::nullptr_t>::value);
+    CPP_assert(!std::is_constructible<span<const int, 1>, std::nullptr_t>::value);
 }
 
 void test_case_from_nullptr_size_constructor()
@@ -241,11 +241,11 @@ void test_case_from_array_constructor()
 
     int arr2d[2][3] = {1, 2, 3, 4, 5, 6};
 
-    CONCEPT_assert(!std::is_constructible<span<int, 6>, int(&)[5]>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 0>, int(&)[5]>::value);
-    CONCEPT_assert(!std::is_constructible<span<int>, decltype((arr2d))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 0>, decltype((arr2d))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 6>, decltype((arr2d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 6>, int(&)[5]>::value);
+    CPP_assert(!std::is_constructible<span<int, 0>, int(&)[5]>::value);
+    CPP_assert(!std::is_constructible<span<int>, decltype((arr2d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 0>, decltype((arr2d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 6>, decltype((arr2d))>::value);
 
     {
         span<int[3]> s{&(arr2d[0]), 1};
@@ -254,10 +254,10 @@ void test_case_from_array_constructor()
 
     int arr3d[2][3][2] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
-    CONCEPT_assert(!std::is_constructible<span<int>, decltype((arr3d))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 0>, decltype((arr3d))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 11>, decltype((arr3d))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 12>, decltype((arr3d))>::value);
+    CPP_assert(!std::is_constructible<span<int>, decltype((arr3d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 0>, decltype((arr3d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 11>, decltype((arr3d))>::value);
+    CPP_assert(!std::is_constructible<span<int, 12>, decltype((arr3d))>::value);
 
     {
         span<int[3][2]> s{&arr3d[0], 1};
@@ -300,11 +300,11 @@ void test_case_from_std_array_constructor()
         CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && cs.data() == arr.data()));
     }
 
-    CONCEPT_assert(!std::is_constructible<span<int, 2>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 0>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 5>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<int, 2>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<int, 0>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<int, 5>, decltype((arr))>::value);
 
     {
         auto get_an_array = []() -> std::array<int, 4> { return {1, 2, 3, 4}; };
@@ -338,9 +338,9 @@ void test_case_from_const_std_array_constructor()
         CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
     }
 
-    CONCEPT_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 5>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 5>, decltype((arr))>::value);
 
     {
         auto get_an_array = []() -> const std::array<int, 4> { return {1, 2, 3, 4}; };
@@ -368,10 +368,10 @@ void test_case_from_std_array_const_constructor()
         CHECK((s.size() == narrow_cast<std::ptrdiff_t>(arr.size()) && s.data() == arr.data()));
     }
 
-    CONCEPT_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<const int, 5>, decltype((arr))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 4>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 2>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 0>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<const int, 5>, decltype((arr))>::value);
+    CPP_assert(!std::is_constructible<span<int, 4>, decltype((arr))>::value);
 
     {
         auto s = make_span(arr);
@@ -418,7 +418,7 @@ void test_case_from_container_constructor()
     }
 
     {
-        CONCEPT_assert(!std::is_constructible<span<char>, decltype((cstr))>::value);
+        CPP_assert(!std::is_constructible<span<char>, decltype((cstr))>::value);
         span<const char> cs{cstr};
         CHECK((cs.size() == narrow_cast<std::ptrdiff_t>(cstr.size()) &&
               cs.data() == cstr.data()));
@@ -436,7 +436,7 @@ void test_case_from_container_constructor()
         use_span(get_temp_vector());
     }
 
-    CONCEPT_assert(!std::is_convertible<const std::vector<int>, span<const char>>::value);
+    CPP_assert(!std::is_convertible<const std::vector<int>, span<const char>>::value);
 
     {
         auto get_temp_string = []() -> const std::string { return {}; };
@@ -444,7 +444,7 @@ void test_case_from_container_constructor()
         use_span(get_temp_string());
     }
 
-    CONCEPT_assert(!std::is_constructible<span<int>, std::map<int, int>&>::value);
+    CPP_assert(!std::is_constructible<span<int>, std::map<int, int>&>::value);
 
     {
         auto s = make_span(v);
@@ -463,11 +463,11 @@ void test_case_from_convertible_span_constructor()
         static_cast<void>(avcd);
     }
 
-    CONCEPT_assert(!std::is_constructible<span<BaseClass>, span<DerivedClass>>::value);
-    CONCEPT_assert(!std::is_constructible<span<DerivedClass>, span<BaseClass>>::value);
-    CONCEPT_assert(!std::is_constructible<span<unsigned int>, span<int>>::value);
-    CONCEPT_assert(!std::is_constructible<span<const unsigned int>, span<int>>::value);
-    CONCEPT_assert(!std::is_constructible<span<short>, span<int>>::value);
+    CPP_assert(!std::is_constructible<span<BaseClass>, span<DerivedClass>>::value);
+    CPP_assert(!std::is_constructible<span<DerivedClass>, span<BaseClass>>::value);
+    CPP_assert(!std::is_constructible<span<unsigned int>, span<int>>::value);
+    CPP_assert(!std::is_constructible<span<const unsigned int>, span<int>>::value);
+    CPP_assert(!std::is_constructible<span<short>, span<int>>::value);
 }
 
 void test_case_copy_move_and_assignment()
@@ -503,29 +503,29 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
         int arr[] = {1, 2, 3, 4, 5};
         {
             span s{arr};
-            CONCEPT_assert(std::is_same<span<int, 5>, decltype(s)>::value);
+            CPP_assert(std::is_same<span<int, 5>, decltype(s)>::value);
         }
         {
             span s{ranges::begin(arr), ranges::size(arr)};
-            CONCEPT_assert(std::is_same<span<int>, decltype(s)>::value);
+            CPP_assert(std::is_same<span<int>, decltype(s)>::value);
         }
         {
             span s{ranges::begin(arr), ranges::end(arr)};
-            CONCEPT_assert(std::is_same<span<int>, decltype(s)>::value);
+            CPP_assert(std::is_same<span<int>, decltype(s)>::value);
         }
     }
     {
         std::array<int, 5> arr = {1, 2, 3, 4, 5};
         {
             span s{arr};
-            CONCEPT_assert(std::is_same<span<int, 5>, decltype(s)>::value);
+            CPP_assert(std::is_same<span<int, 5>, decltype(s)>::value);
         }
     }
     {
         std::vector<int> vec = {1, 2, 3, 4, 5};
         {
             span s{vec};
-            CONCEPT_assert(std::is_same<span<int>, decltype(s)>::value);
+            CPP_assert(std::is_same<span<int>, decltype(s)>::value);
         }
     }
 #if defined(__clang__) && __clang_major__ < 6
@@ -698,7 +698,7 @@ void test_case_iterator_comparisons()
     {
         span<int> s = a;
         auto it = s.begin();
-        CONCEPT_assert(ranges::Same<decltype(it), span<int>::iterator>);
+        CPP_assert(ranges::Same<decltype(it), span<int>::iterator>);
         auto it2 = it + 1;
 
         CHECK(it == it);
@@ -1004,8 +1004,8 @@ void test_case_fixed_size_conversions()
     }
 
     // initialization or assignment to static span that REDUCES size is NOT ok
-    CONCEPT_assert(!std::is_convertible<decltype((arr)), span<int, 2>>::value);
-    CONCEPT_assert(!std::is_convertible<span<int, 4>, span<int, 2>>::value);
+    CPP_assert(!std::is_convertible<decltype((arr)), span<int, 2>>::value);
+    CPP_assert(!std::is_convertible<span<int, 4>, span<int, 2>>::value);
 
 
     // you can convert statically
@@ -1029,8 +1029,8 @@ void test_case_fixed_size_conversions()
     int arr2[2] = {1, 2};
     (void)arr2;
 
-    CONCEPT_assert(!std::is_constructible<span<int, 4>, decltype((arr2))>::value);
-    CONCEPT_assert(!std::is_constructible<span<int, 4>, span<int, 2>>::value);
+    CPP_assert(!std::is_constructible<span<int, 4>, decltype((arr2))>::value);
+    CPP_assert(!std::is_constructible<span<int, 4>, span<int, 2>>::value);
 }
 
 void test_case_interop_with_std_regex()
@@ -1092,6 +1092,6 @@ int main() {
     test_case_interop_with_std_regex();
     test_case_default_constructible();
 
-    CONCEPT_assert(ranges::ContiguousView<span<int>>);
-    CONCEPT_assert(ranges::ContiguousView<span<int, 42>>);
+    CPP_assert(ranges::ContiguousView<span<int>>);
+    CPP_assert(ranges::ContiguousView<span<int, 42>>);
 }

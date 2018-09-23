@@ -46,7 +46,7 @@ namespace ranges
             }
 
         public:
-            CONCEPT_template(typename I0, typename S0, typename I1,
+            CPP_template(typename I0, typename S0, typename I1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Comparable<I0, I1, C, P0, P1>)
             RANGES_CXX14_CONSTEXPR
@@ -59,7 +59,7 @@ namespace ranges
                 return true;
             }
 
-            CONCEPT_template(typename I0, typename S0, typename I1, typename S1,
+            CPP_template(typename I0, typename S0, typename I1, typename S1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident)(
                 requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                     Comparable<I0, I1, C, P0, P1>)
@@ -74,7 +74,7 @@ namespace ranges
                     std::move(end1), std::move(pred), std::move(proj0), std::move(proj1));
             }
 
-            CONCEPT_template(typename Rng0, typename I1Ref,
+            CPP_template(typename Rng0, typename I1Ref,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
                 typename I1 = uncvref_t<I1Ref>)(
@@ -88,7 +88,7 @@ namespace ranges
                     std::move(proj0), std::move(proj1));
             }
 
-            CONCEPT_template(typename Rng0, typename Rng1,
+            CPP_template(typename Rng0, typename Rng1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = iterator_t<Rng0>,
                 typename I1 = iterator_t<Rng1>)(

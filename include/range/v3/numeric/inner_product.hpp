@@ -28,7 +28,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident)
@@ -61,7 +61,7 @@ namespace ranges
 
         struct inner_product_fn
         {
-            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename T,
+            CPP_template(typename I1, typename S1, typename I2, typename S2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident)(
                 requires Sentinel<S1, I1> &&
@@ -75,7 +75,7 @@ namespace ranges
                 return init;
             }
 
-            CONCEPT_template(typename I1, typename S1, typename I2, typename T,
+            CPP_template(typename I1, typename S1, typename I2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident)(
                 requires Sentinel<S1, I1> &&
@@ -87,7 +87,7 @@ namespace ranges
                     std::move(init), std::move(bop1), std::move(bop2), std::move(proj1), std::move(proj2));
             }
 
-            CONCEPT_template(typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
+            CPP_template(typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>)(
@@ -100,7 +100,7 @@ namespace ranges
                     std::move(bop1), std::move(bop2),  std::move(proj1), std::move(proj2));
             }
 
-            CONCEPT_template(typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
+            CPP_template(typename Rng1, typename Rng2, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(

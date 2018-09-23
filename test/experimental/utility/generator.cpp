@@ -37,7 +37,7 @@ using maybe_sized_generator = meta::if_c<Condition,
     meta::quote<ranges::experimental::sized_generator>,
     meta::quote<ranges::experimental::generator>>;
 
-CONCEPT_def
+CPP_def
 (
     template(typename Rng)
     concept CoroConcept,
@@ -55,7 +55,7 @@ private:
         ranges::range_reference_t<V>,
         ranges::range_value_type_t<V>>;
 
-    CONCEPT_template(typename V)(
+    CPP_template(typename V)(
         requires CoroConcept<V> && ranges::View<V>)
     static generator_for<V> impl(V v)
     {
@@ -67,7 +67,7 @@ private:
             co_yield *first;
     }
 public:
-    CONCEPT_template(typename Rng)(
+    CPP_template(typename Rng)(
         requires
             not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::generator>::value &&
             not meta::is<ranges::uncvref_t<Rng>, ranges::experimental::sized_generator>::value &&
@@ -115,7 +115,7 @@ ranges::experimental::sized_generator<int &> h(int const n)
         co_yield i;
 }
 
-CONCEPT_template(class T)(
+CPP_template(class T)(
     requires ranges::WeaklyIncrementable<T>)
 ranges::experimental::generator<T> iota_generator(T t)
 {
@@ -123,7 +123,7 @@ ranges::experimental::generator<T> iota_generator(T t)
         co_yield t;
 }
 
-CONCEPT_template(class T, class S)(
+CPP_template(class T, class S)(
     requires ranges::WeaklyIncrementable<T> &&
         ranges::WeaklyEqualityComparableWith<T, S> &&
         !ranges::SizedIncrementableSentinel<S, T>)
@@ -133,7 +133,7 @@ ranges::experimental::generator<T> iota_generator(T t, S const s)
         co_yield t;
 }
 
-CONCEPT_template(class T, class S)(
+CPP_template(class T, class S)(
     requires ranges::SizedIncrementableSentinel<S, T>)
 ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 {
@@ -142,7 +142,7 @@ ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
         co_yield t;
 }
 
-CONCEPT_template(class V, class F)(
+CPP_template(class V, class F)(
     requires ranges::InputView<V> &&
         ranges::IndirectPredicate<F, ranges::iterator_t<V>>)
 ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_type_t<V>>
@@ -155,7 +155,7 @@ filter(V view, F f)
     }
 }
 
-CONCEPT_template(class V, class F)(
+CPP_template(class V, class F)(
     requires ranges::InputView<V> &&
         ranges::IndirectInvocable<F, ranges::iterator_t<V>>)
 meta::invoke<

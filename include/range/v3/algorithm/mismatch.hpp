@@ -34,7 +34,7 @@ namespace ranges
         // of Predicate. Relation requires symmetry: is_valid(pred(a,b)) => is_valid(pred(b,a))
 
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)
@@ -48,7 +48,7 @@ namespace ranges
         /// @{
         struct mismatch_fn
         {
-            CONCEPT_template(typename I1, typename S1, typename I2, typename C = equal_to,
+            CPP_template(typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)(
                 requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1>)
             tagged_pair<tag::in1(I1), tag::in2(I2)>
@@ -61,7 +61,7 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            CONCEPT_template(typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
+            CPP_template(typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident)(
                 requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1> &&
                     Sentinel<S2, I2>)
@@ -75,7 +75,7 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            CONCEPT_template(typename Rng1, typename I2Ref, typename C = equal_to,
+            CPP_template(typename Rng1, typename I2Ref, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>)( // [*] See below
@@ -89,7 +89,7 @@ namespace ranges
                     std::move(proj1), std::move(proj2));
             }
 
-            CONCEPT_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
+            CPP_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident,
                 typename I1 = iterator_t<Rng1>,
                 typename I2 = iterator_t<Rng2>)(

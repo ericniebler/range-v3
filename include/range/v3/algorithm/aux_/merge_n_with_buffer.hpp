@@ -45,7 +45,7 @@ namespace ranges
         {
             struct merge_n_with_buffer_fn
             {
-                CONCEPT_template(typename I, typename B, typename C = ordered_less, typename P = ident,
+                CPP_template(typename I, typename B, typename C = ordered_less, typename P = ident,
                     typename VI = iter_common_reference_t<I>,
                     typename VB = iter_common_reference_t<B>)(
                     requires Same<VI, VB> && IndirectlyCopyable<I, B> &&

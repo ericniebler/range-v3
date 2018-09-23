@@ -38,7 +38,7 @@ namespace ranges
             /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre `Rng` is a model of the `Range` concept
-            CONCEPT_template(typename I, typename S, typename V2, typename C = ordered_less,
+            CPP_template(typename I, typename S, typename V2, typename C = ordered_less,
                 typename P = ident)(
                 requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
             bool
@@ -49,7 +49,7 @@ namespace ranges
             }
 
             /// \overload
-            CONCEPT_template(typename Rng, typename V2, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && BinarySearchable<I, V2, C, P>)
             bool

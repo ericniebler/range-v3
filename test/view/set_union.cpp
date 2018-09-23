@@ -61,9 +61,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>);
-        CONCEPT_assert(Same<range_reference_t<R>, int&>);
-        CONCEPT_assert(Same<decltype(iter_move(begin(res))), int&&>);
+        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_reference_t<R>, int&>);
+        CPP_assert(Same<decltype(iter_move(begin(res))), int&&>);
 
         static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of union of finite ranges should be finite!");
 
@@ -90,14 +90,14 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>,
+        CPP_assert(Same<range_value_type_t<R>,
                             common_type_t<range_value_type_t<decltype(i1_infinite)>,
                                           range_value_type_t<decltype(i2_infinite)>>>);
-        CONCEPT_assert(Same<range_reference_t<R>,
+        CPP_assert(Same<range_reference_t<R>,
                             common_reference_t<range_reference_t<decltype(i1_infinite)>,
                                                range_reference_t<decltype(i2_infinite)>>
                            >);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>,
+        CPP_assert(Same<range_rvalue_reference_t<R>,
                             common_reference_t<range_rvalue_reference_t<decltype(i1_infinite)>,
                                                range_rvalue_reference_t<decltype(i2_infinite)>>
                            >);
@@ -122,9 +122,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>);
-        CONCEPT_assert(Same<range_reference_t<R>, int>); // our infinite range does not give out references
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, int>);
+        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_reference_t<R>, int>); // our infinite range does not give out references
+        CPP_assert(Same<range_rvalue_reference_t<R>, int>);
 
         static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
 
@@ -141,9 +141,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, int>);
-        CONCEPT_assert(Same<range_reference_t<R>, int>); // our infinite range does not give out references
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, int>);
+        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_reference_t<R>, int>); // our infinite range does not give out references
+        CPP_assert(Same<range_rvalue_reference_t<R>, int>);
 
         static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
 
@@ -179,15 +179,15 @@ int main()
     {
         auto res1 = view::set_union(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, int>);
-        CONCEPT_assert(Same<range_reference_t<R1>, const int&>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
+        CPP_assert(Same<range_value_type_t<R1>, int>);
+        CPP_assert(Same<range_reference_t<R1>, const int&>);
+        CPP_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
 
         auto res2 = view::set_union(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, int>);
-        CONCEPT_assert(Same<range_reference_t<R2>, const int&>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
+        CPP_assert(Same<range_value_type_t<R2>, int>);
+        CPP_assert(Same<range_reference_t<R2>, const int&>);
+        CPP_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
     }
 
     // test different orderings
@@ -222,9 +222,9 @@ int main()
     {
         auto res = view::set_union(b_finite, d_finite, [](const B& a, const D& b){ return a.val < b.val; });
         using R = decltype(res);
-        CONCEPT_assert(Same<range_value_type_t<R>, B>);
-        CONCEPT_assert(Same<range_reference_t<R>, B&>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, B&&>);
+        CPP_assert(Same<range_value_type_t<R>, B>);
+        CPP_assert(Same<range_reference_t<R>, B&>);
+        CPP_assert(Same<range_rvalue_reference_t<R>, B&&>);
         ::check_equal(res, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
         auto it = begin(res);
         CHECK(&*it == &*begin(b_finite));
@@ -240,9 +240,9 @@ int main()
                                     &D::val
                                    );
         using R1 = decltype(res1);
-        CONCEPT_assert(Same<range_value_type_t<R1>, B>);
-        CONCEPT_assert(Same<range_reference_t<R1>, B&>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R1>, B&&>);
+        CPP_assert(Same<range_value_type_t<R1>, B>);
+        CPP_assert(Same<range_reference_t<R1>, B&>);
+        CPP_assert(Same<range_rvalue_reference_t<R1>, B&&>);
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
 
         auto res2 = view::set_union(view::ints(-2, 10), b_finite,
@@ -251,9 +251,9 @@ int main()
                                     [](const B& x){ return x.val; }
                                    );
         using R2 = decltype(res2);
-        CONCEPT_assert(Same<range_value_type_t<R2>, B>);
-        CONCEPT_assert(Same<range_reference_t<R2>, B>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R2>, B>);
+        CPP_assert(Same<range_value_type_t<R2>, B>);
+        CPP_assert(Same<range_reference_t<R2>, B>);
+        CPP_assert(Same<range_rvalue_reference_t<R2>, B>);
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{5}, B{6}, B{7}, B{8}, B{9}, B{20}});
     }
 
@@ -272,9 +272,9 @@ int main()
 
         using R = decltype(res);
 
-        CONCEPT_assert(Same<range_value_type_t<R>, MoveOnlyString>);
-        CONCEPT_assert(Same<range_reference_t<R>, MoveOnlyString &>);
-        CONCEPT_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
+        CPP_assert(Same<range_value_type_t<R>, MoveOnlyString>);
+        CPP_assert(Same<range_reference_t<R>, MoveOnlyString &>);
+        CPP_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
     }
 
     // iterator (in)equality

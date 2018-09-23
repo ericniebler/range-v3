@@ -32,7 +32,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O, typename BOp = minus, typename P = ident)
             (concept AdjacentDifferentiable)(I, O, BOp, P),
@@ -47,7 +47,7 @@ namespace ranges
 
         struct adjacent_difference_fn
         {
-            CONCEPT_template(typename I, typename S, typename O, typename S2,
+            CPP_template(typename I, typename S, typename O, typename S2,
                 typename BOp = minus, typename P = ident)(
                 requires Sentinel<S, I> && Sentinel<S2, O> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
@@ -76,7 +76,7 @@ namespace ranges
                 return {begin, result};
             }
 
-            CONCEPT_template(typename I, typename S, typename O, typename BOp = minus,
+            CPP_template(typename I, typename S, typename O, typename BOp = minus,
                 typename P = ident)(
                 requires Sentinel<S, I> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
@@ -87,7 +87,7 @@ namespace ranges
                                unreachable{}, std::move(bop), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename ORef, typename BOp = minus, typename P = ident,
+            CPP_template(typename Rng, typename ORef, typename BOp = minus, typename P = ident,
                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
                 requires Range<Rng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
@@ -98,7 +98,7 @@ namespace ranges
                                std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename ORng, typename BOp = minus,
+            CPP_template(typename Rng, typename ORng, typename BOp = minus,
                 typename P = ident, typename I = iterator_t<Rng>,
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&

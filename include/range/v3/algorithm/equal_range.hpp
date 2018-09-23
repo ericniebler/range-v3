@@ -35,7 +35,7 @@ namespace ranges
         /// @{
         struct equal_range_fn
         {
-            CONCEPT_template(typename I, typename S, typename V,
+            CPP_template(typename I, typename S, typename V,
                 typename C = ordered_less, typename P = ident)(
                 requires Sentinel<S, I> && !SizedSentinel<S, I> &&
                     BinarySearchable<I, V, C, P>)
@@ -83,7 +83,7 @@ namespace ranges
                 }
             }
 
-            CONCEPT_template(typename I, typename S, typename V,
+            CPP_template(typename I, typename S, typename V,
                 typename C = ordered_less, typename P = ident)(
                 requires SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
             iterator_range<I>
@@ -94,7 +94,7 @@ namespace ranges
                     std::move(pred), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename V, typename C = ordered_less,
+            CPP_template(typename Rng, typename V, typename C = ordered_less,
                 typename P = ident, typename I = iterator_t<Rng>)(
                 requires Range<Rng> && !SizedRange<Rng> &&
                     BinarySearchable<I, V, C, P>)
@@ -104,7 +104,7 @@ namespace ranges
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
             }
 
-            CONCEPT_template(typename Rng, typename V, typename C = ordered_less,
+            CPP_template(typename Rng, typename V, typename C = ordered_less,
                 typename P = ident, typename I = iterator_t<Rng>)(
                 requires SizedRange<Rng> && BinarySearchable<I, V, C, P>)
             meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>

@@ -28,7 +28,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept Readable,
@@ -37,7 +37,7 @@ namespace ranges
                 CommonReference<rvalue_reference_t<I> &&, value_type_t<I> const &>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename Out, typename T)
             concept Writable,
@@ -50,14 +50,14 @@ namespace ranges
                 )
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O)
             concept IndirectlyMovable,
                 Readable<I> && Writable<O, rvalue_reference_t<I>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O)
             concept IndirectlyMovableStorable,
@@ -68,14 +68,14 @@ namespace ranges
                 Writable<O, value_type_t<I>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O)
             concept IndirectlyCopyable,
                 Readable<I> && Writable<O, reference_t<I>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O)
             concept IndirectlyCopyableStorable,
@@ -87,7 +87,7 @@ namespace ranges
                 Writable<O, value_type_t<I> const &>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2)
             concept IndirectlySwappable,
@@ -101,7 +101,7 @@ namespace ranges
                 Readable<I1> && Readable<I2>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept WeaklyIncrementable,
@@ -116,7 +116,7 @@ namespace ranges
                 Semiregular<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept Incrementable,
@@ -127,7 +127,7 @@ namespace ranges
                 Regular<I> && WeaklyIncrementable<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept Iterator,
@@ -138,7 +138,7 @@ namespace ranges
                 WeaklyIncrementable<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename S, typename I)
             concept Sentinel,
@@ -146,7 +146,7 @@ namespace ranges
                 WeaklyEqualityComparableWith<S, I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename S, typename I)
             concept SizedSentinel,
@@ -162,7 +162,7 @@ namespace ranges
                 defer::Sentinel<S, I>)
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename Out, typename T)
             concept OutputIterator,
@@ -173,7 +173,7 @@ namespace ranges
                 Iterator<Out> && Writable<Out, T>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept InputIterator,
@@ -181,7 +181,7 @@ namespace ranges
                 DerivedFrom<iterator_category_t<I>, ranges::input_iterator_tag>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept ForwardIterator,
@@ -190,7 +190,7 @@ namespace ranges
                 DerivedFrom<iterator_category_t<I>, ranges::forward_iterator_tag>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept BidirectionalIterator,
@@ -205,7 +205,7 @@ namespace ranges
                 DerivedFrom<iterator_category_t<I>, ranges::bidirectional_iterator_tag>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept RandomAccessIterator,
@@ -229,7 +229,7 @@ namespace ranges
                 DerivedFrom<iterator_category_t<I>, ranges::random_access_iterator_tag>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept ContiguousIterator,
@@ -253,7 +253,7 @@ namespace ranges
                 T>;
 
         // Generally useful to know if an iterator is single-pass or not:
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept SinglePass,
@@ -353,7 +353,7 @@ namespace ranges
                     Is...>>;
         }
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename ...Is)
             (concept IndirectInvocable)(C, Is...),
@@ -361,7 +361,7 @@ namespace ranges
                 CopyConstructible<C>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename ...Is)
             (concept MoveIndirectInvocable)(C, Is...),
@@ -369,14 +369,14 @@ namespace ranges
                 MoveConstructible<C>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename ...Is)
             (concept IndirectRegularInvocable)(C, Is...),
                 IndirectInvocable<C, Is...>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename ...Is)
             (concept IndirectPredicate)(C, Is...),
@@ -385,7 +385,7 @@ namespace ranges
                 CopyConstructible<C>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename C, typename I0, typename I1 = I0)
             (concept IndirectRelation)(C, I0, I1),
@@ -451,7 +451,7 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
-        CONCEPT_def
+        CPP_def
         (
             template(typename I)
             concept Permutable,
@@ -460,7 +460,7 @@ namespace ranges
                 IndirectlyMovableStorable<I, I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I0, typename I1, typename Out, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident)
@@ -473,7 +473,7 @@ namespace ranges
                 IndirectlyCopyable<I1, Out>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I0, typename I1, typename Out, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident)
@@ -486,7 +486,7 @@ namespace ranges
                 IndirectlyMovable<I1, Out>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename C = ordered_less, typename P = ident)
             (concept Sortable)(I, C, P),
@@ -495,7 +495,7 @@ namespace ranges
                 Permutable<I>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename V2, typename C = ordered_less, typename P = ident)
             (concept BinarySearchable)(I, V2, C, P),
@@ -503,7 +503,7 @@ namespace ranges
                 IndirectRelation<C, projected<I, P>, V2 const *>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident)
@@ -513,7 +513,7 @@ namespace ranges
                 IndirectPredicate<C, projected<I1, P1>, projected<I2, P2>>
         );
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident)
@@ -543,12 +543,12 @@ namespace ranges
 
 namespace __gnu_debug
 {
-    CONCEPT_template(typename I1, typename I2, typename Seq)(
+    CPP_template(typename I1, typename I2, typename Seq)(
         requires not ::ranges::SizedSentinel<I1, I2>)
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
-    CONCEPT_template(typename I1, typename Seq)(
+    CPP_template(typename I1, typename Seq)(
         requires not ::ranges::SizedSentinel<I1, I1>)
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;

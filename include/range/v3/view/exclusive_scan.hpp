@@ -22,14 +22,14 @@ namespace ranges {
     inline namespace v3 {
         /// \cond
         namespace detail {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T, typename Fun)
                 concept ExclusiveScanConstraint3,
                     Assignable<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T, typename Fun)
                 concept ExclusiveScanConstraint2,
@@ -39,7 +39,7 @@ namespace ranges {
         }
         /// \endcond
 
-        CONCEPT_def
+        CPP_def
         (
             template(typename Rng, typename T, typename Fun)
             concept ExclusiveScanConstraint,
@@ -56,7 +56,7 @@ namespace ranges {
         {
         private:
             friend range_access;
-            CONCEPT_assert(ExclusiveScanConstraint<Rng, T, Fun>);
+            CPP_assert(ExclusiveScanConstraint<Rng, T, Fun>);
 
             semiregular_t<T> init_;
             semiregular_t<Fun> fun_;
@@ -116,12 +116,12 @@ namespace ranges {
             {
                 return {*this};
             }
-            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
+            CPP_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
             adaptor<true> begin_adaptor() const
             {
                 return {*this};
             }
-            CONCEPT_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
+            CPP_requires(ExclusiveScanConstraint<Rng const, T, Fun const>)
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {*this};
@@ -134,12 +134,12 @@ namespace ranges {
               , init_(std::move(init))
               , fun_(std::move(fun))
             {}
-            CONCEPT_requires(SizedRange<Rng const>)
+            CPP_requires(SizedRange<Rng const>)
             range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_requires(SizedRange<Rng>)
+            CPP_requires(SizedRange<Rng>)
             range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
@@ -160,7 +160,7 @@ namespace ranges {
                                             std::move(init), protect(std::move(fun))))
                 )
             public:
-                CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
+                CPP_template(typename Rng, typename T, typename Fun = plus)(
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
                 exclusive_scan_view<all_t<Rng>, T, Fun>
                 operator()(Rng &&rng, T init, Fun fun = Fun{}) const
@@ -169,21 +169,21 @@ namespace ranges {
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T, typename Fun = plus)(
+                CPP_template(typename Rng, typename T, typename Fun = plus)(
                     requires not ExclusiveScanConstraint<Rng, T, Fun>)
                 void operator()(Rng &&, T, Fun = Fun{}) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The first argument passed to view::exclusive_scan must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(CopyConstructible<T>,
+                    CPP_assert_msg(CopyConstructible<T>,
                         "The second argument passed to view::exclusive_scan must be a model of the "
                         "CopyConstructible concept.");
-                    CONCEPT_assert_msg(Invocable<Fun &, T, range_reference_t<Rng>>,
+                    CPP_assert_msg(Invocable<Fun &, T, range_reference_t<Rng>>,
                         "The third argument passed to view::exclusive_scan must be invokable with "
                         "the init value passed as the first argument, and "
                         "a value from the range passed as the second argument.");
-                    CONCEPT_assert_msg(
+                    CPP_assert_msg(
                         Assignable<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>,
                         "The result of invoking the third argument must be assignable to the init "
                         "value.");

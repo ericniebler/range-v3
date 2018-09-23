@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         namespace action
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename Gen)
                 concept ShuffleActionConcept,
@@ -47,7 +47,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CONCEPT_template(typename Gen)(
+                CPP_template(typename Gen)(
                     requires UniformRandomNumberGenerator<Gen>)
                 static auto bind(shuffle_fn shuffle, Gen &&gen)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -55,7 +55,7 @@ namespace ranges
                     std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen))
                 )
             public:
-                CONCEPT_template(typename Rng, typename Gen)(
+                CPP_template(typename Rng, typename Gen)(
                     requires ShuffleActionConcept<Rng, Gen>)
                 Rng operator()(Rng &&rng, Gen &&gen) const
                 {
@@ -64,22 +64,22 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename Gen)(
+                CPP_template(typename Rng, typename Gen)(
                     requires not ShuffleActionConcept<Rng, Gen>)
                 void operator()(Rng &&, Gen &&) const
                 {
-                    CONCEPT_assert_msg(RandomAccessRange<Rng>,
+                    CPP_assert_msg(RandomAccessRange<Rng>,
                         "The object on which action::shuffle operates must be a model of the "
                         "RandomAccessRange concept.");
                     using I = iterator_t<Rng>;
-                    CONCEPT_assert_msg(Permutable<I>,
+                    CPP_assert_msg(Permutable<I>,
                         "The iterator type of the range passed to action::shuffle must allow its "
                         "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");
-                    CONCEPT_assert_msg(UniformRandomNumberGenerator<Gen>,
+                    CPP_assert_msg(UniformRandomNumberGenerator<Gen>,
                         "The generator passed to action::shuffle must fulfill the "
                         "UniformRandomNumberGenerator concept.");
-                    CONCEPT_assert_msg(ConvertibleTo<
+                    CPP_assert_msg(ConvertibleTo<
                         invoke_result_t<Gen &>,
                         difference_type_t<I>>,
                         "The random generator passed to action::shuffle has to have a return type "

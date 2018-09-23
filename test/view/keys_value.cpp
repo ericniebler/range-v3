@@ -46,12 +46,12 @@ int main()
     {
         // regression test for #526
         auto f = detail::get_first{};
-        CONCEPT_assert(Same<int, decltype(f(std::declval<std::pair<int,int>>()))>);
-        CONCEPT_assert(Same<int&, decltype(f(std::declval<std::pair<int,int>&>()))>);
-        CONCEPT_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>>()))>);
-        CONCEPT_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>&>()))>);
-        CONCEPT_assert(Same<int, decltype(f(std::declval<std::pair<int&&,int&&>>()))>);
-        CONCEPT_assert(Same<int&, decltype(f(std::declval<std::pair<int&&,int&&>&>()))>);
+        CPP_assert(Same<int, decltype(f(std::declval<std::pair<int,int>>()))>);
+        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int,int>&>()))>);
+        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>>()))>);
+        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&,int&>&>()))>);
+        CPP_assert(Same<int, decltype(f(std::declval<std::pair<int&&,int&&>>()))>);
+        CPP_assert(Same<int&, decltype(f(std::declval<std::pair<int&&,int&&>&>()))>);
 
         std::vector<int> xs = {42, 100, -1234};
         auto exs = view::zip(view::ints, xs);

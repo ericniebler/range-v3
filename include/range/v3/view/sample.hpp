@@ -37,7 +37,7 @@ namespace ranges
             {
                 range_difference_type_t<Rng> size_;
             public:
-                CONCEPT_assert(ForwardRange<Rng> || SizedRange<Rng>);
+                CPP_assert(ForwardRange<Rng> || SizedRange<Rng>);
                 size_tracker() = default;
                 size_tracker(Rng &rng)
                   : size_(ranges::distance(rng))
@@ -169,7 +169,7 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CONCEPT_template(typename R = Rng)(
+            CPP_template(typename R = Rng)(
                 requires SizedRange<R const> ||
                     SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
                     ForwardRange<R const>)
@@ -190,7 +190,7 @@ namespace ranges
 
         namespace view
         {
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename URNG)
                 concept Constraint,
@@ -209,7 +209,7 @@ namespace ranges
             class sample_fn
             {
                 friend view_access;
-                CONCEPT_template(typename Size, typename URNG = detail::default_random_engine)(
+                CPP_template(typename Size, typename URNG = detail::default_random_engine)(
                     requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
                 static auto bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -218,7 +218,7 @@ namespace ranges
                 )
 
             public:
-                CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
+                CPP_template(typename Rng, typename URNG = detail::default_random_engine)(
                     requires Constraint<Rng, URNG>)
                 sample_view<all_t<Rng>, URNG> operator()(
                     Rng &&rng, range_difference_type_t<Rng> sample_size,
@@ -230,24 +230,24 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename URNG = detail::default_random_engine)(
+                CPP_template(typename Rng, typename URNG = detail::default_random_engine)(
                     requires not Constraint<Rng, URNG>)
                 void operator()(Rng &&, URNG && = URNG{}) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::sample operates must satisfy the InputRange "
                         "concept.");
-                    CONCEPT_assert_msg(UniformRandomNumberGenerator<URNG>,
+                    CPP_assert_msg(UniformRandomNumberGenerator<URNG>,
                         "The generator passed to view::sample must satisfy the "
                         "UniformRandomNumberGenerator concept.");
-                    CONCEPT_assert_msg(Or<
+                    CPP_assert_msg(Or<
                         SizedRange<Rng>,
                         SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
                         ForwardRange<Rng>>,
                         "The underlying range for view::sample must either satisfy the SizedRange"
                         "concept, have iterator and sentinel types that satisfy the "
                         "SizedSentinel concept, or be a forward range.");
-                    CONCEPT_assert_msg(ConvertibleTo<
+                    CPP_assert_msg(ConvertibleTo<
                         invoke_result_t<URNG &>,
                         range_difference_type_t<Rng>>,
                         "The random generator passed to view::sample has to have a return type "

@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         struct for_each_n_fn
         {
-            CONCEPT_template(typename I, typename F, typename P = ident)(
+            CPP_template(typename I, typename F, typename P = ident)(
                 requires InputIterator<I> &&
                     MoveIndirectInvocable<F, projected<I, P>>)
             I operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
@@ -45,7 +45,7 @@ namespace ranges
                 return recounted(begin, b, norig);
             }
 
-            CONCEPT_template(typename Rng, typename F, typename P = ident)(
+            CPP_template(typename Rng, typename F, typename P = ident)(
                 requires InputRange<Rng> &&
                     MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
             safe_iterator_t<Rng>

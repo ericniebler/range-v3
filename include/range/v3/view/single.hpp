@@ -100,7 +100,7 @@ namespace ranges
         {
             struct single_fn
             {
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires CopyConstructible<Val>)
                 single_view<Val> operator()(Val value) const
                 {
@@ -108,14 +108,14 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CONCEPT_template(typename Arg, typename Val = detail::decay_t<Arg>)(
+                CPP_template(typename Arg, typename Val = detail::decay_t<Arg>)(
                     requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
                 void operator()(Arg &&) const
                 {
-                    CONCEPT_assert_msg(CopyConstructible<Val>,
+                    CPP_assert_msg(CopyConstructible<Val>,
                         "The object passed to view::single must be a model of the CopyConstructible "
                         "concept; that is, it needs to be copy and move constructible, and destructible.");
-                    CONCEPT_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
+                    CPP_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
                         "The object type passed to view::single must be initializable from the "
                         "actual argument expression.");
                 }

@@ -80,8 +80,8 @@ int main()
     bool flag = true;
     auto mutable_rng = view::remove_if(rgi, [flag](int) mutable { return flag = !flag;});
     ::check_equal(mutable_rng, {1,3,5,7,9});
-    CONCEPT_assert(View<decltype(mutable_rng)>);
-    CONCEPT_assert(!View<decltype(mutable_rng) const>);
+    CPP_assert(View<decltype(mutable_rng)>);
+    CPP_assert(!View<decltype(mutable_rng) const>);
 
     {
         const std::array<int, 3> a{{0, 1, 2}};

@@ -57,7 +57,7 @@ namespace ranges
             /// \relates make_action_fn
             RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Action, typename Rng, typename...Rest)
                 (concept ActionConcept)(Action, Rng, Rest...),
@@ -65,7 +65,7 @@ namespace ranges
                     Invocable<Action const&, Rng, Rest...>
             );
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Action, typename Rng)
                 concept ActionPipeConcept,
@@ -84,7 +84,7 @@ namespace ranges
                 // Piping requires things are passed by value.
                 template<typename Rng, typename Act>
                 static auto pipe(Rng &&rng, Act &&act) ->
-                    CONCEPT_return_type(invoke_result_t<Action &, Rng>)(
+                    CPP_ret(invoke_result_t<Action &, Rng>)(
                         requires ActionPipeConcept<Action, Rng>)
                 {
                     return invoke(act.action_, detail::move(rng));
@@ -94,14 +94,14 @@ namespace ranges
                 // For better error messages:
                 template<typename Rng, typename Act>
                 static auto pipe(Rng &&, Act &&) ->
-                    CONCEPT_return_type(void)(
+                    CPP_ret(void)(
                         requires not ActionPipeConcept<Action, Rng>)
                 {
-                    CONCEPT_assert_msg(Range<Rng>,
+                    CPP_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
-                    CONCEPT_assert_msg(Invocable<Action&, Rng>,
+                    CPP_assert_msg(Invocable<Action&, Rng>,
                         "This action is not callable with this range type.");
                     static_assert(!std::is_reference<Rng>(),
                         "You can't pipe an lvalue into an action. Try using std::move on the argument, "
@@ -119,7 +119,7 @@ namespace ranges
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename ...Rest>
                 auto operator()(Rng &rng, Rest &&... rest) const ->
-                    CONCEPT_return_type(invoke_result_t<Action const &, Rng &, Rest...>)(
+                    CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
                         requires ActionConcept<Action const, Rng &, Rest...>)
                 {
                     return invoke(action_, rng, static_cast<Rest &&>(rest)...);
@@ -140,7 +140,7 @@ namespace ranges
 
             template<typename Rng, typename Action>
             auto operator|=(Rng &rng, Action &&action) ->
-                CONCEPT_return_type(Rng &)(
+                CPP_ret(Rng &)(
                     requires is_pipeable<Action>::value && Range<Rng &> &&
                     Invocable<bitwise_or, ref_t<Rng &>, Action &> &&
                     Same<ref_t<Rng &>,

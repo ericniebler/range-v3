@@ -30,7 +30,7 @@ namespace ranges
             {
                 template<typename T>
                 auto operator()(T &&t) const ->
-                    CONCEPT_return_type(detail::decay_t<T>)(
+                    CPP_ret(detail::decay_t<T>)(
                         requires Constructible<detail::decay_t<T>, T>)
                 {
                     return static_cast<T &&>(t);
@@ -45,7 +45,7 @@ namespace ranges
             /// \sa `copy_fn`
             template<typename T>
             auto operator|(T &&t, copy_fn) ->
-                CONCEPT_return_type(detail::decay_t<T>)(
+                CPP_ret(detail::decay_t<T>)(
                     requires Constructible<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);

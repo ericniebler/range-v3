@@ -82,7 +82,7 @@ namespace ranges
                 }
 
             public:
-                CONCEPT_template(typename I, typename C = ordered_less, typename P = ident)(
+                CPP_template(typename I, typename C = ordered_less, typename P = ident)(
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
                 void operator()(I begin, I middle, I end, difference_type_t<I> len1,
                     difference_type_t<I> len2, value_type_t<I> *buf,
@@ -175,7 +175,7 @@ namespace ranges
 
             struct inplace_merge_no_buffer_fn
             {
-                CONCEPT_template(typename I, typename C = ordered_less, typename P = ident)(
+                CPP_template(typename I, typename C = ordered_less, typename P = ident)(
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
                 void operator()(I begin, I middle, I end, difference_type_t<I> len1,
                     difference_type_t<I> len2, C pred = C{}, P proj = P{}) const
@@ -195,7 +195,7 @@ namespace ranges
         struct inplace_merge_fn
         {
             // TODO reimplement to only need forward iterators
-            CONCEPT_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
+            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
                 requires BidirectionalIterator<I> && Sortable<I, C, P>)
             I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
             {
@@ -216,7 +216,7 @@ namespace ranges
                 return len2_and_end.second;
             }
 
-            CONCEPT_template(typename Rng, typename C = ordered_less, typename P = ident,
+            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = iterator_t<Rng>)(
                 requires BidirectionalRange<Rng> && Sortable<I, C, P>)
             safe_iterator_t<Rng>

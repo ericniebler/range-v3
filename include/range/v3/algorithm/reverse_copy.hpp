@@ -31,7 +31,7 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename O)
             concept ReverseCopyable,
@@ -44,7 +44,7 @@ namespace ranges
         /// @{
         struct reverse_copy_fn
         {
-            CONCEPT_template(typename I, typename S, typename O)(
+            CPP_template(typename I, typename S, typename O)(
                 requires Sentinel<S, I> && ReverseCopyable<I, O>)
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
@@ -54,7 +54,7 @@ namespace ranges
                 return {res, out};
             }
 
-            CONCEPT_template(typename Rng, typename O,
+            CPP_template(typename Rng, typename O,
                 typename I = iterator_t<Rng>)(
                 requires Range<Rng> && ReverseCopyable<I, O>)
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out) const

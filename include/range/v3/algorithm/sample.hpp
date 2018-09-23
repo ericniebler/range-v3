@@ -34,7 +34,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        CONCEPT_def
+        CPP_def
         (
             template(typename I, typename S, typename O, typename Gen)
             concept SampleAlgoConcept,
@@ -47,7 +47,7 @@ namespace ranges
         /// @{
         class sample_fn
         {
-            CONCEPT_template(typename I, typename S, typename O,
+            CPP_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires SampleAlgoConcept<I, S, O, Gen>)
             static tagged_pair<tag::in(I), tag::out(O)>
@@ -69,7 +69,7 @@ namespace ranges
                 return {std::move(first), std::move(out)};
             }
         public:
-            CONCEPT_template(typename I, typename S, typename O,
+            CPP_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires SampleAlgoConcept<I, S, O, Gen> &&
                     (ForwardIterator<I> || SizedSentinel<S, I>))
@@ -81,7 +81,7 @@ namespace ranges
                 return sample_fn::sized_impl(std::move(first), std::move(last),
                     k, std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename I, typename S, typename O,
+            CPP_template(typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
                     !(ForwardIterator<I> || SizedSentinel<S, I>) )
@@ -112,7 +112,7 @@ namespace ranges
             done:
                 return {std::move(first), std::move(out)};
             }
-            CONCEPT_template(typename I, typename S, typename ORng,
+            CPP_template(typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&)(
                 requires SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
                     (ForwardIterator<I> || SizedSentinel<S, I>) &&
@@ -125,7 +125,7 @@ namespace ranges
                 return sample_fn::sized_impl(std::move(first), std::move(last),
                     k, begin(out), distance(out), static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename I, typename S, typename ORng,
+            CPP_template(typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<iterator_t<ORng>> &&
                     SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
@@ -138,7 +138,7 @@ namespace ranges
                 return (*this)(std::move(first), std::move(last), begin(out),
                     distance(out), static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename Rng, typename O,
+            CPP_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<O> &&
                     SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
@@ -150,7 +150,7 @@ namespace ranges
                 return (*this)(begin(rng), end(rng),
                     std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename Rng, typename O,
+            CPP_template(typename Rng, typename O,
                 typename Gen = detail::default_random_engine&)(
                 requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
                     (ForwardRange<Rng> || SizedRange<Rng>))
@@ -161,7 +161,7 @@ namespace ranges
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
                     std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename IRng, typename ORng,
+            CPP_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
                 requires RandomAccessIterator<iterator_t<ORng>> &&
                     SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
@@ -177,7 +177,7 @@ namespace ranges
                 return (*this)(begin(rng), end(rng),
                     begin(out), distance(out), static_cast<Gen &&>(gen));
             }
-            CONCEPT_template(typename IRng, typename ORng,
+            CPP_template(typename IRng, typename ORng,
                 typename Gen = detail::default_random_engine&)(
                 requires SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
                         iterator_t<ORng>, Gen> &&

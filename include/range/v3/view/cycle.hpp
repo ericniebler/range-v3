@@ -48,7 +48,7 @@ namespace ranges
                 iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>>
         {
         private:
-            CONCEPT_assert(ForwardRange<Rng>);
+            CPP_assert(ForwardRange<Rng>);
             friend range_access;
             Rng rng_;
 
@@ -120,14 +120,14 @@ namespace ranges
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
-                CONCEPT_requires(BidirectionalRange<Rng>)
+                CPP_requires(BidirectionalRange<Rng>)
                 void prev()
                 {
                     if(it_ == ranges::begin(rng_->rng_))
                         it_ = this->get_end_(meta::bool_<BoundedRange<Rng>>{});
                     --it_;
                 }
-                CONCEPT_requires(RandomAccessRange<Rng>)
+                CPP_requires(RandomAccessRange<Rng>)
                 void advance(difference_type_ n)
                 {
                     auto const begin = ranges::begin(rng_->rng_);
@@ -137,7 +137,7 @@ namespace ranges
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
                 }
-                CONCEPT_requires(SizedSentinel<iterator, iterator>)
+                CPP_requires(SizedSentinel<iterator, iterator>)
                 difference_type_ distance_to(cursor const &that) const
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
@@ -149,7 +149,7 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CONCEPT_requires(BoundedRange<Rng const>)
+            CPP_requires(BoundedRange<Rng const>)
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};
@@ -175,7 +175,7 @@ namespace ranges
                 friend view_access;
             public:
                 /// \pre <tt>!empty(rng)</tt>
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires ForwardRange<Rng>)
                 cycled_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
@@ -183,11 +183,11 @@ namespace ranges
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng)(
+                CPP_template(typename Rng)(
                     requires not ForwardRange<Rng>)
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_assert_msg(ForwardRange<Rng>,
+                    CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::cycle operates must be a "
                         "model of the ForwardRange concept.");
                 }

@@ -35,25 +35,25 @@ namespace ranges
             return false;
         }
 
-        CONCEPT_template(typename Integer)(
+        CPP_template(typename Integer)(
             requires Integral<Integer>)
         constexpr bool operator==(Integer, infinity)
         {
             return false;
         }
-        CONCEPT_template(typename Integer)(
+        CPP_template(typename Integer)(
             requires Integral<Integer>)
         constexpr bool operator==(infinity, Integer)
         {
             return false;
         }
-        CONCEPT_template(typename Integer)(
+        CPP_template(typename Integer)(
             requires Integral<Integer>)
         constexpr bool operator!=(Integer, infinity)
         {
             return true;
         }
-        CONCEPT_template(typename Integer)(
+        CPP_template(typename Integer)(
             requires Integral<Integer>)
         constexpr bool operator!=(infinity, Integer)
         {

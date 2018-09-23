@@ -36,7 +36,7 @@ namespace ranges
             {
                 indices_fn() = default;
 
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires Integral<Val>)
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -45,7 +45,7 @@ namespace ranges
                         {iota_view<Val>{from}, detail::ints_open_distance_(from, to)}
                 )
 
-                CONCEPT_template(typename Val, typename Self = indices_fn)(
+                CPP_template(typename Val, typename Self = indices_fn)(
                     requires Integral<Val>)
                 auto operator()(Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -54,18 +54,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
                 }
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val, Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
                 }
             #endif
@@ -75,7 +75,7 @@ namespace ranges
             struct closed_indices_fn
               : iota_view<std::ptrdiff_t>
             {
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires Integral<Val>)
                 auto operator()(Val from, Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -84,7 +84,7 @@ namespace ranges
                         {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)}
                 )
 
-                CONCEPT_template(typename Val, typename Self = closed_indices_fn)(
+                CPP_template(typename Val, typename Self = closed_indices_fn)(
                     requires Integral<Val>)
                 auto operator()(Val to) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -93,18 +93,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");
                 }
-                CONCEPT_template(typename Val)(
+                CPP_template(typename Val)(
                     requires not Integral<Val>)
                 void operator()(Val, Val) const
                 {
-                    CONCEPT_assert_msg(Integral<Val>,
+                    CPP_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");
                 }
             #endif

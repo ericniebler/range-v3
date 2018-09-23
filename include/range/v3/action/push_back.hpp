@@ -29,7 +29,7 @@ namespace ranges
         /// \cond
         namespace adl_push_back_detail
         {
-            CONCEPT_template(typename Cont, typename T)(
+            CPP_template(typename Cont, typename T)(
                 requires LvalueContainerLike<Cont> && !Range<T> &&
                     Constructible<range_value_type_t<Cont>, T>)
             decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
@@ -39,7 +39,7 @@ namespace ranges
                 unwrap_reference(cont).push_back(static_cast<T &&>(t));
             }
 
-            CONCEPT_template(typename Cont, typename Rng)(
+            CPP_template(typename Cont, typename Rng)(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
             decltype(static_cast<void>(ranges::insert(
                 unwrap_reference(std::declval<Cont &>()),
@@ -50,7 +50,7 @@ namespace ranges
                 ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng &&>(rng));
             }
 
-            CONCEPT_def
+            CPP_def
             (
                 template(typename Rng, typename T)
                 concept PushBackActionConcept,
@@ -73,7 +73,7 @@ namespace ranges
                     std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
                 )
             public:
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires PushBackActionConcept<Rng, T>)
                 Rng operator()(Rng &&rng, T &&t) const
                 {
@@ -82,14 +82,14 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CONCEPT_template(typename Rng, typename T)(
+                CPP_template(typename Rng, typename T)(
                     requires not PushBackActionConcept<Rng, T>)
                 void operator()(Rng &&rng, T &&t) const
                 {
-                    CONCEPT_assert_msg(InputRange<Rng>,
+                    CPP_assert_msg(InputRange<Rng>,
                         "The object on which action::push_back operates must be a model of the "
                         "InputRange concept.");
-                    CONCEPT_assert_msg(Or<
+                    CPP_assert_msg(Or<
                         Range<T>,
                         Constructible<range_value_type_t<Rng>, T>>,
                         "The object to be inserted with action::push_back must either be "
