@@ -100,13 +100,15 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CPP_requires(SizedRange<Rng const>)
-            range_size_type_t<Rng> size() const
+            CPP_member
+            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);
             }
-            CPP_requires(SizedRange<Rng>)
-            range_size_type_t<Rng> size()
+            CPP_member
+            auto size()-> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng>)
             {
                 return ranges::size(rng_) - static_cast<range_size_type_t<Rng>>(n_);
             }

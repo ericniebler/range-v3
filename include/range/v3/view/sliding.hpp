@@ -70,8 +70,8 @@ namespace ranges
                 {
                     ++it_;
                 }
-                CPP_requires(BidirectionalRange<Rng>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(requires BidirectionalRange<Rng>)
                 {
                     --it_;
                 }
@@ -115,13 +115,17 @@ namespace ranges
                 {
                     RANGES_ASSERT(0 < n_);
                 }
-                CPP_requires(SizedRange<Rng const>)
-                range_size_type_t<Rng> size() const
+                CPP_member
+                auto size() const ->
+                    CPP_ret(range_size_type_t<Rng>)(
+                        requires SizedRange<Rng const>)
                 {
                     return size_(ranges::size(this->base()));
                 }
-                CPP_requires(SizedRange<Rng> && !SizedRange<Rng const>)
-                range_size_type_t<Rng> size()
+                CPP_member
+                auto size() ->
+                    CPP_ret(range_size_type_t<Rng>)(
+                        requires SizedRange<Rng> && !SizedRange<Rng const>)
                 {
                     return size_(ranges::size(this->base()));
                 }
@@ -197,14 +201,17 @@ namespace ranges
                     ++it;
                     base_t::next();
                 }
-                CPP_requires(BidirectionalRange<Rng>)
-                void prev(iterator_t<Rng>& it)
+                CPP_member
+                auto prev(iterator_t<Rng>& it) -> CPP_ret(void)(
+                    requires BidirectionalRange<Rng>)
                 {
                     base_t::prev();
                     --it;
                 }
-                CPP_requires(RandomAccessRange<Rng>)
-                void advance(iterator_t<Rng>& it, range_difference_type_t<Rng> n)
+                CPP_member
+                auto advance(iterator_t<Rng>& it, range_difference_type_t<Rng> n) ->
+                    CPP_ret(void)(
+                        requires RandomAccessRange<Rng>)
                 {
                     it += n;
                 }

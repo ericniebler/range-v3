@@ -51,14 +51,19 @@ private:
         {
             return *ranges::prev(it);
         }
-        CPP_requires(ranges::RandomAccessRange<BidiRange>)
-        void advance(base_iterator_t &it, ranges::range_difference_type_t<BidiRange> n) const
+        CPP_member
+        auto advance(base_iterator_t &it,
+            ranges::range_difference_type_t<BidiRange> n) const ->
+            CPP_ret(void)(
+                requires ranges::RandomAccessRange<BidiRange>)
         {
             it -= n;
         }
-        CPP_requires(ranges::SizedSentinel<base_iterator_t, base_iterator_t>)
-        ranges::range_difference_type_t<BidiRange>
-        distance_to(base_iterator_t const &here, base_iterator_t const &there) const
+        CPP_member
+        auto distance_to(base_iterator_t const &here,
+            base_iterator_t const &there) const ->
+            CPP_ret(ranges::range_difference_type_t<BidiRange>)(
+                requires ranges::SizedSentinel<base_iterator_t, base_iterator_t>)
         {
             return here - there;
         }

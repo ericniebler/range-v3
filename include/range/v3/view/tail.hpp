@@ -69,8 +69,8 @@ namespace ranges
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            CPP_requires(Range<Rng const>)
-            iterator begin() const
+            CPP_member
+            auto begin() const -> CPP_ret(iterator)(requires Range<Rng const>)
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
@@ -78,13 +78,14 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CPP_requires(Range<Rng const>)
-            sentinel end() const
+            CPP_member
+            auto end() const -> CPP_ret(sentinel)(requires Range<Rng const>)
             {
                 return ranges::end(rng_);
             }
-            CPP_requires(SizedView<Rng>)
-            constexpr size_type_ size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type_)(
+                requires SizedView<Rng>)
             {
                 return range_cardinality<Rng>::value >= 0
                   ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)

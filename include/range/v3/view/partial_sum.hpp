@@ -91,17 +91,20 @@ namespace ranges
             {
                 return {*this};
             }
-            CPP_requires(Range<Rng const> &&
-                Invocable<Fun const&, range_common_reference_t<Rng>,
-                    range_common_reference_t<Rng>>)
-            adaptor<true> begin_adaptor() const
+            CPP_member
+            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+                requires Range<Rng const> &&
+                    Invocable<Fun const&, range_common_reference_t<Rng>,
+                        range_common_reference_t<Rng>>)
             {
                 return {*this};
             }
-            CPP_requires(Range<Rng const> &&
-                Invocable<Fun const&, range_common_reference_t<Rng>,
-                    range_common_reference_t<Rng>>)
-            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
+            CPP_member
+            auto end_adaptor() const ->
+                CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
+                    requires Range<Rng const> &&
+                        Invocable<Fun const&, range_common_reference_t<Rng>,
+                            range_common_reference_t<Rng>>)
             {
                 return {*this};
             }
@@ -111,8 +114,9 @@ namespace ranges
               : partial_sum_view::view_adaptor{std::move(rng)}
               , fun_(std::move(fun))
             {}
-            CPP_requires(SizedRange<Rng>)
-            range_size_type_t<Rng> size() const
+            CPP_member
+            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }

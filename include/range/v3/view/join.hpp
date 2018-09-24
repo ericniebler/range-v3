@@ -76,15 +76,17 @@ namespace ranges
             explicit join_view(Rng rng)
               : outer_(view::all(std::move(rng)))
             {}
-            CPP_requires(detail::join_cardinality<Rng>::value >= 0)
-            constexpr size_type size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type)(
+                requires detail::join_cardinality<Rng>::value >= 0)
             {
                 return detail::join_cardinality<Rng>::value;
             }
-            CPP_requires(detail::join_cardinality<Rng>::value < 0 &&
-                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
-                SizedRange<range_reference_t<Rng>>)
-            RANGES_CXX14_CONSTEXPR size_type size()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type)(
+                requires detail::join_cardinality<Rng>::value < 0 &&
+                    range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
+                    SizedRange<range_reference_t<Rng>>)
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0});
             }
@@ -173,15 +175,17 @@ namespace ranges
               : outer_(view::all(std::move(rng)))
               , val_(view::all(std::move(val)))
             {}
-            CPP_requires(detail::join_cardinality<Rng, ValRng>::value >= 0)
-            constexpr size_type size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type)(
+                requires detail::join_cardinality<Rng, ValRng>::value >= 0)
             {
                 return detail::join_cardinality<Rng, ValRng>::value;
             }
-            CPP_requires(detail::join_cardinality<Rng, ValRng>::value < 0 &&
-                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
-                SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
-            size_type size() const
+            CPP_member
+            auto size() const -> CPP_ret(size_type)(
+                requires detail::join_cardinality<Rng, ValRng>::value < 0 &&
+                    range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
+                    SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0}) +
                         (range_cardinality<Rng>::value == 0 ?

@@ -73,13 +73,15 @@ namespace ranges
             explicit const_view(Rng rng)
               : const_view::view_adaptor{std::move(rng)}
             {}
-            CPP_requires(SizedRange<Rng const>)
-            range_size_type_t<Rng> size() const
+            CPP_member
+            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
-            CPP_requires(SizedRange<Rng>)
-            range_size_type_t<Rng> size()
+            CPP_member
+            auto size() -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }

@@ -97,9 +97,10 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CPP_requires(Invocable<Fun const&, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>> && Range<Rng const>)
-            cursor<true> begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor<true>)(
+                requires Invocable<Fun const&, range_common_reference_t<Rng>,
+                    range_common_reference_t<Rng>> && Range<Rng const>)
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }

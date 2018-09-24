@@ -253,8 +253,9 @@ namespace ranges
                 {
                     its_.visit_i(next_fun{this});
                 }
-                CPP_requires(EqualityComparable<decltype(its_)>)
-                bool equal(cursor const &pos) const
+                CPP_member
+                auto equal(cursor const &pos) const -> CPP_ret(bool)(
+                    requires EqualityComparable<variant<iterator_t<constify_if<Rngs>>...>>)
                 {
                     return its_ == pos.its_;
                 }
@@ -263,21 +264,25 @@ namespace ranges
                     return its_.index() == cranges - 1 &&
                         ranges::get<cranges - 1>(its_) == pos.end_;
                 }
-                CPP_requires(And<BidirectionalRange<Rngs>...>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(
+                    requires And<BidirectionalRange<Rngs>...>)
                 {
                     its_.visit_i(prev_fun{this});
                 }
-                CPP_requires(And<RandomAccessRange<Rngs>...>)
-                void advance(difference_type n)
+                CPP_member
+                auto advance(difference_type n) -> CPP_ret(void)(
+                    requires And<RandomAccessRange<Rngs>...>)
                 {
                     if(n > 0)
                         its_.visit_i(advance_fwd_fun{this, n});
                     else if(n < 0)
                         its_.visit_i(advance_rev_fun{this, n});
                 }
-                CPP_requires(And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
-                difference_type distance_to(cursor const &that) const
+                CPP_member
+                auto distance_to(cursor const &that) const ->
+                    CPP_ret(difference_type)(
+                        requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 {
                     if(its_.index() <= that.its_.index())
                         return cursor::distance_to_(meta::size_t<0>{}, *this, that);
@@ -293,14 +298,17 @@ namespace ranges
             {
                 return {*this, end_tag{}};
             }
-            CPP_requires(And<Range<Rngs const>...>)
-            cursor<true> begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor<true>)(
+                requires And<Range<Rngs const>...>)
             {
                 return {*this, begin_tag{}};
             }
-            CPP_requires(And<Range<Rngs const>...>)
-            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>...>, cursor<true>, sentinel<true>>
-            end_cursor() const
+            CPP_member
+            auto end_cursor() const ->
+                CPP_ret(meta::if_<meta::and_c<(bool) BoundedRange<Rngs>...>,
+                                  cursor<true>, sentinel<true>>)(
+                    requires And<Range<Rngs const>...>)
             {
                 return {*this, end_tag{}};
             }
@@ -309,20 +317,23 @@ namespace ranges
             explicit concat_view(Rngs...rngs)
               : rngs_{std::move(rngs)...}
             {}
-            CPP_requires(detail::concat_cardinality<Rngs...>::value >= 0)
-            constexpr size_type_ size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type_)(
+                requires detail::concat_cardinality<Rngs...>::value >= 0)
             {
                 return static_cast<size_type_>(detail::concat_cardinality<Rngs...>::value);
             }
-            CPP_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
-                And<SizedRange<Rngs const>...>)
-            RANGES_CXX14_CONSTEXPR size_type_ size() const
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size() const -> CPP_ret(size_type_)(
+                requires detail::concat_cardinality<Rngs...>::value < 0 &&
+                    And<SizedRange<Rngs const>...>)
             {
                 return const_cast<concat_view *>(this)->size();
             }
-            CPP_requires(detail::concat_cardinality<Rngs...>::value < 0 &&
-                And<SizedRange<Rngs>...>)
-            RANGES_CXX14_CONSTEXPR size_type_ size()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type_)(
+                requires detail::concat_cardinality<Rngs...>::value < 0 &&
+                    And<SizedRange<Rngs>...>)
             {
                 return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
             }

@@ -65,8 +65,8 @@ namespace ranges
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            CPP_requires(Range<Rng const &>)
-            iterator begin() const
+            CPP_member
+            auto begin() const -> CPP_ret(iterator)(requires Range<Rng const>)
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }

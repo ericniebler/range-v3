@@ -98,13 +98,16 @@ namespace ranges
             {
                 return {fun_};
             }
-            CPP_requires(Invocable<Fun const&, iterator_t<Rng>>)
-            adaptor<true> begin_adaptor() const
+            CPP_member
+            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+                requires Invocable<Fun const&, iterator_t<Rng>>)
             {
                 return {fun_};
             }
-            CPP_requires(Invocable<Fun const&, iterator_t<Rng>>)
-            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
+            CPP_member
+            auto end_adaptor() const ->
+                CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
+                    requires Invocable<Fun const&, iterator_t<Rng>>)
             {
                 return {fun_};
             }
@@ -114,13 +117,17 @@ namespace ranges
               : iter_transform_view::view_adaptor{std::move(rng)}
               , fun_(std::move(fun))
             {}
-            CPP_requires(SizedRange<Rng const>)
-            constexpr range_size_type_t<Rng> size() const
+            CPP_member
+            constexpr auto size() const ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
-            CPP_requires(SizedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size() ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }
@@ -203,8 +210,10 @@ namespace ranges
                     ++it1_;
                     ++it2_;
                 }
-                CPP_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
-                bool equal(cursor const &that) const
+                CPP_member
+                auto equal(cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires ForwardRange<Rng1> && ForwardRange<Rng2>)
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // transformed ranges to be of different lengths, stopping when the first
@@ -218,22 +227,25 @@ namespace ranges
                     // one reaches the end.
                     return it1_ == s.end1_ || it2_ == s.end2_;
                 }
-                CPP_requires(BidirectionalRange<Rng1> && BidirectionalRange<Rng2>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(
+                    requires BidirectionalRange<Rng1> && BidirectionalRange<Rng2>)
                 {
                     --it1_;
                     --it2_;
                 }
-                CPP_requires(RandomAccessRange<Rng1> && RandomAccessRange<Rng2>)
-                void advance(difference_type n)
+                CPP_member
+                auto advance(difference_type n) -> CPP_ret(void)(
+                    requires RandomAccessRange<Rng1> && RandomAccessRange<Rng2>)
                 {
                     ranges::advance(it1_, n);
                     ranges::advance(it2_, n);
                 }
-                CPP_requires(
-                    SizedSentinel<iterator_t<Rng1>, iterator_t<Rng1>> &&
-                    SizedSentinel<iterator_t<Rng2>, iterator_t<Rng2>>)
-                difference_type distance_to(cursor const &that) const
+                CPP_member
+                auto distance_to(cursor const &that) const ->
+                    CPP_ret(difference_type)(
+                    requires SizedSentinel<iterator_t<Rng1>, iterator_t<Rng1>> &&
+                        SizedSentinel<iterator_t<Rng2>, iterator_t<Rng2>>)
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -263,13 +275,15 @@ namespace ranges
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
-            CPP_requires(Range<Rng1 const> && Range<Rng2 const>)
-            cursor begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor)(
+                requires Range<Rng1 const> && Range<Rng2 const>)
             {
                 return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
             }
-            CPP_requires(Range<Rng1 const> && Range<Rng2 const>)
-            end_cursor_t end_cursor() const
+            CPP_member
+            auto end_cursor() const -> CPP_ret(end_cursor_t)(
+                requires Range<Rng1 const> && Range<Rng2 const>)
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
@@ -287,20 +301,23 @@ namespace ranges
               , rng1_(std::move(rng1))
               , rng2_(std::move(rng2))
             {}
-            CPP_requires(my_cardinality >= 0)
-            constexpr size_type_ size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type_)(
+                requires my_cardinality >= 0)
             {
                 return static_cast<size_type_>(my_cardinality);
             }
-            CPP_requires(my_cardinality < 0 &&
-                SizedRange<Rng1 const> && SizedRange<Rng2 const>)
-            constexpr size_type_ size() const
+            CPP_member
+            constexpr auto size() const -> CPP_ret(size_type_)(
+                requires my_cardinality < 0 &&
+                    SizedRange<Rng1 const> && SizedRange<Rng2 const>)
             {
                 return size_(*this);
             }
-            CPP_requires(my_cardinality < 0 &&
-                SizedRange<Rng1> && SizedRange<Rng2>)
-            RANGES_CXX14_CONSTEXPR size_type_ size()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type_)(
+                requires my_cardinality < 0 &&
+                    SizedRange<Rng1> && SizedRange<Rng2>)
             {
                 return size_(*this);
             }

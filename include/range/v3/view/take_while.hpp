@@ -65,8 +65,9 @@ namespace ranges
             {
                 return {pred_};
             }
-            CPP_requires(Invocable<Pred const&, iterator_t<Rng>>)
-            sentinel_adaptor<true> end_adaptor() const
+            CPP_member
+            auto end_adaptor() const -> CPP_ret(sentinel_adaptor<true>)(
+                requires Invocable<Pred const&, iterator_t<Rng>>)
             {
                 return {pred_};
             }

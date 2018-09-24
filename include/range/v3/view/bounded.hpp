@@ -106,8 +106,9 @@ namespace ranges
                 return detail::bounded_iterator_t<Rng>{
                     end_(meta::bool_<detail::RA_and_Sized<Rng>>{})};
             }
-            CPP_requires(SizedRange<Rng>)
-            range_size_type_t<Rng> size()
+            CPP_member
+            auto size() -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng>)
             {
                 return ranges::size(rng_);
             }
@@ -125,8 +126,9 @@ namespace ranges
                 return detail::bounded_iterator_t<R>{
                     end_(meta::bool_<detail::RA_and_Sized<R>>{})};
             }
-            CPP_requires(SizedRange<Rng const>)
-            range_size_type_t<Rng> size() const
+            CPP_member
+            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(rng_);
             }

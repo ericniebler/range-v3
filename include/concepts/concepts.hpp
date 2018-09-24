@@ -477,10 +477,6 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
   /**/
 #endif
 
-#define CPP_requires(...)                                                       \
-    CPP_template(typename...)(requires __VA_ARGS__)                             \
-    /**/
-
 #define CPP_broken_friend_ret(...)                                              \
     ::concepts::detail::enable_if_t<__VA_ARGS__,                                \
     CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                                          \

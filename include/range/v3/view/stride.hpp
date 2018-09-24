@@ -170,11 +170,13 @@ namespace ranges
                         rng_->set_offset(delta);
                     }
                 }
-                CPP_requires(BidirectionalRange<Rng>)
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it)
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it)
                     noexcept(noexcept(ranges::advance(it, 0),
                         it != ranges::begin(std::declval<Rng &>()),
-                        it == ranges::end(std::declval<Rng &>())))
+                        it == ranges::end(std::declval<Rng &>()))) ->
+                    CPP_ret(void)(
+                        requires BidirectionalRange<Rng>)
                 {
                     RANGES_EXPECT(it != ranges::begin(rng_->base()));
                     auto delta = -rng_->stride_;
@@ -202,14 +204,16 @@ namespace ranges
                         delta += rng_->stride_ - 1;
                     return delta / rng_->stride_;
                 }
-                CPP_requires(RandomAccessRange<Rng>)
-                RANGES_CXX14_CONSTEXPR void advance(
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto advance(
                     iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(
                         ranges::begin(std::declval<Rng &>()) == ranges::end(std::declval<Rng &>()),
                         ranges::advance(it, n, std::declval<sentinel_t<Rng> &>()),
                         ranges::advance(it, n),
-                        ranges::advance(it, n, std::declval<iterator_t<Rng> &>())))
+                        ranges::advance(it, n, std::declval<iterator_t<Rng> &>()))) ->
+                    CPP_ret(void)(
+                        requires RandomAccessRange<Rng>)
                 {
                     if(0 == n) return;
                     n *= rng_->stride_;
@@ -236,13 +240,17 @@ namespace ranges
                     }
                 }
             };
-            CPP_requires(const_iterable)
-            constexpr adaptor begin_adaptor() const noexcept
+            CPP_member
+            constexpr auto begin_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires const_iterable)
             {
                 return adaptor{*this};
             }
-            CPP_requires(not const_iterable)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto begin_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not const_iterable)
             {
                 return adaptor{*this};
             }
@@ -251,23 +259,31 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // BoundedView, adapt it anyway.
-            CPP_requires(const_iterable && BoundedRange<Rng>)
-            constexpr adaptor end_adaptor() const noexcept
+            CPP_member
+            constexpr auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires const_iterable && BoundedRange<Rng>)
             {
                 return adaptor{*this};
             }
-            CPP_requires(not const_iterable && BoundedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not const_iterable && BoundedRange<Rng>)
             {
                 return adaptor{*this};
             }
-            CPP_requires(const_iterable && !BoundedRange<Rng>)
-            constexpr adaptor_base end_adaptor() const noexcept
+            CPP_member
+            constexpr auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor_base)(
+                    requires const_iterable && !BoundedRange<Rng>)
             {
                 return {};
             }
-            CPP_requires(not const_iterable && !BoundedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+                CPP_ret(adaptor_base)(
+                    requires not const_iterable && !BoundedRange<Rng>)
             {
                 return {};
             }
@@ -284,15 +300,19 @@ namespace ranges
                     Rng, range_difference_type_t<Rng>>::value)
               : detail::stride_view_base<Rng>{std::move(rng), stride}
             {}
-            CPP_requires(SizedRange<Rng const>)
-            constexpr range_size_type_t<Rng> size() const
-                noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
+            CPP_member
+            constexpr auto size() const
+                noexcept(noexcept(ranges::size(std::declval<Rng const &>()))) ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires SizedRange<Rng const>)
             {
                 return size_(ranges::size(this->base()));
             }
-            CPP_requires(not SizedRange<Rng const> && SizedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
-                noexcept(noexcept(ranges::size(std::declval<Rng &>())))
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size()
+                noexcept(noexcept(ranges::size(std::declval<Rng &>()))) ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires not SizedRange<Rng const> && SizedRange<Rng>)
             {
                 return size_(ranges::size(this->base()));
             }

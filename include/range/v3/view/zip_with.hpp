@@ -188,8 +188,9 @@ namespace ranges
                 {
                     tuple_for_each(its_, detail::inc);
                 }
-                CPP_requires(And<Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
-                bool equal(cursor const &that) const
+                CPP_member
+                auto equal(cursor const &that) const -> CPP_ret(bool)(
+                    requires And<Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -209,19 +210,23 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CPP_requires(And<BidirectionalRange<Rngs>...>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(
+                    requires And<BidirectionalRange<Rngs>...>)
                 {
                     tuple_for_each(its_, detail::dec);
                 }
-                CPP_requires(And<RandomAccessRange<Rngs>...>)
-                void advance(difference_type n)
+                CPP_member
+                auto advance(difference_type n) -> CPP_ret(void)(
+                    requires And<RandomAccessRange<Rngs>...>)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
-                CPP_requires(And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
-                difference_type distance_to(cursor const &that) const
+                CPP_member
+                auto distance_to(cursor const &that) const ->
+                    CPP_ret(difference_type)(
+                        requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -266,13 +271,15 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CPP_requires(And<Range<Rngs const>...>)
-            cursor begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor)(
+                requires And<Range<Rngs const>...>)
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CPP_requires(And<Range<Rngs const>...>)
-            end_cursor_t end_cursor() const
+            CPP_member
+            auto end_cursor() const -> CPP_ret(end_cursor_t)(
+                requires And<Range<Rngs const>...>)
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
@@ -286,8 +293,9 @@ namespace ranges
               : fun_(std::move(fun))
               , rngs_{std::move(rngs)...}
             {}
-            CPP_requires(And<SizedRange<Rngs>...>)
-            constexpr size_type_ size() const
+            CPP_member
+            constexpr auto size() const ->
+                CPP_ret(size_type_)(requires And<SizedRange<Rngs>...>)
             {
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
                     (size_type_)range_cardinality<iter_zip_with_view>::value :

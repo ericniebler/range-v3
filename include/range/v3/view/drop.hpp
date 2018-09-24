@@ -79,37 +79,41 @@ namespace ranges
             {
                 RANGES_EXPECT(n >= 0);
             }
-            CPP_requires(not RandomAccessRange<Rng const>)
-            iterator_t<Rng> begin()
+            CPP_member
+            auto begin() -> CPP_ret(iterator_t<Rng>)(
+                requires not RandomAccessRange<Rng const>)
             {
                 return this->get_begin_(meta::bool_<RandomAccessRange<Rng>>{}, std::false_type{});
             }
-            CPP_requires(not RandomAccessRange<Rng const>)
-            sentinel_t<Rng> end()
+            CPP_member
+            auto end() -> CPP_ret(sentinel_t<Rng>)(
+                requires not RandomAccessRange<Rng const>)
             {
                 return ranges::end(rng_);
             }
-            CPP_template(typename BaseRng = Rng)(
+            template<typename BaseRng = Rng>
+            auto begin() const -> CPP_ret(iterator_t<BaseRng const>)(
                 requires RandomAccessRange<BaseRng const>)
-            iterator_t<BaseRng const> begin() const
             {
                 return this->get_begin_(std::true_type{}, std::true_type{});
             }
-            CPP_template(typename BaseRng = Rng)(
+            template<typename BaseRng = Rng>
+            auto end() const -> CPP_ret(sentinel_t<BaseRng const>)(
                 requires RandomAccessRange<BaseRng const>)
-            sentinel_t<BaseRng const> end() const
             {
                 return ranges::end(rng_);
             }
-            CPP_requires(SizedRange<Rng const>)
-            range_size_type_t<Rng> size() const
+            CPP_member
+            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng const>)
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);
                 return s < n ? 0 : s - n;
             }
-            CPP_requires(not SizedRange<Rng const> && SizedRange<Rng>)
-            range_size_type_t<Rng> size()
+            CPP_member
+            auto size() -> CPP_ret(range_size_type_t<Rng>)(
+                requires not SizedRange<Rng const> && SizedRange<Rng>)
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);

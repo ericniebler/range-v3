@@ -75,9 +75,11 @@ namespace ranges
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
-                CPP_requires(BidirectionalRange<Rng>)
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
-                    noexcept(noexcept(std::declval<remove_if_view &>().satisfy_reverse(it)))
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it) const
+                    noexcept(noexcept(std::declval<remove_if_view &>().satisfy_reverse(it))) ->
+                    CPP_ret(void)(
+                        requires BidirectionalRange<Rng>)
                 {
                     rng_->satisfy_reverse(it);
                 }
@@ -92,14 +94,18 @@ namespace ranges
                 cache_begin();
                 return {*this};
             }
-            CPP_requires(not BoundedRange<Rng>)
-            constexpr adaptor_base end_adaptor() const noexcept
+            CPP_member
+            constexpr auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor_base)(
+                    requires not BoundedRange<Rng>)
             {
                 return {};
             }
-            CPP_requires(BoundedRange<Rng>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
-                noexcept(noexcept(std::declval<remove_if_view &>().cache_begin()))
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor()
+                noexcept(noexcept(std::declval<remove_if_view &>().cache_begin())) ->
+                CPP_ret(adaptor)(
+                    requires BoundedRange<Rng>)
             {
                 if(BidirectionalRange<Rng>) cache_begin();
                 return {*this};

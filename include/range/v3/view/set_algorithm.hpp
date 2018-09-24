@@ -65,8 +65,9 @@ namespace ranges
                             ranges::begin(rng1_), ranges::end(rng1_),
                             ranges::begin(rng2_), ranges::end(rng2_)};
                 }
-                CPP_requires(Range<Rng1 const> && Range<Rng2 const>)
-                cursor<true> begin_cursor() const
+                CPP_member
+                auto begin_cursor() const -> CPP_ret(cursor<true>)(
+                    requires Range<Rng1 const> && Range<Rng2 const>)
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
@@ -148,8 +149,10 @@ namespace ranges
                     ++it1_;
                     satisfy();
                 }
-                CPP_requires(ForwardRange<Rng1>)
-                bool equal(set_difference_cursor const &that) const
+                CPP_member
+                auto equal(set_difference_cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires ForwardRange<Rng1>)
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges
                 }
@@ -314,8 +317,10 @@ namespace ranges
                     ++it2_;
                     satisfy();
                 }
-                CPP_requires(ForwardRange<Rng1>)
-                bool equal(set_intersection_cursor const &that) const
+                CPP_member
+                auto equal(set_intersection_cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires ForwardRange<Rng1>)
                 {
                     return it1_ == that.it1_; // does not support comparing iterators from different ranges;
                 }
@@ -518,8 +523,10 @@ namespace ranges
                     }
                     satisfy();
                 }
-                CPP_requires(ForwardRange<Rng1> && ForwardRange<Rng2>)
-                bool equal(set_union_cursor const &that) const
+                CPP_member
+                auto equal(set_union_cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires ForwardRange<Rng1> && ForwardRange<Rng2>)
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
@@ -740,8 +747,10 @@ namespace ranges
                             break;
                     }
                 }
-                CPP_requires(ForwardRange<R1> && ForwardRange<R2>)
-                bool equal(set_symmetric_difference_cursor const &that) const
+                CPP_member
+                auto equal(set_symmetric_difference_cursor const &that) const ->
+                    CPP_ret(bool)(
+                        requires ForwardRange<R1> && ForwardRange<R2>)
                 {
                     return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }

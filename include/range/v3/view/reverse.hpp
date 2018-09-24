@@ -50,26 +50,32 @@ namespace ranges
                     typename reverse_view::view_adaptor, Rng>::value)
               : reverse_view::view_adaptor{detail::move(rng)}
             {}
-            CPP_requires(SizedRange<Rng const>)
-            constexpr range_size_type_t<Rng> size() const
-                noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
+            CPP_member
+            constexpr auto size() const
+                noexcept(noexcept(ranges::size(std::declval<Rng const &>()))) ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
-            CPP_requires(not SizedRange<Rng const> && (SizedRange<Rng> ||
-                SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>))
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto size()
                 noexcept(noexcept(std::declval<reverse_view &>().size_(
-                    meta::bool_<SizedRange<Rng>>{})))
+                    meta::bool_<SizedRange<Rng>>{}))) ->
+                CPP_ret(range_size_type_t<Rng>)(
+                    requires not SizedRange<Rng const> && (SizedRange<Rng> ||
+                        SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>))
             {
                 return size_(meta::bool_<SizedRange<Rng>>{});
             }
         private:
             friend range_access;
 
-            CPP_requires(BoundedRange<Rng const>)
-            constexpr iterator_t<Rng> get_end() const
-                noexcept(noexcept(ranges::end(std::declval<Rng const &>())))
+            CPP_member
+            constexpr auto get_end() const
+                noexcept(noexcept(ranges::end(std::declval<Rng const &>()))) ->
+                CPP_ret(iterator_t<Rng>)(
+                    requires BoundedRange<Rng const>)
             {
                 return ranges::end(this->base());
             }
@@ -91,10 +97,12 @@ namespace ranges
                     end_ = ranges::next(ranges::begin(this->base()), ranges::end(this->base()));
                 return *end_;
             }
-            CPP_requires(not BoundedRange<Rng const>)
-            RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end()
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto get_end()
                 noexcept(noexcept(std::declval<reverse_view &>().get_end_(
-                    meta::bool_<BoundedRange<Rng>>{})))
+                    meta::bool_<BoundedRange<Rng>>{}))) ->
+                CPP_ret(iterator_t<Rng>)(
+                    requires not BoundedRange<Rng const>)
             {
                 return get_end_(meta::bool_<BoundedRange<Rng>>{});
             }
@@ -144,42 +152,54 @@ namespace ranges
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     ++it;
                 }
-                CPP_requires(RandomAccessRange<Rng>)
+                CPP_member
                 RANGES_CXX14_CONSTEXPR
-                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
-                    noexcept(noexcept(ranges::advance(it, -n)))
+                auto advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
+                    noexcept(noexcept(ranges::advance(it, -n))) ->
+                    CPP_ret(void)(
+                        requires RandomAccessRange<Rng>)
                 {
                     RANGES_ASSERT(n <= it - ranges::begin(rng_->base()));
                     RANGES_ASSERT(it - rng_->get_end() <= n);
                     ranges::advance(it, -n);
                 }
-                CPP_requires(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>)
-                RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng>
+                CPP_member
+                RANGES_CXX14_CONSTEXPR auto
                 distance_to(iterator_t<Rng> const &here, iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
-                    noexcept(noexcept(here - there))
+                    noexcept(noexcept(here - there)) ->
+                    CPP_ret(range_difference_type_t<Rng>)(
+                        requires SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_ASSERT(rng_ == other_adapt.rng_); (void)other_adapt;
                     return here - there;
                 }
             };
-            CPP_requires(BoundedRange<Rng const>)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() const noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto begin_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires BoundedRange<Rng const>)
             {
                 return {*this};
             }
-            CPP_requires(BoundedRange<Rng const>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() const noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor)(
+                    requires BoundedRange<Rng const>)
             {
                 return {*this};
             }
-            CPP_requires(not BoundedRange<Rng const>)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto begin_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not BoundedRange<Rng const>)
             {
                 return {*this};
             }
-            CPP_requires(not BoundedRange<Rng const>)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
+            CPP_member
+            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+                CPP_ret(adaptor)(
+                    requires not BoundedRange<Rng const>)
             {
                 return {*this};
             }

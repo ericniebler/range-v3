@@ -272,13 +272,16 @@ namespace ranges
             {
                 return done_;
             }
-            CPP_requires(Incrementable<From>)
-            bool equal(closed_iota_view const &that) const
+            CPP_member
+            auto equal(closed_iota_view const &that) const ->
+                CPP_ret(bool)(
+                    requires Incrementable<From>)
             {
                 return that.from_ == from_ && that.done_ == done_;
             }
-            CPP_requires(BidirectionalIncrementable<From>)
-            void prev()
+            CPP_member
+            auto prev() -> CPP_ret(void)(
+                requires BidirectionalIncrementable<From>)
             {
                 if(done_)
                     done_ = false;
@@ -315,18 +318,22 @@ namespace ranges
             {
                 return from_ == to_;
             }
-            CPP_requires(Incrementable<From>)
-            bool equal(iota_view const &that) const
+            CPP_member
+            auto equal(iota_view const &that) const ->
+                CPP_ret(bool)(
+                    requires Incrementable<From>)
             {
                 return that.from_ == from_;
             }
-            CPP_requires(BidirectionalIncrementable<From>)
-            void prev()
+            CPP_member
+            auto prev() -> CPP_ret(void)(
+                requires BidirectionalIncrementable<From>)
             {
                 --from_;
             }
-            CPP_requires(SizedIncrementableSentinel<To, From>)
-            void check_advance_(difference_type_ n)
+            CPP_member
+            auto check_advance_(difference_type_ n) -> CPP_ret(void)(
+                requires SizedIncrementableSentinel<To, From>)
             {
                 detail::ignore_unused(n);
                 RANGES_EXPECT(detail::iota_minus_(to_, from_) >= n);
@@ -335,14 +342,17 @@ namespace ranges
             void check_advance_(difference_type_) const
             {
             }
-            CPP_requires(RandomAccessIncrementable<From>)
-            void advance(difference_type_ n)
+            CPP_member
+            auto advance(difference_type_ n) -> CPP_ret(void)(
+                requires RandomAccessIncrementable<From>)
             {
                 this->check_advance_(n);
                 from_ = detail::iota_plus(from_, n);
             }
-            CPP_requires(RandomAccessIncrementable<From>)
-            difference_type_ distance_to(iota_view const &that) const
+            CPP_member
+            auto distance_to(iota_view const &that) const ->
+                CPP_ret(difference_type_)(
+                    requires RandomAccessIncrementable<From>)
             {
                 return detail::iota_minus_(that.from_, from_);
             }
@@ -376,23 +386,28 @@ namespace ranges
             {
                 return false;
             }
-            CPP_requires(Incrementable<From>)
-            bool equal(iota_view const &that) const
+            CPP_member
+            auto equal(iota_view const &that) const -> CPP_ret(bool)(
+                requires Incrementable<From>)
             {
                 return that.value_ == value_;
             }
-            CPP_requires(BidirectionalIncrementable<From>)
-            void prev()
+            CPP_member
+            auto prev() -> CPP_ret(void)(
+                requires BidirectionalIncrementable<From>)
             {
                 --value_;
             }
-            CPP_requires(RandomAccessIncrementable<From>)
-            void advance(difference_type_ n)
+            CPP_member
+            auto advance(difference_type_ n) -> CPP_ret(void)(
+                requires RandomAccessIncrementable<From>)
             {
                 value_ = detail::iota_plus(value_, n);
             }
-            CPP_requires(RandomAccessIncrementable<From>)
-            difference_type_ distance_to(iota_view const &that) const
+            CPP_member
+            auto distance_to(iota_view const &that) const ->
+                CPP_ret(difference_type_)(
+                    requires RandomAccessIncrementable<From>)
             {
                 return detail::iota_minus_(that.value_, value_);
             }

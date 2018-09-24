@@ -147,17 +147,19 @@ struct debug_input_view
         {
             return !(i == s);
         }
-        CPP_requires(Sized)
+        CPP_member
         RANGES_CXX14_CONSTEXPR
-        friend difference_type operator-(sentinel const& s, iterator const& i)
+        friend auto operator-(sentinel const& s, iterator const& i) ->
+            CPP_ret(difference_type)(requires Sized)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             i.check_current();
             return i.view_->last_ - i.view_->data_;
         }
-        CPP_requires(Sized)
+        CPP_member
         RANGES_CXX14_CONSTEXPR
-        friend difference_type operator-(iterator const& i, sentinel const& s)
+        friend auto operator-(iterator const& i, sentinel const& s) ->
+            CPP_ret(difference_type)(requires Sized)
         {
             return -(s - i);
         }
@@ -174,9 +176,9 @@ struct debug_input_view
         RANGES_ENSURE(valid_);
         return sentinel{*this};
     }
-    CPP_requires(Sized)
+    CPP_member
     RANGES_CXX14_CONSTEXPR
-    std::size_t size() const noexcept
+    auto size() const noexcept -> CPP_ret(std::size_t)(requires Sized)
     {
         RANGES_ENSURE(valid_);
         RANGES_ENSURE(!begin_called_);

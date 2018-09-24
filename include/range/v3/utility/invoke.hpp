@@ -208,7 +208,8 @@ namespace ranges
             {
                 return get();
             }
-            CPP_requires(not std::is_rvalue_reference<T>())
+            CPP_template(typename...)(
+                requires not std::is_rvalue_reference<T>())
             operator std::reference_wrapper<type> () const noexcept
             {
                 return {get()};

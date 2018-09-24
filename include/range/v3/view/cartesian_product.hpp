@@ -282,69 +282,82 @@ namespace ranges
                 {
                     return equal_(that, meta::size_t<sizeof...(Views)>{});
                 }
-                CPP_requires(CartesianProductViewCanBidi<IsConst, Views...>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(
+                    requires CartesianProductViewCanBidi<IsConst, Views...>)
                 {
                     prev_(meta::size_t<sizeof...(Views)>{});
                 }
-                CPP_requires(CartesianProductViewCanDistance<IsConst, Views...>)
-                std::ptrdiff_t distance_to(cursor const &that) const
+                CPP_member
+                auto distance_to(cursor const &that) const -> CPP_ret(std::ptrdiff_t)(
+                    requires CartesianProductViewCanDistance<IsConst, Views...>)
                 {
                     return distance_(that, meta::size_t<sizeof...(Views)>{});
                 }
-                CPP_requires(CartesianProductViewCanRandom<IsConst, Views...>)
-                void advance(std::ptrdiff_t n)
+                CPP_member
+                auto advance(std::ptrdiff_t n) -> CPP_ret(void)(
+                    requires CartesianProductViewCanRandom<IsConst, Views...>)
                 {
                     advance_(meta::size_t<sizeof...(Views)>{}, n);
                 }
             };
-            CPP_requires(CartesianProductViewCanConst<Views...>)
-            cursor<true> begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor<true>)(
+                requires CartesianProductViewCanConst<Views...>)
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CPP_requires(not CartesianProductViewCanConst<Views...>)
-            cursor<false> begin_cursor()
+            CPP_member
+            auto begin_cursor() -> CPP_ret(cursor<false>)(
+                requires not CartesianProductViewCanConst<Views...>)
             {
                 return cursor<false>{begin_tag{}, *this};
             }
-            CPP_requires(sizeof...(Views) == 0)
-            cursor<true> end_cursor() const
+            CPP_member
+            auto end_cursor() const -> CPP_ret(cursor<true>)(
+                requires sizeof...(Views) == 0)
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CPP_requires(CartesianProductViewCanBidi<std::true_type, Views...> && (sizeof...(Views) > 0))
-            cursor<true> end_cursor() const
+            CPP_member
+            auto end_cursor() const -> CPP_ret(cursor<true>)(
+                requires CartesianProductViewCanBidi<std::true_type, Views...> &&
+                    (sizeof...(Views) > 0))
             {
                 return cursor<true>{end_tag{}, *this};
             }
-            CPP_requires(CartesianProductViewCanBidi<std::false_type, Views...> &&
-                !CartesianProductViewCanBidi<std::true_type, Views...>)
-            cursor<false> end_cursor()
+            CPP_member
+            auto end_cursor() -> CPP_ret(cursor<false>)(
+                requires CartesianProductViewCanBidi<std::false_type, Views...> &&
+                    !CartesianProductViewCanBidi<std::true_type, Views...>)
             {
                 return cursor<false>{end_tag{}, *this};
             }
-            CPP_requires(not CartesianProductViewCanBidi<std::true_type, Views...>)
-            default_sentinel end_cursor() const
+            CPP_member
+            auto end_cursor() const -> CPP_ret(default_sentinel)(
+                requires not CartesianProductViewCanBidi<std::true_type, Views...>)
             {
                 return {};
             }
         public:
             cartesian_product_view() = default;
-            CPP_requires(sizeof...(Views) > 0)
-            constexpr cartesian_product_view(Views... views)
+            CPP_member
+            constexpr CPP_ctor(cartesian_product_view)(Views... views)(
+                requires sizeof...(Views) != 0)
               : views_{detail::move(views)...}
             {}
-            CPP_requires(CartesianProductViewCanSize<std::true_type, Views...>)
-            std::size_t size() const
+            CPP_member
+            auto size() const -> CPP_ret(std::size_t)(
+                requires CartesianProductViewCanSize<std::true_type, Views...>)
             {
                 if(sizeof...(Views) == 0) return 0;
                 return tuple_foldl(views_, std::size_t{1},
                     detail::cartesian_size_fn{});
             }
-            CPP_requires(CartesianProductViewCanSize<std::false_type, Views...> &&
-                !CartesianProductViewCanSize<std::true_type, Views...>)
-            std::size_t size()
+            CPP_member
+            auto size() -> CPP_ret(std::size_t)(
+                requires CartesianProductViewCanSize<std::false_type, Views...> &&
+                    !CartesianProductViewCanSize<std::true_type, Views...>)
             {
                 return tuple_foldl(views_, std::size_t{1},
                     detail::cartesian_size_fn{});
@@ -355,17 +368,19 @@ namespace ranges
         {
             struct cartesian_product_fn
             {
-                CPP_template(typename... Rngs)(
-                    requires concepts::And<ForwardRange<Rngs>...>)
-                constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
+                template<typename... Rngs>
+                constexpr auto operator()(Rngs &&... rngs) const ->
+                    CPP_ret(cartesian_product_view<all_t<Rngs>...>)(
+                        requires concepts::And<ForwardRange<Rngs>...>)
                 {
                     return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename... Rngs)(
-                    requires not concepts::And<ForwardRange<Rngs>...>)
-                void operator()(Rngs &&...) const
+                template<typename... Rngs>
+                auto operator()(Rngs &&...) const ->
+                    CPP_ret(void)(
+                        requires not concepts::And<ForwardRange<Rngs>...>)
                 {
                     static_assert(And<ForwardRange<Rngs>...>,
                         "All of the ranges passed to view::cartesian_product must model the "

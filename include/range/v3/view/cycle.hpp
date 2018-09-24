@@ -120,15 +120,17 @@ namespace ranges
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
-                CPP_requires(BidirectionalRange<Rng>)
-                void prev()
+                CPP_member
+                auto prev() -> CPP_ret(void)(
+                    requires BidirectionalRange<Rng>)
                 {
                     if(it_ == ranges::begin(rng_->rng_))
                         it_ = this->get_end_(meta::bool_<BoundedRange<Rng>>{});
                     --it_;
                 }
-                CPP_requires(RandomAccessRange<Rng>)
-                void advance(difference_type_ n)
+                CPP_member
+                auto advance(difference_type_ n) -> CPP_ret(void)(
+                    requires RandomAccessRange<Rng>)
                 {
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
@@ -137,8 +139,10 @@ namespace ranges
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
                 }
-                CPP_requires(SizedSentinel<iterator, iterator>)
-                difference_type_ distance_to(cursor const &that) const
+                CPP_member
+                auto distance_to(cursor const &that) const ->
+                    CPP_ret(difference_type_)(
+                        requires SizedSentinel<iterator, iterator>)
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
                     return that.it_ - it_;
@@ -149,8 +153,9 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CPP_requires(BoundedRange<Rng const>)
-            cursor<true> begin_cursor() const
+            CPP_member
+            auto begin_cursor() const -> CPP_ret(cursor<true>)(
+                requires BoundedRange<Rng const>)
             {
                 return cursor<true>{*this};
             }

@@ -42,14 +42,16 @@ namespace ranges
             {
                 wrap_base() = default;
                 using Base::Base;
-                CPP_requires(MoveConstructible<Base>)
-                constexpr wrap_base(Base&& base)
+                CPP_member
+                constexpr CPP_ctor(wrap_base)(Base&& base)(
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
+                    requires MoveConstructible<Base>)
                   : Base(static_cast<Base&&>(base))
                 {}
-                CPP_requires(CopyConstructible<Base>)
-                constexpr wrap_base(Base const& base)
+                CPP_member
+                constexpr CPP_ctor(wrap_base)(Base const& base)(
                     noexcept(std::is_nothrow_copy_constructible<Base>::value)
+                    requires CopyConstructible<Base>)
                   : Base(base)
                 {}
             };
