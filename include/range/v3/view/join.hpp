@@ -52,11 +52,12 @@ namespace ranges
                                 finite :
                                 static_cast<cardinality>(Outer::value * Inner::value + (Outer::value == 0 ? 0 : (Outer::value - 1) * Joiner::value))>;
             template<typename Range, typename JoinRange = void>
-            using join_cardinality =
+            struct join_cardinality :
                 join_cardinality_<range_cardinality<Range>, range_cardinality<range_reference_t<Range>>,
                     meta::if_<std::is_same<void, JoinRange>,
                         std::integral_constant<cardinality, static_cast<cardinality>(0)>,
-                        range_cardinality<JoinRange>>>;
+                        range_cardinality<JoinRange>>>
+            {};
         }
         /// \endcond
 
@@ -85,8 +86,9 @@ namespace ranges
             CPP_member
             RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type)(
                 requires detail::join_cardinality<Rng>::value < 0 &&
-                    range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
-                    SizedRange<range_reference_t<Rng>>)
+                    range_cardinality<Rng>::value >= 0 &&
+                    (bool) ForwardRange<Rng> &&
+                    (bool) SizedRange<range_reference_t<Rng>>)
             {
                 return accumulate(view::transform(outer_, ranges::size), size_type{0});
             }

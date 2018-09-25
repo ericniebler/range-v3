@@ -42,6 +42,8 @@ namespace ranges
             {
                 wrap_base() = default;
                 using Base::Base;
+#if !defined(__clang__) || __clang_major__ > 3 || \
+    (__clang_major__ == 3 && __clang_minor__ > 8)
                 CPP_member
                 constexpr CPP_ctor(wrap_base)(Base&& base)(
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
@@ -54,6 +56,23 @@ namespace ranges
                     requires CopyConstructible<Base>)
                   : Base(base)
                 {}
+#else
+                // Clang 3.6, 3.7, 3.8 have a problem with inheriting constructors
+                // that causes the declarations in the preceeding PP block to get
+                // instantiated too early.
+                CPP_template(typename B = Base)(
+                    requires MoveConstructible<B>)
+                constexpr wrap_base(Base&& base)
+                    noexcept(std::is_nothrow_move_constructible<Base>::value)
+                  : Base(static_cast<Base&&>(base))
+                {}
+                CPP_template(typename B = Base)(
+                    requires CopyConstructible<B>)
+                constexpr wrap_base(Base const& base)
+                    noexcept(std::is_nothrow_copy_constructible<Base>::value)
+                  : Base(base)
+                {}
+#endif
             };
             template<typename Base, std::size_t, typename...>
             struct chain
