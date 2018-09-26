@@ -175,10 +175,6 @@ matrix:
       os: linux
       addons: *gcc6
 
-    - env: GCC_VERSION=6 BUILD_TYPE=Release CPP=1z CONCEPTS=On
-      os: linux
-      addons: *gcc6
-
     # gcc-7 C++17/14/1z Debug/Release
     - env: GCC_VERSION=7 BUILD_TYPE=Debug CPP=1z
       os: linux

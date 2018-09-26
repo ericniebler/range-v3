@@ -15,8 +15,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef CPP_S_HPP
-#define CPP_S_HPP
+#ifndef CPP_CONCEPTS_HPP
+#define CPP_CONCEPTS_HPP
 
 // clang-format off
 
@@ -43,6 +43,19 @@
 #define CPP_PP_IGNORE_CXX2A_COMPAT_END
 #endif
 
+#if !defined(CPP_CXX_CONCEPTS)
+#if defined(__cpp_concepts) && __cpp_concepts > 0
+// gcc-6 concepts are too buggy to use
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC_MAJOR__ >= 7
+#define CPP_CXX_CONCEPTS __cpp_concepts
+#else
+#define CPP_CXX_CONCEPTS 0L
+#endif
+#else
+#define CPP_CXX_CONCEPTS 0L
+#endif
+#endif
+
 CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #if defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606
@@ -57,12 +70,6 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
 #else
 #define CPP_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
-#endif
-
-#if __COUNTER__ != __COUNTER__
-#define CPP_COUNTER __COUNTER__
-#else
-#define CPP_COUNTER __LINE__
 #endif
 
 #define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
@@ -195,7 +202,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //    };
 //    template<typename A, typename B>
 //    inline constexpr bool Name = NameConcept::is_satisfied_by<A, B>(0);
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if CPP_CXX_CONCEPTS
 // No requires expression
 #define CPP_PP_DEF_IMPL_0(...)                                                  \
     __VA_ARGS__                                                                 \
@@ -359,7 +366,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //     (requires requires (expr1, expr2, expr3) && Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if CPP_CXX_CONCEPTS
 #define CPP_template(...)                                                       \
     template<__VA_ARGS__> CPP_TEMPLATE_AUX_                                     \
     /**/
@@ -466,7 +473,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #endif
 
 
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if CPP_CXX_CONCEPTS
 #define CPP_PP_CONSTRAINED_USING(REQUIRES, NAME, ...)                           \
     requires REQUIRES                                                           \
   using NAME __VA_ARGS__                                                        \
@@ -494,7 +501,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         ::concepts::detail::CPP_true>                                           \
     /**/
 
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if CPP_CXX_CONCEPTS
 #define CPP_ret(...)                                                            \
     __VA_ARGS__ CPP_PP_EXPAND                                                   \
     /**/
