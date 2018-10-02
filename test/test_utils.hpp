@@ -27,6 +27,9 @@
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
+
 struct check_equal_fn
 {
     template<typename T, typename U>
@@ -297,5 +300,7 @@ struct MoveOnlyString
         return sout << '"' << str.sz_ << '"';
     }
 };
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

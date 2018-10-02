@@ -365,6 +365,8 @@ namespace test_forward_sized
     }
 }
 
+RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
+
 void test_box()
 {
     struct A : ranges::box<int> {};
