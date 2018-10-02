@@ -380,6 +380,19 @@ void test_box()
     CHECK(sizeof(C) == sizeof(int));
     C c1, c2;
     CHECK((&c1.get() != &c2.get()));
+
+    {
+        // empty but not trivial cursor that defines value_type:
+        struct cursor {
+            using value_type = int;
+            cursor() {}
+            int read() const { return 42; }
+            void next() {}
+        };
+        CONCEPT_ASSERT(ranges::detail::box_compression<cursor>() ==
+            ranges::detail::box_compress::ebo);
+        CONCEPT_ASSERT(ranges::Same<int, ranges::basic_iterator<cursor>::value_type>());
+    }
 }
 
 int main()
