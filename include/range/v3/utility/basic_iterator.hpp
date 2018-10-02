@@ -32,6 +32,31 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
+        template<typename T>
+        struct basic_mixin : private box<T>
+        {
+            CONCEPT_REQUIRES(DefaultConstructible<T>())
+            constexpr basic_mixin()
+                noexcept(std::is_nothrow_default_constructible<T>::value)
+              : box<T>{}
+            {}
+            CONCEPT_REQUIRES(MoveConstructible<T>())
+            explicit constexpr basic_mixin(T &&t)
+                noexcept(std::is_nothrow_move_constructible<T>::value)
+              : box<T>(detail::move(t))
+            {}
+            CONCEPT_REQUIRES(CopyConstructible<T>())
+            explicit constexpr basic_mixin(T const &t)
+                noexcept(std::is_nothrow_copy_constructible<T>::value)
+              : box<T>(t)
+            {}
+        protected:
+            using box<T>::get;
+        };
+
         /// \cond
         namespace detail
         {
@@ -280,6 +305,7 @@ namespace ranges
 
             template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
             struct iterator_associated_types_base
+              : range_access::mixin_base_t<Cur>
             {
             protected:
                 using reference_t = basic_proxy_reference<Cur>;
@@ -288,6 +314,8 @@ namespace ranges
             public:
                 using reference = void;
                 using difference_type = range_access::cursor_difference_t<Cur>;
+
+                using range_access::mixin_base_t<Cur>::mixin_base_t;
             };
 
             template<typename Cur>
@@ -296,6 +324,7 @@ namespace ranges
 
             template<typename Cur>
             struct iterator_associated_types_base<Cur, true>
+              : range_access::mixin_base_t<Cur>
             {
             protected:
                 using cursor_concept_t = detail::cursor_concept_t<Cur>;
@@ -323,34 +352,11 @@ namespace ranges
                     meta::defer<cursor_arrow_t, Cur>,
                     std::add_pointer<reference>>>;
                 using common_reference = common_reference_t<reference, value_type &>;
+
+                using range_access::mixin_base_t<Cur>::mixin_base_t;
             };
         }
         /// \endcond
-
-        /// \addtogroup group-utility Utility
-        /// @{
-        ///
-        template<typename T>
-        struct basic_mixin : private box<T>
-        {
-            CONCEPT_REQUIRES(DefaultConstructible<T>())
-            constexpr basic_mixin()
-                noexcept(std::is_nothrow_default_constructible<T>::value)
-              : box<T>{}
-            {}
-            CONCEPT_REQUIRES(MoveConstructible<T>())
-            explicit constexpr basic_mixin(T &&t)
-                noexcept(std::is_nothrow_move_constructible<T>::value)
-              : box<T>(detail::move(t))
-            {}
-            CONCEPT_REQUIRES(CopyConstructible<T>())
-            explicit constexpr basic_mixin(T const &t)
-                noexcept(std::is_nothrow_copy_constructible<T>::value)
-              : box<T>(t)
-            {}
-        protected:
-            using box<T>::get;
-        };
 
 #if RANGES_BROKEN_CPO_LOOKUP
         namespace _basic_iterator_ { template <typename> struct adl_hook {}; }
@@ -358,8 +364,7 @@ namespace ranges
 
         template<typename Cur>
         struct basic_iterator
-          : range_access::mixin_base_t<Cur>
-          , detail::iterator_associated_types_base<Cur>
+          : detail::iterator_associated_types_base<Cur>
 #if RANGES_BROKEN_CPO_LOOKUP
           , private _basic_iterator_::adl_hook<basic_iterator<Cur>>
 #endif
@@ -368,6 +373,7 @@ namespace ranges
             template<typename>
             friend struct basic_iterator;
             friend range_access;
+            using base_t = detail::iterator_associated_types_base<Cur>;
             using mixin_t = range_access::mixin_base_t<Cur>;
             CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
@@ -391,10 +397,10 @@ namespace ranges
                     Constructible<mixin_t, OtherCur>())>
             RANGES_CXX14_CONSTEXPR
             basic_iterator(basic_iterator<OtherCur> that)
-              : mixin_t{std::move(that.pos())}
+              : base_t{std::move(that.pos())}
             {}
             // Mix in any additional constructors provided by the mixin
-            using mixin_t::mixin_t;
+            using base_t::base_t;
 
             template<typename T,
                 CONCEPT_REQUIRES_(!Same<uncvref_t<T>, basic_iterator>() &&
