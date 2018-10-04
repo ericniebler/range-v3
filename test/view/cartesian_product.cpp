@@ -225,7 +225,7 @@ int main()
         range_reference_t<Rng>,
         common_tuple<int &, char const * &>>());
 
-    using CT = common_tuple<int, char const *>;
+    using CT = common_tuple<int, std::string>;
     std::initializer_list<CT> control = {
         CT{0, "John"}, CT{0, "Paul"}, CT{0, "George"}, CT{0, "Ringo"},
         CT{1, "John"}, CT{1, "Paul"}, CT{1, "George"}, CT{1, "Ringo"},
