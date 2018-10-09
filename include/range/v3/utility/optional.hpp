@@ -901,32 +901,28 @@ namespace ranges
                 }
 
                 template<typename T>
-                auto swap(optional<T> &x, optional<T> &y)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(swap)(optional<T> &x, optional<T> &y)
                 (
-                    x.swap(y)
+                    return x.swap(y)
                 )
             } // namespace optional_adl
         } // namespace detail
         /// \endcond
 
         template<typename T>
-        constexpr auto make_optional(T &&t)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        constexpr auto CPP_auto_fun(make_optional)(T &&t)
         (
-            optional<detail::decay_t<T>>{static_cast<T &&>(t)}
+            return optional<detail::decay_t<T>>{static_cast<T &&>(t)}
         )
         template<typename T, typename... Args>
-        constexpr auto make_optional(Args &&... args)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        constexpr auto CPP_auto_fun(make_optional)(Args &&... args)
         (
-            optional<T>{in_place, static_cast<Args &&>(args)...}
+            return optional<T>{in_place, static_cast<Args &&>(args)...}
         )
         template<typename T, typename U, typename... Args>
-        constexpr auto make_optional(std::initializer_list<U> il, Args &&... args)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        constexpr auto CPP_auto_fun(make_optional)(std::initializer_list<U> il, Args &&... args)
         (
-            optional<T>{in_place, il, static_cast<Args &&>(args)...}
+            return optional<T>{in_place, il, static_cast<Args &&>(args)...}
         )
 
         /// \cond

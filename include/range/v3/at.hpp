@@ -34,10 +34,11 @@ namespace ranges
         struct at_fn
         {
             /// \return `begin(rng)[n]`
-            CPP_template(typename Rng)(
-                requires RandomAccessRange<Rng> && SizedRange<Rng>)
+            template<typename Rng>
             RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                CPP_ret(range_reference_t<Rng>)(
+                    requires RandomAccessRange<Rng> && SizedRange<Rng>)
             {
                 // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
                 check_throw(rng, n);
@@ -45,22 +46,21 @@ namespace ranges
             }
 
             /// \return `begin(rng)[n]`
-            CPP_template(typename Rng, typename T, typename Self = at_fn,
-                     typename D = range_difference_type_t<Rng>)(
-                requires RandomAccessRange<Rng> &&
-                                  !Same<uncvref_t<T>, D> &&
-                                  ConvertibleTo<T, D>)
+            template<typename Rng, typename T, typename D = range_difference_type_t<Rng>>
             RANGES_CXX14_CONSTEXPR
-            range_reference_t<Rng> operator()(Rng &&rng, T &&t) const
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                Self{}((Rng &&) rng, static_cast<D>((T &&) t))
-            )
+            auto operator()(Rng &&rng, T &&t) const ->
+                CPP_ret(range_reference_t<Rng>)(
+                    requires RandomAccessRange<Rng> && SizedRange<Rng> &&
+                        !Same<uncvref_t<T>, D> && ConvertibleTo<T, D>)
+            {
+                return (*this)((Rng &&) rng, static_cast<D>((T &&) t));
+            }
 
             /// \cond
-            CPP_template(typename R, typename T)(
-                requires not index_detail::Indexable<R, T>)
-            void operator()(R &&, T &&) const
+            template<typename R, typename T>
+            auto operator()(R &&, T &&) const ->
+                CPP_ret(void)(
+                    requires not index_detail::Indexable<R, T>)
             {
                 CPP_assert_msg(RandomAccessRange<R>,
                     "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");

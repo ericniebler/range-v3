@@ -754,10 +754,9 @@ namespace ranges
                     return it_ - that.base();
                 }
                 RANGES_CXX14_CONSTEXPR
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move)() (const)
                 (
-                    iter_move(ranges::prev(it_))
+                    return iter_move(ranges::prev(it_))
                 )
             public:
                 reverse_cursor() = default;
@@ -812,10 +811,9 @@ namespace ranges
             {
                 return current_;
             }
-            auto operator*() const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            auto CPP_auto_fun(operator*)() (const)
             (
-                iter_move(current_)
+                return iter_move(current_)
             )
             move_iterator &operator++()
             {

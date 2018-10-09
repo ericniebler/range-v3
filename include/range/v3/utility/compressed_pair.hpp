@@ -97,9 +97,9 @@ namespace ranges
         struct make_compressed_tuple_fn
         {
             template<typename... Args>
-            constexpr auto operator()(Args &&... args) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
-                compressed_tuple<bind_element_t<Args>...>{static_cast<Args &&>(args)...}
+            constexpr auto CPP_auto_fun(operator())(Args &&... args) (const)
+            (
+                return compressed_tuple<bind_element_t<Args>...>{static_cast<Args &&>(args)...}
             )
         };
 
@@ -142,9 +142,9 @@ namespace ranges
         struct make_compressed_pair_fn
         {
             template<typename First, typename Second>
-            constexpr auto operator()(First &&f, Second &&s) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
-                compressed_pair<bind_element_t<First>, bind_element_t<Second>>{
+            constexpr auto CPP_auto_fun(operator())(First &&f, Second &&s) (const)
+            (
+                return compressed_pair<bind_element_t<First>, bind_element_t<Second>>{
                     static_cast<First &&>(f), static_cast<Second &&>(s)
                 }
             )

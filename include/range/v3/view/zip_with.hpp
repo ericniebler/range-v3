@@ -179,10 +179,9 @@ namespace ranges
                 cursor(fun_ref_ fun, std::tuple<iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    tuple_apply(fun_, its_)
+                    return tuple_apply(fun_, its_)
                 )
                 void next()
                 {
@@ -242,10 +241,9 @@ namespace ranges
                             detail::max_);
                 }
                 template<std::size_t...Is>
-                auto move_(meta::index_sequence<Is...>) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move_)(meta::index_sequence<Is...>) (const)
                 (
-                    invoke(fun_, move_tag{}, std::get<Is>(its_)...)
+                    return invoke(fun_, move_tag{}, std::get<Is>(its_)...)
                 )
                 auto move() const
                     noexcept(noexcept(std::declval<cursor const&>().move_(

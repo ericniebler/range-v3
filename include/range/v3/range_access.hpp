@@ -60,108 +60,91 @@ namespace ranges
             using mixin_base_t = meta::_t<mixin_base_<Cur>>;
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_cursor)(Rng &rng, long)
             (
-                rng.begin_cursor()
+                return rng.begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_cursor)(Rng &rng, int)
             (
-                static_cast<Rng const &>(rng).begin_cursor()
+                return static_cast<Rng const &>(rng).begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_cursor)(Rng &rng, long)
             (
-                rng.end_cursor()
+                return rng.end_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_cursor)(Rng &rng, int)
             (
-                static_cast<Rng const &>(rng).end_cursor()
+                return static_cast<Rng const &>(rng).end_cursor()
             )
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_adaptor)(Rng &rng, long)
             (
-                rng.begin_adaptor()
+                return rng.begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_adaptor)(Rng &rng, int)
             (
-                static_cast<Rng const &>(rng).begin_adaptor()
+                return static_cast<Rng const &>(rng).begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, long)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_adaptor)(Rng &rng, long)
             (
-                rng.end_adaptor()
+                return rng.end_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_adaptor)(Rng &rng, int)
             (
-                static_cast<Rng const &>(rng).end_adaptor()
+                return static_cast<Rng const &>(rng).end_adaptor()
             )
 
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto read(Cur const &pos)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(read)(Cur const &pos)
             (
-                pos.read()
+                return pos.read()
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto arrow(Cur const &pos)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(arrow)(Cur const &pos)
             (
-                pos.arrow()
+                return pos.arrow()
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto move(Cur const &pos)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(move)(Cur const &pos)
             (
-                pos.move()
+                return pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto write(Cur &pos, T &&t)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(write)(Cur &pos, T &&t)
             (
-                pos.write((T &&) t)
+                return pos.write((T &&) t)
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto next(Cur & pos)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(next)(Cur & pos)
             (
-                pos.next()
+                return pos.next()
             )
             template<typename Cur, typename O>
-            static RANGES_CXX14_CONSTEXPR auto equal(Cur const &pos, O const &other)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(equal)(Cur const &pos, O const &other)
             (
-                pos.equal(other)
+                return pos.equal(other)
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto prev(Cur & pos)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(prev)(Cur & pos)
             (
-                pos.prev()
+                return pos.prev()
             )
             template<typename Cur, typename D>
-            static RANGES_CXX14_CONSTEXPR auto advance(Cur & pos, D n)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(advance)(Cur & pos, D n)
             (
-                pos.advance(n)
+                return pos.advance(n)
             )
             template<typename Cur, typename O>
-            static RANGES_CXX14_CONSTEXPR auto distance_to(Cur const &pos, O const &other)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(distance_to)(Cur const &pos, O const &other)
             (
-                pos.distance_to(other)
+                return pos.distance_to(other)
             )
 
         private:

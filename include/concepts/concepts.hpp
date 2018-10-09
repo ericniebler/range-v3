@@ -75,6 +75,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
 #define CPP_PP_CHECK_N(x, n, ...) n
 #define CPP_PP_PROBE(x) x, 1,
+#define CPP_PP_PROBE_N(x, n) x, n,
 
 // CPP_CXX_VA_OPT
 #ifndef CPP_CXX_VA_OPT
@@ -609,6 +610,53 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 // Note: This macro cannot be used when the last function argument is a
 //       parameter pack.
 #define CPP_fun(X) X CPP_FUN_IMPL_1_
+
+////////////////////////////////////////////////////////////////////////////////
+// CPP_fun
+// Usage:
+//   template <typename A, typename B>
+//   void CPP_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt
+//       requires Concept1<A> && Concept2<B>)
+//   {}
+//
+// Note: This macro cannot be used when the last function argument is a
+//       parameter pack.
+#define CPP_auto_fun(X) X CPP_AUTO_FUN_IMPL_
+#define CPP_AUTO_FUN_IMPL_(...) (__VA_ARGS__) CPP_AUTO_FUN_RETURNS_
+#define CPP_AUTO_FUN_RETURNS_(...)                                              \
+    CPP_AUTO_FUN_SELECT_RETURNS_(__VA_ARGS__,)(__VA_ARGS__)                     \
+    /**/
+#define CPP_AUTO_FUN_SELECT_RETURNS_(MAYBE_CONST, ...)                          \
+    CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_CONST_,                                     \
+        CPP_PP_CHECK(CPP_PP_CAT(                                                \
+            CPP_PP_PROBE_CONST_MUTABLE_PROBE_, MAYBE_CONST)))                   \
+    /**/
+#define CPP_PP_PROBE_CONST_MUTABLE_PROBE_const CPP_PP_PROBE_N(~, 1)
+#define CPP_PP_PROBE_CONST_MUTABLE_PROBE_mutable CPP_PP_PROBE_N(~, 2)
+#define CPP_PP_EAT_MUTABLE_mutable
+#define CPP_AUTO_FUN_RETURNS_CONST_2(...)                                       \
+    CPP_PP_CAT(CPP_PP_EAT_MUTABLE_, __VA_ARGS__) CPP_AUTO_FUN_RETURNS_CONST_0
+#define CPP_AUTO_FUN_RETURNS_CONST_1(...)                                       \
+    __VA_ARGS__ CPP_AUTO_FUN_RETURNS_CONST_0                                    \
+    /**/
+#define CPP_AUTO_FUN_RETURNS_CONST_0(...)                                       \
+    CPP_PP_EVAL(CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_,                                \
+        CPP_PP_CAT(CPP_AUTO_FUN_RETURNS_, __VA_ARGS__))                         \
+    /**/
+#define CPP_AUTO_FUN_RETURNS_return
+
+#ifdef __cpp_guaranteed_copy_elision
+#define CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_(...)                                    \
+    noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__)                    \
+    { return (__VA_ARGS__); }                                                   \
+    /**/
+#else
+#define CPP_AUTO_FUN_DECLTYPE_NOEXCEPT_(...)                                    \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->                   \
+    decltype(__VA_ARGS__)                                                       \
+    { return (__VA_ARGS__); }                                                   \
+    /**/
+#endif
 
 namespace concepts 
 {

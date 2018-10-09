@@ -59,10 +59,9 @@ namespace ranges
             public:
                 CPP_template(typename Rng, typename Fun)(
                     requires ForEachViewConcept<Rng, Fun>)
-                auto operator()(Rng &&rng, Fun fun) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Rng &&rng, Fun fun) (const)
                 (
-                    join(transform(static_cast<Rng &&>(rng), std::move(fun)))
+                    return join(transform(static_cast<Rng &&>(rng), std::move(fun)))
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED

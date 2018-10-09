@@ -78,15 +78,13 @@ namespace ranges
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
                 {}
-                auto read(iterator_t<Rng> it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)(iterator_t<Rng> it) (const)
                 (
-                    invoke(fun_, it)
+                    return invoke(fun_, it)
                 )
-                auto iter_move(iterator_t<Rng> it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(iter_move)(iterator_t<Rng> it) (const)
                 (
-                    invoke(fun_, move_tag{}, it)
+                    return invoke(fun_, move_tag{}, it)
                 )
             };
 
@@ -200,10 +198,9 @@ namespace ranges
                 cursor(fun_ref_ fun, iterator_t<Rng1> it1, iterator_t<Rng2> it2)
                   : fun_(std::move(fun)), it1_(std::move(it1)), it2_(std::move(it2))
                 {}
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    invoke(fun_, it1_, it2_)
+                    return invoke(fun_, it1_, it2_)
                 )
                 void next()
                 {
@@ -252,10 +249,9 @@ namespace ranges
                     difference_type d1 = that.it1_ - it1_, d2 = that.it2_ - it2_;
                     return 0 < d1 ? ranges::min(d1, d2) : ranges::max(d1, d2);
                 }
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move)() (const)
                 (
-                    invoke(fun_, move_tag{}, it1_, it2_)
+                    return invoke(fun_, move_tag{}, it1_, it2_)
                 )
             };
 

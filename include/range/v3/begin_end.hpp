@@ -52,6 +52,11 @@ namespace ranges
             struct fn
             {
             private:
+                template<typename R>
+                using member_begin_t = detail::decay_t<decltype((*(R*)nullptr).begin())>;
+                template<typename R>
+                using non_member_begin_t = detail::decay_t<decltype(begin((*(R*)nullptr)))>;
+
                 template<typename R, std::size_t N>
                 static constexpr R *impl_(R (&array)[N], int) noexcept
                 {
@@ -59,53 +64,49 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Iterator.
-                CPP_template(typename R,
-                    typename I = decltype(aux::copy(std::declval<R &>().begin())))(
-                    requires Iterator<I>)
-                static constexpr I impl_(R &r, int)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    r.begin()
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int)
+                    noexcept(noexcept(member_begin_t<R>(r.begin()))) ->
+                    CPP_ret(member_begin_t<R>)(
+                        requires Iterator<member_begin_t<R>>)
+                {
+                    return r.begin();
+                }
 
                 // Use ADL if it returns Iterator.
-                CPP_template(typename R,
-                    typename I = decltype(aux::copy(begin(std::declval<R &>()))))(
-                    requires Iterator<I>)
-                static constexpr I impl_(R &r, long)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    begin(r)
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, long)
+                    noexcept(noexcept(non_member_begin_t<R>(begin(r)))) ->
+                    CPP_ret(non_member_begin_t<R>)(
+                        requires Iterator<non_member_begin_t<R>>)
+                {
+                    return r.begin();
+                }
 
             public:
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::begin is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }
@@ -142,6 +143,13 @@ namespace ranges
             struct fn
             {
             private:
+                template<typename R>
+                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                template<typename R>
+                using member_end_t = detail::decay_t<decltype((*(R*)nullptr).end())>;
+                template<typename R>
+                using non_member_end_t = detail::decay_t<decltype(end((*(R*)nullptr)))>;
+
                 template<typename R, std::size_t N>
                 static constexpr R *impl_(R (&array)[N], int) noexcept
                 {
@@ -149,55 +157,49 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Sentinel.
-                CPP_template(typename R,
-                    typename I = decltype(ranges::begin(std::declval<R &>())),
-                    typename S = decltype(aux::copy(std::declval<R &>().end())))(
-                    requires Sentinel<S, I>)
-                static constexpr S impl_(R &r, int)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    r.end()
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int)
+                    noexcept(noexcept(member_end_t<R>(r.end()))) ->
+                    CPP_ret(member_end_t<R>)(
+                        requires Sentinel<member_end_t<R>, begin_t<R>>)
+                {
+                    return r.end();
+                }
 
                 // Use ADL if it returns Sentinel.
-                CPP_template(typename R,
-                    typename I = decltype(ranges::begin(std::declval<R &>())),
-                    typename S = decltype(aux::copy(end(std::declval<R &>()))))(
-                    requires Sentinel<S, I>)
-                static constexpr S impl_(R &r, long)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    end(r)
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, long)
+                    noexcept(noexcept(non_member_end_t<R>(end(r)))) ->
+                    CPP_ret(non_member_end_t<R>)(
+                        requires Sentinel<non_member_end_t<R>, begin_t<R>>)
+                {
+                    return end(r);
+                }
 
             public:
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::end is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }
@@ -219,18 +221,16 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr auto operator()(R const &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R const &r) (const)
                 (
-                    ranges::begin(r)
+                    return ranges::begin(r)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::cbegin is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    ranges::begin(r)
+                    return ranges::begin(r)
                 )
             };
         }
@@ -251,18 +251,16 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr auto operator()(R const &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R const &r) (const)
                 (
-                    ranges::end(r)
+                    return ranges::end(r)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::cend is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    ranges::end(r)
+                    return ranges::end(r)
                 )
             };
         }
@@ -283,6 +281,13 @@ namespace ranges
             struct fn
             {
             private:
+                template<typename R>
+                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                template<typename R>
+                using end_t = decltype(ranges::end(*(R*)nullptr));
+                template<typename R>
+                using member_rbegin_t = detail::decay_t<decltype((*(R*)nullptr).rbegin())>;
+
                 template<typename R, std::size_t N>
                 static constexpr reverse_iterator<R *> impl_(R (&array)[N], int) noexcept
                 {
@@ -290,53 +295,49 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Iterator.
-                CPP_template(typename R,
-                    typename I = decltype(aux::copy(std::declval<R &>().rbegin())))(
-                    requires Iterator<I>)
-                static constexpr I impl_(R &r, int)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    r.rbegin()
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int)
+                    noexcept(noexcept(member_rbegin_t<R>(r.rbegin()))) ->
+                    CPP_ret(member_rbegin_t<R>)(
+                        requires Iterator<member_rbegin_t<R>>)
+                {
+                    return r.rbegin();
+                }
 
-                CPP_template(typename R,
-                    typename I = decltype(ranges::begin(std::declval<R &>())),
-                    typename S = decltype(ranges::end(std::declval<R &>())))(
-                    requires Same<I, S> && BidirectionalIterator<I>)
-                static constexpr reverse_iterator<I> impl_(R &r, long)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::make_reverse_iterator(ranges::end(r))
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, long)
+                    noexcept(noexcept(reverse_iterator<end_t<R>>(
+                        ranges::make_reverse_iterator(ranges::end(r))))) ->
+                    CPP_ret(reverse_iterator<end_t<R>>)(
+                        requires Same<begin_t<R>, end_t<R>> && BidirectionalIterator<end_t<R>>)
+                {
+                    return ranges::make_reverse_iterator(ranges::end(r));
+                }
 
             public:
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::rbegin is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }
@@ -360,6 +361,15 @@ namespace ranges
             struct fn
             {
             private:
+                template<typename R>
+                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                template<typename R>
+                using end_t = decltype(ranges::end(*(R*)nullptr));
+                template<typename R>
+                using rbegin_t = decltype(ranges::rbegin(*(R*)nullptr));
+                template<typename R>
+                using member_rend_t = detail::decay_t<decltype((*(R*)nullptr).rend())>;
+
                 template<typename R, std::size_t N>
                 static constexpr reverse_iterator<R *> impl_(R (&array)[N], int) noexcept
                 {
@@ -367,54 +377,49 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Sentinel.
-                CPP_template(typename R,
-                    typename I = decltype(ranges::rbegin(std::declval<R &>())),
-                    typename S = decltype(aux::copy(std::declval<R &>().rend())))(
-                    requires Sentinel<S, I>)
-                static constexpr S impl_(R &r, int)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    r.rend()
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int)
+                    noexcept(noexcept(member_rend_t<R>(r.rend()))) ->
+                    CPP_ret(member_rend_t<R>)(
+                        requires Sentinel<member_rend_t<R>, rbegin_t<R>>)
+                {
+                    return r.rend();
+                }
 
-                CPP_template(typename R,
-                    typename I = decltype(ranges::begin(std::declval<R &>())),
-                    typename S = decltype(ranges::end(std::declval<R &>())))(
-                    requires Same<I, S> && BidirectionalIterator<I>)
-                static constexpr reverse_iterator<I> impl_(R &r, long)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::make_reverse_iterator(ranges::begin(r))
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, long)
+                    noexcept(noexcept(reverse_iterator<begin_t<R>>(
+                        ranges::make_reverse_iterator(ranges::begin(r))))) ->
+                    CPP_ret(reverse_iterator<begin_t<R>>)(
+                        requires Same<begin_t<R>, end_t<R>> && BidirectionalIterator<begin_t<R>>)
+                {
+                    return ranges::make_reverse_iterator(ranges::begin(r));
+                }
 
             public:
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::rend is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }
@@ -439,18 +444,16 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr auto operator()(R const &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R const &r) (const)
                 (
-                    ranges::rbegin(r)
+                    return ranges::rbegin(r)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::crbegin is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    ranges::rbegin(r)
+                    return ranges::rbegin(r)
                 )
             };
         }
@@ -471,18 +474,16 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr auto operator()(R const &r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R const &r) (const)
                 (
-                    ranges::rend(r)
+                    return ranges::rend(r)
                 )
 
                 template<typename R>
                 RANGES_DEPRECATED("Passing an rvalue to ranges::crend is deprecated.")
-                constexpr auto operator()(const R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
-                    ranges::rend(r)
+                    return ranges::rend(r)
                 )
             };
         }

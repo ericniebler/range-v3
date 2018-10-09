@@ -96,10 +96,9 @@ inline namespace function_objects
 }
 
 auto f(int const n)
-RANGES_DECLTYPE_AUTO_RETURN
-(
-    ::coro(ranges::view::iota(0, n))
-)
+{
+    return ::coro(ranges::view::iota(0, n));
+}
 
 ranges::experimental::sized_generator<int> g(int const n)
 {

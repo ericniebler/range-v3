@@ -71,17 +71,15 @@ namespace ranges {
                 semiregular_t<T> sum_;
                 exclusive_scan_view_t *rng_;
 
-                auto move_or_copy_init(std::false_type) noexcept
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(move_or_copy_init)(std::false_type)
                 (
-                    (rng_->init_)
+                    return (rng_->init_)
                 )
 
                 // If the base range is single-pass, we can move the init value.
-                auto move_or_copy_init(std::true_type) noexcept
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(move_or_copy_init)(std::true_type)
                 (
-                    std::move(rng_->init_)
+                    return std::move(rng_->init_)
                 )
             public:
                 using single_pass = exclusive_scan_view::single_pass;

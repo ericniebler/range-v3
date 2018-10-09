@@ -34,22 +34,19 @@ namespace ranges
             struct semiregular_get
             {
                 template<typename T>
-                friend auto get(meta::id_t<semiregular<T>> &t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                friend auto CPP_auto_fun(get)(meta::id_t<semiregular<T>> &t)
                 (
-                    t.get()
+                    return t.get()
                 )
                 template<typename T>
-                friend auto get(meta::id_t<semiregular<T>> const &t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                friend auto CPP_auto_fun(get)(meta::id_t<semiregular<T>> const &t)
                 (
-                    t.get()
+                    return t.get()
                 )
                 template<typename T>
-                friend auto get(meta::id_t<semiregular<T>> &&t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                friend auto CPP_auto_fun(get)(meta::id_t<semiregular<T>> &&t)
                 (
-                    detail::move(t).get()
+                    return detail::move(t).get()
                 )
             };
         }
@@ -61,6 +58,54 @@ namespace ranges
         struct semiregular
           : private detail::semiregular_get
         {
+        private:
+            struct tag {};
+            template<typename... Args>
+            void construct_from(Args &&... args)
+            {
+                new ((void*) std::addressof(data_)) T(static_cast<Args &&>(args)...);
+                engaged_ = true;
+            }
+            void move_assign(T &&t, std::true_type)
+            {
+                data_ = detail::move(t);
+            }
+            void move_assign(T &&t, std::false_type)
+            {
+                reset();
+                construct_from(detail::move(t));
+            }
+            void copy_assign(T const &t, std::true_type)
+            {
+                data_ = t;
+            }
+            void copy_assign(T &&t, std::false_type)
+            {
+                reset();
+                construct_from(t);
+            }
+            constexpr semiregular(tag, std::false_type) noexcept
+            {}
+            constexpr semiregular(tag, std::true_type)
+                noexcept(std::is_nothrow_default_constructible<T>::value)
+              : data_{}
+              , engaged_(true)
+            {}
+            void reset()
+            {
+                if(engaged_)
+                {
+                    data_.~T();
+                    engaged_ = false;
+                }
+            }
+            union
+            {
+                char ch_{};
+                T data_;
+            };
+            bool engaged_ {false};
+        public:
             constexpr semiregular()
                 noexcept(std::is_nothrow_default_constructible<T>::value ||
                     !std::is_default_constructible<T>::value)
@@ -159,72 +204,22 @@ namespace ranges
             }
             operator T const &&() const && = delete;
             template<typename...Args>
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
-            RANGES_DECLTYPE_NOEXCEPT(std::declval<T &>()(static_cast<Args &&>(args)...))
-            {
-                return get()(static_cast<Args &&>(args)...);
-            }
+            RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Args &&...args) (mutable &)
+            (
+                return data_(static_cast<Args &&>(args)...)
+            )
             template<typename...Args>
-            constexpr auto operator()(Args &&...args) const &
-            RANGES_DECLTYPE_NOEXCEPT(std::declval<T const &>()(static_cast<Args &&>(args)...))
-            {
-                return get()(static_cast<Args &&>(args)...);
-            }
+            constexpr auto CPP_auto_fun(operator())(Args &&...args) (const &)
+            (
+                return ((T const &) data_)(static_cast<Args &&>(args)...)
+            )
             template<typename...Args>
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
-            RANGES_DECLTYPE_NOEXCEPT(std::declval<T &&>()(static_cast<Args &&>(args)...))
-            {
-                return detail::move(get())(static_cast<Args &&>(args)...);
-            }
+            RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
+            (
+                return ((T &&) data_)(static_cast<Args &&>(args)...)
+            )
             template<typename...Args>
             constexpr void operator()(Args &&...args) const && = delete;
-        private:
-            struct tag {};
-            template<typename... Args>
-            void construct_from(Args &&... args)
-            {
-                new ((void*) std::addressof(data_)) T(static_cast<Args &&>(args)...);
-                engaged_ = true;
-            }
-            void move_assign(T &&t, std::true_type)
-            {
-                data_ = detail::move(t);
-            }
-            void move_assign(T &&t, std::false_type)
-            {
-                reset();
-                construct_from(detail::move(t));
-            }
-            void copy_assign(T const &t, std::true_type)
-            {
-                data_ = t;
-            }
-            void copy_assign(T &&t, std::false_type)
-            {
-                reset();
-                construct_from(t);
-            }
-            constexpr semiregular(tag, std::false_type) noexcept
-            {}
-            constexpr semiregular(tag, std::true_type)
-                noexcept(std::is_nothrow_default_constructible<T>::value)
-              : data_{}
-              , engaged_(true)
-            {}
-            void reset()
-            {
-                if(engaged_)
-                {
-                    data_.~T();
-                    engaged_ = false;
-                }
-            }
-            union
-            {
-                char ch_{};
-                T data_;
-            };
-            bool engaged_ {false};
         };
 
         template<typename T>

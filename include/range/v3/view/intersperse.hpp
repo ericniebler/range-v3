@@ -145,10 +145,9 @@ namespace ranges
             {
                 static constexpr bool empty(iterator_t<Rng> const &it,
                     cursor_adaptor const &, sentinel_t<Rng> const &sent)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    it == sent
-                )
+                {
+                    return it == sent;
+                }
             };
             CPP_member
             constexpr auto begin_adaptor() const
@@ -230,10 +229,9 @@ namespace ranges
 
                 CPP_template(typename Rng)(
                     requires IntersperseViewConcept<Rng>)
-                constexpr auto operator()(Rng &&rng, range_value_type_t<Rng> val) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(Rng &&rng, range_value_type_t<Rng> val) (const)
                 (
-                    intersperse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), std::move(val)}
+                    return intersperse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), std::move(val)}
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

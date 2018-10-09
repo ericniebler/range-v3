@@ -100,10 +100,9 @@ namespace ranges
                 {
                     return false;
                 }
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    *it_
+                    return *it_
                 )
                 bool equal(cursor const &pos) const
                 {

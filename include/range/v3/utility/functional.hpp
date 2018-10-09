@@ -140,10 +140,9 @@ namespace ranges
         struct convert_to
         {
             template<typename U>
-            constexpr auto operator()(U &&u) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            constexpr auto CPP_auto_fun(operator())(U &&u) (const)
             (
-                static_cast<T>((U &&) u)
+                return static_cast<T>((U &&) u)
             )
         };
 
@@ -188,10 +187,9 @@ namespace ranges
         struct dereference_fn
         {
             template<typename I>
-            constexpr auto operator()(I &i) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            constexpr auto CPP_auto_fun(operator())(I &i) (const)
             (
-                *i
+                return *i
             )
         };
         RANGES_INLINE_VARIABLE(dereference_fn, dereference)
@@ -311,57 +309,45 @@ namespace ranges
 
         template<typename Second, typename First>
         struct composed
-          : private compressed_pair<First, Second>
         {
         private:
-            using composed::compressed_pair::first;
-            using composed::compressed_pair::second;
+            RANGES_NO_UNIQUE_ADDRESS
+            First first_;
+            RANGES_NO_UNIQUE_ADDRESS
+            Second second_;
             template<typename A, typename B, typename...Ts>
-            static auto do_(A &a, B &b, std::false_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static auto CPP_auto_fun(do_)(A &a, B &b, std::false_type, Ts &&...ts)
             (
-                invoke(b, invoke(a, (Ts &&) ts...))
+                return invoke(b, invoke(a, (Ts &&) ts...))
             )
             template<typename A, typename B, typename...Ts>
-            static auto do_(A &a, B &b, std::true_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static auto CPP_auto_fun(do_)(A &a, B &b, std::true_type, Ts &&...ts)
             (
-                (invoke(a, (Ts &&) ts...),
-                 invoke(b))
+                return (invoke(a, (Ts &&) ts...),
+                    invoke(b))
             )
         public:
             composed() = default;
             composed(Second second, First first)
-              : composed::compressed_pair{std::move(first), std::move(second)}
+              : first_(std::move(first))
+              , second_(std::move(second))
             {}
-            template<typename...Ts,
-                typename FirstResultT = invoke_result_t<First &, Ts...>>
-            auto operator()(Ts &&...ts)
-            RANGES_DECLTYPE_NOEXCEPT(composed::do_(
-                std::declval<First &>(),
-                std::declval<Second &>(),
-                std::is_void<FirstResultT>{},
-                (Ts &&) ts...))
-            {
+            template<typename...Ts>
+            auto CPP_auto_fun(operator())(Ts &&...ts)
+            (
                 return composed::do_(
-                    first(), second(),
-                    std::is_void<FirstResultT>{},
-                    (Ts &&) ts...);
-            }
-            template<typename...Ts,
-                typename FirstResultT = invoke_result_t<First const &, Ts...>>
-            auto operator()(Ts &&...ts) const
-            RANGES_DECLTYPE_NOEXCEPT(composed::do_(
-                std::declval<First const &>(),
-                std::declval<Second const &>(),
-                std::is_void<FirstResultT>{},
-                (Ts &&) ts...))
-            {
+                    first_, second_,
+                    std::is_void<invoke_result_t<First &, Ts...>>{},
+                    (Ts &&) ts...)
+            )
+            template<typename...Ts>
+            auto CPP_auto_fun(operator())(Ts &&...ts) (const)
+            (
                 return composed::do_(
-                    first(), second(),
-                    std::is_void<FirstResultT>{},
-                    (Ts &&) ts...);
-            }
+                    (First const &) first_, (Second const &) second_,
+                    std::is_void<invoke_result_t<First const &, Ts...>>{},
+                    (Ts &&) ts...)
+            )
         };
 
         struct compose_fn
@@ -383,51 +369,39 @@ namespace ranges
 
         template<typename First, typename...Rest>
         struct overloaded<First, Rest...>
-          : private compressed_pair<First, overloaded<Rest...>>
         {
         private:
-            using base_t = compressed_pair<First, overloaded<Rest...>>;
-            using base_t::first;
-            using base_t::second;
+            RANGES_NO_UNIQUE_ADDRESS
+            First first_;
+            RANGES_NO_UNIQUE_ADDRESS
+            overloaded<Rest...> second_;
         public:
             overloaded() = default;
             constexpr overloaded(First first, Rest... rest)
-              : overloaded::compressed_pair{
-                    detail::move(first),
-                    overloaded<Rest...>{detail::move(rest)...}}
+              : first_(detail::move(first))
+              , second_{detail::move(rest)...}
             {}
             template<typename... Args>
-            auto operator()(Args &&...args)
-            RANGES_DECLTYPE_NOEXCEPT(
-                invoke(std::declval<First &>(),
-                    static_cast<Args &&>(args)...))
-            {
-                return invoke(first(), static_cast<Args &&>(args)...);
-            }
+            auto CPP_auto_fun(operator())(Args &&...args)
+            (
+                return invoke(first_, static_cast<Args &&>(args)...)
+            )
             template<typename... Args>
-            auto operator()(Args &&...args) const
-            RANGES_DECLTYPE_NOEXCEPT(
-                invoke(std::declval<First const &>(),
-                    static_cast<Args &&>(args)...))
-            {
-                return invoke(first(), static_cast<Args &&>(args)...);
-            }
+            auto CPP_auto_fun(operator())(Args &&...args) (const)
+            (
+                return invoke((First const &) first_, static_cast<Args &&>(args)...)
+            )
             template<typename... Args>
-            auto operator()(Args &&...args)
-            RANGES_DECLTYPE_NOEXCEPT(
-                std::declval<overloaded<Rest...> &>()(
-                    static_cast<Args &&>(args)...))
-            {
-                return second()(static_cast<Args &&>(args)...);
-            }
+            auto CPP_auto_fun(operator())(Args &&...args)
+            (
+                return second_(static_cast<Args &&>(args)...)
+            )
             template<typename... Args>
-            auto operator()(Args &&...args) const
-            RANGES_DECLTYPE_NOEXCEPT(
-                std::declval<overloaded<Rest...> const &>()(
-                    static_cast<Args &&>(args)...))
-            {
-                return second()(static_cast<Args &&>(args)...);
-            }
+            auto CPP_auto_fun(operator())(Args &&...args) (const)
+            (
+                return ((overloaded<Rest...> const &) second_)(
+                    static_cast<Args &&>(args)...)
+            )
         };
 
         struct overload_fn
@@ -437,7 +411,6 @@ namespace ranges
             {
                 return fn;
             }
-
             template<typename ...Fns>
             constexpr overloaded<Fns...> operator()(Fns... fns) const
             {
@@ -451,14 +424,14 @@ namespace ranges
 
         template<typename Fn>
         struct indirected
-          : private box<Fn, indirected<Fn>>
         {
         private:
-            using box<Fn, indirected<Fn>>::get;
+            RANGES_NO_UNIQUE_ADDRESS
+            Fn fn_;
         public:
             indirected() = default;
             indirected(Fn fn)
-              : indirected::box(std::move(fn))
+              : fn_(std::move(fn))
             {}
             // value_type (needs no impl)
             template<typename ...Its>
@@ -470,33 +443,31 @@ namespace ranges
 
             // Reference
             template<typename ...Its>
-            auto operator()(Its ...its)
-            RANGES_DECLTYPE_NOEXCEPT(invoke(std::declval<Fn &>(), *its...))
-            {
-                return invoke(get(), *its...);
-            }
+            auto CPP_auto_fun(operator())(Its ...its)
+            (
+                return invoke(fn_, *its...)
+            )
             template<typename ...Its>
-            auto operator()(Its ...its) const
-            RANGES_DECLTYPE_NOEXCEPT(invoke(std::declval<Fn const &>(), *its...))
-            {
-                return invoke(get(), *its...);
-            }
+            auto CPP_auto_fun(operator())(Its ...its) (const)
+            (
+                return invoke((Fn const &) fn_, *its...)
+            )
 
             // Rvalue reference
             template<typename ...Its>
-            auto operator()(move_tag, Its ...its)
-                noexcept(noexcept(aux::move(invoke(std::declval<Fn &>(), *its...)))) ->
-                aux::move_t<decltype(invoke(std::declval<Fn &>(), *its...))>
-            {
-                return aux::move(invoke(get(), *its...));
-            }
+            auto CPP_auto_fun(operator())(move_tag, Its ...its)
+            (
+                return static_cast<
+                    aux::move_t<invoke_result_t<Fn &, reference_t<Its>...>>>(
+                        aux::move(invoke(fn_, *its...)))
+            )
             template<typename ...Its>
-            auto operator()(move_tag, Its ...its) const
-                noexcept(noexcept(aux::move(invoke(std::declval<Fn const &>(), *its...)))) ->
-                aux::move_t<decltype(invoke(std::declval<Fn const &>(), *its...))>
-            {
-                return aux::move(invoke(get(), *its...));
-            }
+            auto CPP_auto_fun(operator())(move_tag, Its ...its) (const)
+            (
+                return static_cast<
+                    aux::move_t<invoke_result_t<Fn const &, reference_t<Its>...>>>(
+                        aux::move(invoke((Fn const &) fn_, *its...)))
+            )
         };
 
         struct indirect_fn
@@ -514,31 +485,30 @@ namespace ranges
 
         template<typename Fn1, typename Fn2>
         struct transformed
-          : private compressed_pair<Fn1, Fn2>
         {
         private:
-            using transformed::compressed_pair::first;
-            using transformed::compressed_pair::second;
-
+            RANGES_NO_UNIQUE_ADDRESS
+            Fn1 first_;
+            RANGES_NO_UNIQUE_ADDRESS
+            Fn2 second_;
         public:
             transformed() = default;
             constexpr transformed(Fn1 fn1, Fn2 fn2)
-              : transformed::compressed_pair{detail::move(fn1), detail::move(fn2)}
+              : first_(detail::move(fn1))
+              , second_(detail::move(fn2))
             {}
             template<typename ...Args>
-            auto operator()(Args &&... args)
-            RANGES_DECLTYPE_NOEXCEPT(
-                invoke(std::declval<Fn1 &>(), invoke(std::declval<Fn2 &>(), static_cast<Args &&>(args))...))
-            {
-                return invoke(first(), invoke(second(), static_cast<Args &&>(args)...));
-            }
+            auto CPP_auto_fun(operator())(Args &&... args)
+            (
+                return invoke(first_, invoke(second_, static_cast<Args &&>(args)...))
+            )
             template<typename ...Args>
-            auto operator()(Args &&... args) const
-            RANGES_DECLTYPE_NOEXCEPT(
-                invoke(std::declval<Fn1 const &>(), invoke(std::declval<Fn2 const &>(), static_cast<Args &&>(args))...))
-            {
-                return invoke(first(), invoke(second(), static_cast<Args &&>(args)...));
-            }
+            auto CPP_auto_fun(operator())(Args &&... args) (const)
+            (
+                return invoke(
+                    (Fn1 const &) first_,
+                    invoke((Fn2 const &) second_, static_cast<Args &&>(args)...))
+            )
         };
 
         struct on_fn
@@ -573,10 +543,9 @@ namespace ranges
                 Pipe0 pipe0_;
                 Pipe1 pipe1_;
                 template<typename Arg>
-                auto operator()(Arg &&arg) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Arg &&arg) (const)
                 (
-                    static_cast<Arg &&>(arg) | pipe0_ | pipe1_
+                    return static_cast<Arg &&>(arg) | pipe0_ | pipe1_
                 )
             };
         }
@@ -650,10 +619,9 @@ namespace ranges
             // Default Pipe behavior just passes the argument to the pipe's function call
             // operator
             template<typename Arg, typename Pipe>
-            static auto pipe(Arg &&arg, Pipe pipe)
-            RANGES_DECLTYPE_AUTO_RETURN
+            static auto CPP_auto_fun(pipe)(Arg &&arg, Pipe pipe)
             (
-                pipe(static_cast<Arg &&>(arg))
+                return pipe(static_cast<Arg &&>(arg))
             )
         };
 
@@ -773,17 +741,15 @@ namespace ranges
                   : bind_(std::move(b))
                 {}
                 template<typename...Ts>
-                auto operator()(Ts &&...ts)
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Ts &&...ts)
                 (
-                    bind_(static_cast<Ts &&>(ts)...)
+                    return bind_(static_cast<Ts &&>(ts)...)
                 )
                 /// \overload
                 template<typename...Ts>
-                auto operator()(Ts &&...ts) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Ts &&...ts) (const)
                 (
-                    bind_(static_cast<Ts &&>(ts)...)
+                    return bind_(static_cast<Ts &&>(ts)...)
                 )
             };
         }

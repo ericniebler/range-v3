@@ -93,10 +93,9 @@ namespace ranges
             {
                 CPP_template(typename T)(
                     requires std::is_arithmetic<T>::value)
-                constexpr auto operator()(T from, T to, std::ptrdiff_t n) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(T from, T to, std::ptrdiff_t n) (const)
                 (
-                    linear_distribute_view<T>{from, to, n}
+                    return linear_distribute_view<T>{from, to, n}
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

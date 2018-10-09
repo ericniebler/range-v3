@@ -54,10 +54,9 @@ namespace ranges
             struct get_first
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto operator()(Pair &&p) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Pair &&p) (const)
                 (
-                    get_first_second_helper(p.first,
+                    return get_first_second_helper(p.first,
                         get_first_second_tag<Pair, decltype(p.first)>{})
                 )
             };
@@ -65,10 +64,9 @@ namespace ranges
             struct get_second
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto operator()(Pair &&p) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Pair &&p) (const)
                 (
-                    get_first_second_helper(p.second,
+                    return get_first_second_helper(p.second,
                         get_first_second_tag<Pair, decltype(p.second)>{})
                 )
             };

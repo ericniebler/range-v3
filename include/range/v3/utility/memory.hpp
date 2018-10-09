@@ -140,10 +140,9 @@ namespace ranges
             iterator_wrapper(I &i)
               : i_(std::addressof(i))
             {}
-            auto operator*() const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            auto CPP_auto_fun(operator*)() (const)
             (
-                **i_
+                return **i_
             )
             iterator_wrapper &operator++()
             {

@@ -108,10 +108,9 @@ namespace ranges
 
                 CPP_template(typename Rng)(
                     requires SizedRange<Rng> || is_infinite<Rng>::value)
-                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n)
-                RANGES_DECLTYPE_AUTO_RETURN
+                static auto CPP_auto_fun(invoke_)(Rng &&rng, range_difference_type_t<Rng> n)
                 (
-                    take_exactly(
+                    return take_exactly(
                         static_cast<Rng &&>(rng),
                         is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
@@ -137,10 +136,9 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> n) (const)
                 (
-                    take_fn::invoke_(static_cast<Rng &&>(rng), n)
+                    return take_fn::invoke_(static_cast<Rng &&>(rng), n)
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

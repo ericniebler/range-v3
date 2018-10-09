@@ -139,10 +139,9 @@ namespace ranges
                 {
                     satisfy();
                 }
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    *it1_
+                    return *it1_
                 )
                 void next()
                 {
@@ -160,10 +159,9 @@ namespace ranges
                 {
                     return it1_ == end1_;
                 }
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move)() (const)
                 (
-                    iter_move(it1_)
+                    return iter_move(it1_)
                 )
             };
 
@@ -306,10 +304,9 @@ namespace ranges
                 {
                     satisfy();
                 }
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    *it1_
+                    return *it1_
                 )
                 void next()
                 {
@@ -328,10 +325,9 @@ namespace ranges
                 {
                     return (it1_ == end1_) || (it2_ == end2_);
                 }
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move)() (const)
                 (
-                    iter_move(it1_)
+                    return iter_move(it1_)
                 )
             };
 

@@ -50,10 +50,9 @@ namespace ranges
             {
                 CPP_template(typename Rng)(
                     requires SizedRange<Rng>)
-                auto operator()(std::size_t s, Rng &&rng)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(std::size_t s, Rng &&rng)
                 (
-                    s * static_cast<std::size_t>(ranges::size(rng))
+                    return s * static_cast<std::size_t>(ranges::size(rng))
                 )
             };
         } // namespace detail

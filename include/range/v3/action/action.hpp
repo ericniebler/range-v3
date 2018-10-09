@@ -36,10 +36,9 @@ namespace ranges
                 struct impl
                 {
                     template<typename...Ts, typename A = Action>
-                    static auto bind(Ts &&...ts)
-                    RANGES_DECLTYPE_AUTO_RETURN
+                    static auto CPP_auto_fun(bind)(Ts &&...ts)
                     (
-                        A::bind(static_cast<Ts &&>(ts)...)
+                        return A::bind(static_cast<Ts &&>(ts)...)
                     )
                 };
             };
@@ -127,10 +126,9 @@ namespace ranges
 
                 // Currying overload.
                 template<typename T, typename... Rest, typename A = Action>
-                auto operator()(T &&t, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(T &&t, Rest &&... rest) (const)
                 (
-                    make_action(
+                    return make_action(
                         action_access::impl<A>::bind(
                             action_,
                             static_cast<T &&>(t),

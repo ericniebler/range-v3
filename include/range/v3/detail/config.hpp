@@ -436,6 +436,12 @@ namespace ranges
 #define RANGES_RE_ENABLE_WARNINGS
 #endif
 
+#if __has_cpp_attribute(no_unique_address)
+#define RANGES_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#else
+#define RANGES_NO_UNIQUE_ADDRESS
+#endif
+
 #if defined(__clang__)
 #if __has_attribute(no_sanitize)
 #define RANGES_INTENDED_MODULAR_ARITHMETIC \

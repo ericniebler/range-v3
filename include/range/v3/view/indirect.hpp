@@ -42,15 +42,13 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                constexpr auto read(iterator_t<Rng> const &it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(read)(iterator_t<Rng> const &it) (const)
                 (
-                    **it
+                    return **it
                 )
-                constexpr auto iter_move(iterator_t<Rng> const &it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(iter_move)(iterator_t<Rng> const &it) (const)
                 (
-                    ranges::iter_move(*it)
+                    return ranges::iter_move(*it)
                 )
             };
             constexpr adaptor begin_adaptor() const noexcept
@@ -100,10 +98,9 @@ namespace ranges
             {
                 CPP_template(typename Rng)(
                     requires ReadableRange<Rng>)
-                constexpr auto operator()(Rng &&rng) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(Rng &&rng) (const)
                 (
-                    indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
+                    return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Rng)(

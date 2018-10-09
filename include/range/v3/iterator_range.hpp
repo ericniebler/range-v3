@@ -169,11 +169,10 @@ namespace ranges
             /// Tuple-like access for `sized_iterator_range`
             CPP_template(std::size_t N)(
                 requires N < 2)
-            friend constexpr auto get(sized_iterator_range const &p)
-            RANGES_DECLTYPE_AUTO_RETURN
+            friend constexpr auto CPP_auto_fun(get)(sized_iterator_range const &p)
             (
-                //ranges::get<N>(p.rng_)
-                ranges::get<N>(p .* &sized_iterator_range::rng_) // makes clang happy
+                //return ranges::get<N>(p.rng_)
+                return ranges::get<N>(p .* &sized_iterator_range::rng_) // makes clang happy
             )
             /// \overload
             CPP_template(std::size_t N)(

@@ -140,15 +140,13 @@ namespace ranges
                     ++inner_it_;
                     satisfy();
                 }
-                auto read() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(read)() (const)
                 (
-                    *inner_it_
+                    return *inner_it_
                 )
-                auto move() const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(move)() (const)
                 (
-                    iter_move(inner_it_)
+                    return iter_move(inner_it_)
                 )
             };
             cursor begin_cursor()

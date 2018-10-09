@@ -108,16 +108,14 @@ namespace ranges
             adaptor_base(detail::any, detail::any = {}, detail::any = {})
             {}
             template<typename Rng>
-            static constexpr auto begin(Rng &rng)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static constexpr auto CPP_auto_fun(begin)(Rng &rng)
             (
-                ranges::begin(rng.base())
+                return ranges::begin(rng.base())
             )
             template<typename Rng>
-            static constexpr auto end(Rng &rng)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            static constexpr auto CPP_auto_fun(end)(Rng &rng)
             (
-                ranges::end(rng.base())
+                return ranges::end(rng.base())
             )
             template<typename I>
             static auto equal(I const &it0, I const &it1) ->

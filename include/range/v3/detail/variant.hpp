@@ -319,21 +319,19 @@ namespace ranges
             struct get_datum_fn
             {
                 template<typename T>
-                auto operator()(T &&t) const noexcept
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    t.get()
-                )
+                decltype(auto) operator()(T &&t) const noexcept
+                {
+                    return t.get();
+                }
             };
 
             struct indexed_element_fn
             {
                 template<typename T>
-                auto operator()(T &&t) const noexcept
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    t.ref()
-                )
+                decltype(auto) operator()(T &&t) const noexcept
+                {
+                    return t.ref();
+                }
             };
 
             struct empty_variant_tag
@@ -433,10 +431,9 @@ namespace ranges
             {
                 Variant *var_;
                 template<typename...Ts>
-                auto operator()(Ts &&...ts) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Ts &&...ts) (const)
                 (
-                    ranges::emplace<N>(*var_, static_cast<Ts &&>(ts)...)
+                    return ranges::emplace<N>(*var_, static_cast<Ts &&>(ts)...)
                 )
             };
 
@@ -447,10 +444,9 @@ namespace ranges
                 Variant *var_;
 
                 template<typename U, std::size_t N>
-                auto operator()(indexed_element<U, N> u)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(indexed_element<U, N> u)
                 (
-                    compose(emplace_fn<Variant, N>{var_}, fun_)(u)
+                    return compose(emplace_fn<Variant, N>{var_}, fun_)(u)
                 )
             };
 

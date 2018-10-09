@@ -145,10 +145,9 @@ namespace ranges
 
             CPP_template(typename To, typename From)(
                 requires SizedIncrementableSentinel<To, From>)
-            auto iota_minus_(To const &to, From const &from)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            auto CPP_auto_fun(iota_minus_)(To const &to, From const &from)
             (
-                to - from
+                return to - from
             )
 
             CPP_template(typename Val)(
@@ -224,18 +223,16 @@ namespace ranges
             CPP_template(typename Val,
                 typename C = common_type_t<Val, iota_difference_t<Val>>)(
                 requires Integral<Val>)
-            auto iota_plus(Val const &v, iota_difference_t<Val> n)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            auto CPP_auto_fun(iota_plus)(Val const &v, iota_difference_t<Val> n)
             (
-                static_cast<Val>(static_cast<C>(v) + static_cast<C>(n))
+                return static_cast<Val>(static_cast<C>(v) + static_cast<C>(n))
             )
 
             CPP_template(typename Val)(
                 requires not Integral<Val>)
-            auto iota_plus(Val const &v, iota_difference_t<Val> n)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            auto CPP_auto_fun(iota_plus)(Val const &v, iota_difference_t<Val> n)
             (
-                v + n
+                return v + n
             )
         }
         /// \endcond
@@ -565,10 +562,9 @@ namespace ranges
 
                 CPP_template(typename Val)(
                     requires Integral<Val>)
-                auto operator()(Val from, Val to) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Val from, Val to) (const)
                 (
-                    detail::take_exactly_view_<iota_view<Val>, true>
+                    return detail::take_exactly_view_<iota_view<Val>, true>
                         {iota_view<Val>{from}, detail::ints_open_distance_(from, to)}
                 )
 

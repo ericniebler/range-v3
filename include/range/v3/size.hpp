@@ -37,6 +37,15 @@ namespace ranges
             struct fn : iter_size_fn
             {
             private:
+                template<typename R>
+                using cbegin_t = decltype(ranges::cbegin(*(R*)nullptr));
+                template<typename R>
+                using cend_t = decltype(ranges::cend(*(R*)nullptr));
+                template<typename R>
+                using member_size_t = detail::decay_t<decltype((*(R*)nullptr).size())>;
+                template<typename R>
+                using non_member_size_t = detail::decay_t<decltype(size((*(R*)nullptr)))>;
+
                 template<typename R, std::size_t N>
                 static constexpr std::size_t impl_(R (&)[N], int) noexcept
                 {
@@ -44,57 +53,51 @@ namespace ranges
                 }
 
                 // Prefer member if it returns Integral.
-                CPP_template(typename R,
-                    typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(std::declval<R &>().size())))(
-                    requires Integral<N>)
-                static constexpr N impl_(R &r, int)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    r.size()
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int) noexcept(noexcept(r.size())) ->
+                    CPP_ret(member_size_t<R>)(
+                        requires Integral<member_size_t<R>> && !disable_sized_range<R>::value)
+                {
+                    return r.size();
+                }
 
                 // Use ADL if it returns Integral.
-                CPP_template(typename R,
-                    typename = meta::if_c<!disable_sized_range<R>()>,
-                    typename N = decltype(aux::copy(size(std::declval<R &>()))))(
-                    requires Integral<N>)
-                static constexpr N impl_(R &r, long)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    size(r)
-                )
+                template<typename R>
+                static constexpr auto impl_(R &r, int) noexcept(noexcept(size(r))) ->
+                    CPP_ret(non_member_size_t<R>)(
+                        requires Integral<non_member_size_t<R>> && !disable_sized_range<R>::value)
+                {
+                    return size(r);
+                }
 
-                CPP_template(typename R, typename I = decltype(ranges::cbegin(std::declval<R &>())))(
-                    requires ForwardIterator<I>)
-                static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::iter_size(ranges::cbegin(r), ranges::cend(r))
-                )
+                template<typename R>
+                static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...) ->
+                    CPP_ret(size_type_t<cbegin_t<R>>)(
+                        requires ForwardIterator<cbegin_t<R>> &&
+                            SizedSentinel<cend_t<R>, cbegin_t<R>>)
+                {
+                    return ranges::iter_size(ranges::cbegin(r), ranges::cend(r));
+                }
 
             public:
                 using iter_size_fn::operator();
 
                 template<typename R>
-                constexpr auto operator()(R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &&r) (const)
                 (
-                    fn::impl_(r, 42)
+                    return fn::impl_(r, 42)
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }

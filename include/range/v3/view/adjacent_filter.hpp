@@ -151,10 +151,9 @@ namespace ranges
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires detail::AdjacentFilter<Rng, Pred>)
-                RANGES_CXX14_CONSTEXPR auto operator()(Rng &&rng, Pred pred) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
                 (
-                    adjacent_filter_view<all_t<Rng>, Pred>{
+                    return adjacent_filter_view<all_t<Rng>, Pred>{
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED

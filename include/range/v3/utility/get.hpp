@@ -15,6 +15,7 @@
 #define RANGES_V3_UTILITY_GET_HPP
 
 #include <utility>
+#include <concepts/concepts.hpp>
 #include <meta/meta.hpp>
 #include <range/v3/detail/adl_get.hpp>
 
@@ -28,16 +29,14 @@ namespace ranges
         namespace _get_
         {
             template<std::size_t I, typename TupleLike>
-            constexpr auto get(TupleLike &&t)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            constexpr auto CPP_auto_fun(get)(TupleLike &&t)
             (
-                detail::adl_get<I>(static_cast<TupleLike &&>(t))
+                return detail::adl_get<I>(static_cast<TupleLike &&>(t))
             )
             template<typename T, typename TupleLike>
-            constexpr auto get(TupleLike &&t)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            constexpr auto CPP_auto_fun(get)(TupleLike &&t)
             (
-                detail::adl_get<T>(static_cast<TupleLike &&>(t))
+                return detail::adl_get<T>(static_cast<TupleLike &&>(t))
             )
 
             template<typename T>

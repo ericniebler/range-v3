@@ -334,10 +334,9 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                constexpr auto operator()(Rng &&rng, range_difference_type_t<Rng> step) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> step) (const)
                 (
-                    stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step}
+                    return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step}
                 )
 
                 // For the purpose of better error messages:

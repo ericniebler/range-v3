@@ -125,20 +125,17 @@ namespace ranges
                 constexpr adaptor(Parent &) noexcept
                 {}
 #endif
-                RANGES_CXX14_CONSTEXPR static auto begin(Parent &rng)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR static auto CPP_auto_fun(begin)(Parent &rng)
                 (
-                    rng.get_end()
+                    return rng.get_end()
                 )
-                RANGES_CXX14_CONSTEXPR static auto end(Parent &rng)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR static auto CPP_auto_fun(end)(Parent &rng)
                 (
-                    ranges::begin(rng.base())
+                    return ranges::begin(rng.base())
                 )
-                RANGES_CXX14_CONSTEXPR auto read(iterator_t<Rng> it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(read)(iterator_t<Rng> it) (const)
                 (
-                    *--it
+                    return *--it
                 )
                 RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
                     noexcept(noexcept(--it))
@@ -230,16 +227,15 @@ namespace ranges
                 // Avoid GCC5 bug that ODR-uses std::declval?!?
                 CPP_template(typename Rng)(
                     requires BidirectionalRange<Rng>)
-                RANGES_CXX14_CONSTEXPR auto
+                RANGES_CXX14_CONSTEXPR
 #else
                 CPP_template(typename Rng)(
                     requires BidirectionalRange<Rng>)
-                constexpr auto
+                constexpr
 #endif
-                operator()(Rng &&rng) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Rng &&rng) (const)
                 (
-                    reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
+                    return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting

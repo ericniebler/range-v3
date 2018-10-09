@@ -98,17 +98,15 @@ public:
 // For making sized iterator ranges:
 template<template<typename> class I, typename It>
 RANGES_CXX14_CONSTEXPR
-auto operator-(sentinel<It, true> end, I<It> begin)
-RANGES_DECLTYPE_AUTO_RETURN
+auto CPP_auto_fun(operator-)(sentinel<It, true> end, I<It> begin)
 (
-    base(end) - base(begin)
+    return base(end) - base(begin)
 )
 template<template<typename> class I, typename It>
 RANGES_CXX14_CONSTEXPR
-auto operator-(I<It> begin, sentinel<It, true> end)
-RANGES_DECLTYPE_AUTO_RETURN
+auto CPP_auto_fun(operator-)(I<It> begin, sentinel<It, true> end)
 (
-    base(begin) - base(end)
+    return base(begin) - base(end)
 )
 
 template<class It>
@@ -397,11 +395,9 @@ operator>=(const random_access_iterator<T>& x, const random_access_iterator<U>& 
 
 template<class T, class U>
 RANGES_CXX14_CONSTEXPR
-auto
-operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
-RANGES_DECLTYPE_AUTO_RETURN
+auto CPP_auto_fun(operator-)(const random_access_iterator<T>& x, const random_access_iterator<U>& y)
 (
-    x.base() - y.base()
+    return x.base() - y.base()
 )
 
 template<typename It, bool Sized = false>

@@ -49,10 +49,9 @@ namespace
     };
 
     template<typename T>
-    constexpr auto twice(T t)
-    RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+    constexpr auto CPP_auto_fun(twice)(T t)
     (
-        ranges::view::concat(ranges::view::single(t), ranges::view::single(t))
+        return ranges::view::concat(ranges::view::single(t), ranges::view::single(t))
     )
 
     // https://github.com/ericniebler/range-v3/issues/283

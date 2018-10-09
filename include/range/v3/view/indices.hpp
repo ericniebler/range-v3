@@ -38,19 +38,17 @@ namespace ranges
 
                 CPP_template(typename Val)(
                     requires Integral<Val>)
-                auto operator()(Val from, Val to) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Val from, Val to) (const)
                 (
-                    detail::take_exactly_view_<iota_view<Val>, true>
+                    return detail::take_exactly_view_<iota_view<Val>, true>
                         {iota_view<Val>{from}, detail::ints_open_distance_(from, to)}
                 )
 
                 CPP_template(typename Val, typename Self = indices_fn)(
                     requires Integral<Val>)
-                auto operator()(Val to) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Val to) (const)
                 (
-                    Self{}(Val(), to)
+                    return Self{}(Val(), to)
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -77,19 +75,17 @@ namespace ranges
             {
                 CPP_template(typename Val)(
                     requires Integral<Val>)
-                auto operator()(Val from, Val to) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Val from, Val to) (const)
                 (
-                    detail::take_exactly_view_<iota_view<Val>, true>
+                    return detail::take_exactly_view_<iota_view<Val>, true>
                         {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)}
                 )
 
                 CPP_template(typename Val, typename Self = closed_indices_fn)(
                     requires Integral<Val>)
-                auto operator()(Val to) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(Val to) (const)
                 (
-                    Self{}(Val(), to)
+                    return Self{}(Val(), to)
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

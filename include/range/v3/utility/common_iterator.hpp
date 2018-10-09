@@ -135,13 +135,12 @@ namespace ranges
                 detail::cidata(that).visit_i(emplace_fn{&data_});
                 return *this;
             }
-            reference_t<I> operator*()
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                *ranges::get<0>(data_)
-            )
+            reference_t<I> operator*() noexcept(noexcept(reference_t<I>(*std::declval<I &>())))
+            {
+                return *ranges::get<0>(data_);
+            }
             CPP_member
-            auto operator*() const noexcept(noexcept(*ranges::get<0>(data_))) ->
+            auto operator*() const noexcept(noexcept(reference_t<I>(*std::declval<I const &>()))) ->
                 CPP_ret(reference_t<I>)(
                     requires Readable<I const>)
             {
@@ -149,9 +148,8 @@ namespace ranges
             }
             template<typename J = I>
             auto operator->() const
-                noexcept(noexcept(common_iterator::operator_arrow_(ranges::get<0>(data_), 42))) ->
-                CPP_ret(decltype(common_iterator::operator_arrow_(
-                    (J const &) ranges::get<0>(data_), 42)))(
+                noexcept(noexcept(common_iterator::operator_arrow_(std::declval<I const &>(), 42))) ->
+                CPP_ret(decltype(common_iterator::operator_arrow_(std::declval<J const &>(), 42)))(
                     requires Readable<J>)
             {
                 return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);

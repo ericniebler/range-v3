@@ -31,49 +31,43 @@ namespace ranges
             private:
                 // Prefer member if it is valid.
                 template<typename R>
-                static constexpr auto impl_(R &r, detail::priority_tag<2>)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                static constexpr auto CPP_auto_fun(impl_)(R &r, detail::priority_tag<2>)
                 (
-                    bool(r.empty())
+                    return bool(r.empty())
                 )
 
                 // Fall back to size == 0.
                 template<typename R>
-                static constexpr auto impl_(R &r, detail::priority_tag<1>)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                static constexpr auto CPP_auto_fun(impl_)(R &r, detail::priority_tag<1>)
                 (
-                    ranges::size(r) == 0
+                    return ranges::size(r) == 0
                 )
 
                 // Fall further back to begin == end.
                 CPP_template(typename R)(
                     requires ForwardRange<R>)
-                static constexpr bool impl_(R &r, detail::priority_tag<0>)
-                RANGES_AUTO_RETURN_NOEXCEPT
+                static constexpr auto CPP_auto_fun(impl_)(R &r, detail::priority_tag<0>)
                 (
-                    ranges::begin(r) == ranges::end(r)
+                    return bool(ranges::begin(r) == ranges::end(r))
                 )
 
             public:
                 template<typename R>
-                constexpr auto operator()(R &&r) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(R &&r) (const)
                 (
-                    fn::impl_(r, detail::priority_tag<2>{})
+                    return fn::impl_(r, detail::priority_tag<2>{})
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(std::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
-                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
-                    Fn()(ref.get())
+                    return Fn()(ref.get())
                 )
             };
         }

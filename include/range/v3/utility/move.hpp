@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/associated_types.hpp>
@@ -86,19 +87,17 @@ namespace ranges
             {
                 template<typename I,
                     typename = meta::if_c<is_adl_indirectly_movable_<I &>::value>>
-                auto operator()(I &&i) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(I &&i) (const)
                 (
-                    iter_move(i)
+                    return iter_move(i)
                 )
 
                 template<typename I,
                     typename = meta::if_c<!is_adl_indirectly_movable_<I &>::value>,
                     typename R = reference_t<I>>
-                auto operator()(I &&i) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                auto CPP_auto_fun(operator())(I &&i) (const)
                 (
-                    static_cast<aux::move_t<R>>(aux::move(*i))
+                    return static_cast<aux::move_t<R>>(aux::move(*i))
                 )
             };
         }
@@ -110,19 +109,6 @@ namespace ranges
         }
 
         /// \cond
-        struct indirect_move_fn
-        {
-            template<typename I>
-            RANGES_DEPRECATED("Please replace uses of ranges::indirect_move with ranges::iter_move.")
-            void operator()(I &&i) const
-            RANGES_AUTO_RETURN_NOEXCEPT
-            (
-                ranges::iter_move((I &&) i)
-            )
-        };
-
-        RANGES_INLINE_VARIABLE(indirect_move_fn, indirect_move)
-
         namespace detail
         {
             template<typename I, typename O>

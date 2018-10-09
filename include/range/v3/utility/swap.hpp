@@ -117,10 +117,10 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
                 operator()(T &&t, U &&u) const
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    (void) iter_swap((T &&) t, (U &&) u)
-                )
+                    noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
+                {
+                    (void) iter_swap((T &&) t, (U &&) u);
+                }
 
                 // *Otherwise*, for Readable types with swappable reference
                 // types, call ranges::swap(*a, *b)
@@ -130,10 +130,10 @@ namespace ranges
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
                     is_swappable_with<reference_t<I0>, reference_t<I1>>::value>
                 operator()(I0 &&a, I1 &&b) const
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    ranges::swap(*a, *b)
-                )
+                    noexcept(noexcept(ranges::swap(*a, *b)))
+                {
+                    ranges::swap(*a, *b);
+                }
 
                 // *Otherwise*, for Readable types that are mutually
                 // IndirectlyMovableStorable, implement as:

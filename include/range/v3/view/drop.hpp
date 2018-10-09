@@ -168,10 +168,9 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> n) (const)
                 (
-                    drop_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
+                    return drop_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Rng, typename T)(

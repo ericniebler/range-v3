@@ -70,10 +70,9 @@ namespace ranges
                 }
             public:
                 template<typename Rng>
-                constexpr auto operator()(Rng &rng) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                constexpr auto CPP_auto_fun(operator())(Rng &rng) (const)
                 (
-                    data_fn::impl(rng, detail::priority_tag<2>{})
+                    return data_fn::impl(rng, detail::priority_tag<2>{})
                 )
             };
         }

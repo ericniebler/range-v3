@@ -49,10 +49,9 @@ namespace ranges
                 struct impl
                 {
                     template<typename...Ts, typename V = View>
-                    static auto bind(Ts &&...ts)
-                    RANGES_DECLTYPE_AUTO_RETURN
+                    static auto CPP_auto_fun(bind)(Ts &&...ts)
                     (
-                        V::bind(static_cast<Ts &&>(ts)...)
+                        return V::bind(static_cast<Ts &&>(ts)...)
                     )
                 };
             };
@@ -96,10 +95,9 @@ namespace ranges
                 // Piping requires range arguments or lvalue containers.
                 CPP_template(typename Rng, typename Vw)(
                     requires ViewConcept<View, Rng>)
-                static auto pipe(Rng &&rng, Vw &&v)
-                RANGES_DECLTYPE_AUTO_RETURN
+                static auto CPP_auto_fun(pipe)(Rng &&rng, Vw &&v)
                 (
-                    v.view_(static_cast<Rng &&>(rng))
+                    return v.view_(static_cast<Rng &&>(rng))
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -129,18 +127,16 @@ namespace ranges
                 // Calling directly requires View arguments or lvalue containers.
                 CPP_template(typename Rng, typename...Rest)(
                     requires ViewConcept<View const, Rng, Rest...>)
-                auto operator()(Rng &&rng, Rest &&... rest) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Rng &&rng, Rest &&... rest) (const)
                 (
-                    view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...)
+                    return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...)
                 )
 
                 // Currying overload.
                 template<typename...Ts, typename V = View>
-                auto operator()(Ts &&... ts) const
-                RANGES_DECLTYPE_AUTO_RETURN
+                auto CPP_auto_fun(operator())(Ts &&... ts) (const)
                 (
-                    make_view(view_access::impl<V>::bind(view_,
+                    return make_view(view_access::impl<V>::bind(view_,
                         static_cast<Ts &&>(ts)...))
                 )
             };
