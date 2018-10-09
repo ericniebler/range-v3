@@ -30,7 +30,8 @@
             ],
             "compilerPath": "/Users/eniebler/llvm-install/bin/clang++",
             "cStandard": "c11",
-            "cppStandard": "c++11"
+            "cppStandard": "c++11",
+            "configurationProvider": "vector-of-bool.cmake-tools"
         },
         {
             "name": "Linux",

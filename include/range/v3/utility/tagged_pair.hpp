@@ -42,8 +42,7 @@ namespace ranges
             {
                 wrap_base() = default;
                 using Base::Base;
-#if !defined(__clang__) || __clang_major__ > 3 || \
-    (__clang_major__ == 3 && __clang_minor__ > 8)
+#if !defined(__clang__) || __clang_major__ > 3
                 CPP_member
                 constexpr CPP_ctor(wrap_base)(Base&& base)(
                     noexcept(std::is_nothrow_move_constructible<Base>::value)
@@ -57,7 +56,7 @@ namespace ranges
                   : Base(base)
                 {}
 #else
-                // Clang 3.6, 3.7, 3.8 have a problem with inheriting constructors
+                // Clang 3.x have a problem with inheriting constructors
                 // that causes the declarations in the preceeding PP block to get
                 // instantiated too early.
                 CPP_template(typename B = Base)(
@@ -157,6 +156,7 @@ namespace ranges
         public:
             tagged() = default;
             using base_t::base_t;
+#if !defined(__clang__) || __clang_major__ > 3
             template<typename Other>
             constexpr CPP_ctor(tagged)(tagged<Other, Tags...> && that)(
                 noexcept(std::is_nothrow_constructible<Base, Other>::value)
@@ -169,6 +169,23 @@ namespace ranges
                 requires can_convert<Other>::value)
               : base_t(static_cast<Other const &>(that))
             {}
+#else
+            // Clang 3.x have a problem with inheriting constructors
+            // that causes the declarations in the preceeding PP block to get
+            // instantiated too early.
+            CPP_template(typename Other)(
+                requires can_convert<Other>::value)
+            constexpr tagged(tagged<Other, Tags...> && that)
+                noexcept(std::is_nothrow_constructible<Base, Other>::value)
+              : base_t(static_cast<Other &&>(that))
+            {}
+            CPP_template(typename Other)(
+                requires can_convert<Other>::value)
+            constexpr tagged(tagged<Other, Tags...> const &that)
+                noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
+              : base_t(static_cast<Other const &>(that))
+            {}
+#endif
             template<typename Other>
             RANGES_CXX14_CONSTEXPR auto operator=(tagged<Other, Tags...> && that)
                 noexcept(noexcept(std::declval<Base &>() = static_cast<Other &&>(that))) ->
@@ -178,7 +195,7 @@ namespace ranges
                 static_cast<Base &>(*this) = static_cast<Other &&>(that);
                 return *this;
             }
-            template<typename Other, typename = meta::if_<can_convert<Other>>>
+            template<typename Other>
             RANGES_CXX14_CONSTEXPR auto operator=(tagged<Other, Tags...> const &that)
                 noexcept(noexcept(std::declval<Base &>() = static_cast<Other const &>(that))) ->
                 CPP_ret(tagged &)(
@@ -197,21 +214,22 @@ namespace ranges
                 static_cast<Base &>(*this) = static_cast<U&&>(u);
                 return *this;
             }
-            CPP_member
+            template<typename B = Base>
             RANGES_CXX14_CONSTEXPR
             auto swap(tagged &that)
-                noexcept(is_nothrow_swappable<Base>::value) ->
+                noexcept(is_nothrow_swappable<B>::value) ->
                 CPP_ret(void)(
-                    requires is_swappable<Base>::value)
+                    requires is_swappable<B>::value)
             {
                 ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
             }
 #if !RANGES_BROKEN_CPO_LOOKUP
-            CPP_broken_friend_member
+            template<typename B = Base>
             friend RANGES_CXX14_CONSTEXPR
             auto swap(tagged &x, tagged &y)
-                noexcept(is_nothrow_swappable<Base>::value) ->
-                CPP_broken_friend_ret(void)(requires is_swappable<Base>::value)
+                noexcept(is_nothrow_swappable<B>::value) ->
+                CPP_broken_friend_ret(void)(
+                    requires is_swappable<B>::value)
             {
                 x.swap(y);
             }
