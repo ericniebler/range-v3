@@ -218,41 +218,38 @@ namespace ranges
                 }
 
                 // Overloads for the pipe syntax: rng | view::slice(from,to)
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(slice_fn slice, Int from, Int to)(
                     requires Integral<Int>)
-                static auto bind(slice_fn slice, Int from, Int to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
-                )
-                CPP_template(typename Int)(
+                {
+                    return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                }
+                template<typename Int>
+                static auto CPP_fun(bind)(slice_fn slice, Int from, detail::from_end_<Int> to)(
                     requires Integral<Int>)
-                static auto bind(slice_fn slice, Int from, detail::from_end_<Int> to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
-                )
-                CPP_template(typename Int)(
+                {
+                    return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                }
+                template<typename Int>
+                static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
+                    detail::from_end_<Int> to)(
                     requires Integral<Int>)
-                static auto bind(slice_fn slice, detail::from_end_<Int> from, detail::from_end_<Int> to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
-                )
-                CPP_template(typename Int)(
+                {
+                    return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                }
+                template<typename Int>
+                static auto CPP_fun(bind)(slice_fn, Int from, end_fn)(
                     requires Integral<Int>)
-                static auto bind(slice_fn, Int from, end_fn)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(ranges::view::drop_exactly, std::placeholders::_1, from))
-                )
-                CPP_template(typename Int)(
+                {
+                    return make_pipeable(std::bind(ranges::view::drop_exactly,
+                        std::placeholders::_1, from));
+                }
+                template<typename Int>
+                static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from, end_fn to)(
                     requires Integral<Int>)
-                static auto bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
-                )
+                {
+                    return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
+                }
 
             public:
                 // slice(rng, 2, 4)

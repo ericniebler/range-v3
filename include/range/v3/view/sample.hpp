@@ -209,13 +209,14 @@ namespace ranges
             class sample_fn
             {
                 friend view_access;
-                CPP_template(typename Size, typename URNG = detail::default_random_engine)(
+                template<typename Size, typename URNG = detail::default_random_engine>
+                static auto CPP_fun(bind)(sample_fn fn, Size n,
+                    URNG &urng = detail::get_random_engine())(
                     requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
-                static auto bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(fn, std::placeholders::_1, n, bind_forward<URNG &>(urng)))
-                )
+                {
+                    return make_pipeable(std::bind(fn, std::placeholders::_1, n,
+                        bind_forward<URNG &>(urng)));
+                }
 
             public:
                 CPP_template(typename Rng, typename URNG = detail::default_random_engine)(

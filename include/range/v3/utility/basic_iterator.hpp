@@ -151,10 +151,11 @@ namespace ranges
                 }
                 basic_proxy_reference_() = default;
                 basic_proxy_reference_(basic_proxy_reference_ const &) = default;
-                CPP_template(typename OtherCur)(
-                    requires ConvertibleTo<OtherCur *, Cur *>)
+                template<typename OtherCur>
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference_(basic_proxy_reference<OtherCur> const &that) noexcept
+                CPP_ctor(basic_proxy_reference_)(basic_proxy_reference<OtherCur> const &that)(
+                    noexcept(true)
+                    requires ConvertibleTo<OtherCur *, Cur *>)
                   : cur_(that.cur_)
                 {}
                 RANGES_CXX14_CONSTEXPR
@@ -436,11 +437,11 @@ namespace ranges
         public:
             using typename assoc_types_::difference_type;
             constexpr basic_iterator() = default;
-            CPP_template(typename OtherCur)(
+            template<typename OtherCur>
+            RANGES_CXX14_CONSTEXPR
+            CPP_ctor(basic_iterator)(basic_iterator<OtherCur> that)(
                 requires ConvertibleTo<OtherCur, Cur> &&
                     Constructible<mixin_t, OtherCur>)
-            RANGES_CXX14_CONSTEXPR
-            basic_iterator(basic_iterator<OtherCur> that)
               : mixin_t{std::move(that.pos())}
             {}
             // Mix in any additional constructors provided by the mixin

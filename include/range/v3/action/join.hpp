@@ -53,9 +53,9 @@ namespace ranges
             struct join_fn
             {
             public:
-                CPP_template(typename Rng)(
+                template<typename Rng>
+                auto operator()(Rng &&rng) const -> CPP_ret(join_action_value_t_<Rng>)(
                     requires JoinActionConcept<Rng>)
-                join_action_value_t_<Rng> operator()(Rng &&rng) const
                 {
                     join_action_value_t_<Rng> ret;
                     auto end = ranges::end(rng);
@@ -65,9 +65,9 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
+                template<typename Rng>
+                auto operator()(Rng &&) const -> CPP_ret(void)(
                     requires not JoinActionConcept<Rng>)
-                void operator()(Rng &&) const
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which action::join operates must be a model of the "

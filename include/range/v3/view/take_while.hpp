@@ -107,11 +107,10 @@ namespace ranges
                 friend view_access;
                 template<typename Pred>
                 static auto bind(iter_take_while_fn iter_take_while, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(iter_take_while, std::placeholders::_1,
-                        protect(std::move(pred))))
-                )
+                {
+                    return make_pipeable(std::bind(iter_take_while, std::placeholders::_1,
+                        protect(std::move(pred))));
+                }
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires IterPredicateRange<Rng, Pred>)
@@ -151,11 +150,10 @@ namespace ranges
                 friend view_access;
                 template<typename Pred>
                 static auto bind(take_while_fn take_while, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(take_while, std::placeholders::_1,
-                        protect(std::move(pred))))
-                )
+                {
+                    return make_pipeable(std::bind(take_while, std::placeholders::_1,
+                        protect(std::move(pred))));
+                }
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires IndirectPredicateRange<Rng, Pred>)

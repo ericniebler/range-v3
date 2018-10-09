@@ -46,14 +46,13 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename C, typename P = ident)(
+                template<typename C, typename P = ident>
+                static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})(
                     requires not Range<C>)
-                static auto bind(remove_if_fn remove_if, C pred, P proj = P{})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)))
-                )
+                {
+                    return std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
+                        protect(std::move(proj)));
+                }
             public:
                 CPP_template(typename Rng, typename C, typename P = ident)(
                     requires RemoveIfActionConcept<Rng, C, P>)

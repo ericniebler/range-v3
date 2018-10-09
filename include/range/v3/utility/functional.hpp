@@ -258,63 +258,29 @@ namespace ranges
               : pred_(static_cast<T &&>(pred))
             {}
 
-// HACKHACKHACK GCC 4.8 is extremely confused about && and const&& qualifiers.
-// Luckily they are rare - we'll simply break them.
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
-            CPP_template(typename ...Args)(
-                requires Predicate<FD &, Args...>)
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args)
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
+            template<typename ...Args>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) & ->
+                CPP_ret(bool)(
+                    requires Predicate<FD &, Args...>)
             {
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
             /// \overload
-            CPP_template(typename ...Args)(
-                requires Predicate<FD const &, Args...>)
-            constexpr auto operator()(Args &&...args) const
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
-            {
-                return !invoke(pred_, static_cast<Args &&>(args)...);
-            }
-#else // ^^^ GCC <= 4.8 / GCC > 4.8 vvvv
-            CPP_template(typename ...Args)(
-                requires Predicate<FD &, Args...>)
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD &>(), static_cast<Args &&>(args)...))
+            template<typename ...Args>
+            constexpr auto operator()(Args &&...args) const & ->
+                CPP_ret(bool)(
+                    requires Predicate<FD const &, Args...>)
             {
                 return !invoke(pred_, static_cast<Args &&>(args)...);
             }
             /// \overload
-            CPP_template(typename ...Args)(
-                requires Predicate<FD const &, Args...>)
-            constexpr auto operator()(Args &&...args) const &
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD const &>(), static_cast<Args &&>(args)...))
-            {
-                return !invoke(pred_, static_cast<Args &&>(args)...);
-            }
-            /// \overload
-            CPP_template(typename ...Args)(
-                requires Predicate<FD, Args...>)
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) &&
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD>(), static_cast<Args &&>(args)...))
+            template<typename ...Args>
+            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) && ->
+                CPP_ret(bool)(
+                    requires Predicate<FD, Args...>)
             {
                 return !invoke(static_cast<FD &&>(pred_), static_cast<Args &&>(args)...);
             }
-            /// \overload
-            CPP_template(typename ...Args)(
-                requires Predicate<FD const, Args...>)
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) const &&
-            RANGES_DECLTYPE_NOEXCEPT(
-                !invoke(std::declval<FD const>(), static_cast<Args &&>(args)...))
-            {
-                return !invoke(static_cast<FD const &&>(pred_), static_cast<Args &&>(args)...);
-            }
-#endif // GCC
         };
 
         template<typename Pred>
@@ -322,9 +288,10 @@ namespace ranges
 
         struct not_fn_fn
         {
-            CPP_template(typename Pred, typename FD = detail::decay_t<Pred>)(
-                requires MoveConstructible<FD> && Constructible<FD, Pred>)
-            constexpr logical_negate_<FD> operator()(Pred &&pred) const
+            template<typename Pred, typename FD = detail::decay_t<Pred>>
+            constexpr auto operator()(Pred &&pred) const ->
+                CPP_ret(logical_negate_<FD>)(
+                    requires MoveConstructible<FD> && Constructible<FD, Pred>)
             {
                 return logical_negate_<FD>{(Pred &&) pred};
             }
@@ -691,19 +658,21 @@ namespace ranges
         };
 
         // Evaluate the pipe with an argument
-        CPP_template(typename Arg, typename Pipe)(
+        template<typename Arg, typename Pipe>
+        auto operator|(Arg &&arg, Pipe pipe) ->
+            CPP_ret(decltype(pipeable_access::impl<Pipe>::pipe(
+                std::declval<Arg>(), std::declval<Pipe &>())))(
             requires not is_pipeable<Arg>::value && is_pipeable<Pipe>::value)
-        decltype(pipeable_access::impl<Pipe>::pipe(std::declval<Arg>(), std::declval<Pipe &>()))
-        operator|(Arg &&arg, Pipe pipe)
         {
             return pipeable_access::impl<Pipe>::pipe(static_cast<Arg &&>(arg), pipe);
         }
 
         // Compose two pipes
-        CPP_template(typename Pipe0, typename Pipe1)(
+        template<typename Pipe0, typename Pipe1>
+        auto operator|(Pipe0 pipe0, Pipe1 pipe1) ->
+            CPP_ret(decltype(make_pipeable(
+                std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))(
             requires is_pipeable<Pipe0>::value && is_pipeable<Pipe1>::value)
-        decltype(make_pipeable(std::declval<detail::composed_pipe<Pipe0, Pipe1>>()))
-        operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
         }
@@ -733,9 +702,9 @@ namespace ranges
 
         struct ref_fn : pipeable<ref_fn>
         {
-            CPP_template(typename T)(
+            template<typename T>
+            auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)(
                 requires not is_reference_wrapper_t<T>::value)
-            reference_wrapper<T> operator()(T &t) const
             {
                 return {t};
             }
@@ -762,9 +731,9 @@ namespace ranges
 
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {
-            CPP_template(typename T)(
+            template<typename T>
+            auto operator()(T &&t) const noexcept -> CPP_ret(T &&)(
                 requires not is_reference_wrapper<T>::value)
-            T && operator()(T &&t) const noexcept
             {
                 return static_cast<T &&>(t);
             }
@@ -822,16 +791,16 @@ namespace ranges
 
         struct protect_fn
         {
-            CPP_template(typename F)(
+            template<typename F>
+            auto operator()(F &&f) const -> CPP_ret(detail::protect<uncvref_t<F>>)(
                 requires std::is_bind_expression<uncvref_t<F>>::value)
-            detail::protect<uncvref_t<F>> operator()(F &&f) const
             {
                 return {static_cast<F &&>(f)};
             }
             /// \overload
-            CPP_template(typename F)(
+            template<typename F>
+            auto operator()(F &&f) const -> CPP_ret(F)(
                 requires not std::is_bind_expression<uncvref_t<F>>::value)
-            F operator()(F &&f) const
             {
                 return static_cast<F &&>(f);
             }
@@ -858,25 +827,35 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename...Args>
-            constexpr
-            auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::declval<Args>()...))
+            constexpr auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
+                invoke_result_t<ImplFn const &, std::initializer_list<V0>, Args...>
             {
                 return base()(std::move(rng0), static_cast<Args &&>(args)...);
             }
             /// \overload
             template<typename Rng0, typename V1, typename...Args>
-            constexpr
-            auto operator()(Rng0 &&rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), std::move(rng1), std::declval<Args>()...))
+            constexpr auto operator()(
+                Rng0 &&rng0,
+                std::initializer_list<V1> &&rng1,
+                Args &&...args) const ->
+                invoke_result_t<ImplFn const &, Rng0, std::initializer_list<V1>, Args...>
             {
-                return base()(static_cast<Rng0 &&>(rng0), std::move(rng1), static_cast<Args &&>(args)...);
+                return base()(
+                    static_cast<Rng0 &&>(rng0),
+                    std::move(rng1),
+                    static_cast<Args &&>(args)...);
             }
             /// \overload
             template<typename V0, typename V1, typename...Args>
-            constexpr
-            auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::move(rng1), std::declval<Args>()...))
+            constexpr auto operator()(
+                std::initializer_list<V0> &&rng0,
+                std::initializer_list<V1> &&rng1,
+                Args &&...args) const ->
+                invoke_result_t<
+                    ImplFn const &,
+                    std::initializer_list<V0>,
+                    std::initializer_list<V1>,
+                    Args...>
             {
                 return base()(std::move(rng0), std::move(rng1), static_cast<Args &&>(args)...);
             }

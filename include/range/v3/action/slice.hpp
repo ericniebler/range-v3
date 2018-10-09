@@ -46,13 +46,12 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename D)(
+                template<typename D>
+                static auto CPP_fun(bind)(slice_fn slice, D from, D to)(
                     requires Integral<D>)
-                static auto bind(slice_fn slice, D from, D to)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(slice, std::placeholders::_1, from, to)
-                )
+                {
+                    return std::bind(slice, std::placeholders::_1, from, to);
+                }
             public:
                 // TODO support slice from end.
                 CPP_template(typename Rng,

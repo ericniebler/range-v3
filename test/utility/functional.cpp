@@ -16,12 +16,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-// GCC 4.8 is extremely confused about && and const&& qualifiers. Luckily they
-// are rare - we'll simply break them.
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && __GNUC_MINOR__ < 9
-#define GCC_4_8_WORKAROUND 1
-#endif
-
 CPP_assert(ranges::Constructible<ranges::reference_wrapper<int>, int&>);
 CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int>, int&&>);
 CPP_assert(!ranges::Constructible<ranges::reference_wrapper<int &&>, int&>);
@@ -229,28 +223,9 @@ int main()
         CHECK(last_call == k);
     }
     {
-#ifdef GCC_4_8_WORKAROUND
-        constexpr auto k = kind::lvalue;
-#else
         constexpr auto k = kind::rvalue;
-#endif
         using F = fn<k>;
         auto f = ranges::not_fn(F{});
-        CHECK(std::move(f)() == true); // xvalue
-        CHECK(last_call == k);
-
-        CHECK(decltype(f){}() == true); // prvalue
-        CHECK(last_call == k);
-    }
-
-    {
-#ifdef GCC_4_8_WORKAROUND
-        constexpr auto k = kind::const_lvalue;
-#else
-        constexpr auto k = kind::const_rvalue;
-#endif
-        using F = fn<k>;
-        auto const f = ranges::not_fn(F{});
         CHECK(std::move(f)() == true); // xvalue
         CHECK(last_call == k);
 

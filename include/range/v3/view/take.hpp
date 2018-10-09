@@ -116,13 +116,12 @@ namespace ranges
                         is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
 
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(take_fn take, Int n)(
                     requires Integral<Int>)
-                static auto bind(take_fn take, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(take, std::placeholders::_1, n))
-                )
+                {
+                    return make_pipeable(std::bind(take, std::placeholders::_1, n));
+                }
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Int)(

@@ -47,13 +47,13 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename Gen)(
+                template<typename Gen>
+                static auto CPP_fun(bind)(shuffle_fn shuffle, Gen &&gen)(
                     requires UniformRandomNumberGenerator<Gen>)
-                static auto bind(shuffle_fn shuffle, Gen &&gen)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(shuffle, std::placeholders::_1, bind_forward<Gen>(gen))
-                )
+                {
+                    return std::bind(shuffle, std::placeholders::_1,
+                        bind_forward<Gen>(gen));
+                }
             public:
                 CPP_template(typename Rng, typename Gen)(
                     requires ShuffleActionConcept<Rng, Gen>)

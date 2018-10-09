@@ -38,9 +38,7 @@ namespace ranges
                     return {all(static_cast<Rng &&>(rng)), not_fn(std::move(pred))};
                 }
                 template<typename Pred>
-                auto operator()(Pred pred) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1,
-                        protect(std::move(pred)))))
+                auto operator()(Pred pred) const
                 {
                     return make_pipeable(std::bind(*this, std::placeholders::_1,
                         protect(std::move(pred))));

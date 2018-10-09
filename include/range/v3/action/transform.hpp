@@ -43,14 +43,13 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename F, typename P = ident)(
+                template<typename F, typename P = ident>
+                static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
                     requires not Range<F>)
-                static auto bind(transform_fn transform, F fun, P proj = P{})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
-                        protect(std::move(proj)))
-                )
+                {
+                    return std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
+                        protect(std::move(proj)));
+                }
             public:
                 CPP_template(typename Rng, typename F, typename P = ident)(
                     requires TransformActionConcept<Rng, F, P>)

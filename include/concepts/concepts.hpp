@@ -138,10 +138,10 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_assert_msg static_assert
 
 ////////////////////////////////////////////////////////////////////////////////
-// CPP_DEF
+// CPP_def
 //   For defining concepts with a syntax symilar to C++20. For example:
 //
-//     CPP_DEF(
+//     CPP_def(
 //         // The Assignable concept from the C++20
 //         template(typename T, typename U)
 //         concept Assignable,
@@ -357,7 +357,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_template
 // Usage:
-//   CPP_template (class A, typename B)
+//   CPP_template (typename A, typename B)
 //     (requires Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
@@ -511,6 +511,105 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #endif
 
+////////////////////////////////////////////////////////////////////////////////
+// CPP_fun
+#define CPP_FUN_IMPL_1_(...)                                                    \
+    (__VA_ARGS__                                                                \
+        CPP_PP_COMMA_IIF(                                                       \
+            CPP_PP_NOT(CPP_PP_IS_NOT_EMPTY(__VA_ARGS__)))                       \
+    CPP_FUN_IMPL_REQUIRES                                                       \
+    /**/
+
+#define CPP_FUN_IMPL_REQUIRES(...)                                              \
+    CPP_FUN_IMPL_SELECT_CONST_(__VA_ARGS__,)(__VA_ARGS__)                       \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_CONST_(MAYBE_CONST, ...)                            \
+    CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_,                                      \
+          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+            CPP_PP_PROBE_CONST_PROBE_, MAYBE_CONST)))                           \
+    /**/
+
+#define CPP_PP_PROBE_CONST_PROBE_const CPP_PP_PROBE(~)
+
+#define CPP_FUN_IMPL_SELECT_CONST_1(...)                                        \
+    CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(CPP_PP_CAT(                             \
+        CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__),)(CPP_PP_CAT(                     \
+        CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__))                                  \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)                \
+    CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                             \
+          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
+    /**/
+
+#define CPP_PP_PROBE_NOEXCEPT_PROBE_noexcept CPP_PP_PROBE(~)
+
+#define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
+    std::enable_if_t<bool(CPP_PP_CAT(                                           \
+        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)),                              \
+        ::concepts::detail::Nil> = {}) const                                    \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
+    std::enable_if_t<bool(CPP_PP_CAT(                                           \
+        CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(                                 \
+        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))),                             \
+        ::concepts::detail::Nil> = {}) const CPP_PP_EXPAND(                     \
+            CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
+    /**/
+
+#define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
+#define CPP_FUN_IMPL_SHOW_NOEXCEPT_noexcept(...)                                \
+    noexcept(__VA_ARGS__) CPP_PP_EAT CPP_PP_LPAREN                              \
+    /**/
+
+#define CPP_FUN_IMPL_EAT_NOEXCEPT_noexcept(...)
+
+#define CPP_FUN_IMPL_EXPAND_NOEXCEPT_noexcept(...)                              \
+    noexcept(__VA_ARGS__)                                                       \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_CONST_0(...)                                        \
+    CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(__VA_ARGS__,)(__VA_ARGS__)           \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)             \
+    CPP_PP_CAT(CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_,                          \
+          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+            CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
+    std::enable_if_t<bool(CPP_PP_CAT(                                           \
+        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)),                              \
+        ::concepts::detail::Nil> = {})                                          \
+    /**/
+
+#define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
+    std::enable_if_t<bool(CPP_PP_CAT(                                           \
+        CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(                                 \
+        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))),                             \
+        ::concepts::detail::Nil> = {}) CPP_PP_EXPAND(                           \
+            CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
+    /**/
+
+#define CPP_FUN_IMPL_EAT_CONST_const
+#define CPP_FUN_IMPL_EAT_REQUIRES_requires
+
+////////////////////////////////////////////////////////////////////////////////
+// CPP_fun
+// Usage:
+//   template <typename A, typename B>
+//   void CPP_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt
+//       requires Concept1<A> && Concept2<B>)
+//   {}
+//
+// Note: This macro cannot be used when the last function argument is a
+//       parameter pack.
+#define CPP_fun(X) X CPP_FUN_IMPL_1_
+
 namespace concepts 
 {
     inline namespace v1
@@ -550,7 +649,8 @@ namespace concepts
             template<typename T, typename U>
             struct And;
             template<typename T>
-            struct Not {
+            struct Not
+            {
                 explicit constexpr operator bool() const noexcept {
                     return !(bool) T{};
                 }
@@ -755,7 +855,6 @@ namespace concepts
                         t = (U &&) u,
                         requires_<Same<T, decltype(t = (U &&) u)>>
                     ) &&
-
                     std::is_lvalue_reference<T>::value
             );
 
@@ -826,8 +925,8 @@ namespace concepts
                     (
                         t < u ? 1 : 0,
                         t > u ? 1 : 0,
-                        (u <= t) ? 1 : 0,
-                        (u >= t) ? 1 : 0
+                        u <= t ? 1 : 0,
+                        u >= t ? 1 : 0
                     ) &&
                     EqualityComparable<T>
             );
@@ -840,12 +939,12 @@ namespace concepts
                     (
                         t < u ? 1 : 0,
                         t > u ? 1 : 0,
-                        (t <= u) ? 1 : 0,
-                        (t >= u) ? 1 : 0,
+                        t <= u ? 1 : 0,
+                        t >= u ? 1 : 0,
                         u < t ? 1 : 0,
                         u > t ? 1 : 0,
-                        (u <= t) ? 1 : 0,
-                        (u >= t) ? 1 : 0
+                        u <= t ? 1 : 0,
+                        u >= t ? 1 : 0
                     ) &&
                     StrictTotallyOrdered<T> &&
                     StrictTotallyOrdered<U> &&

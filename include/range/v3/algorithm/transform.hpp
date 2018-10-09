@@ -61,78 +61,74 @@ namespace ranges
         struct transform_fn
         {
             // Single-range variant
-            CPP_template(typename I, typename S, typename O, typename F, typename P = ident)(
-                requires Sentinel<S, I> && Transformable1<I, O, F, P>)
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O out, F fun, P proj = P{}) const
+            template<typename I, typename S, typename O, typename F, typename P = ident>
+            auto operator()(I begin, S end, O out, F fun, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires Sentinel<S, I> && Transformable1<I, O, F, P>)
             {
                 for(; begin != end; ++begin, ++out)
                     *out = invoke(fun, invoke(proj, *begin));
                 return {begin, out};
             }
 
-            CPP_template(typename Rng, typename O, typename F, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng> && Transformable1<I, O, F, P>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out, F fun, P proj = P{}) const
+            template<typename Rng, typename O, typename F, typename P = ident>
+            auto operator()(Rng &&rng, O out, F fun, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires Range<Rng> && Transformable1<iterator_t<Rng>, O, F, P>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(fun),
                     std::move(proj));
             }
 
             // Double-range variant, 4-iterator version
-            CPP_template(typename I0, typename S0, typename I1, typename S1, typename O, typename F,
-                typename P0 = ident, typename P1 = ident)(
-                requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
-                    Transformable2<I0, I1, O, F, P0, P1>)
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
-            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
-                P0 proj0 = P0{}, P1 proj1 = P1{}) const
+            template<typename I0, typename S0, typename I1, typename S1, typename O, typename F,
+                typename P0 = ident, typename P1 = ident>
+            auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
+                P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                    requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
+                        Transformable2<I0, I1, O, F, P0, P1>)
             {
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                     *out = invoke(fun, invoke(proj0, *begin0), invoke(proj1, *begin1));
                 return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{begin0, begin1, out};
             }
 
-            CPP_template(typename Rng0, typename Rng1, typename O, typename F,
-                typename P0 = ident, typename P1 = ident,
-                typename I0 = iterator_t<Rng0>,
-                typename I1 = iterator_t<Rng1>)(
-                requires Range<Rng0> && Range<Rng1> &&
-                    Transformable2<I0, I1, O, F, P0, P1>)
-            tagged_tuple<
-                tag::in1(safe_iterator_t<Rng0>),
-                tag::in2(safe_iterator_t<Rng1>),
-                tag::out(O)>
-            operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
-                P1 proj1 = P1{}) const
+            template<typename Rng0, typename Rng1, typename O, typename F,
+                typename P0 = ident, typename P1 = ident>
+            auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<
+                    tag::in1(safe_iterator_t<Rng0>),
+                    tag::in2(safe_iterator_t<Rng1>),
+                    tag::out(O)>)(
+                    requires Range<Rng0> && Range<Rng1> &&
+                        Transformable2<iterator_t<Rng0>, iterator_t<Rng1>, O, F, P0, P1>)
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                     std::move(fun), std::move(proj0), std::move(proj1));
             }
 
             // Double-range variant, 3-iterator version
-            CPP_template(typename I0, typename S0, typename I1, typename O, typename F,
-                typename P0 = ident, typename P1 = ident)(
-                requires Sentinel<S0, I0> &&
-                    Transformable2<I0, I1, O, F, P0, P1>)
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
-            operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
-                P1 proj1 = P1{}) const
+            template<typename I0, typename S0, typename I1, typename O, typename F,
+                typename P0 = ident, typename P1 = ident>
+            auto operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                    requires Sentinel<S0, I0> &&
+                        Transformable2<I0, I1, O, F, P0, P1>)
             {
                 return (*this)(std::move(begin0), std::move(end0), std::move(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
 
-            CPP_template(typename Rng0, typename I1Ref, typename O, typename F,
-                typename P0 = ident, typename P1 = ident, typename I1 = uncvref_t<I1Ref>,
-                typename I0 = iterator_t<Rng0>)(
-                requires Range<Rng0> && Iterator<I1> &&
-                    Transformable2<I0, I1, O, F, P0, P1>)
-            tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(I1), tag::out(O)>
-            operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
-                P1 proj1 = P1{}) const
+            template<typename Rng0, typename I1Ref, typename O, typename F,
+                typename P0 = ident, typename P1 = ident>
+            auto operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(uncvref_t<I1Ref>), tag::out(O)>)(
+                    requires Range<Rng0> && Iterator<uncvref_t<I1Ref>> &&
+                        Transformable2<iterator_t<Rng0>, uncvref_t<I1Ref>, O, F, P0, P1>)
             {
                 return (*this)(begin(rng0), end(rng0), static_cast<I1Ref &&>(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));

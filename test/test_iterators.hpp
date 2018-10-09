@@ -156,8 +156,9 @@ public:
 
     RANGES_CXX14_CONSTEXPR input_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit input_iterator(It it) : it_(it) {}
-    template<class U, bool USized, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
-    RANGES_CXX14_CONSTEXPR input_iterator(const input_iterator<U, USized>& u) :it_(u.it_) {}
+    template<class U, bool USized>
+    RANGES_CXX14_CONSTEXPR CPP_ctor(input_iterator)(const input_iterator<U, USized>& u)(
+        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
     RANGES_CXX14_CONSTEXPR pointer operator->() const {return it_;}
@@ -212,8 +213,9 @@ public:
 
     RANGES_CXX14_CONSTEXPR forward_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit forward_iterator(It it) : it_(it) {}
-    template<class U, bool USized, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
-    RANGES_CXX14_CONSTEXPR forward_iterator(const forward_iterator<U, USized>& u) :it_(u.it_) {}
+    template<class U, bool USized>
+    RANGES_CXX14_CONSTEXPR CPP_ctor(forward_iterator)(const forward_iterator<U, USized>& u)(
+        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
     RANGES_CXX14_CONSTEXPR pointer operator->() const {return it_;}
@@ -263,8 +265,9 @@ public:
 
     RANGES_CXX14_CONSTEXPR bidirectional_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit bidirectional_iterator(It it) : it_(it) {}
-    template<class U, bool USized, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
-    RANGES_CXX14_CONSTEXPR bidirectional_iterator(const bidirectional_iterator<U, USized>& u) :it_(u.it_) {}
+    template<class U, bool USized>
+    RANGES_CXX14_CONSTEXPR CPP_ctor(bidirectional_iterator)(const bidirectional_iterator<U, USized>& u)(
+        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
     RANGES_CXX14_CONSTEXPR pointer operator->() const {return it_;}
@@ -311,8 +314,9 @@ public:
 
     RANGES_CXX14_CONSTEXPR random_access_iterator() : it_() {}
     RANGES_CXX14_CONSTEXPR explicit random_access_iterator(It it) : it_(it) {}
-    template<class U, class = typename std::enable_if<std::is_convertible<U, It>{}>::type>
-    RANGES_CXX14_CONSTEXPR random_access_iterator(const random_access_iterator<U>& u) :it_(u.it_) {}
+    template<class U>
+    RANGES_CXX14_CONSTEXPR CPP_ctor(random_access_iterator)(const random_access_iterator<U>& u)(
+        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
 
     RANGES_CXX14_CONSTEXPR reference operator*() const {return *it_;}
     RANGES_CXX14_CONSTEXPR pointer operator->() const {return it_;}

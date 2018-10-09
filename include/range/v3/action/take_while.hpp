@@ -46,13 +46,12 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename Fun)(
+                template<typename Fun>
+                static auto CPP_fun(bind)(take_while_fn take_while, Fun fun)(
                     requires not Range<Fun>)
-                static auto bind(take_while_fn take_while, Fun fun)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(take_while, std::placeholders::_1, std::move(fun))
-                )
+                {
+                    return std::bind(take_while, std::placeholders::_1, std::move(fun));
+                }
             public:
                 CPP_template(typename Rng, typename Fun)(
                     requires TakeWhileActionConcept<Rng, Fun>)

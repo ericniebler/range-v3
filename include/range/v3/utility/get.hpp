@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <meta/meta.hpp>
+#include <range/v3/detail/adl_get.hpp>
 
 namespace ranges
 {
@@ -24,23 +25,38 @@ namespace ranges
         /// \addtogroup group-utility Utility
         /// @{
         ///
-        template<typename T>
-        T & get(meta::id_t<T> & value)
+        namespace _get_
         {
-            return value;
-        }
+            template<std::size_t I, typename TupleLike>
+            constexpr auto get(TupleLike &&t)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<TupleLike &&>(t))
+            )
+            template<typename T, typename TupleLike>
+            constexpr auto get(TupleLike &&t)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<TupleLike &&>(t))
+            )
 
-        template<typename T>
-        T const & get(meta::id_t<T> const & value)
-        {
-            return value;
+            template<typename T>
+            T & get(meta::id_t<T> &value) noexcept
+            {
+                return value;
+            }
+            template<typename T>
+            T const & get(meta::id_t<T> const &value) noexcept
+            {
+                return value;
+            }
+            template<typename T>
+            T &&get(meta::id_t<T> &&value) noexcept
+            {
+                return std::move(value);
+            }
         }
-
-        template<typename T>
-        T &&get(meta::id_t<T> && value)
-        {
-            return std::move(value);
-        }
+        using namespace _get_;
         /// @}
     }
 }

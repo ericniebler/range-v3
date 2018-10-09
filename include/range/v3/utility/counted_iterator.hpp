@@ -98,15 +98,16 @@ namespace ranges
                 RANGES_EXPECT(n >= 0);
             }
 
-            CPP_template(typename I2)(
+            template<typename I2>
+            CPP_ctor(counted_iterator)(counted_iterator<I2> const &i)(
                 requires ConvertibleTo<I2, I>)
-            counted_iterator(const counted_iterator<I2>& i)
               : current_(_counted_iterator_::access::current(i)), cnt_(i.count())
             {}
 
-            CPP_template(typename I2)(
-                requires ConvertibleTo<I2, I>)
-            counted_iterator& operator=(const counted_iterator<I2>& i)
+            template<typename I2>
+            auto operator=(counted_iterator<I2> const &i) ->
+                CPP_ret(counted_iterator &)(
+                    requires ConvertibleTo<I2, I>)
             {
                 current_ = _counted_iterator_::access::current(i);
                 cnt_ = i.count();
@@ -300,98 +301,104 @@ namespace ranges
         }
 #endif
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator==(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator==(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return x.count() == y.count();
         }
 
         template<typename I>
-        bool operator==(const counted_iterator<I>& x, default_sentinel)
+        bool operator==(counted_iterator<I> const &x, default_sentinel)
         {
             return x.count() == 0;
         }
 
         template<typename I>
-        bool operator==(default_sentinel, const counted_iterator<I>& x)
+        bool operator==(default_sentinel, counted_iterator<I> const &x)
         {
             return x.count() == 0;
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator!=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator!=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return !(x == y);
         }
 
         template<typename I>
-        bool operator!=(const counted_iterator<I>& x, default_sentinel y)
+        bool operator!=(counted_iterator<I> const &x, default_sentinel y)
         {
             return !(x == y);
         }
 
         template<typename I>
-        bool operator!=(default_sentinel x, const counted_iterator<I>& y)
+        bool operator!=(default_sentinel x, counted_iterator<I> const &y)
         {
             return !(x == y);
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator<(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator<(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return y.count() < x.count();
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator<=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator<=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return !(y < x);
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator>(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator>(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return y < x;
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        bool operator>=(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator>=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(bool)(
+                requires Common<I1, I2>)
         {
             return !(x < y);
         }
 
-        CPP_template(typename I1, typename I2)(
-            requires Common<I1, I2>)
-        difference_type_t<I2>
-        operator-(const counted_iterator<I1>& x, const counted_iterator<I2>& y)
+        template<typename I1, typename I2>
+        auto operator-(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+            CPP_ret(difference_type_t<I2>)(
+                requires Common<I1, I2>)
         {
             return y.count() - x.count();
         }
 
         template<typename I>
         difference_type_t<I>
-        operator-(const counted_iterator<I>& x, default_sentinel)
+        operator-(counted_iterator<I> const &x, default_sentinel)
         {
             return -x.count();
         }
 
         template<typename I>
         difference_type_t<I>
-        operator-(default_sentinel, const counted_iterator<I>& y)
+        operator-(default_sentinel, counted_iterator<I> const &y)
         {
             return y.count();
         }
 
-        CPP_template(typename I)(
-            requires RandomAccessIterator<I>)
-        counted_iterator<I>
-        operator+(difference_type_t<I> n, const counted_iterator<I>& x)
+        template<typename I>
+        auto operator+(difference_type_t<I> n, counted_iterator<I> const &x) ->
+            CPP_ret(counted_iterator<I>)(
+                requires RandomAccessIterator<I>)
         {
             return x + n;
         }
@@ -444,9 +451,10 @@ namespace ranges
             };
         } // namespace _counted_iterator_
 
-        CPP_template(typename I)(
-            requires Iterator<I>)
-        counted_iterator<I> make_counted_iterator(I i, difference_type_t<I> n)
+        template<typename I>
+        auto make_counted_iterator(I i, difference_type_t<I> n) ->
+            CPP_ret(counted_iterator<I>)(
+                requires Iterator<I>)
         {
             return {std::move(i), n};
         }

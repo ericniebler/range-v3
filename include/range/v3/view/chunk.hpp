@@ -411,13 +411,12 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(chunk_fn chunk, Int n)(
                     requires Integral<Int>)
-                static auto bind(chunk_fn chunk, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(chunk, std::placeholders::_1, n))
-                )
+                {
+                    return make_pipeable(std::bind(chunk, std::placeholders::_1, n));
+                }
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)

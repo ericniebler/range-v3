@@ -219,13 +219,13 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CPP_template(typename T)(
+                template<typename T>
+                static auto CPP_fun(bind)(intersperse_fn intersperse, T t)(
                     requires Copyable<T>)
-                static auto bind(intersperse_fn intersperse, T t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(std::bind(intersperse, std::placeholders::_1, std::move(t)))
-                )
+                {
+                    return make_pipeable(std::bind(intersperse, std::placeholders::_1,
+                        std::move(t)));
+                }
             public:
 
                 CPP_template(typename Rng)(

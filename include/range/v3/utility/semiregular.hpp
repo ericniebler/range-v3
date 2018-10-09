@@ -25,10 +25,41 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        template<typename T>
+        struct semiregular;
+
+        namespace detail
+        {
+            struct semiregular_get
+            {
+                template<typename T>
+                friend auto get(meta::id_t<semiregular<T>> &t)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    t.get()
+                )
+                template<typename T>
+                friend auto get(meta::id_t<semiregular<T>> const &t)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    t.get()
+                )
+                template<typename T>
+                friend auto get(meta::id_t<semiregular<T>> &&t)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    detail::move(t).get()
+                )
+            };
+        }
+        /// \endcond
+
         /// \addtogroup group-utility
         /// @{
         template<typename T>
         struct semiregular
+          : private detail::semiregular_get
         {
             constexpr semiregular()
                 noexcept(std::is_nothrow_default_constructible<T>::value ||
@@ -199,6 +230,7 @@ namespace ranges
         template<typename T>
         struct semiregular<T &>
           : private ranges::reference_wrapper<T &>
+          , private detail::semiregular_get
         {
             semiregular() = default;
             CPP_template(typename Arg)(
@@ -215,6 +247,7 @@ namespace ranges
         template<typename T>
         struct semiregular<T &&>
           : private ranges::reference_wrapper<T &&>
+          , private detail::semiregular_get
         {
             semiregular() = default;
             CPP_template(typename Arg)(
@@ -245,27 +278,6 @@ namespace ranges
                 (bool) Semiregular<T>,
                 meta::if_c<IsConst, T, reference_wrapper<T>>,
                 reference_wrapper<meta::if_c<IsConst, semiregular<T> const, semiregular<T>>>>;
-
-        template<typename T>
-        auto get(meta::id_t<semiregular<T>> &t)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            t.get()
-        )
-
-        template<typename T>
-        auto get(meta::id_t<semiregular<T>> const &t)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            t.get()
-        )
-
-        template<typename T>
-        auto get(meta::id_t<semiregular<T>> &&t)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::move(t).get()
-        )
         /// @}
     }
 }

@@ -324,14 +324,13 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CPP_template(typename Difference)(
-                    requires Integral<Difference>)
+                template<typename Difference>
                 RANGES_CXX14_CONSTEXPR
-                static auto bind(stride_fn stride, Difference step)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)))
-                )
+                static auto CPP_fun(bind)(stride_fn stride, Difference step)(
+                    requires Integral<Difference>)
+                {
+                    return make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)));
+                }
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)

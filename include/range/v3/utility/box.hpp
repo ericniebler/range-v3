@@ -261,42 +261,40 @@ namespace ranges
         template<typename Element, typename Tag>
         Element box<Element, Tag, detail::box_compress::coalesce>::value;
 
-        // Get by tag type
-        template<typename Tag, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element & get(box<Element, Tag, BC> & b) noexcept
+        namespace _get_
         {
-            return b.get();
-        }
-
-        template<typename Tag, typename Element, detail::box_compress BC>
-        constexpr Element const & get(box<Element, Tag, BC> const & b) noexcept
-        {
-            return b.get();
-        }
-
-        template<typename Tag, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element &&get(box<Element, Tag, BC> && b) noexcept
-        {
-            return detail::move(b).get();
-        }
-
-        // Get by index
-        template<std::size_t I, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element & get(box<Element, meta::size_t<I>, BC> & b) noexcept
-        {
-            return b.get();
-        }
-
-        template<std::size_t I, typename Element, detail::box_compress BC>
-        constexpr Element const & get(box<Element, meta::size_t<I>, BC> const & b) noexcept
-        {
-            return b.get();
-        }
-
-        template<std::size_t I, typename Element, detail::box_compress BC>
-        RANGES_CXX14_CONSTEXPR Element &&get(box<Element, meta::size_t<I>, BC> && b) noexcept
-        {
-            return detail::move(b).get();
+            // Get by tag type
+            template<typename Tag, typename Element, detail::box_compress BC>
+            RANGES_CXX14_CONSTEXPR Element & get(box<Element, Tag, BC> & b) noexcept
+            {
+                return b.get();
+            }
+            template<typename Tag, typename Element, detail::box_compress BC>
+            constexpr Element const & get(box<Element, Tag, BC> const & b) noexcept
+            {
+                return b.get();
+            }
+            template<typename Tag, typename Element, detail::box_compress BC>
+            RANGES_CXX14_CONSTEXPR Element &&get(box<Element, Tag, BC> && b) noexcept
+            {
+                return detail::move(b).get();
+            }
+            // Get by index
+            template<std::size_t I, typename Element, detail::box_compress BC>
+            RANGES_CXX14_CONSTEXPR Element & get(box<Element, meta::size_t<I>, BC> & b) noexcept
+            {
+                return b.get();
+            }
+            template<std::size_t I, typename Element, detail::box_compress BC>
+            constexpr Element const & get(box<Element, meta::size_t<I>, BC> const & b) noexcept
+            {
+                return b.get();
+            }
+            template<std::size_t I, typename Element, detail::box_compress BC>
+            RANGES_CXX14_CONSTEXPR Element &&get(box<Element, meta::size_t<I>, BC> && b) noexcept
+            {
+                return detail::move(b).get();
+            }
         }
         /// @}
     }

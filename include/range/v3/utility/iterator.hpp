@@ -761,10 +761,10 @@ namespace ranges
                 )
             public:
                 reverse_cursor() = default;
-                CPP_template(typename U)(
-                    requires ConvertibleTo<U, I>)
+                template<typename U>
                 RANGES_CXX14_CONSTEXPR
-                reverse_cursor(reverse_cursor<U> const &u)
+                CPP_ctor(reverse_cursor)(reverse_cursor<U> const &u)(
+                    requires ConvertibleTo<U, I>)
                   : it_(u.base())
                 {}
             };
@@ -795,9 +795,9 @@ namespace ranges
             explicit move_iterator(I i)
               : current_(i)
             {}
-            CPP_template(typename O)(
+            template<typename O>
+            CPP_ctor(move_iterator)(move_iterator<O> const &i)(
                 requires ConvertibleTo<O, I>)
-            move_iterator(move_iterator<O> const &i)
               : current_(i.base())
             {}
             template<typename O>
@@ -973,9 +973,9 @@ namespace ranges
             constexpr explicit move_sentinel(S s)
               : sent_(detail::move(s))
             {}
-            CPP_template(typename OS)(
+            template<typename OS>
+            constexpr explicit CPP_ctor(move_sentinel)(move_sentinel<OS> const &that)(
                 requires ConvertibleTo<OS, S>)
-            constexpr explicit move_sentinel(move_sentinel<OS> const &that)
               : sent_(that.base())
             {}
             template<typename OS>

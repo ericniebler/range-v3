@@ -68,10 +68,9 @@ namespace ranges
                 friend action::action_access;
                 template<typename T>
                 static auto bind(push_front_fn push_front, T &&val)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(push_front, std::placeholders::_1, bind_forward<T>(val))
-                )
+                {
+                    return std::bind(push_front, std::placeholders::_1, bind_forward<T>(val));
+                }
             public:
                 CPP_template(typename Rng, typename T)(
                     requires PushFrontActionConcept<Rng, T>)

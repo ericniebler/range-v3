@@ -128,13 +128,12 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)(
                     requires Integral<Int>)
-                static auto bind(drop_exactly_fn drop_exactly, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n))
-                )
+                {
+                    return make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n));
+                }
             #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Int)(
                     requires not Integral<Int>)

@@ -45,13 +45,12 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(take_fn take, Int n)(
                     requires Integral<Int>)
-                static auto bind(take_fn take, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(take, std::placeholders::_1, n)
-                )
+                {
+                    return std::bind(take, std::placeholders::_1, n);
+                }
             public:
                 CPP_template(typename Rng, typename D)(
                     requires TakeActionConcept<Rng, D>)

@@ -51,10 +51,10 @@ namespace ranges
                 friend view_access;
                 template<typename Fun>
                 static auto bind(for_each_fn for_each, Fun fun)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(fun))))
-                )
+                {
+                    return make_pipeable(std::bind(for_each, std::placeholders::_1,
+                        protect(std::move(fun))));
+                }
 
             public:
                 CPP_template(typename Rng, typename Fun)(

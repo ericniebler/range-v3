@@ -26,19 +26,18 @@ namespace ranges
             {
                 template<typename> void get();
 
-                template<std::size_t I, typename Tuple>
-                constexpr auto adl_get(Tuple &&t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get<I>(static_cast<Tuple &&>(t))
-                )
-
-                template<typename T, typename Tuple>
-                constexpr auto adl_get(Tuple &&t)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get<T>(static_cast<Tuple &&>(t))
-                )
+                template<std::size_t I, typename TupleLike>
+                constexpr auto adl_get(TupleLike &&t) noexcept ->
+                    decltype(get<I>(static_cast<TupleLike &&>(t)))
+                {
+                    return get<I>(static_cast<TupleLike &&>(t));
+                }
+                template<typename T, typename TupleLike>
+                constexpr auto adl_get(TupleLike &&t) noexcept ->
+                    decltype(get<T>(static_cast<TupleLike &&>(t)))
+                {
+                    return get<T>(static_cast<TupleLike &&>(t));
+                }
             }
             using _adl_get_::adl_get;
         }

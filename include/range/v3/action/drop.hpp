@@ -45,17 +45,17 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(drop_fn drop, Int n)(
                     requires Integral<Int>)
-                static auto bind(drop_fn drop, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(drop, std::placeholders::_1, n)
-                )
+                {
+                    return std::bind(drop, std::placeholders::_1, n);
+                }
             public:
-                CPP_template(typename Rng)(
+                template<typename Rng>
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                    CPP_ret(Rng)(
                     requires DropActionConcept<Rng, range_difference_type_t<Rng>>)
-                Rng operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
@@ -63,9 +63,9 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const -> CPP_ret(void)(
                     requires not DropActionConcept<Rng, T>)
-                void operator()(Rng &&, T &&) const
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::drop operates must be a model of the "

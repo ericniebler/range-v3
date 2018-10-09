@@ -42,14 +42,13 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename C, typename P = ident)(
+                template<typename C, typename P = ident>
+                static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})(
                     requires not Range<C>)
-                static auto bind(sort_fn sort, C pred, P proj = P{})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)))
-                )
+                {
+                    return std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
+                        protect(std::move(proj)));
+                }
 
             public:
                 CPP_template(typename Rng, typename C = ordered_less, typename P = ident)(

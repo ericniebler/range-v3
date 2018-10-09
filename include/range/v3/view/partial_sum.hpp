@@ -142,11 +142,10 @@ namespace ranges
                 friend view_access;
                 template<typename Fun = plus>
                 static auto bind(partial_sum_fn partial_sum, Fun fun = {})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(partial_sum, std::placeholders::_1,
-                        protect(std::move(fun))))
-                )
+                {
+                    return make_pipeable(std::bind(partial_sum, std::placeholders::_1,
+                        protect(std::move(fun))));
+                }
             public:
                 CPP_template(typename Rng, typename Fun)(
                     requires PartialSumViewConcept<Rng, Fun>)

@@ -166,20 +166,19 @@ namespace ranges
                     return {begin(rng), next(begin(rng), n)};
                 }
 
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
                     requires Integral<Int>)
-                static auto bind(take_exactly_fn take_exactly, Int n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(take_exactly, std::placeholders::_1, n))
-                )
+                {
+                    return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
+                }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Int)(
+                template<typename Int>
+                static auto bind(take_exactly_fn, Int) -> CPP_ret(detail::null_pipe)(
                     requires not Integral<Int>)
-                static detail::null_pipe bind(take_exactly_fn, Int)
                 {
                     CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::take must be a model of the Integral concept.");
+                        "The object passed to view::take must satisfy the Integral concept.");
                     return {};
                 }
             #endif

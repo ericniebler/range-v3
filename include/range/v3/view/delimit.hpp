@@ -82,10 +82,10 @@ namespace ranges
                 friend view_access;
                 template<typename Val>
                 static auto bind(delimit_impl_fn delimit, Val value)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(delimit, std::placeholders::_1, std::move(value)))
-                )
+                {
+                    return make_pipeable(std::bind(delimit, std::placeholders::_1,
+                        std::move(value)));
+                }
             public:
                 CPP_template(typename Rng, typename Val)(
                     requires Delimitable<Rng, Val>)

@@ -29,23 +29,23 @@ namespace ranges
         /// \cond
         namespace adl_push_back_detail
         {
-            CPP_template(typename Cont, typename T)(
+            template<typename Cont, typename T>
+            auto push_back(Cont &&cont, T &&t) ->
+                CPP_ret(decltype(static_cast<void>(unwrap_reference(cont).
+                    push_back(static_cast<T &&>(t)))))(
                 requires LvalueContainerLike<Cont> && !Range<T> &&
                     Constructible<range_value_type_t<Cont>, T>)
-            decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
-                push_back(std::declval<T>())))
-            push_back(Cont &&cont, T &&t)
             {
                 unwrap_reference(cont).push_back(static_cast<T &&>(t));
             }
 
-            CPP_template(typename Cont, typename Rng)(
+            template<typename Cont, typename Rng>
+            auto push_back(Cont &&cont, Rng &&rng) ->
+                CPP_ret(decltype(static_cast<void>(ranges::insert(
+                    unwrap_reference(cont),
+                    end(cont),
+                    static_cast<Rng &&>(rng)))))(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
-            decltype(static_cast<void>(ranges::insert(
-                unwrap_reference(std::declval<Cont &>()),
-                std::declval<sentinel_t<Cont>>(),
-                std::declval<Rng>())))
-            push_back(Cont &&cont, Rng &&rng)
             {
                 ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng &&>(rng));
             }
@@ -68,23 +68,22 @@ namespace ranges
                 friend action::action_access;
                 template<typename T>
                 static auto bind(push_back_fn push_back, T &&val)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
-                )
+                {
+                    return std::bind(push_back, std::placeholders::_1, bind_forward<T>(val));
+                }
             public:
-                CPP_template(typename Rng, typename T)(
+                template<typename Rng, typename T>
+                auto operator()(Rng &&rng, T &&t) const -> CPP_ret(Rng)(
                     requires PushBackActionConcept<Rng, T>)
-                Rng operator()(Rng &&rng, T &&t) const
                 {
                     push_back(rng, static_cast<T &&>(t));
                     return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
+                template<typename Rng, typename T>
+                auto operator()(Rng &&rng, T &&t) const -> CPP_ret(void)(
                     requires not PushBackActionConcept<Rng, T>)
-                void operator()(Rng &&rng, T &&t) const
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which action::push_back operates must be a model of the "

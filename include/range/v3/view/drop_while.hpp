@@ -91,10 +91,9 @@ namespace ranges
                 friend view_access;
                 template<typename Pred>
                 static auto bind(drop_while_fn drop_while, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))))
-                )
+                {
+                    return make_pipeable(std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))));
+                }
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires DropWhileViewConcept<Rng, Pred>)

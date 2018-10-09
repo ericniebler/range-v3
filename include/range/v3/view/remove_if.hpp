@@ -164,11 +164,10 @@ namespace ranges
                 friend view_access;
                 template<typename Pred>
                 static auto bind(remove_if_fn remove_if, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(std::bind(remove_if, std::placeholders::_1,
-                        protect(std::move(pred))))
-                )
+                {
+                    return make_pipeable(std::bind(remove_if, std::placeholders::_1,
+                        protect(std::move(pred))));
+                }
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires SearchableRange<Rng, Pred>)

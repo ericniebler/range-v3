@@ -21,6 +21,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/tagged_pair.hpp> // BUGBUG
 
 namespace ranges
 {
@@ -58,12 +59,12 @@ namespace ranges
 
         template<typename ...Ts>
         struct common_tuple
-          : std::tuple<Ts...>
+          : _tagged_::wrap_base<std::tuple<Ts...>>
         {
         private:
             template<typename That, std::size_t ...Is>
             common_tuple(That &&that, meta::index_sequence<Is...>)
-              : std::tuple<Ts...>{detail::adl_get<Is>(static_cast<That &&>(that))...}
+              : common_tuple::wrap_base{detail::adl_get<Is>(static_cast<That &&>(that))...}
             {}
             struct element_assign_
             {
@@ -80,13 +81,13 @@ namespace ranges
             CPP_ctor(common_tuple)()(
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
                 requires DefaultConstructible<std::tuple<Ts...>>)
-              : std::tuple<Ts...>{}
+              : common_tuple::wrap_base{}
             {}
             CPP_template(typename...Us)(
                 requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
             explicit common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
-              : std::tuple<Ts...>{static_cast<Us &&>(us)...}
+              : common_tuple::wrap_base{static_cast<Us &&>(us)...}
             {}
             template<typename...Us>
             CPP_ctor(common_tuple)(std::tuple<Us...> &that)(
@@ -214,52 +215,6 @@ namespace ranges
                 return detail::to_std_tuple<Us...>(std::move(*this), meta::make_index_sequence<sizeof...(Ts)>{});
             }
         };
-
-        CPP_template(std::size_t I, typename ...Ts)(
-            requires I < sizeof...(Ts))
-        constexpr auto get(common_tuple<Ts...> &ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<I>(ct.base())
-        )
-        CPP_template(std::size_t I, typename ...Ts)(
-            requires I < sizeof...(Ts))
-        constexpr auto get(common_tuple<Ts...> const &ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<I>(ct.base())
-        )
-        CPP_template(std::size_t I, typename ...Ts)(
-            requires I < sizeof...(Ts))
-        constexpr auto get(common_tuple<Ts...> &&ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<I>(std::move(ct.base()))
-        )
-        CPP_template(std::size_t I, typename ...Ts)(
-            requires I < sizeof...(Ts))
-        void get(common_tuple<Ts...> const &&ct) = delete;
-
-        template<typename T, typename ...Ts>
-        constexpr auto get(common_tuple<Ts...> &ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<T>(ct.base())
-        )
-        template<typename T, typename ...Ts>
-        constexpr auto get(common_tuple<Ts...> const &ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<T>(ct.base())
-        )
-        template<typename T, typename ...Ts>
-        constexpr auto get(common_tuple<Ts...> &&ct)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            std::get<T>(std::move(ct.base()))
-        )
-        template<typename T, typename ...Ts>
-        void get(common_tuple<Ts...> const &&ct) = delete;
 
         // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)\

@@ -352,13 +352,12 @@ namespace ranges
                 }
             private:
                friend view_access;
-               CPP_template(typename T)(
+               template<typename T>
+               static auto CPP_fun(bind)(join_fn join, T &&t)(
                    requires not JoinableRange<T>)
-               static auto bind(join_fn join, T &&t)
-               RANGES_DECLTYPE_AUTO_RETURN
-               (
-                   make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
-               )
+               {
+                   return make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)));
+               }
             };
 
             /// \relates join_fn

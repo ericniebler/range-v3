@@ -180,10 +180,10 @@ namespace ranges
                 friend view_access;
                 template<typename T>
                 static auto bind(split_fn split, T &&t)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(split, std::placeholders::_1, bind_forward<T>(t)))
-                )
+                {
+                    return make_pipeable(std::bind(split, std::placeholders::_1,
+                        bind_forward<T>(t)));
+                }
                 template<typename Rng, typename Pred>
                 struct predicate_pred
                 {

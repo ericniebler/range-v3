@@ -144,11 +144,10 @@ namespace ranges
                 template<typename Pred>
                 RANGES_CXX14_CONSTEXPR
                 static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    make_pipeable(std::bind(adjacent_filter, std::placeholders::_1,
-                        protect(std::move(pred))))
-                )
+                {
+                    return make_pipeable(std::bind(adjacent_filter, std::placeholders::_1,
+                        protect(std::move(pred))));
+                }
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires detail::AdjacentFilter<Rng, Pred>)

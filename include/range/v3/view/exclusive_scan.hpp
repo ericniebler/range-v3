@@ -159,11 +159,10 @@ namespace ranges {
                 friend view_access;
                 template<typename T, typename Fun = plus>
                 static auto bind(exclusive_scan_fn exclusive_scan, T init, Fun fun = {})
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(exclusive_scan, std::placeholders::_1,
-                                            std::move(init), protect(std::move(fun))))
-                )
+                {
+                    return make_pipeable(std::bind(exclusive_scan, std::placeholders::_1,
+                        std::move(init), protect(std::move(fun))));
+                }
             public:
                 CPP_template(typename Rng, typename T, typename Fun = plus)(
                     requires ExclusiveScanConstraint<Rng, T, Fun>)

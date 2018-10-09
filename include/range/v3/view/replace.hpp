@@ -98,16 +98,14 @@ namespace ranges
             {
             private:
                 friend view_access;
-                CPP_template(typename Val1, typename Val2,
-                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
-                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
-                    requires Same<V1, V2>)
-                static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(replace, std::placeholders::_1,
-                        std::move(old_value), std::move(new_value)))
-                )
+                template<typename Val1, typename Val2>
+                static auto CPP_fun(bind)(replace_fn replace, Val1 old_value, Val2 new_value)(
+                    requires Same<detail::decay_t<unwrap_reference_t<Val1>>,
+                                  detail::decay_t<unwrap_reference_t<Val2>>>)
+                {
+                    return make_pipeable(std::bind(replace, std::placeholders::_1,
+                        std::move(old_value), std::move(new_value)));
+                }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 CPP_template(typename Val1, typename Val2,

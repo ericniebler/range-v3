@@ -146,7 +146,7 @@ namespace ranges
             {
                 return rng_.end();
             }
-            size_type_t<I> size() const
+            size_type_t<I> size() const noexcept
             {
                 return size_;
             }
@@ -165,6 +165,22 @@ namespace ranges
             constexpr operator iterator_range<I, S> const &() const & noexcept
             {
                 return rng_;
+            }
+            /// Tuple-like access for `sized_iterator_range`
+            CPP_template(std::size_t N)(
+                requires N < 2)
+            friend constexpr auto get(sized_iterator_range const &p)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                //ranges::get<N>(p.rng_)
+                ranges::get<N>(p .* &sized_iterator_range::rng_) // makes clang happy
+            )
+            /// \overload
+            CPP_template(std::size_t N)(
+                requires N == 2)
+            friend constexpr size_type_t<I> get(sized_iterator_range const &p) noexcept
+            {
+                return p.size();
             }
         };
 
@@ -192,24 +208,6 @@ namespace ranges
         /// \ingroup group-core
         /// \sa `make_iterator_range_fn`
         RANGES_INLINE_VARIABLE(make_iterator_range_fn, make_iterator_range)
-
-        /// Tuple-like access for `sized_iterator_range`
-        CPP_template(std::size_t N, typename I, typename S)(
-            requires N < 2)
-        constexpr auto get(sized_iterator_range<I, S> const &p)
-        RANGES_DECLTYPE_AUTO_RETURN
-        (
-            ranges::get<N>(static_cast<iterator_range<I, S> const &>(p))
-        )
-
-        /// \overload
-        CPP_template(std::size_t N, typename I, typename S)(
-            requires N == 2)
-        constexpr size_type_t<I> get(sized_iterator_range<I, S> const &p)
-        {
-            return p.size();
-        }
-
 
         // TODO add specialization of range_cardinality for when we can determine the range is infinite
 

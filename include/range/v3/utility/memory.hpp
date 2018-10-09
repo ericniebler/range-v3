@@ -46,9 +46,9 @@ namespace ranges
                 }
             };
 
-            CPP_template(typename T, typename... Args)(
+            template<typename T, typename... Args>
+            auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
                 requires not std::is_array<T>::value)
-            std::unique_ptr<T> make_unique(Args &&... args)
             {
                 return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
             }

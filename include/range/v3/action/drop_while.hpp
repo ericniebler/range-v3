@@ -46,17 +46,16 @@ namespace ranges
             {
             private:
                 friend action_access;
-                CPP_template(typename Fun)(
-                    requires not Range<Fun>)
-                static auto bind(drop_while_fn drop_while, Fun fun)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    std::bind(drop_while, std::placeholders::_1, std::move(fun))
-                )
+                template<typename Fun>
+                static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)(
+                    requires !Range<Fun>)
+                {
+                    return std::bind(drop_while, std::placeholders::_1, std::move(fun));
+                }
             public:
-                CPP_template(typename Rng, typename Fun)(
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
                     requires DropWhileActionConcept<Rng, Fun>)
-                Rng operator()(Rng &&rng, Fun fun) const
                 {
                     ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
                         std::move(fun)));
@@ -64,9 +63,9 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun &&) const -> CPP_ret(void)(
                     requires not DropWhileActionConcept<Rng, Fun>)
-                void operator()(Rng &&, Fun &&) const
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::drop_while operates must be a model of the "

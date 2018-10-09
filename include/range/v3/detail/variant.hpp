@@ -27,6 +27,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/get.hpp>
 
 namespace ranges
 {
@@ -488,9 +489,47 @@ namespace ranges
             inline void variant_deref_(void const volatile *) noexcept
             {}
 
+            template<typename Variant>
+            struct variant_get
+            {
+                ////////////////////////////////////////////////////////////////////////////////////////////
+                // get
+                template<std::size_t N>
+                friend meta::_t<std::add_lvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>
+                get(Variant &var)
+                {
+                    using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
+                    elem_t *elem = nullptr;
+                    auto &data = detail::variant_core_access::data(var);
+                    detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                    return detail::variant_deref_(elem);
+                }
+                template<std::size_t N>
+                friend meta::_t<std::add_lvalue_reference<meta::at_c<meta::as_list<Variant>, N> const>>
+                get(Variant const &var)
+                {
+                    using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N> const>>;
+                    elem_t *elem = nullptr;
+                    auto &data = detail::variant_core_access::data(var);
+                    detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                    return detail::variant_deref_(elem);
+                }
+                template<std::size_t N>
+                friend meta::_t<std::add_rvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>
+                get(Variant &&var)
+                {
+                    using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
+                    elem_t *elem = nullptr;
+                    auto &data = detail::variant_core_access::data(var);
+                    detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                    using res_t = meta::_t<std::add_rvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>;
+                    return static_cast<res_t>(detail::variant_deref_(elem));
+                }
+            };
+
             template<typename Variant, bool Trivial = std::is_trivially_destructible<
                 meta::apply<meta::quote<variant_data>, meta::as_list<Variant>>>::value>
-            struct variant_base
+            struct variant_base : variant_get<Variant>
             {
                 ~variant_base()
                 {
@@ -498,7 +537,7 @@ namespace ranges
                 }
             };
             template<typename ...Ts>
-            struct variant_base<variant<Ts...>, true>
+            struct variant_base<variant<Ts...>, true> : variant_get<variant<Ts...>>
             {};
 
             template<typename Fun, typename Types, typename Indices, typename = void>
@@ -696,42 +735,6 @@ namespace ranges
                 requires And<EqualityComparableWith<Ts, Us>...>)
         {
             return !(lhs == rhs);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // get
-        template<std::size_t N, typename...Ts>
-        meta::_t<std::add_lvalue_reference<meta::at_c<meta::list<Ts...>, N>>>
-        get(variant<Ts...> &var)
-        {
-            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N>>>;
-            elem_t *elem = nullptr;
-            auto &data = detail::variant_core_access::data(var);
-            detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
-            return detail::variant_deref_(elem);
-        }
-
-        template<std::size_t N, typename...Ts>
-        meta::_t<std::add_lvalue_reference<meta::at_c<meta::list<Ts...>, N> const>>
-        get(variant<Ts...> const &var)
-        {
-            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N> const>>;
-            elem_t *elem = nullptr;
-            auto &data = detail::variant_core_access::data(var);
-            detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
-            return detail::variant_deref_(elem);
-        }
-
-        template<std::size_t N, typename...Ts>
-        meta::_t<std::add_rvalue_reference<meta::at_c<meta::list<Ts...>, N>>>
-        get(variant<Ts...> &&var)
-        {
-            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N>>>;
-            elem_t *elem = nullptr;
-            auto &data = detail::variant_core_access::data(var);
-            detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
-            using res_t = meta::_t<std::add_rvalue_reference<meta::at_c<meta::list<Ts...>, N>>>;
-            return static_cast<res_t>(detail::variant_deref_(elem));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

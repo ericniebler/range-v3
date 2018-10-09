@@ -125,11 +125,10 @@ namespace ranges
                 friend view_access;
                 template<typename Pred, typename Val>
                 static auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(replace_if, std::placeholders::_1,
-                        protect(std::move(pred)), std::move(new_value)))
-                )
+                {
+                    return make_pipeable(std::bind(replace_if, std::placeholders::_1,
+                        protect(std::move(pred)), std::move(new_value)));
+                }
             public:
                 CPP_template(typename Rng, typename Pred, typename Val)(
                     requires ReplaceIfViewConcept<Rng, Pred, Val>)

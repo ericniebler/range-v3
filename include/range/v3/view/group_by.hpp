@@ -128,10 +128,10 @@ namespace ranges
                 friend view_access;
                 template<typename Fun>
                 static auto bind(group_by_fn group_by, Fun fun)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(group_by, std::placeholders::_1, std::move(fun)))
-                )
+                {
+                    return make_pipeable(std::bind(group_by, std::placeholders::_1,
+                        std::move(fun)));
+                }
             public:
                 CPP_template(typename Rng, typename Fun)(
                     requires GroupByViewConcept<Rng, Fun>)

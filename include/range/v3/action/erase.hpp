@@ -27,22 +27,22 @@ namespace ranges
         /// \cond
         namespace adl_erase_detail
         {
-            CPP_template(typename Cont, typename I, typename S)(
+            template<typename Cont, typename I, typename S>
+            auto erase(Cont &&cont, I begin, S end) ->
+                CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))(
                 requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
                     Sentinel<S, I>)
-            decltype(unwrap_reference(std::declval<Cont &>()).erase(std::declval<I>(), std::declval<S>()))
-            erase(Cont &&cont, I begin, S end)
             {
                 return unwrap_reference(cont).erase(begin, end);
             }
 
             struct erase_fn
             {
-                CPP_template(typename Rng, typename I, typename S)(
+                template<typename Rng, typename I, typename S>
+                auto operator()(Rng &&rng, I begin, S end) const ->
+                    CPP_ret(decltype(erase((Rng &&) rng, begin, end)))(
                     requires Range<Rng> && ForwardIterator<I> &&
                         Sentinel<S, I>)
-                decltype(erase(std::declval<Rng>(), std::declval<I>(), std::declval<S>()))
-                operator()(Rng &&rng, I begin, S end) const
                 {
                     return erase(static_cast<Rng &&>(rng), begin, end);
                 }

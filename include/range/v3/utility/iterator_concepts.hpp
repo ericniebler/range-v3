@@ -543,15 +543,15 @@ namespace ranges
 
 namespace __gnu_debug
 {
-    CPP_template(typename I1, typename I2, typename Seq)(
-        requires not ::ranges::SizedSentinel<I1, I2>)
-    void operator-(
-        _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
+    template<typename I1, typename I2, typename Seq>
+    auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) ->
+        CPP_ret(void)(
+            requires not ::ranges::SizedSentinel<I1, I2>) = delete;
 
-    CPP_template(typename I1, typename Seq)(
-        requires not ::ranges::SizedSentinel<I1, I1>)
-    void operator-(
-        _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;
+    template<typename I1, typename Seq>
+    auto operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) ->
+        CPP_ret(void)(
+            requires not ::ranges::SizedSentinel<I1, I1>)= delete;
 }
 #endif
 

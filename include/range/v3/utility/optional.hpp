@@ -266,9 +266,10 @@ namespace ranges
                 struct optional_base<T &>
                 {
                     optional_base() = default;
-                    CPP_template(typename Arg)(
+                    template<typename Arg>
+                    constexpr explicit CPP_ctor(optional_base)(in_place_t, Arg &&arg)(
+                        noexcept(true)
                         requires Constructible<T &, Arg>)
-                    constexpr explicit optional_base(in_place_t, Arg &&arg) noexcept
                       : ptr_(std::addressof(arg))
                     {}
                     constexpr bool has_value() const noexcept
@@ -519,56 +520,56 @@ namespace ranges
               : base_t(in_place, il, static_cast<Args &&>(args)...)
             {}
 
-            CPP_template(typename U = T)(
+            template<typename U = T>
+            constexpr CPP_ctor(optional)(U &&v)(
                 requires not defer::Same<detail::decay_t<U>, in_place_t> &&
                     !defer::Same<detail::decay_t<U>, optional> &&
                     defer::Constructible<T, U> &&
                     defer::ConvertibleTo<U, T>)
-            constexpr optional(U &&v)
               : base_t(in_place, static_cast<U &&>(v))
             {}
-            CPP_template(typename U = T)(
+            template<typename U = T>
+            explicit constexpr CPP_ctor(optional)(U &&v)(
                 requires not defer::Same<detail::decay_t<U>, in_place_t> &&
                     !defer::Same<detail::decay_t<U>, optional> &&
                     defer::Constructible<T, U> &&
                     !defer::ConvertibleTo<U, T>)
-            explicit constexpr optional(U &&v)
               : base_t(in_place, static_cast<U &&>(v))
             {}
 
-            CPP_template(typename U)(
+            template<typename U>
+            CPP_ctor(optional)(optional<U> const &that)(
                 requires OptionalShouldConvert<U, T> &&
                     Constructible<T, U const &> &&
                     ConvertibleTo<U const &, T>)
-            optional(optional<U> const &that)
             {
                 if (that.has_value())
                     base_t::construct_from(*that);
             }
-            CPP_template(typename U)(
+            template<typename U>
+            explicit CPP_ctor(optional)(optional<U> const &that)(
                 requires OptionalShouldConvert<U, T> &&
                     Constructible<T, U const &> &&
                     !ConvertibleTo<U const &, T>)
-            explicit optional(optional<U> const &that)
             {
                 if (that.has_value())
                     base_t::construct_from(*that);
             }
 
-            CPP_template(typename U)(
+            template<typename U>
+            CPP_ctor(optional)(optional<U> &&that)(
                 requires OptionalShouldConvert<U, T> &&
                     Constructible<T, U> &&
                     ConvertibleTo<U, T>)
-            optional(optional<U> &&that)
             {
                 if (that.has_value())
                     base_t::construct_from(detail::move(*that));
             }
-            CPP_template(typename U)(
+            template<typename U>
+            explicit CPP_ctor(optional)(optional<U> &&that)(
                 requires OptionalShouldConvert<U, T> &&
                     Constructible<T, U> &&
                     !ConvertibleTo<U, T>)
-            explicit optional(optional<U> &&that)
             {
                 if (that.has_value())
                     base_t::construct_from(detail::move(*that));
