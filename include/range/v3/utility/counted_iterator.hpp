@@ -34,14 +34,14 @@ namespace ranges
             struct access
             {
                 template<typename I>
-                static RANGES_CXX14_CONSTEXPR difference_type_t<counted_iterator<I>> &
+                static constexpr /*c++14*/ difference_type_t<counted_iterator<I>> &
                 count(counted_iterator<I> &ci) noexcept
                 {
                     return ci.cnt_;
                 }
 
                 template<typename I>
-                static RANGES_CXX14_CONSTEXPR I &
+                static constexpr /*c++14*/ I &
                 current(counted_iterator<I> &ci) noexcept
                 {
                     return ci.current_;
@@ -239,7 +239,7 @@ namespace ranges
 
 #if !RANGES_BROKEN_CPO_LOOKUP
             CPP_broken_friend_member
-            friend RANGES_CXX14_CONSTEXPR
+            friend constexpr /*c++14*/
             auto iter_move(counted_iterator const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
                 CPP_broken_friend_ret(rvalue_reference_t<I>)(
@@ -271,7 +271,7 @@ namespace ranges
         namespace _counted_iterator_
         {
             template<typename I>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto iter_move(counted_iterator<I> const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
                 CPP_broken_friend_ret(rvalue_reference_t<I>)(

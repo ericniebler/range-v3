@@ -40,7 +40,7 @@ struct debug_input_view
     constexpr debug_input_view(T (&data)[N]) noexcept
       : debug_input_view{data, N}
     {}
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     debug_input_view(debug_input_view &&that) noexcept
       : data_{ranges::exchange(that.data_, nullptr)}
       , last_{ranges::exchange(that.last_, nullptr)}
@@ -53,7 +53,7 @@ struct debug_input_view
             valid_ = false;
         }
     }
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     debug_input_view &operator=(debug_input_view &&that) noexcept
     {
         ++that.version_;
@@ -95,23 +95,23 @@ struct debug_input_view
           : view_{&view}, version_{view.version_}
         {}
 
-        RANGES_CXX14_CONSTEXPR void check_current() const noexcept
+        constexpr /*c++14*/ void check_current() const noexcept
         {
             RANGES_ENSURE(view_), RANGES_ENSURE(view_->version_ == version_);
         }
 
-        RANGES_CXX14_CONSTEXPR void check_dereferenceable() const noexcept
+        constexpr /*c++14*/ void check_dereferenceable() const noexcept
         {
             check_current(), RANGES_ENSURE(view_->data_ < view_->last_);
         }
 
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         reference operator*() const noexcept
         {
             check_dereferenceable();
             return *view_->data_;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         iterator &operator++() noexcept
         {
             check_dereferenceable();
@@ -119,36 +119,36 @@ struct debug_input_view
             version_ = ++view_->version_;
             return *this;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         void operator++(int) noexcept
         {
             ++*this;
         }
 
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend bool operator==(iterator const &i, sentinel const &s)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             i.check_current();
             return i.view_->data_ == i.view_->last_;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend bool operator==(sentinel const &s, iterator const &i)
         {
             return i == s;
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend bool operator!=(iterator const &i, sentinel const &s)
         {
             return !(i == s);
         }
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend bool operator!=(sentinel const &s, iterator const &i)
         {
             return !(i == s);
         }
         CPP_member
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend auto operator-(sentinel const& s, iterator const& i) ->
             CPP_ret(difference_type)(requires Sized)
         {
@@ -157,27 +157,27 @@ struct debug_input_view
             return i.view_->last_ - i.view_->data_;
         }
         CPP_member
-        RANGES_CXX14_CONSTEXPR
+        constexpr /*c++14*/
         friend auto operator-(iterator const& i, sentinel const& s) ->
             CPP_ret(difference_type)(requires Sized)
         {
             return -(s - i);
         }
     };
-    RANGES_CXX14_CONSTEXPR iterator begin() noexcept
+    constexpr /*c++14*/ iterator begin() noexcept
     {
         RANGES_ENSURE(valid_);
         RANGES_ENSURE(!begin_called_);
         begin_called_ = true;
         return iterator{*this};
     }
-    RANGES_CXX14_CONSTEXPR sentinel end() noexcept
+    constexpr /*c++14*/ sentinel end() noexcept
     {
         RANGES_ENSURE(valid_);
         return sentinel{*this};
     }
     CPP_member
-    RANGES_CXX14_CONSTEXPR
+    constexpr /*c++14*/
     auto size() const noexcept -> CPP_ret(std::size_t)(requires Sized)
     {
         RANGES_ENSURE(valid_);

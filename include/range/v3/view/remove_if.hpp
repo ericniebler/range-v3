@@ -64,19 +64,19 @@ namespace ranges
                 constexpr adaptor(remove_if_view &rng) noexcept
                   : rng_(&rng)
                 {}
-                static RANGES_CXX14_CONSTEXPR iterator_t<Rng> begin(remove_if_view &rng)
+                static constexpr /*c++14*/ iterator_t<Rng> begin(remove_if_view &rng)
                     noexcept(std::is_nothrow_copy_constructible<iterator_t<Rng>>::value)
                 {
                     return *rng.begin_;
                 }
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
+                constexpr /*c++14*/ void next(iterator_t<Rng> &it) const
                     noexcept(noexcept(std::declval<remove_if_view &>().satisfy_forward(++it)))
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it) const
+                constexpr /*c++14*/ auto prev(iterator_t<Rng> &it) const
                     noexcept(noexcept(std::declval<remove_if_view &>().satisfy_reverse(it))) ->
                     CPP_ret(void)(
                         requires BidirectionalRange<Rng>)
@@ -88,7 +88,7 @@ namespace ranges
             private:
                 remove_if_view *rng_;
             };
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor()
+            constexpr /*c++14*/ adaptor begin_adaptor()
                 noexcept(noexcept(std::declval<remove_if_view &>().cache_begin()))
             {
                 cache_begin();
@@ -102,7 +102,7 @@ namespace ranges
                 return {};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor()
+            constexpr /*c++14*/ auto end_adaptor()
                 noexcept(noexcept(std::declval<remove_if_view &>().cache_begin())) ->
                 CPP_ret(adaptor)(
                     requires BoundedRange<Rng>)
@@ -111,7 +111,7 @@ namespace ranges
                 return {*this};
             }
 
-            RANGES_CXX14_CONSTEXPR void satisfy_forward(iterator_t<Rng> &it)
+            constexpr /*c++14*/ void satisfy_forward(iterator_t<Rng> &it)
                 noexcept(noexcept((void)(++it != ranges::end(std::declval<Rng &>())),
                     invoke(std::declval<Pred &>(), *it)))
             {
@@ -120,7 +120,7 @@ namespace ranges
                 while (it != last && invoke(pred, *it))
                     ++it;
             }
-            RANGES_CXX14_CONSTEXPR void satisfy_reverse(iterator_t<Rng> &it)
+            constexpr /*c++14*/ void satisfy_reverse(iterator_t<Rng> &it)
                 noexcept(noexcept(invoke(std::declval<Pred &>(), *--it)))
             {
                 RANGES_ASSERT(begin_);
@@ -133,7 +133,7 @@ namespace ranges
                 } while(invoke(pred, *it));
             }
 
-            RANGES_CXX14_CONSTEXPR void cache_begin()
+            constexpr /*c++14*/ void cache_begin()
                 noexcept(noexcept(ranges::begin(std::declval<Rng &>()),
                     std::declval<remove_if_view &>().
                         satisfy_forward(std::declval<iterator_t<Rng> &>())) &&
@@ -171,7 +171,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires SearchableRange<Rng, Pred>)
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
                 (
                     return remove_if_view<all_t<Rng>, Pred>{
                         all(static_cast<Rng &&>(rng)), std::move(pred)}

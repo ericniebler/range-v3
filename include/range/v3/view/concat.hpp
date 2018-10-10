@@ -324,14 +324,14 @@ namespace ranges
                 return static_cast<size_type_>(detail::concat_cardinality<Rngs...>::value);
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size() const -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto size() const -> CPP_ret(size_type_)(
                 requires detail::concat_cardinality<Rngs...>::value < 0 &&
                     And<SizedRange<Rngs const>...>)
             {
                 return const_cast<concat_view *>(this)->size();
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
                 requires detail::concat_cardinality<Rngs...>::value < 0 &&
                     And<SizedRange<Rngs>...>)
             {

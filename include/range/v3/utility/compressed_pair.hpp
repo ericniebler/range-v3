@@ -61,7 +61,7 @@ namespace ranges
                     return std::tuple<Us...>{get<Is>(*this)...};
                 }
                 template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-                friend RANGES_CXX14_CONSTEXPR T &
+                friend constexpr /*c++14*/ T &
                 get(compressed_tuple_ &tuple) noexcept
                 {
                     return static_cast<storage<T, I, Ts...> &>(tuple).get();
@@ -73,13 +73,13 @@ namespace ranges
                     return static_cast<storage<T, I, Ts...> const &>(tuple).get();
                 }
                 template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-                friend RANGES_CXX14_CONSTEXPR T &&
+                friend constexpr /*c++14*/ T &&
                 get(compressed_tuple_ &&tuple) noexcept
                 {
                     return static_cast<storage<T, I, Ts...> &&>(tuple).get();
                 }
                 template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
-                friend RANGES_CXX14_CONSTEXPR T const &&
+                friend constexpr /*c++14*/ T const &&
                 get(compressed_tuple_ const &&tuple) noexcept
                 {
                     return static_cast<storage<T, I, Ts...> const &&>(tuple).get();

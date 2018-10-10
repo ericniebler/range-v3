@@ -177,7 +177,7 @@ namespace ranges
                     this->construct_from(detail::move(t));
                 return *this;
             }
-            RANGES_CXX14_CONSTEXPR T &get() & noexcept
+            constexpr /*c++14*/ T &get() & noexcept
             {
                 return RANGES_ENSURE(engaged_), data_;
             }
@@ -185,12 +185,12 @@ namespace ranges
             {
                 return RANGES_ENSURE(engaged_), data_;
             }
-            RANGES_CXX14_CONSTEXPR T &&get() && noexcept
+            constexpr /*c++14*/ T &&get() && noexcept
             {
                 return RANGES_ENSURE(engaged_), detail::move(data_);
             }
             T const &&get() const && = delete;
-            RANGES_CXX14_CONSTEXPR operator T &() & noexcept
+            constexpr /*c++14*/ operator T &() & noexcept
             {
                 return get();
             }
@@ -198,13 +198,13 @@ namespace ranges
             {
                 return get();
             }
-            RANGES_CXX14_CONSTEXPR operator T &&() && noexcept
+            constexpr /*c++14*/ operator T &&() && noexcept
             {
                 return detail::move(get());
             }
             operator T const &&() const && = delete;
             template<typename...Args>
-            RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Args &&...args) (mutable &)
+            constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &)
             (
                 return data_(static_cast<Args &&>(args)...)
             )
@@ -214,7 +214,7 @@ namespace ranges
                 return ((T const &) data_)(static_cast<Args &&>(args)...)
             )
             template<typename...Args>
-            RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
+            constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
             (
                 return ((T &&) data_)(static_cast<Args &&>(args)...)
             )

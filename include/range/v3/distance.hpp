@@ -75,7 +75,7 @@ namespace ranges
                 return enumerate(rng, d).first;
             }
             template<typename Rng, typename D>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             D impl_r(Rng &rng, D d, sized_range_tag) const
             {
                 return static_cast<D>(size(rng)) + d;
@@ -85,7 +85,7 @@ namespace ranges
 
             CPP_template(typename Rng, typename D = range_difference_type_t<Rng>)(
                 requires Integral<D> && Range<Rng>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             D operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:

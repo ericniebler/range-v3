@@ -175,7 +175,7 @@ namespace ranges
 
 #if !RANGES_BROKEN_CPO_LOOKUP
             template<typename I_ = I>
-            friend RANGES_CXX14_CONSTEXPR
+            friend constexpr /*c++14*/
             auto iter_move(common_iterator const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
                 CPP_broken_friend_ret(rvalue_reference_t<I>)(
@@ -201,7 +201,7 @@ namespace ranges
         namespace _common_iterator_
         {
             template<typename I, typename S>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto iter_move(common_iterator<I, S> const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
                 CPP_broken_friend_ret(rvalue_reference_t<I>)(

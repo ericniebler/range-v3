@@ -699,14 +699,17 @@ namespace concepts
             template<typename T>
             struct Not
             {
-                explicit constexpr operator bool() const noexcept {
+                explicit constexpr operator bool() const noexcept
+                {
                     return !(bool) T{};
                 }
-                constexpr auto operator!() const noexcept {
+                constexpr auto operator!() const noexcept
+                {
                     return T{};
                 }
                 template<typename That>
-                constexpr auto operator&&(That) const noexcept {
+                constexpr auto operator&&(That) const noexcept
+                {
                     return And<Not, That>{};
                 }
             };

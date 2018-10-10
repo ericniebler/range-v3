@@ -76,7 +76,7 @@ namespace ranges
           : basic_view<Cardinality>
         {
         protected:
-            RANGES_CXX14_CONSTEXPR Derived &derived() noexcept
+            constexpr /*c++14*/ Derived &derived() noexcept
             {
                 CPP_assert(DerivedFrom<Derived, view_interface>);
                 return static_cast<Derived &>(*this);
@@ -103,7 +103,7 @@ namespace ranges
                 return Cardinality == 0;
             }
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto empty()
+            constexpr /*c++14*/ auto empty()
                 noexcept(noexcept(bool(ranges::begin(std::declval<D &>()) ==
                     ranges::end(std::declval<D &>())))) ->
                 CPP_ret(bool)(
@@ -126,7 +126,7 @@ namespace ranges
             }
             CPP_template(typename D = Derived)(
                 requires Same<D, Derived> && detail::CanEmpty<D &>)
-            RANGES_CXX14_CONSTEXPR explicit operator bool()
+            constexpr /*c++14*/ explicit operator bool()
                 noexcept(noexcept(ranges::empty(std::declval<D &>())))
             {
                 return !ranges::empty(derived());
@@ -147,7 +147,7 @@ namespace ranges
                 return static_cast<range_size_type_t<D>>(Cardinality);
             }
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto size() ->
+            constexpr /*c++14*/ auto size() ->
                 CPP_ret(range_size_type_t<D>)(
                     requires Same<D, Derived> && Cardinality < 0 &&
                         SizedSentinel<sentinel_t<D>, iterator_t<D>> &&
@@ -166,7 +166,7 @@ namespace ranges
             }
             /// Access the first element in a range:
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto front() ->
+            constexpr /*c++14*/ auto front() ->
                 CPP_ret(range_reference_t<D>)(
                     requires Same<D, Derived> && ForwardRange<D>)
             {
@@ -174,7 +174,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto front() const ->
+            constexpr /*c++14*/ auto front() const ->
                 CPP_ret(range_reference_t<D const>)(
                     requires Same<D, Derived> && ForwardRange<D const>)
             {
@@ -182,7 +182,7 @@ namespace ranges
             }
             /// Access the last element in a range:
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto back() ->
+            constexpr /*c++14*/ auto back() ->
                 CPP_ret(range_reference_t<D>)(
                     requires Same<D, Derived> &&
                         BoundedRange<D> &&
@@ -192,7 +192,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR auto back() const ->
+            constexpr /*c++14*/ auto back() const ->
                 CPP_ret(range_reference_t<D const>)(
                     requires Same<D, Derived> &&
                         BoundedRange<D const> &&
@@ -202,7 +202,7 @@ namespace ranges
             }
             /// Simple indexing:
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](range_difference_type_t<D> n) ->
                 CPP_ret(range_reference_t<D>)(
                     requires Same<D, Derived> && RandomAccessRange<D>)
@@ -211,7 +211,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](range_difference_type_t<D> n) const ->
                 CPP_ret(range_reference_t<D const>)(
                     requires Same<D, Derived> && RandomAccessRange<D const>)
@@ -220,7 +220,7 @@ namespace ranges
             }
             /// Returns a reference to the element at specified location pos, with bounds checking.
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto at(range_difference_type_t<D> n) ->
                 CPP_ret(range_reference_t<D>)(
                     requires Same<D, Derived> && RandomAccessRange<D> && SizedRange<D>)
@@ -234,7 +234,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto at(range_difference_type_t<D> n) const ->
                 CPP_ret(range_reference_t<D const>)(
                     requires Same<D, Derived> &&
@@ -251,7 +251,7 @@ namespace ranges
             /// Python-ic slicing:
             //      rng[{4,6}]
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](detail::slice_bounds<range_difference_type_t<D>> offs) & ->
                 CPP_ret(
                     invoke_result_t<
@@ -279,7 +279,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](detail::slice_bounds<range_difference_type_t<D>> offs) && ->
                 CPP_ret(
                     invoke_result_t<
@@ -294,7 +294,7 @@ namespace ranges
             //      rng[{4,end-2}]
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     range_difference_type_t<D>,
@@ -311,7 +311,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     range_difference_type_t<D>,
@@ -328,7 +328,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     range_difference_type_t<D>,
@@ -346,7 +346,7 @@ namespace ranges
             //      rng[{end-4,end-2}]
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
@@ -363,7 +363,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
@@ -380,7 +380,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
@@ -398,7 +398,7 @@ namespace ranges
             //      rng[{4,end}]
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) & ->
                 CPP_ret(
                     invoke_result_t<Slice, D &, range_difference_type_t<D>, end_fn>)(
@@ -408,7 +408,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) const & ->
                 CPP_ret(
                     invoke_result_t<Slice, D const &, range_difference_type_t<D>, end_fn>)(
@@ -418,7 +418,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](detail::slice_bounds<range_difference_type_t<D>, end_fn> offs) && ->
                 CPP_ret(
                     invoke_result_t<Slice, D, range_difference_type_t<D>, end_fn>)(
@@ -429,7 +429,7 @@ namespace ranges
             //      rng[{end-4,end}]
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<detail::from_end_<range_difference_type_t<D>>, end_fn> offs) & ->
                 CPP_ret(
@@ -440,7 +440,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
@@ -453,7 +453,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator[](
                 detail::slice_bounds<
                     detail::from_end_<range_difference_type_t<D>>,
@@ -467,7 +467,7 @@ namespace ranges
             /// Implicit conversion to something that looks like a container.
             CPP_template(typename Container, typename D = Derived)(
                 requires detail::ConvertibleToContainer<D, Container>)
-            RANGES_CXX14_CONSTEXPR operator Container ()
+            constexpr /*c++14*/ operator Container ()
             {
                 return ranges::to_<Container>(derived());
             }

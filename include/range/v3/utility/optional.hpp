@@ -97,7 +97,7 @@ namespace ranges
                       : data_(static_cast<Args &&>(args)...), engaged_{true}
                     {}
 
-                    RANGES_CXX14_CONSTEXPR void reset() noexcept
+                    constexpr /*c++14*/ void reset() noexcept
                     {
                         engaged_ = false;
                     }
@@ -160,7 +160,7 @@ namespace ranges
                     {
                         return engaged_;
                     }
-                    RANGES_CXX14_CONSTEXPR T &operator*() & noexcept
+                    constexpr /*c++14*/ T &operator*() & noexcept
                     {
                         return RANGES_EXPECT(engaged_), data_;
                     }
@@ -168,15 +168,15 @@ namespace ranges
                     {
                         return RANGES_EXPECT(engaged_), data_;
                     }
-                    RANGES_CXX14_CONSTEXPR T &&operator*() && noexcept
+                    constexpr /*c++14*/ T &&operator*() && noexcept
                     {
                         return RANGES_EXPECT(engaged_), detail::move(data_);
                     }
-                    RANGES_CXX14_CONSTEXPR T const &&operator*() const && noexcept
+                    constexpr /*c++14*/ T const &&operator*() const && noexcept
                     {
                         return RANGES_EXPECT(engaged_), detail::move(data_);
                     }
-                    RANGES_CXX14_CONSTEXPR T *operator->() noexcept
+                    constexpr /*c++14*/ T *operator->() noexcept
                     {
                         return RANGES_EXPECT(engaged_), std::addressof(data_);
                     }
@@ -185,7 +185,7 @@ namespace ranges
                         return RANGES_EXPECT(engaged_), std::addressof(data_);
                     }
                     CPP_member
-                    RANGES_CXX14_CONSTEXPR auto swap(optional_base &that)
+                    constexpr /*c++14*/ auto swap(optional_base &that)
                         noexcept(std::is_nothrow_move_constructible<T>::value &&
                             is_nothrow_swappable<T>::value) ->
                         CPP_ret(void)(
@@ -212,7 +212,7 @@ namespace ranges
                         return data_;
                     }
                     template<typename U>
-                    RANGES_CXX14_CONSTEXPR
+                    constexpr /*c++14*/
                     void assign_from(U &&that)
                         noexcept(
                             std::is_nothrow_constructible<T,
@@ -232,14 +232,14 @@ namespace ranges
                         }
                     }
                 private:
-                    RANGES_CXX14_CONSTEXPR
+                    constexpr /*c++14*/
                     void swap_(std::true_type, optional_base &that) noexcept
                     {
                         ranges::swap(
                             static_cast<optional_storage<T> &>(*this),
                             static_cast<optional_storage<T> &>(that));
                     }
-                    RANGES_CXX14_CONSTEXPR
+                    constexpr /*c++14*/
                     void swap_(std::false_type, optional_base &that)
                         noexcept(std::is_nothrow_move_constructible<T>::value &&
                             is_nothrow_swappable<T>::value)
@@ -284,12 +284,12 @@ namespace ranges
                     {
                         return RANGES_EXPECT(ptr_), ptr_;
                     }
-                    RANGES_CXX14_CONSTEXPR void reset() noexcept
+                    constexpr /*c++14*/ void reset() noexcept
                     {
                         ptr_ = nullptr;
                     }
                     CPP_member
-                    RANGES_CXX14_CONSTEXPR auto swap(optional_base &that)
+                    constexpr /*c++14*/ auto swap(optional_base &that)
                         noexcept(is_nothrow_swappable<T>::value) ->
                         CPP_ret(void)(
                             requires Swappable<T>)
@@ -301,7 +301,7 @@ namespace ranges
                     }
                 protected:
                     template<typename U>
-                    RANGES_CXX14_CONSTEXPR
+                    constexpr /*c++14*/
                     auto construct_from(U &&ref) noexcept ->
                         CPP_ret(T &)(
                             requires ConvertibleTo<U &, T &>)
@@ -311,7 +311,7 @@ namespace ranges
                         return *ptr_;
                     }
                     template<typename U>
-                    RANGES_CXX14_CONSTEXPR void assign_from(U &&that)
+                    constexpr /*c++14*/ void assign_from(U &&that)
                     {
                         if (ptr_ && that.ptr_)
                             *ptr_ = *that.ptr_;
@@ -575,7 +575,7 @@ namespace ranges
                     base_t::construct_from(detail::move(*that));
             }
 
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             optional &operator=(nullopt_t) noexcept
             {
                 reset();
@@ -586,7 +586,7 @@ namespace ranges
             optional &operator=(optional &&) = default;
 
             template<typename U = T>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator=(U &&u)
                 noexcept(std::is_nothrow_constructible<T, U>::value &&
                     std::is_nothrow_assignable<T &, U>::value) ->
@@ -604,7 +604,7 @@ namespace ranges
             }
 
             template<typename U>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator=(optional<U> const &that) ->
                 CPP_ret(optional &)(
                     requires OptionalShouldConvertAssign<U, T> &&
@@ -616,7 +616,7 @@ namespace ranges
             }
 
             template<typename U>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator=(optional<U> &&that) ->
                 CPP_ret(optional &)(
                     requires OptionalShouldConvertAssign<U, T> &&
@@ -662,7 +662,7 @@ namespace ranges
                 return (has_value() || detail::throw_bad_optional_access()),
                     **this;
             }
-            RANGES_CXX14_CONSTEXPR T &value() &
+            constexpr /*c++14*/ T &value() &
             {
                 return (has_value() || detail::throw_bad_optional_access()),
                     **this;
@@ -672,7 +672,7 @@ namespace ranges
                 return (has_value() || detail::throw_bad_optional_access()),
                     detail::move(**this);
             }
-            RANGES_CXX14_CONSTEXPR T &&value() &&
+            constexpr /*c++14*/ T &&value() &&
             {
                 return (has_value() || detail::throw_bad_optional_access()),
                     detail::move(**this);
@@ -939,19 +939,19 @@ namespace ranges
                 non_propagating_cache(non_propagating_cache const &) noexcept
                   : optional<T>{}
                 {}
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 non_propagating_cache(non_propagating_cache &&that) noexcept
                   : optional<T>{}
                 {
                     that.optional<T>::reset();
                 }
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 non_propagating_cache &operator=(non_propagating_cache const &) noexcept
                 {
                     optional<T>::reset();
                     return *this;
                 }
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 non_propagating_cache &operator=(non_propagating_cache &&that) noexcept
                 {
                     that.optional<T>::reset();

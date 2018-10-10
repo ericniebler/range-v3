@@ -47,7 +47,7 @@ namespace ranges
                 {
                     return n_ == 0;
                 }
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 bool equal(linear_distribute_view const& other) const noexcept
                 {
                     RANGES_DIAGNOSTIC_PUSH
@@ -56,7 +56,7 @@ namespace ranges
                     RANGES_DIAGNOSTIC_POP
                     return n_ == other.n_;
                 }
-                RANGES_CXX14_CONSTEXPR void next() noexcept
+                constexpr /*c++14*/ void next() noexcept
                 {
                     RANGES_EXPECT(n_ > 0);
                     --n_;
@@ -70,8 +70,8 @@ namespace ranges
                     }
                 }
             public:
-                RANGES_CXX14_CONSTEXPR linear_distribute_view() = default;
-                RANGES_CXX14_CONSTEXPR linear_distribute_view(T from, T to__, std::ptrdiff_t n) noexcept
+                constexpr /*c++14*/ linear_distribute_view() = default;
+                constexpr /*c++14*/ linear_distribute_view(T from, T to__, std::ptrdiff_t n) noexcept
                   : from_(from), to_(to__), n_(n)
                 {
                     RANGES_EXPECT(n_ > 0);

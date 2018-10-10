@@ -88,7 +88,7 @@ namespace ranges
                 explicit constexpr coroutine_owner(base_t coro) noexcept
                   : base_t(coro)
                 {}
-                RANGES_CXX14_CONSTEXPR coroutine_owner(coroutine_owner &&that) noexcept
+                constexpr /*c++14*/ coroutine_owner(coroutine_owner &&that) noexcept
                   : base_t(ranges::exchange(that.base(), {}))
                 {}
 

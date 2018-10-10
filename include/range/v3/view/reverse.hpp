@@ -59,7 +59,7 @@ namespace ranges
                 return ranges::size(this->base());
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size()
+            constexpr /*c++14*/ auto size()
                 noexcept(noexcept(std::declval<reverse_view &>().size_(
                     meta::bool_<SizedRange<Rng>>{}))) ->
                 CPP_ret(range_size_type_t<Rng>)(
@@ -79,13 +79,13 @@ namespace ranges
             {
                 return ranges::end(this->base());
             }
-            RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::true_type)
+            constexpr /*c++14*/ iterator_t<Rng> get_end_(std::true_type)
                 noexcept(noexcept(ranges::end(std::declval<Rng &>())))
             {
                 CPP_assert(BoundedRange<Rng>);
                 return ranges::end(this->base());
             }
-            RANGES_CXX14_CONSTEXPR iterator_t<Rng> get_end_(std::false_type)
+            constexpr /*c++14*/ iterator_t<Rng> get_end_(std::false_type)
                 noexcept(noexcept(iterator_t<Rng>(ranges::next(
                     ranges::begin(std::declval<Rng &>()),
                     ranges::end(std::declval<Rng &>())))))
@@ -98,7 +98,7 @@ namespace ranges
                 return *end_;
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto get_end()
+            constexpr /*c++14*/ auto get_end()
                 noexcept(noexcept(std::declval<reverse_view &>().get_end_(
                     meta::bool_<BoundedRange<Rng>>{}))) ->
                 CPP_ret(iterator_t<Rng>)(
@@ -125,32 +125,32 @@ namespace ranges
                 constexpr adaptor(Parent &) noexcept
                 {}
 #endif
-                RANGES_CXX14_CONSTEXPR static auto CPP_auto_fun(begin)(Parent &rng)
+                constexpr /*c++14*/ static auto CPP_auto_fun(begin)(Parent &rng)
                 (
                     return rng.get_end()
                 )
-                RANGES_CXX14_CONSTEXPR static auto CPP_auto_fun(end)(Parent &rng)
+                constexpr /*c++14*/ static auto CPP_auto_fun(end)(Parent &rng)
                 (
                     return ranges::begin(rng.base())
                 )
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(read)(iterator_t<Rng> it) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(read)(iterator_t<Rng> it) (const)
                 (
                     return *--it
                 )
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
+                constexpr /*c++14*/ void next(iterator_t<Rng> &it) const
                     noexcept(noexcept(--it))
                 {
                     RANGES_ASSERT(it != ranges::begin(rng_->base()));
                     --it;
                 }
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it) const
+                constexpr /*c++14*/ void prev(iterator_t<Rng> &it) const
                     noexcept(noexcept(++it))
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     ++it;
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 auto advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n) const
                     noexcept(noexcept(ranges::advance(it, -n))) ->
                     CPP_ret(void)(
@@ -161,7 +161,7 @@ namespace ranges
                     ranges::advance(it, -n);
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto
+                constexpr /*c++14*/ auto
                 distance_to(iterator_t<Rng> const &here, iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                     noexcept(noexcept(here - there)) ->
@@ -173,41 +173,41 @@ namespace ranges
                 }
             };
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto begin_adaptor() const noexcept ->
+            constexpr /*c++14*/ auto begin_adaptor() const noexcept ->
                 CPP_ret(adaptor)(
                     requires BoundedRange<Rng const>)
             {
                 return {*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() const noexcept ->
+            constexpr /*c++14*/ auto end_adaptor() const noexcept ->
                 CPP_ret(adaptor)(
                     requires BoundedRange<Rng const>)
             {
                 return {*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto begin_adaptor() noexcept ->
+            constexpr /*c++14*/ auto begin_adaptor() noexcept ->
                 CPP_ret(adaptor)(
                     requires not BoundedRange<Rng const>)
             {
                 return {*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+            constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(adaptor)(
                     requires not BoundedRange<Rng const>)
             {
                 return {*this};
             }
             // SizedRange == true
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size_(std::true_type)
+            constexpr /*c++14*/ range_size_type_t<Rng> size_(std::true_type)
                 noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
                 return ranges::size(this->base());
             }
             // SizedRange == false, SizedSentinel == true
-            RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size_(std::false_type)
+            constexpr /*c++14*/ range_size_type_t<Rng> size_(std::false_type)
                 noexcept(noexcept(ranges::iter_size(
                     std::declval<reverse_view &>().begin(),
                     std::declval<reverse_view &>().end())))
@@ -227,7 +227,7 @@ namespace ranges
                 // Avoid GCC5 bug that ODR-uses std::declval?!?
                 CPP_template(typename Rng)(
                     requires BidirectionalRange<Rng>)
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
 #else
                 CPP_template(typename Rng)(
                     requires BidirectionalRange<Rng>)

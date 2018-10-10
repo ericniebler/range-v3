@@ -35,7 +35,7 @@ namespace ranges
         {
             /// \return `begin(rng)[n]`
             template<typename Rng>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
                 CPP_ret(range_reference_t<Rng>)(
                     requires RandomAccessRange<Rng> && SizedRange<Rng>)
@@ -47,7 +47,7 @@ namespace ranges
 
             /// \return `begin(rng)[n]`
             template<typename Rng, typename T, typename D = range_difference_type_t<Rng>>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             auto operator()(Rng &&rng, T &&t) const ->
                 CPP_ret(range_reference_t<Rng>)(
                     requires RandomAccessRange<Rng> && SizedRange<Rng> &&
@@ -70,7 +70,7 @@ namespace ranges
 
         private:
             template<typename Rng>
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             static void check_throw(Rng &&rng, range_difference_type_t<Rng> n)
             {
                 (n < 0 || n >= ranges::distance(rng)) ? throw std::out_of_range("ranges::at") : void(0);

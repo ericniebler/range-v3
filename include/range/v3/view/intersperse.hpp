@@ -62,7 +62,7 @@ namespace ranges
                 return size_(ranges::size(this->base()));
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size()
+            constexpr /*c++14*/ auto size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>()))) ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires not SizedRange<Rng const> && SizedRange<Rng>)
@@ -79,7 +79,7 @@ namespace ranges
                   : val_{view.val_}
                 {}
                 template<typename View>
-                RANGES_CXX14_CONSTEXPR iterator_t<Rng> begin(View &view)
+                constexpr /*c++14*/ iterator_t<Rng> begin(View &view)
                     noexcept(std::is_nothrow_move_constructible<iterator_t<Rng>>::value &&
                         noexcept(ranges::begin(view.base()) != ranges::end(view.base())))
                 {
@@ -101,7 +101,7 @@ namespace ranges
                 {
                     return it0 == it1 && toggle_ == other.toggle_;
                 }
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it)
+                constexpr /*c++14*/ void next(iterator_t<Rng> &it)
                     noexcept(noexcept(++it))
                 {
                     if(toggle_)
@@ -109,7 +109,7 @@ namespace ranges
                     toggle_ = !toggle_;
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it)
+                constexpr /*c++14*/ auto prev(iterator_t<Rng> &it)
                     noexcept(noexcept(--it)) -> CPP_ret(void)(
                         requires BidirectionalRange<Rng>)
                 {
@@ -127,7 +127,7 @@ namespace ranges
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 auto advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(ranges::advance(it, n))) ->
                     CPP_ret(void)(
@@ -159,7 +159,7 @@ namespace ranges
                 return cursor_adaptor{*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto begin_adaptor()
+            constexpr /*c++14*/ auto begin_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value) ->
                 CPP_ret(cursor_adaptor)(
@@ -178,7 +178,7 @@ namespace ranges
                 return cursor_adaptor{*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor()
+            constexpr /*c++14*/ auto end_adaptor()
                 noexcept(std::is_nothrow_constructible<
                     cursor_adaptor, intersperse_view &>::value) ->
                 CPP_ret(cursor_adaptor)(

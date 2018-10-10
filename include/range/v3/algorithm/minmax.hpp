@@ -39,7 +39,7 @@ namespace ranges
                 typename R = tagged_pair<tag::min(V), tag::max(V)>)(
                 requires InputRange<Rng> && Copyable<V> &&
                     IndirectRelation<C, projected<I, P>>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             R operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 auto begin = ranges::begin(rng);

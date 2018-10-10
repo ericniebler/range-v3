@@ -106,7 +106,7 @@ namespace ranges
                     ranges::copy(r, data_);
                     return *this;
                 }
-                RANGES_CXX14_CONSTEXPR indexed_element<T[N], Index::value> ref()
+                constexpr /*c++14*/ indexed_element<T[N], Index::value> ref()
                 {
                     return {data_};
                 }
@@ -114,7 +114,7 @@ namespace ranges
                 {
                     return {data_};
                 }
-                RANGES_CXX14_CONSTEXPR T (&get() noexcept)[N]
+                constexpr /*c++14*/ T (&get() noexcept)[N]
                 {
                     return data_;
                 }

@@ -170,7 +170,7 @@ namespace ranges
 
             CPP_template(typename Val)(
                 requires SignedIntegral<Val>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
                 RANGES_EXPECT(from <= to);
@@ -182,7 +182,7 @@ namespace ranges
 
             CPP_template(typename Val)(
                 requires UnsignedIntegral<Val>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
                 using UD = meta::_t<std::make_unsigned<D>>;
@@ -210,7 +210,7 @@ namespace ranges
 
             CPP_template(typename Val)(
                 requires Integral<Val>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
                 using D = iota_difference_t<Val>;
                 auto dist = ints_open_distance_(from, to);

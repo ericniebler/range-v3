@@ -124,7 +124,7 @@ namespace ranges
             {
                 CPP_template(typename T)(
                     requires Integral<T>)
-                RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
+                constexpr /*c++14*/ std::uint32_t crushto32(T value)
                 RANGES_INTENDED_MODULAR_ARITHMETIC
                 {
                     if(sizeof(T) <= 4)
@@ -137,7 +137,7 @@ namespace ranges
                 }
 
                 template<typename T>
-                RANGES_CXX14_CONSTEXPR std::uint32_t hash(T &&value)
+                constexpr /*c++14*/ std::uint32_t hash(T &&value)
                 {
                     auto hasher = std::hash<uncvref_t<T>>{};
                     return randutils::crushto32(hasher(static_cast<T &&>(value)));

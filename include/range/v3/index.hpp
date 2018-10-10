@@ -54,7 +54,7 @@ namespace ranges
             /// \return `begin(rng)[n]`
             CPP_template(typename Rng)(
                 requires RandomAccessRange<Rng>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 noexcept(noexcept(ranges::begin(rng)[n]))
             {
@@ -67,7 +67,7 @@ namespace ranges
                 requires RandomAccessRange<Rng> &&
                                   !Same<uncvref_t<T>, D> &&
                                   ConvertibleTo<T, D>)
-            RANGES_CXX14_CONSTEXPR
+            constexpr /*c++14*/
             range_reference_t<Rng> operator()(Rng &&rng, T &&t) const
                 noexcept(noexcept(ranges::begin(rng)[D()]))
             {

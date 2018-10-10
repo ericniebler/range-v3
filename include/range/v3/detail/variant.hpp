@@ -141,7 +141,7 @@ namespace ranges
                     noexcept(std::is_nothrow_constructible<T, Ts...>::value)
                   : datum_(static_cast<Ts &&>(ts)...)
                 {}
-                RANGES_CXX14_CONSTEXPR indexed_element<T, Index::value> ref() noexcept
+                constexpr /*c++14*/ indexed_element<T, Index::value> ref() noexcept
                 {
                     return {datum_};
                 }
@@ -149,7 +149,7 @@ namespace ranges
                 {
                     return {datum_};
                 }
-                RANGES_CXX14_CONSTEXPR T &get() noexcept
+                constexpr /*c++14*/ T &get() noexcept
                 {
                     return datum_;
                 }

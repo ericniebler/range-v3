@@ -63,7 +63,7 @@ namespace ranges
             template<typename Derived>
             struct member_swap
             {
-                friend RANGES_CXX14_CONSTEXPR void swap(Derived &a, Derived &b)
+                friend constexpr /*c++14*/ void swap(Derived &a, Derived &b)
                     noexcept(noexcept(a.swap(b)))
                 {
                     a.swap(b);
@@ -114,7 +114,7 @@ namespace ranges
             {
                 // *If* a user-defined iter_swap is found via ADL, call that:
                 template<typename T, typename U>
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 meta::if_c<is_adl_indirectly_swappable_<T, U>::value>
                 operator()(T &&t, U &&u) const
                     noexcept(noexcept(iter_swap((T &&) t, (U &&) u)))
@@ -125,7 +125,7 @@ namespace ranges
                 // *Otherwise*, for Readable types with swappable reference
                 // types, call ranges::swap(*a, *b)
                 template<typename I0, typename I1>
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
                     is_swappable_with<reference_t<I0>, reference_t<I1>>::value>
@@ -141,7 +141,7 @@ namespace ranges
                 //      *a = iter_move(b);
                 //      *b = std::move(tmp);
                 template<typename I0, typename I1>
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
                     !is_swappable_with<reference_t<I0>, reference_t<I1>>::value &&

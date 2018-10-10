@@ -75,7 +75,7 @@ namespace ranges
                 return ranges::size(this->base());
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size()
+            constexpr /*c++14*/ auto size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>()))) ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires not SizedRange<Rng const> && SizedRange<Rng>)

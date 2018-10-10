@@ -68,7 +68,7 @@ namespace ranges
                 constexpr adaptor(Parent &rng) noexcept
                   : rng_(&rng)
                 {}
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Base> &it) const
+                constexpr /*c++14*/ void next(iterator_t<Base> &it) const
                 {
                     auto const last = ranges::end(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -78,7 +78,7 @@ namespace ranges
                             break;
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Base> &it) const ->
+                constexpr /*c++14*/ auto prev(iterator_t<Base> &it) const ->
                     CPP_ret(void)(
                         requires BidirectionalRange<Base>)
                 {
@@ -142,7 +142,7 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename Pred>
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 static auto bind(adjacent_filter_fn adjacent_filter, Pred pred)
                 {
                     return make_pipeable(std::bind(adjacent_filter, std::placeholders::_1,
@@ -151,7 +151,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires detail::AdjacentFilter<Rng, Pred>)
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
                 (
                     return adjacent_filter_view<all_t<Rng>, Pred>{
                         all(static_cast<Rng &&>(rng)), std::move(pred)}

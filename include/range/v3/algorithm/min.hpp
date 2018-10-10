@@ -36,7 +36,7 @@ namespace ranges
                 typename I = iterator_t<Rng>, typename V = value_type_t<I>)(
                 requires InputRange<Rng> && Copyable<V> &&
                     IndirectRelation<C, projected<I, P>>)
-            RANGES_CXX14_CONSTEXPR V operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            constexpr /*c++14*/ V operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);

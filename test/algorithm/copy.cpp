@@ -19,7 +19,7 @@
 #include "../simple_test.hpp"
 
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14 && RANGES_CONSTEXPR_INVOKE
-RANGES_CXX14_CONSTEXPR
+constexpr /*c++14*/
 bool test_constexpr_copy()
 {
     int a[4] = {0, 0, 0, 0};

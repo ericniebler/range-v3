@@ -77,17 +77,17 @@ namespace ranges
                 ~static_cast<meta::_t<std::underlying_type<category>>>(lhs));
         }
 
-        RANGES_CXX14_CONSTEXPR category &operator&=(category &lhs, category rhs) noexcept
+        constexpr /*c++14*/ category &operator&=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs & rhs);
         }
 
-        RANGES_CXX14_CONSTEXPR category &operator|=(category &lhs, category rhs) noexcept
+        constexpr /*c++14*/ category &operator|=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs | rhs);
         }
 
-        RANGES_CXX14_CONSTEXPR category &operator^=(category &lhs, category rhs) noexcept
+        constexpr /*c++14*/ category &operator^=(category &lhs, category rhs) noexcept
         {
             return (lhs = lhs ^ rhs);
         }

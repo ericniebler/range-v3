@@ -71,7 +71,7 @@ namespace ranges
                 }
 
                 template<typename R>
-                static RANGES_CXX14_CONSTEXPR auto impl_(R &r, ...) ->
+                static constexpr /*c++14*/ auto impl_(R &r, ...) ->
                     CPP_ret(size_type_t<cbegin_t<R>>)(
                         requires ForwardIterator<cbegin_t<R>> &&
                             SizedSentinel<cend_t<R>, cbegin_t<R>>)

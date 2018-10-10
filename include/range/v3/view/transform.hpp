@@ -123,7 +123,7 @@ namespace ranges
                 return ranges::size(this->base());
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size() ->
+            constexpr /*c++14*/ auto size() ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires SizedRange<Rng>)
             {
@@ -311,7 +311,7 @@ namespace ranges
                 return size_(*this);
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
                 requires my_cardinality < 0 &&
                     SizedRange<Rng1> && SizedRange<Rng2>)
             {

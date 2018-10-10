@@ -62,7 +62,7 @@ namespace ranges
               : stride_view_adaptor<Rng>
             {
                 stride_view_base_() = default;
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 stride_view_base_(Rng &&rng, range_difference_type_t<Rng> const stride)
                     noexcept(std::is_nothrow_constructible<stride_view_adaptor<Rng>, Rng>::value &&
                         noexcept(std::declval<stride_view_base_ &>().calc_offset(
@@ -72,17 +72,17 @@ namespace ranges
                     offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
                 {}
             protected:
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 void set_offset(range_difference_type_t<Rng> const delta) noexcept
                 {
                     RANGES_EXPECT(0 <= delta && delta < stride_);
                     if(0 > offset_) offset_ = delta;
                     else RANGES_EXPECT(offset_ == delta);
                 }
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 void set_offset(range_difference_type_t<Rng> const) const noexcept
                 {}
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 range_difference_type_t<Rng> get_offset(bool check = true) const noexcept
                 {
                     RANGES_EXPECT(!check || 0 <= offset_);
@@ -92,7 +92,7 @@ namespace ranges
                 range_difference_type_t<Rng> stride_;
                 range_difference_type_t<Rng> offset_ = -1;
             private:
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 range_difference_type_t<Rng> calc_offset(std::true_type)
                     noexcept(noexcept(ranges::distance(std::declval<stride_view_base_ &>().base())))
                 {
@@ -101,7 +101,7 @@ namespace ranges
                     else
                         return 0;
                 }
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 range_difference_type_t<Rng> calc_offset(std::false_type) const noexcept
                 {
                     return -1;
@@ -119,10 +119,10 @@ namespace ranges
                     stride_{(RANGES_EXPECT(0 < stride), stride)}
                 {}
             protected:
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 void set_offset(range_difference_type_t<Rng> const) const noexcept
                 {}
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 range_difference_type_t<Rng> get_offset(bool = true) const noexcept
                 {
                     return 0;
@@ -158,7 +158,7 @@ namespace ranges
                 explicit constexpr adaptor(stride_view_t &rng) noexcept
                   : rng_(&rng)
                 {}
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it)
+                constexpr /*c++14*/ void next(iterator_t<Rng> &it)
                     noexcept(noexcept(it != ranges::end(std::declval<Rng &>()),
                         ranges::advance(it, 0, std::declval<sentinel_t<Rng> &>())))
                 {
@@ -171,7 +171,7 @@ namespace ranges
                     }
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it)
+                constexpr /*c++14*/ auto prev(iterator_t<Rng> &it)
                     noexcept(noexcept(ranges::advance(it, 0),
                         it != ranges::begin(std::declval<Rng &>()),
                         it == ranges::end(std::declval<Rng &>()))) ->
@@ -193,7 +193,7 @@ namespace ranges
                 }
                 CPP_template(typename Other)(
                     requires SizedSentinel<Other, iterator_t<Rng>>)
-                RANGES_CXX14_CONSTEXPR range_difference_type_t<Rng> distance_to(
+                constexpr /*c++14*/ range_difference_type_t<Rng> distance_to(
                     iterator_t<Rng> const &here, Other const &there) const
                     noexcept(noexcept(there - here))
                 {
@@ -205,7 +205,7 @@ namespace ranges
                     return delta / rng_->stride_;
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto advance(
+                constexpr /*c++14*/ auto advance(
                     iterator_t<Rng> &it, range_difference_type_t<Rng> n)
                     noexcept(noexcept(
                         ranges::begin(std::declval<Rng &>()) == ranges::end(std::declval<Rng &>()),
@@ -248,7 +248,7 @@ namespace ranges
                 return adaptor{*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto begin_adaptor() noexcept ->
+            constexpr /*c++14*/ auto begin_adaptor() noexcept ->
                 CPP_ret(adaptor)(
                     requires not const_iterable)
             {
@@ -267,7 +267,7 @@ namespace ranges
                 return adaptor{*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+            constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(adaptor)(
                     requires not const_iterable && BoundedRange<Rng>)
             {
@@ -281,7 +281,7 @@ namespace ranges
                 return {};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+            constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(adaptor_base)(
                     requires not const_iterable && !BoundedRange<Rng>)
             {
@@ -309,7 +309,7 @@ namespace ranges
                 return size_(ranges::size(this->base()));
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size()
+            constexpr /*c++14*/ auto size()
                 noexcept(noexcept(ranges::size(std::declval<Rng &>()))) ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires not SizedRange<Rng const> && SizedRange<Rng>)
@@ -325,7 +325,7 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename Difference>
-                RANGES_CXX14_CONSTEXPR
+                constexpr /*c++14*/
                 static auto CPP_fun(bind)(stride_fn stride, Difference step)(
                     requires Integral<Difference>)
                 {

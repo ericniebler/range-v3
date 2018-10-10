@@ -64,17 +64,17 @@ namespace ranges
                 constexpr adaptor(adjacent_remove_if_view &rng) noexcept
                   : rng_(&rng)
                 {}
-                RANGES_CXX14_CONSTEXPR static iterator_t<Rng> begin(adjacent_remove_if_view &rng)
+                constexpr /*c++14*/ static iterator_t<Rng> begin(adjacent_remove_if_view &rng)
                 {
                     return *rng.begin_;
                 }
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it) const
+                constexpr /*c++14*/ void next(iterator_t<Rng> &it) const
                 {
                     RANGES_ASSERT(it != ranges::end(rng_->base()));
                     rng_->satisfy_forward(++it);
                 }
                 CPP_member
-                RANGES_CXX14_CONSTEXPR auto prev(iterator_t<Rng> &it) const ->
+                constexpr /*c++14*/ auto prev(iterator_t<Rng> &it) const ->
                     CPP_ret(void)(
                         requires BidirectionalRange<Rng>)
                 {
@@ -83,13 +83,13 @@ namespace ranges
                 void advance() = delete;
                 void distance_to() = delete;
             };
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor()
+            constexpr /*c++14*/ adaptor begin_adaptor()
             {
                 cache_begin();
                 return {*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() ->
+            constexpr /*c++14*/ auto end_adaptor() ->
                 CPP_ret(adaptor)(
                     requires BoundedRange<Rng>)
             {
@@ -97,14 +97,14 @@ namespace ranges
                 return {*this};
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto end_adaptor() noexcept ->
+            constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(adaptor_base)(
                     requires not BoundedRange<Rng>)
             {
                 return {};
             }
 
-            RANGES_CXX14_CONSTEXPR void satisfy_forward(iterator_t<Rng> &it)
+            constexpr /*c++14*/ void satisfy_forward(iterator_t<Rng> &it)
             {
                 auto const end = ranges::end(this->base());
                 if(it == end) return;
@@ -112,7 +112,7 @@ namespace ranges
                 for(auto next = it; ++next != end && invoke(pred, *it, *next); it = next)
                     ;
             }
-            RANGES_CXX14_CONSTEXPR void satisfy_reverse(iterator_t<Rng> &it)
+            constexpr /*c++14*/ void satisfy_reverse(iterator_t<Rng> &it)
             {
                 auto const &first = *begin_;
                 RANGES_ASSERT(it != first); (void)first;
@@ -161,7 +161,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng, typename Pred)(
                     requires AdjacentRemoveIfConcept<Rng, Pred>)
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
                 (
                     return adjacent_remove_if_view<all_t<Rng>, Pred>{
                         all(static_cast<Rng &&>(rng)), std::move(pred)}

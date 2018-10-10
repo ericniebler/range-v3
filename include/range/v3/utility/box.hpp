@@ -170,7 +170,7 @@ namespace ranges
               : value(static_cast<E &&>(e))
             {}
 
-            RANGES_CXX14_CONSTEXPR Element &get() & noexcept
+            constexpr /*c++14*/ Element &get() & noexcept
             {
                 return value;
             }
@@ -178,7 +178,7 @@ namespace ranges
             {
                 return value;
             }
-            RANGES_CXX14_CONSTEXPR Element &&get() && noexcept
+            constexpr /*c++14*/ Element &&get() && noexcept
             {
                 return detail::move(value);
             }
@@ -210,7 +210,7 @@ namespace ranges
               : Element(static_cast<E &&>(e))
             {}
 
-            RANGES_CXX14_CONSTEXPR Element &get() & noexcept
+            constexpr /*c++14*/ Element &get() & noexcept
             {
                 return *this;
             }
@@ -218,7 +218,7 @@ namespace ranges
             {
                 return *this;
             }
-            RANGES_CXX14_CONSTEXPR Element &&get() && noexcept
+            constexpr /*c++14*/ Element &&get() && noexcept
             {
                 return detail::move(*this);
             }
@@ -244,7 +244,7 @@ namespace ranges
                     defer::Constructible<Element, E> && !defer::ConvertibleTo<E, Element>)
             {}
 
-            RANGES_CXX14_CONSTEXPR Element &get() & noexcept
+            constexpr /*c++14*/ Element &get() & noexcept
             {
                 return value;
             }
@@ -252,7 +252,7 @@ namespace ranges
             {
                 return value;
             }
-            RANGES_CXX14_CONSTEXPR Element &&get() && noexcept
+            constexpr /*c++14*/ Element &&get() && noexcept
             {
                 return detail::move(value);
             }
@@ -265,7 +265,7 @@ namespace ranges
         {
             // Get by tag type
             template<typename Tag, typename Element, detail::box_compress BC>
-            RANGES_CXX14_CONSTEXPR Element & get(box<Element, Tag, BC> & b) noexcept
+            constexpr /*c++14*/ Element & get(box<Element, Tag, BC> & b) noexcept
             {
                 return b.get();
             }
@@ -275,13 +275,13 @@ namespace ranges
                 return b.get();
             }
             template<typename Tag, typename Element, detail::box_compress BC>
-            RANGES_CXX14_CONSTEXPR Element &&get(box<Element, Tag, BC> && b) noexcept
+            constexpr /*c++14*/ Element &&get(box<Element, Tag, BC> && b) noexcept
             {
                 return detail::move(b).get();
             }
             // Get by index
             template<std::size_t I, typename Element, detail::box_compress BC>
-            RANGES_CXX14_CONSTEXPR Element & get(box<Element, meta::size_t<I>, BC> & b) noexcept
+            constexpr /*c++14*/ Element & get(box<Element, meta::size_t<I>, BC> & b) noexcept
             {
                 return b.get();
             }
@@ -291,7 +291,7 @@ namespace ranges
                 return b.get();
             }
             template<std::size_t I, typename Element, detail::box_compress BC>
-            RANGES_CXX14_CONSTEXPR Element &&get(box<Element, meta::size_t<I>, BC> && b) noexcept
+            constexpr /*c++14*/ Element &&get(box<Element, meta::size_t<I>, BC> && b) noexcept
             {
                 return detail::move(b).get();
             }

@@ -24,7 +24,7 @@
 
 // Test sequence 1,2,3,4
 template<typename It>
-RANGES_CXX14_CONSTEXPR auto test_it_back(It, It end,
+constexpr /*c++14*/ auto test_it_back(It, It end,
     ranges::bidirectional_iterator_tag) -> bool
 {
     auto end_m1_2 = It{ranges::prev(end, 1)};
@@ -33,13 +33,13 @@ RANGES_CXX14_CONSTEXPR auto test_it_back(It, It end,
 }
 
 template<typename It, typename Concept>
-RANGES_CXX14_CONSTEXPR auto test_it_back(It, It, Concept) -> bool
+constexpr /*c++14*/ auto test_it_back(It, It, Concept) -> bool
 {
     return true;
 }
 
 template<typename It>
-RANGES_CXX14_CONSTEXPR auto test_it_(It beg, It end) -> bool {
+constexpr /*c++14*/ auto test_it_(It beg, It end) -> bool {
     if (*beg != 1) { return false; }
     if (ranges::distance(beg, end) != 4) { return false; }
     if (ranges::next(beg, 4) != end) { return false; }
@@ -66,7 +66,7 @@ RANGES_CXX14_CONSTEXPR auto test_it_(It beg, It end) -> bool {
 
 // Test sequence 4,3,2,1 (for reverse iterators)
 template<typename It>
-RANGES_CXX14_CONSTEXPR auto test_rit_(It beg, It end) -> bool {
+constexpr /*c++14*/ auto test_rit_(It beg, It end) -> bool {
     if (ranges::distance(beg, end) != 4) { return false; }
     if (ranges::next(beg, 4) != end) { return false; }
     auto end_m1 = It{ranges::next(beg, 3)};
@@ -94,14 +94,14 @@ RANGES_CXX14_CONSTEXPR auto test_rit_(It beg, It end) -> bool {
 }
 
 template<typename It, typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_it(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_it(Sequence1234&& a) -> bool {
     auto beg = It{ranges::begin(a)};
     auto end = It{ranges::end(a)};
     return test_it_(beg, end);
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_its_c(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_its_c(Sequence1234&& a) -> bool {
     return     test_it<input_iterator<int const *>>(a)
             && test_it<forward_iterator<int const *>>(a)
             && test_it<bidirectional_iterator<int const *>>(a)
@@ -110,7 +110,7 @@ RANGES_CXX14_CONSTEXPR auto test_its_c(Sequence1234&& a) -> bool {
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_its(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_its(Sequence1234&& a) -> bool {
     return     test_it<input_iterator<int *>>(a)
             && test_it<forward_iterator<int *>>(a)
             && test_it<bidirectional_iterator<int *>>(a)
@@ -120,28 +120,28 @@ RANGES_CXX14_CONSTEXPR auto test_its(Sequence1234&& a) -> bool {
 }
 
 template<typename It, typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_rit(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_rit(Sequence1234&& a) -> bool {
     auto beg = It{ranges::rbegin(a)};
     auto end = It{ranges::rend(a)};
     return test_rit_(beg, end);
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_rits(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_rits(Sequence1234&& a) -> bool {
     using rit = decltype(ranges::rbegin(a));
     return     test_rit<bidirectional_iterator<rit>>(a)
             && test_rit<random_access_iterator<rit>>(a);
 }
 
 template<typename It, typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_cit(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_cit(Sequence1234&& a) -> bool {
     auto beg = It{ranges::cbegin(a)};
     auto end = It{ranges::cend(a)};
     return test_it_(beg, end);
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_cits(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_cits(Sequence1234&& a) -> bool {
     return     test_cit<input_iterator<int const *>>(a)
             && test_cit<forward_iterator<int const *>>(a)
             && test_cit<bidirectional_iterator<int const *>>(a)
@@ -150,21 +150,21 @@ RANGES_CXX14_CONSTEXPR auto test_cits(Sequence1234&& a) -> bool {
 
 
 template<typename It, typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_crit(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_crit(Sequence1234&& a) -> bool {
     auto beg = It{ranges::crbegin(a)};
     auto end = It{ranges::crend(a)};
     return test_rit_(beg, end);
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_crits(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_crits(Sequence1234&& a) -> bool {
     using rit = decltype(ranges::crbegin(a));
     return     test_crit<bidirectional_iterator<rit>>(a)
             && test_crit<random_access_iterator<rit>>(a);
 }
 
 template<typename Sequence1234>
-RANGES_CXX14_CONSTEXPR auto test_non_member_f(Sequence1234&& a) -> bool {
+constexpr /*c++14*/ auto test_non_member_f(Sequence1234&& a) -> bool {
     if (ranges::empty(a)) { return false; }
     if (ranges::front(a) != 1) { return false; }
     if (ranges::back(a) != 4) { return false; }
@@ -174,7 +174,7 @@ RANGES_CXX14_CONSTEXPR auto test_non_member_f(Sequence1234&& a) -> bool {
     return true;
 }
 
-RANGES_CXX14_CONSTEXPR auto test_array() -> bool {
+constexpr /*c++14*/ auto test_array() -> bool {
     test::array<int, 4> a{{1, 2, 3, 4}};
 
     auto beg = ranges::begin(a);
@@ -201,7 +201,7 @@ RANGES_CXX14_CONSTEXPR auto test_array() -> bool {
     return true;
 }
 
-RANGES_CXX14_CONSTEXPR auto test_c_array() -> bool {
+constexpr /*c++14*/ auto test_c_array() -> bool {
     int a[4]{1, 2, 3, 4};
     if (!test_its(a)) { return false; }
     if (!test_cits(a)) { return false; }
@@ -217,7 +217,7 @@ RANGES_CXX14_CONSTEXPR auto test_c_array() -> bool {
     return true;
 }
 
-RANGES_CXX14_CONSTEXPR auto test_init_list() -> bool {
+constexpr /*c++14*/ auto test_init_list() -> bool {
     std::initializer_list<int> a{1, 2, 3, 4};
     if (!test_its_c(a)) { return false; }
     if (!test_cits(a)) { return false; }

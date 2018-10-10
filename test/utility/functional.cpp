@@ -89,7 +89,7 @@ namespace
     struct A {
         int i = 13;
         constexpr int f() const noexcept { return 42; }
-        RANGES_CXX14_CONSTEXPR int g(int i) { return 2 * i; }
+        constexpr /*c++14*/ int g(int i) { return 2 * i; }
     };
 
     constexpr int f() noexcept { return 13; }

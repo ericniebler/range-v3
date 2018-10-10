@@ -257,7 +257,7 @@ namespace ranges
             {}
 
             template<typename ...Args>
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) & ->
+            constexpr /*c++14*/ auto operator()(Args &&...args) & ->
                 CPP_ret(bool)(
                     requires Predicate<FD &, Args...>)
             {
@@ -273,7 +273,7 @@ namespace ranges
             }
             /// \overload
             template<typename ...Args>
-            RANGES_CXX14_CONSTEXPR auto operator()(Args &&...args) && ->
+            constexpr /*c++14*/ auto operator()(Args &&...args) && ->
                 CPP_ret(bool)(
                     requires Predicate<FD, Args...>)
             {

@@ -31,7 +31,7 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            RANGES_CXX14_CONSTEXPR T&
+            constexpr /*c++14*/ T&
             get_first_second_helper(T& t, std::true_type) noexcept
             {
                 return t;
@@ -39,7 +39,7 @@ namespace ranges
 
             CPP_template(typename T)(
                 requires MoveConstructible<T>)
-            RANGES_CXX14_CONSTEXPR T
+            constexpr /*c++14*/ T
             get_first_second_helper(T& t, std::false_type)
                 noexcept(std::is_nothrow_move_constructible<T>::value)
             {
@@ -54,7 +54,7 @@ namespace ranges
             struct get_first
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Pair &&p) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Pair &&p) (const)
                 (
                     return get_first_second_helper(p.first,
                         get_first_second_tag<Pair, decltype(p.first)>{})
@@ -64,7 +64,7 @@ namespace ranges
             struct get_second
             {
                 template<typename Pair>
-                RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(operator())(Pair &&p) (const)
+                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Pair &&p) (const)
                 (
                     return get_first_second_helper(p.second,
                         get_first_second_tag<Pair, decltype(p.second)>{})

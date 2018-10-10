@@ -60,89 +60,89 @@ namespace ranges
             using mixin_base_t = meta::_t<mixin_base_<Cur>>;
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_cursor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng, long)
             (
                 return rng.begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_cursor)(Rng &rng, int)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng, int)
             (
                 return static_cast<Rng const &>(rng).begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_cursor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng, long)
             (
                 return rng.end_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_cursor)(Rng &rng, int)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng, int)
             (
                 return static_cast<Rng const &>(rng).end_cursor()
             )
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_adaptor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng, long)
             (
                 return rng.begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(begin_adaptor)(Rng &rng, int)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng, int)
             (
                 return static_cast<Rng const &>(rng).begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_adaptor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng, long)
             (
                 return rng.end_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(end_adaptor)(Rng &rng, int)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng, int)
             (
                 return static_cast<Rng const &>(rng).end_adaptor()
             )
 
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(read)(Cur const &pos)
+            static constexpr /*c++14*/ auto CPP_auto_fun(read)(Cur const &pos)
             (
                 return pos.read()
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(arrow)(Cur const &pos)
+            static constexpr /*c++14*/ auto CPP_auto_fun(arrow)(Cur const &pos)
             (
                 return pos.arrow()
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(move)(Cur const &pos)
+            static constexpr /*c++14*/ auto CPP_auto_fun(move)(Cur const &pos)
             (
                 return pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(write)(Cur &pos, T &&t)
+            static constexpr /*c++14*/ auto CPP_auto_fun(write)(Cur &pos, T &&t)
             (
                 return pos.write((T &&) t)
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(next)(Cur & pos)
+            static constexpr /*c++14*/ auto CPP_auto_fun(next)(Cur & pos)
             (
                 return pos.next()
             )
             template<typename Cur, typename O>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(equal)(Cur const &pos, O const &other)
+            static constexpr /*c++14*/ auto CPP_auto_fun(equal)(Cur const &pos, O const &other)
             (
                 return pos.equal(other)
             )
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(prev)(Cur & pos)
+            static constexpr /*c++14*/ auto CPP_auto_fun(prev)(Cur & pos)
             (
                 return pos.prev()
             )
             template<typename Cur, typename D>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(advance)(Cur & pos, D n)
+            static constexpr /*c++14*/ auto CPP_auto_fun(advance)(Cur & pos, D n)
             (
                 return pos.advance(n)
             )
             template<typename Cur, typename O>
-            static RANGES_CXX14_CONSTEXPR auto CPP_auto_fun(distance_to)(Cur const &pos, O const &other)
+            static constexpr /*c++14*/ auto CPP_auto_fun(distance_to)(Cur const &pos, O const &other)
             (
                 return pos.distance_to(other)
             )
@@ -186,7 +186,7 @@ namespace ranges
             using cursor_value_t = typename cursor_value<Cur>::type;
 
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR Cur &pos(basic_iterator<Cur> &it) noexcept
+            static constexpr /*c++14*/ Cur &pos(basic_iterator<Cur> &it) noexcept
             {
                 return it.pos();
             }
@@ -196,13 +196,13 @@ namespace ranges
                 return it.pos();
             }
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR Cur &&pos(basic_iterator<Cur> &&it) noexcept
+            static constexpr /*c++14*/ Cur &&pos(basic_iterator<Cur> &&it) noexcept
             {
                 return detail::move(it.pos());
             }
 
             template<typename Cur>
-            static RANGES_CXX14_CONSTEXPR Cur cursor(basic_iterator<Cur> it)
+            static constexpr /*c++14*/ Cur cursor(basic_iterator<Cur> it)
             {
                 return std::move(it.pos());
             }

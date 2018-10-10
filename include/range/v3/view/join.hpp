@@ -84,7 +84,7 @@ namespace ranges
                 return detail::join_cardinality<Rng>::value;
             }
             CPP_member
-            RANGES_CXX14_CONSTEXPR auto size() -> CPP_ret(size_type)(
+            constexpr /*c++14*/ auto size() -> CPP_ret(size_type)(
                 requires detail::join_cardinality<Rng>::value < 0 &&
                     range_cardinality<Rng>::value >= 0 &&
                     (bool) ForwardRange<Rng> &&
