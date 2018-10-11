@@ -17,6 +17,7 @@
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/stride.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/numeric.hpp>
@@ -133,5 +134,30 @@ int main()
                     {48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0});
     }
 
-    return ::test_result();
+    // https://github.com/ericniebler/range-v3/issues/901
+    {
+        auto r = view::iota( 0, 12 );
+
+        // Evenly divisible stride:
+        auto strided1 = r | view::stride(3);
+        ::check_equal(strided1, {0, 3, 6, 9});
+        CHECK(strided1.size() == 4u);
+        CHECK(strided1.front() == 0);
+        CHECK(strided1[0] == 0);
+        CHECK(strided1.back() == 9);
+        CHECK(strided1[3] == 9);
+        CHECK(strided1[(int)strided1.size() - 1] == 9);
+
+        // Not evenly divisible stride:
+        auto strided2 = r | view::stride(5);
+        ::check_equal(strided2, {0, 5, 10});
+        CHECK(strided2.size() == 3u);
+        CHECK(strided2.front() == 0);
+        CHECK(strided2[0] == 0);
+        CHECK(strided2.back() == 10);
+        CHECK(strided2[2] == 10);
+        CHECK(strided2[(int)strided2.size() - 1] == 10);
+    }
+
+    //return ::test_result();
 }

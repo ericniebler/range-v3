@@ -205,10 +205,20 @@ namespace ranges
                         ranges::advance(it, n),
                         ranges::advance(it, n, std::declval<iterator_t<Rng> &>())))
                 {
-                    if(0 == n) return;
+                    if(0 == n)
+                        return;
                     n *= rng_->stride_;
                     auto const last = ranges::end(rng_->base());
-                    if(it == last) n -= rng_->get_offset();
+                    if(it == last)
+                    {
+                        RANGES_EXPECT(n < 0);
+                        if(rng_->get_offset(false) < 0) // hasn't been set yet!
+                        {
+                            auto const rem = ranges::distance(rng_->base()) % rng_->stride_;
+                            rng_->set_offset(rem ? rng_->stride_ - rem : 0);
+                        }
+                        n += rng_->get_offset();
+                    }
                     if(0 < n)
                     {
                         auto delta = ranges::advance(it, n, last);
