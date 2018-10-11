@@ -56,9 +56,10 @@ namespace ranges
                 {
                     return 0 == rng_->n_;
                 }
-                result_t read() const
+                result_t &&read() const
                 {
-                    return rng_->val_;
+                    return static_cast<result_t &&>(
+                        static_cast<result_t &>(rng_->val_));
                 }
                 void next()
                 {

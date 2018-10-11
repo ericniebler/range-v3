@@ -55,5 +55,20 @@ int main()
         check_equal(rng, {'H', 'e', 'l', 'l', 'o'});
     }
 
+    // Test for generator functions that return move-only types
+    {
+        char str[] = "gi";
+        auto rng = view::generate_n([&]{str[0]++; return MoveOnlyString{str};}, 2);
+        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        auto i = rng.begin();
+        CHECK(bool(*i == MoveOnlyString{"hi"}));
+        CHECK(bool(*i == MoveOnlyString{"hi"}));
+        CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
+        CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
+        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        check_equal(rng, {MoveOnlyString{"hi"}, MoveOnlyString{"ii"}});
+        static_assert(std::is_same<ranges::range_reference_t<decltype(rng)>, MoveOnlyString &&>::value, "");
+    }
+
     return test_result();
 }

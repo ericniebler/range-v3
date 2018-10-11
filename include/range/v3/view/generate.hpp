@@ -52,9 +52,10 @@ namespace ranges
                 explicit cursor(generate_view &view)
                   : view_(&view)
                 {}
-                result_t read() const
+                result_t &&read() const
                 {
-                    return view_->val_;
+                    return static_cast<result_t &&>(
+                        static_cast<result_t &>(view_->val_));
                 }
                 void next()
                 {
