@@ -118,7 +118,7 @@ namespace ranges
             meta::_t<upgrade_iterator_category<typename T::iterator_category>>
             iterator_category_helper(T *);
 
-            template<class T>
+            template<typename T>
             using iterator_category_ = decltype(detail::iterator_category_helper(_nullptr_v<T>()));
         }
         /// \endcond
@@ -494,7 +494,7 @@ namespace ranges
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
             // Readables. Return all the results as a list.
-            template<class...Is>
+            template<typename...Is>
             using iter_args_lists_ =
                 meta::push_back<
                     meta::cartesian_product<
@@ -672,12 +672,12 @@ namespace ranges
 
 namespace __gnu_debug
 {
-    template<class I1, class I2, class Seq,
+    template<typename I1, typename I2, typename Seq,
         CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I2>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
-    template<class I1, class Seq,
+    template<typename I1, typename Seq,
         CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I1>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;

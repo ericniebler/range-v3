@@ -41,6 +41,9 @@ namespace ranges
 #endif
 
 #ifndef RANGES_ASSERT
+    // Always use our hand-rolled assert implementation on older GCCs, which do
+    // not allow assert to be used in a constant expression, and on MSVC whose
+    // assert is not marked [[noreturn]].
 #if !defined(NDEBUG) && \
     ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \
      defined(_MSVC_STL_VERSION))
@@ -171,6 +174,7 @@ namespace ranges
 #define RANGES_CXX_IF_CONSTEXPR_14 0L
 #define RANGES_CXX_IF_CONSTEXPR_17 201606L
 
+// Implementation-specific diagnostic control
 #if defined(_MSC_VER) && !defined(__clang__)
 #define RANGES_CXX_VER _MSVC_LANG
 #define RANGES_DIAGNOSTIC_PUSH __pragma(warning(push))

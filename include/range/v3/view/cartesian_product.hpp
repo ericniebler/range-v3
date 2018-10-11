@@ -190,7 +190,7 @@ namespace ranges
                         ranges::size(std::get<N - 1>(view_->views_)));
                     auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
-                    auto const idx = i - first;
+                    auto const idx = static_cast<std::ptrdiff_t>(i - first);
                     RANGES_EXPECT(0 <= idx && idx < my_size);
                     RANGES_EXPECT(n < PTRDIFF_MAX - idx);
                     n += idx;
@@ -250,7 +250,7 @@ namespace ranges
                 explicit cursor(end_tag, constify_if<cartesian_product_view> &view)
                   : cursor(end_tag{}, view, BoundedView<meta::at_c<meta::list<Views...>, 0>>{})
                 {}
-                ranges::common_tuple<range_reference_t<Views>...> read() const
+                common_tuple<range_reference_t<Views>...> read() const
                 {
                     return tuple_transform(its_, ranges::dereference);
                 }
@@ -315,7 +315,7 @@ namespace ranges
         public:
             cartesian_product_view() = default;
             CONCEPT_REQUIRES(sizeof...(Views) > 0)
-            constexpr cartesian_product_view(Views... views)
+            explicit constexpr cartesian_product_view(Views... views)
               : views_{detail::move(views)...}
             {}
             CONCEPT_REQUIRES(CanSize<true>())

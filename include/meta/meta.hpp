@@ -1012,7 +1012,7 @@ namespace meta
         /// \endcond
 
         /// Use as `on<F, Gs...>`. Creates an Callable that applies Callable \c F to the
-        /// result of applying Callable `compose<Gs...>` to all the arguments.
+        /// result of applying Callable `compose<Gs...>` to each of the arguments.
         /// \ingroup composition
         template <typename... Fs>
         using on = detail::on_<Fs...>;
