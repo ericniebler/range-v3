@@ -40,8 +40,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng1, typename Rng2,
-                     typename C, typename P1, typename P2,
+            template<typename Rng1, typename Rng2, typename C, typename P1, typename P2,
                      template<bool, typename...> class Cursor, cardinality Cardinality>
             struct set_algorithm_view
               : view_facade<
@@ -174,11 +173,11 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Rng1, typename Rng2,
-                 typename C, typename P1, typename P2>
-        using set_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_difference_cursor,
-                 detail::set_difference_cardinality(
+        template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
+        using set_difference_view =
+            detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
+                detail::set_difference_cursor,
+                detail::set_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
 
@@ -339,11 +338,11 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Rng1, typename Rng2,
-                 typename C, typename P1, typename P2>
-        using set_intersection_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_intersection_cursor,
-                 detail::set_intersection_cardinality(
+        template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
+        using set_intersection_view =
+            detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
+                detail::set_intersection_cursor,
+                detail::set_intersection_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
 
@@ -403,7 +402,6 @@ namespace ranges
                         "The second projection function passed to view::set_intersection "
                         "must be callable with an argument of the second range's value type.");
                 }
-
             #endif
             };
 
@@ -548,11 +546,11 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Rng1, typename Rng2,
-                 typename C, typename P1, typename P2>
-        using set_union_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_union_cursor,
-                 detail::set_union_cardinality(
+        template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
+        using set_union_view =
+            detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
+                detail::set_union_cursor,
+                detail::set_union_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
 
@@ -772,11 +770,11 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Rng1, typename Rng2,
-                 typename C, typename P1, typename P2>
-        using set_symmetric_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_symmetric_difference_cursor,
-                 detail::set_symmetric_difference_cardinality(
+        template<typename Rng1, typename Rng2, typename C, typename P1, typename P2>
+        using set_symmetric_difference_view =
+            detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
+                detail::set_symmetric_difference_cursor,
+                detail::set_symmetric_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
 
