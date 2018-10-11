@@ -90,8 +90,8 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common<T &&, U &&, meta::if_<meta::and_<
-                std::is_convertible<T &&, _rref_res<T, U>>,
-                std::is_convertible<U &&, _rref_res<T, U>>>>>
+                std::is_convertible<T, _rref_res<T, U>>,
+                std::is_convertible<U, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -101,7 +101,7 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common<T &, U &&, meta::if_<
-                std::is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+                std::is_convertible<U, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -126,8 +126,8 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common_rr<T, U, meta::if_<meta::and_<
-                std::is_convertible<T &&, _rref_res<T, U>>,
-                std::is_convertible<U &&, _rref_res<T, U>>>>>
+                std::is_convertible<T, _rref_res<T, U>>,
+                std::is_convertible<U, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -145,7 +145,7 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common_lr<T, U, meta::if_<
-                std::is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+                std::is_convertible<U, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -257,17 +257,10 @@ namespace ranges
                     common_type<T, U>>
             {};
 
-        #if 0 //!defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
-            template<typename T, typename U>
-            struct _common_reference2<T, U, meta::if_<meta::is_trait<_builtin_common<T, U>>>>
-              : _builtin_common<T, U>
-            {};
-        #else
             template<typename T, typename U>
             struct _common_reference2<T, U, meta::if_<std::is_reference<_builtin_common_t<T, U>>>>
               : _builtin_common<T, U>
             {};
-        #endif
         }
         /// \endcond
 

@@ -328,17 +328,12 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         template<typename Rng,
-            CONCEPT_REQUIRES_(ContiguousRange<Rng>() &&
-                range_cardinality<Rng>::value < cardinality{})>
-        span(Rng &&rng) ->
-            span<concepts::ContiguousRange::element_t<Rng>>;
-
-        template<typename Rng,
-            CONCEPT_REQUIRES_(ContiguousRange<Rng>() &&
-                range_cardinality<Rng>::value >= cardinality{})>
+            CONCEPT_REQUIRES_(ContiguousRange<Rng>())>
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>,
-                static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;
+                (range_cardinality<Rng>::value < cardinality{}
+                    ? dynamic_extent
+                    : static_cast<detail::span_index_t>(range_cardinality<Rng>::value))>;
 #endif
 
         template<typename T, detail::span_index_t N>

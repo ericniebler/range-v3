@@ -224,7 +224,6 @@ namespace ranges
         struct result_of<Fun(Args...)>
           : meta::defer<invoke_result_t, Fun, Args...>
         {};
-
     } // namespace v3
 } // namespace ranges
 
