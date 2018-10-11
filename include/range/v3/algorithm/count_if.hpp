@@ -31,11 +31,11 @@ namespace ranges
         /// @{
         struct count_if_fn
         {
-            CPP_template(typename I, typename S, typename R, typename P = ident)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectPredicate<R, projected<I, P>>)
-            difference_type_t<I>
-            operator()(I begin, S end, R pred, P proj = P{}) const
+            template<typename I, typename S, typename R, typename P = ident>
+            auto operator()(I begin, S end, R pred, P proj = P{}) const ->
+                CPP_ret(difference_type_t<I>)(
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        IndirectPredicate<R, projected<I, P>>)
             {
                 difference_type_t<I> n = 0;
                 for(; begin != end; ++begin)
@@ -44,11 +44,11 @@ namespace ranges
                 return n;
             }
 
-            CPP_template(typename Rng, typename R, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires InputRange<Rng> && IndirectPredicate<R, projected<I, P>>)
-            difference_type_t<I>
-            operator()(Rng &&rng, R pred, P proj = P{}) const
+            template<typename Rng, typename R, typename P = ident>
+            auto operator()(Rng &&rng, R pred, P proj = P{}) const ->
+                CPP_ret(difference_type_t<iterator_t<Rng>>)(
+                    requires InputRange<Rng> &&
+                        IndirectPredicate<R, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

@@ -29,23 +29,31 @@ namespace ranges
         /// \cond
         namespace adl_push_front_detail
         {
-            CPP_template(typename Cont, typename T)(
-                requires LvalueContainerLike<Cont> && !Range<T> &&
-                    Constructible<range_value_type_t<Cont>, T>)
-            decltype(static_cast<void>(unwrap_reference(std::declval<Cont &>()).
-                push_front(std::declval<T>())))
-            push_front(Cont &&cont, T &&t)
+            template<typename Cont, typename T>
+            using push_front_t =
+                decltype(static_cast<void>(unwrap_reference(
+                    std::declval<Cont &>()).push_front(std::declval<T>())));
+
+            template<typename Cont, typename Rng>
+            using insert_t =
+                decltype(static_cast<void>(ranges::insert(
+                    std::declval<Cont &>(),
+                    std::declval<iterator_t<Cont>>(),
+                    std::declval<Rng>())));
+
+            template<typename Cont, typename T>
+            auto push_front(Cont &&cont, T &&t) ->
+                CPP_ret(push_front_t<Cont, T>)(
+                    requires LvalueContainerLike<Cont> && !Range<T> &&
+                        Constructible<range_value_type_t<Cont>, T>)
             {
                 unwrap_reference(cont).push_front(static_cast<T &&>(t));
             }
 
-            CPP_template(typename Cont, typename Rng)(
-                requires LvalueContainerLike<Cont> && Range<Rng>)
-            decltype(static_cast<void>(ranges::insert(
-                std::declval<Cont &>(),
-                std::declval<iterator_t<Cont>>(),
-                std::declval<Rng>())))
-            push_front(Cont &&cont, Rng &&rng)
+            template<typename Cont, typename Rng>
+            auto push_front(Cont &&cont, Rng &&rng) ->
+                CPP_ret(insert_t<Cont, Rng>)(
+                    requires LvalueContainerLike<Cont> && Range<Rng>)
             {
                 ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
             }
@@ -72,18 +80,20 @@ namespace ranges
                     return std::bind(push_front, std::placeholders::_1, bind_forward<T>(val));
                 }
             public:
-                CPP_template(typename Rng, typename T)(
-                    requires PushFrontActionConcept<Rng, T>)
-                Rng operator()(Rng &&rng, T &&t) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&rng, T &&t) const ->
+                    CPP_ret(Rng)(
+                        requires PushFrontActionConcept<Rng, T>)
                 {
                     push_front(rng, static_cast<T &&>(t));
                     return static_cast<Rng &&>(rng);
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not PushFrontActionConcept<Rng, T>)
-                void operator()(Rng &&rng, T &&t) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&rng, T &&t) const ->
+                    CPP_ret(void)(
+                        requires not PushFrontActionConcept<Rng, T>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which action::push_front operates must be a model of the "

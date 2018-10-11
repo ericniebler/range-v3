@@ -239,9 +239,10 @@ namespace ranges
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CPP_template(typename Rng)(
-                    requires not BidirectionalRange<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not BidirectionalRange<Rng>)
                 {
                     CPP_assert_msg(BidirectionalRange<Rng>,
                         "The object on which view::reverse operates must model the "

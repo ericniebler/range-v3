@@ -133,17 +133,19 @@ namespace ranges
                         std::move(fun)));
                 }
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires GroupByViewConcept<Rng, Fun>)
-                group_by_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(group_by_view<all_t<Rng>, Fun>)(
+                        requires GroupByViewConcept<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not GroupByViewConcept<Rng, Fun>)
-                void operator()(Rng &&, Fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not GroupByViewConcept<Rng, Fun>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::group_by operates must be a model of the "

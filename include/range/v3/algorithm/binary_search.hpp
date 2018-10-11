@@ -38,22 +38,20 @@ namespace ranges
             /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre `Rng` is a model of the `Range` concept
-            CPP_template(typename I, typename S, typename V2, typename C = ordered_less,
-                typename P = ident)(
-                requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
-            bool
-            operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
             {
                 begin = lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
                 return begin != end && !invoke(pred, val, invoke(proj, *begin));
             }
 
             /// \overload
-            CPP_template(typename Rng, typename V2, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng> && BinarySearchable<I, V2, C, P>)
-            bool
-            operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename V2, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V2, C, P>)
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to binary search an infinite range");

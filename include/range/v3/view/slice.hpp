@@ -141,16 +141,18 @@ namespace ranges
                     return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{}) + count_;
                 }
-                CPP_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>)
-                iterator_t<BaseRng const> begin() const
+                template<typename BaseRng = Rng>
+                auto begin() const ->
+                    CPP_ret(iterator_t<BaseRng const>)(
+                        requires Range<BaseRng const>)
                 {
                     return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{});
                 }
-                CPP_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>)
-                iterator_t<BaseRng const> end() const
+                template<typename BaseRng = Rng>
+                auto end() const ->
+                    CPP_ret(iterator_t<BaseRng const>)(
+                        requires Range<BaseRng const>)
                 {
                     return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                         is_infinite<Rng>{}) + count_;
@@ -174,9 +176,10 @@ namespace ranges
         /// \cond
         namespace _end_
         {
-            CPP_template(typename Int)(
-                requires Integral<Int>)
-            detail::from_end_<meta::_t<std::make_signed<Int>>> operator-(end_fn, Int dist)
+            template<typename Int>
+            auto operator-(end_fn, Int dist) ->
+                CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
+                    requires Integral<Int>)
             {
                 RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
                 return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
@@ -207,11 +210,12 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), from, count};
                 }
-                CPP_template(typename Rng)(
-                    requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
-                static iterator_range<iterator_t<Rng>>
-                invoke_(Rng &&rng, range_difference_type_t<Rng> from, range_difference_type_t<Rng> count,
-                    random_access_range_tag, bounded_range_tag = {})
+                template<typename Rng>
+                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> from,
+                        range_difference_type_t<Rng> count, random_access_range_tag,
+                        bounded_range_tag = {}) ->
+                    CPP_ret(iterator_range<iterator_t<Rng>>)(
+                        requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
                 {
                     auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                     return {it, it + count};
@@ -253,12 +257,12 @@ namespace ranges
 
             public:
                 // slice(rng, 2, 4)
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
+                template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_type_t<Rng> from,
-                    range_difference_type_t<Rng> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from, to - from,
-                        range_tag_of<Rng>{}))
+                        range_difference_type_t<Rng> to) const ->
+                    CPP_ret(decltype(slice_fn::invoke_(
+                            static_cast<Rng &&>(rng), from, to - from, range_tag_of<Rng>{})))(
+                        requires InputRange<Rng>)
                 {
                     RANGES_EXPECT(0 <= from && from <= to);
                     return slice_fn::invoke_(static_cast<Rng &&>(rng), from, to - from,
@@ -267,12 +271,13 @@ namespace ranges
                 // slice(rng, 4, end-2)
                 //  TODO Support Forward, non-Sized ranges by returning a range that
                 //       doesn't know it's size?
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng> && SizedRange<Rng>)
+                template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_type_t<Rng> from,
-                    detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from,
-                        distance(rng) + to.dist_ - from, range_tag_of<Rng>{}))
+                        detail::from_end_<range_difference_type_t<Rng>> to) const ->
+                    CPP_ret(decltype(slice_fn::invoke_(
+                            static_cast<Rng &&>(rng), from, distance(rng) + to.dist_ - from,
+                            range_tag_of<Rng>{})))(
+                        requires InputRange<Rng> && SizedRange<Rng>)
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
@@ -282,14 +287,13 @@ namespace ranges
                         distance(rng) + to.dist_ - from, range_tag_of<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
-                CPP_template(typename Rng)(
-                    requires ForwardRange<Rng> ||
-                        (InputRange<Rng> && SizedRange<Rng>))
+                template<typename Rng>
                 auto operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from,
-                    detail::from_end_<range_difference_type_t<Rng>> to) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
-                        to.dist_ - from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}))
+                        detail::from_end_<range_difference_type_t<Rng>> to) const ->
+                    CPP_ret(decltype(slice_fn::invoke_(
+                            static_cast<Rng &&>(rng), from.dist_, to.dist_ - from.dist_,
+                            range_tag_of<Rng>{}, bounded_range_tag_of<Rng>{})))(
+                        requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
@@ -299,23 +303,21 @@ namespace ranges
                         bounded_range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end)
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
+                template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_type_t<Rng> from, end_fn) const ->
-                    decltype(ranges::view::drop_exactly(static_cast<Rng &&>(rng), from))
+                    CPP_ret(decltype(ranges::view::drop_exactly(static_cast<Rng &&>(rng), from)))(
+                        requires InputRange<Rng>)
                 {
                     RANGES_EXPECT(0 <= from);
                     return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
                 }
                 // slice(rng, end-4, end)
-                CPP_template(typename Rng)(
-                    requires ForwardRange<Rng> ||
-                        (InputRange<Rng> && SizedRange<Rng>))
-                auto operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from,
-                    end_fn) const ->
-                    decltype(slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
-                        -from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{}))
+                template<typename Rng>
+                auto operator()(Rng &&rng, detail::from_end_<range_difference_type_t<Rng>> from, end_fn) const ->
+                    CPP_ret(decltype(slice_fn::invoke_(
+                            static_cast<Rng &&>(rng), from.dist_, -from.dist_, range_tag_of<Rng>{},
+                            bounded_range_tag_of<Rng>{})))(
+                        requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
@@ -336,18 +338,20 @@ namespace ranges
                 //
 
                 // slice(rng, 2, 4)
-                CPP_template(typename Rng)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&, range_difference_type_t<Rng>, range_difference_type_t<Rng>) const
+                template<typename Rng>
+                auto operator()(Rng &&, range_difference_type_t<Rng>, range_difference_type_t<Rng>) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be sliced must be a model of the InputRange concept.");
                 }
                 // slice(rng, 4, end-2)
-                CPP_template(typename Rng)(
-                    requires not (InputRange<Rng> && SizedRange<Rng>))
-                void operator()(Rng &&, range_difference_type_t<Rng>,
-                    detail::from_end_<range_difference_type_t<Rng>>) const
+                template<typename Rng>
+                auto operator()(Rng &&, range_difference_type_t<Rng>,
+                        detail::from_end_<range_difference_type_t<Rng>>) const ->
+                    CPP_ret(void)(
+                        requires not (InputRange<Rng> && SizedRange<Rng>))
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be sliced must be a model of the InputRange concept.");
@@ -357,11 +361,11 @@ namespace ranges
                         "concept; that is, its size must be known.");
                 }
                 // slice(rng, end-4, end-2)
-                CPP_template(typename Rng)(
-                    requires not ((InputRange<Rng> && SizedRange<Rng>) ||
-                        ForwardRange<Rng>))
-                void operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>,
-                    detail::from_end_<range_difference_type_t<Rng>>) const
+                template<typename Rng>
+                auto operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>,
+                        detail::from_end_<range_difference_type_t<Rng>>) const ->
+                    CPP_ret(void)(
+                        requires not ((InputRange<Rng> && SizedRange<Rng>) || ForwardRange<Rng>))
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be sliced must be a model of the InputRange concept.");
@@ -371,18 +375,20 @@ namespace ranges
                         "must be known), or it must be a model of the ForwardRange concept.");
                 }
                 // slice(rng, 4, end)
-                CPP_template(typename Rng)(
-                    requires not (InputRange<Rng>))
-                void operator()(Rng &&, range_difference_type_t<Rng>, end_fn) const
+                template<typename Rng>
+                auto operator()(Rng &&, range_difference_type_t<Rng>, end_fn) const ->
+                    CPP_ret(void)(
+                        requires not (InputRange<Rng>))
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be sliced must be a model of the InputRange concept.");
                 }
                 // slice(rng, end-4, end)
-                CPP_template(typename Rng)(
-                    requires not ((InputRange<Rng> && SizedRange<Rng>) ||
-                        ForwardRange<Rng>))
-                void operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>, end_fn) const
+                template<typename Rng>
+                auto operator()(Rng &&, detail::from_end_<range_difference_type_t<Rng>>,
+                        end_fn) const ->
+                    CPP_ret(void)(
+                        requires not ((InputRange<Rng> && SizedRange<Rng>) || ForwardRange<Rng>))
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be sliced must be a model of the InputRange concept.");

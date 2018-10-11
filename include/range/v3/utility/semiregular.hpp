@@ -122,11 +122,11 @@ namespace ranges
                 if (that.engaged_)
                     this->construct_from(that.data_);
             }
-            CPP_template(typename U)(
-                requires not defer::Same<uncvref_t<U>, semiregular> &&
-                    defer::Constructible<T, U>)
-            explicit constexpr semiregular(U &&u)
+            template<typename U>
+            explicit constexpr CPP_ctor(semiregular)(U &&u)(
                 noexcept(std::is_nothrow_constructible<T, U>::value)
+                    requires not defer::Same<uncvref_t<U>, semiregular> &&
+                        defer::Constructible<T, U>)
               : semiregular(in_place, static_cast<U &&>(u))
             {}
             CPP_template(typename... Args)(
@@ -228,9 +228,10 @@ namespace ranges
           , private detail::semiregular_get
         {
             semiregular() = default;
-            CPP_template(typename Arg)(
+            template<typename Arg>
+            CPP_ctor(semiregular)(in_place_t, Arg &arg)(
+                noexcept(true)
                 requires Constructible<ranges::reference_wrapper<T &>, Arg &>)
-            semiregular(in_place_t, Arg &arg)
               : ranges::reference_wrapper<T &>(arg)
             {}
             using ranges::reference_wrapper<T &>::reference_wrapper;
@@ -245,10 +246,11 @@ namespace ranges
           , private detail::semiregular_get
         {
             semiregular() = default;
-            CPP_template(typename Arg)(
+            template<typename Arg>
+            CPP_ctor(semiregular)(in_place_t, Arg &&arg)(
+                noexcept(true)
                 requires Constructible<ranges::reference_wrapper<T &&>, Arg>)
-            semiregular(in_place_t, Arg &&arg)
-              : ranges::reference_wrapper<T &>(static_cast<Arg &&>(arg))
+              : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
             {}
             using ranges::reference_wrapper<T &&>::reference_wrapper;
             using ranges::reference_wrapper<T &&>::get;

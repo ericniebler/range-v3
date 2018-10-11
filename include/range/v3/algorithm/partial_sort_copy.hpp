@@ -45,12 +45,13 @@ namespace ranges
         /// @{
         struct partial_sort_copy_fn
         {
-            CPP_template(typename I, typename SI, typename O, typename SO, typename C = ordered_less,
-                typename PI = ident, typename PO = ident)(
-                requires PartialSortCopyConcept<I, O, C, PI, PO> &&
-                    Sentinel<SI, I> && Sentinel<SO, O>)
-            O operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{}, PI in_proj = PI{},
-                PO out_proj = PO{}) const
+            template<typename I, typename SI, typename O, typename SO, typename C = ordered_less,
+                typename PI = ident, typename PO = ident>
+            auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
+                    PI in_proj = PI{}, PO out_proj = PO{}) const ->
+                CPP_ret(O)(
+                    requires Sentinel<SI, I> && Sentinel<SO, O> &&
+                        PartialSortCopyConcept<I, O, C, PI, PO>)
             {
                 O r = out_begin;
                 if(r != out_end)
@@ -73,15 +74,13 @@ namespace ranges
                 return r;
             }
 
-            CPP_template(typename InRng, typename OutRng, typename C = ordered_less,
-                typename PI = ident, typename PO = ident,
-                typename I = iterator_t<InRng>,
-                typename O = iterator_t<OutRng>)(
-                requires PartialSortCopyConcept<I, O, C, PI, PO> &&
-                    Range<InRng> && Range<OutRng>)
-            safe_iterator_t<OutRng>
-            operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
-                PO out_proj = PO{}) const
+            template<typename InRng, typename OutRng, typename C = ordered_less,
+                typename PI = ident, typename PO = ident>
+            auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
+                    PO out_proj = PO{}) const ->
+                CPP_ret(safe_iterator_t<OutRng>)(
+                    requires Range<InRng> && Range<OutRng> &&
+                        PartialSortCopyConcept<iterator_t<InRng>, iterator_t<OutRng>, C, PI, PO>)
             {
                 return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
                     std::move(pred), std::move(in_proj), std::move(out_proj));

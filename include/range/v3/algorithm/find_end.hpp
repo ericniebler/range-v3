@@ -31,23 +31,26 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            CPP_template(typename I, typename S)(
-                requires InputIterator<I> && Sentinel<S, I>)
-            I next_to_if(I i, S s, std::true_type)
+            template<typename I, typename S>
+            auto next_to_if(I i, S s, std::true_type) ->
+                CPP_ret(I)(
+                    requires InputIterator<I> && Sentinel<S, I>)
             {
                 return ranges::next(i, s);
             }
 
-            CPP_template(typename I, typename S)(
-                requires InputIterator<I> && Sentinel<S, I>)
-            S next_to_if(I, S s, std::false_type)
+            template<typename I, typename S>
+            auto next_to_if(I, S s, std::false_type) ->
+                CPP_ret(S)(
+                    requires InputIterator<I> && Sentinel<S, I>)
             {
                 return s;
             }
 
-            CPP_template(bool B, typename I, typename S)(
-                requires InputIterator<I> && Sentinel<S, I>)
-            meta::if_c<B, I, S> next_to_if(I i, S s)
+            template<bool B, typename I, typename S>
+            auto next_to_if(I i, S s) ->
+                CPP_ret(meta::if_c<B, I, S>)(
+                    requires InputIterator<I> && Sentinel<S, I>)
             {
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
             }
@@ -158,12 +161,12 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
-                typename P = ident)(
-                requires ForwardIterator<I1> && Sentinel<S1, I1> &&
-                    ForwardIterator<I2> && Sentinel<S2, I2> &&
-                    IndirectRelation<R, projected<I1, P>, I2>)
-            I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
+            template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
+                typename P = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const ->
+                CPP_ret(I1)(
+                    requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
+                        Sentinel<S2, I2> && IndirectRelation<R, projected<I1, P>, I2>)
             {
                 constexpr bool Bidi = BidirectionalIterator<I1> && BidirectionalIterator<I2>;
                 return find_end_fn::impl(
@@ -173,12 +176,11 @@ namespace ranges
                     iterator_tag_of<I1>(), iterator_tag_of<I2>());
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>)(
-                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
-                    IndirectRelation<R, projected<I1, P>, I2>)
-            safe_iterator_t<Rng1> operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
+            template<typename Rng1, typename Rng2, typename R = equal_to, typename P = ident>
+            auto operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng1>)(
+                    requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+                        IndirectRelation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
                     std::move(proj));

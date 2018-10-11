@@ -147,16 +147,18 @@ namespace ranges
                         protect(std::move(fun))));
                 }
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires PartialSumViewConcept<Rng, Fun>)
-                partial_sum_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
+                        requires PartialSumViewConcept<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not PartialSumViewConcept<Rng, Fun>)
-                void operator()(Rng &&, Fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not PartialSumViewConcept<Rng, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The first argument passed to view::partial_sum must be a model of the "

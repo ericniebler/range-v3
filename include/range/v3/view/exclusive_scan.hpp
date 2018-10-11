@@ -162,18 +162,19 @@ namespace ranges {
                         std::move(init), protect(std::move(fun))));
                 }
             public:
-                CPP_template(typename Rng, typename T, typename Fun = plus)(
-                    requires ExclusiveScanConstraint<Rng, T, Fun>)
-                exclusive_scan_view<all_t<Rng>, T, Fun>
-                operator()(Rng &&rng, T init, Fun fun = Fun{}) const
+                template<typename Rng, typename T, typename Fun = plus>
+                auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const ->
+                    CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)(
+                        requires ExclusiveScanConstraint<Rng, T, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T, typename Fun = plus)(
-                    requires not ExclusiveScanConstraint<Rng, T, Fun>)
-                void operator()(Rng &&, T, Fun = Fun{}) const
+                template<typename Rng, typename T, typename Fun = plus>
+                auto operator()(Rng &&, T, Fun = Fun{}) const ->
+                    CPP_ret(void)(
+                        requires not ExclusiveScanConstraint<Rng, T, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The first argument passed to view::exclusive_scan must be a model of the "

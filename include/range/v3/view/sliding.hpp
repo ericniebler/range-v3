@@ -343,9 +343,10 @@ namespace ranges
                     return make_pipeable(std::bind(sliding, std::placeholders::_1, n));
                 }
             public:
-                CPP_template(typename Rng)(
-                    requires ForwardRange<Rng>)
-                sliding_view<all_t<Rng>> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                template<typename Rng>
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                    CPP_ret(sliding_view<all_t<Rng>>)(
+                        requires ForwardRange<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
@@ -353,18 +354,20 @@ namespace ranges
                 // For the sake of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
-                CPP_template(typename Int)(
-                    requires not Integral<Int>)
-                static detail::null_pipe bind(sliding_fn, Int)
+                template<typename Int>
+                static auto bind(sliding_fn, Int) ->
+                    CPP_ret(detail::null_pipe)(
+                        requires not Integral<Int>)
                 {
                     CPP_assert_msg(Integral<Int>,
                         "The object passed to view::sliding must be Integral");
                     return {};
                 }
             public:
-                CPP_template(typename Rng, typename T)(
-                    requires not (ForwardRange<Rng> && Integral<T>))
-                void operator()(Rng &&, T) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T) const ->
+                    CPP_ret(void)(
+                        requires not (ForwardRange<Rng> && Integral<T>))
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The first argument to view::sliding must be a model of the ForwardRange concept");

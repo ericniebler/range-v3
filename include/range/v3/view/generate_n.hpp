@@ -97,16 +97,18 @@ namespace ranges
         {
             struct generate_n_fn
             {
-                CPP_template(typename G)(
-                    requires GenerateViewConcept<G>)
-                generate_n_view<G> operator()(G g, std::size_t n) const
+                template<typename G>
+                auto operator()(G g, std::size_t n) const ->
+                    CPP_ret(generate_n_view<G>)(
+                        requires GenerateViewConcept<G>)
                 {
                     return generate_n_view<G>{std::move(g), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename G)(
-                    requires not GenerateViewConcept<G>)
-                void operator()(G, std::size_t) const
+                template<typename G>
+                auto operator()(G, std::size_t) const ->
+                    CPP_ret(void)(
+                        requires not GenerateViewConcept<G>)
                 {
                     generate_fn::check<G>();
                 }

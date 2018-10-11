@@ -44,9 +44,10 @@ namespace ranges
         /// @{
         struct remove_copy_if_fn
         {
-            CPP_template(typename I, typename S, typename O, typename C, typename P = ident)(
-                requires RemoveCopyableIf<I, O, C, P> && Sentinel<S, I>)
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred, P proj = P{}) const
+            template<typename I, typename S, typename O, typename C, typename P = ident>
+            auto operator()(I begin, S end, O out, C pred, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires RemoveCopyableIf<I, O, C, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -60,10 +61,10 @@ namespace ranges
                 return {begin, out};
             }
 
-            CPP_template(typename Rng, typename O, typename C, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires RemoveCopyableIf<I, O, C, P> && InputRange<Rng>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)> operator()(Rng &&rng, O out, C pred, P proj = P{}) const
+            template<typename Rng, typename O, typename C, typename P = ident>
+            auto operator()(Rng &&rng, O out, C pred, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires RemoveCopyableIf<iterator_t<Rng>, O, C, P> && InputRange<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));
             }

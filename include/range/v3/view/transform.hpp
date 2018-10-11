@@ -365,25 +365,29 @@ namespace ranges
                         protect(std::move(fun))));
                 }
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires IterTansformableRange<Rng, Fun>)
-                iter_transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(iter_transform_view<all_t<Rng>, Fun>)(
+                        requires IterTansformableRange<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
 
-                CPP_template(typename Rng1, typename Rng2, typename Fun)(
-                    requires IterTansformableRanges<Rng1, Rng2, Fun>)
-                iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
-                operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
+                template<typename Rng1, typename Rng2, typename Fun>
+                auto operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const ->
+                    CPP_ret(iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)(
+                        requires IterTansformableRanges<Rng1, Rng2, Fun>)
                 {
-                    return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)), std::move(fun)};
+                    return {all(static_cast<Rng1 &&>(rng1)),
+                            all(static_cast<Rng2 &&>(rng2)),
+                            std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not IterTansformableRange<Rng, Fun>)
-                void operator()(Rng &&, Fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not IterTansformableRange<Rng, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::iter_transform operates must be a model of the "
@@ -405,9 +409,10 @@ namespace ranges
                         "move_tag and an argument of the range's iterator type.");
                 }
 
-                CPP_template(typename Rng1, typename Rng2, typename Fun)(
-                    requires not IterTansformableRanges<Rng1, Rng2, Fun>)
-                void operator()(Rng1 &&, Rng2 &&, Fun) const
+                template<typename Rng1, typename Rng2, typename Fun>
+                auto operator()(Rng1 &&, Rng2 &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not IterTansformableRanges<Rng1, Rng2, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng1>,
                         "The first object on which view::iter_transform operates must be a model of the "
@@ -480,26 +485,28 @@ namespace ranges
                         protect(std::move(fun))));
                 }
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires TransformableRange<Rng, Fun>)
-                transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(transform_view<all_t<Rng>, Fun>)(
+                        requires TransformableRange<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
 
-                CPP_template(typename Rng1, typename Rng2, typename Fun)(
-                    requires TransformableRanges<Rng1, Rng2, Fun>)
-                transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>
-                operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
+                template<typename Rng1, typename Rng2, typename Fun>
+                auto operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const ->
+                    CPP_ret(transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)(
+                        requires TransformableRanges<Rng1, Rng2, Fun>)
                 {
                     return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)),
                         std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not TransformableRange<Rng, Fun>)
-                void operator()(Rng &&, Fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not TransformableRange<Rng, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::transform operates must be a model of the "
@@ -517,9 +524,10 @@ namespace ranges
                         "with an argument of the range's reference type.");
                 }
 
-                CPP_template(typename Rng1, typename Rng2, typename Fun)(
-                    requires not TransformableRanges<Rng1, Rng2, Fun>)
-                void operator()(Rng1 &&, Rng2 &&, Fun) const
+                template<typename Rng1, typename Rng2, typename Fun>
+                auto operator()(Rng1 &&, Rng2 &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not TransformableRanges<Rng1, Rng2, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng1>,
                         "The first object on which view::transform operates must be a model of the "

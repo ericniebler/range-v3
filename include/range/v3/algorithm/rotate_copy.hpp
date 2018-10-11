@@ -34,10 +34,10 @@ namespace ranges
         /// @{
         struct rotate_copy_fn
         {
-            CPP_template(typename I, typename S, typename O, typename P = ident)(
-                requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O>)
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, I middle, S end, O out) const
+            template<typename I, typename S, typename O, typename P = ident>
+            auto operator()(I begin, I middle, S end, O out) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {
                 auto res = copy(middle, std::move(end), std::move(out));
                 return {
@@ -46,12 +46,11 @@ namespace ranges
                 };
             }
 
-            CPP_template(typename Rng, typename O, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, I middle, O out) const
+            template<typename Rng, typename O, typename P = ident>
+            auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires Range<Rng> && WeaklyIncrementable<O> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
             }

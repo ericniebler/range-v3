@@ -59,20 +59,20 @@ namespace ranges
                     RANGES_EXPECT(false);
                 }
 
-                CPP_template(typename I)(
-                    requires not Invocable<Pred const&, reference_t<I>>)
-                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
-                operator()(I const &i)
+                template<typename I>
+                auto operator()(I const &i) ->
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)(
+                        requires not Invocable<Pred const&, reference_t<I>>)
                 {
                     auto &&x = *i;
                     if(invoke(first(), (decltype(x) &&) x))
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                CPP_template(typename I)(
-                    requires Invocable<Pred const&, reference_t<I>>)
-                common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>
-                operator()(I const &i) const
+                template<typename I>
+                auto operator()(I const &i) const ->
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)(
+                        requires Invocable<Pred const&, reference_t<I>>)
                 {
                     auto &&x = *i;
                     if(invoke(first(), (decltype(x) &&) x))
@@ -80,20 +80,20 @@ namespace ranges
                     return (decltype(x) &&) x;
                 }
 
-                CPP_template(typename I)(
-                    requires not Invocable<Pred const&, rvalue_reference_t<I>>)
-                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
-                operator()(move_tag, I const &i)
+                template<typename I>
+                auto operator()(move_tag, I const &i) ->
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)(
+                        requires not Invocable<Pred const&, rvalue_reference_t<I>>)
                 {
                     auto &&x = iter_move(i);
                     if(invoke(first(), (decltype(x) &&) x))
                         return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
-                CPP_template(typename I)(
-                    requires Invocable<Pred const&, rvalue_reference_t<I>>)
-                common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>
-                operator()(move_tag, I const &i) const
+                template<typename I>
+                auto operator()(move_tag, I const &i) const ->
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, rvalue_reference_t<I>>)(
+                        requires Invocable<Pred const&, rvalue_reference_t<I>>)
                 {
                     auto &&x = iter_move(i);
                     if(invoke(first(), (decltype(x) &&) x))
@@ -130,18 +130,19 @@ namespace ranges
                         protect(std::move(pred)), std::move(new_value)));
                 }
             public:
-                CPP_template(typename Rng, typename Pred, typename Val)(
-                    requires ReplaceIfViewConcept<Rng, Pred, Val>)
-                replace_if_view<all_t<Rng>, Pred, Val>
-                operator()(Rng &&rng, Pred pred, Val new_value) const
+                template<typename Rng, typename Pred, typename Val>
+                auto operator()(Rng &&rng, Pred pred, Val new_value) const ->
+                    CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)(
+                        requires ReplaceIfViewConcept<Rng, Pred, Val>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(pred), std::move(new_value)}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CPP_template(typename Rng, typename Pred, typename Val)(
-                    requires not ReplaceIfViewConcept<Rng, Pred, Val>)
-                void operator()(Rng &&, Pred, Val) const
+                template<typename Rng, typename Pred, typename Val>
+                auto operator()(Rng &&, Pred, Val) const ->
+                    CPP_ret(void)(
+                        requires not ReplaceIfViewConcept<Rng, Pred, Val>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::replace_if operates must be a model of the "

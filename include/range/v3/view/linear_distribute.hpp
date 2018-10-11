@@ -99,9 +99,10 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename T)(
-                    requires not std::is_arithmetic<T>::value)
-                void operator()(T, T, std::ptrdiff_t) const
+                template<typename T>
+                auto operator()(T, T, std::ptrdiff_t) const ->
+                    CPP_ret(void)(
+                        requires not std::is_arithmetic<T>::value)
                 {
                     CPP_assert_msg(std::is_arithmetic<T>(),
                         "The object passed to view::linear_distribute must model the Arithmetic "

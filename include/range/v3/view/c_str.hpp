@@ -66,20 +66,21 @@ namespace ranges
             struct c_str_fn
             {
                 // Fixed-length
-                CPP_template(typename Char, std::size_t N)(
-                    requires detail::is_char_type<Char>::value)
-                ranges::iterator_range<Char *> operator()(Char (&sz)[N]) const
+                template<typename Char, std::size_t N>
+                auto operator()(Char (&sz)[N]) const ->
+                    CPP_ret(ranges::iterator_range<Char *>)(
+                        requires detail::is_char_type<Char>::value)
                 {
                     return {&sz[0], &sz[N-1]};
                 }
 
                 // Null-terminated
-                CPP_template(typename Char)(
+                template<typename Char>
+                auto operator()(Char *sz) const volatile ->
+                    CPP_ret(ranges::delimit_view<
+                        ranges::iterator_range<Char *, ranges::unreachable>,
+                        meta::_t<std::remove_cv<Char>>>)(
                     requires detail::is_char_type<Char>::value)
-                ranges::delimit_view<
-                    ranges::iterator_range<Char *, ranges::unreachable>,
-                    meta::_t<std::remove_cv<Char>>>
-                operator()(Char *sz) const volatile
                 {
                     using ch_t = meta::_t<std::remove_cv<Char>>;
                     return ranges::view::delimit(sz, ch_t(0));

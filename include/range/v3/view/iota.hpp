@@ -150,17 +150,19 @@ namespace ranges
                 return to - from
             )
 
-            CPP_template(typename Val)(
-                requires SignedIntegral<Val>)
-            iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
+            template<typename Val>
+            auto iota_minus_(Val const &v0, Val const &v1) ->
+                CPP_ret(iota_difference_t<Val>)(
+                    requires SignedIntegral<Val>)
             {
                 using D = iota_difference_t<Val>;
                 return (D) v0 - (D) v1;
             }
 
-            CPP_template(typename Val)(
-                requires UnsignedIntegral<Val>)
-            iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
+            template<typename Val>
+            auto iota_minus_(Val const &v0, Val const &v1) ->
+                CPP_ret(iota_difference_t<Val>)(
+                    requires UnsignedIntegral<Val>)
             {
                 using D = iota_difference_t<Val>;
                 return v0 < v1
@@ -168,10 +170,11 @@ namespace ranges
                     :  static_cast<D>(v0 - v1);
             }
 
-            CPP_template(typename Val)(
-                requires SignedIntegral<Val>)
-            constexpr /*c++14*/
-            iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
+            template<typename Val>
+            constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
+                CPP_ret(iota_difference_t<Val>)(
+                    requires SignedIntegral<Val>)
+            {
                 using D = iota_difference_t<Val>;
                 RANGES_EXPECT(from <= to);
                 static_assert(sizeof(iota_difference_t<Val>) >= sizeof(Val),
@@ -180,10 +183,11 @@ namespace ranges
                 return static_cast<D>(to) - static_cast<D>(from);
             }
 
-            CPP_template(typename Val)(
-                requires UnsignedIntegral<Val>)
-            constexpr /*c++14*/
-            iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept {
+            template<typename Val>
+            constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
+                CPP_ret(iota_difference_t<Val>)(
+                    requires UnsignedIntegral<Val>)
+            {
                 using D = iota_difference_t<Val>;
                 using UD = meta::_t<std::make_unsigned<D>>;
                 // Disable wrap-semantics for UnsignedIntegral types.
@@ -208,10 +212,11 @@ namespace ranges
                 return static_cast<D>(Val(to - from));
             }
 
-            CPP_template(typename Val)(
-                requires Integral<Val>)
-            constexpr /*c++14*/
-            iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept {
+            template<typename Val>
+            constexpr /*c++14*/ auto ints_closed_distance_(Val from, Val to) noexcept ->
+                CPP_ret(iota_difference_t<Val>)(
+                    requires Integral<Val>)
+            {
                 using D = iota_difference_t<Val>;
                 auto dist = ints_open_distance_(from, to);
                 // Check whether dist + 1 would overflow the signed integer type,
@@ -434,9 +439,10 @@ namespace ranges
                     return {std::move(from), std::move(to)};
                 }
             public:
-                CPP_template(typename From)(
-                    requires WeaklyIncrementable<From>)
-                iota_view<From> operator()(From value) const
+                template<typename From>
+                auto operator()(From value) const ->
+                    CPP_ret(iota_view<From>)(
+                        requires WeaklyIncrementable<From>)
                 {
                     return iota_view<From>{std::move(value)};
                 }
@@ -450,19 +456,21 @@ namespace ranges
                 operator()(From from, To to) const;
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename From)(
-                    requires not WeaklyIncrementable<From>)
-                void operator()(From) const
+                template<typename From>
+                auto operator()(From) const ->
+                    CPP_ret(void)(
+                        requires not WeaklyIncrementable<From>)
                 {
                     CPP_assert_msg(WeaklyIncrementable<From>,
                         "The object passed to view::iota must model the WeaklyIncrementable "
                         "concept; that is, it must have pre- and post-increment operators and it "
                         "must have a difference_type");
                 }
-                CPP_template(typename From, typename To)(
-                    requires not (WeaklyIncrementable<From> &&
-                        WeaklyEqualityComparableWith<From, To>))
-                void operator()(From, To) const
+                template<typename From, typename To>
+                auto operator()(From, To) const ->
+                    CPP_ret(void)(
+                        requires not (WeaklyIncrementable<From> &&
+                            WeaklyEqualityComparableWith<From, To>))
                 {
                     CPP_assert_msg(WeaklyIncrementable<From>,
                         "The object passed to view::iota must model the WeaklyIncrementable "
@@ -553,9 +561,10 @@ namespace ranges
             {
                 ints_fn() = default;
 
-                CPP_template(typename Val)(
-                    requires Integral<Val>)
-                iota_view<Val> operator()(Val value) const
+                template<typename Val>
+                auto operator()(Val value) const ->
+                    CPP_ret(iota_view<Val>)(
+                        requires Integral<Val>)
                 {
                     return iota_view<Val>{value};
                 }
@@ -569,16 +578,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val) const
+                template<typename Val>
+                auto operator()(Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::ints must be Integral");
                 }
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val, Val) const
+                template<typename Val>
+                auto operator()(Val, Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::ints must be Integral");

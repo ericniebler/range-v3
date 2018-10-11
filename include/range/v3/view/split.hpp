@@ -189,10 +189,10 @@ namespace ranges
                 {
                     semiregular_t<Pred> pred_;
 
-                    CPP_template(typename S)(
-                        requires Sentinel<S, iterator_t<Rng>>)
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, S end) const
+                    template<typename S>
+                    auto operator()(iterator_t<Rng> cur, S end) const ->
+                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                            requires Sentinel<S, iterator_t<Rng>>)
                     {
                         auto where = ranges::find_if_not(cur, end, std::ref(pred_));
                         return std::pair<bool, iterator_t<Rng>>{cur != where, where};
@@ -203,10 +203,10 @@ namespace ranges
                 {
                     range_value_type_t<Rng> val_;
 
-                    CPP_template(typename S)(
-                        requires Sentinel<S, iterator_t<Rng>>)
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, S end) const
+                    template<typename S>
+                    auto operator()(iterator_t<Rng> cur, S end) const ->
+                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                            requires Sentinel<S, iterator_t<Rng>>)
                     {
                         RANGES_EXPECT(cur != end);
                         bool const match = *cur == val_;
@@ -224,10 +224,10 @@ namespace ranges
                     subrange_pred(Sub &&sub)
                       : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
                     {}
-                    CPP_template(typename S)(
-                        requires Sentinel<S, iterator_t<Rng>>)
-                    std::pair<bool, iterator_t<Rng>>
-                    operator()(iterator_t<Rng> cur, S end) const
+                    template<typename S>
+                    auto operator()(iterator_t<Rng> cur, S end) const ->
+                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                            requires Sentinel<S, iterator_t<Rng>>)
                     {
                         using P = std::pair<bool, iterator_t<Rng>>;
                         RANGES_EXPECT(cur != end);
@@ -245,35 +245,40 @@ namespace ranges
                     }
                 };
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires SplitOnFunction<Rng, Fun>)
-                split_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(split_view<all_t<Rng>, Fun>)(
+                        requires SplitOnFunction<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
-                CPP_template(typename Rng, typename Fun)(
-                    requires SplitOnPredicate<Rng, Fun>)
-                split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng &&rng, Fun fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&rng, Fun fun) const ->
+                    CPP_ret(split_view<all_t<Rng>, predicate_pred<Rng, Fun>>)(
+                        requires SplitOnPredicate<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
-                CPP_template(typename Rng)(
-                    requires SplitOnElement<Rng>)
-                split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng &&rng, range_value_type_t<Rng> val) const
+                template<typename Rng>
+                auto operator()(Rng &&rng, range_value_type_t<Rng> val) const ->
+                    CPP_ret(split_view<all_t<Rng>, element_pred<Rng>>)(
+                        requires SplitOnElement<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
                 }
-                CPP_template(typename Rng, typename Sub)(
-                    requires SplitOnSubRange<Rng, Sub>)
-                split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng &&rng, Sub &&sub) const
+                template<typename Rng, typename Sub>
+                auto operator()(Rng &&rng, Sub &&sub) const ->
+                    CPP_ret(split_view<all_t<Rng>, subrange_pred<Rng, Sub>>)(
+                        requires SplitOnSubRange<Rng, Sub>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not ConvertibleTo<T, range_value_type_t<Rng>>)
-                void operator()(Rng &&, T &&) const volatile
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const volatile ->
+                    CPP_ret(void)(
+                        requires not ConvertibleTo<T, range_value_type_t<Rng>>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::split operates must be a model of the "

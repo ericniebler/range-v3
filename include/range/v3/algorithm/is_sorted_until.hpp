@@ -41,10 +41,10 @@ namespace ranges
             /// \pre `S` and `I` model the `Sentinel<S, I>` concept
             /// \pre `R` and `projected<I, P>` model the `IndirectRelation<R, projected<I, P>>` concept
             ///
-            CPP_template(typename I, typename S, typename R = ordered_less, typename P = ident)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<R, projected<I, P>>)
-            I operator()(I begin, S end, R pred = R{}, P proj = P{}) const
+            template<typename I, typename S, typename R = ordered_less, typename P = ident>
+            auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<R, projected<I, P>>)
             {
                 auto i = begin;
                 if(begin != end)
@@ -59,11 +59,10 @@ namespace ranges
                 return i;
             }
 
-            CPP_template(typename Rng, typename R = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectRelation<R, projected<I, P>>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, R pred = R{}, P proj = P{}) const
+            template<typename Rng, typename R = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires ForwardRange<Rng> && IndirectRelation<R, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

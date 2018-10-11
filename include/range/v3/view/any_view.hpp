@@ -387,11 +387,11 @@ namespace ranges
                 using impl_t = any_cursor_impl<iterator_t<Rng>, Ref, Cat>;
             public:
                 any_cursor() = default;
-                CPP_template(typename Rng)(
+                template<typename Rng>
+                explicit CPP_ctor(any_cursor)(Rng &&rng)(
                     requires not ranges::defer::Same<detail::decay_t<Rng>, any_cursor> &&
                         ranges::defer::ForwardRange<Rng> &&
                         defer::AnyCompatibleRange<Rng, Ref>)
-                explicit any_cursor(Rng &&rng)
                   : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
                 {}
                 any_cursor(any_cursor &&) = default;
@@ -518,11 +518,11 @@ namespace ranges
             CPP_assert((Cat & category::forward) == category::forward);
 
             any_view() = default;
-            CPP_template(typename Rng)(
+            template<typename Rng>
+            CPP_ctor(any_view)(Rng &&rng)(
                 requires not defer::Same<detail::decay_t<Rng>, any_view> &&
                     defer::InputRange<Rng> &&
                     detail::defer::AnyCompatibleRange<Rng, Ref>)
-            any_view(Rng &&rng)
               : any_view(static_cast<Rng &&>(rng),
                   meta::bool_<(get_categories<Rng>() & Cat) == Cat>{})
             {}
@@ -577,11 +577,11 @@ namespace ranges
             friend range_access;
 
             any_view() = default;
-            CPP_template(typename Rng)(
+            template<typename Rng>
+            CPP_ctor(any_view)(Rng &&rng)(
                 requires not defer::Same<detail::decay_t<Rng>, any_view> &&
                     defer::InputRange<Rng> &&
                     detail::defer::AnyCompatibleRange<Rng, Ref>)
-            any_view(Rng &&rng)
               : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
             {}
 

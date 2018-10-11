@@ -48,14 +48,13 @@ namespace ranges
         /// @{
         struct merge_fn
         {
-            CPP_template(typename I0, typename S0, typename I1, typename S1, typename O,
-                typename C = ordered_less, typename P0 = ident, typename P1 = ident)(
-                requires Sentinel<S0, I0> &&
-                    Sentinel<S1, I1> &&
-                    Mergeable<I0, I1, O, C, P0, P1>)
-            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
-            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
-                P0 proj0 = P0{}, P1 proj1 = P1{}) const
+            template<typename I0, typename S0, typename I1, typename S1, typename O,
+                typename C = ordered_less, typename P0 = ident, typename P1 = ident>
+            auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
+                    P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                    requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
+                        Mergeable<I0, I1, O, C, P0, P1>)
             {
                 for(; begin0 != end0 && begin1 != end1; ++out)
                 {
@@ -75,16 +74,15 @@ namespace ranges
                 return make_tagged_tuple<tag::in1, tag::in2, tag::out>(t0.first, t1.first, t1.second);
             }
 
-            CPP_template(typename Rng0, typename Rng1, typename O, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident,
-                typename I0 = iterator_t<Rng0>,
-                typename I1 = iterator_t<Rng1>)(
-                requires Range<Rng0> &&
-                    Range<Rng1> &&
-                    Mergeable<I0, I1, O, C, P0, P1>)
-            tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(safe_iterator_t<Rng1>), tag::out(O)>
-            operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
-                P1 proj1 = P1{}) const
+            template<typename Rng0, typename Rng1, typename O, typename C = ordered_less,
+                typename P0 = ident, typename P1 = ident>
+            auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
+                    P1 proj1 = P1{}) const ->
+                CPP_ret(tagged_tuple<tag::in1(safe_iterator_t<Rng0>),
+                                     tag::in2(safe_iterator_t<Rng1>),
+                                     tag::out(O)>)(
+                    requires Range<Rng0> && Range<Rng1> &&
+                        Mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                     std::move(pred), std::move(proj0), std::move(proj1));

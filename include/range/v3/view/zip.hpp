@@ -40,28 +40,28 @@ namespace ranges
                 template<typename ...Its>
                 [[noreturn]] auto operator()(copy_tag, Its...) const ->
                     CPP_ret(std::tuple<value_type_t<Its>...>)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
                     RANGES_EXPECT(false);
                 }
 
                 // tuple reference
-                CPP_template(typename ...Its)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                common_tuple<reference_t<Its>...>
-                operator()(Its const &...its) const
-                    noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value)
+                template<typename ...Its>
+                auto operator()(Its const &...its) const
+                    noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value) ->
+                    CPP_ret(common_tuple<reference_t<Its>...>)(
+                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
                     return common_tuple<reference_t<Its>...>{*its...};
                 }
 
                 // tuple rvalue reference
-                CPP_template(typename ...Its)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                common_tuple<rvalue_reference_t<Its>...>
-                operator()(move_tag, Its const &...its) const
+                template<typename ...Its>
+                auto operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
-                        noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value)
+                        noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
+                    CPP_ret(common_tuple<rvalue_reference_t<Its>...>)(
+                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
                     return common_tuple<rvalue_reference_t<Its>...>{iter_move(its)...};
                 }
@@ -76,26 +76,25 @@ namespace ranges
                 }
 
                 // pair reference
-                CPP_template(typename It1, typename It2)(
-                    requires Readable<It1> && Readable<It2>)
-                common_pair<reference_t<It1>, reference_t<It2>>
-                operator()(It1 const &it1, It2 const &it2) const
+                template<typename It1, typename It2>
+                auto operator()(It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(reference_t<It1>(*it1)) &&
-                             noexcept(reference_t<It2>(*it2)))
+                             noexcept(reference_t<It2>(*it2))) ->
+                    CPP_ret(common_pair<reference_t<It1>, reference_t<It2>>)(
+                        requires Readable<It1> && Readable<It2>)
                 {
-                    return common_pair<reference_t<It1>, reference_t<It2>>{*it1, *it2};
+                    return {*it1, *it2};
                 }
 
                 // pair rvalue reference
-                CPP_template(typename It1, typename It2)(
-                    requires Readable<It1> && Readable<It2>)
-                common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>
-                operator()(move_tag, It1 const &it1, It2 const &it2) const
+                template<typename It1, typename It2>
+                auto operator()(move_tag, It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
-                             noexcept(rvalue_reference_t<It2>(iter_move(it2))))
+                             noexcept(rvalue_reference_t<It2>(iter_move(it2)))) ->
+                    CPP_ret(common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>)(
+                        requires Readable<It1> && Readable<It2>)
                 {
-                    return common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>{
-                        iter_move(it1), iter_move(it2)};
+                    return {iter_move(it1), iter_move(it2)};
                 }
             };
         } // namespace detail
@@ -125,18 +124,20 @@ namespace ranges
 
             struct zip_fn
             {
-                CPP_template(typename...Rngs)(
-                    requires ZipViewConcept<Rngs...>)
-                zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
+                template<typename...Rngs>
+                auto operator()(Rngs &&... rngs) const ->
+                    CPP_ret(zip_view<all_t<Rngs>...>)(
+                        requires ZipViewConcept<Rngs...>)
                 {
                     CPP_assert(And<Range<Rngs>...>);
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename...Rngs)(
-                    requires not ZipViewConcept<Rngs...>)
-                void operator()(Rngs &&...) const
+                template<typename...Rngs>
+                auto operator()(Rngs &&...) const ->
+                    CPP_ret(void)(
+                        requires not ZipViewConcept<Rngs...>)
                 {
                     CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::zip must model the InputRange "

@@ -31,11 +31,11 @@ namespace ranges
         /// @{
         struct count_fn
         {
-            CPP_template(typename I, typename S, typename V, typename P = ident)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>)
-            difference_type_t<I>
-            operator()(I begin, S end, V const & val, P proj = P{}) const
+            template<typename I, typename S, typename V, typename P = ident>
+            auto operator()(I begin, S end, V const & val, P proj = P{}) const ->
+                CPP_ret(difference_type_t<I>)(
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        IndirectRelation<equal_to, projected<I, P>, V const *>)
             {
                 difference_type_t<I> n = 0;
                 for(; begin != end; ++begin)
@@ -44,12 +44,11 @@ namespace ranges
                 return n;
             }
 
-            CPP_template(typename Rng, typename V, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires InputRange<Rng> &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>)
-            difference_type_t<I>
-            operator()(Rng &&rng, V const & val, P proj = P{}) const
+            template<typename Rng, typename V, typename P = ident>
+            auto operator()(Rng &&rng, V const & val, P proj = P{}) const ->
+                CPP_ret(difference_type_t<iterator_t<Rng>>)(
+                    requires InputRange<Rng> &&
+                        IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }
@@ -57,7 +56,7 @@ namespace ranges
 
         /// \sa `count_fn`
         /// \ingroup group-algorithms
-      RANGES_INLINE_VARIABLE(with_braced_init_args<with_braced_init_args<count_fn>>,
+        RANGES_INLINE_VARIABLE(with_braced_init_args<with_braced_init_args<count_fn>>,
                                count)
         /// @}
     } // namespace v3

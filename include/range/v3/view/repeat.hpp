@@ -91,16 +91,18 @@ namespace ranges
         {
             struct repeat_fn
             {
-                CPP_template(typename Val)(
-                    requires CopyConstructible<Val> && std::is_object<Val>::value)
-                repeat_view<Val> operator()(Val value) const
+                template<typename Val>
+                auto operator()(Val value) const ->
+                    CPP_ret(repeat_view<Val>)(
+                        requires CopyConstructible<Val> && std::is_object<Val>::value)
                 {
                     return repeat_view<Val>{std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Val)(
-                    requires not (CopyConstructible<Val> && std::is_object<Val>::value))
-                void operator()(Val) const
+                template<typename Val>
+                auto operator()(Val) const ->
+                    CPP_ret(void)(
+                        requires not (CopyConstructible<Val> && std::is_object<Val>::value))
                 {
                     CPP_assert_msg(std::is_object<Val>::value,
                         "The value passed to view::repeat must be an object.");

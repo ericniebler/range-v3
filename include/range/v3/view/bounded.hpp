@@ -71,15 +71,17 @@ namespace ranges
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
             }
-            CPP_template(typename R = Rng const)(
-                requires Range<R &>)
-            sentinel_t<R> end_(std::false_type) const
+            template<typename R = Rng const>
+            auto end_(std::false_type) const ->
+                CPP_ret(sentinel_t<R>)(
+                    requires Range<R &>)
             {
                 return ranges::end(rng_);
             }
-            CPP_template(typename R = Rng const)(
-                requires Range<R &>)
-            iterator_t<R> end_(std::true_type) const
+            template<typename R = Rng const>
+            auto end_(std::true_type) const ->
+                CPP_ret(iterator_t<R>)(
+                    requires Range<R &>)
             {
                 return ranges::begin(rng_) + ranges::distance(rng_);
             }
@@ -113,15 +115,17 @@ namespace ranges
                 return ranges::size(rng_);
             }
 
-            CPP_template(typename R = Rng const)(
-                requires Range<R &>)
-            detail::bounded_iterator_t<R> begin() const
+            template<typename R = Rng const>
+            auto begin() const ->
+                CPP_ret(detail::bounded_iterator_t<R>)(
+                    requires Range<R &>)
             {
                 return detail::bounded_iterator_t<R>{ranges::begin(rng_)};
             }
-            CPP_template(typename R = Rng const)(
-                requires Range<R &>)
-            detail::bounded_iterator_t<R> end() const
+            template<typename R = Rng const>
+            auto end() const ->
+                CPP_ret(detail::bounded_iterator_t<R>)(
+                    requires Range<R &>)
             {
                 return detail::bounded_iterator_t<R>{
                     end_(meta::bool_<detail::RA_and_Sized<R>>{})};
@@ -138,22 +142,25 @@ namespace ranges
         {
             struct bounded_fn
             {
-                CPP_template(typename Rng)(
-                    requires Range<Rng> && !BoundedRange<Rng>)
-                bounded_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(bounded_view<all_t<Rng>>)(
+                        requires Range<Rng> && !BoundedRange<Rng>)
                 {
                     return bounded_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-                CPP_template(typename Rng)(
-                    requires Range<Rng> && BoundedRange<Rng>)
-                all_t<Rng> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(all_t<Rng>)(
+                        requires Range<Rng> && BoundedRange<Rng>)
                 {
                     return all(static_cast<Rng &&>(rng));
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not Range<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not Range<Rng>)
                 {
                     CPP_assert_msg(Range<Rng>,
                         "Rng is not a model of the Range concept");

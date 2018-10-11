@@ -235,9 +235,10 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not IntersperseViewConcept<Rng, T>)
-                void operator()(Rng &&, T &&) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const ->
+                    CPP_ret(void)(
+                        requires not IntersperseViewConcept<Rng, T>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::intersperse operates must be a model of the "

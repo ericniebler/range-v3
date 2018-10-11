@@ -123,13 +123,12 @@ namespace ranges
                 }
             }
         public:
-            CPP_template(typename I1, typename S1, typename I2, typename S2,
-                typename C = equal_to, typename P1 = ident, typename P2 = ident)(
-                requires Searchable<I1, I2, C, P1, P2> &&
-                    Sentinel<S1, I1> &&
-                    Sentinel<S2, I2>)
-            I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
+                typename P1 = ident, typename P2 = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
+                    C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+                CPP_ret(I1)(
+                    requires Sentinel<S1, I1> && Sentinel<S2, I2> && Searchable<I1, I2, C, P1, P2>)
             {
                 if(begin2 == end2)
                     return begin1;
@@ -142,16 +141,13 @@ namespace ranges
                         std::move(begin2), std::move(end2), pred, proj1, proj2);
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>)(
-                requires Searchable<I1, I2, C, P1, P2> &&
-                    Range<Rng1> &&
-                    Range<Rng2>)
-            safe_iterator_t<Rng1>
-            operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
+                typename P2 = ident>
+            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(safe_iterator_t<Rng1>)(
+                    requires Range<Rng1> && Range<Rng2> &&
+                        Searchable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {
                 if(empty(rng2))
                     return begin(rng1);

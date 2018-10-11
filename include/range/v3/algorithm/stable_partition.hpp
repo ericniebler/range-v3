@@ -265,19 +265,20 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I, typename S, typename C, typename P = ident)(
-                requires StablePartitionable<I, C, P> && Sentinel<S, I>)
-            I operator()(I begin, S end, C pred, P proj = P{}) const
+            template<typename I, typename S, typename C, typename P = ident>
+            auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires StablePartitionable<I, C, P> && Sentinel<S, I>)
             {
                 return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
                     std::ref(proj), iterator_tag_of<I>());
             }
 
             // BUGBUG Can this be optimized if Rng has O1 size?
-            CPP_template(typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires StablePartitionable<I, C, P> && Range<Rng>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
+            template<typename Rng, typename C, typename P = ident>
+            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires StablePartitionable<iterator_t<Rng>, C, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

@@ -30,24 +30,32 @@ namespace ranges
         namespace adl_push_back_detail
         {
             template<typename Cont, typename T>
+            using push_back_t =
+                decltype(static_cast<void>(unwrap_reference(
+                    std::declval<Cont &>()).push_back(std::declval<T>())));
+
+            template<typename Cont, typename Rng>
+            using insert_t =
+                decltype(static_cast<void>(ranges::insert(
+                    std::declval<Cont &>(),
+                    std::declval<sentinel_t<Cont>>(),
+                    std::declval<Rng>())));
+
+            template<typename Cont, typename T>
             auto push_back(Cont &&cont, T &&t) ->
-                CPP_ret(decltype(static_cast<void>(unwrap_reference(cont).
-                    push_back(static_cast<T &&>(t)))))(
-                requires LvalueContainerLike<Cont> && !Range<T> &&
-                    Constructible<range_value_type_t<Cont>, T>)
+                CPP_ret(push_back_t<Cont, T>)(
+                    requires LvalueContainerLike<Cont> && !Range<T> &&
+                        Constructible<range_value_type_t<Cont>, T>)
             {
                 unwrap_reference(cont).push_back(static_cast<T &&>(t));
             }
 
             template<typename Cont, typename Rng>
             auto push_back(Cont &&cont, Rng &&rng) ->
-                CPP_ret(decltype(static_cast<void>(ranges::insert(
-                    unwrap_reference(cont),
-                    end(cont),
-                    static_cast<Rng &&>(rng)))))(
-                requires LvalueContainerLike<Cont> && Range<Rng>)
+                CPP_ret(insert_t<Cont, Rng>)(
+                    requires LvalueContainerLike<Cont> && Range<Rng>)
             {
-                ranges::insert(unwrap_reference(cont), end(cont), static_cast<Rng &&>(rng));
+                ranges::insert(cont, end(cont), static_cast<Rng &&>(rng));
             }
 
             CPP_def

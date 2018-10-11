@@ -179,17 +179,19 @@ namespace ranges
                 friend view_access;
             public:
                 /// \pre <tt>!empty(rng)</tt>
-                CPP_template(typename Rng)(
-                    requires ForwardRange<Rng>)
-                cycled_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(cycled_view<all_t<Rng>>)(
+                        requires ForwardRange<Rng>)
                 {
                     return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not ForwardRange<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not ForwardRange<Rng>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::cycle operates must be a "

@@ -43,9 +43,10 @@ namespace ranges
         /// @{
         struct remove_if_fn
         {
-            CPP_template(typename I, typename S, typename C, typename P = ident)(
-                requires RemovableIf<I, C, P> && Sentinel<S, I>)
-            I operator()(I begin, S end, C pred, P proj = P{}) const
+            template<typename I, typename S, typename C, typename P = ident>
+            auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires RemovableIf<I, C, P> && Sentinel<S, I>)
             {
                 begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
                 if(begin != end)
@@ -62,10 +63,10 @@ namespace ranges
                 return begin;
             }
 
-            CPP_template(typename Rng, typename C, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires RemovableIf<I, C, P> && ForwardRange<Rng>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
+            template<typename Rng, typename C, typename P = ident>
+            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires RemovableIf<iterator_t<Rng>, C, P> && ForwardRange<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

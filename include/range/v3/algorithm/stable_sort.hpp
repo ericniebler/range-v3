@@ -152,10 +152,10 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires Sortable<I, C, P> && RandomAccessIterator<I> &&
-                    Sentinel<S, I>)
-            I operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
             {
                 I end = ranges::next(begin, end_);
                 using D = difference_type_t<I>;
@@ -170,10 +170,10 @@ namespace ranges
                 return end;
             }
 
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Sortable<I, C, P> && RandomAccessRange<Rng>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

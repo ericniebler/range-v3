@@ -102,9 +102,10 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
-                CPP_template(typename Rng, typename Vw)(
-                    requires not ViewConcept<View const, Rng>)
-                static void pipe(Rng &&, Vw &&)
+                template<typename Rng, typename Vw>
+                static auto pipe(Rng &&, Vw &&) ->
+                    CPP_ret(void)(
+                        requires not ViewConcept<View const, Rng>)
                 {
                     CPP_assert_msg(Range<Rng>,
                         "The type Rng must be a model of the Range concept.");

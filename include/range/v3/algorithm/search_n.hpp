@@ -120,10 +120,11 @@ namespace ranges
                 }
             }
         public:
-            CPP_template(typename I, typename S, typename V, typename C = equal_to, typename P = ident)(
-                requires Searchnable<I, V, C, P> && Sentinel<S, I>)
-            I operator()(I begin, S end, difference_type_t<I> count, V const &val,
-                C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V, typename C = equal_to, typename P = ident>
+            auto operator()(I begin, S end, difference_type_t<I> count, V const &val,
+                    C pred = C{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires Searchnable<I, V, C, P> && Sentinel<S, I>)
             {
                 if(count <= 0)
                     return begin;
@@ -135,12 +136,11 @@ namespace ranges
                         proj);
             }
 
-            CPP_template(typename Rng, typename V, typename C = equal_to, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Searchnable<I, V, C, P> && Range<Rng>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, difference_type_t<I> count, V const &val, C pred = C{},
-                P proj = P{}) const
+            template<typename Rng, typename V, typename C = equal_to, typename P = ident>
+            auto operator()(Rng &&rng, difference_type_t<iterator_t<Rng>> count, V const &val,
+                    C pred = C{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Searchnable<iterator_t<Rng>, V, C, P> && Range<Rng>)
             {
                 if(count <= 0)
                     return begin(rng);

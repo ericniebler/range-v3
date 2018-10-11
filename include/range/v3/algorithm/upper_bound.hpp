@@ -31,20 +31,20 @@ namespace ranges
         /// @{
         struct upper_bound_fn
         {
-            CPP_template(typename I, typename S, typename V2, typename C = ordered_less, typename P = ident)(
-                requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
-            I operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
             {
                 return partition_point(std::move(begin), std::move(end),
                     detail::make_upper_bound_predicate(pred, val), std::move(proj));
             }
 
             /// \overload
-            CPP_template(typename Rng, typename V2, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng> && BinarySearchable<I, V2, C, P>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename V2, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V2, C, P>)
             {
                 return partition_point(rng,
                     detail::make_upper_bound_predicate(pred, val), std::move(proj));

@@ -100,17 +100,19 @@ namespace ranges
         {
             struct single_fn
             {
-                CPP_template(typename Val)(
-                    requires CopyConstructible<Val>)
-                single_view<Val> operator()(Val value) const
+                template<typename Val>
+                auto operator()(Val value) const ->
+                    CPP_ret(single_view<Val>)(
+                        requires CopyConstructible<Val>)
                 {
                     return single_view<Val>{std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CPP_template(typename Arg, typename Val = detail::decay_t<Arg>)(
-                    requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-                void operator()(Arg &&) const
+                template<typename Arg, typename Val = detail::decay_t<Arg>>
+                auto operator()(Arg &&) const ->
+                    CPP_ret(void)(
+                        requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
                 {
                     CPP_assert_msg(CopyConstructible<Val>,
                         "The object passed to view::single must be a model of the CopyConstructible "

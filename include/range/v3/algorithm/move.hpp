@@ -36,23 +36,22 @@ namespace ranges
         {
             using aux::move_fn::operator();
 
-            CPP_template(typename I, typename S, typename O)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> && IndirectlyMovable<I, O>)
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O out) const
+            template<typename I, typename S, typename O>
+            auto operator()(I begin, S end, O out) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                        IndirectlyMovable<I, O>)
             {
                 for(; begin != end; ++begin, ++out)
                     *out = iter_move(begin);
                 return {begin, out};
             }
 
-            CPP_template(typename Rng, typename O,
-                typename I = iterator_t<Rng>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyMovable<I, O>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out) const
+            template<typename Rng, typename O>
+            auto operator()(Rng &&rng, O out) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                        IndirectlyMovable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }

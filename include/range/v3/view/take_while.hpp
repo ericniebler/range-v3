@@ -112,16 +112,18 @@ namespace ranges
                         protect(std::move(pred))));
                 }
             public:
-                CPP_template(typename Rng, typename Pred)(
-                    requires IterPredicateRange<Rng, Pred>)
-                iter_take_while_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&rng, Pred pred) const ->
+                    CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)(
+                        requires IterPredicateRange<Rng, Pred>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Pred)(
-                    requires not IterPredicateRange<Rng, Pred>)
-                void operator()(Rng &&, Pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&, Pred) const ->
+                    CPP_ret(void)(
+                        requires not IterPredicateRange<Rng, Pred>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::take_while operates must be a model of the "
@@ -155,16 +157,18 @@ namespace ranges
                         protect(std::move(pred))));
                 }
             public:
-                CPP_template(typename Rng, typename Pred)(
-                    requires IndirectPredicateRange<Rng, Pred>)
-                take_while_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&rng, Pred pred) const ->
+                    CPP_ret(take_while_view<all_t<Rng>, Pred>)(
+                        requires IndirectPredicateRange<Rng, Pred>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Pred)(
-                    requires not IndirectPredicateRange<Rng, Pred>)
-                void operator()(Rng &&, Pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&, Pred) const ->
+                    CPP_ret(void)(
+                        requires not IndirectPredicateRange<Rng, Pred>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::take_while operates must be a model of the "

@@ -35,12 +35,11 @@ namespace ranges
         /// @{
         struct equal_range_fn
         {
-            CPP_template(typename I, typename S, typename V,
-                typename C = ordered_less, typename P = ident)(
-                requires Sentinel<S, I> && !SizedSentinel<S, I> &&
-                    BinarySearchable<I, V, C, P>)
-            iterator_range<I>
-            operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V, typename C = ordered_less,
+                typename P = ident>
+            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(iterator_range<I>)(
+                    requires Sentinel<S, I> && !SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
             {
                 // Probe exponentially for either end-of-range, an iterator that
                 // is past the equal range (i.e., denotes an element greater
@@ -83,32 +82,34 @@ namespace ranges
                 }
             }
 
-            CPP_template(typename I, typename S, typename V,
-                typename C = ordered_less, typename P = ident)(
-                requires SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
-            iterator_range<I>
-            operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V, typename C = ordered_less,
+                typename P = ident>
+            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(iterator_range<I>)(
+                    requires SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
             {
                 auto const len = distance(begin, end);
                 return aux::equal_range_n(std::move(begin), len, val,
                     std::move(pred), std::move(proj));
             }
 
-            CPP_template(typename Rng, typename V, typename C = ordered_less,
-                typename P = ident, typename I = iterator_t<Rng>)(
-                requires Range<Rng> && !SizedRange<Rng> &&
-                    BinarySearchable<I, V, C, P>)
-            meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
-            operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(meta::if_c<std::is_lvalue_reference<Rng>::value,
+                                   iterator_range<iterator_t<Rng>>,
+                                   dangling<iterator_range<iterator_t<Rng>>>>)(
+                    requires Range<Rng> && !SizedRange<Rng> &&
+                        BinarySearchable<iterator_t<Rng>, V, C, P>)
             {
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
             }
 
-            CPP_template(typename Rng, typename V, typename C = ordered_less,
-                typename P = ident, typename I = iterator_t<Rng>)(
-                requires SizedRange<Rng> && BinarySearchable<I, V, C, P>)
-            meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
-            operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(meta::if_c<std::is_lvalue_reference<Rng>::value,
+                                   iterator_range<iterator_t<Rng>>,
+                                   dangling<iterator_range<iterator_t<Rng>>>>)(
+                    requires SizedRange<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)
             {
                 auto const len = distance(rng);
                 return aux::equal_range_n(begin(rng), len, val, std::move(pred), std::move(proj));

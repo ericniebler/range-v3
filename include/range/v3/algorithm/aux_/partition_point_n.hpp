@@ -36,9 +36,10 @@ namespace ranges
         {
             struct partition_point_n_fn
             {
-                CPP_template(typename I, typename C, typename P = ident)(
-                    requires PartitionPointable<I, C, P>)
-                I operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const
+                template<typename I, typename C, typename P = ident>
+                auto operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const ->
+                    CPP_ret(I)(
+                        requires PartitionPointable<I, C, P>)
                 {
                     if(0 < d)
                     {

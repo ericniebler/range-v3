@@ -101,11 +101,11 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I1, typename S1, typename I2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident)(
-                requires Sentinel<S1, I1> && IsPermutationable<I1, I2, C, P1, P2>)
-            bool operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
+            template<typename I1, typename S1, typename I2, typename C = equal_to, typename P1 = ident, typename P2 = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(bool)(
+                    requires Sentinel<S1, I1> && IsPermutationable<I1, I2, C, P1, P2>)
             {
                 // shorten sequences as much as possible by lopping off any equal parts
                 for(; begin1 != end1; ++begin1, ++begin2)
@@ -147,12 +147,13 @@ namespace ranges
                 return true;
             }
 
-            CPP_template(typename I1, typename S1, typename I2, typename S2,
-                typename C = equal_to, typename P1 = ident, typename P2 = ident)(
-                requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
-                    IsPermutationable<I1, I2, C, P1, P2>)
-            bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
-                P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
+                typename P1 = ident, typename P2 = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(bool)(
+                    requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
+                        IsPermutationable<I1, I2, C, P1, P2>)
             {
                 if(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
                     return distance(begin1, end1) == distance(begin2, end2) &&
@@ -163,25 +164,25 @@ namespace ranges
                     std::move(proj2));
             }
 
-            CPP_template(typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident, typename I1 = iterator_t<Rng1>,
-                typename I2 = uncvref_t<I2Ref>)(
-                requires ForwardRange<Rng1> && Iterator<I2> &&
-                    IsPermutationable<I1, I2, C, P1, P2>)
-            bool operator()(Rng1 &&rng1, I2Ref &&begin2,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
+                typename P2 = ident>
+            auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(bool)(
+                    requires ForwardRange<Rng1> && Iterator<uncvref_t<I2Ref>> &&
+                        IsPermutationable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
             {
                 return (*this)(begin(rng1), end(rng1), (I2Ref &&) begin2, std::move(pred),
                     std::move(proj1), std::move(proj2));
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident, typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>)(
-                requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
-                    IsPermutationable<I1, I2, C, P1, P2>)
-            bool operator()(Rng1 &&rng1, Rng2 &&rng2,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
+                typename P2 = ident>
+            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(bool)(
+                    requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
+                        IsPermutationable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {
                 if(SizedRange<Rng1> && SizedRange<Rng2>)
                     return distance(rng1) == distance(rng2) &&
@@ -199,9 +200,10 @@ namespace ranges
 
         struct next_permutation_fn
         {
-            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
-            bool operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
             {
                 if(begin == end_)
                     return false;
@@ -228,10 +230,10 @@ namespace ranges
                 }
             }
 
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> && Sortable<I, C, P>)
-            bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -244,9 +246,10 @@ namespace ranges
 
         struct prev_permutation_fn
         {
-            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
-            bool operator()(I begin, S end_, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
             {
                 if(begin == end_)
                     return false;
@@ -273,10 +276,10 @@ namespace ranges
                 }
             }
 
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> && Sortable<I, C, P>)
-            bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(bool)(
+                    requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

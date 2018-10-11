@@ -71,15 +71,17 @@ namespace ranges
             {
                 return {};
             }
-            CPP_template(typename BaseRng = Rng)(
-                requires Range<BaseRng const>)
-            adaptor<true> begin_adaptor() const
+            template<typename BaseRng = Rng>
+            auto begin_adaptor() const ->
+                CPP_ret(adaptor<true>)(
+                    requires Range<BaseRng const>)
             {
                 return {};
             }
-            CPP_template(typename BaseRng = Rng)(
-                requires Range<BaseRng const>)
-            sentinel_adaptor<true> end_adaptor() const
+            template<typename BaseRng = Rng>
+            auto end_adaptor() const ->
+                CPP_ret(sentinel_adaptor<true>)(
+                    requires Range<BaseRng const>)
             {
                 return {};
             }
@@ -99,9 +101,10 @@ namespace ranges
             private:
                 friend view_access;
 
-                CPP_template(typename Rng)(
-                    requires not SizedRange<Rng> && !is_infinite<Rng>::value)
-                static take_view<all_t<Rng>> invoke_(Rng &&rng, range_difference_type_t<Rng> n)
+                template<typename Rng>
+                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n) ->
+                    CPP_ret(take_view<all_t<Rng>>)(
+                        requires not SizedRange<Rng> && !is_infinite<Rng>::value)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
@@ -123,9 +126,10 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Int)(
-                    requires not Integral<Int>)
-                static detail::null_pipe bind(take_fn, Int)
+                template<typename Int>
+                static auto bind(take_fn, Int) ->
+                    CPP_ret(detail::null_pipe)(
+                        requires not Integral<Int>)
                 {
                     CPP_assert_msg(Integral<Int>,
                         "The object passed to view::take must be a model of the Integral concept.");
@@ -142,9 +146,10 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&, T &&) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::take operates must be a model of the InputRange "

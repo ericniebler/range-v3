@@ -44,9 +44,12 @@ namespace ranges
         /// @{
         struct replace_copy_fn
         {
-            CPP_template(typename I, typename S, typename O, typename T0, typename T1, typename P = ident)(
-                requires ReplaceCopyable<I, O, T0, T1, P> && Sentinel<S, I>)
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj = {}) const
+            template<typename I, typename S, typename O, typename T0, typename T1,
+                typename P = ident>
+            auto operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value,
+                    P proj = {}) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires ReplaceCopyable<I, O, T0, T1, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin, ++out)
                 {
@@ -59,12 +62,11 @@ namespace ranges
                 return {begin, out};
             }
 
-            CPP_template(typename Rng, typename O, typename T0, typename T1, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires ReplaceCopyable<I, O, T0, T1, P> && Range<Rng>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
-                P proj = {}) const
+            template<typename Rng, typename O, typename T0, typename T1, typename P = ident>
+            auto operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
+                    P proj = {}) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires ReplaceCopyable<iterator_t<Rng>, O, T0, T1, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), old_value, new_value,
                     std::move(proj));

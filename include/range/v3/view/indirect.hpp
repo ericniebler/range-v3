@@ -103,9 +103,10 @@ namespace ranges
                     return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not ReadableRange<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not ReadableRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The argument to view::indirect must be a model of the InputRange "

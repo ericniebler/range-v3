@@ -65,9 +65,10 @@ namespace ranges
         {
             struct counted_fn
             {
-                CPP_template(typename I)(
-                    requires Iterator<I>)
-                counted_view<I> operator()(I it, difference_type_t<I> n) const
+                template<typename I>
+                auto operator()(I it, difference_type_t<I> n) const ->
+                    CPP_ret(counted_view<I>)(
+                        requires Iterator<I>)
                 {
                     return {std::move(it), n};
                 }

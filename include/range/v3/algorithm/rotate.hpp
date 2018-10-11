@@ -190,9 +190,10 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I, typename S)(
-                requires Permutable<I> && Sentinel<S, I>)
-            iterator_range<I> operator()(I begin, I middle, S end) const
+            template<typename I, typename S>
+            auto operator()(I begin, I middle, S end) const ->
+                CPP_ret(iterator_range<I>)(
+                    requires Permutable<I> && Sentinel<S, I>)
             {
                 if(begin == middle)
                 {
@@ -206,10 +207,10 @@ namespace ranges
                 return rotate_fn::rotate_(begin, middle, end, iterator_tag_of<I>{});
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)(
-                requires Range<Rng> && Permutable<I>)
-            meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>
-            operator()(Rng &&rng, I middle) const
+            template<typename Rng, typename I = iterator_t<Rng>>
+            auto operator()(Rng &&rng, I middle) const ->
+                CPP_ret(meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>)(
+                    requires Range<Rng> && Permutable<I>)
             {
                 return (*this)(begin(rng), std::move(middle), end(rng));
             }

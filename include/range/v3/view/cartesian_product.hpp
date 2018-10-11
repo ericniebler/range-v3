@@ -48,12 +48,13 @@ namespace ranges
 
             struct cartesian_size_fn
             {
-                CPP_template(typename Rng)(
-                    requires SizedRange<Rng>)
-                auto CPP_auto_fun(operator())(std::size_t s, Rng &&rng)
-                (
-                    return s * static_cast<std::size_t>(ranges::size(rng))
-                )
+                template<typename Rng>
+                auto operator()(std::size_t s, Rng &&rng) const ->
+                    CPP_ret(std::size_t)(
+                        requires SizedRange<Rng>)
+                {
+                    return s * static_cast<std::size_t>(ranges::size(rng));
+                }
             };
         } // namespace detail
 

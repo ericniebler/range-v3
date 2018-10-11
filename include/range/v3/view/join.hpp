@@ -314,15 +314,17 @@ namespace ranges
 
             struct join_fn
             {
-                CPP_template(typename Rng)(
-                    requires JoinableRange<Rng>)
-                join_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(join_view<all_t<Rng>>)(
+                        requires JoinableRange<Rng>)
                 {
                     return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-                CPP_template(typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>)(
-                    requires JoinableRange<Rng>)
-                join_view<all_t<Rng>, single_view<Val>> operator()(Rng &&rng, meta::id_t<Val> v) const
+                template<typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>>
+                auto operator()(Rng &&rng, meta::id_t<Val> v) const ->
+                    CPP_ret(join_view<all_t<Rng>, single_view<Val>>)(
+                        requires JoinableRange<Rng>)
                 {
                     CPP_assert_msg(Semiregular<Val>,
                         "To join a range of ranges with a value, the value type must be a model of "
@@ -330,11 +332,12 @@ namespace ranges
                         "copy and move constructors, and a destructor.");
                     return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
                 }
-                CPP_template(typename Rng, typename ValRng)(
-                    // For some reason, this gives gcc problems:
-                    //requires JoinableRange<Rng> && ForwardRange<ValRng>)
-                    requires JoinableRange<Rng> && Range<ValRng> && ForwardIterator<iterator_t<ValRng>>)
-                join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng &&rng, ValRng &&val) const
+                template<typename Rng, typename ValRng>
+                auto operator()(Rng &&rng, ValRng &&val) const ->
+                    CPP_ret(join_view<all_t<Rng>, all_t<ValRng>>)(
+                        // For some reason, this gives gcc problems:
+                        //requires JoinableRange<Rng> && ForwardRange<ValRng>)
+                        requires JoinableRange<Rng> && Range<ValRng> && ForwardIterator<iterator_t<ValRng>>)
                 {
                     CPP_assert_msg(Common<range_value_type_t<ValRng>,
                         range_value_type_t<range_reference_t<Rng>>>,

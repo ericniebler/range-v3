@@ -83,16 +83,18 @@ namespace ranges
         {
             struct move_fn
             {
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                move_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(move_view<all_t<Rng>>)(
+                        requires InputRange<Rng>)
                 {
                     return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The argument passed to view::move must be a model of the InputRange "

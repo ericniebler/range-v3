@@ -36,62 +36,75 @@ namespace ranges
             private:
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, range_tag, sentinel_tag)
+                from_container(T &t, range_tag, sentinel_tag)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
                 static sized_iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, sized_range_tag, sentinel_tag)
+                from_container(T &t, sized_range_tag, sentinel_tag)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
                 static iterator_range<iterator_t<T>, sentinel_t<T>>
-                from_container(T & t, sized_range_tag, sized_sentinel_tag)
+                from_container(T &t, sized_range_tag, sized_sentinel_tag)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
                 }
 
+                template<typename T>
+                using sirc_t = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>;
+
+                template<typename T>
+                using from_container_t =
+                    decltype(all_fn::from_container(
+                        std::declval<T &>(),
+                        sized_range_tag_of<T>(),
+                        sirc_t<T>()));
+
                 /// If it's a view already, pass it though.
-                CPP_template(typename T)(
-                    requires View<uncvref_t<T>>)
-                static T from_range(T &&t)
+                template<typename T>
+                static auto from_range(T &&t) ->
+                    CPP_ret(T)(
+                        requires View<uncvref_t<T>>)
                 {
                     return static_cast<T &&>(t);
                 }
 
                 /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
-                CPP_template(typename T,
-                    typename SIRC = sentinel_tag_of<sentinel_t<T>, iterator_t<T>>)(
-                    requires not View<uncvref_t<T>>)
-                static decltype(all_fn::from_container(std::declval<T&>(), sized_range_tag_of<T>(), SIRC()))
-                from_range(T &&t)
+                template<typename T>
+                static auto from_range(T &&t) ->
+                    CPP_ret(from_container_t<T>)(
+                        requires not View<uncvref_t<T>>)
                 {
                     static_assert(std::is_lvalue_reference<T>::value,
                         "Cannot get a view of a temporary container");
-                    return all_fn::from_container(t, sized_range_tag_of<T>(), SIRC());
+                    return all_fn::from_container(t, sized_range_tag_of<T>(), sirc_t<T>());
                 }
 
                 // TODO handle char const * by turning it into a delimited range?
 
+                template<typename T>
+                using from_range_t = decltype(all_fn::from_range(std::declval<T>()));
+
             public:
-                CPP_template(typename T)(
-                    requires Range<T>)
-                decltype(all_fn::from_range(std::declval<T>()))
-                operator()(T &&t) const
+                template<typename T>
+                auto operator()(T &&t) const ->
+                    CPP_ret(from_range_t<T>)(
+                        requires Range<T>)
                 {
                     return all_fn::from_range(static_cast<T &&>(t));
                 }
 
-                CPP_template(typename T)(
-                    requires Range<T &>)
-                ranges::reference_wrapper<T>
-                operator()(std::reference_wrapper<T> ref) const
+                template<typename T>
+                auto operator()(std::reference_wrapper<T> ref) const ->
+                    CPP_ret(ranges::reference_wrapper<T>)(
+                        requires Range<T &>)
                 {
                     return ranges::ref(ref.get());
                 }

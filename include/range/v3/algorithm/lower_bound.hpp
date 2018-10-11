@@ -33,18 +33,19 @@ namespace ranges
         /// @{
         struct lower_bound_fn
         {
-            CPP_template(typename I, typename S, typename V, typename C = ordered_less, typename P = ident)(
-                requires Sentinel<S, I> && BinarySearchable<I, V, C, P>)
-            I operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename V, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires Sentinel<S, I> && BinarySearchable<I, V, C, P>)
             {
                 return partition_point(std::move(begin), std::move(end),
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));
             }
 
-            CPP_template(typename Rng, typename V, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Range<Rng> && BinarySearchable<I, V, C, P>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)
             {
                 return partition_point(rng,
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));

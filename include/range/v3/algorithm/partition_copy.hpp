@@ -49,10 +49,10 @@ namespace ranges
         /// @{
         struct partition_copy_fn
         {
-            CPP_template(typename I, typename S, typename O0, typename O1, typename C, typename P = ident)(
-                requires PartitionCopyable<I, O0, O1, C, P> && Sentinel<S, I>)
-            tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>
-            operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const
+            template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident>
+            auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
+                CPP_ret(tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>)(
+                    requires PartitionCopyable<I, O0, O1, C, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -71,11 +71,10 @@ namespace ranges
                 return make_tagged_tuple<tag::in, tag::out1, tag::out2>(begin, o0, o1);
             }
 
-            CPP_template(typename Rng, typename O0, typename O1, typename C, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires PartitionCopyable<I, O0, O1, C, P> && Range<Rng>)
-            tagged_tuple<tag::in(safe_iterator_t<Rng>), tag::out1(O0), tag::out2(O1)>
-            operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
+            template<typename Rng, typename O0, typename O1, typename C, typename P = ident>
+            auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
+                CPP_ret(tagged_tuple<tag::in(safe_iterator_t<Rng>), tag::out1(O0), tag::out2(O1)>)(
+                    requires PartitionCopyable<iterator_t<Rng>, O0, O1, C, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),
                     std::move(proj));

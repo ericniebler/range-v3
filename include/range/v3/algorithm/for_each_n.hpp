@@ -32,10 +32,10 @@ namespace ranges
         /// @{
         struct for_each_n_fn
         {
-            CPP_template(typename I, typename F, typename P = ident)(
-                requires InputIterator<I> &&
-                    MoveIndirectInvocable<F, projected<I, P>>)
-            I operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const
+            template<typename I, typename F, typename P = ident>
+            auto operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires InputIterator<I> && MoveIndirectInvocable<F, projected<I, P>>)
             {
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
@@ -45,11 +45,11 @@ namespace ranges
                 return recounted(begin, b, norig);
             }
 
-            CPP_template(typename Rng, typename F, typename P = ident)(
-                requires InputRange<Rng> &&
-                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, range_difference_type_t<Rng> n, F fun, P proj = P{}) const
+            template<typename Rng, typename F, typename P = ident>
+            auto operator()(Rng &&rng, range_difference_type_t<Rng> n, F fun, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires InputRange<Rng> &&
+                        MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
             {
                 if (SizedRange<Rng>)
                     RANGES_EXPECT(n <= distance(rng));

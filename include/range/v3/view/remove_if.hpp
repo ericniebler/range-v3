@@ -177,9 +177,10 @@ namespace ranges
                         all(static_cast<Rng &&>(rng)), std::move(pred)}
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Pred)(
-                    requires not SearchableRange<Rng, Pred>)
-                void operator()(Rng &&, Pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&, Pred) const ->
+                    CPP_ret(void)(
+                        requires not SearchableRange<Rng, Pred>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The first argument to view::remove_if must be a model of the "

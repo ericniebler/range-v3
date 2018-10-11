@@ -30,9 +30,10 @@ namespace ranges
         /// @{
         struct fill_n_fn
         {
-            CPP_template(typename O, typename V)(
-                requires OutputIterator<O, V const &>)
-            O operator()(O begin, difference_type_t<O> n, V const & val) const
+            template<typename O, typename V>
+            auto operator()(O begin, difference_type_t<O> n, V const & val) const ->
+                CPP_ret(O)(
+                    requires OutputIterator<O, V const &>)
             {
                 RANGES_EXPECT(n >= 0);
                 auto norig = n;

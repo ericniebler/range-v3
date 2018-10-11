@@ -41,9 +41,10 @@ namespace ranges
         /// @{
         struct replace_fn
         {
-            CPP_template(typename I, typename S, typename T0, typename T1, typename P = ident)(
-                requires Replaceable<I, T0, T1, P> && Sentinel<S, I>)
-            I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const
+            template<typename I, typename S, typename T0, typename T1, typename P = ident>
+            auto operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const ->
+                CPP_ret(I)(
+                    requires Replaceable<I, T0, T1, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin)
                     if(invoke(proj, *begin) == old_value)
@@ -51,11 +52,10 @@ namespace ranges
                 return begin;
             }
 
-            CPP_template(typename Rng, typename T0, typename T1, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Replaceable<I, T0, T1, P> && Range<Rng>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
+            template<typename Rng, typename T0, typename T1, typename P = ident>
+            auto operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Replaceable<iterator_t<Rng>, T0, T1, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
             }

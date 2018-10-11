@@ -119,9 +119,10 @@ namespace ranges
                 struct next_fun
                 {
                     cursor *pos;
-                    CPP_template(typename I, std::size_t N)(
-                        requires Iterator<I>)
-                    void operator()(indexed_element<I, N> it) const
+                    template<typename I, std::size_t N>
+                    auto operator()(indexed_element<I, N> it) const ->
+                        CPP_ret(void)(
+                            requires Iterator<I>)
                     {
                         RANGES_ASSERT(it.get() != end(std::get<N>(pos->rng_->rngs_)));
                         ++it.get();
@@ -131,16 +132,18 @@ namespace ranges
                 struct prev_fun
                 {
                     cursor *pos;
-                    CPP_template(typename I)(
-                        requires BidirectionalIterator<I>)
-                    void operator()(indexed_element<I, 0> it) const
+                    template<typename I>
+                    auto operator()(indexed_element<I, 0> it) const ->
+                        CPP_ret(void)(
+                            requires BidirectionalIterator<I>)
                     {
                         RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
                         --it.get();
                     }
-                    CPP_template(typename I, std::size_t N)(
-                        requires N != 0 && BidirectionalIterator<I>)
-                    void operator()(indexed_element<I, N> it) const
+                    template<typename I, std::size_t N>
+                    auto operator()(indexed_element<I, N> it) const ->
+                        CPP_ret(void)(
+                            requires N != 0 && BidirectionalIterator<I>)
                     {
                         if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
                         {
@@ -157,15 +160,17 @@ namespace ranges
                 {
                     cursor *pos;
                     difference_type n;
-                    CPP_template(typename I)(
-                        requires RandomAccessIterator<I>)
-                    void operator()(indexed_element<I, cranges - 1> it) const
+                    template<typename I>
+                    auto operator()(indexed_element<I, cranges - 1> it) const ->
+                        CPP_ret(void)(
+                            requires RandomAccessIterator<I>)
                     {
                         ranges::advance(it.get(), n);
                     }
-                    CPP_template(typename I, std::size_t N)(
-                        requires RandomAccessIterator<I>)
-                    void operator()(indexed_element<I, N> it) const
+                    template<typename I, std::size_t N>
+                    auto operator()(indexed_element<I, N> it) const ->
+                        CPP_ret(void)(
+                            requires RandomAccessIterator<I>)
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
                         // BUGBUG If distance(it, end) > n, then using bounded advance
@@ -182,15 +187,17 @@ namespace ranges
                 {
                     cursor *pos;
                     difference_type n;
-                    CPP_template(typename I)(
-                        requires RandomAccessIterator<I>)
-                    void operator()(indexed_element<I, 0> it) const
+                    template<typename I>
+                    auto operator()(indexed_element<I, 0> it) const ->
+                        CPP_ret(void)(
+                            requires RandomAccessIterator<I>)
                     {
                         ranges::advance(it.get(), n);
                     }
-                    CPP_template(typename I, std::size_t N)(
-                        requires RandomAccessIterator<I>)
-                    void operator()(indexed_element<I, N> it) const
+                    template<typename I, std::size_t N>
+                    auto operator()(indexed_element<I, N> it) const ->
+                        CPP_ret(void)(
+                            requires RandomAccessIterator<I>)
                     {
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
                         if(it.get() == begin)

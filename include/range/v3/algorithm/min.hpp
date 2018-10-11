@@ -32,16 +32,16 @@ namespace ranges
         /// @{
         struct min_fn
         {
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>, typename V = value_type_t<I>)(
-                requires InputRange<Rng> && Copyable<V> &&
-                    IndirectRelation<C, projected<I, P>>)
-            constexpr /*c++14*/ V operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(value_type_t<iterator_t<Rng>>)(
+                    requires InputRange<Rng> && Copyable<value_type_t<iterator_t<Rng>>> &&
+                        IndirectRelation<C, projected<iterator_t<Rng>, P>>)
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
-                V result = *begin;
+                value_type_t<iterator_t<Rng>> result = *begin;
                 while(++begin != end)
                 {
                     auto && tmp = *begin;
@@ -51,9 +51,10 @@ namespace ranges
                 return result;
             }
 
-            CPP_template(typename T, typename C = ordered_less, typename P = ident)(
-                requires IndirectRelation<C, projected<const T *, P>>)
-            constexpr T const &operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
+            template<typename T, typename C = ordered_less, typename P = ident>
+            constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(T const &)(
+                    requires IndirectRelation<C, projected<const T *, P>>)
             {
                 return invoke(pred, invoke(proj, b), invoke(proj, a)) ? b : a;
             }

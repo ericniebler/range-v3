@@ -32,11 +32,11 @@ namespace ranges
         /// @{
         struct for_each_fn
         {
-            CPP_template(typename I, typename S, typename F, typename P = ident)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    MoveIndirectInvocable<F, projected<I, P>>)
-            tagged_pair<tag::in(I), tag::fun(F)>
-            operator()(I begin, S end, F fun, P proj = P{}) const
+            template<typename I, typename S, typename F, typename P = ident>
+            auto operator()(I begin, S end, F fun, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::fun(F)>)(
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        MoveIndirectInvocable<F, projected<I, P>>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -45,11 +45,11 @@ namespace ranges
                 return {detail::move(begin), detail::move(fun)};
             }
 
-            CPP_template(typename Rng, typename F, typename P = ident)(
-                requires InputRange<Rng> &&
-                    MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
-            operator()(Rng &&rng, F fun, P proj = P{}) const
+            template<typename Rng, typename F, typename P = ident>
+            auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>)(
+                    requires InputRange<Rng> &&
+                        MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
             {
                 return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in(),
                     detail::move(fun)};

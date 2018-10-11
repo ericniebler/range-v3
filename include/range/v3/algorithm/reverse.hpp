@@ -53,18 +53,20 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename I, typename S)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> && Permutable<I>)
-            I operator()(I begin, S end_) const
+            template<typename I, typename S>
+            auto operator()(I begin, S end_) const ->
+                CPP_ret(I)(
+                    requires BidirectionalIterator<I> && Sentinel<S, I> && Permutable<I>)
             {
                 I end = ranges::next(begin, end_);
                 reverse_fn::impl(begin, end, iterator_tag_of<I>{});
                 return end;
             }
 
-            CPP_template(typename Rng, typename I = iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> && Permutable<I>)
-            safe_iterator_t<Rng> operator()(Rng &&rng) const
+            template<typename Rng, typename I = iterator_t<Rng>>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires BidirectionalRange<Rng> && Permutable<I>)
             {
                 return (*this)(begin(rng), end(rng));
             }

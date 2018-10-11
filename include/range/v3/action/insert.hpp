@@ -208,19 +208,23 @@ namespace ranges
 
             struct insert_fn
             {
+                template<typename Rng, typename... Args>
+                using insert_result_t =
+                    decltype(insert(std::declval<Rng>(), std::declval<Args>()...));
+
                 template<typename Rng, typename T>
                 auto operator()(Rng &&rng, T &&t) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), static_cast<T &&>(t))))(
-                    requires Range<Rng> && !Range<T> &&
-                        Constructible<range_value_type_t<Rng>, T>)
+                    CPP_ret(insert_result_t<Rng, T>)(
+                        requires Range<Rng> && !Range<T> &&
+                            Constructible<range_value_type_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), static_cast<T &&>(t));
                 }
 
                 template<typename Rng, typename Rng2>
                 auto operator()(Rng &&rng, Rng2 &&rng2) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), static_cast<Rng2 &&>(rng2))))(
-                    requires Range<Rng> && Range<Rng2>)
+                    CPP_ret(insert_result_t<Rng, Rng2>)(
+                        requires Range<Rng> && Range<Rng2>)
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempting to insert an infinite range into a container");
@@ -229,35 +233,33 @@ namespace ranges
 
                 template<typename Rng, typename T>
                 auto operator()(Rng &&rng, std::initializer_list<T> rng2) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), rng2)))(
-                    requires Range<Rng>)
+                    CPP_ret(insert_result_t<Rng, std::initializer_list<T> &>)(
+                        requires Range<Rng>)
                 {
                     return insert(static_cast<Rng &&>(rng), rng2);
                 }
 
                 template<typename Rng, typename I, typename S>
                 auto operator()(Rng &&rng, I i, S j) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(i), std::move(j))))(
-                    requires Range<Rng> && Sentinel<S, I> && !Range<S>)
+                    CPP_ret(insert_result_t<Rng, I, S>)(
+                        requires Range<Rng> && Sentinel<S, I> && !Range<S>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(i), std::move(j));
                 }
 
                 template<typename Rng, typename I, typename T>
                 auto operator()(Rng &&rng, I p, T &&t) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(p),
-                        static_cast<T &&>(t))))(
-                    requires Range<Rng> && Iterator<I> && !Range<T> &&
-                        Constructible<range_value_type_t<Rng>, T>)
+                    CPP_ret(insert_result_t<Rng, I, T>)(
+                        requires Range<Rng> && Iterator<I> && !Range<T> &&
+                            Constructible<range_value_type_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), static_cast<T &&>(t));
                 }
 
                 template<typename Rng, typename I, typename Rng2>
                 auto operator()(Rng &&rng, I p, Rng2 &&rng2) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(p),
-                        static_cast<Rng2 &&>(rng2))))(
-                    requires Range<Rng> && Iterator<I> && Range<Rng2>)
+                    CPP_ret(insert_result_t<Rng, I, Rng2>)(
+                        requires Range<Rng> && Iterator<I> && Range<Rng2>)
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempting to insert an infinite range into a container");
@@ -266,26 +268,24 @@ namespace ranges
 
                 template<typename Rng, typename I, typename T>
                 auto operator()(Rng &&rng, I p, std::initializer_list<T> rng2) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(p), rng2)))(
-                    requires Range<Rng> && Iterator<I>)
+                    CPP_ret(insert_result_t<Rng, I, std::initializer_list<T> &>)(
+                        requires Range<Rng> && Iterator<I>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), rng2);
                 }
 
                 template<typename Rng, typename I, typename N, typename T>
                 auto operator()(Rng &&rng, I p, N n, T &&t) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(p), n,
-                        static_cast<T &&>(t))))(
-                    requires Range<Rng> && Iterator<I> && Integral<N> && !Range<T> &&
-                        Constructible<range_value_type_t<Rng>, T>)
+                    CPP_ret(insert_result_t<Rng, I, N, T>)(
+                        requires Range<Rng> && Iterator<I> && Integral<N> && !Range<T> &&
+                            Constructible<range_value_type_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), n, static_cast<T &&>(t));
                 }
 
                 template<typename Rng, typename P, typename I, typename S>
                 auto operator()(Rng &&rng, P p, I i, S j) const ->
-                    CPP_ret(decltype(insert(static_cast<Rng &&>(rng), std::move(p), std::move(i),
-                        std::move(j))))(
+                    CPP_ret(insert_result_t<Rng, P, I, S>)(
                     requires Range<Rng> && Iterator<P> && Sentinel<S, I> && !Range<S>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), std::move(i),

@@ -44,11 +44,6 @@ namespace ranges
         {
             adjacent_remove_if_view() = default;
             constexpr adjacent_remove_if_view(Rng rng, Pred pred)
-                noexcept(
-                    std::is_nothrow_constructible<
-                        typename adjacent_remove_if_view::view_adaptor, Rng>::value &&
-                    std::is_nothrow_constructible<
-                        typename adjacent_remove_if_view::box, Pred>::value)
               : adjacent_remove_if_view::view_adaptor{detail::move(rng)}
               , adjacent_remove_if_view::box(detail::move(pred))
             {}
@@ -159,17 +154,18 @@ namespace ranges
                         protect(std::move(pred))));
                 }
             public:
-                CPP_template(typename Rng, typename Pred)(
-                    requires AdjacentRemoveIfConcept<Rng, Pred>)
-                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
-                (
-                    return adjacent_remove_if_view<all_t<Rng>, Pred>{
-                        all(static_cast<Rng &&>(rng)), std::move(pred)}
-                )
+                template<typename Rng, typename Pred>
+                constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
+                    CPP_ret(adjacent_remove_if_view<all_t<Rng>, Pred>)(
+                        requires AdjacentRemoveIfConcept<Rng, Pred>)
+                {
+                    return {all(static_cast<Rng &&>(rng)), std::move(pred)};
+                }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Pred)(
-                    requires not AdjacentRemoveIfConcept<Rng, Pred>)
-                void operator()(Rng &&, Pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&, Pred) const ->
+                    CPP_ret(void)(
+                        requires not AdjacentRemoveIfConcept<Rng, Pred>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "Rng must model the ForwardRange concept");

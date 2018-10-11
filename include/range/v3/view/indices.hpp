@@ -52,16 +52,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val) const
+                template<typename Val>
+                auto operator()(Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
                 }
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val, Val) const
+                template<typename Val>
+                auto operator()(Val, Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::indices must be Integral");
@@ -89,16 +91,18 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val) const
+                template<typename Val>
+                auto operator()(Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");
                 }
-                CPP_template(typename Val)(
-                    requires not Integral<Val>)
-                void operator()(Val, Val) const
+                template<typename Val>
+                auto operator()(Val, Val) const ->
+                    CPP_ret(void)(
+                        requires not Integral<Val>)
                 {
                     CPP_assert_msg(Integral<Val>,
                         "The object passed to view::closed_indices must be Integral");

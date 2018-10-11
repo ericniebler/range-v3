@@ -73,9 +73,10 @@ namespace ranges
 
             struct _advance_
             {
-                CPP_template(typename I)(
-                    requires Iterator<I>)
-                void operator()(I & i, difference_type_t<I> n) const
+                template<typename I>
+                auto operator()(I & i, difference_type_t<I> n) const ->
+                    CPP_ret(void)(
+                        requires Iterator<I>)
                 {
                     advance(i, n);
                 }
@@ -334,9 +335,10 @@ namespace ranges
 
             struct iter_zip_with_fn
             {
-                CPP_template(typename...Rngs, typename Fun)(
-                    requires IterZipWithViewConcept<Fun, Rngs...>)
-                iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                template<typename...Rngs, typename Fun>
+                auto operator()(Fun fun, Rngs &&... rngs) const ->
+                    CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
+                        requires IterZipWithViewConcept<Fun, Rngs...>)
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
@@ -345,9 +347,10 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Fun, typename...Rngs)(
-                    requires not IterZipWithViewConcept<Fun, Rngs...>)
-                void operator()(Fun, Rngs &&...) const
+                template<typename Fun, typename...Rngs>
+                auto operator()(Fun, Rngs &&...) const ->
+                    CPP_ret(void)(
+                        requires not IterZipWithViewConcept<Fun, Rngs...>)
                 {
                     CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::iter_zip_with must model the InputRange "
@@ -386,9 +389,10 @@ namespace ranges
 
             struct zip_with_fn
             {
-                CPP_template(typename...Rngs, typename Fun)(
-                    requires ZipWithViewConcept<Fun, Rngs...>)
-                zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                template<typename...Rngs, typename Fun>
+                auto operator()(Fun fun, Rngs &&... rngs) const ->
+                    CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)(
+                        requires ZipWithViewConcept<Fun, Rngs...>)
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
@@ -397,9 +401,10 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Fun, typename...Rngs)(
-                    requires not ZipWithViewConcept<Fun, Rngs...>)
-                void operator()(Fun, Rngs &&...) const
+                template<typename Fun, typename...Rngs>
+                auto operator()(Fun, Rngs &&...) const ->
+                    CPP_ret(void)(
+                        requires not ZipWithViewConcept<Fun, Rngs...>)
                 {
                     CPP_assert_msg(And<InputRange<Rngs>...>,
                         "All of the objects passed to view::zip_with must model the InputRange "

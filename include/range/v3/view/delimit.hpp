@@ -87,18 +87,18 @@ namespace ranges
                         std::move(value)));
                 }
             public:
-                CPP_template(typename Rng, typename Val)(
-                    requires Delimitable<Rng, Val>)
-                delimit_view<all_t<Rng>, Val>
-                operator()(Rng &&rng, Val value) const
+                template<typename Rng, typename Val>
+                auto operator()(Rng &&rng, Val value) const ->
+                    CPP_ret(delimit_view<all_t<Rng>, Val>)(
+                        requires Delimitable<Rng, Val>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(value)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Val)(
-                    requires not Delimitable<Rng, Val>)
-                void
-                operator()(Rng &&, Val) const
+                template<typename Rng, typename Val>
+                auto operator()(Rng &&, Val) const ->
+                    CPP_ret(void)(
+                        requires not Delimitable<Rng, Val>)
                 {
                     CPP_assert_msg(Range<Rng>,
                         "Rng must model the Range concept");
@@ -113,10 +113,10 @@ namespace ranges
             {
                 using view<delimit_impl_fn>::operator();
 
-                CPP_template(typename I, typename Val)(
-                    requires InputIterator<I>)
-                delimit_view<iterator_range<I, unreachable>, Val>
-                operator()(I begin, Val value) const
+                template<typename I, typename Val>
+                auto operator()(I begin, Val value) const ->
+                    CPP_ret(delimit_view<iterator_range<I, unreachable>, Val>)(
+                        requires InputIterator<I>)
                 {
                     return {{std::move(begin), {}}, std::move(value)};
                 }

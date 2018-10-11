@@ -191,11 +191,11 @@ namespace ranges
                     }
                     ranges::advance(it, delta);
                 }
-                CPP_template(typename Other)(
-                    requires SizedSentinel<Other, iterator_t<Rng>>)
-                constexpr /*c++14*/ range_difference_type_t<Rng> distance_to(
-                    iterator_t<Rng> const &here, Other const &there) const
-                    noexcept(noexcept(there - here))
+                template<typename Other>
+                constexpr /*c++14*/ auto distance_to(iterator_t<Rng> const &here,
+                        Other const &there) const noexcept(noexcept(there - here)) ->
+                    CPP_ret(range_difference_type_t<Rng>)(
+                        requires SizedSentinel<Other, iterator_t<Rng>>)
                 {
                     range_difference_type_t<Rng> delta = there - here;
                     if(delta < 0)
@@ -342,9 +342,10 @@ namespace ranges
                 // For the purpose of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
-                CPP_template(typename Difference)(
-                    requires not Integral<Difference>)
-                static detail::null_pipe bind(stride_fn, const Difference &)
+                template<typename Difference>
+                static auto bind(stride_fn, const Difference &) ->
+                    CPP_ret(detail::null_pipe)(
+                        requires not Integral<Difference>)
                 {
                     CPP_assert_msg(Integral<Difference>,
                         "The value to be used as the step in a call to view::stride must be a "
@@ -353,9 +354,10 @@ namespace ranges
                     return {};
                 }
             public:
-                CPP_template(typename Rng, typename T)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&, T &&) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object to be operated on by view::stride should be a model of the "

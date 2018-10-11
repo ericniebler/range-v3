@@ -418,9 +418,10 @@ namespace ranges
                     return make_pipeable(std::bind(chunk, std::placeholders::_1, n));
                 }
             public:
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                chunk_view<all_t<Rng>> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                template<typename Rng>
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                    CPP_ret(chunk_view<all_t<Rng>>)(
+                        requires InputRange<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
@@ -428,18 +429,20 @@ namespace ranges
                 // For the sake of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
-                CPP_template(typename Int)(
-                    requires not Integral<Int>)
-                static detail::null_pipe bind(chunk_fn, Int)
+                template<typename Int>
+                static auto bind(chunk_fn, Int) ->
+                    CPP_ret(detail::null_pipe)(
+                        requires not Integral<Int>)
                 {
                     CPP_assert_msg(Integral<Int>,
                         "The object passed to view::chunk must be Integral");
                     return {};
                 }
             public:
-                CPP_template(typename Rng, typename T)(
-                    requires not (InputRange<Rng> && Integral<T>))
-                void operator()(Rng &&, T) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T) const ->
+                    CPP_ret(void)(
+                        requires not (InputRange<Rng> && Integral<T>))
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The first argument to view::chunk must satisfy the InputRange concept");

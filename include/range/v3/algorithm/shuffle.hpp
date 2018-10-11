@@ -33,12 +33,13 @@ namespace ranges
         /// @{
         struct shuffle_fn
         {
-            CPP_template(typename I, typename S, typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<I> && Sentinel<S, I> &&
-                    Permutable<I> && UniformRandomNumberGenerator<Gen> &&
-                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
-            I operator()(I const begin, S const end,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename I, typename S, typename Gen = detail::default_random_engine&>
+            auto operator()(I const begin, S const end,
+                    Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(I)(
+                    requires RandomAccessIterator<I> && Sentinel<S, I> && Permutable<I> &&
+                        UniformRandomNumberGenerator<Gen> &&
+                        ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
             {
                 auto mid = begin;
                 if(mid == end)
@@ -53,13 +54,12 @@ namespace ranges
                 return mid;
             }
 
-            CPP_template(typename Rng, typename Gen = detail::default_random_engine&,
-                typename I = iterator_t<Rng>)(
-                requires RandomAccessRange<Rng> && Permutable<I> &&
-                    UniformRandomNumberGenerator<Gen> &&
-                    ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, Gen &&rand = detail::get_random_engine()) const
+            template<typename Rng, typename Gen = detail::default_random_engine&>
+            auto operator()(Rng &&rng, Gen &&rand = detail::get_random_engine()) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
+                        UniformRandomNumberGenerator<Gen> &&
+                        ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<iterator_t<Rng>>>)
             {
                 return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
             }

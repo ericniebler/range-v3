@@ -47,12 +47,11 @@ namespace ranges
         /// @{
         class sample_fn
         {
-            CPP_template(typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&)(
-                requires SampleAlgoConcept<I, S, O, Gen>)
-            static tagged_pair<tag::in(I), tag::out(O)>
-            sized_impl(I first, S last, difference_type_t<I> pop_size,
-                O out, difference_type_t<I> n, Gen &&gen)
+            template<typename I, typename S, typename O, typename Gen = detail::default_random_engine&>
+            static auto sized_impl(I first, S last, difference_type_t<I> pop_size, O out,
+                    difference_type_t<I> n, Gen &&gen) ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires SampleAlgoConcept<I, S, O, Gen>)
             {
                 std::uniform_int_distribution<difference_type_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
@@ -69,25 +68,25 @@ namespace ranges
                 return {std::move(first), std::move(out)};
             }
         public:
-            CPP_template(typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&)(
-                requires SampleAlgoConcept<I, S, O, Gen> &&
-                    (ForwardIterator<I> || SizedSentinel<S, I>))
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename I, typename S, typename O,
+                typename Gen = detail::default_random_engine&>
+            auto operator()(I first, S last, O out, difference_type_t<I> n,
+                    Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires SampleAlgoConcept<I, S, O, Gen> &&
+                        (ForwardIterator<I> || SizedSentinel<S, I>))
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
                     k, std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CPP_template(typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
-                    !(ForwardIterator<I> || SizedSentinel<S, I>) )
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename I, typename S, typename O,
+                typename Gen = detail::default_random_engine&>
+            auto operator()(I first, S last, O out, difference_type_t<I> n,
+                Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
+                        !(ForwardIterator<I> || SizedSentinel<S, I>) )
             {
                 if(n <= 0)
                     goto done;
@@ -112,82 +111,70 @@ namespace ranges
             done:
                 return {std::move(first), std::move(out)};
             }
-            CPP_template(typename I, typename S, typename ORng,
-                typename Gen = detail::default_random_engine&)(
-                requires SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
-                    (ForwardIterator<I> || SizedSentinel<S, I>) &&
-                    (ForwardRange<ORng> || SizedRange<ORng>))
-            tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>
-            operator()(I first, S last, ORng &&out,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename I, typename S, typename ORng,
+                typename Gen = detail::default_random_engine&>
+            auto operator()(I first, S last, ORng &&out,
+                    Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)(
+                    requires SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
+                        (ForwardIterator<I> || SizedSentinel<S, I>) &&
+                        (ForwardRange<ORng> || SizedRange<ORng>))
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
                     k, begin(out), distance(out), static_cast<Gen &&>(gen));
             }
-            CPP_template(typename I, typename S, typename ORng,
-                typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<iterator_t<ORng>> &&
-                    SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
-                    !(ForwardIterator<I> || SizedSentinel<S, I>) &&
-                    (ForwardRange<ORng> || SizedRange<ORng>))
-            tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>
-            operator()(I first, S last, ORng &&out,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename I, typename S, typename ORng,
+                typename Gen = detail::default_random_engine&>
+            auto operator()(I first, S last, ORng &&out,
+                    Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)(
+                    requires RandomAccessIterator<iterator_t<ORng>> &&
+                        SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
+                        !(ForwardIterator<I> || SizedSentinel<S, I>) &&
+                        (ForwardRange<ORng> || SizedRange<ORng>))
             {
                 return (*this)(std::move(first), std::move(last), begin(out),
                     distance(out), static_cast<Gen &&>(gen));
             }
-            CPP_template(typename Rng, typename O,
-                typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<O> &&
-                    SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
-                    !(ForwardRange<Rng> || SizedRange<Rng>))
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
+            auto operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+                    Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires RandomAccessIterator<O> &&
+                        SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
+                        !(ForwardRange<Rng> || SizedRange<Rng>))
             {
                 return (*this)(begin(rng), end(rng),
                     std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CPP_template(typename Rng, typename O,
-                typename Gen = detail::default_random_engine&)(
-                requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
-                    (ForwardRange<Rng> || SizedRange<Rng>))
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
+            auto operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+                Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
+                        (ForwardRange<Rng> || SizedRange<Rng>))
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
                     std::move(out), n, static_cast<Gen &&>(gen));
             }
-            CPP_template(typename IRng, typename ORng,
-                typename Gen = detail::default_random_engine&)(
-                requires RandomAccessIterator<iterator_t<ORng>> &&
-                    SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
-                        iterator_t<ORng>, Gen> &&
-                    !(ForwardRange<IRng> || SizedRange<IRng>) &&
-                    (ForwardRange<ORng> || SizedRange<ORng>))
-            tagged_pair<
-                tag::in(safe_iterator_t<IRng>),
-                tag::out(safe_iterator_t<ORng>)>
-            operator()(IRng &&rng, ORng &&out,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename IRng, typename ORng, typename Gen = detail::default_random_engine&>
+            auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<IRng>), tag::out(safe_iterator_t<ORng>)>)(
+                    requires RandomAccessIterator<iterator_t<ORng>> &&
+                        SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>, iterator_t<ORng>, Gen> &&
+                            !(ForwardRange<IRng> || SizedRange<IRng>) &&
+                            (ForwardRange<ORng> || SizedRange<ORng>))
             {
                 return (*this)(begin(rng), end(rng),
                     begin(out), distance(out), static_cast<Gen &&>(gen));
             }
-            CPP_template(typename IRng, typename ORng,
-                typename Gen = detail::default_random_engine&)(
-                requires SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>,
-                        iterator_t<ORng>, Gen> &&
-                    (ForwardRange<IRng> || SizedRange<IRng>) &&
-                    (ForwardRange<ORng> || SizedRange<ORng>))
-            tagged_pair<
-                tag::in(safe_iterator_t<IRng>),
-                tag::out(safe_iterator_t<ORng>)>
-            operator()(IRng &&rng, ORng &&out,
-                Gen &&gen = detail::get_random_engine()) const
+            template<typename IRng, typename ORng, typename Gen = detail::default_random_engine&>
+            auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<IRng>), tag::out(safe_iterator_t<ORng>)>)(
+                    requires SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>, iterator_t<ORng>, Gen> &&
+                        (ForwardRange<IRng> || SizedRange<IRng>) &&
+                        (ForwardRange<ORng> || SizedRange<ORng>))
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
                     begin(out), distance(out), static_cast<Gen &&>(gen));

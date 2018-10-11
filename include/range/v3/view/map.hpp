@@ -37,11 +37,12 @@ namespace ranges
                 return t;
             }
 
-            CPP_template(typename T)(
-                requires MoveConstructible<T>)
-            constexpr /*c++14*/ T
-            get_first_second_helper(T& t, std::false_type)
-                noexcept(std::is_nothrow_move_constructible<T>::value)
+            template<typename T>
+            constexpr /*c++14*/
+            auto get_first_second_helper(T& t, std::false_type)
+                noexcept(std::is_nothrow_move_constructible<T>::value) ->
+                CPP_ret(T)(
+                    requires MoveConstructible<T>)
             {
                 return std::move(t);
             }
@@ -95,16 +96,18 @@ namespace ranges
 
             struct keys_fn
             {
-                CPP_template(typename Rng)(
-                    requires KeysViewConcept<Rng>)
-                keys_range_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(keys_range_view<all_t<Rng>>)(
+                        requires KeysViewConcept<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not KeysViewConcept<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not KeysViewConcept<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The argument of view::keys must be a model of the InputRange concept.");
@@ -125,16 +128,18 @@ namespace ranges
 
             struct values_fn
             {
-                CPP_template(typename Rng)(
-                    requires ValuesViewConcept<Rng>)
-                values_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(values_view<all_t<Rng>>)(
+                        requires ValuesViewConcept<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not ValuesViewConcept<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not ValuesViewConcept<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The argument of view::values must be a model of the InputRange concept.");

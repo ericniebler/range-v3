@@ -64,9 +64,10 @@ namespace ranges
                 {
                     return {ranges::begin(rng_), n_};
                 }
-                CPP_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>)
-                counted_iterator<iterator_t<BaseRng const>> begin() const
+                template<typename BaseRng = Rng>
+                auto begin() const ->
+                    CPP_ret(counted_iterator<iterator_t<BaseRng const>>)(
+                        requires Range<BaseRng const>)
                 {
                     return {ranges::begin(rng_), n_};
                 }
@@ -112,15 +113,17 @@ namespace ranges
                 {
                     return next(ranges::begin(rng_), n_);
                 }
-                CPP_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>)
-                iterator_t<BaseRng const> begin() const
+                template<typename BaseRng = Rng>
+                auto begin() const ->
+                    CPP_ret(iterator_t<BaseRng const>)(
+                        requires Range<BaseRng const>)
                 {
                     return ranges::begin(rng_);
                 }
-                CPP_template(typename BaseRng = Rng)(
-                    requires Range<BaseRng const>)
-                iterator_t<BaseRng const> end() const
+                template<typename BaseRng = Rng>
+                auto end() const ->
+                    CPP_ret(iterator_t<BaseRng const>)(
+                        requires Range<BaseRng const>)
                 {
                     return next(ranges::begin(rng_), n_);
                 }
@@ -158,10 +161,11 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
-                CPP_template(typename Rng)(
-                    requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
-                static iterator_range<iterator_t<Rng>>
-                invoke_(Rng &&rng, range_difference_type_t<Rng> n, random_access_range_tag)
+                template<typename Rng>
+                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n,
+                        random_access_range_tag) ->
+                    CPP_ret(iterator_range<iterator_t<Rng>>)(
+                        requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
                 {
                     return {begin(rng), next(begin(rng), n)};
                 }
@@ -192,9 +196,10 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&, T &&) const
+                template<typename Rng, typename T>
+                auto operator()(Rng &&, T &&) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<T>,
                         "The object on which view::take operates must be a model of the InputRange "

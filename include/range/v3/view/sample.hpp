@@ -169,11 +169,12 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            CPP_template(typename R = Rng)(
-                requires SizedRange<R const> ||
-                    SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
-                    ForwardRange<R const>)
-            cursor<true> begin_cursor() const
+            template<typename R = Rng>
+            auto begin_cursor() const ->
+                CPP_ret(cursor<true>)(
+                    requires SizedRange<R const> ||
+                        SizedSentinel<sentinel_t<R const>, iterator_t<R const>> ||
+                        ForwardRange<R const>)
             {
                 return cursor<true>{*this};
             }
@@ -219,11 +220,11 @@ namespace ranges
                 }
 
             public:
-                CPP_template(typename Rng, typename URNG = detail::default_random_engine)(
-                    requires Constraint<Rng, URNG>)
-                sample_view<all_t<Rng>, URNG> operator()(
-                    Rng &&rng, range_difference_type_t<Rng> sample_size,
-                    URNG &generator = detail::get_random_engine()) const
+                template<typename Rng, typename URNG = detail::default_random_engine>
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> sample_size,
+                        URNG &generator = detail::get_random_engine()) const ->
+                    CPP_ret(sample_view<all_t<Rng>, URNG>)(
+                        requires Constraint<Rng, URNG>)
                 {
                     return sample_view<all_t<Rng>, URNG>{
                         all(static_cast<Rng &&>(rng)), sample_size, generator
@@ -231,9 +232,10 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename URNG = detail::default_random_engine)(
-                    requires not Constraint<Rng, URNG>)
-                void operator()(Rng &&, URNG && = URNG{}) const
+                template<typename Rng, typename URNG = detail::default_random_engine>
+                auto operator()(Rng &&, URNG && = URNG{}) const ->
+                    CPP_ret(void)(
+                        requires not Constraint<Rng, URNG>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::sample operates must satisfy the InputRange "

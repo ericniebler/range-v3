@@ -105,18 +105,20 @@ namespace ranges
         {
             struct tail_fn
             {
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                meta::if_c<range_cardinality<Rng>::value == 0, all_t<Rng>, tail_view<all_t<Rng>>>
-                operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
+                            all_t<Rng>, tail_view<all_t<Rng>>>)(
+                        requires InputRange<Rng>)
                 {
                     return all(static_cast<Rng &&>(rng));
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not InputRange<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not InputRange<Rng>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::tail is to operate must be a model of the "

@@ -41,16 +41,18 @@ namespace ranges
 
             struct unique_fn
             {
-                CPP_template(typename Rng)(
-                    requires UniqueViewConcept<Rng>)
-                unique_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(unique_view<all_t<Rng>>)(
+                        requires UniqueViewConcept<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng)(
-                    requires not UniqueViewConcept<Rng>)
-                void operator()(Rng &&) const
+                template<typename Rng>
+                auto operator()(Rng &&) const ->
+                    CPP_ret(void)(
+                        requires not UniqueViewConcept<Rng>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::unique operates must be a model the "

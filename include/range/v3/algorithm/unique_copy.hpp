@@ -122,9 +122,10 @@ namespace ranges
             /// \pre InputView is a model of the `InputView` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `Relation` concept
-            CPP_template(typename I, typename S, typename O, typename C = equal_to, typename P = ident)(
-                requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
-            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename O, typename C = equal_to, typename P = ident>
+            auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
                     std::move(pred), std::move(proj), iterator_tag_of<I>(),
@@ -132,14 +133,13 @@ namespace ranges
             }
 
             /// \overload
-            CPP_template(typename Rng, typename O, typename C = equal_to, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires UniqueCopyable<I, O, C, P> && Range<Rng>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename O, typename C = equal_to, typename P = ident>
+            auto operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires UniqueCopyable<iterator_t<Rng>, O, C, P> && Range<Rng>)
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
-                    std::move(pred), std::move(proj), iterator_tag_of<I>(),
+                    std::move(pred), std::move(proj), iterator_tag_of<iterator_t<Rng>>(),
                     meta::bool_<ForwardIterator<O>>{});
             }
         };

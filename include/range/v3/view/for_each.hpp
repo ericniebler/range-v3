@@ -65,9 +65,10 @@ namespace ranges
                 )
 
         #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not ForEachViewConcept<Rng, Fun>)
-                void operator()(Rng &&, Fun) const
+                template<typename Rng, typename Fun>
+                auto operator()(Rng &&, Fun) const ->
+                    CPP_ret(void)(
+                        requires not ForEachViewConcept<Rng, Fun>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::for_each operates must be a model of the "
@@ -94,17 +95,19 @@ namespace ranges
 
         struct yield_fn
         {
-            CPP_template(typename V)(
-                requires CopyConstructible<V>)
-            single_view<V> operator()(V v) const
+            template<typename V>
+            auto operator()(V v) const ->
+                CPP_ret(single_view<V>)(
+                    requires CopyConstructible<V>)
             {
                 return view::single(std::move(v));
             }
 
         #ifndef RANGES_DOXYGEN_INVOKED
-            CPP_template(typename Arg, typename Val = detail::decay_t<Arg>)(
-                requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-            void operator()(Arg &&) const
+            template<typename Arg, typename Val = detail::decay_t<Arg>>
+            auto operator()(Arg &&) const ->
+                CPP_ret(void)(
+                    requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
             {
                 CPP_assert_msg(CopyConstructible<Val>,
                     "The object passed to yield must be a model of the CopyConstructible "
@@ -122,9 +125,10 @@ namespace ranges
 
         struct yield_from_fn
         {
-            CPP_template(typename Rng)(
-                requires View<Rng>)
-            Rng operator()(Rng rng) const
+            template<typename Rng>
+            auto operator()(Rng rng) const ->
+                CPP_ret(Rng)(
+                    requires View<Rng>)
             {
                 return rng;
             }

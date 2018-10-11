@@ -41,9 +41,10 @@ namespace ranges
         /// @{
         struct replace_if_fn
         {
-            CPP_template(typename I, typename S, typename C, typename T, typename P = ident)(
-                requires ReplaceIfable<I, C, T, P> && Sentinel<S, I>)
-            I operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const
+            template<typename I, typename S, typename C, typename T, typename P = ident>
+            auto operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires ReplaceIfable<I, C, T, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin)
                     if(invoke(pred, invoke(proj, *begin)))
@@ -51,11 +52,10 @@ namespace ranges
                 return begin;
             }
 
-            CPP_template(typename Rng, typename C, typename T, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires ReplaceIfable<I, C, T, P> && Range<Rng>)
-            safe_iterator_t<Rng>
-            operator()(Rng &&rng, C pred, T const & new_value, P proj = P{}) const
+            template<typename Rng, typename C, typename T, typename P = ident>
+            auto operator()(Rng &&rng, C pred, T const & new_value, P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires ReplaceIfable<iterator_t<Rng>, C, T, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
             }

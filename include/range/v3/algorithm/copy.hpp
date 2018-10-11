@@ -36,24 +36,22 @@ namespace ranges
         {
             using aux::copy_fn::operator();
 
-            CPP_template(typename I, typename S, typename O)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
-            constexpr /*c++14*/
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, S end, O out) const
+            template<typename I, typename S, typename O>
+            constexpr /*c++14*/ auto operator()(I begin, S end, O out) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {
                 for(; begin != end; ++begin, ++out)
                     *out = *begin;
                 return {begin, out};
             }
 
-            CPP_template(typename Rng, typename O)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
-            constexpr /*c++14*/
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng &&rng, O out) const
+            template<typename Rng, typename O>
+            constexpr /*c++14*/ auto operator()(Rng &&rng, O out) const ->
+                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                    requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }

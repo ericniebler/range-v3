@@ -95,17 +95,18 @@ namespace ranges
                     return make_pipeable(std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))));
                 }
             public:
-                CPP_template(typename Rng, typename Pred)(
-                    requires DropWhileViewConcept<Rng, Pred>)
-                drop_while_view<all_t<Rng>, Pred>
-                operator()(Rng &&rng, Pred pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&rng, Pred pred) const ->
+                    CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
+                        requires DropWhileViewConcept<Rng, Pred>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Pred)(
-                    requires not DropWhileViewConcept<Rng, Pred>)
-                void operator()(Rng &&, Pred) const
+                template<typename Rng, typename Pred>
+                auto operator()(Rng &&, Pred) const ->
+                    CPP_ret(void)(
+                        requires not DropWhileViewConcept<Rng, Pred>)
                 {
                     CPP_assert_msg(InputRange<Rng>,
                         "The first argument to view::drop_while must be a model of the "

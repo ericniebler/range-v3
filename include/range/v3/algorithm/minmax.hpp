@@ -34,14 +34,15 @@ namespace ranges
         /// @{
         struct minmax_fn
         {
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>, typename V = value_type_t<I>,
-                typename R = tagged_pair<tag::min(V), tag::max(V)>)(
-                requires InputRange<Rng> && Copyable<V> &&
-                    IndirectRelation<C, projected<I, P>>)
-            constexpr /*c++14*/
-            R operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::min(value_type_t<iterator_t<Rng>>),
+                                    tag::max(value_type_t<iterator_t<Rng>>)>)(
+                    requires InputRange<Rng> && Copyable<value_type_t<iterator_t<Rng>>> &&
+                        IndirectRelation<C, projected<iterator_t<Rng>, P>>)
             {
+                using R = tagged_pair<tag::min(value_type_t<iterator_t<Rng>>),
+                                      tag::max(value_type_t<iterator_t<Rng>>)>;
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
@@ -57,7 +58,7 @@ namespace ranges
                     }
                     while(++begin != end)
                     {
-                        V tmp1 = *begin;
+                        value_type_t<iterator_t<Rng>> tmp1 = *begin;
                         if(++begin == end)
                         {
                             if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.first)))
@@ -87,10 +88,10 @@ namespace ranges
                 return result;
             }
 
-            CPP_template(typename T, typename C = ordered_less, typename P = ident)(
-                requires IndirectRelation<C, projected<const T *, P>>)
-            constexpr tagged_pair<tag::min(T const &), tag::max(T const &)>
-            operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
+            template<typename T, typename C = ordered_less, typename P = ident>
+            constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::min(T const &), tag::max(T const &)>)(
+                    requires IndirectRelation<C, projected<const T *, P>>)
             {
                 using R = tagged_pair<tag::min(T const &), tag::max(T const &)>;
                 return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};

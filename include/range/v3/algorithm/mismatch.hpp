@@ -48,12 +48,12 @@ namespace ranges
         /// @{
         struct mismatch_fn
         {
-            CPP_template(typename I1, typename S1, typename I2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident)(
-                requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1>)
-            tagged_pair<tag::in1(I1), tag::in2(I2)>
-            operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
+            template<typename I1, typename S1, typename I2, typename C = equal_to,
+                typename P1 = ident, typename P2 = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(tagged_pair<tag::in1(I1), tag::in2(I2)>)(
+                    requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1>)
             {
                 for(; begin1 != end1; ++begin1, ++begin2)
                     if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -61,13 +61,11 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            CPP_template(typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident)(
-                requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1> &&
-                    Sentinel<S2, I2>)
-            tagged_pair<tag::in1(I1), tag::in2(I2)>
-            operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
+            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to, typename P1 = ident, typename P2 = ident>
+            auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(tagged_pair<tag::in1(I1), tag::in2(I2)>)(
+                    requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1> && Sentinel<S2, I2>)
             {
                 for(; begin1 != end1 &&  begin2 != end2; ++begin1, ++begin2)
                     if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -75,28 +73,26 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            CPP_template(typename Rng1, typename I2Ref, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = uncvref_t<I2Ref>)( // [*] See below
-                requires InputRange<Rng1> && Iterator<I2> &&
-                    Mismatchable<I1, I2, C, P1, P2>)
-            tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(I2)>
-            operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
-                P2 proj2 = P2{}) const
+            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
+                typename P2 = ident>
+            auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
+                    P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+                CPP_ret(tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(uncvref_t<I2Ref>)>)(
+                    requires InputRange<Rng1> && Iterator<uncvref_t<I2Ref>> &&
+                        Mismatchable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
             {
-                return (*this)(begin(rng1), end(rng1), static_cast<I2 &&>(begin2), std::move(pred),
+                return (*this)(begin(rng1), end(rng1), static_cast<uncvref_t<I2Ref> &&>(begin2), std::move(pred),
                     std::move(proj1), std::move(proj2));
             }
 
-            CPP_template(typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident,
-                typename I1 = iterator_t<Rng1>,
-                typename I2 = iterator_t<Rng2>)(
-                requires InputRange<Rng1> && InputRange<Rng2> &&
-                    Mismatchable<I1, I2, C, P1, P2>)
-            tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(safe_iterator_t<Rng2>)>
-            operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
+                typename P2 = ident>
+            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                    P2 proj2 = P2{}) const ->
+                CPP_ret(tagged_pair<tag::in1(safe_iterator_t<Rng1>),
+                                    tag::in2(safe_iterator_t<Rng2>)>)(
+                    requires InputRange<Rng1> && InputRange<Rng2> &&
+                        Mismatchable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
                     std::move(proj1), std::move(proj2));

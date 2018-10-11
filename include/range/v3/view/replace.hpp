@@ -108,22 +108,26 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CPP_template(typename Val1, typename Val2,
-                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
-                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>)(
-                    requires not Same<V1, V2>)
-                static detail::null_pipe bind(replace_fn, Val1, Val2)
+                template<typename Val1, typename Val2>
+                static auto bind(replace_fn, Val1, Val2) ->
+                    CPP_ret(detail::null_pipe)(
+                        requires not Same<
+                            detail::decay_t<unwrap_reference_t<Val1>>,
+                            detail::decay_t<unwrap_reference_t<Val1>>>)
                 {
-                    CPP_assert_msg(Same<V1, V2>,
+                    CPP_assert_msg(
+                        Same<
+                            detail::decay_t<unwrap_reference_t<Val1>>,
+                            detail::decay_t<unwrap_reference_t<Val1>>>,
                         "The two values passed to view::replace must have the same type.");
                     return {};
                 }
             #endif
             public:
-                CPP_template(typename Rng, typename Val1, typename Val2)(
-                    requires ReplaceViewConcept<Rng, Val1, Val2>)
-                replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
-                operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const
+                template<typename Rng, typename Val1, typename Val2>
+                auto operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const ->
+                    CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)(
+                        requires ReplaceViewConcept<Rng, Val1, Val2>)
                 {
                     return {all(static_cast<Rng &&>(rng)),
                             {static_cast<Val1 &&>(old_value),
@@ -131,9 +135,10 @@ namespace ranges
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
-                CPP_template(typename Rng, typename Val1, typename Val2)(
-                    requires not ReplaceViewConcept<Rng, Val1, Val2>)
-                void operator()(Rng &&, Val1 &&, Val2 &&) const
+                template<typename Rng, typename Val1, typename Val2>
+                auto operator()(Rng &&, Val1 &&, Val2 &&) const ->
+                    CPP_ret(void)(
+                        requires not ReplaceViewConcept<Rng, Val1, Val2>)
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
                     using V2 = detail::decay_t<unwrap_reference_t<Val2>>;

@@ -99,16 +99,18 @@ namespace ranges
 
             struct generate_fn
             {
-                CPP_template(typename G)(
-                    requires GenerateViewConcept<G>)
-                generate_view<G> operator()(G g) const
+                template<typename G>
+                auto operator()(G g) const ->
+                    CPP_ret(generate_view<G>)(
+                        requires GenerateViewConcept<G>)
                 {
                     return generate_view<G>{std::move(g)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename G)(
-                    requires not GenerateViewConcept<G>)
-                void operator()(G) const
+                template<typename G>
+                auto operator()(G) const ->
+                    CPP_ret(void)(
+                        requires not GenerateViewConcept<G>)
                 {
                     check<G>();
                 }

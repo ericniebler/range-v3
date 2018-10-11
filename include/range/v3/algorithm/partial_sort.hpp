@@ -33,9 +33,10 @@ namespace ranges
         /// @{
         struct partial_sort_fn
         {
-            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
-            I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
             {
                 make_heap(begin, middle, std::ref(pred), std::ref(proj));
                 auto const len = middle - begin;
@@ -52,11 +53,11 @@ namespace ranges
                 return i;
             }
 
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires Sortable<I, C, P> && RandomAccessRange<Rng>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, I middle, C pred = C{},
-                P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{},
+                    P proj = P{}) const ->
+                CPP_ret(safe_iterator_t<Rng>)(
+                    requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
                     std::move(proj));

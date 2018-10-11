@@ -45,12 +45,11 @@ namespace ranges
         {
             struct sort_n_with_buffer_fn
             {
-                CPP_template(typename I, typename B, typename C = ordered_less, typename P = ident,
-                    typename VI = iter_common_reference_t<I>,
-                    typename VB = iter_common_reference_t<B>)(
-                    requires Same<VI, VB> && IndirectlyCopyable<I, B> &&
-                        Mergeable<B, I, I, C, P, P>)
-                I operator()(I begin, difference_type_t<I> n, B buff, C r = C{}, P p = P{}) const
+                template<typename I, typename B, typename C = ordered_less, typename P = ident>
+                auto operator()(I begin, difference_type_t<I> n, B buff, C r = C{}, P p = P{}) const ->
+                    CPP_ret(I)(
+                        requires Same<iter_common_reference_t<I>, iter_common_reference_t<B>> &&
+                            IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
                 {
                     auto half = n / 2;
                     if(0 == half)

@@ -36,11 +36,10 @@ namespace ranges
         /// @{
         struct minmax_element_fn
         {
-            CPP_template(typename I, typename S, typename C = ordered_less, typename P = ident)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<C, projected<I, P>>)
-            tagged_pair<tag::min(I), tag::max(I)>
-            operator()(I begin, S end, C pred = C{}, P proj = P{}) const
+            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(tagged_pair<tag::min(I), tag::max(I)>)(
+                    requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<C, projected<I, P>>)
             {
                 tagged_pair<tag::min(I), tag::max(I)> result{begin, begin};
                 if(begin == end || ++begin == end)
@@ -81,14 +80,14 @@ namespace ranges
                 return result;
             }
 
-            CPP_template(typename Rng, typename C = ordered_less, typename P = ident,
-                typename I = iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectRelation<C, projected<I, P>>)
-            meta::if_<std::is_lvalue_reference<Rng>,
-                tagged_pair<tag::min(I), tag::max(I)>,
-                dangling<tagged_pair<tag::min(I), tag::max(I)>>>
-            operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            template<typename Rng, typename C = ordered_less, typename P = ident>
+            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(meta::if_c<
+                    std::is_lvalue_reference<Rng>::value,
+                    tagged_pair<tag::min(iterator_t<Rng>), tag::max(iterator_t<Rng>)>,
+                    dangling<tagged_pair<tag::min(iterator_t<Rng>), tag::max(iterator_t<Rng>)>>>)(
+                    requires ForwardRange<Rng> &&
+                        IndirectRelation<C, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

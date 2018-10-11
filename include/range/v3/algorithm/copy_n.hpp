@@ -36,11 +36,10 @@ namespace ranges
         /// @{
         struct copy_n_fn
         {
-            CPP_template(typename I, typename O, typename P = ident)(
-                requires InputIterator<I> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O>)
-            tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I begin, difference_type_t<I> n, O out) const
+            template<typename I, typename O, typename P = ident>
+            auto operator()(I begin, difference_type_t<I> n, O out) const ->
+                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                    requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
