@@ -111,7 +111,7 @@ namespace ranges
                 CPP_assert(ForwardRange<Rng>);
                 sv_base() = default;
                 sv_base(Rng rng, range_difference_type_t<Rng> n)
-                : sv_base::view_adaptor(std::move(rng)), n_(n)
+                  : sv_base::view_adaptor(std::move(rng)), n_(n)
                 {
                     RANGES_ASSERT(0 < n_);
                 }
