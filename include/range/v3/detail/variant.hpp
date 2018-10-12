@@ -391,14 +391,14 @@ namespace ranges
                 }
                 template<typename U>
                 meta::if_<std::is_object<U>>
-                    operator()(indexed_datum<U, meta::size_t<N>> &u)
+                operator()(indexed_datum<U, meta::size_t<N>> &u)
                     noexcept(std::is_nothrow_constructible<U, Ts...>::value)
                 {
                     this->construct_(u.get(), meta::make_index_sequence<sizeof...(Ts)>{});
                 }
                 template<typename U>
                 meta::if_<meta::not_<std::is_object<U>>>
-                    operator()(indexed_datum<U, meta::size_t<N>> &u)
+                operator()(indexed_datum<U, meta::size_t<N>> &u)
                     noexcept(std::is_nothrow_constructible<detail::decay_t<U>, Ts...>::value)
                 {
                     this->construct_(u, meta::make_index_sequence<sizeof...(Ts)>{});
@@ -419,6 +419,12 @@ namespace ranges
                 void operator()(indexed_element<U, N> t) const noexcept
                 {
                     *t_ = std::addressof(t.get());
+                }
+                template<typename U>
+                void operator()(indexed_element<U &&, N> t) const noexcept
+                {
+                    U &&u = t.get();
+                    *t_ = std::addressof(u);
                 }
                 void operator()(indexed_element<void, N>) const noexcept
                 {}
