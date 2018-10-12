@@ -58,24 +58,20 @@ namespace ranges
                 }
                 result_t &&read() const
                 {
+                    if (!rng_->val_)
+                        rng_->val_ = rng_->gen_();
                     return static_cast<result_t &&>(
                         static_cast<result_t &>(*rng_->val_));
                 }
                 void next()
                 {
                     RANGES_EXPECT(0 != rng_->n_);
-                    if(0 != --rng_->n_)
-                        rng_->next();
+                    --rng_->n_;
+                    rng_->val_.reset();
                 }
             };
-            void next()
-            {
-                val_ = gen_();
-            }
             cursor begin_cursor()
             {
-                if (!val_)
-                    val_ = gen_();
                 return cursor{*this};
             }
         public:
@@ -83,7 +79,7 @@ namespace ranges
             explicit generate_n_view(G g, std::size_t n)
               : gen_(std::move(g)), n_(n)
             {}
-            result_t & cached()
+            result_t &cached()
             {
                 return *val_;
             }

@@ -54,22 +54,18 @@ namespace ranges
                 {}
                 result_t &&read() const
                 {
+                    if (!view_->val_)
+                        view_->val_ = view_->gen_();
                     return static_cast<result_t &&>(
                         static_cast<result_t &>(*view_->val_));
                 }
                 void next()
                 {
-                    view_->next();
+                    view_->val_.reset();
                 }
             };
-            void next()
-            {
-                val_ = gen_();
-            }
             cursor begin_cursor()
             {
-                if (!val_)
-                    val_ = gen_();
                 return cursor{*this};
             }
             unreachable end_cursor() const
@@ -81,7 +77,7 @@ namespace ranges
             explicit generate_view(G g)
               : gen_(std::move(g))
             {}
-            result_t & cached()
+            result_t &cached()
             {
                 return *val_;
             }

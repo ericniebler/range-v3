@@ -83,5 +83,21 @@ int main()
         CHECK(p == p2);
     }
 
+    // Test that we only call the function once for each dereferenceable position
+    // https://github.com/ericniebler/range-v3/issues/819
+    {
+        int i = 0;
+        auto rng = view::generate_n([&i]{return ++i;}, 2);
+        auto rng2 = std::move(rng);
+        auto it = rng2.begin();
+        CHECK(i == 0);
+        CHECK(*it == 1);
+        CHECK(i == 1);
+        ++it;
+        CHECK(i == 1);
+        CHECK(*it == 2);
+        CHECK(i == 2);
+    }
+
     return test_result();
 }
