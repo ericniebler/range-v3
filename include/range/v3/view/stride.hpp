@@ -138,6 +138,14 @@ namespace ranges
             static constexpr bool const_iterable =
                 Range<Rng const>() && (SizedRange<Rng>() || !BidirectionalRange<Rng>());
 
+            // If the underlying range doesn't model BoundedRange, then we can't
+            // decrement the end and there's no reason to adapt the sentinel. Strictly
+            // speaking, we don't have to adapt the end iterator of Input and Forward
+            // Ranges, but in the interests of making the resulting stride view model
+            // BoundedView, adapt it anyway.
+            static constexpr bool can_bound = BoundedRange<Rng>()
+                && (SizedRange<Rng>() || !BidirectionalRange<Rng>());
+
             struct adaptor : adaptor_base
             {
             private:
@@ -165,11 +173,7 @@ namespace ranges
                     auto delta = -rng_->stride_;
                     if(it == ranges::end(rng_->base()))
                     {
-                        if(rng_->get_offset(false) < 0) // hasn't been set yet!
-                        {
-                            auto const rem = ranges::distance(rng_->base()) % rng_->stride_;
-                            rng_->set_offset(rem ? rng_->stride_ - rem : 0);
-                        }
+                        RANGES_EXPECT(rng_->get_offset() >= 0);
                         delta += rng_->get_offset();
                     }
                     ranges::advance(it, delta);
@@ -197,11 +201,7 @@ namespace ranges
                     if(it == last)
                     {
                         RANGES_EXPECT(n < 0);
-                        if(rng_->get_offset(false) < 0) // hasn't been set yet!
-                        {
-                            auto const rem = ranges::distance(rng_->base()) % rng_->stride_;
-                            rng_->set_offset(rem ? rng_->stride_ - rem : 0);
-                        }
+                        RANGES_EXPECT(rng_->get_offset() >= 0);
                         n += rng_->get_offset();
                     }
                     if(0 < n)
@@ -235,27 +235,23 @@ namespace ranges
             {
                 return adaptor{*this};
             }
-            // If the underlying sequence object doesn't model BoundedRange, then we can't
-            // decrement the end and there's no reason to adapt the sentinel. Strictly
-            // speaking, we don't have to adapt the end iterator of Input and Forward
-            // Ranges, but in the interests of making the resulting stride view model
-            // BoundedView, adapt it anyway.
-            CONCEPT_REQUIRES(const_iterable && BoundedRange<Rng>())
+
+            CONCEPT_REQUIRES(const_iterable && can_bound)
             constexpr adaptor end_adaptor() const
             {
                 return adaptor{*this};
             }
-            CONCEPT_REQUIRES(!const_iterable && BoundedRange<Rng>())
+            CONCEPT_REQUIRES(!const_iterable && can_bound)
             RANGES_CXX14_CONSTEXPR adaptor end_adaptor()
             {
                 return adaptor{*this};
             }
-            CONCEPT_REQUIRES(const_iterable && !BoundedRange<Rng>())
+            CONCEPT_REQUIRES(const_iterable && !can_bound)
             constexpr adaptor_base end_adaptor() const
             {
                 return {};
             }
-            CONCEPT_REQUIRES(!const_iterable && !BoundedRange<Rng>())
+            CONCEPT_REQUIRES(!const_iterable && !can_bound)
             RANGES_CXX14_CONSTEXPR adaptor_base end_adaptor()
             {
                 return {};
