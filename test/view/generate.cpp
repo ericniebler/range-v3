@@ -58,6 +58,7 @@ int main()
     }
 
     // Test for generator functions that return move-only types
+    // https://github.com/ericniebler/range-v3/issues/905
     {
         char str[] = "gi";
         auto rng = view::generate([&]{str[0]++; return MoveOnlyString{str};}) | view::take_exactly(2);
@@ -69,6 +70,18 @@ int main()
         CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
         check_equal(rng, {MoveOnlyString{"hi"}, MoveOnlyString{"ii"}});
         static_assert(std::is_same<ranges::range_reference_t<decltype(rng)>, MoveOnlyString &&>::value, "");
+    }
+
+    // Test for generator functions that return internal references
+    // https://github.com/ericniebler/range-v3/issues/807
+    {
+        int i = 42;
+        auto rng = view::generate([i]{return &i;});
+        auto rng2 = std::move(rng);
+        auto it = rng2.begin();
+        auto p = *it;
+        auto p2 = *++it;
+        CHECK(p == p2);
     }
 
     return test_result();
