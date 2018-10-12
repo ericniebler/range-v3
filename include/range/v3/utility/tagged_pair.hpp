@@ -72,55 +72,57 @@ namespace ranges
                   : Base(base)
                 {}
 #endif
-                template<std::size_t I>
-                auto get(Base &base) noexcept ->
-                    decltype(detail::adl_get<I>(base))
-                {
-                    return detail::adl_get<I>(base);
-                }
-                template<std::size_t I>
-                auto get(Base const &base) noexcept ->
-                    decltype(detail::adl_get<I>(base))
-                {
-                    return detail::adl_get<I>(base);
-                }
-                template<std::size_t I>
-                auto get(Base &&base) noexcept ->
-                    decltype(detail::adl_get<I>(static_cast<Base &&>(base)))
-                {
-                    return detail::adl_get<I>(static_cast<Base &&>(base));
-                }
-                template<std::size_t I>
-                auto get(Base const &&base) noexcept ->
-                    decltype(detail::adl_get<I>(static_cast<Base const &&>(base)))
-                {
-                    return detail::adl_get<I>(static_cast<Base const &&>(base));
-                }
-                template<typename T>
-                auto get(Base &base) noexcept ->
-                    decltype(detail::adl_get<T>(base))
-                {
-                    return detail::adl_get<T>(base);
-                }
-                template<typename T>
-                auto get(Base const &base) noexcept ->
-                    decltype(detail::adl_get<T>(base))
-                {
-                    return detail::adl_get<T>(base);
-                }
-                template<typename T>
-                auto get(Base &&base) noexcept ->
-                    decltype(detail::adl_get<T>(static_cast<Base &&>(base)))
-                {
-                    return detail::adl_get<T>(static_cast<Base &&>(base));
-                }
-                template<typename T>
-                auto get(Base const &&base) noexcept ->
-                    decltype(detail::adl_get<T>(static_cast<Base const &&>(base)))
-                {
-                    return detail::adl_get<T>(static_cast<Base const &&>(base));
-                }
             };
+
+            template<std::size_t I, typename Base>
+            constexpr auto get(wrap_base<Base> &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<Base &>(wb))
+            )
+            template<std::size_t I, typename Base>
+            constexpr auto get(wrap_base<Base> const &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<Base const &>(wb))
+            )
+            template<std::size_t I, typename Base>
+            constexpr auto get(wrap_base<Base> &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<Base &&>(wb))
+            )
+            template<std::size_t I, typename Base>
+            constexpr auto get(wrap_base<Base> const &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<Base const &&>(wb))
+            )
+            template<typename T, typename Base>
+            constexpr auto get(wrap_base<Base> &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<Base &>(wb))
+            )
+            template<typename T, typename Base>
+            constexpr auto get(wrap_base<Base> const &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<Base const &>(wb))
+            )
+            template<typename T, typename Base>
+            constexpr auto get(wrap_base<Base> &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<Base &&>(wb))
+            )
+            template<typename T, typename Base>
+            constexpr auto get(wrap_base<Base> const &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<Base const &&>(wb))
+            )
+
             template<typename Base, std::size_t, typename...>
             struct chain
             {
@@ -136,7 +138,7 @@ namespace ranges
 #if RANGES_BROKEN_CPO_LOOKUP
             template<typename> struct adl_hook {};
 #endif
-        }
+        } // namespace _tagged_
         /// \endcond
 
         template<typename Base, typename...Tags>
@@ -283,14 +285,14 @@ namespace ranges
                 using Next::Next;                                                    \
                 getter &operator=(getter &&) = default;                              \
                 getter &operator=(getter const &) = default;                         \
-                constexpr /*c++14*/                                               \
+                constexpr /*c++14*/                                                  \
                 meta::_t<std::tuple_element<I, Untagged>> &NAME() &                  \
                     noexcept(noexcept(                                               \
                         detail::adl_get<I>(std::declval<Untagged &>())))             \
                 {                                                                    \
                     return detail::adl_get<I>(static_cast<Untagged &>(*this));       \
                 }                                                                    \
-                constexpr /*c++14*/                                               \
+                constexpr /*c++14*/                                                  \
                 meta::_t<std::tuple_element<I, Untagged>> &&NAME() &&                \
                     noexcept(noexcept(                                               \
                         detail::adl_get<I>(std::declval<Untagged>())))               \
