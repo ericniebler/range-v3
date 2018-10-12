@@ -12,6 +12,7 @@
 
 #include <list>
 #include <array>
+#include <vector>
 #include <memory>
 #include <forward_list>
 #include <range/v3/range_for.hpp>
@@ -20,6 +21,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/slice.hpp>
 #include <range/v3/view/c_str.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -144,10 +146,7 @@ void test_bidirectional_it(Rng const &rng)
 
     CHECK((*f) == 0);
     auto n = next(f, 1);
-    auto p = next(f, -1);
     CHECK((*n) == 1);
-    CHECK((*p) == 2);
-    CHECK((++p) == f);
     CHECK((--n) == f);
 }
 
@@ -170,12 +169,6 @@ void test_random_access_it(Rng const &rng)
     CHECK(r[3] == 0);
     CHECK(r[4] == 1);
     CHECK(r[5] == 2);
-    CHECK(r[-1] == 2);
-    CHECK(r[-2] == 1);
-    CHECK(r[-3] == 0);
-    CHECK(r[-4] == 2);
-    CHECK(r[-5] == 1);
-    CHECK(r[-6] == 0);
 
     CHECK((f + 3) == f1);
     CHECK((f + 6) == f2);
@@ -192,12 +185,6 @@ void test_random_access_it(Rng const &rng)
     CHECK(f[3] == 0);
     CHECK(f[4] == 1);
     CHECK(f[5] == 2);
-    CHECK(f[-1] == 2);
-    CHECK(f[-2] == 1);
-    CHECK(f[-3] == 0);
-    CHECK(f[-4] == 2);
-    CHECK(f[-5] == 1);
-    CHECK(f[-6] == 0);
 
     CHECK(*m == 1);
     CHECK(m[0] == 1);
@@ -208,11 +195,6 @@ void test_random_access_it(Rng const &rng)
     CHECK(m[5] == 0);
 
     CHECK(m[-1] == 0);
-    CHECK(m[-2] == 2);
-    CHECK(m[-3] == 1);
-    CHECK(m[-4] == 0);
-    CHECK(m[-5] == 2);
-    CHECK(m[-6] == 1);
 
     CHECK(*l == 2);
     CHECK(l[0] == 2);
@@ -224,12 +206,19 @@ void test_random_access_it(Rng const &rng)
 
     CHECK(l[-1] == 1);
     CHECK(l[-2] == 0);
-    CHECK(l[-3] == 2);
-    CHECK(l[-4] == 1);
-    CHECK(l[-5] == 0);
-    CHECK(l[-6] == 2);
 
     CHECK(f != e);
+
+    auto cur = f;
+    for (int i = 0; i < 100; ++i, ++cur)
+    {
+        CHECK((next(begin(r), i) - f) == i);
+        CHECK((cur - f) == i);
+        if(i > 0)
+            CHECK((cur - m) == i - 1);
+        if(i > 1)
+            CHECK((cur - l) == i - 2);
+    }
 }
 
 int main()
@@ -330,5 +319,28 @@ int main()
         CHECK(*it == 'h');
     }
 
+    // Cycle of an infinite range,
+    // https://github.com/ericniebler/range-v3/issues/780
+    {
+        auto view = ranges::view::iota(0)
+                    | ranges::view::cycle;
+        CHECK(view[5] == 5);
+    }
+
+    // Composing ranges::view::cycle with ranges::view::slice
+    // https://github.com/ericniebler/range-v3/issues/778
+    {
+        const auto length = 512;
+        const auto k = 16;
+
+        std::vector<int> input(length);
+
+        auto output = ranges::view::cycle(input)
+                    | ranges::view::slice(length + k, 2 * length + k);
+
+        CHECK(bool(ranges::begin(output) != ranges::end(output)));
+        CHECK(ranges::size(output) == 512u);
+        CHECK(ranges::distance(output) == 512);
+    }
     return test_result();
 }

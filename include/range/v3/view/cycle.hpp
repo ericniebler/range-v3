@@ -65,8 +65,9 @@ namespace ranges
                 using difference_type_ = range_difference_type_t<Rng>;
                 using iterator = iterator_t<constify_if<Rng>>;
 
-                cycled_view_t *rng_;
-                iterator it_;
+                cycled_view_t *rng_{};
+                iterator it_{};
+                std::ptrdiff_t n_ = 0;
 
                 iterator get_end_(std::true_type, bool = false) const
                 {
@@ -90,9 +91,7 @@ namespace ranges
                         end_ = it_;
                 }
             public:
-                cursor()
-                  : rng_{}, it_{}
-                {}
+                cursor() = default;
                 explicit cursor(cycled_view_t &rng)
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
@@ -108,7 +107,7 @@ namespace ranges
                 bool equal(cursor const &pos) const
                 {
                     RANGES_EXPECT(rng_ == pos.rng_);
-                    return it_ == pos.it_;
+                    return n_ == pos.n_ && it_ == pos.it_;
                 }
                 void next()
                 {
@@ -116,6 +115,7 @@ namespace ranges
                     RANGES_EXPECT(it_ != end);
                     if(++it_ == end)
                     {
+                        ++n_;
                         this->set_end_(BoundedRange<Rng>());
                         it_ = ranges::begin(rng_->rng_);
                     }
@@ -124,23 +124,37 @@ namespace ranges
                 void prev()
                 {
                     if(it_ == ranges::begin(rng_->rng_))
+                    {
+                        RANGES_EXPECT(n_ > 0); // decrementing the begin iterator?!
+                        --n_;
                         it_ = this->get_end_(BoundedRange<Rng>());
+                    }
                     --it_;
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(difference_type_ n)
                 {
+                    if (is_infinite<Rng>::value)
+                        return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
-                    auto const d = end - begin;
-                    auto const off = ((it_ - begin) + n) % d;
-                    it_ = begin + (off < 0 ? off + d : off);
+                    auto const dist = end - begin;
+                    auto const d = it_ - begin;
+                    auto const off = (d + n) % dist;
+                    n_ += (d + n) / dist;
+                    RANGES_EXPECT(n_ >= 0);
+                    it_ = begin + (off < 0 ? off + dist : off);
                 }
                 CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(cursor const &that) const
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
-                    return that.it_ - it_;
+                    if (is_infinite<Rng>::value)
+                        return that.it_ - it_;
+                    auto const begin = ranges::begin(rng_->rng_);
+                    auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
+                    auto const dist = end - begin;
+                    return (that.n_ - n_) * dist + (that.it_ - it_);
                 }
             };
 

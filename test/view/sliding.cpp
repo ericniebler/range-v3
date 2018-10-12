@@ -131,7 +131,7 @@ int main()
             CHECK(i == deref.end());
         }
         auto it2 = next(it, 42);
-        CHECK(it == it2);
+        CHECK(it != it2);
         {
             auto deref = *it;
             auto i = deref.begin();
@@ -145,7 +145,7 @@ int main()
 #else
         ::check_equal(*it, view::repeat_n(5, K));
         auto it2 = next(it, 42);
-        CHECK(it == it2);
+        CHECK(it != it2);
         ::check_equal(*it2, view::repeat_n(5, K));
 #endif
     }
