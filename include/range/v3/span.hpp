@@ -341,17 +341,12 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         CPP_template(typename Rng)(
-            requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value < cardinality{})
-        span(Rng &&rng) ->
-            span<detail::element_t<Rng>>;
-
-        CPP_template(typename Rng)(
-            requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value >= cardinality{})
+            requires ContiguousRange<Rng>)
         span(Rng &&rng) ->
             span<detail::element_t<Rng>,
-                static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>;
+                (range_cardinality<Rng>::value < cardinality{}
+                    ? dynamic_extent
+                    : static_cast<detail::span_index_t>(range_cardinality<Rng>::value))>;
 #endif
 
         template<typename T, detail::span_index_t N>

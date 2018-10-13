@@ -182,6 +182,10 @@ namespace ranges
             {
                 return detail::move(value);
             }
+            constexpr /*c++14*/ Element const &&get() const && noexcept
+            {
+                return detail::move(value);
+            }
         };
 
         template<typename Element, typename Tag>
@@ -222,6 +226,10 @@ namespace ranges
             {
                 return detail::move(*this);
             }
+            constexpr /*c++14*/ Element const &&get() const && noexcept
+            {
+                return detail::move(*this);
+            }
         };
 
         template<typename Element, typename Tag>
@@ -253,6 +261,10 @@ namespace ranges
                 return value;
             }
             constexpr /*c++14*/ Element &&get() && noexcept
+            {
+                return detail::move(value);
+            }
+            constexpr /*c++14*/ Element const &&get() const && noexcept
             {
                 return detail::move(value);
             }

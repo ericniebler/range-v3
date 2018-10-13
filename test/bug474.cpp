@@ -15,18 +15,18 @@ struct Foo {
     Foo() = default;
     Foo(Foo const&) = default;
     virtual ~Foo() = default;
-	virtual void foo() = 0;
+    virtual void foo() = 0;
 };
 
 struct Bar : public Foo {
-	virtual void foo() override {}
+    virtual void foo() override {}
 };
 
 int main()
 {
-	std::vector<Bar> bars { Bar() };
-	ranges::any_view<Foo &> foos = bars;
-	ranges::for_each(foos, [] (Foo & foo) {
-		foo.foo();
-	});
+    std::vector<Bar> bars { Bar() };
+    ranges::any_view<Foo &> foos = bars;
+    ranges::for_each(foos, [] (Foo & foo) {
+        foo.foo();
+    });
 }

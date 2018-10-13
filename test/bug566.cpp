@@ -20,16 +20,17 @@ using namespace ranges;
 
 int main()
 {
-  std::vector<std::unique_ptr<int>> data;
-  data.emplace_back(std::unique_ptr<int>(new int(1)));
-  data.emplace_back(std::unique_ptr<int>(new int(5)));
-  data.emplace_back(std::unique_ptr<int>(new int(4)));
+    std::vector<std::unique_ptr<int>> data;
+    data.emplace_back(std::unique_ptr<int>(new int(1)));
+    data.emplace_back(std::unique_ptr<int>(new int(5)));
+    data.emplace_back(std::unique_ptr<int>(new int(4)));
 
-  auto rng = data | view::move | view::for_each([](std::unique_ptr<int> ptr) {
-    return yield(*ptr);
-  });
+    auto rng = data | view::move | view::for_each([](std::unique_ptr<int> ptr)
+    {
+        return yield(*ptr);
+    });
 
-  check_equal(rng, {1, 5, 4});
+    check_equal(rng, {1, 5, 4});
 
-  return ::test_result();
+    return ::test_result();
 }

@@ -57,7 +57,6 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                 "${workspaceRoot}/include"
             ],
             "defines": [
@@ -67,7 +66,6 @@
             "intelliSenseMode": "msvc-x64",
             "browse": {
                 "path": [
-                    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
                     "${workspaceRoot}/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
