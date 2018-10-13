@@ -118,7 +118,8 @@ int main()
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
         CONCEPT_ASSERT(RandomAccessIterator<decltype(it)>());
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 3
+#if defined(__GNUC__) && !defined(__clang__) && \
+    ((__GNUC__ == 6 && __GNUC_MINOR__ < 3) || __GNUC__ < 6)
         // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78047
         {
             auto deref = *it;
