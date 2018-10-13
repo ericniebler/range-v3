@@ -205,7 +205,7 @@ namespace ranges
                         ranges::size(std::get<N - 1>(view_->views_)));
                     auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
-                    auto const idx = i - first;
+                    auto const idx = static_cast<std::ptrdiff_t>(i - first);
                     RANGES_EXPECT(0 <= idx && idx < my_size);
                     RANGES_EXPECT(n < PTRDIFF_MAX - idx);
                     n += idx;
@@ -266,7 +266,7 @@ namespace ranges
                   : cursor(end_tag{}, view,
                         meta::bool_<BoundedView<meta::at_c<meta::list<Views...>, 0>>>{})
                 {}
-                ranges::common_tuple<range_reference_t<Views>...> read() const
+                common_tuple<range_reference_t<Views>...> read() const
                 {
                     return tuple_transform(its_, ranges::dereference);
                 }
@@ -342,7 +342,7 @@ namespace ranges
         public:
             cartesian_product_view() = default;
             CPP_member
-            constexpr CPP_ctor(cartesian_product_view)(Views... views)(
+            explicit constexpr CPP_ctor(cartesian_product_view)(Views... views)(
                 requires sizeof...(Views) != 0)
               : views_{detail::move(views)...}
             {}

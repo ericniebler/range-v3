@@ -60,6 +60,7 @@ namespace ranges
                 {
                     return std::tuple<Us...>{get<Is>(*this)...};
                 }
+
                 template<std::size_t I, typename T = meta::at_c<meta::list<Ts...>, I>>
                 friend constexpr /*c++14*/ T &
                 get(compressed_tuple_ &tuple) noexcept
