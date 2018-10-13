@@ -55,5 +55,49 @@ int main()
         check_equal(rng, {'H', 'e', 'l', 'l', 'o'});
     }
 
+    // Test for generator functions that return move-only types
+    // https://github.com/ericniebler/range-v3/issues/905
+    {
+        char str[] = "gi";
+        auto rng = view::generate_n([&]{str[0]++; return MoveOnlyString{str};}, 2);
+        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        auto i = rng.begin();
+        CHECK(bool(*i == MoveOnlyString{"hi"}));
+        CHECK(bool(*i == MoveOnlyString{"hi"}));
+        CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
+        CHECK(bool(*rng.begin() == MoveOnlyString{"hi"}));
+        CONCEPT_ASSERT(ranges::InputView<decltype(rng)>());
+        check_equal(rng, {MoveOnlyString{"hi"}, MoveOnlyString{"ii"}});
+        static_assert(std::is_same<ranges::range_reference_t<decltype(rng)>, MoveOnlyString &&>::value, "");
+    }
+
+    // Test for generator functions that return internal references
+    // https://github.com/ericniebler/range-v3/issues/807
+    {
+        int i = 42;
+        auto rng = view::generate_n([i]{return &i;}, 2);
+        auto rng2 = std::move(rng);
+        auto it = rng2.begin();
+        auto p = *it;
+        auto p2 = *++it;
+        CHECK(p == p2);
+    }
+
+    // Test that we only call the function once for each dereferenceable position
+    // https://github.com/ericniebler/range-v3/issues/819
+    {
+        int i = 0;
+        auto rng = view::generate_n([&i]{return ++i;}, 2);
+        auto rng2 = std::move(rng);
+        auto it = rng2.begin();
+        CHECK(i == 0);
+        CHECK(*it == 1);
+        CHECK(i == 1);
+        ++it;
+        CHECK(i == 1);
+        CHECK(*it == 2);
+        CHECK(i == 2);
+    }
+
     return test_result();
 }
