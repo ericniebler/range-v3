@@ -41,7 +41,7 @@ namespace ranges
             friend range_access;
             using result_t = invoke_result_t<G &>;
             movesemiregular_t<G> gen_;
-            movesemiregular_t<result_t> val_;
+            detail::non_propagating_cache<result_t> val_;
             std::size_t n_;
             struct cursor
             {
@@ -56,21 +56,20 @@ namespace ranges
                 {
                     return 0 == rng_->n_;
                 }
-                result_t read() const
+                result_t &&read() const
                 {
-                    return rng_->val_;
+                    if (!rng_->val_)
+                        rng_->val_ = rng_->gen_();
+                    return static_cast<result_t &&>(
+                        static_cast<result_t &>(*rng_->val_));
                 }
                 void next()
                 {
                     RANGES_EXPECT(0 != rng_->n_);
-                    if(0 != --rng_->n_)
-                        rng_->next();
+                    --rng_->n_;
+                    rng_->val_.reset();
                 }
             };
-            void next()
-            {
-                val_ = invoke(gen_);
-            }
             cursor begin_cursor()
             {
                 return cursor{*this};
@@ -78,14 +77,11 @@ namespace ranges
         public:
             generate_n_view() = default;
             explicit generate_n_view(G g, std::size_t n)
-              : gen_(std::move(g)), val_{}, n_(n)
+              : gen_(std::move(g)), n_(n)
+            {}
+            result_t &cached()
             {
-                if(0 != n)
-                    next();
-            }
-            result_t & cached()
-            {
-                return val_;
+                return *val_;
             }
             std::size_t size() const
             {

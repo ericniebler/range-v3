@@ -24,6 +24,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/unreachable.hpp>
@@ -42,7 +43,7 @@ namespace ranges
             friend range_access;
             using result_t = invoke_result_t<G &>;
             movesemiregular_t<G> gen_;
-            movesemiregular_t<result_t> val_;
+            detail::non_propagating_cache<result_t> val_;
             struct cursor
             {
             private:
@@ -52,19 +53,18 @@ namespace ranges
                 explicit cursor(generate_view &view)
                   : view_(&view)
                 {}
-                result_t read() const
+                result_t &&read() const
                 {
-                    return view_->val_;
+                    if (!view_->val_)
+                        view_->val_ = view_->gen_();
+                    return static_cast<result_t &&>(
+                        static_cast<result_t &>(*view_->val_));
                 }
                 void next()
                 {
-                    view_->next();
+                    view_->val_.reset();
                 }
             };
-            void next()
-            {
-                val_ = invoke(gen_);
-            }
             cursor begin_cursor()
             {
                 return cursor{*this};
@@ -76,11 +76,11 @@ namespace ranges
         public:
             generate_view() = default;
             explicit generate_view(G g)
-              : gen_(std::move(g)), val_(gen_())
+              : gen_(std::move(g))
             {}
-            result_t & cached()
+            result_t &cached()
             {
-                return val_;
+                return *val_;
             }
         };
 
