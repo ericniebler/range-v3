@@ -117,7 +117,7 @@ int main()
         ::models<concepts::RandomAccessRange>(rng);
         auto it = rng.begin();
         auto it2 = next(it,3);
-        CHECK((it2 - it) == 0);
+        CHECK((it2 - it) == 3);
         ::check_equal(*it, {5,5,5});
         ::check_equal(*it2, {5,5,5});
     }
@@ -133,15 +133,14 @@ int main()
         auto it2 = next(it,2);
         ::check_equal(*it, {0,1});
         ::check_equal(*it2, {1,2});
-        // Strange, but not wrong necessarily:
         CHECK((it - it) == 0);
         CHECK((next(it,1) - it) == 1);
-        // static_cast<void>(next(it,2) - it); // not in the domain of -
-        CHECK((next(it,3) - it) == 0);
-        CHECK((next(it,4) - it) == 1);
-        // static_cast<void>(next(it,5) - it); // not in the domain of -
-        CHECK((next(it,6) - it) == 0);
-        CHECK((next(it,7) - it) == 1);
+        CHECK((next(it,2) - it) == 2);
+        CHECK((next(it,3) - it) == 3);
+        CHECK((next(it,4) - it) == 4);
+        CHECK((next(it,5) - it) == 5);
+        CHECK((next(it,6) - it) == 6);
+        CHECK((next(it,7) - it) == 7    );
     }
 
     {
@@ -157,13 +156,13 @@ int main()
         ::check_equal(*it2, {2,0,1,2});
         // Strange, but not wrong necessarily:
         CHECK((it - it) == 0);
-        // static_cast<void>(next(it,1) - it); // not in the domain of -
-        // static_cast<void>(next(it,2) - it); // not in the domain of -
-        CHECK((next(it,3) - it) == 0);
-        // static_cast<void>(next(it,4) - it); // not in the domain of -
-        // static_cast<void>(next(it,5) - it); // not in the domain of -
-        CHECK((next(it,6) - it) == 0);
-        // static_cast<void>(next(it,7) - it); // not in the domain of -
+        CHECK((next(it,1) - it) == 1);
+        CHECK((next(it,2) - it) == 2);
+        CHECK((next(it,3) - it) == 3);
+        CHECK((next(it,4) - it) == 4);
+        CHECK((next(it,5) - it) == 5);
+        CHECK((next(it,6) - it) == 6);
+        CHECK((next(it,7) - it) == 7);
     }
 
     {
@@ -182,15 +181,16 @@ int main()
         CHECK((next(it,1) - it) == 1);
         CHECK((next(it,2) - it) == 2);
         CHECK((next(it,3) - it) == 3);
-        // static_cast<void>(next(it,4) - it); // not in the domain of -
-        // static_cast<void>(next(it,5) - it); // not in the domain of -
-        // ...
-        // static_cast<void>(next(it,8) - it); // not in the domain of -
-        // static_cast<void>(next(it,9) - it); // not in the domain of -
-        CHECK((next(it,10) - it) == 0);
-        CHECK((next(it,11) - it) == 1);
-        CHECK((next(it,12) - it) == 2);
-        CHECK((next(it,13) - it) == 3);
+        CHECK((next(it,4) - it) == 4);
+        CHECK((next(it,5) - it) == 5);
+        CHECK((next(it,6) - it) == 6);
+        CHECK((next(it,7) - it) == 7);
+        CHECK((next(it,8) - it) == 8);
+        CHECK((next(it,9) - it) == 9);
+        CHECK((next(it,10) - it) == 10);
+        CHECK((next(it,11) - it) == 11);
+        CHECK((next(it,12) - it) == 12);
+        CHECK((next(it,13) - it) == 13);
     }
 
     test_input_ranges();
