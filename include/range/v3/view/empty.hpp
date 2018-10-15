@@ -22,58 +22,44 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename T>
-        struct empty_view
-          : view_facade<empty_view<T>, (cardinality)0>
+        namespace detail
         {
-        private:
-            friend range_access;
-            struct cursor
+            struct empty_view_base
             {
-                [[noreturn]] T const & read() const
+                template<typename T>
+                friend constexpr T *begin(empty_view<T>) noexcept
                 {
-                    RANGES_ENSURE(false);
+                    return nullptr;
                 }
-                constexpr bool equal(default_sentinel) const
+                template<typename T>
+                friend constexpr T *end(empty_view<T>) noexcept
                 {
-                    return true;
-                }
-                constexpr bool equal(cursor const &) const
-                {
-                    return true;
-                }
-                [[noreturn]] void next()
-                {
-                    RANGES_ENSURE(false);
-                }
-                [[noreturn]] void prev()
-                {
-                    RANGES_ENSURE(false);
-                }
-                void advance(std::ptrdiff_t n)
-                {
-                    RANGES_EXPECT(n == 0);
-                }
-                std::ptrdiff_t distance_to(cursor const &) const
-                {
-                    return 0;
+                    return nullptr;
                 }
             };
-            cursor begin_cursor() const
-            {
-                return {};
-            }
-            cursor end_cursor() const
-            {
-                return {};
-            }
-        public:
+        }
+
+        template<typename T>
+        struct empty_view
+          : view_interface<empty_view<T>, (cardinality)0>
+          , private detail::empty_view_base
+        {
+            static_assert(std::is_object<T>::value,
+                "The template parameter to empty_view must be an object type.");
             empty_view() = default;
-            constexpr std::size_t size() const
+            constexpr static T *begin() noexcept
+            {
+                return nullptr;
+            }
+            constexpr static T *end() noexcept
+            {
+                return nullptr;
+            }
+            static constexpr std::size_t size() noexcept
             {
                 return 0u;
             }
-            constexpr T const *data() const
+            static constexpr T *data() noexcept
             {
                 return nullptr;
             }

@@ -47,131 +47,133 @@ namespace ranges
         {
             intersperse_view() = default;
             constexpr intersperse_view(Rng rng, range_value_type_t<Rng> val)
-                noexcept(
-                    std::is_nothrow_constructible<
-                        typename intersperse_view::view_adaptor, Rng>::value &&
-                    std::is_nothrow_move_constructible<range_value_type_t<Rng>>::value)
               : intersperse_view::view_adaptor{detail::move(rng)}, val_(detail::move(val))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
-                noexcept(noexcept(ranges::size(std::declval<Rng const &>())))
             {
                 return size_(ranges::size(this->base()));
             }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
-                noexcept(noexcept(ranges::size(std::declval<Rng &>())))
             {
                 return size_(ranges::size(this->base()));
             }
         private:
             friend range_access;
-            struct cursor_adaptor : adaptor_base
+            template<bool Const>
+            struct cursor_adaptor
+              : adaptor_base
             {
+            private:
+                friend struct cursor_adaptor<!Const>;
+                using CRng = meta::const_if_c<Const, Rng>;
+                bool toggle_ = false;
+                range_value_type_t<Rng> val_;
+            public:
                 cursor_adaptor() = default;
-                explicit constexpr cursor_adaptor(intersperse_view const &view)
-                    noexcept(std::is_nothrow_copy_constructible<range_value_type_t<Rng>>::value)
-                  : val_{view.val_}
+                explicit constexpr cursor_adaptor(range_value_type_t<Rng> const &val)
+                  : val_{val}
+                {}
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                cursor_adaptor(cursor_adaptor<Other> that)
+                  : toggle_(that.toggle_)
+                  , val_(std::move(that.val_))
                 {}
                 template<typename View>
-                RANGES_CXX14_CONSTEXPR iterator_t<Rng> begin(View &view)
-                    noexcept(std::is_nothrow_move_constructible<iterator_t<Rng>>::value &&
-                        noexcept(ranges::begin(view.base()) != ranges::end(view.base())))
+                RANGES_CXX14_CONSTEXPR iterator_t<CRng> begin(View &view)
                 {
                     auto first = ranges::begin(view.base());
                     toggle_ = first != ranges::end(view.base());
                     return first;
                 }
-                constexpr range_value_type_t<Rng> read(iterator_t<Rng> const &it) const
-                    noexcept(noexcept(range_value_type_t<Rng>(*it)) &&
-                        std::is_nothrow_copy_constructible<range_value_type_t<Rng>>::value)
+                constexpr range_value_type_t<Rng> read(iterator_t<CRng> const &it) const
                 {
                     return toggle_ ? *it : val_;
                 }
-                CONCEPT_REQUIRES(Sentinel<iterator_t<Rng>, iterator_t<Rng>>())
-                constexpr bool equal(iterator_t<Rng> const &it0, iterator_t<Rng> const &it1,
+                CONCEPT_REQUIRES(Sentinel<iterator_t<CRng>, iterator_t<CRng>>())
+                constexpr bool equal(iterator_t<CRng> const &it0, iterator_t<CRng> const &it1,
                     cursor_adaptor const &other) const
-                    noexcept(noexcept(it0 == it1))
                 {
                     return it0 == it1 && toggle_ == other.toggle_;
                 }
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Rng> &it)
-                    noexcept(noexcept(++it))
+                RANGES_CXX14_CONSTEXPR void next(iterator_t<CRng> &it)
                 {
                     if(toggle_)
                         ++it;
                     toggle_ = !toggle_;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Rng> &it)
-                    noexcept(noexcept(--it))
+                CONCEPT_REQUIRES(BidirectionalRange<CRng>())
+                RANGES_CXX14_CONSTEXPR void prev(iterator_t<CRng> &it)
                 {
                     toggle_ = !toggle_;
                     if(toggle_)
                         --it;
                 }
-                CONCEPT_REQUIRES(SizedSentinel<iterator_t<Rng>, iterator_t<Rng>>())
-                constexpr range_difference_type_t<Rng> distance_to(iterator_t<Rng> const &it,
-                    iterator_t<Rng> const &other_it, cursor_adaptor const &other) const
-                    noexcept(noexcept(other_it - it))
+                CONCEPT_REQUIRES(SizedSentinel<iterator_t<CRng>, iterator_t<CRng>>())
+                constexpr range_difference_type_t<Rng> distance_to(iterator_t<CRng> const &it,
+                    iterator_t<CRng> const &other_it, cursor_adaptor const &other) const
                 {
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<CRng>())
                 RANGES_CXX14_CONSTEXPR
-                void advance(iterator_t<Rng> &it, range_difference_type_t<Rng> n)
-                    noexcept(noexcept(ranges::advance(it, n)))
+                void advance(iterator_t<CRng> &it, range_difference_type_t<Rng> n)
                 {
                     ranges::advance(it, n >= 0 ? (n + toggle_) / 2 : (n - !toggle_) / 2);
                     if(n % 2 != 0)
                         toggle_ = !toggle_;
                 }
-            private:
-                bool toggle_ = false;
-                range_value_type_t<Rng> val_;
             };
-            struct sentinel_adaptor : adaptor_base
+            template<bool Const>
+            struct sentinel_adaptor
+              : adaptor_base
             {
-                static constexpr bool empty(iterator_t<Rng> const &it,
-                    cursor_adaptor const &, sentinel_t<Rng> const &sent)
-                RANGES_AUTO_RETURN_NOEXCEPT
-                (
-                    it == sent
-                )
+            private:
+                using CRng = meta::const_if_c<Const, Rng>;
+            public:
+                sentinel_adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                sentinel_adaptor(sentinel_adaptor<Other>)
+                {}
+                static constexpr bool empty(iterator_t<CRng> const &it,
+                    cursor_adaptor<Const> const &, sentinel_t<CRng> const &sent)
+                {
+                    return it == sent;
+                }
             };
             CONCEPT_REQUIRES(Range<Rng const>())
-            constexpr cursor_adaptor begin_adaptor() const
-                noexcept(std::is_nothrow_constructible<
-                    cursor_adaptor, intersperse_view const&>::value)
+            constexpr cursor_adaptor<true> begin_adaptor() const
             {
-                return cursor_adaptor{*this};
+                return cursor_adaptor<true>{val_};
             }
-            CONCEPT_REQUIRES(!Range<Rng const>())
-            RANGES_CXX14_CONSTEXPR cursor_adaptor begin_adaptor()
-                noexcept(std::is_nothrow_constructible<
-                    cursor_adaptor, intersperse_view &>::value)
+            RANGES_CXX14_CONSTEXPR cursor_adaptor<false> begin_adaptor()
             {
-                return cursor_adaptor{*this};
+                return cursor_adaptor<false>{val_};
             }
-            CONCEPT_REQUIRES(Range<Rng const>() && BoundedRange<Rng>() &&
-                !SinglePass<iterator_t<Rng>>())
-            constexpr cursor_adaptor end_adaptor() const
-                noexcept(std::is_nothrow_constructible<
-                    cursor_adaptor, intersperse_view const&>::value)
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                    (BoundedRange<CRng>() && !SinglePass<iterator_t<CRng>>()))>
+            constexpr cursor_adaptor<true> end_adaptor() const
             {
-                return cursor_adaptor{*this};
+                return cursor_adaptor<true>{val_};
             }
-            CONCEPT_REQUIRES(!Range<Rng const>() && BoundedRange<Rng>() &&
-                !SinglePass<iterator_t<Rng>>())
-            RANGES_CXX14_CONSTEXPR cursor_adaptor end_adaptor()
-                noexcept(std::is_nothrow_constructible<
-                    cursor_adaptor, intersperse_view &>::value)
+            CONCEPT_REQUIRES(BoundedRange<Rng>() && !SinglePass<iterator_t<Rng>>())
+            RANGES_CXX14_CONSTEXPR cursor_adaptor<false> end_adaptor()
             {
-                return cursor_adaptor{*this};
+                return cursor_adaptor<false>{val_};
+            }
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                    (!BoundedRange<CRng>() || SinglePass<iterator_t<CRng>>()))>
+            constexpr sentinel_adaptor<true> end_adaptor() const noexcept
+            {
+                return {};
             }
             CONCEPT_REQUIRES(!BoundedRange<Rng>() || SinglePass<iterator_t<Rng>>())
-            constexpr sentinel_adaptor end_adaptor() const noexcept
+            RANGES_CXX14_CONSTEXPR sentinel_adaptor<false> end_adaptor() noexcept
             {
                 return {};
             }

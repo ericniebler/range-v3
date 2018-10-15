@@ -59,11 +59,13 @@ namespace ranges
             struct cursor
             {
             private:
+                friend struct cursor<!IsConst>;
                 template<typename T>
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
+                using CRng = constify_if<Rng>;
                 using difference_type_ = range_difference_type_t<Rng>;
-                using iterator = iterator_t<constify_if<Rng>>;
+                using iterator = iterator_t<CRng>;
 
                 cycled_view_t *rng_{};
                 iterator it_{};
@@ -95,6 +97,12 @@ namespace ranges
                 explicit cursor(cycled_view_t &rng)
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : rng_(that.rng_)
+                  , it_(std::move(that.it_))
+                {}
                 constexpr bool equal(default_sentinel) const
                 {
                     return false;
@@ -116,28 +124,28 @@ namespace ranges
                     if(++it_ == end)
                     {
                         ++n_;
-                        this->set_end_(BoundedRange<Rng>());
+                        this->set_end_(BoundedRange<CRng>());
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_REQUIRES(BidirectionalRange<CRng>())
                 void prev()
                 {
                     if(it_ == ranges::begin(rng_->rng_))
                     {
                         RANGES_EXPECT(n_ > 0); // decrementing the begin iterator?!
                         --n_;
-                        it_ = this->get_end_(BoundedRange<Rng>());
+                        it_ = this->get_end_(BoundedRange<CRng>());
                     }
                     --it_;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<CRng>())
                 void advance(difference_type_ n)
                 {
                     if (is_infinite<Rng>::value)
                         return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
-                    auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
+                    auto const end = this->get_end_(BoundedRange<CRng>(), meta::bool_<true>());
                     auto const dist = end - begin;
                     auto const d = it_ - begin;
                     auto const off = (d + n) % dist;

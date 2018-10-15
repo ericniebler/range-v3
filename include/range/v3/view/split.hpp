@@ -59,25 +59,27 @@ namespace ranges
             private:
                 friend range_access;
                 friend split_view;
+                friend struct cursor<!IsConst>;
                 bool zero_;
-                iterator_t<Rng> cur_;
-                sentinel_t<Rng> last_;
+                using CRng = meta::const_if_c<IsConst, Rng>;
+                iterator_t<CRng> cur_;
+                sentinel_t<CRng> last_;
                 using fun_ref_t = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_t fun_;
 
                 struct search_pred
                 {
                     bool zero_;
-                    iterator_t<Rng> first_;
-                    sentinel_t<Rng> last_;
+                    iterator_t<CRng> first_;
+                    sentinel_t<CRng> last_;
                     fun_ref_t fun_;
-                    bool operator()(iterator_t<Rng> cur) const
+                    bool operator()(iterator_t<CRng> cur) const
                     {
                         return (zero_ && cur == first_) || (cur != last_ && !invoke(fun_, cur, last_).first);
                     }
                 };
                 using reference_ =
-                    indirect_view<take_while_view<iota_view<iterator_t<Rng>>, search_pred>>;
+                    indirect_view<take_while_view<iota_view<iterator_t<CRng>>, search_pred>>;
                 reference_ read() const
                 {
                     return reference_{{view::iota(cur_), {zero_, cur_, last_, fun_}}};
@@ -107,7 +109,7 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(fun_ref_t fun, iterator_t<Rng> first, sentinel_t<Rng> last)
+                cursor(fun_ref_t fun, iterator_t<CRng> first, sentinel_t<CRng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {
                     // For skipping an initial zero-length match
@@ -116,13 +118,19 @@ namespace ranges
                 }
             public:
                 cursor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
+                {}
             };
             cursor<false> begin_cursor()
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>,
-                sentinel_t<Rng>>() && Range<Rng const>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                    Invocable<Fun const&, iterator_t<CRng>, sentinel_t<CRng>>())>
             cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};

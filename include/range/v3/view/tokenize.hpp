@@ -49,9 +49,10 @@ namespace ranges
             Regex rex_;
             SubMatchRange subs_;
             std::regex_constants::match_flag_type flags_;
+            template<bool Const>
+            using iterator_t =
+                std::regex_token_iterator<iterator_t<meta::const_if_c<Const, Rng>>>;
         public:
-            using iterator =
-                std::regex_token_iterator<iterator_t<Rng>>;
 
             tokenize_view() = default;
             tokenize_view(Rng rng, Regex rex, SubMatchRange subs,
@@ -61,16 +62,23 @@ namespace ranges
               , subs_(std::move(subs))
               , flags_(flags)
             {}
-            iterator begin()
+            iterator_t<false> begin()
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            CONCEPT_REQUIRES(Range<Rng const &>())
-            iterator begin() const
+            template<bool Const = true,
+                CONCEPT_REQUIRES_(Range<Rng const>())>
+            iterator_t<Const> begin() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            iterator end() const
+            iterator_t<false> end()
+            {
+                return {};
+            }
+            template<bool Const = true,
+                CONCEPT_REQUIRES_(Range<Rng const>())>
+            iterator_t<Const> end() const
             {
                 return {};
             }

@@ -34,10 +34,10 @@ namespace ranges
         {
             template<typename T>
             struct is_movable_
-              : meta::and_<
-                    std::is_object<T>,
-                    std::is_move_constructible<T>,
-                    std::is_move_assignable<T>>
+              : meta::bool_<
+                    std::is_object<T>::value &&
+                    std::is_move_constructible<T>::value &&
+                    std::is_move_assignable<T>::value>
             {};
         }
         /// \endcond

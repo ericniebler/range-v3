@@ -27,7 +27,6 @@ namespace ranges
 {
     inline namespace v3
     {
-
         namespace view
         {
             /// Half-open range of indices: [from, to).

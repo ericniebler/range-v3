@@ -58,7 +58,9 @@ namespace ranges {
             struct adaptor : adaptor_base
             {
             private:
+                friend struct adaptor<!IsConst>;
                 using exclusive_scan_view_t = meta::const_if_c<IsConst, exclusive_scan_view>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
                 semiregular_t<T> sum_;
                 exclusive_scan_view_t *rng_;
 
@@ -80,19 +82,23 @@ namespace ranges {
                 adaptor(exclusive_scan_view_t &rng)
                   : rng_(&rng)
                 {}
-                iterator_t<Rng> begin(exclusive_scan_view_t &)
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                adaptor(adaptor<Other> that)
+                  : rng_(that.rng_)
+                {}
+                iterator_t<CRng> begin(exclusive_scan_view_t &)
                 {
                     sum_ = move_or_copy_init(single_pass{});
                     return ranges::begin(rng_->base());
                 }
-                T read(iterator_t<Rng> const &) const
+                T read(iterator_t<CRng> const &) const
                 {
                     return sum_;
                 }
-                void next(iterator_t<Rng> &it)
+                void next(iterator_t<CRng> &it)
                 {
                     RANGES_EXPECT(it != ranges::end(rng_->base()));
-
                     sum_ = invoke(rng_->fun_, static_cast<T &&>(std::move(sum_)), *it);
                     ++it;
                 }

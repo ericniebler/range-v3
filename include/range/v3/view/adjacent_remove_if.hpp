@@ -44,18 +44,14 @@ namespace ranges
         {
             adjacent_remove_if_view() = default;
             constexpr adjacent_remove_if_view(Rng rng, Pred pred)
-                noexcept(
-                    std::is_nothrow_constructible<
-                        typename adjacent_remove_if_view::view_adaptor, Rng>::value &&
-                    std::is_nothrow_constructible<
-                        typename adjacent_remove_if_view::box, Pred>::value)
               : adjacent_remove_if_view::view_adaptor{detail::move(rng)}
               , adjacent_remove_if_view::box(detail::move(pred))
             {}
         private:
             friend range_access;
 
-            struct adaptor : adaptor_base
+            struct adaptor
+              : adaptor_base
             {
             private:
                 adjacent_remove_if_view *rng_;

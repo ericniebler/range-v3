@@ -58,21 +58,26 @@ namespace ranges
         private:
             friend range_access;
 
-            static constexpr bool const_iterable =
-                detail::AdjacentFilterConstraint<Rng const, Pred const>();
-
-            struct adaptor : adaptor_base
+            template<bool Const>
+            struct adaptor
+              : adaptor_base
             {
             private:
-                using Base = meta::const_if_c<const_iterable, Rng>;
-                using Parent = meta::const_if_c<const_iterable, adjacent_filter_view>;
+                friend struct adaptor<!Const>;
+                using CRng = meta::const_if_c<Const, Rng>;
+                using Parent = meta::const_if_c<Const, adjacent_filter_view>;
                 Parent *rng_;
             public:
                 adaptor() = default;
                 constexpr adaptor(Parent &rng) noexcept
                   : rng_(&rng)
                 {}
-                RANGES_CXX14_CONSTEXPR void next(iterator_t<Base> &it) const
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                constexpr adaptor(adaptor<Other> that)
+                  : rng_(that.rng_)
+                {}
+                RANGES_CXX14_CONSTEXPR void next(iterator_t<CRng> &it) const
                 {
                     auto const last = ranges::end(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -81,8 +86,8 @@ namespace ranges
                         if(invoke(pred, *prev, *it))
                             break;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Base>())
-                RANGES_CXX14_CONSTEXPR void prev(iterator_t<Base> &it) const
+                CONCEPT_REQUIRES(BidirectionalRange<CRng>())
+                RANGES_CXX14_CONSTEXPR void prev(iterator_t<CRng> &it) const
                 {
                     auto const first = ranges::begin(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -98,32 +103,27 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
-            CONCEPT_REQUIRES(const_iterable)
-            constexpr adaptor begin_adaptor() const noexcept
+            RANGES_CXX14_CONSTEXPR adaptor<false> begin_adaptor() noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(const_iterable)
-            constexpr adaptor end_adaptor() const noexcept
+            RANGES_CXX14_CONSTEXPR adaptor<false> end_adaptor() noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(!const_iterable)
-            RANGES_CXX14_CONSTEXPR adaptor begin_adaptor() noexcept
+            CONCEPT_REQUIRES(detail::AdjacentFilterConstraint<Rng const, Pred const>())
+            constexpr adaptor<true> begin_adaptor() const noexcept
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(!const_iterable)
-            RANGES_CXX14_CONSTEXPR adaptor end_adaptor() noexcept
+            CONCEPT_REQUIRES(detail::AdjacentFilterConstraint<Rng const, Pred const>())
+            constexpr adaptor<true> end_adaptor() const noexcept
             {
                 return {*this};
             }
         public:
             adjacent_filter_view() = default;
             constexpr adjacent_filter_view(Rng rng, Pred pred)
-                noexcept(std::is_nothrow_constructible<
-                    typename adjacent_filter_view::view_adaptor, Rng>::value &&
-                    std::is_nothrow_constructible<semiregular_t<Pred>, Pred>::value)
               : adjacent_filter_view::view_adaptor{detail::move(rng)}
               , adjacent_filter_view::box(detail::move(pred))
             {}

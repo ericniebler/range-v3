@@ -49,7 +49,8 @@ namespace ranges
             sliding_view_detail::cache = sliding_view_detail::caching<Rng>::value>
         struct sliding_view;
 
-        namespace sliding_view_detail {
+        namespace sliding_view_detail
+        {
             template<typename Rng>
             using uncounted_t = decltype(
                 ranges::uncounted(std::declval<iterator_t<Rng>&>()));
@@ -120,7 +121,7 @@ namespace ranges
                 {
                     return size_(ranges::size(this->base()));
                 }
-                CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<Rng const>())
+                CONCEPT_REQUIRES(SizedRange<Rng>())
                 range_size_type_t<Rng> size()
                 {
                     return size_(ranges::size(this->base()));
@@ -132,7 +133,7 @@ namespace ranges
                 {
                     return static_cast<cache_t&>(*this);
                 }
-                optional<iterator_t<Rng>> const &cache() const&
+                optional<iterator_t<Rng>> const &cache() const &
                 {
                     return static_cast<cache_t const&>(*this);
                 }
@@ -179,7 +180,7 @@ namespace ranges
                 range_difference_type_t<Rng> n_ = {};
             public:
                 adaptor() = default;
-                adaptor(sliding_view<Rng> const &v)
+                adaptor(sliding_view &v)
                   : base_t{v.base()}
                   , n_{v.n_}
                 {}
@@ -214,7 +215,7 @@ namespace ranges
             {
                 return {*this};
             }
-            meta::if_<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor() const
+            meta::if_<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor()
             {
                 return {*this};
             }
@@ -248,7 +249,7 @@ namespace ranges
                 range_difference_type_t<Rng> n_ = {};
             public:
                 adaptor() = default;
-                adaptor(sliding_view<Rng> const &v)
+                adaptor(sliding_view &v)
                   : n_{v.n_}
                 {}
                 iterator_t<Rng> end(sliding_view &v)
@@ -262,7 +263,7 @@ namespace ranges
                 }
             };
 
-            adaptor begin_adaptor() const
+            adaptor begin_adaptor()
             {
                 return {*this};
             }
@@ -281,41 +282,54 @@ namespace ranges
         private:
             friend range_access;
 
-            iterator_t<Rng> get_last() const
-            {
-                auto const sz = ranges::distance(this->base());
-                auto const offset = this->n_ - 1 < sz ? this->n_ - 1 : sz;
-                return ranges::begin(this->base()) + (sz - offset);
-            }
-
+            template<bool Const>
             struct adaptor
               : adaptor_base
             {
             private:
-                range_difference_type_t<Rng> n_ = {};
+                friend struct adaptor<!Const>;
+                using CRng = meta::const_if_c<Const, Rng>;
+                range_difference_type_t<Rng> n_ = 0;
             public:
                 adaptor() = default;
-                adaptor(sliding_view<Rng> const &v)
-                  : n_{v.n_}
+                adaptor(range_difference_type_t<Rng> n)
+                  : n_(n)
                 {}
-                iterator_t<Rng> end(sliding_view const &v) const
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                adaptor(adaptor<Other> that)
+                  : n_(that.n_)
+                {}
+                iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> &v) const
                 {
-                    return v.get_last();
+                    auto const sz = ranges::distance(v.base());
+                    auto const offset = n_ - 1 < sz ? n_ - 1 : sz;
+                    return ranges::begin(v.base()) + (sz - offset);
                 }
-                auto read(iterator_t<Rng> const &it) const ->
+                auto read(iterator_t<CRng> const &it) const ->
                     decltype(view::counted(uncounted(it), n_))
                 {
                     return view::counted(uncounted(it), n_);
                 }
             };
 
-            adaptor begin_adaptor() const
+            adaptor<false> begin_adaptor()
             {
-                return {*this};
+                return {this->n_};
             }
-            adaptor end_adaptor() const
+            adaptor<false> end_adaptor()
             {
-                return {*this};
+                return {this->n_};
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
+            adaptor<true> begin_adaptor() const
+            {
+                return {this->n_};
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
+            adaptor<true> end_adaptor() const
+            {
+                return {this->n_};
             }
         public:
             using sliding_view::sv_base::sv_base;

@@ -51,6 +51,8 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
+                friend struct adaptor<!IsConst>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
                 using partial_sum_view_t = meta::const_if_c<IsConst, partial_sum_view>;
                 semiregular_t<range_value_type_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
@@ -60,7 +62,13 @@ namespace ranges
                 adaptor(partial_sum_view_t &rng)
                   : rng_(&rng)
                 {}
-                iterator_t<Rng> begin(partial_sum_view_t &)
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                constexpr adaptor(adaptor<Other> that)
+                  : sum_(std::move(that.sum_))
+                  , rng_(that.rng_)
+                {}
+                iterator_t<CRng> begin(partial_sum_view_t &)
                 {
                     auto &base = rng_->base();
                     auto it = ranges::begin(base);
@@ -68,11 +76,11 @@ namespace ranges
                         sum_ = *it;
                     return it;
                 }
-                range_value_type_t<Rng> read(iterator_t<Rng>) const
+                range_value_type_t<Rng> read(iterator_t<CRng>) const
                 {
                     return sum_;
                 }
-                void next(iterator_t<Rng> &it)
+                void next(iterator_t<CRng> &it)
                 {
                     if (++it != ranges::end(rng_->base()))
                     {
@@ -91,16 +99,18 @@ namespace ranges
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(Range<Rng const>() &&
-                Invocable<Fun const&, range_common_reference_t<Rng>,
-                    range_common_reference_t<Rng>>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                    Invocable<Fun const&, range_common_reference_t<CRng>,
+                        range_common_reference_t<CRng>>())>
             adaptor<true> begin_adaptor() const
             {
                 return {*this};
             }
-            CONCEPT_REQUIRES(Range<Rng const>() &&
-                Invocable<Fun const&, range_common_reference_t<Rng>,
-                    range_common_reference_t<Rng>>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                Invocable<Fun const&, range_common_reference_t<CRng>,
+                    range_common_reference_t<CRng>>())>
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {*this};

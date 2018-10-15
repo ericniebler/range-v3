@@ -50,13 +50,20 @@ namespace ranges
               : adaptor_base
             {
             private:
+                friend struct sentinel_adaptor<!IsConst>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
                 semiregular_ref_or_val_t<Pred, IsConst> pred_;
             public:
                 sentinel_adaptor() = default;
                 sentinel_adaptor(semiregular_ref_or_val_t<Pred, IsConst> pred)
                   : pred_(std::move(pred))
                 {}
-                bool empty(iterator_t<Rng> it, sentinel_t<Rng> end) const
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                sentinel_adaptor(sentinel_adaptor<Other> that)
+                  : pred_(std::move(that.pred_))
+                {}
+                bool empty(iterator_t<CRng> const &it, sentinel_t<CRng> const &end) const
                 {
                     return it == end || !invoke(pred_, it);
                 }
@@ -65,7 +72,8 @@ namespace ranges
             {
                 return {pred_};
             }
-            CONCEPT_REQUIRES(Invocable<Pred const&, iterator_t<Rng>>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() && Invocable<Pred const&, iterator_t<CRng>>())>
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};

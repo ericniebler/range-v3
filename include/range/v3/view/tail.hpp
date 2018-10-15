@@ -55,6 +55,13 @@ namespace ranges
         private:
             Rng rng_;
             using size_type_ = range_size_type_t<Rng>;
+            template<typename R>
+            static constexpr size_type_ size_(R &rng)
+            {
+                return range_cardinality<Rng>::value >= 0
+                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
+                  : detail::prev_or_zero_(ranges::size(rng));
+            }
         public:
             using iterator = iterator_t<Rng>;
             using sentinel = sentinel_t<Rng>;
@@ -69,8 +76,9 @@ namespace ranges
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
-            iterator begin() const
+            template<class CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>())>
+            iterator_t<CRng> begin() const
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
@@ -78,17 +86,21 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
-            sentinel end() const
+            template<class CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>())>
+            sentinel_t<CRng> end() const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedView<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            RANGES_CXX14_CONSTEXPR size_type_ size()
+            {
+                return tail_view::size_(rng_);
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr size_type_ size() const
             {
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng_));
+                return tail_view::size_(rng_);
             }
             Rng & base()
             {
