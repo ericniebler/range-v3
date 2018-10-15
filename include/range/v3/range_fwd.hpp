@@ -309,9 +309,6 @@ namespace ranges
         #endif
 
             // Work around libc++'s buggy std::is_function
-        #if !defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 3800
-            using std::is_function;
-        #else
             // Function types here:
             template<typename T>
             char (&is_function_impl_(priority_tag<0>))[1];
@@ -333,7 +330,6 @@ namespace ranges
             struct is_function
               : meta::bool_<sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1>
             {};
-        #endif
 
             template<typename T>
             struct remove_rvalue_reference
