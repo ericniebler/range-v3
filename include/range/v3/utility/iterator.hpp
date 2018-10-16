@@ -265,7 +265,14 @@ namespace ranges
             template<typename I,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
             RANGES_CXX14_CONSTEXPR
-            I operator()(I it, difference_type_t<I> n = 1) const
+            I operator()(I it) const
+            {
+                return --it;
+            }
+            template<typename I,
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>())>
+            RANGES_CXX14_CONSTEXPR
+            I operator()(I it, difference_type_t<I> n) const
             {
                 advance(it, -n);
                 return it;
