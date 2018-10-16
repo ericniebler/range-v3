@@ -83,7 +83,7 @@ void test_empty_set()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == static_cast<std::ptrdiff_t>(size(rng)));
+    CHECK((last - first) == size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -125,7 +125,7 @@ void test_empty_range()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == static_cast<std::ptrdiff_t>(size(rng)));
+    CHECK((last - first) == size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -200,6 +200,26 @@ void test_bug_823()
     }
 }
 
+void test_bug_919()
+{
+    // https://github.com/ericniebler/range-v3/issues/919
+    int some_ints[] = {0,1,2,3};
+    char const * some_strings[] = {"John", "Paul", "George", "Ringo"};
+    auto rng = view::cartesian_product(
+        span<int, size(some_ints)>{some_ints},
+        span<char const*, size(some_strings)>{some_strings}
+    );
+    constexpr std::intmax_t n = size(rng);
+    CONCEPT_ASSERT(n == 16);
+
+    for (std::intmax_t i = 0; i <= n; ++i) {
+        auto const x = rng.begin() + i;
+        CHECK((x == rng.end() - (n - i)));
+        for (std::intmax_t j = 0; j <= n; ++j)
+            CHECK((rng.begin() + j == x + (j - i)));
+    }
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -216,7 +236,7 @@ int main()
     CONCEPT_ASSERT(RandomAccessView<Rng>());
     CONCEPT_ASSERT(BoundedRange<Rng>());
     CONCEPT_ASSERT(SizedRange<Rng>());
-    CHECK(size(rng) == size(some_ints) * size(some_strings));
+    CHECK(size(rng) == static_cast<std::intmax_t>(size(some_ints) * size(some_strings)));
 
     CONCEPT_ASSERT(std::is_same<
         range_value_type_t<Rng>,
@@ -238,7 +258,7 @@ int main()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == static_cast<std::ptrdiff_t>(size(rng)));
+    CHECK((last - first) == size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -251,6 +271,7 @@ int main()
     test_empty_range();
     test_bug_820();
     test_bug_823();
+    test_bug_919();
 
     return test_result();
 }
