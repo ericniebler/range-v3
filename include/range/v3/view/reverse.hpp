@@ -68,7 +68,7 @@ namespace ranges
               : rng_(detail::move(rng))
             {}
             template<typename O,
-                CONCEPT_REQUIRES_(view::ViewableRange<not_self_<O>>() &&
+                CONCEPT_REQUIRES_(ViewableRange<not_self_<O>>() &&
                     BidirectionalRange<O>() && Constructible<Rng, view::all_t<O>>())>
             explicit constexpr reverse_view(O&& o)
               : rng_(view::all(static_cast<O &&>(o)))

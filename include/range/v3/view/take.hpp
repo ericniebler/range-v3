@@ -73,11 +73,11 @@ namespace ranges
                 }
             };
 
-            adaptor<false> begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            sentinel_adaptor<false> end_adaptor()
+            sentinel_adaptor<simple_view<Rng>()> end_adaptor()
             {
                 return {};
             }

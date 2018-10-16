@@ -39,6 +39,29 @@ namespace ranges
         }
         /// \endcond
 
+        struct SimpleView
+        {
+            template<typename Rng>
+            auto requires_() -> decltype(
+                concepts::valid_expr(
+                    concepts::model_of<concepts::View, Rng>() &&
+                    concepts::model_of<concepts::Range, Rng const>() &&
+                    concepts::model_of<concepts::Same, iterator_t<Rng>, iterator_t<Rng const>>() &&
+                    concepts::model_of<concepts::Same, sentinel_t<Rng>, sentinel_t<Rng const>>()
+                ));
+        };
+
+        template<typename Rng>
+        constexpr bool simple_view()
+        {
+            return concepts::models<SimpleView, Rng>::value;
+        }
+
+        template<typename Rng>
+        using ViewableRange = meta::and_<
+            Range<Rng>,
+            meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
+
         namespace view
         {
             /// \addtogroup group-views
@@ -69,11 +92,6 @@ namespace ranges
             /// \ingroup group-views
             /// \sa make_view_fn
             RANGES_INLINE_VARIABLE(make_view_fn, make_view)
-
-            template<typename Rng>
-            using ViewableRange = meta::and_<
-                Range<Rng>,
-                meta::or_<std::is_lvalue_reference<Rng>, View<uncvref_t<Rng>>>>;
 
             template<typename View>
             struct view : pipeable<view<View>>

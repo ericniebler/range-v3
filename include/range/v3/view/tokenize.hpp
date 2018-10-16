@@ -27,6 +27,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -62,9 +63,10 @@ namespace ranges
               , subs_(std::move(subs))
               , flags_(flags)
             {}
-            iterator_t<false> begin()
+            iterator_t<simple_view<Rng>()> begin()
             {
-                return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
+                meta::const_if_c<simple_view<Rng>(), Rng> &rng = rng_;
+                return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
             }
             template<bool Const = true,
                 CONCEPT_REQUIRES_(Range<Rng const>())>
@@ -72,7 +74,7 @@ namespace ranges
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            iterator_t<false> end()
+            iterator_t<simple_view<Rng>()> end()
             {
                 return {};
             }

@@ -313,11 +313,11 @@ namespace ranges
                 }
             };
 
-            adaptor<false> begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {this->n_};
             }
-            adaptor<false> end_adaptor()
+            adaptor<simple_view<Rng>()> end_adaptor()
             {
                 return {this->n_};
             }

@@ -162,9 +162,9 @@ namespace ranges
             };
 
             RANGES_CXX14_CONSTEXPR
-            adaptor<false> begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
-                return adaptor<false>{*this};
+                return adaptor<simple_view<Rng>()>{*this};
             }
             CONCEPT_REQUIRES(ForwardRange<Rng const>())
             constexpr adaptor<true> begin_adaptor() const

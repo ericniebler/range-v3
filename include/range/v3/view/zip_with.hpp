@@ -124,6 +124,14 @@ namespace ranges
                             State::value == unknown || Value::value == unknown ?
                                 unknown :
                                 infinite>;
+
+            template<typename Fun, typename ...Rngs>
+            using IterZipWithConcept = meta::and_<
+                InputRange<Rngs>...,
+                CopyConstructible<Fun>,
+                Invocable<Fun&, iterator_t<Rngs>...>,
+                Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
+                Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
         } // namespace detail
         /// \endcond
 
@@ -182,7 +190,7 @@ namespace ranges
                 using single_pass =
                     meta::or_c<(bool) SinglePass<iterator_t<meta::const_if_c<Const, Rngs>>>()...>;
                 using value_type =
-                    detail::decay_t<decltype(invoke(fun_, copy_tag{}, iterator_t<meta::const_if_c<Const, Rngs>>{}...))>;
+                    detail::decay_t<invoke_result_t<fun_ref_ &, copy_tag, iterator_t<meta::const_if_c<Const, Rngs>>...>>;
 
                 cursor() = default;
                 cursor(fun_ref_ fun, std::tuple<iterator_t<meta::const_if_c<Const, Rngs>>...> its)
@@ -290,13 +298,16 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Range<Rngs const>()...>::value)
+            template<bool Const = true,
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Range<Rngs const>()...>::value &&
+                    detail::IterZipWithConcept<Fun, meta::if_c<Const, Rngs const>...>())>
             cursor<true> begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
             template<bool Const = true,
-                CONCEPT_REQUIRES_(meta::and_c<(bool) Range<Rngs const>()...>::value)>
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Range<Rngs const>()...>::value &&
+                    detail::IterZipWithConcept<Fun, meta::if_c<Const, Rngs const>...>())>
             end_cursor_t<Const> end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
@@ -342,13 +353,8 @@ namespace ranges
         {
             struct iter_zip_with_fn
             {
-                template<typename Fun, typename ...Rngs>
-                using Concept = meta::and_<
-                    InputRange<Rngs>...,
-                    CopyConstructible<Fun>,
-                    Invocable<Fun&, iterator_t<Rngs>...>,
-                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
-                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>>;
+                template<typename Fun, typename... Rngs>
+                using Concept = detail::IterZipWithConcept<Fun, Rngs...>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>

@@ -31,6 +31,7 @@
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -300,11 +301,14 @@ namespace ranges
                     return -cursor::distance_to_(meta::size_t<0>{}, that, *this);
                 }
             };
-            cursor<false> begin_cursor()
+            cursor<meta::and_c<simple_view<Rngs>()...>::value> begin_cursor()
             {
                 return {*this, begin_tag{}};
             }
-            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<false>, sentinel<false>>
+            meta::if_<
+                meta::and_c<(bool)BoundedRange<Rngs>()...>,
+                cursor<meta::and_c<simple_view<Rngs>()...>::value>,
+                sentinel<meta::and_c<simple_view<Rngs>()...>::value>>
             end_cursor()
             {
                 return {*this, end_tag{}};

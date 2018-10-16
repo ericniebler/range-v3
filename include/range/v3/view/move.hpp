@@ -60,11 +60,11 @@ namespace ranges
                     return ranges::iter_move(it);
                 }
             };
-            adaptor<false> begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            adaptor<false> end_adaptor()
+            adaptor<simple_view<Rng>()> end_adaptor()
             {
                 return {};
             }

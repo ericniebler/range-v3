@@ -94,7 +94,7 @@ namespace ranges
                 }
             public:
                 cursor() = default;
-                explicit cursor(cycled_view_t &rng)
+                cursor(cycled_view_t &rng)
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
                 template<bool Other,
@@ -166,14 +166,14 @@ namespace ranges
                 }
             };
 
-            cursor<false> begin_cursor()
+            cursor<simple_view<Rng>() && (bool) BoundedRange<Rng const>()> begin_cursor()
             {
-                return cursor<false>{*this};
+                return {*this};
             }
             CONCEPT_REQUIRES(BoundedRange<Rng const>())
             cursor<true> begin_cursor() const
             {
-                return cursor<true>{*this};
+                return {*this};
             }
 
         public:

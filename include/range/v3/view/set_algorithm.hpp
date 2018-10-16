@@ -59,7 +59,7 @@ namespace ranges
                 template<bool IsConst>
                 using cursor = Cursor<IsConst, Rng1, Rng2, C, P1, P2>;
 
-                cursor<false> begin_cursor()
+                cursor<simple_view<Rng1>() && simple_view<Rng2>()> begin_cursor()
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
