@@ -69,20 +69,28 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
+                friend struct adaptor<!IsConst>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
                 using fun_ref_ = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_ fun_;
             public:
                 using value_type =
-                    detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<Rng>>>;
+                    detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<CRng>>>;
                 adaptor() = default;
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
                 {}
-                auto CPP_auto_fun(read)(iterator_t<Rng> it) (const)
+                template<bool Other>
+                CPP_ctor(adaptor)(adaptor<Other> that)(
+                    requires IsConst && !Other)
+                  : fun_(std::move(that.fun_))
+                {}
+
+                auto CPP_auto_fun(read)(iterator_t<CRng> it) (const)
                 (
                     return invoke(fun_, it)
                 )
-                auto CPP_auto_fun(iter_move)(iterator_t<Rng> it) (const)
+                auto CPP_auto_fun(iter_move)(iterator_t<CRng> it) (const)
                 (
                     return invoke(fun_, move_tag{}, it)
                 )
@@ -92,20 +100,20 @@ namespace ranges
             {
                 return {fun_};
             }
+            template<typename CRng = Rng const>
+            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+                requires Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>)
+            {
+                return {fun_};
+            }
             meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
             {
                 return {fun_};
             }
-            CPP_member
-            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
-                requires Invocable<Fun const&, iterator_t<Rng>>)
-            {
-                return {fun_};
-            }
-            CPP_member
+            template<typename CRng = Rng const>
             auto end_adaptor() const ->
                 CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
-                    requires Invocable<Fun const&, iterator_t<Rng>>)
+                    requires Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>)
             {
                 return {fun_};
             }

@@ -121,7 +121,8 @@ int main()
         ::models<RandomAccessRangeConcept>(rng);
         auto it = rng.begin();
         CPP_assert(RandomAccessIterator<decltype(it)>);
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 6 && __GNUC_MINOR__ < 3
+#if defined(__GNUC__) && !defined(__clang__) && \
+    ((__GNUC__ == 6 && __GNUC_MINOR__ < 3) || __GNUC__ < 6)
         // Avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78047
         {
             auto deref = *it;
@@ -134,7 +135,7 @@ int main()
             CHECK(i == deref.end());
         }
         auto it2 = next(it, 42);
-        CHECK(it == it2);
+        CHECK(it != it2);
         {
             auto deref = *it;
             auto i = deref.begin();
@@ -148,7 +149,7 @@ int main()
 #else
         ::check_equal(*it, view::repeat_n(5, K));
         auto it2 = next(it, 42);
-        CHECK(it == it2);
+        CHECK(it != it2);
         ::check_equal(*it2, view::repeat_n(5, K));
 #endif
     }

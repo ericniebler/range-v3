@@ -50,47 +50,64 @@ namespace ranges
         private:
             friend range_access;
             CPP_assert(ForwardRange<Rng>);
-            template<typename T>
-            using constify = meta::const_if_c<ForwardRange<Rng const>, T>;
-            static constexpr bool CanSizedSentinel =
-                SizedSentinel<iterator_t<constify<Rng>>, iterator_t<constify<Rng>>>;
 
+            template<bool Const>
+            static constexpr bool CanSizedSentinel() noexcept
+            {
+                using I = iterator_t<meta::const_if_c<Const, Rng>>;
+                return (bool) SizedSentinel<I, I>;
+            }
+            template<bool Const>
             using offset_t =
                 meta::if_c<
-                    BidirectionalRange<constify<Rng>> || CanSizedSentinel,
+                    BidirectionalRange<meta::const_if_c<Const, Rng>> ||
+                        chunk_view_::CanSizedSentinel<Const>(),
                     range_difference_type_t<Rng>,
                     constant<range_difference_type_t<Rng>, 0>>;
 
             range_difference_type_t<Rng> n_ = 0;
 
+            template<bool Const>
             struct adaptor
-              : adaptor_base, private box<offset_t>
+              : adaptor_base
+              , private box<offset_t<Const>>
             {
             private:
-                range_difference_type_t<Rng> n_;
-                sentinel_t<constify<Rng>> end_;
+                friend struct adaptor<!Const>;
+                using CRng = meta::const_if_c<Const, Rng>;
+
+                range_difference_type_t<CRng> n_;
+                sentinel_t<CRng> end_;
 
                 constexpr /*c++14*/
-                offset_t const &offset() const
+                offset_t<Const> const &offset() const
                 {
-                    offset_t const &result = this->box<offset_t>::get();
+                    offset_t<Const> const &result = this->box<offset_t<Const>>::get();
                     RANGES_EXPECT(0 <= result && result < n_);
                     return result;
                 }
                 constexpr /*c++14*/
-                offset_t &offset()
+                offset_t<Const> &offset()
                 {
-                    return const_cast<offset_t &>(const_cast<adaptor const &>(*this).offset());
+                    return const_cast<offset_t<Const> &>(
+                        const_cast<adaptor const &>(*this).offset());
                 }
             public:
                 adaptor() = default;
-                constexpr adaptor(constify<chunk_view_> &cv)
-                  : box<offset_t>{0}
+                constexpr adaptor(meta::const_if_c<Const, chunk_view_> &cv)
+                  : box<offset_t<Const>>{0}
                   , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
                   , end_(ranges::end(cv.base()))
                 {}
+                template<bool Other>
+                constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
+                    requires Const && !Other)
+                  : box<offset_t<Const>>(that.offset())
+                  , n_(that.n_)
+                  , end_(that.end_)
+                {}
                 constexpr /*c++14*/
-                auto read(iterator_t<constify<Rng>> const &it) const ->
+                auto read(iterator_t<CRng> const &it) const ->
                     decltype(view::take(make_iterator_range(it, end_), n_))
                 {
                     RANGES_EXPECT(it != end_);
@@ -98,7 +115,7 @@ namespace ranges
                     return view::take(make_iterator_range(it, end_), n_);
                 }
                 constexpr /*c++14*/
-                void next(iterator_t<constify<Rng>> &it)
+                void next(iterator_t<CRng> &it)
                 {
                     RANGES_EXPECT(it != end_);
                     RANGES_EXPECT(0 == offset());
@@ -106,20 +123,18 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto prev(iterator_t<constify<Rng>> &it) -> CPP_ret(void)(
-                    requires BidirectionalRange<constify<Rng>>)
+                auto prev(iterator_t<CRng> &it) -> CPP_ret(void)(
+                    requires BidirectionalRange<CRng>)
                 {
                     ranges::advance(it, -n_ + offset());
                     offset() = 0;
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto distance_to(
-                    iterator_t<constify<Rng>> const &here,
-                    iterator_t<constify<Rng>> const &there,
+                auto distance_to(iterator_t<CRng> const &here, iterator_t<CRng> const &there,
                     adaptor const &that) const ->
                         CPP_ret(range_difference_type_t<Rng>)(
-                            requires CanSizedSentinel)
+                            requires CanSizedSentinel<Const>())
                 {
                     auto const delta = (there - here) + (that.offset() - offset());
                     // This can fail for cyclic base ranges when the chunk size does not divide the
@@ -129,10 +144,11 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto advance(iterator_t<constify<Rng>> &it, range_difference_type_t<Rng> n) ->
-                    CPP_ret(void)(requires RandomAccessRange<constify<Rng>>)
+                auto advance(iterator_t<CRng> &it, range_difference_type_t<Rng> n) ->
+                    CPP_ret(void)(
+                        requires RandomAccessRange<CRng>)
                 {
-                    using Limits = std::numeric_limits<range_difference_type_t<Rng>>;
+                    using Limits = std::numeric_limits<range_difference_type_t<CRng>>;
                     if(0 < n)
                     {
                         RANGES_EXPECT(0 == offset());
@@ -151,20 +167,21 @@ namespace ranges
             };
 
             constexpr /*c++14*/
-            adaptor begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
-                return adaptor{*this};
+                return adaptor<simple_view<Rng>()>{*this};
             }
             CPP_member
             constexpr auto begin_adaptor() const ->
-                CPP_ret(adaptor)(requires ForwardRange<Rng const>)
+                CPP_ret(adaptor<true>)(
+                    requires ForwardRange<Rng const>)
             {
-                return adaptor{*this};
+                return adaptor<true>{*this};
             }
             constexpr /*c++14*/
             range_size_type_t<Rng> size_(range_difference_type_t<Rng> base_size) const
             {
-                CPP_assert(SizedRange<Rng>);
+                CPP_assert(SizedRange<Rng const>);
                 base_size = base_size / n_ + (0 != (base_size % n_));
                 return static_cast<range_size_type_t<Rng>>(base_size);
             }
@@ -184,7 +201,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/
             auto size() -> CPP_ret(range_size_type_t<Rng>)(
-                requires SizedRange<Rng> && !SizedRange<Rng const>)
+                requires SizedRange<Rng>)
             {
                 return size_(ranges::distance(this->base()));
             }
@@ -209,8 +226,14 @@ namespace ranges
                 iter_cache_t                  // it
             > data_{};
 
-            constexpr /*c++14*/ Rng &base() noexcept { return ranges::get<0>(data_); }
-            constexpr Rng const &base() const noexcept { return ranges::get<0>(data_); }
+            constexpr /*c++14*/ Rng &base() noexcept
+            {
+                return ranges::get<0>(data_);
+            }
+            constexpr Rng const &base() const noexcept
+            {
+                return ranges::get<0>(data_);
+            }
             constexpr /*c++14*/ range_difference_type_t<Rng> &n() noexcept
             {
                 return ranges::get<1>(data_);
@@ -229,9 +252,18 @@ namespace ranges
                 return ranges::get<2>(data_);
             }
 
-            constexpr iter_cache_t &it_cache() const noexcept { return ranges::get<3>(data_); }
-            constexpr /*c++14*/ iterator_t<Rng> &it() noexcept { return *it_cache(); }
-            constexpr iterator_t<Rng> const &it() const noexcept { return *it_cache(); }
+            constexpr iter_cache_t &it_cache() const noexcept
+            {
+                return ranges::get<3>(data_);
+            }
+            constexpr /*c++14*/ iterator_t<Rng> &it() noexcept
+            {
+                return *it_cache();
+            }
+            constexpr iterator_t<Rng> const &it() const noexcept
+            {
+                return *it_cache();
+            }
 
             struct outer_cursor
             {
@@ -376,18 +408,14 @@ namespace ranges
               : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
             {}
             CPP_member
-            constexpr /*c++14*/
-            auto size() const
-                noexcept(noexcept(ranges::distance(std::declval<Rng const &>()))) ->
+            constexpr auto size() const ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires SizedRange<Rng const>)
             {
                 return size_(ranges::distance(base()));
             }
             CPP_member
-            constexpr /*c++14*/
-            auto size()
-                noexcept(noexcept(ranges::distance(std::declval<Rng &>()))) ->
+            constexpr /*c++14*/ auto size() ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires SizedRange<Rng>)
             {

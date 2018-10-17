@@ -62,23 +62,19 @@ namespace ranges
         public:
             indirect_view() = default;
             explicit constexpr indirect_view(Rng rng)
-                noexcept(std::is_nothrow_constructible<
-                    typename indirect_view::view_adaptor, Rng>::value)
               : indirect_view::view_adaptor{detail::move(rng)}
             {}
             CPP_member
-            constexpr auto size() const
-                noexcept(noexcept(ranges::size(std::declval<Rng const &>()))) ->
+            constexpr auto size() const ->
                 CPP_ret(range_size_type_t<Rng>)(
                     requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            constexpr /*c++14*/ auto size()
-                noexcept(noexcept(ranges::size(std::declval<Rng &>()))) ->
+            constexpr /*c++14*/ auto size() ->
                 CPP_ret(range_size_type_t<Rng>)(
-                    requires not SizedRange<Rng const> && SizedRange<Rng>)
+                    requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }

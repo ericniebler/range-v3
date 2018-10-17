@@ -41,30 +41,49 @@ namespace ranges
         {
         private:
             friend range_access;
-            using value_ =
-                range_value_type_t<Rng>;
-            using reference_ =
-                common_reference_t<value_ const &&, range_reference_t<Rng>>;
-            using rvalue_reference_ =
-                common_reference_t<value_ const &&, range_rvalue_reference_t<Rng>>;
+            template<bool Const>
             struct adaptor
               : adaptor_base
             {
-                reference_ read(iterator_t<Rng> const &it) const
+                using CRng = meta::const_if_c<Const, Rng>;
+                using value_ =
+                    range_value_type_t<CRng>;
+                using reference_ =
+                    common_reference_t<value_ const &&, range_reference_t<CRng>>;
+                using rvalue_reference_ =
+                    common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
+                adaptor() = default;
+                template<bool Other>
+                constexpr CPP_ctor(adaptor)(adaptor<Other>)(
+                    requires Const && !Other)
+                {}
+                reference_ read(iterator_t<CRng> const &it) const
                 {
                     return *it;
                 }
-                rvalue_reference_ iter_move(iterator_t<Rng> const &it) const
+                rvalue_reference_ iter_move(iterator_t<CRng> const &it) const
                     noexcept(noexcept(rvalue_reference_(ranges::iter_move(it))))
                 {
                     return ranges::iter_move(it);
                 }
             };
-            adaptor begin_adaptor() const
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            adaptor end_adaptor() const
+            CPP_member
+            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+                requires Range<Rng const>)
+            {
+                return {};
+            }
+            adaptor<simple_view<Rng>()> end_adaptor()
+            {
+                return {};
+            }
+            CPP_member
+            auto end_adaptor() const -> CPP_ret(adaptor<true>)(
+                requires Range<Rng const>)
             {
                 return {};
             }
@@ -74,14 +93,14 @@ namespace ranges
               : const_view::view_adaptor{std::move(rng)}
             {}
             CPP_member
-            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
-                requires SizedRange<Rng const>)
+            constexpr /*c++14*/ auto size() -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            auto size() -> CPP_ret(range_size_type_t<Rng>)(
-                requires SizedRange<Rng>)
+            constexpr auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }

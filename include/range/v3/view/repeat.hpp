@@ -48,12 +48,13 @@ namespace ranges
             {
             private:
                 Val const *value_;
+                std::ptrdiff_t n_ = 0;
             public:
                 cursor() = default;
                 explicit cursor(Val const &value)
                   : value_(std::addressof(value))
                 {}
-                Val const &read() const
+                Val const &read() const noexcept
                 {
                     return *value_;
                 }
@@ -61,19 +62,25 @@ namespace ranges
                 {
                     return false;
                 }
-                bool equal(cursor const &) const
+                bool equal(cursor const &that) const
                 {
-                    return true;
+                    return n_ == that.n_;
                 }
                 void next()
-                {}
-                void prev()
-                {}
-                void advance(std::ptrdiff_t)
-                {}
-                std::ptrdiff_t distance_to(cursor const &) const
                 {
-                    return 0;
+                    ++n_;
+                }
+                void prev()
+                {
+                    --n_;
+                }
+                void advance(std::ptrdiff_t d)
+                {
+                    n_ += d;
+                }
+                std::ptrdiff_t distance_to(cursor const &that) const
+                {
+                    return that.n_ - n_;
                 }
             };
             cursor begin_cursor() const

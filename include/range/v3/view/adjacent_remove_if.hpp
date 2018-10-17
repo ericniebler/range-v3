@@ -50,7 +50,8 @@ namespace ranges
         private:
             friend range_access;
 
-            struct adaptor : adaptor_base
+            struct adaptor
+              : adaptor_base
             {
             private:
                 adjacent_remove_if_view *rng_;

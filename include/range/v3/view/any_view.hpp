@@ -161,14 +161,13 @@ namespace ranges
             public:
                 any_view_sentinel_impl() = default;
                 any_view_sentinel_impl(Rng &rng)
-                    noexcept(noexcept(box_t(ranges::end(rng))))
                   : box_t(ranges::end(rng))
                 {}
                 void init(Rng &rng) noexcept
                 {
                     box_t::get() = ranges::end(rng);
                 }
-                sentinel_t<Rng> const &get(Rng const &) const noexcept
+                sentinel_t<Rng> const &get(Rng &) const noexcept
                 {
                     return box_t::get();
                 }
@@ -183,7 +182,7 @@ namespace ranges
                 {}
                 void init(Rng &) noexcept
                 {}
-                sentinel_t<Rng> get(Rng const &rng) const noexcept
+                sentinel_t<Rng> get(Rng &rng) const noexcept
                 {
                     return ranges::end(rng);
                 }
@@ -194,7 +193,7 @@ namespace ranges
             {
                 virtual ~any_input_view_interface() = default;
                 virtual void init() = 0;
-                virtual bool done() const = 0;
+                virtual bool done() = 0;
                 virtual Ref read() const = 0;
                 virtual void next() = 0;
             };
@@ -257,12 +256,18 @@ namespace ranges
                     sentinel_box_t::init(rng);
                     current() = ranges::begin(rng);
                 }
-                virtual bool done() const override
+                virtual bool done() override
                 {
                     return current() == sentinel_box_t::get(range());
                 }
-                virtual Ref read() const override { return *current(); }
-                virtual void next() override { ++current(); }
+                virtual Ref read() const override
+                {
+                    return *current();
+                }
+                virtual void next() override
+                {
+                    ++current();
+                }
                 std::size_t size() const // override-ish
                 {
                     return static_cast<std::size_t>(ranges::size(range()));
@@ -281,7 +286,6 @@ namespace ranges
                 virtual bool equal(any_cursor_interface const &) const = 0;
                 virtual void next() = 0;
             };
-
 
             template<typename Ref, category Cat>
             struct any_cursor_interface<Ref, Cat, meta::if_c<(Cat & category::mask) == category::bidirectional>>
@@ -357,8 +361,8 @@ namespace ranges
 
             struct fully_erased_view
             {
-                virtual bool at_end(any_ref) const = 0; // any_ref is a const ref to a wrapped iterator
-                                                        // to be compared to the erased view's end sentinel
+                virtual bool at_end(any_ref) = 0; // any_ref is a const ref to a wrapped iterator
+                                                  // to be compared to the erased view's end sentinel
             protected:
                 ~fully_erased_view() = default;
             };
@@ -366,13 +370,13 @@ namespace ranges
             struct any_sentinel
             {
                 any_sentinel() = default;
-                constexpr explicit any_sentinel(fully_erased_view const &view) noexcept
+                constexpr explicit any_sentinel(fully_erased_view &view) noexcept
                   : view_{&view}
                 {}
             private:
                 template<typename, category> friend struct any_cursor;
 
-                fully_erased_view const *view_ = nullptr;
+                fully_erased_view *view_ = nullptr;
             };
 
             template<typename Ref, category Cat>
@@ -491,7 +495,7 @@ namespace ranges
                 {
                     return any_cursor<Ref, Cat>{range_box_t::get()};
                 }
-                bool at_end(any_ref it_) const override
+                bool at_end(any_ref it_) override
                 {
                     auto &it = it_.get<iterator_t<Rng> const>();
                     return it == sentinel_box_t::get(range_box_t::get());
@@ -561,7 +565,7 @@ namespace ranges
             {
                 return ptr_ ? ptr_->begin_cursor() : detail::value_init{};
             }
-            detail::any_sentinel end_cursor() const noexcept
+            detail::any_sentinel end_cursor() noexcept
             {
                 return detail::any_sentinel{*ptr_};
             }

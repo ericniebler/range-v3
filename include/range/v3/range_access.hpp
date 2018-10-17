@@ -60,45 +60,25 @@ namespace ranges
             using mixin_base_t = meta::_t<mixin_base_<Cur>>;
 
             template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng)
             (
                 return rng.begin_cursor()
             )
             template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(begin_cursor)(Rng &rng, int)
-            (
-                return static_cast<Rng const &>(rng).begin_cursor()
-            )
-            template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng)
             (
                 return rng.end_cursor()
             )
-            template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(end_cursor)(Rng &rng, int)
-            (
-                return static_cast<Rng const &>(rng).end_cursor()
-            )
 
             template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng)
             (
                 return rng.begin_adaptor()
             )
             template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(begin_adaptor)(Rng &rng, int)
-            (
-                return static_cast<Rng const &>(rng).begin_adaptor()
-            )
-            template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng, long)
+            static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng)
             (
                 return rng.end_adaptor()
-            )
-            template<typename Rng>
-            static constexpr /*c++14*/ auto CPP_auto_fun(end_adaptor)(Rng &rng, int)
-            (
-                return static_cast<Rng const &>(rng).end_adaptor()
             )
 
             template<typename Cur>

@@ -24,6 +24,7 @@
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -33,68 +34,72 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Val>
+        template<typename T>
         struct single_view
-          : view_facade<single_view<Val>, (cardinality)1>
-        {
+          : view_interface<single_view<T>, (cardinality)1> {
         private:
-            friend struct ranges::range_access;
-            semiregular_t<Val> value_;
-            struct cursor
-            {
-            private:
-                semiregular_t<Val> value_;
-                bool done_;
-            public:
-                cursor() = default;
-                explicit cursor(Val value)
-                  : value_(std::move(value)), done_(false)
-                {}
-                Val read() const
-                {
-                    return value_;
-                }
-                bool equal(default_sentinel) const
-                {
-                    return done_;
-                }
-                bool equal(cursor const &that) const
-                {
-                    return done_ == that.done_;
-                }
-                void next()
-                {
-                    done_ = true;
-                }
-                void prev()
-                {
-                    done_ = false;
-                }
-                void advance(std::ptrdiff_t n)
-                {
-                    n += done_;
-                    RANGES_EXPECT(n == 0 || n == 1);
-                    done_ = n != 0;
-                }
-                std::ptrdiff_t distance_to(cursor const &that) const
-                {
-                    return that.done_ - done_;
-                }
-            };
-            cursor begin_cursor() const
-            {
-                return cursor{value_};
-            }
+            CPP_assert(CopyConstructible<T>);
+            static_assert(std::is_object<T>::value,
+                "The template parameter of single_view must be an object type");
+            semiregular_t<T> value_;
+            template<typename... Args>
+            constexpr single_view(in_place_t, std::true_type, Args &&...args)
+              : value_{static_cast<Args &&>(args)...}
+            {}
+            template<typename... Args>
+            constexpr single_view(in_place_t, std::false_type, Args &&...args)
+              : value_{in_place, static_cast<Args &&>(args)...}
+            {}
         public:
             single_view() = default;
-            constexpr explicit single_view(Val value)
-              : value_(detail::move(value))
+            constexpr explicit single_view(T const &t)
+              : value_(t)
             {}
-            constexpr std::size_t size() const
+            constexpr explicit single_view(T &&t)
+              : value_(std::move(t))
+            {}
+            CPP_template(class... Args)(
+                requires Constructible<T, Args...>)
+            constexpr single_view(in_place_t, Args&&... args)
+              : single_view{
+                    in_place,
+                    meta::bool_<(bool) Semiregular<T>>{},
+                    static_cast<Args &&>(args)...}
+            {}
+            constexpr /*c++14*/ T *begin() noexcept
             {
-                return 1;
+                return data();
+            }
+            constexpr T const *begin() const noexcept
+            {
+                return data();
+            }
+            constexpr /*c++14*/ T *end() noexcept
+            {
+                return data() + 1;
+            }
+            constexpr T const *end() const noexcept
+            {
+                return data() + 1;
+            }
+            constexpr static std::size_t size() noexcept
+            {
+                return 1u;
+            }
+            constexpr /*c++14*/ T *data() noexcept
+            {
+                return std::addressof(static_cast<T &>(value_));
+            }
+            constexpr T const *data() const noexcept
+            {
+                return std::addressof(static_cast<T const &>(value_));
             }
         };
+
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+        template<class T>
+        explicit single_view(T&&) -> single_view<detail::decay_t<T>>;
+#endif
 
         namespace view
         {

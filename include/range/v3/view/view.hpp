@@ -39,6 +39,30 @@ namespace ranges
         }
         /// \endcond
 
+        CPP_def
+        (
+            template(typename Rng)
+            concept SimpleView,
+                View<Rng> &&
+                Range<Rng const> &&
+                Same<iterator_t<Rng>, iterator_t<Rng const>> &&
+                Same<sentinel_t<Rng>, sentinel_t<Rng const>>
+        );
+
+        template<typename Rng>
+        constexpr bool simple_view()
+        {
+            return (bool) SimpleView<Rng>;
+        }
+
+        CPP_def
+        (
+            template(typename Rng)
+            concept ViewableRange,
+                Range<Rng> &&
+                (std::is_lvalue_reference<Rng>::value || View<uncvref_t<Rng>>)
+        );
+
         namespace view
         {
             /// \addtogroup group-views
@@ -68,14 +92,6 @@ namespace ranges
             /// \ingroup group-views
             /// \sa make_view_fn
             RANGES_INLINE_VARIABLE(make_view_fn, make_view)
-
-            CPP_def
-            (
-                template(typename Rng)
-                concept ViewableRange,
-                    Range<Rng> &&
-                    (std::is_lvalue_reference<Rng>::value || View<uncvref_t<Rng>>)
-            );
 
             CPP_def
             (

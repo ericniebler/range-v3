@@ -111,7 +111,7 @@ namespace ranges
                 }
                 iterator_t<Rng> end()
                 {
-                    return next(ranges::begin(rng_), n_);
+                    return ranges::begin(rng_) + n_;
                 }
                 template<typename BaseRng = Rng>
                 auto begin() const ->
@@ -125,7 +125,7 @@ namespace ranges
                     CPP_ret(iterator_t<BaseRng const>)(
                         requires Range<BaseRng const>)
                 {
-                    return next(ranges::begin(rng_), n_);
+                    return ranges::begin(rng_) + n_;
                 }
                 range_size_type_t<Rng> size() const
                 {

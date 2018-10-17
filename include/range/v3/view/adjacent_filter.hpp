@@ -57,18 +57,26 @@ namespace ranges
         private:
             friend range_access;
 
-            struct adaptor : adaptor_base
+            template<bool Const>
+            struct adaptor
+              : adaptor_base
             {
             private:
-                using Base = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>, Rng>;
-                using Parent = meta::const_if_c<(bool) detail::AdjacentFilter<Rng const, Pred const>, adjacent_filter_view>;
+                friend struct adaptor<!Const>;
+                using CRng = meta::const_if_c<Const, Rng>;
+                using Parent = meta::const_if_c<Const, adjacent_filter_view>;
                 Parent *rng_;
             public:
                 adaptor() = default;
                 constexpr adaptor(Parent &rng) noexcept
                   : rng_(&rng)
                 {}
-                constexpr /*c++14*/ void next(iterator_t<Base> &it) const
+                template<bool Other>
+                constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
+                    requires Const && !Other)
+                  : rng_(that.rng_)
+                {}
+                constexpr /*c++14*/ void next(iterator_t<CRng> &it) const
                 {
                     auto const last = ranges::end(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -78,9 +86,9 @@ namespace ranges
                             break;
                 }
                 CPP_member
-                constexpr /*c++14*/ auto prev(iterator_t<Base> &it) const ->
+                constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) const ->
                     CPP_ret(void)(
-                        requires BidirectionalRange<Base>)
+                        requires BidirectionalRange<CRng>)
                 {
                     auto const first = ranges::begin(rng_->base());
                     auto &pred = rng_->adjacent_filter_view::box::get();
@@ -96,31 +104,27 @@ namespace ranges
                 }
                 void distance_to() = delete;
             };
+            constexpr auto begin_adaptor() noexcept ->
+                adaptor<false>
+            {
+                return {*this};
+            }
             CPP_member
             constexpr auto begin_adaptor() const noexcept ->
-                CPP_ret(adaptor)(
+                CPP_ret(adaptor<true>)(
                     requires detail::AdjacentFilter<Rng const, Pred const>)
+            {
+                return {*this};
+            }
+            constexpr auto end_adaptor() noexcept ->
+                adaptor<false>
             {
                 return {*this};
             }
             CPP_member
             constexpr auto end_adaptor() const noexcept ->
-                CPP_ret(adaptor)(
+                CPP_ret(adaptor<true>)(
                     requires detail::AdjacentFilter<Rng const, Pred const>)
-            {
-                return {*this};
-            }
-            CPP_member
-            constexpr auto begin_adaptor() noexcept ->
-                CPP_ret(adaptor)(
-                    requires not detail::AdjacentFilter<Rng const, Pred const>)
-            {
-                return {*this};
-            }
-            CPP_member
-            constexpr auto end_adaptor() noexcept ->
-                CPP_ret(adaptor)(
-                    requires not detail::AdjacentFilter<Rng const, Pred const>)
             {
                 return {*this};
             }

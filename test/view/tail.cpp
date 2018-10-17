@@ -59,12 +59,12 @@ int main()
     }
 
     {
-        tail_view<empty_view<int>> rng(view::empty<int>());
+        tail_view<empty_view<int>> const rng(view::empty<int>());
         static_assert(0 == size(rng), "");
     }
 
     {
-        auto rng = view::single(1) | view::tail;
+        auto const rng = view::single(1) | view::tail;
         static_assert(0 == size(rng), "");
     }
 

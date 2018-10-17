@@ -63,7 +63,7 @@ namespace ranges
 
                 // Use ADL if it returns Integral.
                 template<typename R>
-                static constexpr auto impl_(R &r, int) noexcept(noexcept(size(r))) ->
+                static constexpr auto impl_(R &r, long) noexcept(noexcept(size(r))) ->
                     CPP_ret(non_member_size_t<R>)(
                         requires Integral<non_member_size_t<R>> && !disable_sized_range<R>::value)
                 {

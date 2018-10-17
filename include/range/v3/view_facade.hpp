@@ -32,11 +32,11 @@ namespace ranges
         {
             template<typename Derived>
             using begin_cursor_t =
-                detail::decay_t<decltype(range_access::begin_cursor(std::declval<Derived &>(), 42))>;
+                detail::decay_t<decltype(range_access::begin_cursor(std::declval<Derived &>()))>;
 
             template<typename Derived>
             using end_cursor_t =
-                detail::decay_t<decltype(range_access::end_cursor(std::declval<Derived &>(), 42))>;
+                detail::decay_t<decltype(range_access::end_cursor(std::declval<Derived &>()))>;
 
             template<typename Derived>
             using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
@@ -95,7 +95,7 @@ namespace ranges
                     requires Same<D, Derived>)
             {
                 return detail::facade_iterator_t<D>{
-                    range_access::begin_cursor(derived(), 42)};
+                    range_access::begin_cursor(derived())};
             }
             /// \overload
             template<typename D = Derived>
@@ -104,7 +104,7 @@ namespace ranges
                     requires Same<D, Derived>)
             {
                 return detail::facade_iterator_t<D const>{
-                    range_access::begin_cursor(derived(), 42)};
+                    range_access::begin_cursor(derived())};
             }
             /// Let `d` be `static_cast<Derived &>(*this)`. Let `e` be
             /// `std::as_const(d).end_cursor()` if that expression is well-formed;
@@ -118,7 +118,7 @@ namespace ranges
                     requires Same<D, Derived>)
             {
                 return static_cast<detail::facade_sentinel_t<D>>(
-                    range_access::end_cursor(derived(), 42));
+                    range_access::end_cursor(derived()));
             }
             /// \overload
             template<typename D = Derived>
@@ -127,7 +127,7 @@ namespace ranges
                     requires Same<D, Derived>)
             {
                 return static_cast<detail::facade_sentinel_t<D const>>(
-                    range_access::end_cursor(derived(), 42));
+                    range_access::end_cursor(derived()));
             }
         };
 

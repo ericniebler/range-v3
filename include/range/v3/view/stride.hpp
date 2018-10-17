@@ -140,28 +140,43 @@ namespace ranges
             // stride_view const models Range if Rng const models Range, and
             // either (1) Rng is sized, so we can pre-calculate offset_, or (2)
             // Rng is not Bidirectional, so it does not need offset_.
-            static constexpr bool const_iterable =
-                Range<Rng const> && (SizedRange<Rng> || !BidirectionalRange<Rng>);
+            static constexpr bool const_iterable() noexcept
+            {
+                return Range<Rng const> &&
+                    (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
+            }
 
             // If the underlying range doesn't model BoundedRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // BoundedView, adapt it anyway.
-            static constexpr bool can_bound = BoundedRange<Rng>
-                && (SizedRange<Rng> || !BidirectionalRange<Rng>);
+            template<bool Const>
+            static constexpr bool can_bound() noexcept
+            {
+                using CRng = meta::const_if_c<Const, Rng>;
+                return BoundedRange<CRng>
+                    && (SizedRange<CRng> || !BidirectionalRange<CRng>);
+            }
 
+            template<bool Const>
             struct adaptor : adaptor_base
             {
             private:
-                using stride_view_t = meta::const_if_c<const_iterable, stride_view>;
+                using CRng = meta::const_if_c<Const, Rng>;
+                using stride_view_t = meta::const_if_c<Const, stride_view>;
                 stride_view_t *rng_;
             public:
                 adaptor() = default;
-                explicit constexpr adaptor(stride_view_t &rng) noexcept
+                constexpr adaptor(stride_view_t &rng) noexcept
                   : rng_(&rng)
                 {}
-                constexpr /*c++14*/ void next(iterator_t<Rng> &it)
+                template<bool Other>
+                CPP_ctor(adaptor)(adaptor<Other> that)(
+                    requires Const && !Other)
+                  : rng_(that.rng_)
+                {}
+                constexpr /*c++14*/ void next(iterator_t<CRng> &it)
                 {
                     auto const last = ranges::end(rng_->base());
                     RANGES_EXPECT(it != last);
@@ -172,9 +187,9 @@ namespace ranges
                     }
                 }
                 CPP_member
-                constexpr /*c++14*/ auto prev(iterator_t<Rng> &it) ->
+                constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) ->
                     CPP_ret(void)(
-                        requires BidirectionalRange<Rng>)
+                        requires BidirectionalRange<CRng>)
                 {
                     RANGES_EXPECT(it != ranges::begin(rng_->base()));
                     auto delta = -rng_->stride_;
@@ -186,10 +201,10 @@ namespace ranges
                     ranges::advance(it, delta);
                 }
                 template<typename Other>
-                constexpr /*c++14*/ auto distance_to(iterator_t<Rng> const &here,
+                constexpr /*c++14*/ auto distance_to(iterator_t<CRng> const &here,
                         Other const &there) const ->
                     CPP_ret(range_difference_type_t<Rng>)(
-                        requires SizedSentinel<Other, iterator_t<Rng>>)
+                        requires SizedSentinel<Other, iterator_t<CRng>>)
                 {
                     range_difference_type_t<Rng> delta = there - here;
                     if(delta < 0)
@@ -200,9 +215,9 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/ auto advance(
-                    iterator_t<Rng> &it, range_difference_type_t<Rng> n) ->
+                    iterator_t<CRng> &it, range_difference_type_t<Rng> n) ->
                     CPP_ret(void)(
-                        requires RandomAccessRange<Rng>)
+                        requires RandomAccessRange<CRng>)
                 {
                     if(0 == n)
                         return;
@@ -235,47 +250,30 @@ namespace ranges
                     }
                 }
             };
+            constexpr /*c++14*/ auto begin_adaptor() noexcept -> adaptor<false>
+            {
+                return adaptor<false>{*this};
+            }
             CPP_member
             constexpr auto begin_adaptor() const noexcept ->
-                CPP_ret(adaptor)(
-                    requires const_iterable)
+                CPP_ret(adaptor<true>)(
+                    requires const_iterable())
             {
-                return adaptor{*this};
+                return adaptor<true>{*this};
             }
-            CPP_member
-            constexpr /*c++14*/ auto begin_adaptor() noexcept ->
-                CPP_ret(adaptor)(
-                    requires not const_iterable)
+
+            constexpr /*c++14*/
+            auto end_adaptor() noexcept ->
+                meta::if_c<can_bound<false>(), adaptor<false>, adaptor_base>
             {
-                return adaptor{*this};
-            }
-            CPP_member
-            constexpr auto end_adaptor() const noexcept ->
-                CPP_ret(adaptor)(
-                    requires const_iterable && can_bound)
-            {
-                return adaptor{*this};
-            }
-            CPP_member
-            constexpr /*c++14*/ auto end_adaptor() noexcept ->
-                CPP_ret(adaptor)(
-                    requires not const_iterable && can_bound)
-            {
-                return adaptor{*this};
+                return {*this};
             }
             CPP_member
             constexpr auto end_adaptor() const noexcept ->
-                CPP_ret(adaptor_base)(
-                    requires const_iterable && !can_bound)
+                CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)(
+                    requires const_iterable())
             {
-                return {};
-            }
-            CPP_member
-            constexpr /*c++14*/ auto end_adaptor() noexcept ->
-                CPP_ret(adaptor_base)(
-                    requires not const_iterable && !can_bound)
-            {
-                return {};
+                return {*this};
             }
 
             constexpr range_size_type_t<Rng> size_(range_size_type_t<Rng> const n) const noexcept
@@ -289,16 +287,16 @@ namespace ranges
               : detail::stride_view_base<Rng>{std::move(rng), stride}
             {}
             CPP_member
-            constexpr auto size() const ->
+            constexpr /*c++14*/ auto size() ->
                 CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+                    requires SizedRange<Rng>)
             {
                 return size_(ranges::size(this->base()));
             }
             CPP_member
-            constexpr /*c++14*/ auto size() ->
+            constexpr auto size() const ->
                 CPP_ret(range_size_type_t<Rng>)(
-                    requires not SizedRange<Rng const> && SizedRange<Rng>)
+                    requires SizedRange<Rng const>)
             {
                 return size_(ranges::size(this->base()));
             }

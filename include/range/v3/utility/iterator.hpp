@@ -273,7 +273,14 @@ namespace ranges
         {
             template<typename I>
             constexpr /*c++14*/
-            auto operator()(I it, difference_type_t<I> n = 1) const ->
+            auto operator()(I it) const ->
+                CPP_ret(I)(requires BidirectionalIterator<I>)
+            {
+                return --it;
+            }
+            template<typename I>
+            constexpr /*c++14*/
+            auto operator()(I it, difference_type_t<I> n) const ->
                 CPP_ret(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n);
@@ -770,12 +777,18 @@ namespace ranges
         }  // namespace detail
         /// \endcond
 
-        template<typename I>
-        constexpr /*c++14*/
-        reverse_iterator<I> make_reverse_iterator(I i)
+        struct make_reverse_iterator_fn
         {
-            return reverse_iterator<I>(i);
-        }
+            template<typename I>
+            constexpr /*c++14*/
+            auto operator()(I i) const -> CPP_ret(reverse_iterator<I>)(
+                requires BidirectionalIterator<I>)
+            {
+                return reverse_iterator<I>(i);
+            }
+        };
+
+        RANGES_INLINE_VARIABLE(make_reverse_iterator_fn, make_reverse_iterator)
 
         template<typename I>
         struct move_iterator

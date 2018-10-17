@@ -59,14 +59,17 @@ namespace ranges
             struct cursor
             {
             private:
+                friend struct cursor<!IsConst>;
                 template<typename T>
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
+                using CRng = constify_if<Rng>;
                 using difference_type_ = range_difference_type_t<Rng>;
-                using iterator = iterator_t<constify_if<Rng>>;
+                using iterator = iterator_t<CRng>;
 
-                cycled_view_t *rng_;
-                iterator it_;
+                cycled_view_t *rng_{};
+                iterator it_{};
+                std::ptrdiff_t n_ = 0;
 
                 iterator get_end_(std::true_type, bool = false) const
                 {
@@ -90,11 +93,14 @@ namespace ranges
                         end_ = it_;
                 }
             public:
-                cursor()
-                  : rng_{}, it_{}
-                {}
-                explicit cursor(cycled_view_t &rng)
+                cursor() = default;
+                cursor(cycled_view_t &rng)
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
+                {}
+                template<bool Other>
+                CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && !Other)
+                  : rng_(that.rng_)
+                  , it_(std::move(that.it_))
                 {}
                 constexpr bool equal(default_sentinel) const
                 {
@@ -107,7 +113,7 @@ namespace ranges
                 bool equal(cursor const &pos) const
                 {
                     RANGES_EXPECT(rng_ == pos.rng_);
-                    return it_ == pos.it_;
+                    return n_ == pos.n_ && it_ == pos.it_;
                 }
                 void next()
                 {
@@ -115,28 +121,38 @@ namespace ranges
                     RANGES_EXPECT(it_ != end);
                     if(++it_ == end)
                     {
-                        this->set_end_(meta::bool_<BoundedRange<Rng>>{});
+                        ++n_;
+                        this->set_end_(meta::bool_<(bool) BoundedRange<CRng>>{});
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
                 CPP_member
                 auto prev() -> CPP_ret(void)(
-                    requires BidirectionalRange<Rng>)
+                    requires BidirectionalRange<CRng>)
                 {
                     if(it_ == ranges::begin(rng_->rng_))
-                        it_ = this->get_end_(meta::bool_<BoundedRange<Rng>>{});
+                    {
+                        RANGES_EXPECT(n_ > 0); // decrementing the begin iterator?!
+                        --n_;
+                        it_ = this->get_end_(meta::bool_<(bool) BoundedRange<CRng>>{});
+                    }
                     --it_;
                 }
                 CPP_member
                 auto advance(difference_type_ n) -> CPP_ret(void)(
-                    requires RandomAccessRange<Rng>)
+                    requires RandomAccessRange<CRng>)
                 {
+                    if (is_infinite<Rng>::value)
+                        return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
-                        meta::bool_<BoundedRange<Rng>>{}, meta::bool_<true>{});
-                    auto const d = end - begin;
-                    auto const off = ((it_ - begin) + n) % d;
-                    it_ = begin + (off < 0 ? off + d : off);
+                        meta::bool_<(bool) BoundedRange<CRng>>{}, meta::bool_<true>());
+                    auto const dist = end - begin;
+                    auto const d = it_ - begin;
+                    auto const off = (d + n) % dist;
+                    n_ += (d + n) / dist;
+                    RANGES_EXPECT(n_ >= 0);
+                    it_ = begin + (off < 0 ? off + dist : off);
                 }
                 CPP_member
                 auto distance_to(cursor const &that) const ->
@@ -144,19 +160,25 @@ namespace ranges
                         requires SizedSentinel<iterator, iterator>)
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
-                    return that.it_ - it_;
+                    if (is_infinite<Rng>::value)
+                        return that.it_ - it_;
+                    auto const begin = ranges::begin(rng_->rng_);
+                    auto const end = this->get_end_(
+                        meta::bool_<(bool) BoundedRange<Rng>>{}, meta::bool_<true>());
+                    auto const dist = end - begin;
+                    return (that.n_ - n_) * dist + (that.it_ - it_);
                 }
             };
 
-            cursor<false> begin_cursor()
+            cursor<simple_view<Rng>() && (bool) BoundedRange<Rng const>> begin_cursor()
             {
-                return cursor<false>{*this};
+                return {*this};
             }
             CPP_member
             auto begin_cursor() const -> CPP_ret(cursor<true>)(
                 requires BoundedRange<Rng const>)
             {
-                return cursor<true>{*this};
+                return {*this};
             }
 
         public:

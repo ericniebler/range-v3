@@ -55,41 +55,51 @@ namespace ranges
         private:
             Rng rng_;
             using size_type_ = range_size_type_t<Rng>;
+            template<typename R>
+            static constexpr size_type_ size_(R &rng)
+            {
+                return range_cardinality<Rng>::value >= 0
+                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
+                  : detail::prev_or_zero_(ranges::size(rng));
+            }
         public:
-            using iterator = iterator_t<Rng>;
-            using sentinel = sentinel_t<Rng>;
-
             tail_view() = default;
             tail_view(Rng rng)
               : rng_(static_cast<Rng &&>(rng))
             {
                 CPP_assert(InputRange<Rng>);
             }
-            iterator begin()
+            iterator_t<Rng> begin()
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            CPP_member
-            auto begin() const -> CPP_ret(iterator)(requires Range<Rng const>)
+            template<class CRng = Rng const>
+            auto begin() const -> CPP_ret(iterator_t<CRng>)(
+                requires Range<CRng>)
             {
                 return next(ranges::begin(rng_), 1, ranges::end(rng_));
             }
-            sentinel end()
+            sentinel_t<Rng> end()
+            {
+                return ranges::end(rng_);
+            }
+            template<class CRng = Rng const>
+            auto end() const -> CPP_ret(sentinel_t<CRng>)(
+                requires Range<CRng>)
             {
                 return ranges::end(rng_);
             }
             CPP_member
-            auto end() const -> CPP_ret(sentinel)(requires Range<Rng const>)
+            constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
+                requires SizedRange<Rng>)
             {
-                return ranges::end(rng_);
+                return tail_view::size_(rng_);
             }
             CPP_member
             constexpr auto size() const -> CPP_ret(size_type_)(
-                requires SizedView<Rng>)
+                requires SizedRange<Rng const>)
             {
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng_));
+                return tail_view::size_(rng_);
             }
             Rng & base()
             {

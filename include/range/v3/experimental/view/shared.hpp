@@ -55,18 +55,10 @@ namespace ranges
                     return ranges::end(*rng_ptr_);
                 }
 
-                // use the const-most size() function provided by the range
                 CPP_member
                 auto size() const ->
                     CPP_ret(range_size_type_t<Rng>)(
-                        requires SizedRange<Rng const>)
-                {
-                    return ranges::size(*rng_ptr_);
-                }
-                CPP_member
-                auto size() const ->
-                    CPP_ret(range_size_type_t<Rng>)(
-                        requires SizedRange<Rng> && !SizedRange<Rng const>)
+                        requires SizedRange<Rng>)
                 {
                     return ranges::size(*rng_ptr_);
                 }

@@ -129,6 +129,20 @@ namespace ranges
         } // namespace detail
         /// \endcond
 
+        namespace view
+        {
+            CPP_def
+            (
+                template(typename Fun, typename ...Rngs)
+                (concept IterZipWithViewConcept)(Fun, Rngs...),
+                    And<InputRange<Rngs>...> &&
+                    CopyConstructible<Fun> &&
+                    Invocable<Fun&, iterator_t<Rngs>...> &&
+                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...> &&
+                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>
+            );
+        }
+
         /// \addtogroup group-views
         /// @{
         template<typename Fun, typename...Rngs>
@@ -147,38 +161,53 @@ namespace ranges
             using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
+            template<bool Const>
             struct cursor;
 
+            template<bool Const>
             struct sentinel
             {
             private:
-                friend struct cursor;
-                std::tuple<sentinel_t<Rngs>...> ends_;
+                friend struct cursor<Const>;
+                friend struct sentinel<!Const>;
+                std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(detail::any, std::tuple<sentinel_t<Rngs>...> ends)
+                sentinel(detail::any, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
                   : ends_(std::move(ends))
+                {}
+                template<bool Other>
+                CPP_ctor(sentinel)(sentinel<Other> that)(
+                    requires Const && !Other)
+                  : ends_(std::move(that.ends_))
                 {}
             };
 
+            template<bool Const>
             struct cursor
             {
             private:
-                using fun_ref_ = semiregular_ref_or_val_t<Fun, true>;
+                friend struct cursor<!Const>;
+                using fun_ref_ = semiregular_ref_or_val_t<Fun, Const>;
                 fun_ref_ fun_;
-                std::tuple<iterator_t<Rngs>...> its_;
+                std::tuple<iterator_t<meta::const_if_c<Const, Rngs>>...> its_;
 
             public:
                 using difference_type =
-                    common_type_t<range_difference_type_t<Rngs>...>;
+                    common_type_t<range_difference_type_t<meta::const_if_c<Const, Rngs>>...>;
                 using single_pass =
-                    meta::or_c<(bool) SinglePass<iterator_t<Rngs>>...>;
+                    meta::or_c<(bool) SinglePass<iterator_t<meta::const_if_c<Const, Rngs>>>...>;
                 using value_type =
-                    detail::decay_t<decltype(invoke(fun_, copy_tag{}, iterator_t<Rngs>{}...))>;
+                    detail::decay_t<invoke_result_t<fun_ref_ &, copy_tag, iterator_t<meta::const_if_c<Const, Rngs>>...>>;
 
                 cursor() = default;
-                cursor(fun_ref_ fun, std::tuple<iterator_t<Rngs>...> its)
+                cursor(fun_ref_ fun, std::tuple<iterator_t<meta::const_if_c<Const, Rngs>>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
+                {}
+                template<bool Other>
+                CPP_ctor(cursor)(cursor<Other> that)(
+                    requires Const && !Other)
+                  : fun_(std::move(that.fun_)), its_(std::move(that.its_))
                 {}
                 auto CPP_auto_fun(read)() (const)
                 (
@@ -190,7 +219,9 @@ namespace ranges
                 }
                 CPP_member
                 auto equal(cursor const &that) const -> CPP_ret(bool)(
-                    requires And<Sentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+                    requires And<Sentinel<
+                        iterator_t<meta::const_if_c<Const, Rngs>>,
+                        iterator_t<meta::const_if_c<Const, Rngs>>>...>)
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -200,7 +231,7 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                bool equal(sentinel const &s) const
+                bool equal(sentinel<Const> const &s) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -212,13 +243,13 @@ namespace ranges
                 }
                 CPP_member
                 auto prev() -> CPP_ret(void)(
-                    requires And<BidirectionalRange<Rngs>...>)
+                    requires And<BidirectionalRange<meta::const_if_c<Const, Rngs>>...>)
                 {
                     tuple_for_each(its_, detail::dec);
                 }
                 CPP_member
                 auto advance(difference_type n) -> CPP_ret(void)(
-                    requires And<RandomAccessRange<Rngs>...>)
+                    requires And<RandomAccessRange<meta::const_if_c<Const, Rngs>>...>)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
@@ -226,7 +257,9 @@ namespace ranges
                 CPP_member
                 auto distance_to(cursor const &that) const ->
                     CPP_ret(difference_type)(
-                        requires And<SizedSentinel<iterator_t<Rngs>, iterator_t<Rngs>>...>)
+                        requires And<SizedSentinel<
+                            iterator_t<meta::const_if_c<Const, Rngs>>,
+                            iterator_t<meta::const_if_c<Const, Rngs>>>...>)
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -256,29 +289,33 @@ namespace ranges
                 }
             };
 
+            template<bool Const>
             using end_cursor_t =
                 meta::if_c<
-                    concepts::and_v<(bool) BoundedRange<Rngs>..., !(bool) SinglePass<iterator_t<Rngs>>...>,
-                    cursor,
-                    sentinel>;
+                    concepts::and_v<(bool) BoundedRange<Rngs>...,
+                        !(bool) SinglePass<iterator_t<Rngs>>...>,
+                    cursor<Const>,
+                    sentinel<Const>>;
 
-            cursor begin_cursor()
+            cursor<false> begin_cursor()
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            end_cursor_t end_cursor()
+            end_cursor_t<false> end_cursor()
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CPP_member
-            auto begin_cursor() const -> CPP_ret(cursor)(
-                requires And<Range<Rngs const>...>)
+            template<bool Const = true>
+            auto begin_cursor() const -> CPP_ret(cursor<Const>)(
+                requires Const && And<Range<Rngs const>...> &&
+                    view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CPP_member
-            auto end_cursor() const -> CPP_ret(end_cursor_t)(
-                requires And<Range<Rngs const>...>)
+            template<bool Const = true>
+            auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)(
+                requires Const && And<Range<Rngs const>...> &&
+                    view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
@@ -294,7 +331,7 @@ namespace ranges
             {}
             CPP_member
             constexpr auto size() const ->
-                CPP_ret(size_type_)(requires And<SizedRange<Rngs>...>)
+                CPP_ret(size_type_)(requires And<SizedRange<Rngs const>...>)
             {
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
                     (size_type_)range_cardinality<iter_zip_with_view>::value :
@@ -322,17 +359,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Fun, typename ...Rngs)
-                (concept IterZipWithViewConcept)(Fun, Rngs...),
-                    And<InputRange<Rngs>...> &&
-                    CopyConstructible<Fun> &&
-                    Invocable<Fun&, iterator_t<Rngs>...> &&
-                    Invocable<Fun&, copy_tag, iterator_t<Rngs>...> &&
-                    Invocable<Fun&, move_tag, iterator_t<Rngs>...>
-            );
-
             struct iter_zip_with_fn
             {
                 template<typename...Rngs, typename Fun>

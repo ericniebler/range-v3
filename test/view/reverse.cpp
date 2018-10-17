@@ -55,8 +55,7 @@ int main()
     models<ViewConcept>(aux::copy(rng2));
     models<RandomAccessRangeConcept>(rng2);
     models<BoundedRangeConcept>(rng2);
-    models<SizedRangeConcept>(rng2);
-    CHECK(rng2.size() == 5u);
+    models_not<SizedRangeConcept>(rng2);
     auto const & crng2 = rng2;
     models_not<RangeConcept>(crng2);
     ::check_equal(rng2, {'o','l','l','e','h'});

@@ -51,10 +51,10 @@ namespace ranges
             Rng rng_;
             difference_type_ n_;
 
-            template<typename BaseRng = Rng>
-            iterator_t<BaseRng const> get_begin_(std::true_type, std::true_type) const
+            template<typename CRng = Rng const>
+            iterator_t<CRng> get_begin_(std::true_type, std::true_type) const
             {
-                CPP_assert(RandomAccessRange<Rng const>);
+                CPP_assert(RandomAccessRange<CRng>);
                 return next(ranges::begin(rng_), n_, ranges::end(rng_));
             }
             iterator_t<Rng> get_begin_(std::true_type, std::false_type)
@@ -79,27 +79,23 @@ namespace ranges
             {
                 RANGES_EXPECT(n >= 0);
             }
-            CPP_member
-            auto begin() -> CPP_ret(iterator_t<Rng>)(
-                requires not RandomAccessRange<Rng const>)
+            iterator_t<Rng> begin()
             {
                 return this->get_begin_(meta::bool_<RandomAccessRange<Rng>>{}, std::false_type{});
             }
-            CPP_member
-            auto end() -> CPP_ret(sentinel_t<Rng>)(
-                requires not RandomAccessRange<Rng const>)
+            sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
             }
-            template<typename BaseRng = Rng>
-            auto begin() const -> CPP_ret(iterator_t<BaseRng const>)(
-                requires RandomAccessRange<BaseRng const>)
+            template<typename CRng = Rng const>
+            auto begin() const -> CPP_ret(iterator_t<CRng>)(
+                requires RandomAccessRange<CRng>)
             {
                 return this->get_begin_(std::true_type{}, std::true_type{});
             }
-            template<typename BaseRng = Rng>
-            auto end() const -> CPP_ret(sentinel_t<BaseRng const>)(
-                requires RandomAccessRange<BaseRng const>)
+            template<typename CRng = Rng const>
+            auto end() const -> CPP_ret(sentinel_t<CRng>)(
+                requires RandomAccessRange<CRng>)
             {
                 return ranges::end(rng_);
             }
@@ -113,7 +109,7 @@ namespace ranges
             }
             CPP_member
             auto size() -> CPP_ret(range_size_type_t<Rng>)(
-                requires not SizedRange<Rng const> && SizedRange<Rng>)
+                requires SizedRange<Rng>)
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);
