@@ -66,7 +66,25 @@ The code is known to work on the following compilers:
 
 Release Notes:
 --------------
-
+* **0.4.0** Oct 18, 2018
+  - Minor interface-breaking changes:
+    * `single_view` returns by `const &` (see [#817](https://github.com/ericniebler/range-v3/issues/817)).
+    * `reverse_view` of a non-Sized, non-Bounded RandomAccess range (eg., a null-terminated string) no longer satisfies SizedRange.
+    * The `generate` and `generate_n` views now return the generated values by xvalue reference (`T &&`) to the value cached within the view (see [#905](https://github.com/ericniebler/range-v3/issues/905)).
+    * Views no longer prefer returning constant iterators when they can; some views have different constant and mutable iterators.
+  - Enhancements:
+    * Views can successfully adapt other views that have different constant and mutable iterators.
+    * The `single` and `empty` views are much closer to the versions as specified in [P0896](http://wg21.link/P0896).
+  - Bug fixes:
+    * "single_view should not copy the value" [#817](https://github.com/ericniebler/range-v3/issues/817).
+    * "Calling back() on strided range does not return the correct last value in range" [#901](https://github.com/ericniebler/range-v3/issues/901).
+    * "generate(foo) | take(n) calls foo n+1 times" [#819](https://github.com/ericniebler/range-v3/issues/819).
+    * "generate seems broken with move-only return types" [#905](https://github.com/ericniebler/range-v3/issues/905).
+    * "Unexpected behavior in generate with return by reference" [#807](https://github.com/ericniebler/range-v3/issues/807).
+    * "Inconsistent behaviour of ranges::distance with ranges::view::zip using infinite views." [#783](https://github.com/ericniebler/range-v3/issues/783).
+    * "Infinite loop when using ranges::view::cycle with an infinite range" [#780](https://github.com/ericniebler/range-v3/issues/780).
+    * "Composing ranges::view::cycle with ranges::view::slice" [#778](https://github.com/ericniebler/range-v3/issues/778).
+    * "cartesian_product view, now with moar bugs." [#919](https://github.com/ericniebler/range-v3/issues/919).
 * **0.3.7** Sept 19, 2018
   - Improved support for clang-cl (thanks to @CaseyCarter).
   - Fix for `any_view<T, category::sized | category::input>` (see #869).
