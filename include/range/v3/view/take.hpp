@@ -48,6 +48,11 @@ namespace ranges
             template<bool IsConst>
             struct adaptor : adaptor_base
             {
+                adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                adaptor(adaptor<Other>)
+                {}
                 CI<IsConst> begin(meta::const_if_c<IsConst, take_view> &rng) const
                 {
                     return {ranges::begin(rng.base()), rng.n_};
@@ -57,17 +62,22 @@ namespace ranges
             template<bool IsConst>
             struct sentinel_adaptor : adaptor_base
             {
+                sentinel_adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                sentinel_adaptor(sentinel_adaptor<Other>)
+                {}
                 bool empty(CI<IsConst> const &that, S<IsConst> const &sent) const
                 {
                     return 0 == that.count() || sent == that.base();
                 }
             };
 
-            adaptor<false> begin_adaptor()
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            sentinel_adaptor<false> end_adaptor()
+            sentinel_adaptor<simple_view<Rng>()> end_adaptor()
             {
                 return {};
             }

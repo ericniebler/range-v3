@@ -27,6 +27,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -49,9 +50,10 @@ namespace ranges
             Regex rex_;
             SubMatchRange subs_;
             std::regex_constants::match_flag_type flags_;
+            template<bool Const>
+            using iterator_t =
+                std::regex_token_iterator<iterator_t<meta::const_if_c<Const, Rng>>>;
         public:
-            using iterator =
-                std::regex_token_iterator<iterator_t<Rng>>;
 
             tokenize_view() = default;
             tokenize_view(Rng rng, Regex rex, SubMatchRange subs,
@@ -61,16 +63,24 @@ namespace ranges
               , subs_(std::move(subs))
               , flags_(flags)
             {}
-            iterator begin()
+            iterator_t<simple_view<Rng>()> begin()
+            {
+                meta::const_if_c<simple_view<Rng>(), Rng> &rng = rng_;
+                return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
+            }
+            template<bool Const = true,
+                CONCEPT_REQUIRES_(Range<Rng const>())>
+            iterator_t<Const> begin() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            CONCEPT_REQUIRES(Range<Rng const &>())
-            iterator begin() const
+            iterator_t<simple_view<Rng>()> end()
             {
-                return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
+                return {};
             }
-            iterator end() const
+            template<bool Const = true,
+                CONCEPT_REQUIRES_(Range<Rng const>())>
+            iterator_t<Const> end() const
             {
                 return {};
             }

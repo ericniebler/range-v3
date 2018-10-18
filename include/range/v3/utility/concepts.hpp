@@ -225,6 +225,15 @@ namespace ranges
             // Core language concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
 
+            struct Satisfies
+            {
+                template<typename T, typename Trait, typename ...Ts>
+                auto requires_() -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(meta::invoke<Trait, T, Ts...>{})
+                    ));
+            };
+
             struct Same
             {
                 template<typename ...Ts>
@@ -579,6 +588,9 @@ namespace ranges
               : refines<SemiRegular, EqualityComparable>
             {};
         }
+
+        template<typename T, template<typename...> class Trait, typename ...Ts>
+        using Satisfies = concepts::models<concepts::Satisfies, T, meta::quote<Trait>, Ts...>;
 
         template<typename ...Ts>
         using Same = concepts::Same::same_t<Ts...>; // This handles void better than using the Same concept

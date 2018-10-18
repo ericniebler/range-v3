@@ -55,14 +55,8 @@ namespace ranges
                     return ranges::end(*rng_ptr_);
                 }
 
-                // use the const-most size() function provided by the range
-                CONCEPT_REQUIRES(SizedRange<const Rng>())
+                CONCEPT_REQUIRES(SizedRange<Rng>())
                 range_size_type_t<Rng> size() const
-                {
-                    return ranges::size(*rng_ptr_);
-                }
-                CONCEPT_REQUIRES(SizedRange<Rng>() && !SizedRange<const Rng>())
-                range_size_type_t<Rng> size()
                 {
                     return ranges::size(*rng_ptr_);
                 }

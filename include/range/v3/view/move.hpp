@@ -40,23 +40,41 @@ namespace ranges
         {
         private:
             friend range_access;
-            struct adaptor : adaptor_base
+            template<bool Const>
+            struct adaptor
+              : adaptor_base
             {
+                adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                constexpr adaptor(adaptor<Other>)
+                {}
+                using CRng = meta::const_if_c<Const, Rng>;
                 using value_type = range_value_type_t<Rng>;
-                range_rvalue_reference_t<Rng> read(iterator_t<Rng> const &it) const
+                range_rvalue_reference_t<CRng> read(iterator_t<CRng> const &it) const
                 {
                     return ranges::iter_move(it);
                 }
-                range_rvalue_reference_t<Rng> iter_move(iterator_t<Rng> const &it) const
+                range_rvalue_reference_t<CRng> iter_move(iterator_t<CRng> const &it) const
                 {
                     return ranges::iter_move(it);
                 }
             };
-            adaptor begin_adaptor() const
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            adaptor end_adaptor() const
+            adaptor<simple_view<Rng>()> end_adaptor()
+            {
+                return {};
+            }
+            CONCEPT_REQUIRES(InputRange<Rng const>())
+            adaptor<true> begin_adaptor() const
+            {
+                return {};
+            }
+            CONCEPT_REQUIRES(InputRange<Rng const>())
+            adaptor<true> end_adaptor() const
             {
                 return {};
             }

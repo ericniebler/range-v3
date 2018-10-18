@@ -31,6 +31,7 @@
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -79,6 +80,7 @@ namespace ranges
             struct sentinel
             {
             private:
+                friend struct sentinel<!IsConst>;
                 friend struct cursor<IsConst>;
                 template<typename T>
                 using constify_if = meta::const_if_c<IsConst, T>;
@@ -89,6 +91,11 @@ namespace ranges
                 sentinel(concat_view_t &rng, end_tag)
                   : end_(end(std::get<cranges - 1>(rng.rngs_)))
                 {}
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                sentinel(sentinel<Other> that)
+                  : end_(std::move(that.end_))
+                {}
             };
 
             template<bool IsConst>
@@ -96,6 +103,7 @@ namespace ranges
             {
                 using difference_type = common_type_t<range_difference_type_t<Rngs>...>;
             private:
+                friend struct cursor<!IsConst>;
                 template<typename T>
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using concat_view_t = constify_if<concat_view>;
@@ -236,12 +244,20 @@ namespace ranges
                 using single_pass = meta::strict_or<SinglePass<iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view_t &rng, begin_tag)
-                  : rng_(&rng), its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
+                  : rng_(&rng)
+                  , its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(meta::size_t<0>{});
                 }
                 cursor(concat_view_t &rng, end_tag)
-                  : rng_(&rng), its_{emplaced_index<cranges-1>, end(std::get<cranges-1>(rng.rngs_))}
+                  : rng_(&rng)
+                  , its_{emplaced_index<cranges-1>, end(std::get<cranges-1>(rng.rngs_))}
+                {}
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : rng_(that.rng_)
+                  , its_(std::move(that.its_))
                 {}
                 reference read() const
                 {
@@ -285,11 +301,14 @@ namespace ranges
                     return -cursor::distance_to_(meta::size_t<0>{}, that, *this);
                 }
             };
-            cursor<false> begin_cursor()
+            cursor<meta::and_c<simple_view<Rngs>()...>::value> begin_cursor()
             {
                 return {*this, begin_tag{}};
             }
-            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<false>, sentinel<false>>
+            meta::if_<
+                meta::and_c<(bool)BoundedRange<Rngs>()...>,
+                cursor<meta::and_c<simple_view<Rngs>()...>::value>,
+                sentinel<meta::and_c<simple_view<Rngs>()...>::value>>
             end_cursor()
             {
                 return {*this, end_tag{}};
@@ -300,7 +319,10 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool)Range<Rngs const>()...>())
-            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<true>, sentinel<true>>
+            meta::if_<
+                meta::and_c<(bool)BoundedRange<Rngs const>()...>,
+                cursor<true>,
+                sentinel<true>>
             end_cursor() const
             {
                 return {*this, end_tag{}};

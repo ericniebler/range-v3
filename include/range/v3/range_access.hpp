@@ -169,53 +169,29 @@ namespace ranges
             };
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, long)
+            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.begin_cursor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_cursor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                static_cast<Rng const &>(rng).begin_cursor()
-            )
-            template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, long)
+            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.end_cursor()
             )
-            template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_cursor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                static_cast<Rng const &>(rng).end_cursor()
-            )
 
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, long)
+            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.begin_adaptor()
             )
             template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto begin_adaptor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                static_cast<Rng const &>(rng).begin_adaptor()
-            )
-            template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, long)
+            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 rng.end_adaptor()
-            )
-            template<typename Rng>
-            static RANGES_CXX14_CONSTEXPR auto end_adaptor(Rng &rng, int)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                static_cast<Rng const &>(rng).end_adaptor()
             )
 
             template<typename Cur>

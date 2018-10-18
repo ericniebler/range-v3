@@ -104,6 +104,7 @@ namespace ranges
             template<bool IsConst>
             class cursor
             {
+                friend class cursor<!IsConst>;
                 template<typename T>
                 using constify_if = meta::const_if_c<IsConst, T>;
 
@@ -246,9 +247,10 @@ namespace ranges
                 template<std::size_t N>
                 void check_at_end_(meta::size_t<N>, bool at_end = false)
                 {
-                    if(!at_end)
-                        at_end = std::get<N - 1>(its_) == ranges::end(std::get<N - 1>(view_->views_));
-                    return check_at_end_(meta::size_t<N - 1>{}, at_end);
+                    return check_at_end_(
+                        meta::size_t<N - 1>{},
+                        at_end ||
+                            bool(std::get<N - 1>(its_) == ranges::end(std::get<N - 1>(view_->views_))));
                 }
                 cursor(end_tag, constify_if<cartesian_product_view> &view, std::true_type) // Bounded
                   : cursor(begin_tag{}, view)
@@ -278,6 +280,12 @@ namespace ranges
                 }
                 explicit cursor(end_tag, constify_if<cartesian_product_view> &view)
                   : cursor(end_tag{}, view, BoundedView<meta::at_c<meta::list<Views...>, 0>>{})
+                {}
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : view_(that.view_)
+                  , its_(std::move(that.its_))
                 {}
                 common_tuple<range_reference_t<Views>...> read() const
                 {
@@ -311,32 +319,28 @@ namespace ranges
                     advance_(meta::size_t<sizeof...(Views)>{}, n);
                 }
             };
+            cursor<false> begin_cursor()
+            {
+                return cursor<false>{begin_tag{}, *this};
+            }
             CONCEPT_REQUIRES(CanConst())
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CONCEPT_REQUIRES(!CanConst())
-            cursor<false> begin_cursor()
-            {
-                return cursor<false>{begin_tag{}, *this};
-            }
-            CONCEPT_REQUIRES(sizeof...(Views) == 0)
-            cursor<true> end_cursor() const
-            {
-                return cursor<true>{begin_tag{}, *this};
-            }
-            CONCEPT_REQUIRES(CanBidi<true>() && sizeof...(Views) > 0)
-            cursor<true> end_cursor() const
-            {
-                return cursor<true>{end_tag{}, *this};
-            }
-            CONCEPT_REQUIRES(CanBidi<false>() && !CanBidi<true>())
+            CONCEPT_REQUIRES(sizeof...(Views) == 0 || CanBidi<false>())
             cursor<false> end_cursor()
             {
-                return cursor<false>{end_tag{}, *this};
+                using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
+                return cursor<false>{Tag{}, *this};
             }
-            CONCEPT_REQUIRES(!CanBidi<true>())
+            CONCEPT_REQUIRES(sizeof...(Views) == 0 || CanBidi<true>())
+            cursor<true> end_cursor() const
+            {
+                using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
+                return cursor<true>{Tag{}, *this};
+            }
+            CONCEPT_REQUIRES(sizeof...(Views) != 0 && !CanBidi<true>())
             default_sentinel end_cursor() const
             {
                 return {};
@@ -352,15 +356,13 @@ namespace ranges
             {
                 return std::intmax_t{my_cardinality};
             }
-            CONCEPT_REQUIRES(my_cardinality < 0 &&
-                CanSize<true>())
+            CONCEPT_REQUIRES(my_cardinality < 0 && CanSize<true>())
             std::intmax_t size() const
             {
                 return tuple_foldl(views_, std::intmax_t{1},
                     detail::cartesian_size_fn{});
             }
-            CONCEPT_REQUIRES(my_cardinality < 0 &&
-                !CanSize<true>() && CanSize<false>())
+            CONCEPT_REQUIRES(my_cardinality < 0 && CanSize<false>())
             std::intmax_t size()
             {
                 return tuple_foldl(views_, std::intmax_t{1},

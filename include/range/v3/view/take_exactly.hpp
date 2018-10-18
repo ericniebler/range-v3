@@ -110,7 +110,7 @@ namespace ranges
                 }
                 iterator_t<Rng> end()
                 {
-                    return next(ranges::begin(rng_), n_);
+                    return ranges::begin(rng_) + n_;
                 }
                 template<typename BaseRng = Rng,
                     CONCEPT_REQUIRES_(Range<BaseRng const>())>
@@ -122,7 +122,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Range<BaseRng const>())>
                 iterator_t<BaseRng const> end() const
                 {
-                    return next(ranges::begin(rng_), n_);
+                    return ranges::begin(rng_) + n_;
                 }
                 range_size_type_t<Rng> size() const
                 {

@@ -56,21 +56,25 @@ namespace ranges
             struct cursor
             {
             private:
-                friend range_access; friend group_by_view;
-                iterator_t<Rng> cur_;
-                sentinel_t<Rng> last_;
+                friend struct cursor<!IsConst>;
+                friend range_access;
+                friend group_by_view;
+                using CRng = meta::const_if_c<IsConst, Rng>;
+                iterator_t<CRng> cur_;
+                sentinel_t<CRng> last_;
                 semiregular_ref_or_val_t<Fun, IsConst> fun_;
 
                 struct pred
                 {
-                    iterator_t<Rng> first_;
+                    iterator_t<CRng> first_;
                     semiregular_ref_or_val_t<Fun, IsConst> fun_;
-                    bool operator()(range_reference_t<Rng> ref) const
+                    bool operator()(range_reference_t<CRng> ref) const
                     {
                         return invoke(fun_, *first_, ref);
                     }
                 };
-                take_while_view<iterator_range<iterator_t<Rng>, sentinel_t<Rng>>, pred> read() const
+                auto read() const ->
+                    take_while_view<iterator_range<iterator_t<CRng>, sentinel_t<CRng>>, pred>
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }
@@ -86,19 +90,28 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(semiregular_ref_or_val_t<Fun, IsConst> fun, iterator_t<Rng> first,
-                    sentinel_t<Rng> last)
+                cursor(semiregular_ref_or_val_t<Fun, IsConst> fun, iterator_t<CRng> first,
+                    sentinel_t<CRng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {}
             public:
                 cursor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : cur_(std::move(that.cur_)), last_(std::move(last_)), fun_(std::move(that.fun_))
+                {}
             };
             cursor<false> begin_cursor()
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>>() && Range<Rng const>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() &&
+                    Invocable<
+                        Fun const &,
+                        range_common_reference_t<CRng>,
+                        range_common_reference_t<CRng>>())>
             cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};

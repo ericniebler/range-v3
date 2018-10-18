@@ -69,21 +69,28 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
+                friend struct adaptor<!IsConst>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
                 using fun_ref_ = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_ fun_;
             public:
                 using value_type =
-                    detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<Rng>>>;
+                    detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<CRng>>>;
                 adaptor() = default;
                 adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
                 {}
-                auto read(iterator_t<Rng> it) const
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                adaptor(adaptor<Other> that)
+                  : fun_(std::move(that.fun_))
+                {}
+                auto read(iterator_t<CRng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     invoke(fun_, it)
                 )
-                auto iter_move(iterator_t<Rng> it) const
+                auto iter_move(iterator_t<CRng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     invoke(fun_, move_tag{}, it)
@@ -94,16 +101,18 @@ namespace ranges
             {
                 return {fun_};
             }
-            meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
-            {
-                return {fun_};
-            }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>>())
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>())>
             adaptor<true> begin_adaptor() const
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Invocable<Fun const&, iterator_t<Rng>>())
+            meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
+            {
+                return {fun_};
+            }
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>())>
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};

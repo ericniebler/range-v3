@@ -97,6 +97,7 @@ namespace ranges
                     tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
                     tag::size(detail::size_tracker<meta::const_if_c<IsConst, Rng>>)>
             {
+                friend class cursor<!IsConst>;
                 using base_t = tagged_compressed_tuple<
                     tag::range(meta::const_if_c<IsConst, sample_view> *),
                     tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
@@ -137,13 +138,19 @@ namespace ranges
 
                 cursor() = default;
                 explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
-                : base_t{&rng, ranges::begin(rng.range()), rng.range()}
+                  : base_t{&rng, ranges::begin(rng.range()), rng.range()}
                 {
                     auto n = pop_size();
                     if(rng.size() > n)
                         rng.size() = n;
                     advance();
                 }
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                cursor(cursor<Other> that)
+                  : base_t(static_cast<typename cursor<Other>::base_t &&>(
+                      static_cast<typename cursor<Other>::base_t &>(that)))
+                {}
                 range_reference_t<Rng> read() const
                 {
                     return *current();
@@ -169,10 +176,11 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
-            template<class R = Rng, CONCEPT_REQUIRES_(meta::or_<
-                SizedRange<R const>,
-                SizedSentinel<sentinel_t<R const>, iterator_t<R const>>,
-                ForwardRange<R const>>::value)>
+            template<class CRng = Rng const,
+                CONCEPT_REQUIRES_(meta::or_<
+                    SizedRange<CRng>,
+                    SizedSentinel<sentinel_t<CRng>, iterator_t<CRng>>,
+                    ForwardRange<CRng>>::value)>
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};

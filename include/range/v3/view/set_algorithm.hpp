@@ -59,7 +59,7 @@ namespace ranges
                 template<bool IsConst>
                 using cursor = Cursor<IsConst, Rng1, Rng2, C, P1, P2>;
 
-                cursor<false> begin_cursor()
+                cursor<simple_view<Rng1>() && simple_view<Rng2>()> begin_cursor()
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
@@ -88,6 +88,7 @@ namespace ranges
             struct set_difference_cursor
             {
             private:
+                friend struct set_difference_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
                 using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
                 using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
                 using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
@@ -138,6 +139,14 @@ namespace ranges
                 {
                     satisfy();
                 }
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                set_difference_cursor(set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+                  : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
+                  , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
+                  , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
+                  , end2_(std::move(that.end2_))
+                {}
                 auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -253,6 +262,7 @@ namespace ranges
             struct set_intersection_cursor
             {
             private:
+                friend struct set_intersection_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
                 using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
                 using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
                 using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
@@ -301,6 +311,14 @@ namespace ranges
                 {
                     satisfy();
                 }
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                set_intersection_cursor(set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+                  : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
+                  , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
+                  , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
+                  , end2_(std::move(that.end2_))
+                {}
                 auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -417,6 +435,7 @@ namespace ranges
             struct set_union_cursor
             {
             private:
+                friend struct set_union_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
                 using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
                 using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
                 using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
@@ -484,6 +503,14 @@ namespace ranges
                 {
                     satisfy();
                 }
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+                  : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
+                  , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
+                  , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
+                  , end2_(std::move(that.end2_))
+                {}
                 reference_type read() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
@@ -625,12 +652,18 @@ namespace ranges
 
         namespace detail
         {
+            enum class set_symmetric_difference_state_t
+            {
+                FIRST, SECOND, ONLY_FIRST, ONLY_SECOND
+            };
+
             template<bool IsConst,
                      typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_symmetric_difference_cursor
             {
             private:
+                friend struct set_symmetric_difference_cursor<!IsConst, Rng1, Rng2, C, P1, P2>;
                 using pred_ref_ = semiregular_ref_or_val_t<C, IsConst>;
                 using proj1_ref_ = semiregular_ref_or_val_t<P1, IsConst>;
                 using proj2_ref_ = semiregular_ref_or_val_t<P2, IsConst>;
@@ -650,10 +683,8 @@ namespace ranges
                 iterator_t<R2> it2_;
                 sentinel_t<R2> end2_;
 
-                enum class state_t
-                {
-                    FIRST, SECOND, ONLY_FIRST, ONLY_SECOND
-                } state;
+                using state_t = set_symmetric_difference_state_t;
+                state_t state;
 
                 void satisfy()
                 {
@@ -705,6 +736,15 @@ namespace ranges
                 {
                     satisfy();
                 }
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                set_symmetric_difference_cursor(
+                    set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
+                  : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
+                  , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
+                  , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
+                  , end2_(std::move(that.end2_)), state(that.state)
+                {}
                 reference_type read() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {

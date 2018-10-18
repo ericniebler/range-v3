@@ -51,10 +51,10 @@ namespace ranges
             Rng rng_;
             difference_type_ n_;
 
-            template<typename BaseRng = Rng>
-            iterator_t<BaseRng const> get_begin_(std::true_type, std::true_type) const
+            template<typename CRng = Rng const>
+            iterator_t<CRng> get_begin_(std::true_type, std::true_type) const
             {
-                CONCEPT_ASSERT(RandomAccessRange<Rng const>());
+                CONCEPT_ASSERT(RandomAccessRange<CRng>());
                 return next(ranges::begin(rng_), n_, ranges::end(rng_));
             }
             iterator_t<Rng> get_begin_(std::true_type, std::false_type)
@@ -79,25 +79,23 @@ namespace ranges
             {
                 RANGES_EXPECT(n >= 0);
             }
-            CONCEPT_REQUIRES(!RandomAccessRange<Rng const>())
             iterator_t<Rng> begin()
             {
                 return this->get_begin_(RandomAccessRange<Rng>{}, std::false_type{});
             }
-            CONCEPT_REQUIRES(!RandomAccessRange<Rng const>())
             sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
-            iterator_t<BaseRng const> begin() const
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(RandomAccessRange<CRng>())>
+            iterator_t<CRng> begin() const
             {
                 return this->get_begin_(std::true_type{}, std::true_type{});
             }
-            template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
-            sentinel_t<BaseRng const> end() const
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(RandomAccessRange<CRng>())>
+            sentinel_t<CRng> end() const
             {
                 return ranges::end(rng_);
             }
@@ -108,7 +106,7 @@ namespace ranges
                 auto const n = static_cast<range_size_type_t<Rng>>(n_);
                 return s < n ? 0 : s - n;
             }
-            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_type_t<Rng> size()
             {
                 auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));

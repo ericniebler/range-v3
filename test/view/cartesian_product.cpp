@@ -115,7 +115,7 @@ void test_empty_range()
         std::tuple<int, char>>());
     CONCEPT_ASSERT(std::is_same<
         range_reference_t<Rng>,
-        common_tuple<int &, char const &>>());
+        common_tuple<int &, char &>>());
 
     using CT = common_tuple<int, char>;
     std::initializer_list<CT> control = {};

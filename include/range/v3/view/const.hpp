@@ -41,30 +41,47 @@ namespace ranges
         {
         private:
             friend range_access;
-            using value_ =
-                range_value_type_t<Rng>;
-            using reference_ =
-                common_reference_t<value_ const &&, range_reference_t<Rng>>;
-            using rvalue_reference_ =
-                common_reference_t<value_ const &&, range_rvalue_reference_t<Rng>>;
+            template<bool Const>
             struct adaptor
               : adaptor_base
             {
-                reference_ read(iterator_t<Rng> const &it) const
+                using CRng = meta::const_if_c<Const, Rng>;
+                using value_ =
+                    range_value_type_t<CRng>;
+                using reference_ =
+                    common_reference_t<value_ const &&, range_reference_t<CRng>>;
+                using rvalue_reference_ =
+                    common_reference_t<value_ const &&, range_rvalue_reference_t<CRng>>;
+                adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(Const && !Other)>
+                constexpr adaptor(adaptor<Other>)
+                {}
+                reference_ read(iterator_t<CRng> const &it) const
                 {
                     return *it;
                 }
-                rvalue_reference_ iter_move(iterator_t<Rng> const &it) const
+                rvalue_reference_ iter_move(iterator_t<CRng> const &it) const
                 RANGES_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::iter_move(it)
                 )
             };
-            adaptor begin_adaptor() const
+            adaptor<simple_view<Rng>()> begin_adaptor()
             {
                 return {};
             }
-            adaptor end_adaptor() const
+            adaptor<simple_view<Rng>()> end_adaptor()
+            {
+                return {};
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
+            adaptor<true> begin_adaptor() const
+            {
+                return {};
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
+            adaptor<true> end_adaptor() const
             {
                 return {};
             }
@@ -73,13 +90,13 @@ namespace ranges
             explicit const_view(Rng rng)
               : const_view::view_adaptor{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
-            range_size_type_t<Rng> size() const
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_type_t<Rng> size()
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            range_size_type_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
