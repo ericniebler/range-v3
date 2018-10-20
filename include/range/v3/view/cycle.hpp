@@ -48,7 +48,7 @@ namespace ranges
                 iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>
         {
         private:
-            CONCEPT_ASSERT(ForwardRange<Rng>());
+            CONCEPT_ASSERT(ForwardRange<Rng>() && !is_infinite<Rng>::value);
             friend range_access;
             Rng rng_;
 
@@ -64,12 +64,11 @@ namespace ranges
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
                 using CRng = constify_if<Rng>;
-                using difference_type_ = range_difference_type_t<Rng>;
                 using iterator = iterator_t<CRng>;
 
                 cycled_view_t *rng_{};
                 iterator it_{};
-                std::ptrdiff_t n_ = 0;
+                std::intmax_t n_ = 0;
 
                 iterator get_end_(std::true_type, bool = false) const
                 {
@@ -140,10 +139,8 @@ namespace ranges
                     --it_;
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<CRng>())
-                void advance(difference_type_ n)
+                void advance(std::intmax_t n)
                 {
-                    if (is_infinite<Rng>::value)
-                        return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(BoundedRange<CRng>(), meta::bool_<true>());
                     auto const dist = end - begin;
@@ -151,14 +148,13 @@ namespace ranges
                     auto const off = (d + n) % dist;
                     n_ += (d + n) / dist;
                     RANGES_EXPECT(n_ >= 0);
-                    it_ = begin + (off < 0 ? off + dist : off);
+                    using D = range_difference_type_t<Rng>;
+                    it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
                 }
                 CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
-                difference_type_ distance_to(cursor const &that) const
+                std::intmax_t distance_to(cursor const &that) const
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
-                    if (is_infinite<Rng>::value)
-                        return that.it_ - it_;
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
                     auto const dist = end - begin;
@@ -192,26 +188,47 @@ namespace ranges
             /// range.
             struct cycle_fn
             {
-            private:
-                friend view_access;
-                template<class T>
-                using Concept = ForwardRange<T>;
-
-            public:
+#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
                 /// \pre <tt>!empty(rng)</tt>
-                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
-                cycled_view<all_t<Rng>> operator()(Rng &&rng) const
+                template<typename Rng, CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+                auto operator()(Rng &&rng) const
                 {
+                    if constexpr(is_infinite<Rng>::value)
+                        return all(static_cast<Rng&&>(rng));
+                    else
+                        return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                }
+#else // ^^^ Use "if constexpr" / Use tag dispatch vvv
+            private:
+                template<typename Rng>
+                static all_t<Rng> impl_(Rng &&rng, std::true_type)
+                {
+                    CONCEPT_ASSERT(is_infinite<Rng>::value);
+                    return all(static_cast<Rng&&>(rng));
+                }
+                template<typename Rng>
+                static cycled_view<all_t<Rng>> impl_(Rng &&rng, std::false_type)
+                {
+                    CONCEPT_ASSERT(!is_infinite<Rng>::value);
                     return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
                 }
+            public:
+                /// \pre <tt>!empty(rng)</tt>
+                template<typename Rng, CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+                auto operator()(Rng &&rng) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    impl_(static_cast<Rng&&>(rng), is_infinite<Rng>{})
+                )
+#endif // "if constexpr" switch
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!ForwardRange<Rng>())>
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
-                        "The object on which view::cycle operates must be a "
-                        "model of the ForwardRange concept.");
+                        "The object on which view::cycle operates must model "
+                        "the ForwardRange concept.");
                 }
 #endif
             };
