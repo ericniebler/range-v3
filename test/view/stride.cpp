@@ -176,5 +176,5 @@ int main()
         CHECK(strided2[(int)strided2.size() - 1] == 10);
     }
 
-    //return ::test_result();
+    return ::test_result();
 }
