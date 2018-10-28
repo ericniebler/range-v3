@@ -41,7 +41,7 @@ namespace ranges
     {
         /// \addtogroup group-views
         ///@{
-        template<typename Rng>
+        template<typename Rng, bool /* = (bool) is_infinite<Rng>() */>
         struct cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
@@ -77,7 +77,7 @@ namespace ranges
                 template<bool CanBeEmpty = false>
                 iterator get_end_(std::false_type, meta::bool_<CanBeEmpty> = {}) const
                 {
-                    auto &end_ = static_cast<cache_t&>(*rng_);
+                    auto &end_ = static_cast<cache_t &>(*rng_);
                     RANGES_EXPECT(CanBeEmpty || end_);
                     if(CanBeEmpty && !end_)
                         end_ = ranges::next(it_, ranges::end(rng_->rng_));
@@ -87,7 +87,7 @@ namespace ranges
                 {}
                 void set_end_(std::false_type) const
                 {
-                    auto &end_ = static_cast<cache_t&>(*rng_);
+                    auto &end_ = static_cast<cache_t &>(*rng_);
                     if(!end_)
                         end_ = it_;
                 }
@@ -162,7 +162,8 @@ namespace ranges
                 }
             };
 
-            cursor<simple_view<Rng>() && (bool) BoundedRange<Rng const>()> begin_cursor()
+            CONCEPT_REQUIRES(!simple_view<Rng>() || !BoundedRange<Rng const>())
+            cursor<false> begin_cursor()
             {
                 return {*this};
             }
@@ -182,45 +183,26 @@ namespace ranges
             }
         };
 
+        template<typename Rng>
+        struct cycled_view<Rng, true>
+          : identity_adaptor<Rng>
+        {
+            CONCEPT_ASSERT(is_infinite<Rng>());
+            using identity_adaptor<Rng>::identity_adaptor;
+        };
+
         namespace view
         {
             /// Returns an infinite range that endlessly repeats the source
             /// range.
             struct cycle_fn
             {
-#if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
                 /// \pre <tt>!empty(rng)</tt>
                 template<typename Rng, CONCEPT_REQUIRES_(ForwardRange<Rng>())>
-                auto operator()(Rng &&rng) const
+                cycled_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
-                    if constexpr(is_infinite<Rng>::value)
-                        return all(static_cast<Rng&&>(rng));
-                    else
-                        return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                    return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-#else // ^^^ Use "if constexpr" / Use tag dispatch vvv
-            private:
-                template<typename Rng>
-                static all_t<Rng> impl_(Rng &&rng, std::true_type)
-                {
-                    CONCEPT_ASSERT(is_infinite<Rng>::value);
-                    return all(static_cast<Rng&&>(rng));
-                }
-                template<typename Rng>
-                static cycled_view<all_t<Rng>> impl_(Rng &&rng, std::false_type)
-                {
-                    CONCEPT_ASSERT(!is_infinite<Rng>::value);
-                    return cycled_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
-                }
-            public:
-                /// \pre <tt>!empty(rng)</tt>
-                template<typename Rng, CONCEPT_REQUIRES_(ForwardRange<Rng>())>
-                auto operator()(Rng &&rng) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    impl_(static_cast<Rng&&>(rng), is_infinite<Rng>{})
-                )
-#endif // "if constexpr" switch
 
 #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, CONCEPT_REQUIRES_(!ForwardRange<Rng>())>

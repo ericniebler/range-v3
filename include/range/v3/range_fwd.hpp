@@ -475,14 +475,6 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct bounded_view;
-
-        namespace view
-        {
-            struct bounded_fn;
-        }
-
-        template<typename Rng>
         struct const_view;
 
         namespace view
@@ -507,7 +499,7 @@ namespace ranges
         using move_into_iterator =
             basic_iterator<detail::move_into_cursor<I>>;
 
-        template<typename Rng>
+        template<typename Rng, bool = (bool) is_infinite<Rng>()>
         struct cycled_view;
 
         namespace view
@@ -609,7 +601,15 @@ namespace ranges
             struct repeat_fn;
         }
 
-        template<typename Rng>
+        namespace detail
+        {
+            template<typename>
+            std::false_type double_reverse(long);
+            template<typename R, meta::if_<std::is_same<R, typename R::unreverse_me>>* = nullptr>
+            std::true_type double_reverse(int);
+        }
+
+        template<typename Rng, bool = decltype(detail::double_reverse<Rng>(42))::value>
         struct reverse_view;
 
         namespace view

@@ -50,7 +50,7 @@ namespace ranges
             /// \endcond
         }
 
-        template<typename Rng>
+        template<typename Rng, bool = BoundedRange<Rng>()>
         struct bounded_view
           : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
@@ -83,11 +83,11 @@ namespace ranges
             explicit bounded_view(Rng rng)
               : rng_(detail::move(rng))
             {}
-            Rng & base()
+            Rng &base() noexcept
             {
                 return rng_;
             }
-            Rng const & base() const
+            Rng const &base() const noexcept
             {
                 return rng_;
             }
@@ -123,29 +123,30 @@ namespace ranges
             }
         };
 
+        template<typename Rng>
+        struct bounded_view<Rng, true>
+          : identity_adaptor<Rng>
+        {
+            CONCEPT_ASSERT(BoundedRange<Rng>());
+            using identity_adaptor<Rng>::identity_adaptor;
+        };
+
         namespace view
         {
             struct bounded_fn
             {
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>() && !BoundedRange<Rng>())>
-                bounded_view<all_t<Rng>> operator()(Rng && rng) const
+                template<typename Rng, CONCEPT_REQUIRES_(Range<Rng>())>
+                bounded_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
-                    return bounded_view<all_t<Rng>>{all(static_cast<Rng&&>(rng))};
+                    return bounded_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Range<Rng>() && BoundedRange<Rng>())>
-                all_t<Rng> operator()(Rng && rng) const
-                {
-                    return all(static_cast<Rng&&>(rng));
-                }
+
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Range<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!Range<Rng>())>
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
-                        "Rng is not a model of the Range concept");
+                        "The argument to view::bounded must model the Range concept.");
                 }
             #endif
             };
@@ -153,10 +154,6 @@ namespace ranges
             /// \relates bounded_fn
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(view<bounded_fn>, bounded)
-
-            template<typename Rng>
-            using bounded_t =
-                decltype(bounded(std::declval<Rng>()));
         }
         /// @}
     }

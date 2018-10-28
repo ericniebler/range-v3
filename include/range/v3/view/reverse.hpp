@@ -28,6 +28,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -36,7 +37,7 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Rng>
+        template<typename Rng, bool /* = decltype(detail::double_reverse<Rng>(42))::value */>
         struct reverse_view
           : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
@@ -44,7 +45,9 @@ namespace ranges
         {
         private:
             CONCEPT_ASSERT(BidirectionalRange<Rng>());
+
             Rng rng_;
+
             RANGES_CXX14_CONSTEXPR
             reverse_iterator<iterator_t<Rng>> begin_(std::true_type)
             {
@@ -104,6 +107,21 @@ namespace ranges
             {
                 return ranges::size(rng_);
             }
+
+            using unreverse_me = reverse_view;
+        };
+
+        template<typename Rng_>
+        struct reverse_view<Rng_, true>
+          : identity_adaptor<decltype(std::declval<Rng_ &>().base())>
+        {
+            using Rng = decltype(std::declval<Rng_ &>().base());
+            CONCEPT_ASSERT(BidirectionalRange<Rng>());
+
+            reverse_view() = default;
+            explicit constexpr reverse_view(Rng_ rng)
+              : identity_adaptor<Rng>(rng.base())
+            {}
         };
 
         namespace view

@@ -107,6 +107,32 @@ namespace ranges
             using all_t =
                 meta::_t<std::decay<decltype(all(std::declval<Rng>()))>>;
         }
+
+        template<typename Rng>
+        struct identity_adaptor
+          : Rng
+        {
+            CONCEPT_ASSERT(View<Rng>());
+
+            identity_adaptor() = default;
+            constexpr explicit identity_adaptor(Rng const &rng)
+              : Rng(rng)
+            {}
+            constexpr explicit identity_adaptor(Rng &&rng)
+              : Rng(detail::move(rng))
+            {}
+
+            using Rng::Rng;
+
+            RANGES_CXX14_CONSTEXPR Rng &base() noexcept
+            {
+                return *this;
+            }
+            constexpr Rng const &base() const noexcept
+            {
+                return *this;
+            }
+        };
         /// @}
     }
 }
