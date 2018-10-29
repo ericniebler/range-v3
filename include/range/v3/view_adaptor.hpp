@@ -80,7 +80,11 @@ namespace ranges
               : compressed_pair<BaseIter, Adapt>
             {
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
+#ifdef RANGES_WORKAROUND_MSVC_688606
+                using value_type = value_type_t<Adapt>;
+#else // ^^^ workaround ^^^ / vvv no workaround vvv
                 using value_type = typename Adapt::value_type;
+#endif // RANGES_WORKAROUND_MSVC_688606
             };
         }
         /// \endcond

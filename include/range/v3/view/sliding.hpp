@@ -98,7 +98,7 @@ namespace ranges
             };
 
             template<typename Rng>
-            class sv_base
+            class RANGES_EMPTY_BASES sv_base
               : public view_adaptor<
                     sliding_view<Rng>,
                     Rng,
@@ -171,7 +171,7 @@ namespace ranges
                 return *first;
             }
 
-            struct adaptor
+            struct RANGES_EMPTY_BASES adaptor
               : adaptor_base
               , sliding_view_detail::trailing<Rng>
             {

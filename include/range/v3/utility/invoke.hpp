@@ -207,6 +207,30 @@ namespace ranges
             }
         };
 
+#ifdef RANGES_WORKAROUND_MSVC_701385
+        /// \cond
+        namespace detail
+        {
+            template<typename Void, typename Fun, typename...Args>
+            struct _invoke_result_
+            {};
+
+            template<typename Fun, typename...Args>
+            struct _invoke_result_<
+                meta::void_<decltype(invoke(std::declval<Fun>(), std::declval<Args>()...))>,
+                Fun, Args...>
+            {
+                using type = decltype(invoke(std::declval<Fun>(), std::declval<Args>()...));
+            };
+        }
+        /// \endcond
+
+        template<typename Fun, typename...Args>
+        using invoke_result = detail::_invoke_result_<void, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using invoke_result_t = meta::_t<invoke_result<Fun, Args...>>;
+#else // RANGES_WORKAROUND_MSVC_701385
         template<typename Fun, typename...Args>
         using invoke_result_t =
             decltype(invoke(std::declval<Fun>(), std::declval<Args>()...));
@@ -215,6 +239,7 @@ namespace ranges
         struct invoke_result
           : meta::defer<invoke_result_t, Fun, Args...>
         {};
+#endif // RANGES_WORKAROUND_MSVC_701385
 
         template<typename Sig>
         struct result_of

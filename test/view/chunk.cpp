@@ -92,8 +92,7 @@ int main()
     CHECK(it1 == ranges::end(rng1));
     ::check_equal(*ranges::next(it1, -3), {3,4,5});
     CHECK(size(rng1), 4u);
-    if (!ranges::v3::detail::broken_ebo)
-        CHECK(sizeof(rng1.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
+    CHECK(sizeof(rng1.begin()) == sizeof(v.begin()) * 2 + sizeof(std::ptrdiff_t) * 2);
 
     std::forward_list<int> l = view::iota(0,11);
     auto rng2 = l | view::chunk(3);
@@ -106,8 +105,7 @@ int main()
     ::check_equal(*it2++, {6,7,8});
     ::check_equal(*it2++, {9,10});
     CHECK(it2 == ranges::end(rng2));
-    if (!ranges::v3::detail::broken_ebo)
-        CHECK(sizeof(rng2.begin()) == sizeof(l.begin()) * 2 + sizeof(std::ptrdiff_t));
+    CHECK(sizeof(rng2.begin()) == sizeof(l.begin()) * 2 + sizeof(std::ptrdiff_t));
 
     {
         // An infinite, cyclic range with cycle length == 1

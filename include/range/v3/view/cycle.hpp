@@ -42,7 +42,7 @@ namespace ranges
         /// \addtogroup group-views
         ///@{
         template<typename Rng, bool /* = (bool) is_infinite<Rng>() */>
-        struct cycled_view
+        struct RANGES_EMPTY_BASES cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>()>

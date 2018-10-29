@@ -186,6 +186,8 @@ namespace ranges
                     RANGES_EXPECT(sizeof...(Views) == 0);
                     RANGES_EXPECT(n == 0);
                 }
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
                 template<std::size_t N>
                 void advance_(meta::size_t<N>, std::intmax_t n)
                 {
@@ -235,6 +237,7 @@ namespace ranges
                     using D = difference_type_t<decltype(first)>;
                     i = first + static_cast<D>(n_mod);
                 }
+RANGES_DIAGNOSTIC_POP
                 void check_at_end_(meta::size_t<0>, bool = false)
                 {
                     CONCEPT_ASSERT(sizeof...(Views) == 0);
@@ -352,7 +355,11 @@ namespace ranges
               : views_{detail::move(views)...}
             {}
             CONCEPT_REQUIRES(my_cardinality >= 0)
+#ifdef RANGES_WORKAROUND_MSVC_DC338193
+            constexpr std::intmax_t size() const noexcept
+#else // ^^^ workaround / no workaround vvv
             constexpr static std::intmax_t size() noexcept
+#endif // RANGES_WORKAROUND_MSVC_DC338193
             {
                 return std::intmax_t{my_cardinality};
             }
@@ -369,6 +376,32 @@ namespace ranges
                     detail::cartesian_size_fn{});
             }
         };
+
+#ifdef RANGES_WORKAROUND_MSVC_125882
+        template<>
+        class cartesian_product_view<>
+          : public view_facade<cartesian_product_view<>, cardinality(0)>
+        {
+            friend range_access;
+            struct cursor
+            {
+                using value_type = std::tuple<>;
+
+                common_tuple<> read() const { return {}; }
+                void next() {}
+                bool equal(default_sentinel) const { return true; }
+                bool equal(cursor const &) const { return true; }
+                void prev() {}
+                std::ptrdiff_t distance_to(cursor const &) const { return 0; }
+                void advance(std::ptrdiff_t) {}
+            };
+            cursor begin_cursor() const { return {}; }
+            cursor end_cursor() const { return {}; }
+        public:
+            cartesian_product_view() = default;
+            std::size_t size() const { return 0; }
+        };
+#endif // RANGES_WORKAROUND_MSVC_125882
 
         namespace view
         {

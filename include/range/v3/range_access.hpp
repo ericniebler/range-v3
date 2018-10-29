@@ -261,12 +261,6 @@ namespace ranges
             template<typename T>
             static typename T::difference_type cursor_difference_2_(int);
 
-            template<typename Cur>
-            struct cursor_difference
-            {
-                using type = decltype(range_access::cursor_difference_2_<Cur>(42));
-            };
-
             template<typename T>
             using cursor_reference_t = decltype(std::declval<T const &>().read());
 
@@ -275,17 +269,32 @@ namespace ranges
             template<typename T>
             static meta::id<typename T::value_type> cursor_value_2_(int);
 
+#ifdef RANGES_WORKAROUND_CWG_1554
+            template<typename Cur>
+            struct cursor_difference
+            {
+                using type = decltype(range_access::cursor_difference_2_<Cur>(42));
+            };
+
             template<typename Cur>
             struct cursor_value
               : decltype(range_access::cursor_value_2_<Cur>(42))
             {};
-
+#endif // RANGES_WORKAROUND_CWG_1554
         public:
+#ifdef RANGES_WORKAROUND_CWG_1554
             template<typename Cur>
-            using cursor_difference_t = typename cursor_difference<Cur>::type;
+            using cursor_difference_t = meta::_t<cursor_difference<Cur>>;
 
             template<typename Cur>
-            using cursor_value_t = typename cursor_value<Cur>::type;
+            using cursor_value_t = meta::_t<cursor_value<Cur>>;
+#else // ^^^ workaround ^^^ / vvv no workaround vvv
+            template<typename Cur>
+            using cursor_difference_t = decltype(range_access::cursor_difference_2_<Cur>(42));
+
+            template<typename Cur>
+            using cursor_value_t = meta::_t<decltype(range_access::cursor_value_2_<Cur>(42))>;
+#endif // RANGES_WORKAROUND_CWG_1554
 
             template<typename Cur>
             static RANGES_CXX14_CONSTEXPR Cur &pos(basic_iterator<Cur> &it) noexcept
