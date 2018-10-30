@@ -37,7 +37,7 @@ void
 test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     using namespace std::placeholders;
     Iter r = ranges::remove_if(Iter(ia), Sent(ia+sa), std::bind(std::equal_to<int>(), _1, 2));
     CHECK(base(r) == ia + sa-3);
@@ -54,7 +54,7 @@ void
 test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     using namespace std::placeholders;
     Iter r = ranges::remove_if(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), std::bind(std::equal_to<int>(), _1, 2));
     CHECK(base(r) == ia + sa-3);
@@ -163,7 +163,7 @@ int main()
     {
         // Check projection
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-        constexpr unsigned sa = ranges::size(ia);
+        constexpr auto sa = ranges::size(ia);
         using namespace std::placeholders;
         S* r = ranges::remove_if(ia, std::bind(std::equal_to<int>(), _1, 2), &S::i);
         CHECK(r == ia + sa-3);
@@ -178,7 +178,7 @@ int main()
     {
         // Check rvalue range
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-        constexpr unsigned sa = ranges::size(ia);
+        constexpr auto sa = ranges::size(ia);
         using namespace std::placeholders;
         auto r = ranges::remove_if(ranges::view::all(ia), std::bind(std::equal_to<int>(), _1, 2), &S::i);
         CHECK(r.get_unsafe() == ia + sa-3);

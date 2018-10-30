@@ -28,7 +28,7 @@ void test()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4, 5};
-    constexpr unsigned s = size(ia);
+    constexpr auto s = size(ia);
     int ib[s] = {0, 1, 2, 5, 4, 5};
     CHECK(equal(input_iterator<const int*>(ia),
                  sentinel<const int*>(ia+s),
@@ -78,7 +78,7 @@ void test_rng()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4, 5};
-    constexpr unsigned s = size(ia);
+    constexpr auto s = size(ia);
     int ib[s] = {0, 1, 2, 5, 4, 5};
     CHECK(equal(make_iterator_range(input_iterator<const int*>(ia),
                  sentinel<const int*>(ia+s)),
@@ -137,7 +137,7 @@ void test_pred()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4, 5};
-    constexpr unsigned s = size(ia);
+    constexpr auto s = size(ia);
     int ib[s] = {0, 1, 2, 5, 4, 5};
     CHECK(equal(input_iterator<const int*>(ia),
                  sentinel<const int*>(ia+s),
@@ -205,7 +205,7 @@ void test_rng_pred()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 4, 5};
-    constexpr unsigned s = size(ia);
+    constexpr auto s = size(ia);
     int ib[s] = {0, 1, 2, 5, 4, 5};
     CHECK(equal(make_iterator_range(input_iterator<const int*>(ia),
                  sentinel<const int*>(ia+s)),

@@ -35,7 +35,7 @@ void
 test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     Iter r = ranges::remove(Iter(ia), Sent(ia+sa), 2);
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
@@ -51,7 +51,7 @@ void
 test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     Iter r = ranges::remove(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 2);
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
@@ -147,7 +147,7 @@ int main()
 
     // Check projection
     S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     S* r = ranges::remove(ia, 2, &S::i);
     CHECK(r == ia + sa-3);
     CHECK(ia[0].i == 0);
@@ -159,7 +159,7 @@ int main()
 
     // Check rvalue range
     S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr unsigned sa2 = ranges::size(ia2);
+    constexpr auto sa2 = ranges::size(ia2);
     auto r2 = ranges::remove(ranges::view::all(ia2), 2, &S::i);
     CHECK(r2.get_unsafe() == ia2 + sa2-3);
     CHECK(ia2[0].i == 0);

@@ -30,9 +30,9 @@ void test_iter()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    static constexpr unsigned sa = size(ia);
+    static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
-    static constexpr unsigned sb = size(ib);
+    static constexpr auto sb = size(ib);
     CHECK(rng::find_first_of(input_iterator<const int*>(ia),
                              sentinel<const int*>(ia + sa),
                              forward_iterator<const int*>(ib),
@@ -60,9 +60,9 @@ void test_iter_pred()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    static constexpr unsigned sa = size(ia);
+    static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
-    static constexpr unsigned sb = size(ib);
+    static constexpr auto sb = size(ib);
     CHECK(rng::find_first_of(input_iterator<const int*>(ia),
                              sentinel<const int*>(ia + sa),
                              forward_iterator<const int*>(ib),
@@ -94,9 +94,9 @@ void test_rng()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    static constexpr unsigned sa = size(ia);
+    static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
-    static constexpr unsigned sb = size(ib);
+    static constexpr auto sb = size(ib);
     CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
                              make_iterator_range(forward_iterator<const int*>(ib),
@@ -144,9 +144,9 @@ void test_rng_pred()
 {
     using namespace ranges;
     int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    static constexpr unsigned sa = size(ia);
+    static constexpr auto sa = size(ia);
     int ib[] = {1, 3, 5, 7};
-    static constexpr unsigned sb = size(ib);
+    static constexpr auto sb = size(ib);
     CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
                              make_iterator_range(forward_iterator<const int*>(ib),
@@ -183,9 +183,9 @@ void test_rng_pred_proj()
 {
     using namespace ranges;
     S ia[] = {S{0}, S{1}, S{2}, S{3}, S{0}, S{1}, S{2}, S{3}};
-    static constexpr unsigned sa = size(ia);
+    static constexpr auto sa = size(ia);
     S ib[] = {S{1}, S{3}, S{5}, S{7}};
-    static constexpr unsigned sb = size(ib);
+    static constexpr auto sb = size(ib);
     CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const S*>(ia),
                              input_iterator<const S*>(ia + sa))),
                              make_iterator_range(forward_iterator<const S*>(ib),

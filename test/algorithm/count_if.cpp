@@ -31,7 +31,7 @@ int main()
     auto equals = [](int i){ return std::bind(equal_to{}, i, std::placeholders::_1); };
 
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
-    constexpr unsigned cia = size(ia);
+    constexpr auto cia = size(ia);
 
     CHECK(count_if(input_iterator<const int*>(ia),
                    sentinel<const int*>(ia + cia), equals(2)) == 3);
@@ -48,7 +48,7 @@ int main()
                          sentinel<const int*>(ia)), equals(2)) == 0);
 
     S sa[] = {{0}, {1}, {2}, {2}, {0}, {1}, {2}, {3}};
-    constexpr unsigned csa = size(ia);
+    constexpr auto csa = size(ia);
 
     CHECK(count_if(input_iterator<const S*>(sa),
                    sentinel<const S*>(sa + csa), equals(2), &S::i) == 3);

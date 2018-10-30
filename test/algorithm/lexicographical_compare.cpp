@@ -29,7 +29,7 @@ void
 test_iter1()
 {
     int ia[] = {1, 2, 3, 4};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     int ib[] = {1, 2, 3};
     CHECK(!ranges::lexicographical_compare(Iter1(ia), Sent1(ia+sa), Iter2(ib), Sent2(ib+2)));
     CHECK(ranges::lexicographical_compare(Iter1(ib), Sent1(ib+2), Iter2(ia), Sent2(ia+sa)));

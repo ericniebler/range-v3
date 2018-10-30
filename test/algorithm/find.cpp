@@ -35,7 +35,7 @@ int main()
     using namespace ranges;
 
     int ia[] = {0, 1, 2, 3, 4, 5};
-    constexpr unsigned s = size(ia);
+    constexpr auto s = size(ia);
     input_iterator<const int*> r = find(input_iterator<const int*>(ia),
                                         input_iterator<const int*>(ia+s), 3);
     CHECK(*r == 3);
