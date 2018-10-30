@@ -37,7 +37,7 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Rng, bool /* = decltype(detail::double_reverse<Rng>(42))::value */>
+        template<typename Rng>
         struct RANGES_EMPTY_BASES reverse_view
           : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
@@ -107,19 +107,16 @@ namespace ranges
             {
                 return ranges::size(rng_);
             }
-
-            using unreverse_me = reverse_view;
         };
 
-        template<typename Rng_>
-        struct reverse_view<Rng_, true>
-          : identity_adaptor<decltype(std::declval<Rng_ &>().base())>
+        template<typename Rng>
+        struct reverse_view<reverse_view<Rng>>
+          : identity_adaptor<Rng>
         {
-            using Rng = decltype(std::declval<Rng_ &>().base());
             CONCEPT_ASSERT(BidirectionalRange<Rng>());
 
             reverse_view() = default;
-            explicit constexpr reverse_view(Rng_ rng)
+            explicit constexpr reverse_view(reverse_view<Rng> const &rng)
               : identity_adaptor<Rng>(rng.base())
             {}
         };
