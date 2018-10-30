@@ -619,6 +619,65 @@ namespace ranges
             Char const *delim_;
         };
 
+        template <typename Delim, typename Char = char,
+                  typename Traits = std::char_traits<Char>>
+        struct ostream_joiner
+        {
+            using difference_type = std::ptrdiff_t;
+            using char_type       = Char;
+            using traits_type     = Traits;
+            using ostream_type    = std::basic_ostream<Char, Traits>;
+            using delim_type      = detail::decay_t<Delim>;
+
+            constexpr ostream_joiner() = default;
+            ostream_joiner(ostream_type &s, delim_type const &d) noexcept
+              : delim_(d), sout_(&s), first_(true)
+            {}
+            ostream_joiner(ostream_type &s, delim_type &&d) noexcept
+              : delim_(std::move(d)), sout_(&s), first_(true)
+            {}
+            template <typename T>
+            ostream_joiner& operator=(T const &value)
+            {
+                RANGES_EXPECT(sout_);
+                if (!first_ && delim_)
+                    *sout_ << delim_;
+                first_ = false;
+                *sout_ << value;
+                return *this;
+            }
+            ostream_joiner& operator*()
+            {
+                return *this;
+            }
+            ostream_joiner& operator++()
+            {
+                return *this;
+            }
+            ostream_joiner& operator++(int)
+            {
+                return *this;
+            }
+          private:
+            delim_type delim_;
+            ostream_type *sout_;
+            bool first_;
+        };
+
+        struct make_ostream_joiner_fn
+        {
+            template <typename Delim, typename Char, typename Traits>
+            ostream_joiner<Delim, Char, Traits>
+            operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const noexcept
+            {
+                return {s, std::forward<Delim>(d)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_ostream_joiner_fn`
+        RANGES_INLINE_VARIABLE(make_ostream_joiner_fn, make_ostream_joiner)
+
         template<typename Char, typename Traits = std::char_traits<Char>>
         struct ostreambuf_iterator
         {

@@ -12,6 +12,7 @@
 
 #include <list>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <meta/meta.hpp>
@@ -37,6 +38,17 @@ void test_insert_iterator()
     std::vector<int> vi{5,6,7,8};
     copy({1,2,3,4}, inserter(vi, vi.begin()+2));
     ::check_equal(vi, {5,6,1,2,3,4,7,8});
+}
+
+void test_ostream_joiner()
+{
+    std::ostringstream oss;
+    std::vector<int> vi{};
+    copy(vi, make_ostream_joiner(oss, ","));
+    ::check_equal(oss.str(), std::string{""});
+    vi = {1,2,3,4};
+    copy(vi, make_ostream_joiner(oss, ","));
+    ::check_equal(oss.str(), std::string{"1,2,3,4"});
 }
 
 void test_move_iterator()
@@ -178,6 +190,7 @@ int main()
 {
     test_insert_iterator();
     test_move_iterator();
+    test_ostream_joiner();
     issue_420_regression();
 
     {
