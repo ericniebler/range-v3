@@ -172,66 +172,6 @@ namespace ranges
         /// @}
 
         /// \cond
-        template<typename I>
-        using iterator_value_t
-            RANGES_DEPRECATED("Please use ranges::value_type_t instead") =
-                value_type_t<I>;
-
-        template<typename I>
-        using iterator_reference_t
-            RANGES_DEPRECATED("Please use ranges::reference_t instead") =
-                reference_t<I>;
-
-        template<typename I>
-        using iterator_rvalue_reference_t
-            RANGES_DEPRECATED("Please use ranges::rvalue_reference_t instead") =
-                rvalue_reference_t<I>;
-
-        template<typename I>
-        using iterator_common_reference_t
-            RANGES_DEPRECATED("Please use ranges::iter_common_reference_t instead") =
-                iter_common_reference_t<I>;
-
-        template<typename I>
-        using iterator_difference_t
-            RANGES_DEPRECATED("Please use ranges::difference_type_t instead") =
-                difference_type_t<I>;
-
-        template<typename I>
-        using iterator_size_t
-            RANGES_DEPRECATED("Please use ranges::size_type_t instead") =
-                size_type_t<I>;
-
-        template<typename I>
-        using iterator_value
-            RANGES_DEPRECATED("Please use ranges::value_type instead") =
-                value_type<I>;
-
-        template<typename I>
-        using iterator_difference
-            RANGES_DEPRECATED("Please use ranges::difference_type instead") =
-                difference_type<I>;
-
-        template<typename I>
-        using iterator_reference
-            RANGES_DEPRECATED("iterator_reference is deprecated") =
-                meta::defer<reference_t, I>;
-
-        template<typename I>
-        using iterator_rvalue_reference
-            RANGES_DEPRECATED("iterator_rvalue_reference is deprecated") =
-                meta::defer<rvalue_reference_t, I>;
-
-        template<typename I>
-        using iterator_common_reference
-            RANGES_DEPRECATED("iterator_common_reference is deprecated") =
-                meta::defer<iter_common_reference_t, I>;
-
-        template<typename I>
-        using iterator_size
-            RANGES_DEPRECATED("Please use ranges::size_type instead") =
-                size_type<I>;
-
         namespace detail
         {
             template<typename I>

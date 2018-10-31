@@ -299,14 +299,6 @@ namespace ranges
         /// \sa `not_fn_fn`
         RANGES_INLINE_VARIABLE(not_fn_fn, not_fn)
 
-        /// \cond
-        inline namespace
-        {
-            RANGES_DEPRECATED("\"not_\" now uses the C++17 name \"not_fn\".")
-            constexpr const auto& not_ = not_fn;
-        }
-        /// \endcond
-
         template<typename Second, typename First>
         struct composed
         {

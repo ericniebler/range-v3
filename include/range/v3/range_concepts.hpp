@@ -368,17 +368,6 @@ namespace ranges
             {};
         }
         /// \endcond
-
-        /// \addtogroup group-concepts
-        /// @{
-
-        template<typename T>
-        using is_view
-            RANGES_DEPRECATED("If you need to override the logic of the View concept, please use ranges::enable_view."
-                              "Otherwise, please use the View concept directly.") =
-                detail::is_view_<T>;
-
-        /// @}
     }
 }
 

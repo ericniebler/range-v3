@@ -90,13 +90,6 @@ namespace ranges
                     return fn::impl_(r, 42)
                 )
 
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::begin is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
-                (
-                    return fn::impl_(r, 42)
-                )
-
                 template<typename T, typename Fn = fn>
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
@@ -183,13 +176,6 @@ namespace ranges
                     return fn::impl_(r, 42)
                 )
 
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::end is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
-                (
-                    return fn::impl_(r, 42)
-                )
-
                 template<typename T, typename Fn = fn>
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
@@ -225,13 +211,6 @@ namespace ranges
                 (
                     return ranges::begin(r)
                 )
-
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::cbegin is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
-                (
-                    return ranges::begin(r)
-                )
             };
         }
         /// \endcond
@@ -252,13 +231,6 @@ namespace ranges
             {
                 template<typename R>
                 constexpr auto CPP_auto_fun(operator())(R const &r) (const)
-                (
-                    return ranges::end(r)
-                )
-
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::cend is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
                     return ranges::end(r)
                 )
@@ -317,13 +289,6 @@ namespace ranges
             public:
                 template<typename R>
                 constexpr auto CPP_auto_fun(operator())(R &r) (const)
-                (
-                    return fn::impl_(r, 42)
-                )
-
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::rbegin is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
                     return fn::impl_(r, 42)
                 )
@@ -403,13 +368,6 @@ namespace ranges
                     return fn::impl_(r, 42)
                 )
 
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::rend is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
-                (
-                    return fn::impl_(r, 42)
-                )
-
                 template<typename T, typename Fn = fn>
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
@@ -448,13 +406,6 @@ namespace ranges
                 (
                     return ranges::rbegin(r)
                 )
-
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::crbegin is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
-                (
-                    return ranges::rbegin(r)
-                )
             };
         }
         /// \endcond
@@ -475,13 +426,6 @@ namespace ranges
             {
                 template<typename R>
                 constexpr auto CPP_auto_fun(operator())(R const &r) (const)
-                (
-                    return ranges::rend(r)
-                )
-
-                template<typename R>
-                RANGES_DEPRECATED("Passing an rvalue to ranges::crend is deprecated.")
-                constexpr auto CPP_auto_fun(operator())(const R &&r) (const)
                 (
                     return ranges::rend(r)
                 )
