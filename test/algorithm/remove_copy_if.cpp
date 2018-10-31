@@ -36,7 +36,7 @@ void
 test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     int ib[sa];
     std::pair<InIter, OutIter> r = ranges::remove_copy_if(InIter(ia), Sent(ia+sa), OutIter(ib), [](int i){return i == 2;});
     CHECK(base(r.first) == ia + sa);
@@ -54,7 +54,7 @@ void
 test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     int ib[sa];
     std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_iterator_range(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
     CHECK(base(r.first) == ia + sa);
@@ -139,7 +139,7 @@ int main()
     // Check projection
     {
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-        constexpr unsigned sa = ranges::size(ia);
+        constexpr auto sa = ranges::size(ia);
         S ib[sa];
         std::pair<S*, S*> r = ranges::remove_copy_if(ia, ib, [](int i){return i == 2;}, &S::i);
         CHECK(r.first == ia + sa);
@@ -155,7 +155,7 @@ int main()
     // Check rvalue range
     {
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-        constexpr unsigned sa = ranges::size(ia);
+        constexpr auto sa = ranges::size(ia);
         S ib[sa];
         auto r = ranges::remove_copy_if(ranges::view::all(ia), ib, [](int i){return i == 2;}, &S::i);
         CHECK(r.first.get_unsafe() == ia + sa);

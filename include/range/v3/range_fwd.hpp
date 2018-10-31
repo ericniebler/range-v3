@@ -601,15 +601,7 @@ namespace ranges
             struct repeat_fn;
         }
 
-        namespace detail
-        {
-            template<typename>
-            std::false_type double_reverse(long);
-            template<typename R, meta::if_<std::is_same<R, typename R::unreverse_me>>* = nullptr>
-            std::true_type double_reverse(int);
-        }
-
-        template<typename Rng, bool = decltype(detail::double_reverse<Rng>(42))::value>
+        template<typename Rng>
         struct RANGES_EMPTY_BASES reverse_view;
 
         namespace view

@@ -30,7 +30,7 @@ template<typename Iter, typename Sent = Iter>
 void test_iter()
 {
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     int ib[] = {0, 1, 2, 3, 0, 1, 2, 3};
     using Pair = std::pair<Iter, Iter>;
     CHECK(ranges::mismatch(Iter(ia), Sent(ia + sa), Iter(ib)) ==
@@ -52,7 +52,7 @@ template<typename Iter, typename Sent = Iter>
 void test_range()
 {
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     int ib[] = {0, 1, 2, 3, 0, 1, 2, 3};
     using Pair = std::pair<Iter, Iter>;
     auto rng1 = ranges::make_iterator_range(Iter(ia), Sent(ia + sa));
