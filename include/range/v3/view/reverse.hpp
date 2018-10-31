@@ -109,6 +109,7 @@ namespace ranges
             }
         };
 
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ >= 5
         template<typename Rng>
         struct reverse_view<reverse_view<Rng>>
           : identity_adaptor<Rng>
@@ -120,6 +121,7 @@ namespace ranges
               : identity_adaptor<Rng>(rng.base())
             {}
         };
+#endif // !GCC4
 
         namespace view
         {
