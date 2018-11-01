@@ -39,12 +39,12 @@ namespace ranges
                 CPP_ret(I)(
                     requires RandomAccessIterator<I> && Sentinel<S, I> && Permutable<I> &&
                         UniformRandomNumberGenerator<Gen> &&
-                        ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>)
+                        ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<I>>)
             {
                 auto mid = begin;
                 if(mid == end)
                     return mid;
-                std::uniform_int_distribution<difference_type_t<I>> uid{};
+                std::uniform_int_distribution<iter_difference_t<I>> uid{};
                 using param_t = typename decltype(uid)::param_type;
                 while(++mid != end)
                 {
@@ -59,7 +59,7 @@ namespace ranges
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
                         UniformRandomNumberGenerator<Gen> &&
-                        ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<iterator_t<Rng>>>)
+                        ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<iterator_t<Rng>>>)
             {
                 return (*this)(begin(rng), end(rng), static_cast<Gen &&>(rand));
             }

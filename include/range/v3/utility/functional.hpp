@@ -428,7 +428,7 @@ namespace ranges
             // value_type (needs no impl)
             template<typename ...Its>
             [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                invoke_result_t<Fn &, reference_t<Its>...>
+                invoke_result_t<Fn &, iter_reference_t<Its>...>
             {
                 RANGES_EXPECT(false);
             }
@@ -450,14 +450,14 @@ namespace ranges
             auto CPP_auto_fun(operator())(move_tag, Its ...its)
             (
                 return static_cast<
-                    aux::move_t<invoke_result_t<Fn &, reference_t<Its>...>>>(
+                    aux::move_t<invoke_result_t<Fn &, iter_reference_t<Its>...>>>(
                         aux::move(invoke(fn_, *its...)))
             )
             template<typename ...Its>
             auto CPP_auto_fun(operator())(move_tag, Its ...its) (const)
             (
                 return static_cast<
-                    aux::move_t<invoke_result_t<Fn const &, reference_t<Its>...>>>(
+                    aux::move_t<invoke_result_t<Fn const &, iter_reference_t<Its>...>>>(
                         aux::move(invoke((Fn const &) fn_, *its...)))
             )
         };

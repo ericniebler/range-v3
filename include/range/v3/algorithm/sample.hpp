@@ -40,7 +40,7 @@ namespace ranges
             concept SampleAlgoConcept,
                 InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
                 IndirectlyCopyable<I, O> && UniformRandomNumberGenerator<Gen> &&
-                ConvertibleTo<invoke_result_t<Gen &>, difference_type_t<I>>
+                ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<I>>
         );
 
         /// \addtogroup group-algorithms
@@ -48,12 +48,12 @@ namespace ranges
         class sample_fn
         {
             template<typename I, typename S, typename O, typename Gen = detail::default_random_engine&>
-            static auto sized_impl(I first, S last, difference_type_t<I> pop_size, O out,
-                    difference_type_t<I> n, Gen &&gen) ->
+            static auto sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
+                    iter_difference_t<I> n, Gen &&gen) ->
                 CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
                     requires SampleAlgoConcept<I, S, O, Gen>)
             {
-                std::uniform_int_distribution<difference_type_t<I>> dist;
+                std::uniform_int_distribution<iter_difference_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
                 n = ranges::min(pop_size, n);
                 for(; n > 0 && first != last; ++first)
@@ -70,7 +70,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&>
-            auto operator()(I first, S last, O out, difference_type_t<I> n,
+            auto operator()(I first, S last, O out, iter_difference_t<I> n,
                     Gen &&gen = detail::get_random_engine()) const ->
                 CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
                     requires SampleAlgoConcept<I, S, O, Gen> &&
@@ -82,7 +82,7 @@ namespace ranges
             }
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&>
-            auto operator()(I first, S last, O out, difference_type_t<I> n,
+            auto operator()(I first, S last, O out, iter_difference_t<I> n,
                 Gen &&gen = detail::get_random_engine()) const ->
                 CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
                     requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
@@ -90,7 +90,7 @@ namespace ranges
             {
                 if(n <= 0)
                     goto done;
-                for(difference_type_t<I> i = 0; i < n; (void)++i, ++first)
+                for(iter_difference_t<I> i = 0; i < n; (void)++i, ++first)
                 {
                     if(first == last)
                     {
@@ -99,7 +99,7 @@ namespace ranges
                     }
                     out[i] = *first;
                 }
-                std::uniform_int_distribution<difference_type_t<I>> dist;
+                std::uniform_int_distribution<iter_difference_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
                 for(auto pop_size = n; first != last; (void)++first, ++pop_size)
                 {

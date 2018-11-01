@@ -51,7 +51,7 @@ namespace ranges
             {
                 // Probe exponentially for either end-of-range or an iterator
                 // that is past the partition point (i.e., does not satisfy pred).
-                auto len = difference_type_t<I>{1};
+                auto len = iter_difference_t<I>{1};
                 while(true)
                 {
                     auto mid = begin;

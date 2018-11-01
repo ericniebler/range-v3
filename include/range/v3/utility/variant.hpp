@@ -68,7 +68,7 @@ namespace ranges
                 template<typename I, typename S>
                 CPP_ctor(indexed_datum)(I first, S last)(
                     requires Sentinel<S, I> && InputIterator<I> &&
-                        Constructible<T, reference_t<I>>)
+                        Constructible<T, iter_reference_t<I>>)
                 {
                     T *p = detail::uninitialized_copy(first, last, data_);
                     this->fill_default_(p, meta::bool_<DefaultConstructible<T>>{});

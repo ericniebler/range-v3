@@ -108,7 +108,7 @@ namespace ranges
             {
                 I end = ranges::next(nth, end_), end_orig = end;
                 // C is known to be a reference type
-                using difference_type = difference_type_t<I>;
+                using difference_type = iter_difference_t<I>;
                 difference_type const limit = 7;
                 while(true)
                 {

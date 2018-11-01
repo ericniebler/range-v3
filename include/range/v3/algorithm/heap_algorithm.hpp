@@ -53,12 +53,12 @@ namespace ranges
             struct is_heap_until_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                auto operator()(I const begin_, difference_type_t<I> const n_, C pred = C{}, P proj = P{}) const ->
+                auto operator()(I const begin_, iter_difference_t<I> const n_, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(I)(
                         requires IsHeapable<I, C, P>)
                 {
                     RANGES_EXPECT(0 <= n_);
-                    difference_type_t<I> p = 0, c = 1;
+                    iter_difference_t<I> p = 0, c = 1;
                     I pp = begin_;
                     while(c < n_)
                     {
@@ -82,7 +82,7 @@ namespace ranges
             struct is_heap_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                auto operator()(I begin, difference_type_t<I> n, C pred = C{}, P proj = P{}) const ->
+                auto operator()(I begin, iter_difference_t<I> n, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(bool)(
                         requires IsHeapable<I, C, P>)
                 {
@@ -153,7 +153,7 @@ namespace ranges
             struct sift_up_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, difference_type_t<I> len, C pred = C{}, P proj = P{}) const
+                void operator()(I begin, iter_difference_t<I> len, C pred = C{}, P proj = P{}) const
                 {
                     if(len > 1)
                     {
@@ -162,7 +162,7 @@ namespace ranges
                         I i = begin + len;
                         if(invoke(pred, invoke(proj, *i), invoke(proj, *--end)))
                         {
-                            value_type_t<I> v = iter_move(end);
+                            iter_value_t<I> v = iter_move(end);
                             do
                             {
                                 *end = iter_move(i);
@@ -183,7 +183,7 @@ namespace ranges
             struct sift_down_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                void operator()(I begin, difference_type_t<I> len, I start, C pred = C {}, P proj = P{}) const
+                void operator()(I begin, iter_difference_t<I> len, I start, C pred = C {}, P proj = P{}) const
                 {
                     // left-child of start is at 2 * start + 1
                     // right-child of start is at 2 * start + 2
@@ -207,7 +207,7 @@ namespace ranges
                         // we are, start is larger than it's largest child
                         return;
 
-                    value_type_t<I> top = iter_move(start);
+                    iter_value_t<I> top = iter_move(start);
                     do
                     {
                         // we are not in heap-order, swap the parent with it's largest child
@@ -275,7 +275,7 @@ namespace ranges
             struct pop_heap_n_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                auto operator()(I begin, difference_type_t<I> len, C pred = C{},
+                auto operator()(I begin, iter_difference_t<I> len, C pred = C{},
                     P proj = P{}) const ->
                     CPP_ret(void)(
                         requires RandomAccessIterator<I> && Sortable<I, C, P>)
@@ -329,7 +329,7 @@ namespace ranges
                 CPP_ret(I)(
                     requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
             {
-                difference_type_t<I> const n = distance(begin, end);
+                iter_difference_t<I> const n = distance(begin, end);
                 if(n > 1)
                     // start from the first parent, there is no need to consider children
                     for(auto start = (n - 2) / 2; start >= 0; --start)
@@ -363,7 +363,7 @@ namespace ranges
                 CPP_ret(I)(
                     requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
             {
-                difference_type_t<I> const n = distance(begin, end);
+                iter_difference_t<I> const n = distance(begin, end);
                 for(auto i = n; i > 1; --i)
                     detail::pop_heap_n(begin, i, std::ref(pred), std::ref(proj));
                 return begin + n;

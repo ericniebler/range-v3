@@ -111,7 +111,7 @@ namespace ranges
             template<typename I, typename V, typename C, typename P>
             static void merge_sort_with_buffer(I begin, I end, V *buffer, C &pred, P &proj)
             {
-                difference_type_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
+                iter_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
                 stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
                 if(step_size >= len)
                     return;
@@ -158,8 +158,8 @@ namespace ranges
                     requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
             {
                 I end = ranges::next(begin, end_);
-                using D = difference_type_t<I>;
-                using V = value_type_t<I>;
+                using D = iter_difference_t<I>;
+                using V = iter_value_t<I>;
                 D len = end - begin;
                 auto buf = len > 256 ? std::get_temporary_buffer<V>(len) : detail::value_init{};
                 std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};

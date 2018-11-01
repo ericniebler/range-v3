@@ -62,10 +62,10 @@ namespace ranges
         {
         private:
             CPP_assert(OutputIterator<O, Val>);
-            CPP_assert(std::is_lvalue_reference<reference_t<O>>());
+            CPP_assert(std::is_lvalue_reference<iter_reference_t<O>>());
             O out_;
         public:
-            using difference_type = difference_type_t<O>;
+            using difference_type = iter_difference_t<O>;
             raw_storage_iterator() = default;
             explicit raw_storage_iterator(O out)
               : out_(std::move(out))
@@ -124,7 +124,7 @@ namespace ranges
             CPP_assert(Iterator<I>);
             mutable I *i_ = nullptr;
         public:
-            using difference_type = difference_type_t<I>;
+            using difference_type = iter_difference_t<I>;
             iterator_wrapper() = default;
             iterator_wrapper(iterator_wrapper const &that)
               : i_(that.i_)
@@ -170,16 +170,16 @@ namespace ranges
         template<typename I>
         struct iterator_category<iterator_wrapper<I>>
           : meta::if_c<
-                InputIterator<I>,
+                (bool) InputIterator<I>,
                 meta::id<input_iterator_tag>,
                 meta::nil_>
         {};
 
         template<typename I>
-        struct value_type<iterator_wrapper<I>>
+        struct readable_traits<iterator_wrapper<I>>
           : meta::if_c<
-                InputIterator<I>,
-                meta::defer<value_type_t, I>,
+                (bool) InputIterator<I>,
+                readable_traits<I>,
                 meta::nil_>
         {};
 

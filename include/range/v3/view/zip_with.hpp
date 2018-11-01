@@ -74,7 +74,7 @@ namespace ranges
             struct _advance_
             {
                 template<typename I>
-                auto operator()(I & i, difference_type_t<I> n) const ->
+                auto operator()(I & i, iter_difference_t<I> n) const ->
                     CPP_ret(void)(
                         requires Iterator<I>)
                 {

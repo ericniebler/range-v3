@@ -94,7 +94,7 @@ namespace ranges
 
                 template<typename I,
                     typename = meta::if_c<!is_adl_indirectly_movable_<I &>::value>,
-                    typename R = reference_t<I>>
+                    typename R = iter_reference_t<I>>
                 auto CPP_auto_fun(operator())(I &&i) (const)
                 (
                     return static_cast<aux::move_t<R>>(aux::move(*i))
@@ -115,16 +115,16 @@ namespace ranges
             using is_indirectly_movable_ =
                 meta::bool_<
                     std::is_constructible<
-                        meta::_t<value_type<I>>,
+                        iter_value_t<I>,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_assignable<
-                        meta::_t<value_type<I>> &,
+                        iter_value_t<I> &,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_assignable<
-                        reference_t<O>,
-                        meta::_t<value_type<I>>>::value &&
+                        iter_reference_t<O>,
+                        iter_value_t<I>>::value &&
                     std::is_assignable<
-                        reference_t<O>,
+                        iter_reference_t<O>,
                         decltype(iter_move(std::declval<I &>()))>::value>;
 
             template<typename I, typename O>
@@ -132,16 +132,16 @@ namespace ranges
                 meta::bool_<
                     noexcept(iter_move(std::declval<I &>())) &&
                     std::is_nothrow_constructible<
-                        meta::_t<value_type<I>>,
+                        iter_value_t<I>,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_nothrow_assignable<
-                        meta::_t<value_type<I>> &,
+                        iter_value_t<I> &,
                         decltype(iter_move(std::declval<I &>()))>::value &&
                     std::is_nothrow_assignable<
-                        reference_t<O>,
-                        meta::_t<value_type<I>>>::value &&
+                        iter_reference_t<O>,
+                        iter_value_t<I>>::value &&
                     std::is_nothrow_assignable<
-                        reference_t<O>,
+                        iter_reference_t<O>,
                         decltype(iter_move(std::declval<I &>()))>::value>;
         }
         /// \endcond

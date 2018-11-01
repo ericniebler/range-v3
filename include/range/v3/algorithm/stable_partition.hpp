@@ -123,7 +123,7 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end, C pred, P proj, forward_iterator_tag fi)
             {
-                using difference_type = difference_type_t<I>;
+                using difference_type = iter_difference_t<I>;
                 difference_type const alloc_limit = 3;  // might want to make this a function of trivial assignment
                 // Either prove all true and return begin or point to first false
                 while(true)
@@ -136,7 +136,7 @@ namespace ranges
                 }
                 // We now have a reduced range [begin, end)
                 // *begin is known to be false
-                using value_type = value_type_t<I>;
+                using value_type = iter_value_t<I>;
                 auto len_end = enumerate(begin, end);
                 auto p = len_end.first >= alloc_limit ?
                     std::get_temporary_buffer<value_type>(len_end.first) : detail::value_init{};
@@ -233,8 +233,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end_, C pred, P proj, bidirectional_iterator_tag bi)
             {
-                using difference_type = difference_type_t<I>;
-                using value_type = value_type_t<I>;
+                using difference_type = iter_difference_t<I>;
+                using value_type = iter_value_t<I>;
                 difference_type const alloc_limit = 4;  // might want to make this a function of trivial assignment
                 // Either prove all true and return begin or point to first false
                 while(true)

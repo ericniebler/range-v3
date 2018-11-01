@@ -81,14 +81,14 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        difference_type_t<I2> c2 = 0;
+                        iter_difference_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj2, *j)))
                                 ++c2;
                         if(c2 == 0)
                             return false;
                         // Count number of *i in [i, l1) (we can start with 1)
-                        difference_type_t<I1> c1 = 1;
+                        iter_difference_t<I1> c1 = 1;
                         for(I1 j = next(i); j != end1; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj1, *j)))
                                 ++c1;
@@ -128,14 +128,14 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        difference_type_t<I2> c2 = 0;
+                        iter_difference_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj2, *j)))
                                 ++c2;
                         if(c2 == 0)
                             return false;
                         // Count number of *i in [i, l1) (we can start with 1)
-                        difference_type_t<I1> c1 = 1;
+                        iter_difference_t<I1> c1 = 1;
                         for(I1 j = next(i); j != end1; ++j)
                             if(invoke(pred, invoke(proj1, *i), invoke(proj1, *j)))
                                 ++c1;

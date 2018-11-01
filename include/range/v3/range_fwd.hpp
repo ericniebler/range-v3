@@ -16,6 +16,7 @@
 
 #include <climits>
 #include <utility>
+#include <iterator>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
@@ -130,19 +131,46 @@ namespace ranges
         struct iter_size_fn;
 
         template<typename T>
-        struct difference_type;
+        struct readable_traits;
 
         template<typename T>
-        struct value_type;
+        struct incrementable_traits;
+
+        struct view_base
+        {};
+
+        /// \cond
+        template<typename T>
+        struct difference_type_;
+
+        template<typename T>
+        using difference_type
+            RANGES_DEPRECATED("ranges::difference_type<T>::type is deprecated. Use "
+                "ranges::incrementable_traits<T>::difference_type instead.") =
+            difference_type_<T>;
+
+        template<typename T>
+        struct value_type_;
+
+        template<typename T>
+        using value_type
+            RANGES_DEPRECATED("ranges::value_type<T>::type is deprecated. Use "
+                "ranges::readable_traits<T>::value_type instead.") =
+            value_type_<T>;
 
         template<typename T>
         struct iterator_category;
 
+        // template<typename T>
+        // struct iterator_category
+        //     RANGES_DEPRECATED("ranges::iterator_category<T>::type is deprecated. "
+        //         "Use std::iterator_traits<T>::iterator_concept instead.") =
+        //     iterator_category_<T>;
+
         template<typename T>
         struct size_type;
+        /// \endcond
 
-        struct view_base
-        {};
 
         /// \cond
         namespace detail
@@ -760,6 +788,7 @@ namespace ranges
     }
 }
 
+/// \cond
 namespace concepts
 {
     inline namespace v1
@@ -788,9 +817,55 @@ namespace ranges
         {
             using namespace ::concepts::defs::defer;
         }
+        namespace detail
+        {
+            template<typename T>
+            struct default_std_iterator_traits_;
+            template<typename, typename = void>
+            struct has_iterator_typedefs_
+              : std::false_type
+            {};
+            template<typename T>
+            struct has_iterator_typedefs_<
+                T,
+                meta::void_<
+                    typename T::difference_type,
+                    typename T::value_type,
+                    typename T::pointer,
+                    typename T::reference,
+                    typename T::iterator_category>>
+              : std::true_type
+            {};
+        }
     }
 }
 
 RANGES_DIAGNOSTIC_POP
+
+// Hijack the primary std::iterator_traits template from each of the 3 major
+// standard library 
+RANGES_BEGIN_NAMESPACE_STD
+#if defined(__GLIBCXX__)
+    template<typename I>
+    struct __iterator_traits<
+        I,
+        ::meta::if_c<!::ranges::detail::has_iterator_typedefs_<I>::value>>
+      : ::ranges::detail::default_std_iterator_traits_<I>
+    {};
+#elif defined(_LIBCPP_VERSION)
+    template<typename I>
+    struct __iterator_traits<I, false>
+      : ::ranges::detail::default_std_iterator_traits_<I>
+    {};
+#elif defined(_MSVC_STL_VERSION)
+    template<typename I>
+    struct _Iterator_traits_base<
+        I,
+        ::meta::if_c<!::ranges::detail::has_iterator_typedefs_<I>::value>>
+      : ::ranges::detail::default_std_iterator_traits_<I>
+    {};
+#endif
+RANGES_END_NAMESPACE_STD
+/// \endcond
 
 #endif

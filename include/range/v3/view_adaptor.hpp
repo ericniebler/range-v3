@@ -67,7 +67,7 @@ namespace ranges
             {
                 adaptor_value_type_2_() = default;
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
-                using value_type = value_type_t<BaseIter>;
+                using value_type = iter_value_t<BaseIter>;
             };
 
             template<typename BaseIter, typename Adapt, typename Enable = void>
@@ -127,8 +127,8 @@ namespace ranges
             template<typename I>
             static auto read(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
-                noexcept(noexcept(reference_t<I>(*it))) ->
-                CPP_ret(reference_t<I>)(
+                noexcept(noexcept(iter_reference_t<I>(*it))) ->
+                CPP_ret(iter_reference_t<I>)(
                     requires Iterator<I>)
             {
                 return *it;
@@ -148,7 +148,7 @@ namespace ranges
                 --it;
             }
             template<typename I>
-            static auto advance(I &it, difference_type_t<I> n) ->
+            static auto advance(I &it, iter_difference_t<I> n) ->
                 CPP_ret(void)(
                     requires RandomAccessIterator<I>)
             {
@@ -156,7 +156,7 @@ namespace ranges
             }
             template<typename I>
             static auto distance_to(I const &it0, I const &it1) ->
-                CPP_ret(difference_type_t<I>)(
+                CPP_ret(iter_difference_t<I>)(
                     requires SizedSentinel<I, I>)
             {
                 return it1 - it0;
@@ -300,7 +300,7 @@ namespace ranges
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A &>().advance(std::declval<BaseIter &>(), 0))>
-            void advance(difference_type_t<BaseIter> n)
+            void advance(iter_difference_t<BaseIter> n)
             {
                 second().advance(first(), n);
             }

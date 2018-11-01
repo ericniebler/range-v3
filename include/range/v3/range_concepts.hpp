@@ -311,7 +311,7 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            std::is_same<reference_t<iterator_t<T>>, reference_t<iterator_t<T const>>>
+            std::is_same<iter_reference_t<iterator_t<T>>, iter_reference_t<iterator_t<T const>>>
             view_like_(int);
 
             template<typename T>

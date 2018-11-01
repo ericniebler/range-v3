@@ -39,7 +39,7 @@ namespace ranges
                 // tuple value
                 template<typename ...Its>
                 [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                    CPP_ret(std::tuple<value_type_t<Its>...>)(
+                    CPP_ret(std::tuple<iter_value_t<Its>...>)(
                         requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
                     RANGES_EXPECT(false);
@@ -48,11 +48,11 @@ namespace ranges
                 // tuple reference
                 template<typename ...Its>
                 auto operator()(Its const &...its) const
-                    noexcept(meta::and_c<noexcept(reference_t<Its>(*its))...>::value) ->
-                    CPP_ret(common_tuple<reference_t<Its>...>)(
+                    noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value) ->
+                    CPP_ret(common_tuple<iter_reference_t<Its>...>)(
                         requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
-                    return common_tuple<reference_t<Its>...>{*its...};
+                    return common_tuple<iter_reference_t<Its>...>{*its...};
                 }
 
                 // tuple rvalue reference
@@ -69,7 +69,7 @@ namespace ranges
                 // pair value
                 template<typename It1, typename It2>
                 [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
-                CPP_ret(std::pair<value_type_t<It1>, value_type_t<It2>>)(
+                CPP_ret(std::pair<iter_value_t<It1>, iter_value_t<It2>>)(
                     requires Readable<It1> && Readable<It2>)
                 {
                     RANGES_EXPECT(false);
@@ -78,9 +78,9 @@ namespace ranges
                 // pair reference
                 template<typename It1, typename It2>
                 auto operator()(It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(reference_t<It1>(*it1)) &&
-                             noexcept(reference_t<It2>(*it2))) ->
-                    CPP_ret(common_pair<reference_t<It1>, reference_t<It2>>)(
+                    noexcept(noexcept(iter_reference_t<It1>(*it1)) &&
+                             noexcept(iter_reference_t<It2>(*it2))) ->
+                    CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)(
                         requires Readable<It1> && Readable<It2>)
                 {
                     return {*it1, *it2};

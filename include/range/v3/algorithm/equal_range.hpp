@@ -45,7 +45,7 @@ namespace ranges
                 // is past the equal range (i.e., denotes an element greater
                 // than val), or is in the equal range (denotes an element equal
                 // to val).
-                auto dist = difference_type_t<I>{1};
+                auto dist = iter_difference_t<I>{1};
                 while(true)
                 {
                     auto mid = begin;

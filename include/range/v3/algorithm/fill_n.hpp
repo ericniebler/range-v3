@@ -31,7 +31,7 @@ namespace ranges
         struct fill_n_fn
         {
             template<typename O, typename V>
-            auto operator()(O begin, difference_type_t<O> n, V const & val) const ->
+            auto operator()(O begin, iter_difference_t<O> n, V const & val) const ->
                 CPP_ret(O)(
                     requires OutputIterator<O, V const &>)
             {

@@ -49,14 +49,14 @@ namespace ranges
 
                 template<typename I>
                 [[noreturn]]
-                common_type_t<decay_t<unwrap_reference_t<Val2 const &>>, value_type_t<I>> &
+                common_type_t<decay_t<unwrap_reference_t<Val2 const &>>, iter_value_t<I>> &
                 operator()(copy_tag, I const &) const
                 {
                     RANGES_EXPECT(false);
                 }
 
                 template<typename I>
-                common_reference_t<unwrap_reference_t<Val2 const &>, reference_t<I>>
+                common_reference_t<unwrap_reference_t<Val2 const &>, iter_reference_t<I>>
                 operator()(I const &i) const
                 {
                     auto &&x = *i;

@@ -51,16 +51,16 @@ namespace ranges
         using sentinel_t = decltype(end(std::declval<Rng &>()));
 
         template<typename Rng>
-        using range_difference_type_t = difference_type_t<iterator_t<Rng>>;
+        using range_difference_type_t = iter_difference_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_size_type_t = meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
 
         template<typename Rng>
-        using range_value_type_t = value_type_t<iterator_t<Rng>>;
+        using range_value_type_t = iter_value_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_reference_t = reference_t<iterator_t<Rng>>;
+        using range_reference_t = iter_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_rvalue_reference_t = rvalue_reference_t<iterator_t<Rng>>;

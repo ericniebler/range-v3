@@ -35,19 +35,19 @@ namespace ranges
             (concept InnerProductable)(I1, I2, T, BOp1, BOp2, P1, P2),
                 InputIterator<I1> &&
                 InputIterator<I2> &&
-                Invocable<P1&, value_type_t<I1>> &&
-                Invocable<P2&, value_type_t<I2>> &&
+                Invocable<P1&, iter_value_t<I1>> &&
+                Invocable<P2&, iter_value_t<I2>> &&
                 Invocable<
                     BOp2&,
-                    invoke_result_t<P1&, value_type_t<I1>>,
-                    invoke_result_t<P2&, value_type_t<I2>>> &&
+                    invoke_result_t<P1&, iter_value_t<I1>>,
+                    invoke_result_t<P2&, iter_value_t<I2>>> &&
                 Invocable<
                     BOp1&,
                     T,
                     invoke_result_t<
                         BOp2&,
-                        invoke_result_t<P1&, value_type_t<I1>>,
-                        invoke_result_t<P2&, value_type_t<I2>>>> &&
+                        invoke_result_t<P1&, iter_value_t<I1>>,
+                        invoke_result_t<P2&, iter_value_t<I2>>>> &&
                 Assignable<
                     T&,
                     invoke_result_t<
@@ -55,8 +55,8 @@ namespace ranges
                         T,
                         invoke_result_t<
                             BOp2&,
-                            invoke_result_t<P1&, value_type_t<I1>>,
-                            invoke_result_t<P2&, value_type_t<I2>>>>>
+                            invoke_result_t<P1&, iter_value_t<I1>>,
+                            invoke_result_t<P2&, iter_value_t<I2>>>>>
         );
 
         struct inner_product_fn

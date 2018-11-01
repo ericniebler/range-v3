@@ -34,7 +34,7 @@ namespace ranges
         struct generate_n_fn
         {
             template<typename O, typename F>
-            auto operator()(O begin, difference_type_t<O> n, F fun) const ->
+            auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
                 CPP_ret(tagged_pair<tag::out(O), tag::fun(F)>)(
                     requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
             {

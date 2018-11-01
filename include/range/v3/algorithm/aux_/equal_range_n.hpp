@@ -35,7 +35,7 @@ namespace ranges
             struct equal_range_n_fn
             {
                 template<typename I, typename V, typename R = ordered_less, typename P = ident>
-                auto operator()(I begin, difference_type_t<I> dist, V const & val, R pred = R{},
+                auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
                         P proj = P{}) const ->
                     CPP_ret(iterator_range<I>)(
                         requires BinarySearchable<I, V, R, P>)

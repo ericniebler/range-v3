@@ -38,11 +38,11 @@ namespace ranges
             friend range_access;
             using size_type_ = size_type_t<I>;
             I it_;
-            difference_type_t<I> n_;
+            iter_difference_t<I> n_;
 
         public:
             counted_view() = default;
-            counted_view(I it, difference_type_t<I> n)
+            counted_view(I it, iter_difference_t<I> n)
               : it_(it), n_(n)
             {
                 RANGES_EXPECT(0 <= n_);
@@ -66,7 +66,7 @@ namespace ranges
             struct counted_fn
             {
                 template<typename I>
-                auto operator()(I it, difference_type_t<I> n) const ->
+                auto operator()(I it, iter_difference_t<I> n) const ->
                     CPP_ret(counted_view<I>)(
                         requires Iterator<I>)
                 {

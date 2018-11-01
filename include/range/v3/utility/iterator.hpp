@@ -43,26 +43,26 @@ namespace ranges
             private:
                 template<typename I>
                 constexpr /*c++14*/
-                static void n_impl_(I &i, difference_type_t<I> n,
+                static void n_impl_(I &i, iter_difference_t<I> n,
                     input_iterator_tag);
                 template<typename I>
                 constexpr /*c++14*/
-                static void n_impl_(I &i, difference_type_t<I> n,
+                static void n_impl_(I &i, iter_difference_t<I> n,
                     bidirectional_iterator_tag);
                 template<typename I>
                 constexpr /*c++14*/
-                static void n_impl_(I &i, difference_type_t<I> n,
+                static void n_impl_(I &i, iter_difference_t<I> n,
                     random_access_iterator_tag);
                 // Is there an advance that is find-able by ADL and is preferred
                 // by partial ordering to the poison-pill overload?
                 template<typename I>
                 constexpr /*c++14*/
-                static auto n_(I &i, difference_type_t<I> n, int) ->
+                static auto n_(I &i, iter_difference_t<I> n, int) ->
                     decltype(static_cast<void>(advance(i, n)));
                 // No advance overload found by ADL, use the default implementation:
                 template<typename I>
                 constexpr /*c++14*/
-                static void n_(I &i, difference_type_t<I> n, long);
+                static void n_(I &i, iter_difference_t<I> n, long);
                 template<typename I, typename S>
                 constexpr /*c++14*/
                 static void to_(I &i, S s, sentinel_tag);
@@ -85,7 +85,7 @@ namespace ranges
                 // Advance a certain number of steps:
                 template<typename I>
                 constexpr /*c++14*/
-                auto operator()(I &i, difference_type_t<I> n) const ->
+                auto operator()(I &i, iter_difference_t<I> n) const ->
                     CPP_ret(void)(requires Iterator<I>)
                 {
                     advance_fn::n_(i, n, 0);
@@ -110,8 +110,8 @@ namespace ranges
                 // Advance a certain number of times, with a bound:
                 template<typename I, typename S>
                 constexpr /*c++14*/
-                auto operator()(I &it, difference_type_t<I> n, S bound) const ->
-                    CPP_ret(difference_type_t<I>)(
+                auto operator()(I &it, iter_difference_t<I> n, S bound) const ->
+                    CPP_ret(iter_difference_t<I>)(
                         requires Sentinel<S, I>)
                 {
                     return advance_fn::bounded_(it, n, std::move(bound),
@@ -132,7 +132,7 @@ namespace ranges
         {
             template<typename I>
             constexpr /*c++14*/
-            void advance_fn::n_impl_(I &i, difference_type_t<I> n,
+            void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
                 input_iterator_tag)
             {
                 RANGES_EXPECT(n >= 0);
@@ -141,7 +141,7 @@ namespace ranges
             }
             template<typename I>
             constexpr /*c++14*/
-            void advance_fn::n_impl_(I &i, difference_type_t<I> n,
+            void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
                 bidirectional_iterator_tag)
             {
                 if(n > 0)
@@ -153,7 +153,7 @@ namespace ranges
             }
             template<typename I>
             constexpr /*c++14*/
-            void advance_fn::n_impl_(I &i, difference_type_t<I> n,
+            void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
                 random_access_iterator_tag)
             {
                 i += n;
@@ -162,7 +162,7 @@ namespace ranges
             // by partial ordering to the poison-pill overload?
             template<typename I>
             constexpr /*c++14*/
-            auto advance_fn::n_(I &i, difference_type_t<I> n, int) ->
+            auto advance_fn::n_(I &i, iter_difference_t<I> n, int) ->
                 decltype(static_cast<void>(advance(i, n)))
             {
                 advance(i, n);
@@ -170,7 +170,7 @@ namespace ranges
             // No advance overload found by ADL, use the default implementation:
             template<typename I>
             constexpr /*c++14*/
-            void advance_fn::n_(I &i, difference_type_t<I> n, long)
+            void advance_fn::n_(I &i, iter_difference_t<I> n, long)
             {
                 advance_fn::n_impl_(i, n, iterator_tag_of<I>{});
             }
@@ -185,7 +185,7 @@ namespace ranges
             constexpr /*c++14*/
             void advance_fn::to_(I &i, S s, sized_sentinel_tag)
             {
-                difference_type_t<I> d = s - i;
+                iter_difference_t<I> d = s - i;
                 RANGES_EXPECT(0 <= d);
                 ranges::advance(i, d);
             }
@@ -241,7 +241,7 @@ namespace ranges
             }
             template<typename I>
             constexpr /*c++14*/
-            auto operator()(I it, difference_type_t<I> n) const ->
+            auto operator()(I it, iter_difference_t<I> n) const ->
                 CPP_ret(I)(requires Iterator<I>)
             {
                 advance(it, n);
@@ -257,7 +257,7 @@ namespace ranges
             }
             template<typename I, typename S>
             constexpr /*c++14*/
-            auto operator()(I it, difference_type_t<I> n, S bound) const ->
+            auto operator()(I it, iter_difference_t<I> n, S bound) const ->
                 CPP_ret(I)(requires Sentinel<S, I>)
             {
                 advance(it, n, std::move(bound));
@@ -280,7 +280,7 @@ namespace ranges
             }
             template<typename I>
             constexpr /*c++14*/
-            auto operator()(I it, difference_type_t<I> n) const ->
+            auto operator()(I it, iter_difference_t<I> n) const ->
                 CPP_ret(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n);
@@ -288,7 +288,7 @@ namespace ranges
             }
             template<typename I>
             constexpr /*c++14*/
-            auto operator()(I it, difference_type_t<I> n, I bound) const ->
+            auto operator()(I it, iter_difference_t<I> n, I bound) const ->
                 CPP_ret(I)(requires BidirectionalIterator<I>)
             {
                 advance(it, -n, std::move(bound));
@@ -333,7 +333,7 @@ namespace ranges
                 return {n + d, ranges::next(begin, end)};
             }
         public:
-            template<typename I, typename S, typename D = difference_type_t<I>>
+            template<typename I, typename S, typename D = iter_difference_t<I>>
             constexpr /*c++14*/
             auto operator()(I begin, S end, D d = 0) const ->
                 CPP_ret(std::pair<D, I>)(
@@ -366,7 +366,7 @@ namespace ranges
                 return n + d;
             }
         public:
-            template<typename I, typename S, typename D = difference_type_t<I>>
+            template<typename I, typename S, typename D = iter_difference_t<I>>
             constexpr /*c++14*/
             auto operator()(I begin, S end, D d = 0) const ->
                 CPP_ret(D)(
@@ -386,7 +386,7 @@ namespace ranges
         private:
             template<typename I, typename S>
             constexpr /*c++14*/
-            int impl_i(I begin, S end, difference_type_t<I> n, sentinel_tag) const
+            int impl_i(I begin, S end, iter_difference_t<I> n, sentinel_tag) const
             {
                 if(n < 0)
                     return 1;
@@ -399,9 +399,9 @@ namespace ranges
             }
             template<typename I, typename S>
             constexpr /*c++14*/
-            int impl_i(I begin, S end, difference_type_t<I> n, sized_sentinel_tag) const
+            int impl_i(I begin, S end, iter_difference_t<I> n, sized_sentinel_tag) const
             {
-                difference_type_t<I> dist = end - begin;
+                iter_difference_t<I> dist = end - begin;
                 if(n < dist)
                     return  1;
                 if(dist < n)
@@ -411,7 +411,7 @@ namespace ranges
         public:
             template<typename I, typename S>
             constexpr /*c++14*/
-            auto operator()(I begin, S end, difference_type_t<I> n) const ->
+            auto operator()(I begin, S end, iter_difference_t<I> n) const ->
                 CPP_ret(int)(
                     requires InputIterator<I> && Sentinel<S, I>)
             {
@@ -433,7 +433,7 @@ namespace ranges
                 CPP_ret(size_type_t<I>)(
                     requires SizedSentinel<S, I>)
             {
-                difference_type_t<I> n = end - begin;
+                iter_difference_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
                 return static_cast<size_type_t<I>>(n);
             }
@@ -712,7 +712,7 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 constexpr /*c++14*/
-                auto read() const -> reference_t<I>
+                auto read() const -> iter_reference_t<I>
                 {
                     return *arrow();
                 }
@@ -746,7 +746,7 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto advance(difference_type_t<I> n) ->
+                auto advance(iter_difference_t<I> n) ->
                     CPP_ret(void)(
                         requires RandomAccessIterator<I>)
                 {
@@ -755,7 +755,7 @@ namespace ranges
                 template<typename J>
                 constexpr /*c++14*/
                 auto distance_to(reverse_cursor<J> const &that) const ->
-                    CPP_ret(difference_type_t<I>)(
+                    CPP_ret(iter_difference_t<I>)(
                         requires SizedSentinel<J, I>)
                 {
                     return it_ - that.base();
@@ -798,8 +798,8 @@ namespace ranges
             I current_ = detail::value_init{};
         public:
             using iterator_type = I;
-            using difference_type = difference_type_t<I>;
-            using value_type = value_type_t<I>;
+            using difference_type = iter_difference_t<I>;
+            using value_type = iter_value_t<I>;
             using iterator_category = input_iterator_tag;
             using reference = rvalue_reference_t<I>;
 
@@ -946,13 +946,13 @@ namespace ranges
 
         template<typename I1, typename I2>
         auto operator-(move_iterator<I1> const &x, move_iterator<I2> const &y) ->
-            CPP_ret(difference_type_t<I2>)(
+            CPP_ret(iter_difference_t<I2>)(
                 requires SizedSentinel<I1, I2>)
         {
             return x.base() - y.base();
         }
         template<typename I>
-        auto operator+(difference_type_t<I> n, move_iterator<I> const &x) ->
+        auto operator+(iter_difference_t<I> n, move_iterator<I> const &x) ->
             CPP_ret(move_iterator<I>)(
                 requires RandomAccessIterator<I>)
         {
@@ -1063,7 +1063,7 @@ namespace ranges
             template<typename I>
             struct move_into_cursor_types_<I, true>
             {
-                using value_type = value_type_t<I>;
+                using value_type = iter_value_t<I>;
                 using single_pass = meta::bool_<(bool)SinglePass<I>>;
             };
 
@@ -1115,7 +1115,7 @@ namespace ranges
                 CPP_member
                 auto read() const
                     noexcept(noexcept(*std::declval<I const&>())) ->
-                    CPP_ret(reference_t<I>)(
+                    CPP_ret(iter_reference_t<I>)(
                         requires Readable<I>)
                 {
                     return *it_;
@@ -1135,7 +1135,7 @@ namespace ranges
                     --it_;
                 }
                 CPP_member
-                auto advance(difference_type_t<I> n) ->
+                auto advance(iter_difference_t<I> n) ->
                     CPP_ret(void)(
                         requires RandomAccessIterator<I>)
                 {
@@ -1143,7 +1143,7 @@ namespace ranges
                 }
                 CPP_member
                 auto distance_to(move_into_cursor const &that) const ->
-                    CPP_ret(difference_type_t<I>)(
+                    CPP_ret(iter_difference_t<I>)(
                         requires SizedSentinel<I, I>)
                 {
                     return that.it_ - it_;
@@ -1188,7 +1188,7 @@ namespace ranges
             }
 
             template<typename I>
-            constexpr I recounted(I const &, I i, difference_type_t<I>)
+            constexpr I recounted(I const &, I i, iter_difference_t<I>)
             {
                 return i;
             }
@@ -1208,7 +1208,7 @@ namespace ranges
             {
                 template<typename I, typename J>
                 constexpr
-                auto operator()(I i, J j, difference_type_t<J> n) const ->
+                auto operator()(I i, J j, iter_difference_t<J> n) const ->
                     decltype(recounted((I &&)i, (J &&)j, n))
                 {
                     return recounted((I &&)i, (J &&)j, n);
@@ -1228,14 +1228,142 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename D = std::ptrdiff_t>
             struct std_output_iterator_traits
             {
                 using iterator_category = std::output_iterator_tag;
-                using difference_type = std::ptrdiff_t;
+                using difference_type = D;
                 using value_type = void;
                 using reference = void;
                 using pointer = void;
             };
+
+            CPP_def(
+                template(typename I)
+                concept Cpp17Iterator,
+                    requires (I i) (
+                        *i, // { *i } -> auto&&;
+                        concepts::requires_<Same<decltype(++i), I&>>, // { ++i } -> Same<I>&;
+                        *i++ // { *i++ } -> auto&&;
+                    ) &&
+                    Copyable<I>
+            );
+            CPP_def(
+                template(typename I)
+                concept Cpp17InputIterator,
+                    Cpp17Iterator<I> &&
+                    True<
+                        common_reference_t<
+                            iter_reference_t<I> &&,
+                            typename readable_traits<I>::value_type &>,
+                        common_reference_t<
+                            decltype(*std::declval<I &>()++) &&,
+                            typename readable_traits<I>::value_type &>> &&
+                    SignedIntegral<typename incrementable_traits<I>::difference_type> &&
+                    EqualityComparable<I>
+            );
+            CPP_def(
+                template(typename I)
+                concept Cpp17ForwardIterator,
+                    requires (I i) (
+                        concepts::requires_<Same<decltype(i++), I const &>>, // { i++ } -> const I&;
+                        concepts::requires_<Same<iter_reference_t<I>, decltype(*i++)>>
+                    ) &&
+                    Cpp17InputIterator<I> &&
+                    Constructible<I> &&
+                    Same<uncvref_t<iter_reference_t<I>>, typename readable_traits<I>::value_type>
+            );
+            CPP_def(
+                template(typename I)
+                concept Cpp17BidirectionalIterator,
+                    requires (I i) (
+                        concepts::requires_<Same<decltype(--i), I &>>, // { --i } -> Same<I>&;
+                        concepts::requires_<Same<decltype(i--), I const &>>, // { i-- } -> const I&;
+                        concepts::requires_<Same<iter_reference_t<I>, decltype(*i--)>>
+                    ) &&
+                    Cpp17ForwardIterator<I>
+            );
+            CPP_def(
+                template(typename I)
+                concept Cpp17RandomAccessIterator,
+                    requires (I i, typename incrementable_traits<I>::difference_type n) (
+                        concepts::requires_<Same<I &, decltype(i += n)>>,
+                        concepts::requires_<Same<I &, decltype(i -= n)>>,
+                        concepts::requires_<Same<I, decltype(i + n)>>,
+                        concepts::requires_<Same<I, decltype(n + i)>>,
+                        concepts::requires_<Same<I, decltype(i - n)>>,
+                        concepts::requires_<Same<decltype(n), decltype(i - i)>>,
+                        concepts::requires_<Same<iter_reference_t<I>, decltype(i[n])>>
+                    ) &&
+                    Cpp17BidirectionalIterator<I> &&
+                    StrictTotallyOrdered<I>
+            );
+
+            template<typename I>
+            typename incrementable_traits<I>::difference_type cpp17_difference_type_(int);
+            template<typename I>
+            void cpp17_difference_type_(long);
+
+            template<typename I>
+            typename I::pointer cpp17_pointer_type_(int);
+            template<typename I>
+            decltype(std::declval<I &>().operator->()) cpp17_pointer_type_(long);
+            template<typename I>
+            void cpp17_pointer_type_(...);
+
+            template<typename I>
+            typename I::reference cpp17_reference_type_(int);
+            template<typename I>
+            iter_reference_t<I> cpp17_reference_type_(long);
+
+            template<typename I>
+            auto cpp17_iterator_category_type_(priority_tag<4>) ->
+                typename I::iterator_category;
+            template<typename I>
+            auto cpp17_iterator_category_type_(priority_tag<3>) ->
+                CPP_ret(std::random_access_iterator_tag)(
+                    requires Cpp17RandomAccessIterator<I>);
+            template<typename I>
+            auto cpp17_iterator_category_type_(priority_tag<2>) ->
+                CPP_ret(std::bidirectional_iterator_tag)(
+                    requires Cpp17BidirectionalIterator<I>);
+            template<typename I>
+            auto cpp17_iterator_category_type_(priority_tag<1>) ->
+                CPP_ret(std::forward_iterator_tag)(
+                    requires Cpp17ForwardIterator<I>);
+            template<typename I>
+            auto cpp17_iterator_category_type_(priority_tag<0>) ->
+                std::input_iterator_tag;
+
+            template<typename I, bool>
+            struct default_std_iterator_traits_2_
+              : std_output_iterator_traits<decltype(detail::cpp17_difference_type_<I>(0))>
+            {};
+
+            template<typename I>
+            struct default_std_iterator_traits_2_<I, true>
+            {
+                using difference_type = typename incrementable_traits<I>::difference_type;
+                using value_type = typename readable_traits<I>::value_type;
+                using pointer = decltype(detail::cpp17_pointer_type_<I>(0));
+                using reference = decltype(detail::cpp17_reference_type_<I>(0));
+                using iterator_category =
+                    decltype(detail::cpp17_iterator_category_type_<I>(priority_tag<4>{}));
+            };
+
+            template<typename I, bool>
+            struct default_std_iterator_traits_1_
+            {};
+
+            template<typename I>
+            struct default_std_iterator_traits_1_<I, true>
+              : default_std_iterator_traits_2_<I, (bool) Cpp17InputIterator<I>>
+            {};
+
+            template<typename I>
+            struct default_std_iterator_traits_
+              : default_std_iterator_traits_1_<I, (bool) Cpp17Iterator<I>>
+            {};
         }
         /// \endcond
     }
@@ -1246,27 +1374,27 @@ namespace std
 {
     template<typename Container>
     struct iterator_traits< ::ranges::back_insert_iterator<Container>>
-      : ::ranges::detail::std_output_iterator_traits
+      : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
     struct iterator_traits< ::ranges::front_insert_iterator<Container>>
-      : ::ranges::detail::std_output_iterator_traits
+      : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Container>
     struct iterator_traits< ::ranges::insert_iterator<Container>>
-      : ::ranges::detail::std_output_iterator_traits
+      : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename T, typename Char, typename Traits>
     struct iterator_traits< ::ranges::ostream_iterator<T, Char, Traits>>
-      : ::ranges::detail::std_output_iterator_traits
+      : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename Char, typename Traits>
     struct iterator_traits< ::ranges::ostreambuf_iterator<Char, Traits>>
-      : ::ranges::detail::std_output_iterator_traits
+      : ::ranges::detail::std_output_iterator_traits<>
     {};
 
     template<typename I>

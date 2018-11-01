@@ -37,12 +37,12 @@ namespace ranges
             template(typename I, typename O, typename BOp = minus, typename P = ident)
             (concept AdjacentDifferentiable)(I, O, BOp, P),
                 InputIterator<I> &&
-                Invocable<P&, value_type_t<I>> &&
-                CopyConstructible<uncvref_t<invoke_result_t<P&, value_type_t<I>>>> &&
-                Movable<uncvref_t<invoke_result_t<P&, value_type_t<I>>>> &&
-                OutputIterator<O, invoke_result_t<P&, value_type_t<I>>> &&
-                Invocable<BOp&, invoke_result_t<P&, value_type_t<I>>, invoke_result_t<P&, value_type_t<I>>> &&
-                OutputIterator<O, invoke_result_t<BOp&, invoke_result_t<P&, value_type_t<I>>, invoke_result_t<P&, value_type_t<I>>>>
+                Invocable<P&, iter_value_t<I>> &&
+                CopyConstructible<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+                Movable<uncvref_t<invoke_result_t<P&, iter_value_t<I>>>> &&
+                OutputIterator<O, invoke_result_t<P&, iter_value_t<I>>> &&
+                Invocable<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>> &&
+                OutputIterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
         );
 
         struct adjacent_difference_fn
@@ -56,7 +56,7 @@ namespace ranges
                        P proj = P{}) const
             {
                 // BUGBUG think about the use of coerce here.
-                using V = value_type_t<I>;
+                using V = iter_value_t<I>;
                 using X = invoke_result_t<P&, V>;
                 coerce<V> v;
                 coerce<X> x;

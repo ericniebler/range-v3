@@ -290,7 +290,7 @@ namespace ranges
                         return done();
                     }
                     constexpr /*c++14*/
-                    reference_t<iterator_t<Rng>> read() const
+                    iter_reference_t<iterator_t<Rng>> read() const
                     {
                         RANGES_EXPECT(!done());
                         return *rng_->it();

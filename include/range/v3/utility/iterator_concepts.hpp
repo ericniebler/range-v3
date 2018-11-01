@@ -32,9 +32,9 @@ namespace ranges
         (
             template(typename I)
             concept Readable,
-                CommonReference<reference_t<I> &&, value_type_t<I> &> &&
-                CommonReference<reference_t<I> &&, rvalue_reference_t<I> &&> &&
-                CommonReference<rvalue_reference_t<I> &&, value_type_t<I> const &>
+                CommonReference<iter_reference_t<I> &&, iter_value_t<I> &> &&
+                CommonReference<iter_reference_t<I> &&, rvalue_reference_t<I> &&> &&
+                CommonReference<rvalue_reference_t<I> &&, iter_value_t<I> const &>
         );
 
         CPP_def
@@ -45,8 +45,8 @@ namespace ranges
                 (
                     *o = static_cast<T &&>(t),
                     *((Out &&) o) = static_cast<T &&>(t),
-                    const_cast<reference_t<Out> const &&>(*o) = static_cast<T &&>(t),
-                    const_cast<reference_t<Out> const &&>(*((Out &&) o)) = static_cast<T &&>(t)
+                    const_cast<iter_reference_t<Out> const &&>(*o) = static_cast<T &&>(t),
+                    const_cast<iter_reference_t<Out> const &&>(*((Out &&) o)) = static_cast<T &&>(t)
                 )
         );
 
@@ -62,17 +62,17 @@ namespace ranges
             template(typename I, typename O)
             concept IndirectlyMovableStorable,
                 IndirectlyMovable<I, O> && 
-                Movable<value_type_t<I>> &&
-                Constructible<value_type_t<I>, rvalue_reference_t<I>> &&
-                Assignable<value_type_t<I> &, rvalue_reference_t<I>> &&
-                Writable<O, value_type_t<I>>
+                Movable<iter_value_t<I>> &&
+                Constructible<iter_value_t<I>, rvalue_reference_t<I>> &&
+                Assignable<iter_value_t<I> &, rvalue_reference_t<I>> &&
+                Writable<O, iter_value_t<I>>
         );
 
         CPP_def
         (
             template(typename I, typename O)
             concept IndirectlyCopyable,
-                Readable<I> && Writable<O, reference_t<I>>
+                Readable<I> && Writable<O, iter_reference_t<I>>
         );
 
         CPP_def
@@ -80,11 +80,11 @@ namespace ranges
             template(typename I, typename O)
             concept IndirectlyCopyableStorable,
                 IndirectlyMovable<I, O> && 
-                Copyable<value_type_t<I>> &&
-                Constructible<value_type_t<I>, reference_t<I>> &&
-                Assignable<value_type_t<I> &, reference_t<I>> &&
+                Copyable<iter_value_t<I>> &&
+                Constructible<iter_value_t<I>, iter_reference_t<I>> &&
+                Assignable<iter_value_t<I> &, iter_reference_t<I>> &&
                 Writable<O, iter_common_reference_t<I>> &&
-                Writable<O, value_type_t<I> const &>
+                Writable<O, iter_value_t<I> const &>
         );
 
         CPP_def
@@ -107,12 +107,12 @@ namespace ranges
             concept WeaklyIncrementable,
                 requires (I i)
                 (
-                    True<difference_type_t<I>>,
+                    True<iter_difference_t<I>>,
                     ++i,
                     i++,
                     concepts::requires_<Same<I&, decltype(++i)>>
                 ) &&
-                Integral<difference_type_t<I>> &&
+                Integral<iter_difference_t<I>> &&
                 Semiregular<I>
         );
 
@@ -154,8 +154,8 @@ namespace ranges
                 (
                     s - i,
                     i - s,
-                    concepts::requires_<Same<difference_type_t<I>, decltype(s - i)>>,
-                    concepts::requires_<Same<difference_type_t<I>, decltype(i - s)>>
+                    concepts::requires_<Same<iter_difference_t<I>, decltype(s - i)>>,
+                    concepts::requires_<Same<iter_difference_t<I>, decltype(i - s)>>
                 ) &&
                 // Short-circuit the test for Sentinel if we're emulating concepts:
                 (!defer::Satisfies<uncvref_t<S>, disable_sized_sentinel, uncvref_t<I>> &&
@@ -209,7 +209,7 @@ namespace ranges
         (
             template(typename I)
             concept RandomAccessIterator,
-                requires (I i, difference_type_t<I> n)
+                requires (I i, iter_difference_t<I> n)
                 (
                     i + n,
                     n + i,
@@ -221,7 +221,7 @@ namespace ranges
                     concepts::requires_<Same<decltype(i - n), I>>,
                     concepts::requires_<Same<decltype(i += n), I&>>,
                     concepts::requires_<Same<decltype(i -= n), I&>>,
-                    concepts::requires_<Same<decltype(i[n]), reference_t<I>>>
+                    concepts::requires_<Same<decltype(i[n]), iter_reference_t<I>>>
                 ) &&
                 BidirectionalIterator<I> &&
                 StrictTotallyOrdered<I> &&
@@ -235,8 +235,8 @@ namespace ranges
             concept ContiguousIterator,
                 RandomAccessIterator<I> &&
                 DerivedFrom<iterator_category_t<I>, ranges::contiguous_iterator_tag> &&
-                std::is_lvalue_reference<reference_t<I>>::value &&
-                Same<value_type_t<I>, uncvref_t<reference_t<I>>>
+                std::is_lvalue_reference<iter_reference_t<I>>::value &&
+                Same<iter_value_t<I>, uncvref_t<iter_reference_t<I>>>
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ namespace ranges
                 using invoke =
                     meta::and_<
                         meta::bool_<(bool) Writable<I, T>>,
-                        meta::not_<meta::is_trait<meta::defer<assignable_res_t, reference_t<I>, T>>>>;
+                        meta::not_<meta::is_trait<meta::defer<assignable_res_t, iter_reference_t<I>, T>>>>;
             };
 
             template<typename I>
@@ -311,7 +311,7 @@ namespace ranges
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
-                meta::list<value_type_t<I> &, reference_t<I> /*&&*/>;
+                meta::list<iter_value_t<I> &, iter_reference_t<I> /*&&*/>;
 
             // Call ApplyFn with the cartesian product of the Readables' value and reference
             // types. In addition, call ApplyFn with the common_reference type of all the
@@ -401,7 +401,7 @@ namespace ranges
         using indirect_invoke_result_t =
             meta::if_c<
                 meta::and_c<(bool) Readable<Is>...>::value,
-                invoke_result_t<Fun, reference_t<Is>...>>;
+                invoke_result_t<Fun, iter_reference_t<Is>...>>;
 
         template<typename Fun, typename... Is>
         struct indirect_invoke_result
@@ -444,10 +444,9 @@ namespace ranges
                 detail::projected_<I, Proj>>;
 
         template<typename I, typename Proj>
-        struct difference_type<detail::projected_<I, Proj>>
-        {
-            using type = meta::_t<difference_type<I>>;
-        };
+        struct incrementable_traits<detail::projected_<I, Proj>>
+          : incrementable_traits<I>
+        {};
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:

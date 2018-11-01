@@ -128,7 +128,7 @@ namespace ranges
                 constexpr /*c++14*/
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
-                    is_swappable_with<reference_t<I0>, reference_t<I1>>::value>
+                    is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value>
                 operator()(I0 &&a, I1 &&b) const
                     noexcept(noexcept(ranges::swap(*a, *b)))
                 {
@@ -137,14 +137,14 @@ namespace ranges
 
                 // *Otherwise*, for Readable types that are mutually
                 // IndirectlyMovableStorable, implement as:
-                //      value_type_t<T0> tmp = iter_move(a);
+                //      iter_value_t<T0> tmp = iter_move(a);
                 //      *a = iter_move(b);
                 //      *b = std::move(tmp);
                 template<typename I0, typename I1>
                 constexpr /*c++14*/
                 meta::if_c<
                     !is_adl_indirectly_swappable_<I0, I1>::value &&
-                    !is_swappable_with<reference_t<I0>, reference_t<I1>>::value &&
+                    !is_swappable_with<iter_reference_t<I0>, iter_reference_t<I1>>::value &&
                     is_indirectly_movable<I0, I1>::value &&
                     is_indirectly_movable<I1, I0>::value>
                 operator()(I0 &&a, I1 &&b) const
@@ -152,7 +152,7 @@ namespace ranges
                         is_nothrow_indirectly_movable<I0, I1>::value &&
                         is_nothrow_indirectly_movable<I1, I0>::value)
                 {
-                    meta::_t<value_type<I0>> v0 = iter_move(a);
+                    iter_value_t<I0> v0 = iter_move(a);
                     *a = iter_move(b);
                     *b = detail::move(v0);
                 }

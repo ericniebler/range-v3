@@ -355,7 +355,7 @@ namespace ranges
               : range_access::mixin_base_t<Cur>
             {
             //protected:
-                using reference_t = basic_proxy_reference<Cur>;
+                using iter_reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_tag_t = concepts::tag<detail::OutputCursorConcept, cursor_tag>;
             public:
@@ -375,7 +375,7 @@ namespace ranges
             {
             //protected:
                 using cursor_tag_t = detail::cursor_tag_of<Cur>;
-                using reference_t =
+                using iter_reference_t =
                     meta::if_<
                         is_writable_cursor<Cur const>,
                         basic_proxy_reference<Cur const>,
@@ -391,7 +391,7 @@ namespace ranges
             public:
                 using difference_type = range_access::cursor_difference_t<Cur>;
                 using value_type = range_access::cursor_value_t<Cur>;
-                using reference = reference_t;
+                using reference = iter_reference_t;
                 using iterator_category =
                     decltype(detail::iter_cat(cursor_tag_t()));
                 using pointer = meta::_t<meta::if_c<
@@ -429,7 +429,7 @@ namespace ranges
             static_assert((bool) detail::Cursor<Cur>, "");
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
             using typename assoc_types_::cursor_tag_t;
-            using typename assoc_types_::reference_t;
+            using typename assoc_types_::iter_reference_t;
             using typename assoc_types_::const_reference_t;
             constexpr /*c++14*/ Cur &pos() noexcept
             {
@@ -490,12 +490,12 @@ namespace ranges
             }
             CPP_member
             constexpr /*c++14*/ auto operator*()
-            noexcept(noexcept(reference_t{std::declval<Cur &>()})) ->
-                CPP_ret(reference_t)(
+            noexcept(noexcept(iter_reference_t{std::declval<Cur &>()})) ->
+                CPP_ret(iter_reference_t)(
                     requires detail::HasCursorNext<Cur> &&
                         detail::is_writable_cursor<Cur>::value)
             {
-                return reference_t{pos()};
+                return iter_reference_t{pos()};
             }
             CPP_member
             constexpr auto operator*() const
@@ -523,8 +523,8 @@ namespace ranges
             {
                 return range_access::arrow(pos());
             }
-            // Otherwise, if reference_t is an lvalue reference to cv-qualified
-            // value_type_t, return the address of **this.
+            // Otherwise, if iter_reference_t is an lvalue reference to cv-qualified
+            // iter_value_t, return the address of **this.
             template<typename C = Cur>
             constexpr auto operator->() const
             noexcept(noexcept(*std::declval<basic_iterator const &>())) ->

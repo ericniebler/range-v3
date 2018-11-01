@@ -42,7 +42,7 @@ namespace ranges
                 }
             };
             template<typename I>
-            using as_value_type_t = composed<as_lvalue_fn, coerce<value_type_t<I>>>;
+            using as_value_type_t = composed<as_lvalue_fn, coerce<iter_value_t<I>>>;
         }
         /// \endcond
 
@@ -52,8 +52,8 @@ namespace ranges
             template(typename I, typename BOp)
             concept IndirectSemigroup,
                 Readable<I> &&
-                Copyable<value_type_t<I>> &&
-                IndirectRegularInvocable<composed<coerce<value_type_t<I>>, BOp>, value_type_t<I>*, I>
+                Copyable<iter_value_t<I>> &&
+                IndirectRegularInvocable<composed<coerce<iter_value_t<I>>, BOp>, iter_value_t<I>*, I>
         );
 
         CPP_def
@@ -62,7 +62,7 @@ namespace ranges
             (concept PartialSummable)(I, O, BOp, P),
                 InputIterator<I> &&
                 IndirectSemigroup<projected<projected<I, detail::as_value_type_t<I>>, P>, BOp> &&
-                OutputIterator<O, value_type_t<projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
+                OutputIterator<O, iter_value_t<projected<projected<I, detail::as_value_type_t<I>>, P>> const &>
         );
 
         struct partial_sum_fn
@@ -75,12 +75,12 @@ namespace ranges
             operator()(I begin, S1 end, O result, S2 end_result, BOp bop = BOp{}, P proj = P{}) const
             {
                 using X = projected<projected<I, detail::as_value_type_t<I>>, P>;
-                coerce<value_type_t<I>> val_i;
-                coerce<value_type_t<X>> val_x;
+                coerce<iter_value_t<I>> val_i;
+                coerce<iter_value_t<X>> val_x;
                 if(begin != end && result != end_result)
                 {
                     auto &&cur1 = val_i(*begin);
-                    value_type_t<X> t(invoke(proj, cur1));
+                    iter_value_t<X> t(invoke(proj, cur1));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)

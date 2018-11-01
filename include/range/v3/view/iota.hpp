@@ -193,8 +193,8 @@ namespace ranges
                 // Disable wrap-semantics for UnsignedIntegral types.
                 // See discussion in: https://github.com/ericniebler/range-v3/pull/593
                 RANGES_EXPECT(from <= to);
-                // view::take_exactly(Rng rng, difference_type_t<Rng> n) takes a
-                // number of type difference_type_t<Rng>, which for view::iota is
+                // view::take_exactly(Rng rng, iter_difference_t<Rng> n) takes a
+                // number of type iter_difference_t<Rng>, which for view::iota is
                 // equal to iota_difference_t<Val>.
                 //
                 // The expression (to - from) shall not overflow this signed

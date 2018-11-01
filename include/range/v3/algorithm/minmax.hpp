@@ -36,13 +36,13 @@ namespace ranges
         {
             template<typename Rng, typename C = ordered_less, typename P = ident>
             constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::min(value_type_t<iterator_t<Rng>>),
-                                    tag::max(value_type_t<iterator_t<Rng>>)>)(
-                    requires InputRange<Rng> && Copyable<value_type_t<iterator_t<Rng>>> &&
+                CPP_ret(tagged_pair<tag::min(iter_value_t<iterator_t<Rng>>),
+                                    tag::max(iter_value_t<iterator_t<Rng>>)>)(
+                    requires InputRange<Rng> && Copyable<iter_value_t<iterator_t<Rng>>> &&
                         IndirectRelation<C, projected<iterator_t<Rng>, P>>)
             {
-                using R = tagged_pair<tag::min(value_type_t<iterator_t<Rng>>),
-                                      tag::max(value_type_t<iterator_t<Rng>>)>;
+                using R = tagged_pair<tag::min(iter_value_t<iterator_t<Rng>>),
+                                      tag::max(iter_value_t<iterator_t<Rng>>)>;
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
@@ -58,7 +58,7 @@ namespace ranges
                     }
                     while(++begin != end)
                     {
-                        value_type_t<iterator_t<Rng>> tmp1 = *begin;
+                        iter_value_t<iterator_t<Rng>> tmp1 = *begin;
                         if(++begin == end)
                         {
                             if(invoke(pred, invoke(proj, tmp1), invoke(proj, result.first)))

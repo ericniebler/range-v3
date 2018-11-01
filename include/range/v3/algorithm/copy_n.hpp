@@ -37,7 +37,7 @@ namespace ranges
         struct copy_n_fn
         {
             template<typename I, typename O, typename P = ident>
-            auto operator()(I begin, difference_type_t<I> n, O out) const ->
+            auto operator()(I begin, iter_difference_t<I> n, O out) const ->
                 CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
                     requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {

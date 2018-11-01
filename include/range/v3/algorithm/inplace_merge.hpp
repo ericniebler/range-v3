@@ -56,8 +56,8 @@ namespace ranges
             {
             private:
                 template<typename I, typename C, typename P>
-                static void impl(I begin, I middle, I end, difference_type_t<I> len1,
-                    difference_type_t<I> len2, value_type_t<I> *const buf, C &pred, P &proj)
+                static void impl(I begin, I middle, I end, iter_difference_t<I> len1,
+                    iter_difference_t<I> len2, iter_value_t<I> *const buf, C &pred, P &proj)
                 {
                     auto tmpbuf = make_raw_buffer(buf);
                     if(len1 <= len2)
@@ -72,7 +72,7 @@ namespace ranges
                     {
                         auto p = ranges::move(middle, end, tmpbuf.begin()).second;
                         using RBi = ranges::reverse_iterator<I>;
-                        using Rv = ranges::reverse_iterator<value_type_t<I> *>;
+                        using Rv = ranges::reverse_iterator<iter_value_t<I> *>;
                         merge(make_move_iterator(RBi{std::move(middle)}),
                             make_move_iterator(RBi{std::move(begin)}),
                             make_move_iterator(Rv{p.base().base()}),
@@ -83,13 +83,13 @@ namespace ranges
 
             public:
                 template<typename I, typename C = ordered_less, typename P = ident>
-                auto operator()(I begin, I middle, I end, difference_type_t<I> len1,
-                    difference_type_t<I> len2, value_type_t<I> *buf,
+                auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+                    iter_difference_t<I> len2, iter_value_t<I> *buf,
                     std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(void)(
                         requires BidirectionalIterator<I> && Sortable<I, C, P>)
                 {
-                    using D = difference_type_t<I>;
+                    using D = iter_difference_t<I>;
                     while(true)
                     {
                         // if middle == end, we're done
@@ -177,13 +177,13 @@ namespace ranges
             struct inplace_merge_no_buffer_fn
             {
                 template<typename I, typename C = ordered_less, typename P = ident>
-                auto operator()(I begin, I middle, I end, difference_type_t<I> len1,
-                    difference_type_t<I> len2, C pred = C{}, P proj = P{}) const ->
+                auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+                    iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(void)(
                         requires BidirectionalIterator<I> && Sortable<I, C, P>)
                 {
                     merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
-                        _nullptr_v<value_type_t<I>>(), 0, std::move(pred), std::move(proj));
+                        _nullptr_v<iter_value_t<I>>(), 0, std::move(pred), std::move(proj));
                 }
             };
 
@@ -202,7 +202,7 @@ namespace ranges
                 CPP_ret(I)(
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
             {
-                using value_type = value_type_t<I>;
+                using value_type = iter_value_t<I>;
                 auto len1 = distance(begin, middle);
                 auto len2_and_end = enumerate(middle, end);
                 auto buf_size = ranges::min(len1, len2_and_end.first);

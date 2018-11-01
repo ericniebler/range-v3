@@ -33,7 +33,7 @@ namespace ranges
         struct for_each_n_fn
         {
             template<typename I, typename F, typename P = ident>
-            auto operator()(I begin, difference_type_t<I> n, F fun, P proj = P{}) const ->
+            auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires InputIterator<I> && MoveIndirectInvocable<F, projected<I, P>>)
             {

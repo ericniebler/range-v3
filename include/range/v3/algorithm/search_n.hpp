@@ -121,7 +121,7 @@ namespace ranges
             }
         public:
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident>
-            auto operator()(I begin, S end, difference_type_t<I> count, V const &val,
+            auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires Searchnable<I, V, C, P> && Sentinel<S, I>)
@@ -137,7 +137,7 @@ namespace ranges
             }
 
             template<typename Rng, typename V, typename C = equal_to, typename P = ident>
-            auto operator()(Rng &&rng, difference_type_t<iterator_t<Rng>> count, V const &val,
+            auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Searchnable<iterator_t<Rng>, V, C, P> && Range<Rng>)

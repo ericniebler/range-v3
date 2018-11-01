@@ -55,7 +55,7 @@ namespace ranges
             struct lower_bound_n_fn
             {
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident>
-                auto operator()(I begin, difference_type_t<I> d, V2 const &val, C pred = C{},
+                auto operator()(I begin, iter_difference_t<I> d, V2 const &val, C pred = C{},
                         P proj = P{}) const ->
                     CPP_ret(I)(
                         requires BinarySearchable<I, V2, C, P>)

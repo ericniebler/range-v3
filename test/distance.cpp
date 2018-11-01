@@ -21,7 +21,7 @@
 #include "./test_utils.hpp"
 
 template<typename I, typename S>
-void test_iterators(I begin, S end, ranges::difference_type_t<I> n)
+void test_iterators(I begin, S end, ranges::iter_difference_t<I> n)
 {
     using namespace ranges;
 
@@ -29,8 +29,8 @@ void test_iterators(I begin, S end, ranges::difference_type_t<I> n)
     CHECK(distance_compare(begin, end, n) == 0);
     CHECK(distance_compare(begin, end, n - 1) > 0);
     CHECK(distance_compare(begin, end, n + 1) < 0);
-    CHECK(distance_compare(begin, end, (std::numeric_limits<difference_type_t<I>>::min)()) > 0);
-    CHECK(distance_compare(begin, end, (std::numeric_limits<difference_type_t<I>>::max)()) < 0);
+    CHECK(distance_compare(begin, end, (std::numeric_limits<iter_difference_t<I>>::min)()) > 0);
+    CHECK(distance_compare(begin, end, (std::numeric_limits<iter_difference_t<I>>::max)()) < 0);
 }
 
 template<typename Rng>

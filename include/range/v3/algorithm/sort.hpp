@@ -87,7 +87,7 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void unguarded_linear_insert(I end, value_type_t<I> val, C &pred, P &proj)
+            inline void unguarded_linear_insert(I end, iter_value_t<I> val, C &pred, P &proj)
             {
                 I next = prev(end);
                 while(invoke(pred, invoke(proj, val), invoke(proj, *next)))
@@ -102,7 +102,7 @@ namespace ranges
             template<typename I, typename C, typename P>
             inline void linear_insert(I begin, I end, C &pred, P &proj)
             {
-                value_type_t<I> val = iter_move(end);
+                iter_value_t<I> val = iter_move(end);
                 if(invoke(pred, invoke(proj, val), invoke(proj, *begin)))
                 {
                     move_backward(begin, end, end + 1);

@@ -37,7 +37,7 @@ namespace ranges
             struct partition_point_n_fn
             {
                 template<typename I, typename C, typename P = ident>
-                auto operator()(I begin, difference_type_t<I> d, C pred, P proj = P{}) const ->
+                auto operator()(I begin, iter_difference_t<I> d, C pred, P proj = P{}) const ->
                     CPP_ret(I)(
                         requires PartitionPointable<I, C, P>)
                 {

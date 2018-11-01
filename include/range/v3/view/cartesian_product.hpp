@@ -252,7 +252,7 @@ namespace ranges
                         }
                     }
 
-                    using D = difference_type_t<decltype(first)>;
+                    using D = iter_difference_t<decltype(first)>;
                     i = first + static_cast<D>(n_mod);
                 }
                 void check_at_end_(meta::size_t<0>, bool = false)

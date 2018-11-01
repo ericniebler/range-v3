@@ -95,12 +95,12 @@ namespace test_random_access
         bool equal(cursor<J> const &that) const { return that.it_ == it_; }
         void next() { ++it_; }
         void prev() { --it_; }
-        void advance(ranges::difference_type_t<I> n) {
+        void advance(ranges::iter_difference_t<I> n) {
             it_ += n;
         }
         CPP_template(class J)(
             requires ranges::SizedSentinel<J, I>)
-        ranges::difference_type_t<I> distance_to(cursor<J> const &that) const {
+        ranges::iter_difference_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };
@@ -158,7 +158,7 @@ namespace test_weak_output
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
 
-        void write(ranges::value_type_t<I> v) const { *it_ = v; }
+        void write(ranges::iter_value_t<I> v) const { *it_ = v; }
         void next() { ++it_; }
     private:
         I it_;
@@ -210,7 +210,7 @@ namespace test_output
             requires ranges::ConvertibleTo<J, I>)
         cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
-        using value_type = ranges::value_type_t<I>;
+        using value_type = ranges::iter_value_t<I>;
         value_type read() const { return *it_; }
         void write(value_type v) const { *it_ = v; }
         I arrow() const { return it_; }
@@ -282,8 +282,8 @@ namespace test_move_only
             requires ranges::ConvertibleTo<J, I>)
         zip1_cursor(zip1_cursor<J> that) : it_(std::move(that.it_)) {}
 
-        using value_type = std::tuple<ranges::value_type_t<I>>;
-        using reference = ranges::common_tuple<ranges::reference_t<I>>;
+        using value_type = std::tuple<ranges::iter_value_t<I>>;
+        using reference = ranges::common_tuple<ranges::iter_reference_t<I>>;
         using rvalue_reference = ranges::common_tuple<ranges::rvalue_reference_t<I>>;
         reference read() const { return reference{*it_}; }
         rvalue_reference move() const { return rvalue_reference{ranges::iter_move(it_)}; }
@@ -338,7 +338,7 @@ namespace test_forward_sized
         void next() { ++it_; }
         CPP_template(class J)(
             requires ranges::SizedSentinel<J, I>)
-        ranges::difference_type_t<I> distance_to(cursor<J> const &that) const {
+        ranges::iter_difference_t<I> distance_to(cursor<J> const &that) const {
             return that.it_ - it_;
         }
     };

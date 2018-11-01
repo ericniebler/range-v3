@@ -310,7 +310,7 @@ namespace ranges
             struct any_cursor_impl
               : any_cloneable_cursor_interface<Ref, Cat>
             {
-                CPP_assert(ConvertibleTo<reference_t<I>, Ref>);
+                CPP_assert(ConvertibleTo<iter_reference_t<I>, Ref>);
                 CPP_assert((Cat & category::forward) == category::forward);
 
                 any_cursor_impl() = default;

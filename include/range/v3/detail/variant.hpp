@@ -105,7 +105,7 @@ namespace ranges
                     requires not SizedSentinel<S, I>)
             {
                 for(; first != last; ++first, ++out)
-                    ::new((void *) std::addressof(*out)) value_type_t<O>(*first);
+                    ::new((void *) std::addressof(*out)) iter_value_t<O>(*first);
                 return out;
             }
 

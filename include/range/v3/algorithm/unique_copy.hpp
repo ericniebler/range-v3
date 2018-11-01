@@ -56,7 +56,7 @@ namespace ranges
                 {
                     // Must save a copy into a local because we will need this value
                     // even after we advance the input iterator.
-                    value_type_t<I> value = *begin; // This is guaranteed by IndirectlyCopyable
+                    iter_value_t<I> value = *begin; // This is guaranteed by IndirectlyCopyable
                     *out = value;
                     ++out;
                     while(++begin != end)

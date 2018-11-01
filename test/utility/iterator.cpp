@@ -79,10 +79,12 @@ void issue_420_regression()
 
 struct value_type_tester_thingy {};
 
-namespace ranges {
+namespace ranges
+{
     template<>
-    struct value_type<::value_type_tester_thingy> {
-        using type = int;
+    struct readable_traits<::value_type_tester_thingy>
+    {
+        using value_type = int;
     };
 }
 
@@ -92,66 +94,68 @@ template<typename T>
 struct with_element_type { using element_type = T; };
 
 // arrays of known bound
-CPP_assert(Same<int, ranges::value_type<int[4]>::type>);
-CPP_assert(Same<int, ranges::value_type<const int[4]>::type>);
-CPP_assert(Same<int*, ranges::value_type<int*[4]>::type>);
-CPP_assert(Same<with_value_type<int>, ranges::value_type<with_value_type<int>[4]>::type>);
+CPP_assert(Same<int, ranges::readable_traits<int[4]>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<const int[4]>::value_type>);
+CPP_assert(Same<int*, ranges::readable_traits<int*[4]>::value_type>);
+CPP_assert(Same<with_value_type<int>, ranges::readable_traits<with_value_type<int>[4]>::value_type>);
 
 #if !defined(__GNUC__) || defined(__clang__)
 // arrays of unknown bound
-CPP_assert(Same<int, ranges::value_type<int[]>::type>);
-CPP_assert(Same<int, ranges::value_type<const int[]>::type>);
+CPP_assert(Same<int, ranges::readable_traits<int[]>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<const int[]>::value_type>);
 #endif
 
+template<typename T>
+using readable_traits_value_type_t = typename ranges::readable_traits<T>::value_type;
+template<typename T>
+using readable_traits_value_type = meta::defer<readable_traits_value_type_t, T>;
+
 // object pointer types
-CPP_assert(Same<int, ranges::value_type<int*>::type>);
-CPP_assert(Same<int, ranges::value_type<int*const>::type>);
-CPP_assert(Same<int, ranges::value_type<int const*>::type>);
-CPP_assert(Same<int, ranges::value_type<int const*const>::type>);
-CPP_assert(Same<int[4], ranges::value_type<int(*)[4]>::type>);
-CPP_assert(Same<int[4], ranges::value_type<const int(*)[4]>::type>);
+CPP_assert(Same<int, ranges::readable_traits<int*>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<int*const>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<int const*>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<int const*const>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<int(*)[4]>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<const int(*)[4]>::value_type>);
 struct incomplete;
-CPP_assert(Same<incomplete, ranges::value_type<incomplete*>::type>);
-static_assert(!meta::is_trait<ranges::value_type<void*>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<void const*>>::value, "");
+CPP_assert(Same<incomplete, ranges::readable_traits<incomplete*>::value_type>);
+static_assert(!meta::is_trait<readable_traits_value_type<void*>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<void const*>>::value, "");
 
 // class types with member value_type
-CPP_assert(Same<int, ranges::value_type<with_value_type<int>>::type>);
-CPP_assert(Same<int, ranges::value_type<with_value_type<int> const>::type>);
-CPP_assert(Same<int, ranges::value_type<value_type_tester_thingy>::type>);
-CPP_assert(Same<int, ranges::value_type<value_type_tester_thingy const>::type>);
-CPP_assert(Same<int[4], ranges::value_type<with_value_type<int[4]>>::type>);
-CPP_assert(Same<int[4], ranges::value_type<with_value_type<int[4]> const>::type>);
-static_assert(!meta::is_trait<ranges::value_type<with_value_type<void>>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_value_type<int(int)>>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_value_type<int&>>>::value, "");
+CPP_assert(Same<int, ranges::readable_traits<with_value_type<int>>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<with_value_type<int> const>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<value_type_tester_thingy>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<value_type_tester_thingy const>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<with_value_type<int[4]>>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<with_value_type<int[4]> const>::value_type>);
+static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<void>>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int(int)>>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_value_type<int&>>>::value, "");
 
 // class types with member element_type
-CPP_assert(Same<int, ranges::value_type<with_element_type<int>>::type>);
-CPP_assert(Same<int, ranges::value_type<with_element_type<int> const>::type>);
-CPP_assert(Same<int, ranges::value_type<with_element_type<int const>>::type>);
-CPP_assert(Same<int[4], ranges::value_type<with_element_type<int[4]>>::type>);
-CPP_assert(Same<int[4], ranges::value_type<with_element_type<int[4]> const>::type>);
-CPP_assert(Same<int[4], ranges::value_type<with_element_type<int const[4]>>::type>);
-static_assert(!meta::is_trait<ranges::value_type<with_element_type<void>>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_element_type<void const>>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_element_type<void> const>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_element_type<int(int)>>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<with_element_type<int&>>>::value, "");
-
-// classes derived from std::ios_base
-CPP_assert(Same<char, ranges::value_type<std::ostream>::type>);
+CPP_assert(Same<int, ranges::readable_traits<with_element_type<int>>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<with_element_type<int> const>::value_type>);
+CPP_assert(Same<int, ranges::readable_traits<with_element_type<int const>>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int[4]>>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int[4]> const>::value_type>);
+CPP_assert(Same<int[4], ranges::readable_traits<with_element_type<int const[4]>>::value_type>);
+static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void>>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void const>>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<void> const>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<int(int)>>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<with_element_type<int&>>>::value, "");
 
 // cv-void
-static_assert(!meta::is_trait<ranges::value_type<void>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<void const>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<void>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<void const>>::value, "");
 // reference types
-static_assert(!meta::is_trait<ranges::value_type<int&>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<int&&>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<int*&>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<int*&&>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<int(&)(int)>>::value, "");
-static_assert(!meta::is_trait<ranges::value_type<std::ostream&>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<int&>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<int&&>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<int*&>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<int*&&>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<int(&)(int)>>::value, "");
+static_assert(!meta::is_trait<readable_traits_value_type<std::ostream&>>::value, "");
 
 CPP_assert(IndirectlySwappable<int *, int *>);
 CPP_assert(IndirectlyMovable<int const *, int *>);
@@ -182,7 +186,7 @@ int main()
 
     {
         struct S { using value_type = int; };
-        CPP_assert(Same<int, ranges::value_type<S const>::type>);
+        CPP_assert(Same<int, ranges::readable_traits<S const>::value_type>);
     }
 
     return ::test_result();

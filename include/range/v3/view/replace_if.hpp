@@ -53,7 +53,7 @@ namespace ranges
 
                 template<typename I>
                 [[noreturn]]
-                common_type_t<decay_t<unwrap_reference_t<Val const &>>, value_type_t<I>> &
+                common_type_t<decay_t<unwrap_reference_t<Val const &>>, iter_value_t<I>> &
                 operator()(copy_tag, I const &) const
                 {
                     RANGES_EXPECT(false);
@@ -61,8 +61,8 @@ namespace ranges
 
                 template<typename I>
                 auto operator()(I const &i) ->
-                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)(
-                        requires not Invocable<Pred const&, reference_t<I>>)
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
+                        requires not Invocable<Pred const&, iter_reference_t<I>>)
                 {
                     auto &&x = *i;
                     if(invoke(first(), (decltype(x) &&) x))
@@ -71,8 +71,8 @@ namespace ranges
                 }
                 template<typename I>
                 auto operator()(I const &i) const ->
-                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, reference_t<I>>)(
-                        requires Invocable<Pred const&, reference_t<I>>)
+                    CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
+                        requires Invocable<Pred const&, iter_reference_t<I>>)
                 {
                     auto &&x = *i;
                     if(invoke(first(), (decltype(x) &&) x))

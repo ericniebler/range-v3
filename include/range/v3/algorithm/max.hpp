@@ -34,14 +34,14 @@ namespace ranges
         {
             template<typename Rng, typename C = ordered_less, typename P = ident>
             constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(value_type_t<iterator_t<Rng>>)(
-                    requires InputRange<Rng> && Copyable<value_type_t<iterator_t<Rng>>> &&
+                CPP_ret(iter_value_t<iterator_t<Rng>>)(
+                    requires InputRange<Rng> && Copyable<iter_value_t<iterator_t<Rng>>> &&
                         IndirectRelation<C, projected<iterator_t<Rng>, P>>)
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
-                value_type_t<iterator_t<Rng>> result = *begin;
+                iter_value_t<iterator_t<Rng>> result = *begin;
                 while(++begin != end)
                 {
                     auto && tmp = *begin;

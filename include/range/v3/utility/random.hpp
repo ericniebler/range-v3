@@ -329,7 +329,7 @@ namespace ranges
                     auto mix_entropy(I begin, S end) ->
                         CPP_ret(void)(
                             requires InputIterator<I> && Sentinel<S, I> &&
-                                ConvertibleTo<reference_t<I>, IntRep>)
+                                ConvertibleTo<iter_reference_t<I>, IntRep>)
                     {
                         auto hash_const = INIT_A;
                         auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC
@@ -377,7 +377,7 @@ namespace ranges
                     template<typename I, typename S>
                     CPP_ctor(seed_seq_fe)(I begin, S end)(
                         requires InputIterator<I> && Sentinel<S, I> &&
-                            ConvertibleTo<reference_t<I>, IntRep>)
+                            ConvertibleTo<iter_reference_t<I>, IntRep>)
                     {
                         seed(begin, end);
                     }
@@ -461,7 +461,7 @@ namespace ranges
                     auto seed(I begin, S end) ->
                         CPP_ret(void)(
                         requires InputIterator<I> && Sentinel<S, I> &&
-                            ConvertibleTo<reference_t<I>, IntRep>)
+                            ConvertibleTo<iter_reference_t<I>, IntRep>)
                     {
                         mix_entropy(begin, end);
                         // For very small sizes, we do some additional mixing.  For normal

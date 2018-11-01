@@ -18,6 +18,7 @@
 #include <iosfwd>
 #include <cstddef>
 #include <utility>
+#include <iterator>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -29,123 +30,217 @@ namespace ranges
     {
         /// \addtogroup group-concepts
         /// @{
-
         ////////////////////////////////////////////////////////////////////////////////////////
         /// \cond
         namespace detail
         {
-            template<typename T, typename Enable = void>
-            struct difference_type2
+#if defined(__GLIBCXX__)
+            template<typename I>
+            std::false_type is_std_iterator_traits_specialized_(std::__iterator_traits<I> *);
+            template<typename I>
+            std::true_type is_std_iterator_traits_specialized_(void *);
+#elif defined(_LIBCPP_VERSION)
+            template<typename I, bool B>
+            std::false_type is_std_iterator_traits_specialized_(std::__iterator_traits<I, B> *);
+            template<typename I>
+            std::true_type is_std_iterator_traits_specialized_(void *);
+#elif defined(_MSVC_STL_VERSION)
+            template<typename I>
+            std::false_type is_std_iterator_traits_specialized_(std::_Iterator_traits_base<I /*, void*/> *);
+            template<typename I>
+            std::true_type is_std_iterator_traits_specialized_(void *);
+#else
+            template<typename I>
+            std::false_type is_std_iterator_traits_specialized_(void *);
+#endif
+
+            template<typename I>
+            struct is_std_iterator_traits_specialized
+              : decltype(is_std_iterator_traits_specialized_<I>(
+                    static_cast<std::iterator_traits<I> *>(nullptr)))
             {};
 
             template<typename T>
-            struct difference_type2<T,
-                meta::if_<std::is_integral<
-                    decltype(std::declval<const T>() - std::declval<const T>())>>>
-              : std::make_signed<decltype(std::declval<const T>() - std::declval<const T>())>
-            {};
-
-            template<typename T, typename Enable = void>
-            struct difference_type1
-              : detail::difference_type2<T>
-            {};
-
-            template<typename T>
-            struct difference_type1<T *>
-              : meta::lazy::if_<std::is_object<T>, std::ptrdiff_t>
-            {};
-
-            template<typename T>
-            struct difference_type1<T, meta::void_<typename T::difference_type>>
+            struct with_difference_type_
             {
-                using type = typename T::difference_type;
+                using difference_type = T;
+            };
+
+            template<typename T>
+            using difference_result_t =
+                decltype(std::declval<const T>() - std::declval<const T>());
+
+            template<typename, typename = void>
+            struct incrementable_traits_2_
+            {};
+
+            template<typename T>
+            struct incrementable_traits_2_<T, meta::if_<std::is_integral<difference_result_t<T>>>>
+            {
+                using difference_type = meta::_t<std::make_signed<difference_result_t<T>>>;
+            };
+
+            template<typename T, typename = void>
+            struct incrementable_traits_1_
+              : detail::incrementable_traits_2_<T>
+            {};
+
+            template<typename T>
+            struct incrementable_traits_1_<T *>
+              : meta::if_<
+                    std::is_object<T>,
+                    detail::with_difference_type_<std::ptrdiff_t>,
+                    meta::nil_>
+            {};
+
+            template<typename T>
+            struct incrementable_traits_1_<T, meta::void_<typename T::difference_type>>
+            {
+                using difference_type = typename T::difference_type;
             };
         }
         /// \endcond
 
         template<typename T>
-        struct difference_type
-          : detail::difference_type1<T>
+        struct incrementable_traits
+          : detail::incrementable_traits_1_<T>
         {};
 
         template<typename T>
-        struct difference_type<T const>
-          : difference_type<T>
+        struct incrementable_traits<T const>
+          : incrementable_traits<T>
         {};
 
+        template<typename T>
+        using iter_difference_t =
+            typename meta::if_<
+                detail::is_std_iterator_traits_specialized<T>,
+                std::iterator_traits<T>,
+                incrementable_traits<T>>::difference_type;
+
         ////////////////////////////////////////////////////////////////////////////////////////
+        /// \cond
+        template<typename T>
+        struct difference_type_
+          : meta::defer<iter_difference_t, T>
+        {};
+
+        template<typename T>
+        using difference_type_t
+            RANGES_DEPRECATED("ranges::difference_type_t is deprecated. Please use "
+                "ranges::iter_difference_t instead.") =
+            iter_difference_t<T>;
+        /// \endcond
+
         /// \cond
         namespace detail
         {
             template<typename I,
                 typename R = decltype(*std::declval<I &>()),
                 typename = R&>
-            using reference_t_ = R;
+            using iter_reference_t_ = R;
+
+            template<typename, typename = void>
+            struct size_type_
+            {};
+
+            template<typename T>
+            struct size_type_<T, meta::void_<iter_difference_t<T>>>
+              : std::make_unsigned<iter_difference_t<T>>
+            {};
         }
         /// \endcond
 
         template<typename R>
-        using reference_t = detail::reference_t_<R>;
+        using iter_reference_t = detail::iter_reference_t_<R>;
+
+        template<typename R>
+        using reference_t
+            RANGES_DEPRECATED("ranges::reference_t is deprecated. Use ranges::iter_reference_t "
+                "instead.") =
+            iter_reference_t<R>;
 
         ////////////////////////////////////////////////////////////////////////////////////////
         template<typename T>
         struct size_type
-          : meta::lazy::let<std::make_unsigned<meta::lazy::_t<difference_type<T>>>>
+          : detail::size_type_<T>
         {};
 
         /// \cond
         namespace detail
         {
-#if !defined(__GNUC__) || defined(__clang__)
-            // GCC does not implement CWG393
-            // per https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69316
+            template<typename, typename = void>
+            struct with_value_type_
+            {};
             template<typename T>
-            std::remove_cv<T> value_type_helper(T (*)[]);
-#endif
-            template<typename T, std::size_t N>
-            std::remove_cv<T> value_type_helper(T (*)[N]);
-
+            struct with_value_type_<T, meta::if_<std::is_object<T>>>
+            {
+                using value_type = meta::_t<std::remove_cv<T>>;
+            };
+            template<typename, typename = void>
+            struct readable_traits_2_
+            {};
             template<typename T>
-            using object_remove_cv = meta::if_<std::is_object<T>, std::remove_cv<T>>;
-
+            struct readable_traits_2_<T, meta::void_<typename T::element_type>>
+              : with_value_type_<typename T::element_type>
+            {};
+            template<typename T, typename = void>
+            struct readable_traits_1_
+              : readable_traits_2_<T>
+            {};
             template<typename T>
-            object_remove_cv<T> value_type_helper(T **);
-
+            struct readable_traits_1_<T, meta::if_<std::is_array<T>>>
+              : with_value_type_<meta::_t<std::remove_extent<T>>>
+            {};
             template<typename T>
-            object_remove_cv<typename T::value_type> value_type_helper(T *);
-
+            struct readable_traits_1_<T *>
+              : detail::with_value_type_<T>
+            {};
             template<typename T>
-            object_remove_cv<typename T::element_type> value_type_helper(T *);
-
-            template<typename T>
-            meta::if_<std::is_base_of<std::ios_base, T>, std::remove_cv<typename T::char_type>>
-            value_type_helper(T *);
-
-            template<typename T>
-            using value_type_ = meta::_t<decltype(detail::value_type_helper(_nullptr_v<T>()))>;
+            struct readable_traits_1_<T, meta::void_<typename T::value_type>>
+              : with_value_type_<typename T::value_type>
+            {};
         }
         /// \endcond
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // Not to spec:
-        // * arrays of unknown bound have no value type on compilers that do not implement
-        //   CWG 393 (http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#393).
-        // * For class types with member type element_type, value type is element_type with any
-        //   cv-qualifiers stripped (See ericniebler/stl2#299).
-        // * using member "char_type" as the value type of class types derived from
-        //   std::ios_base is an extension.
+        // * For class types with both member value_type and element_type, value_type is
+        //   preferred (see ericniebler/stl2#299).
         template<typename T>
-        struct value_type
-          : meta::defer<detail::value_type_, T>
+        struct readable_traits
+          : detail::readable_traits_1_<T>
         {};
 
         template<typename T>
-        struct value_type<T const>
-          : value_type<T>
+        struct readable_traits<T const>
+          : readable_traits<T>
         {};
+
+        template<typename T>
+        using iter_value_t =
+            typename meta::if_<
+                detail::is_std_iterator_traits_specialized<T>,
+                std::iterator_traits<T>,
+                readable_traits<T>>::value_type;
+
+        /// \cond
+        template<typename T>
+        struct value_type_
+          : meta::defer<iter_value_t, T>
+        {};
+
+        template<typename T>
+        using value_type_t
+            RANGES_DEPRECATED("ranges::value_type_t is deprecated. Please use "
+                "ranges::iter_value_t instead.") =
+            iter_value_t<T>;
+        /// \endcond
 
         template<typename S, typename I>
-        struct disable_sized_sentinel : std::false_type {};
+        struct disable_sized_sentinel
+          : std::false_type
+        {};
         /// @}
     }
 }

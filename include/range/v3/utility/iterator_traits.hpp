@@ -55,7 +55,7 @@ namespace ranges
         namespace detail
         {
             template<typename I,
-                typename = reference_t<I>,
+                typename = iter_reference_t<I>,
                 typename R = decltype(iter_move(std::declval<I &>())),
                 typename = R&>
             using rvalue_reference_t = R;
@@ -152,23 +152,23 @@ namespace ranges
         /// @{
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator traits
-        template<typename I>
-        using value_type_t = meta::_t<value_type<I>>;
+        // template<typename I>
+        // using iter_value_t = meta::_t<value_type<I>>;
 
         template<typename I>
         using rvalue_reference_t = detail::rvalue_reference_t<I>;
 
         template<typename I>
-        using iter_common_reference_t = common_reference_t<reference_t<I>, value_type_t<I> &>;
+        using iter_common_reference_t = common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
 
         template<typename I>
         using iterator_category_t = meta::_t<iterator_category<I>>;
 
-        template<typename I>
-        using difference_type_t = meta::_t<difference_type<I>>;
+        // template<typename I>
+        // using iter_difference_t = meta::_t<difference_type<I>>;
 
         template<typename I>
-        using size_type_t = meta::_t<std::make_unsigned<difference_type_t<I>>>;
+        using size_type_t = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
         /// @}
 
         /// \cond
@@ -182,7 +182,7 @@ namespace ranges
               : meta::if_<
                     meta::is_trait<meta::defer<arrow_type_, I>>,
                     meta::defer<arrow_type_, I>,
-                    std::add_pointer<reference_t<I>>>
+                    std::add_pointer<iter_reference_t<I>>>
             {};
         }
         /// \endcond

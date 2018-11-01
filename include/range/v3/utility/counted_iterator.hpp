@@ -34,7 +34,7 @@ namespace ranges
             struct access
             {
                 template<typename I>
-                static constexpr /*c++14*/ difference_type_t<counted_iterator<I>> &
+                static constexpr /*c++14*/ iter_difference_t<counted_iterator<I>> &
                 count(counted_iterator<I> &ci) noexcept
                 {
                     return ci.cnt_;
@@ -72,7 +72,7 @@ namespace ranges
             friend _counted_iterator_::access;
 
             I current_{};
-            difference_type_t<I> cnt_{0};
+            iter_difference_t<I> cnt_{0};
 
             void post_increment_(std::true_type)
             {
@@ -88,11 +88,11 @@ namespace ranges
             }
         public:
             using iterator_type = I;
-            using difference_type = difference_type_t<I>;
+            using difference_type = iter_difference_t<I>;
 
             counted_iterator() = default;
 
-            counted_iterator(I x, difference_type_t<I> n)
+            counted_iterator(I x, iter_difference_t<I> n)
               : current_(std::move(x)), cnt_(n)
             {
                 RANGES_EXPECT(n >= 0);
@@ -118,21 +118,21 @@ namespace ranges
                 return current_;
             }
 
-            difference_type_t<I> count() const
+            iter_difference_t<I> count() const
             {
                 return cnt_;
             }
 
-            reference_t<I> operator*()
-                noexcept(noexcept(reference_t<I>(*current_)))
+            iter_reference_t<I> operator*()
+                noexcept(noexcept(iter_reference_t<I>(*current_)))
             {
                 RANGES_EXPECT(cnt_ > 0);
                 return *current_;
             }
             template<typename I2 = I>
             auto operator*() const
-                noexcept(noexcept(reference_t<I>(*current_))) ->
-                CPP_ret(reference_t<I2>)(
+                noexcept(noexcept(iter_reference_t<I>(*current_))) ->
+                CPP_ret(iter_reference_t<I2>)(
                     requires Readable<I const>)
             {
                 RANGES_EXPECT(cnt_ > 0);
@@ -230,7 +230,7 @@ namespace ranges
 
             CPP_member
             auto operator[](difference_type n) const ->
-                CPP_ret(reference_t<I>)(
+                CPP_ret(iter_reference_t<I>)(
                     requires RandomAccessIterator<I>)
             {
                 RANGES_EXPECT(cnt_ >= n);
@@ -258,7 +258,7 @@ namespace ranges
                     x.current_,
                     _counted_iterator_::access::current(y));
             }
-            friend void advance(counted_iterator &i, difference_type_t<I> n)
+            friend void advance(counted_iterator &i, iter_difference_t<I> n)
             {
                 RANGES_EXPECT(i.cnt_ >= n);
                 ranges::advance(i.current_, n);
@@ -291,7 +291,7 @@ namespace ranges
                     _counted_iterator_::access::current(y));
             }
             template<typename I>
-            void advance(counted_iterator<I> &i, difference_type_t<I> n)
+            void advance(counted_iterator<I> &i, iter_difference_t<I> n)
             {
                 auto &count = _counted_iterator_::access::count(i);
                 RANGES_EXPECT(count >= n);
@@ -375,28 +375,28 @@ namespace ranges
 
         template<typename I1, typename I2>
         auto operator-(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
-            CPP_ret(difference_type_t<I2>)(
+            CPP_ret(iter_difference_t<I2>)(
                 requires Common<I1, I2>)
         {
             return y.count() - x.count();
         }
 
         template<typename I>
-        difference_type_t<I>
+        iter_difference_t<I>
         operator-(counted_iterator<I> const &x, default_sentinel)
         {
             return -x.count();
         }
 
         template<typename I>
-        difference_type_t<I>
+        iter_difference_t<I>
         operator-(default_sentinel, counted_iterator<I> const &y)
         {
             return y.count();
         }
 
         template<typename I>
-        auto operator+(difference_type_t<I> n, counted_iterator<I> const &x) ->
+        auto operator+(iter_difference_t<I> n, counted_iterator<I> const &x) ->
             CPP_ret(counted_iterator<I>)(
                 requires RandomAccessIterator<I>)
         {
@@ -412,7 +412,7 @@ namespace ranges
             template<typename I>
             struct value_type_<I, meta::if_c<Readable<I>>>
             {
-                using type = value_type_t<I>;
+                using type = iter_value_t<I>;
             };
 
             template<typename I, typename = void>
@@ -429,7 +429,7 @@ namespace ranges
             struct iterator_traits_
             {
                 using iterator_category = std::output_iterator_tag;
-                using difference_type = difference_type_t<I>;
+                using difference_type = iter_difference_t<I>;
                 using value_type = void;
                 using reference = void;
                 using pointer = void;
@@ -441,18 +441,18 @@ namespace ranges
                 using iterator_category =
                     meta::if_c<
                         (bool)ForwardIterator<I> &&
-                            std::is_reference<reference_t<I>>::value,
+                            std::is_reference<iter_reference_t<I>>::value,
                         std::forward_iterator_tag,
                         std::input_iterator_tag>;
-                using difference_type = difference_type_t<I>;
-                using value_type = value_type_t<I>;
-                using reference = reference_t<I>;
+                using difference_type = iter_difference_t<I>;
+                using value_type = iter_value_t<I>;
+                using reference = iter_reference_t<I>;
                 using pointer = meta::_t<detail::pointer_type_<I>>;
             };
         } // namespace _counted_iterator_
 
         template<typename I>
-        auto make_counted_iterator(I i, difference_type_t<I> n) ->
+        auto make_counted_iterator(I i, iter_difference_t<I> n) ->
             CPP_ret(counted_iterator<I>)(
                 requires Iterator<I>)
         {
@@ -460,8 +460,11 @@ namespace ranges
         }
 
         template<typename I>
-        struct value_type<counted_iterator<I>>
-          : _counted_iterator_::value_type_<I>
+        struct readable_traits<counted_iterator<I>>
+          : meta::if_c<
+                (bool) Readable<I>,
+                readable_traits<I>,
+                meta::nil_>
         {};
 
         template<typename I>
