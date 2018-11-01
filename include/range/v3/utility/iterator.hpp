@@ -627,14 +627,13 @@ namespace ranges
             using char_type       = Char;
             using traits_type     = Traits;
             using ostream_type    = std::basic_ostream<Char, Traits>;
-            using delim_type      = detail::decay_t<Delim>;
 
             constexpr ostream_joiner() = default;
-            ostream_joiner(ostream_type &s, delim_type const &d) noexcept
-              : delim_(d), sout_(&s), first_(true)
+            ostream_joiner(ostream_type &s, Delim const &d) noexcept
+              : delim_(d), sout_(std::addressof(s)), first_(true)
             {}
-            ostream_joiner(ostream_type &s, delim_type &&d) noexcept
-              : delim_(std::move(d)), sout_(&s), first_(true)
+            ostream_joiner(ostream_type &s, Delim &&d) noexcept
+              : delim_(std::move(d)), sout_(std::addressof(s)), first_(true)
             {}
             template <typename T>
             ostream_joiner& operator=(T const &value)
@@ -659,7 +658,7 @@ namespace ranges
                 return *this;
             }
           private:
-            delim_type delim_;
+            Delim delim_;
             ostream_type *sout_;
             bool first_;
         };
@@ -667,7 +666,7 @@ namespace ranges
         struct make_ostream_joiner_fn
         {
             template <typename Delim, typename Char, typename Traits>
-            ostream_joiner<Delim, Char, Traits>
+            ostream_joiner<detail::decay_t<Delim>, Char, Traits>
             operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const noexcept
             {
                 return {s, std::forward<Delim>(d)};
