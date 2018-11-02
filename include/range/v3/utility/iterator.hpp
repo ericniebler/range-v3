@@ -629,10 +629,10 @@ namespace ranges
             using ostream_type    = std::basic_ostream<Char, Traits>;
 
             constexpr ostream_joiner() = default;
-            ostream_joiner(ostream_type &s, Delim const &d) noexcept
+            ostream_joiner(ostream_type &s, Delim const &d)
               : delim_(d), sout_(std::addressof(s)), first_(true)
             {}
-            ostream_joiner(ostream_type &s, Delim &&d) noexcept
+            ostream_joiner(ostream_type &s, Delim &&d)
               : delim_(std::move(d)), sout_(std::addressof(s)), first_(true)
             {}
             template <typename T>
@@ -667,7 +667,7 @@ namespace ranges
         {
             template <typename Delim, typename Char, typename Traits>
             ostream_joiner<detail::decay_t<Delim>, Char, Traits>
-            operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const noexcept
+            operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const
             {
                 return {s, std::forward<Delim>(d)};
             }
