@@ -645,15 +645,15 @@ namespace ranges
                 *sout_ << value;
                 return *this;
             }
-            ostream_joiner& operator*()
+            ostream_joiner& operator*() noexcept
             {
                 return *this;
             }
-            ostream_joiner& operator++()
+            ostream_joiner& operator++() noexcept
             {
                 return *this;
             }
-            ostream_joiner& operator++(int)
+            ostream_joiner& operator++(int) noexcept
             {
                 return *this;
             }
