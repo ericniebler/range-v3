@@ -639,7 +639,7 @@ namespace ranges
             ostream_joiner& operator=(T const &value)
             {
                 RANGES_EXPECT(sout_);
-                if (!first_ && delim_)
+                if (!first_)
                     *sout_ << delim_;
                 first_ = false;
                 *sout_ << value;
