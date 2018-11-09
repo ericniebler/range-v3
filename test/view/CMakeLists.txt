@@ -1,3 +1,5 @@
+set(CMAKE_FOLDER "${CMAKE_FOLDER}/view")
+
 rv3_add_test(test.view.adjacent_remove_if view.adjacent_remove_if adjacent_remove_if.cpp)
 rv3_add_test(test.view.all view.all all.cpp)
 rv3_add_test(test.view.any_view view.any_view any_view.cpp)

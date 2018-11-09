@@ -1,5 +1,7 @@
 include(../cmake/ranges_diagnostics.cmake)
 
+set(CMAKE_FOLDER "test")
+
 add_library(rv3-tests INTERFACE)
 target_link_libraries(rv3-tests INTERFACE range-v3)
 if(NOT RANGE_V3_TRY_THREAD)
