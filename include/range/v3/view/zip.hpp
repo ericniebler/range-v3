@@ -59,11 +59,11 @@ namespace ranges
                 template<typename ...Its>
                 auto operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
-                        noexcept(rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
-                    CPP_ret(common_tuple<rvalue_reference_t<Its>...>)(
+                        noexcept(iter_rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
+                    CPP_ret(common_tuple<iter_rvalue_reference_t<Its>...>)(
                         requires And<Readable<Its>...> && sizeof...(Its) != 2)
                 {
-                    return common_tuple<rvalue_reference_t<Its>...>{iter_move(its)...};
+                    return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
                 }
 
                 // pair value
@@ -89,9 +89,9 @@ namespace ranges
                 // pair rvalue reference
                 template<typename It1, typename It2>
                 auto operator()(move_tag, It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(rvalue_reference_t<It1>(iter_move(it1))) &&
-                             noexcept(rvalue_reference_t<It2>(iter_move(it2)))) ->
-                    CPP_ret(common_pair<rvalue_reference_t<It1>, rvalue_reference_t<It2>>)(
+                    noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
+                             noexcept(iter_rvalue_reference_t<It2>(iter_move(it2)))) ->
+                    CPP_ret(common_pair<iter_rvalue_reference_t<It1>, iter_rvalue_reference_t<It2>>)(
                         requires Readable<It1> && Readable<It2>)
                 {
                     return {iter_move(it1), iter_move(it2)};

@@ -66,7 +66,7 @@ namespace ranges
                 }
 
                 template<typename I>
-                common_reference_t<unwrap_reference_t<Val2 const &>, rvalue_reference_t<I>>
+                common_reference_t<unwrap_reference_t<Val2 const &>, iter_rvalue_reference_t<I>>
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);

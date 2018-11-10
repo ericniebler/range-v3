@@ -33,8 +33,8 @@ namespace ranges
             template(typename I)
             concept Readable,
                 CommonReference<iter_reference_t<I> &&, iter_value_t<I> &> &&
-                CommonReference<iter_reference_t<I> &&, rvalue_reference_t<I> &&> &&
-                CommonReference<rvalue_reference_t<I> &&, iter_value_t<I> const &>
+                CommonReference<iter_reference_t<I> &&, iter_rvalue_reference_t<I> &&> &&
+                CommonReference<iter_rvalue_reference_t<I> &&, iter_value_t<I> const &>
         );
 
         CPP_def
@@ -54,7 +54,7 @@ namespace ranges
         (
             template(typename I, typename O)
             concept IndirectlyMovable,
-                Readable<I> && Writable<O, rvalue_reference_t<I>>
+                Readable<I> && Writable<O, iter_rvalue_reference_t<I>>
         );
 
         CPP_def
@@ -63,8 +63,8 @@ namespace ranges
             concept IndirectlyMovableStorable,
                 IndirectlyMovable<I, O> && 
                 Movable<iter_value_t<I>> &&
-                Constructible<iter_value_t<I>, rvalue_reference_t<I>> &&
-                Assignable<iter_value_t<I> &, rvalue_reference_t<I>> &&
+                Constructible<iter_value_t<I>, iter_rvalue_reference_t<I>> &&
+                Assignable<iter_value_t<I> &, iter_rvalue_reference_t<I>> &&
                 Writable<O, iter_value_t<I>>
         );
 

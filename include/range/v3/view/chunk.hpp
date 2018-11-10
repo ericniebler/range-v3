@@ -296,7 +296,7 @@ namespace ranges
                         return *rng_->it();
                     }
                     constexpr /*c++14*/
-                    rvalue_reference_t<iterator_t<Rng>> move() const
+                    iter_rvalue_reference_t<iterator_t<Rng>> move() const
                     {
                         RANGES_EXPECT(!done());
                         return ranges::iter_move(rng_->it());

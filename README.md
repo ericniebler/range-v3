@@ -150,7 +150,7 @@ Release Notes:
     | `indirect_swap`               | `iter_swap`               |
     | `indirect_move`               | `iter_move`               |
     | `iterator_value_t`            | `value_type_t`            |
-    | `iterator_reference_t`        | `iter_reference_t`             |
+    | `iterator_reference_t`        | `reference_t`             |
     | `iterator_difference_t`       | `difference_type_t`       |
     | `iterator_size_t`             | `size_type_t`             |
     | `iterator_rvalue_reference_t` | `rvalue_reference_t`      |

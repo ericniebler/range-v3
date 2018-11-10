@@ -178,7 +178,7 @@ namespace ranges
             friend constexpr /*c++14*/
             auto iter_move(common_iterator const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
-                CPP_broken_friend_ret(rvalue_reference_t<I>)(
+                CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                     requires InputIterator<I_>)
             {
                 return ranges::iter_move(ranges::get<0>(detail::cidata(i)));
@@ -204,7 +204,7 @@ namespace ranges
             constexpr /*c++14*/
             auto iter_move(common_iterator<I, S> const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
-                CPP_broken_friend_ret(rvalue_reference_t<I>)(
+                CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                     requires InputIterator<I>)
             {
                 return ranges::iter_move(ranges::get<0>(detail::cidata(i)));

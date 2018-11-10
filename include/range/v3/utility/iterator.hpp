@@ -801,7 +801,7 @@ namespace ranges
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;
             using iterator_category = input_iterator_tag;
-            using reference = rvalue_reference_t<I>;
+            using reference = iter_rvalue_reference_t<I>;
 
             constexpr move_iterator() = default;
             explicit move_iterator(I i)
@@ -1151,7 +1151,7 @@ namespace ranges
                 template<typename II = I const>
                 constexpr /*c++14*/
                 auto move() const noexcept(has_nothrow_iter_move<II>::value) ->
-                    CPP_ret(rvalue_reference_t<II>)(
+                    CPP_ret(iter_rvalue_reference_t<II>)(
                         requires Same<I const, II> && Readable<II>)
                 {
                     return iter_move(it_);
@@ -1224,148 +1224,6 @@ namespace ranges
         RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::recounted_fn,
                                recounted)
         /// @}
-
-        /// \cond
-        namespace detail
-        {
-            template<typename D = std::ptrdiff_t>
-            struct std_output_iterator_traits
-            {
-                using iterator_category = std::output_iterator_tag;
-                using difference_type = D;
-                using value_type = void;
-                using reference = void;
-                using pointer = void;
-            };
-
-            CPP_def(
-                template(typename I)
-                concept Cpp17Iterator,
-                    requires (I i) (
-                        *i, // { *i } -> auto&&;
-                        concepts::requires_<Same<decltype(++i), I&>>, // { ++i } -> Same<I>&;
-                        *i++ // { *i++ } -> auto&&;
-                    ) &&
-                    Copyable<I>
-            );
-            CPP_def(
-                template(typename I)
-                concept Cpp17InputIterator,
-                    Cpp17Iterator<I> &&
-                    True<
-                        common_reference_t<
-                            iter_reference_t<I> &&,
-                            typename readable_traits<I>::value_type &>,
-                        common_reference_t<
-                            decltype(*std::declval<I &>()++) &&,
-                            typename readable_traits<I>::value_type &>> &&
-                    SignedIntegral<typename incrementable_traits<I>::difference_type> &&
-                    EqualityComparable<I>
-            );
-            CPP_def(
-                template(typename I)
-                concept Cpp17ForwardIterator,
-                    requires (I i) (
-                        concepts::requires_<Same<decltype(i++), I const &>>, // { i++ } -> const I&;
-                        concepts::requires_<Same<iter_reference_t<I>, decltype(*i++)>>
-                    ) &&
-                    Cpp17InputIterator<I> &&
-                    Constructible<I> &&
-                    Same<uncvref_t<iter_reference_t<I>>, typename readable_traits<I>::value_type>
-            );
-            CPP_def(
-                template(typename I)
-                concept Cpp17BidirectionalIterator,
-                    requires (I i) (
-                        concepts::requires_<Same<decltype(--i), I &>>, // { --i } -> Same<I>&;
-                        concepts::requires_<Same<decltype(i--), I const &>>, // { i-- } -> const I&;
-                        concepts::requires_<Same<iter_reference_t<I>, decltype(*i--)>>
-                    ) &&
-                    Cpp17ForwardIterator<I>
-            );
-            CPP_def(
-                template(typename I)
-                concept Cpp17RandomAccessIterator,
-                    requires (I i, typename incrementable_traits<I>::difference_type n) (
-                        concepts::requires_<Same<I &, decltype(i += n)>>,
-                        concepts::requires_<Same<I &, decltype(i -= n)>>,
-                        concepts::requires_<Same<I, decltype(i + n)>>,
-                        concepts::requires_<Same<I, decltype(n + i)>>,
-                        concepts::requires_<Same<I, decltype(i - n)>>,
-                        concepts::requires_<Same<decltype(n), decltype(i - i)>>,
-                        concepts::requires_<Same<iter_reference_t<I>, decltype(i[n])>>
-                    ) &&
-                    Cpp17BidirectionalIterator<I> &&
-                    StrictTotallyOrdered<I>
-            );
-
-            template<typename I>
-            typename incrementable_traits<I>::difference_type cpp17_difference_type_(int);
-            template<typename I>
-            void cpp17_difference_type_(long);
-
-            template<typename I>
-            typename I::pointer cpp17_pointer_type_(int);
-            template<typename I>
-            decltype(std::declval<I &>().operator->()) cpp17_pointer_type_(long);
-            template<typename I>
-            void cpp17_pointer_type_(...);
-
-            template<typename I>
-            typename I::reference cpp17_reference_type_(int);
-            template<typename I>
-            iter_reference_t<I> cpp17_reference_type_(long);
-
-            template<typename I>
-            auto cpp17_iterator_category_type_(priority_tag<4>) ->
-                typename I::iterator_category;
-            template<typename I>
-            auto cpp17_iterator_category_type_(priority_tag<3>) ->
-                CPP_ret(std::random_access_iterator_tag)(
-                    requires Cpp17RandomAccessIterator<I>);
-            template<typename I>
-            auto cpp17_iterator_category_type_(priority_tag<2>) ->
-                CPP_ret(std::bidirectional_iterator_tag)(
-                    requires Cpp17BidirectionalIterator<I>);
-            template<typename I>
-            auto cpp17_iterator_category_type_(priority_tag<1>) ->
-                CPP_ret(std::forward_iterator_tag)(
-                    requires Cpp17ForwardIterator<I>);
-            template<typename I>
-            auto cpp17_iterator_category_type_(priority_tag<0>) ->
-                std::input_iterator_tag;
-
-            template<typename I, bool>
-            struct default_std_iterator_traits_2_
-              : std_output_iterator_traits<decltype(detail::cpp17_difference_type_<I>(0))>
-            {};
-
-            template<typename I>
-            struct default_std_iterator_traits_2_<I, true>
-            {
-                using difference_type = typename incrementable_traits<I>::difference_type;
-                using value_type = typename readable_traits<I>::value_type;
-                using pointer = decltype(detail::cpp17_pointer_type_<I>(0));
-                using reference = decltype(detail::cpp17_reference_type_<I>(0));
-                using iterator_category =
-                    decltype(detail::cpp17_iterator_category_type_<I>(priority_tag<4>{}));
-            };
-
-            template<typename I, bool>
-            struct default_std_iterator_traits_1_
-            {};
-
-            template<typename I>
-            struct default_std_iterator_traits_1_<I, true>
-              : default_std_iterator_traits_2_<I, (bool) Cpp17InputIterator<I>>
-            {};
-
-            template<typename I>
-            struct default_std_iterator_traits_
-              : default_std_iterator_traits_1_<I, (bool) Cpp17Iterator<I>>
-            {};
-        }
-        /// \endcond
     }
 }
 

@@ -178,6 +178,229 @@ void test_845()
     ranges::advance(itr, 1); // Should not create ambiguity
 }
 
+// Test the deep integration with the STL
+#if RANGES_DEEP_STL_INTEGRATION
+
+struct _X
+{
+    int& operator*() const;
+    _X & operator++();
+    struct proxy { operator int() const; };
+    proxy operator++(int);
+};
+
+namespace std
+{
+    template <>
+    struct iterator_traits<::_X>
+    {
+        using value_type = int;
+        using reference = int&;
+        using pointer = int*;
+        using difference_type = ptrdiff_t;
+        using iterator_category = input_iterator_tag;
+    };
+}
+
+// TODO:
+//static_assert(ranges::InputIterator<_X>, "");
+
+struct _Y
+{
+    using value_type = int;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::bidirectional_iterator_tag;
+    using reference = int&;
+    using pointer = int*;
+    int& operator*() const noexcept;
+};
+
+static_assert(std::is_same<std::add_pointer_t<int&>, int*>::value, "");
+
+struct _Z
+{
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::bidirectional_iterator_tag;
+    int& operator*() const noexcept;
+    _Z& operator++();
+    _Z operator++(int);
+    bool operator==(_Z) const;
+    bool operator!=(_Z) const;
+};
+
+namespace ranges
+{
+    template <>
+    struct readable_traits<::_Z>
+    {
+        using value_type = int;
+    };
+}
+
+// Looks like an STL2 forward iterator, but the conformance beyond
+// input is "accidental".
+struct WouldBeFwd
+{
+    using value_type = struct _S{ };
+    using difference_type = std::ptrdiff_t;
+    _S & operator*() const;
+    WouldBeFwd& operator++();
+    WouldBeFwd operator++(int);
+    //_S* operator->() const;
+    bool operator==(WouldBeFwd) const;
+    bool operator!=(WouldBeFwd) const;
+};
+
+namespace std
+{
+    template <>
+    struct iterator_traits<::WouldBeFwd>
+    {
+        using value_type = typename ::WouldBeFwd::value_type;
+        using difference_type = typename ::WouldBeFwd::difference_type;
+        using reference = iter_reference_t<::WouldBeFwd>;
+        using pointer = add_pointer_t<reference>;
+        // Explicit opt-out of stl2's ForwardIterator concept:
+        using iterator_category = std::input_iterator_tag; // STL1-style iterator category
+    };
+}
+
+// Looks like an STL2 bidirectional iterator, but the conformance beyond
+// forward is "accidental".
+struct WouldBeBidi
+{
+    using value_type = struct _S{ };
+    using difference_type = std::ptrdiff_t;
+    // using iterator_category = std::input_iterator_tag;
+    // using iterator_concept = std::forward_iterator_tag;
+    _S operator*() const; // by value!
+    WouldBeBidi& operator++();
+    WouldBeBidi operator++(int);
+    WouldBeBidi& operator--();
+    WouldBeBidi operator--(int);
+    //_S* operator->() const;
+    bool operator==(WouldBeBidi) const;
+    bool operator!=(WouldBeBidi) const;
+};
+
+namespace std
+{
+    template <>
+    struct iterator_traits<::WouldBeBidi>
+    {
+        using value_type = typename ::WouldBeBidi::value_type;
+        using difference_type = typename ::WouldBeBidi::difference_type;
+        using reference = value_type;
+        using pointer = value_type*;
+        using iterator_category = std::input_iterator_tag; // STL1-style iterator category
+        // Explicit opt-out of stl2's BidirectionalIterator concept:
+        using iterator_concept = std::forward_iterator_tag; // STL2-style iterator category
+    };
+}
+
+struct OutIter
+{
+    using difference_type = std::ptrdiff_t;
+    OutIter& operator=(int);
+    OutIter& operator*();
+    OutIter& operator++();
+    OutIter& operator++(int);
+};
+
+// proxy iterator
+struct bool_iterator
+{
+    using value_type = bool;
+    struct reference
+    {
+        operator bool() const { return true; }
+        reference();
+        reference(reference const &);
+        reference& operator=(reference);
+        reference& operator=(bool);
+    };
+    using difference_type = std::ptrdiff_t;
+    reference operator*() const;
+    bool_iterator& operator++();
+    bool_iterator operator++(int);
+    bool operator==(bool_iterator) const;
+    bool operator!=(bool_iterator) const;
+    friend reference iter_move(bool_iterator i) { return *i; }
+    friend void iter_swap(bool_iterator, bool_iterator) { }
+};
+
+void deep_integration_test()
+{
+    using std::is_same;
+    using std::iterator_traits;
+    using ranges::iter_value_t;
+    using ranges::iter_difference_t;
+    static_assert(is_same<iter_value_t<const int*>, int>::value, "");
+    static_assert(is_same<iter_difference_t<const int*>, ptrdiff_t>::value, "");
+    static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");
+
+    // static_assert(!_IsPrimary<iterator_traits, _X>);
+    static_assert(is_same<typename iterator_traits<_X>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<_X>, int>::value, "");
+
+    // static_assert(_IsPrimary<iterator_traits, _Y>);
+    static_assert(is_same<typename iterator_traits<_Y>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<_Y>, int>::value, "");
+
+    // libc++ has a broken std::iterator_traits primary template
+    // https://bugs.llvm.org/show_bug.cgi?id=39619
+#ifndef _LIBCPP_VERSION
+    // iterator_traits uses specializations of ranges::value_type:
+    // static_assert(_IsPrimary<iterator_traits, _Z>);
+    static_assert(is_same<typename iterator_traits<_Z>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<_Z>, int>::value, "");
+    static_assert(is_same<typename iterator_traits<_Z>::iterator_category,
+                          std::bidirectional_iterator_tag>::value, "");
+#endif
+
+    // static_assert(ranges::InputIterator<WouldBeFwd>);
+    // static_assert(!ranges::ForwardIterator<WouldBeFwd>);
+    static_assert(is_same<typename iterator_traits<WouldBeFwd>::iterator_category,
+                           std::input_iterator_tag>::value, "");
+
+    // static_assert(ranges::ForwardIterator<WouldBeBidi>);
+    // static_assert(!ranges::BidirectionalIterator<WouldBeBidi>);
+    static_assert(is_same<typename iterator_traits<WouldBeBidi>::iterator_category,
+                          std::input_iterator_tag>::value, "");
+
+    // static_assert(ranges::Iterator<OutIter>);
+    // static_assert(!ranges::InputIterator<OutIter>);
+    static_assert(is_same<typename iterator_traits<OutIter>::difference_type,
+                          std::ptrdiff_t>::value, "");
+    static_assert(is_same<typename iterator_traits<OutIter>::iterator_category,
+                          std::output_iterator_tag>::value, "");
+
+    // static_assert(ranges::RandomAccessIterator<int volatile *>);
+    // static_assert(ranges::ContiguousIterator<int volatile *>);
+
+    // static_assert(ranges::ForwardIterator<bool_iterator>);
+    static_assert(is_same<typename iterator_traits<bool_iterator>::iterator_category,
+                          std::input_iterator_tag>::value, "");
+    // static_assert(_Cpp98InputIterator<int volatile*>);
+    // static_assert(_Cpp98InputIterator<bool_iterator>);
+
+    // // Test subsumption:
+    // test(WouldBeFwd{});
+    // test(WouldBeBidi{});
+    // test(std::__nullptr_v<int>);
+
+    // // Test subsumption:
+    // test2(OutIter{});
+    // test2(std::__nullptr_v<int>);
+
+    // // Test subsumption:
+    // test3(WouldBeFwd{}, WouldBeFwd{});
+    // test3(std::__nullptr_v<int>, std::__nullptr_v<int>);
+}
+
+#endif
+
+
 int main()
 {
     test_insert_iterator();

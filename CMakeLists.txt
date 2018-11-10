@@ -10,8 +10,6 @@ get_directory_property(is_subproject PARENT_DIRECTORY)
 
 project(Range-v3 CXX)
 
-option(RANGE_V3_PREFER_REAL_CONCEPTS "Use real concepts instead of emulation if the compiler supports it" ON)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
 
@@ -38,14 +36,15 @@ include(ranges_flags)
 # Test for <thread>
 try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
 
-# Test for coroutine TS and concepts support
 include(CheckCXXSourceCompiles)
 
+# Test for coroutine TS support
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
 set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
 unset(CMAKE_REQUIRED_FLAGS)
 
+# Test for concepts support
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/concepts_test_code.cpp" RANGE_V3_CONCEPTS_TEST_CODE)
 set(CMAKE_REQUIRED_FLAGS "-fconcepts")
 check_cxx_source_compiles("${RANGE_V3_CONCEPTS_TEST_CODE}" RANGE_V3_HAS_FCONCEPTS)
@@ -71,6 +70,8 @@ endif()
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include"
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+# This header is not meant to be included directly.
+list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
 
 # Add header files as sources to fix MSVS 2017 not finding source during debugging
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE

@@ -242,7 +242,7 @@ namespace ranges
             friend constexpr /*c++14*/
             auto iter_move(counted_iterator const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
-                CPP_broken_friend_ret(rvalue_reference_t<I>)(
+                CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                     requires InputIterator<I>)
             {
                 return ranges::iter_move(i.current_);
@@ -274,7 +274,7 @@ namespace ranges
             constexpr /*c++14*/
             auto iter_move(counted_iterator<I> const &i)
                 noexcept(detail::has_nothrow_iter_move<I>::value) ->
-                CPP_broken_friend_ret(rvalue_reference_t<I>)(
+                CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                     requires InputIterator<I>)
             {
                 return ranges::iter_move(_counted_iterator_::access::current(i));

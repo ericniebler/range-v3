@@ -353,7 +353,7 @@ namespace ranges
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A const &>().read(
                     std::declval<BaseIter const &>(), detail::adaptor_base_current_mem_fn{})),
-                typename X = rvalue_reference_t<BaseIter>>
+                typename X = iter_rvalue_reference_t<BaseIter>>
             X iter_move_(long) const
                 noexcept(noexcept(X(ranges::iter_move(std::declval<BaseIter const &>()))))
             {

@@ -109,6 +109,14 @@ namespace ranges
     decltype(__VA_ARGS__)                                       \
     /**/
 
+#ifdef __clang__
+#define RANGES_IS_SAME(...) __is_same(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
+#define RANGES_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#else
+#define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#endif
+
 // Non-portable forward declarations of standard containers
 #ifdef _LIBCPP_VERSION
 #define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD

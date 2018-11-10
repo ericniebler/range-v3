@@ -15,14 +15,13 @@
 #ifndef RANGES_V3_UTILITY_ASSOCIATED_TYPES_HPP
 #define RANGES_V3_UTILITY_ASSOCIATED_TYPES_HPP
 
-#include <iosfwd>
 #include <cstddef>
 #include <utility>
 #include <iterator>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
+#include <std/detail/associated_types.hpp>
 
 namespace ranges
 {
@@ -36,87 +35,45 @@ namespace ranges
         {
 #if defined(__GLIBCXX__)
             template<typename I>
-            std::false_type is_std_iterator_traits_specialized_(std::__iterator_traits<I> *);
+            char (&is_std_iterator_traits_specialized_(std::__iterator_traits<I> *))[2];
             template<typename I>
-            std::true_type is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_(void *);
 #elif defined(_LIBCPP_VERSION)
             template<typename I, bool B>
-            std::false_type is_std_iterator_traits_specialized_(std::__iterator_traits<I, B> *);
+            char (&is_std_iterator_traits_specialized_(std::__iterator_traits<I, B> *))[2];
             template<typename I>
-            std::true_type is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_(void *);
 #elif defined(_MSVC_STL_VERSION)
             template<typename I>
-            std::false_type is_std_iterator_traits_specialized_(std::_Iterator_traits_base<I /*, void*/> *);
+            char (&is_std_iterator_traits_specialized_(std::_Iterator_traits_base<I> *))[2];
             template<typename I>
-            std::true_type is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_(void *);
 #else
             template<typename I>
-            std::false_type is_std_iterator_traits_specialized_(void *);
+            char (&is_std_iterator_traits_specialized_(void *))[2];
 #endif
 
             template<typename I>
-            struct is_std_iterator_traits_specialized
-              : decltype(is_std_iterator_traits_specialized_<I>(
-                    static_cast<std::iterator_traits<I> *>(nullptr)))
-            {};
-
-            template<typename T>
-            struct with_difference_type_
+            constexpr bool is_std_iterator_traits_specialized() noexcept
             {
-                using difference_type = T;
-            };
-
-            template<typename T>
-            using difference_result_t =
-                decltype(std::declval<const T>() - std::declval<const T>());
-
-            template<typename, typename = void>
-            struct incrementable_traits_2_
-            {};
-
-            template<typename T>
-            struct incrementable_traits_2_<T, meta::if_<std::is_integral<difference_result_t<T>>>>
-            {
-                using difference_type = meta::_t<std::make_signed<difference_result_t<T>>>;
-            };
-
-            template<typename T, typename = void>
-            struct incrementable_traits_1_
-              : detail::incrementable_traits_2_<T>
-            {};
-
-            template<typename T>
-            struct incrementable_traits_1_<T *>
-              : meta::if_<
-                    std::is_object<T>,
-                    detail::with_difference_type_<std::ptrdiff_t>,
-                    meta::nil_>
-            {};
-
-            template<typename T>
-            struct incrementable_traits_1_<T, meta::void_<typename T::difference_type>>
-            {
-                using difference_type = typename T::difference_type;
-            };
+                using iter_traits_ptr = std::iterator_traits<I> *;
+                return 1 == sizeof(is_std_iterator_traits_specialized_<I>(iter_traits_ptr{}));
+            }
         }
         /// \endcond
 
-        template<typename T>
-        struct incrementable_traits
-          : detail::incrementable_traits_1_<T>
-        {};
-
-        template<typename T>
-        struct incrementable_traits<T const>
-          : incrementable_traits<T>
-        {};
-
+#if RANGES_DEEP_STL_INTEGRATION && !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_difference_t =
-            typename meta::if_<
-                detail::is_std_iterator_traits_specialized<T>,
+            typename detail::if_then_t<
+                detail::is_std_iterator_traits_specialized<T>(),
                 std::iterator_traits<T>,
                 incrementable_traits<T>>::difference_type;
+#else
+        template<typename T>
+        using iter_difference_t =
+            typename incrementable_traits<T>::difference_type;
+#endif
 
         ////////////////////////////////////////////////////////////////////////////////////////
         /// \cond
@@ -145,7 +102,7 @@ namespace ranges
             {};
 
             template<typename T>
-            struct size_type_<T, meta::void_<iter_difference_t<T>>>
+            struct size_type_<T, always_<void, iter_difference_t<T>>>
               : std::make_unsigned<iter_difference_t<T>>
             {};
         }
@@ -166,63 +123,18 @@ namespace ranges
           : detail::size_type_<T>
         {};
 
-        /// \cond
-        namespace detail
-        {
-            template<typename, typename = void>
-            struct with_value_type_
-            {};
-            template<typename T>
-            struct with_value_type_<T, meta::if_<std::is_object<T>>>
-            {
-                using value_type = meta::_t<std::remove_cv<T>>;
-            };
-            template<typename, typename = void>
-            struct readable_traits_2_
-            {};
-            template<typename T>
-            struct readable_traits_2_<T, meta::void_<typename T::element_type>>
-              : with_value_type_<typename T::element_type>
-            {};
-            template<typename T, typename = void>
-            struct readable_traits_1_
-              : readable_traits_2_<T>
-            {};
-            template<typename T>
-            struct readable_traits_1_<T, meta::if_<std::is_array<T>>>
-              : with_value_type_<meta::_t<std::remove_extent<T>>>
-            {};
-            template<typename T>
-            struct readable_traits_1_<T *>
-              : detail::with_value_type_<T>
-            {};
-            template<typename T>
-            struct readable_traits_1_<T, meta::void_<typename T::value_type>>
-              : with_value_type_<typename T::value_type>
-            {};
-        }
-        /// \endcond
-
-        ////////////////////////////////////////////////////////////////////////////////////////
-        // Not to spec:
-        // * For class types with both member value_type and element_type, value_type is
-        //   preferred (see ericniebler/stl2#299).
-        template<typename T>
-        struct readable_traits
-          : detail::readable_traits_1_<T>
-        {};
-
-        template<typename T>
-        struct readable_traits<T const>
-          : readable_traits<T>
-        {};
-
+#if RANGES_DEEP_STL_INTEGRATION && !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_value_t =
-            typename meta::if_<
-                detail::is_std_iterator_traits_specialized<T>,
+            typename detail::if_then_t<
+                detail::is_std_iterator_traits_specialized<T>(),
                 std::iterator_traits<T>,
                 readable_traits<T>>::value_type;
+#else
+        template<typename T>
+        using iter_value_t =
+            typename readable_traits<T>::value_type;
+#endif
 
         /// \cond
         template<typename T>

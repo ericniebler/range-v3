@@ -35,6 +35,14 @@ namespace ranges
 
         /// \addtogroup group-core
         /// @{
+        // using input_iterator_tag = std::input_iterator_tag;
+        // using forward_iterator_tag = std::forward_iterator_tag;
+        // using bidirectional_iterator_tag = std::bidirectional_iterator_tag;
+        // using random_access_iterator_tag = std::random_access_iterator_tag;
+        // struct contiguous_iterator_tag
+        //   : random_access_iterator_tag
+        // {};
+
         using input_iterator_tag =
             ::concepts::tag<InputIteratorConcept>;
 
@@ -58,7 +66,7 @@ namespace ranges
                 typename = iter_reference_t<I>,
                 typename R = decltype(iter_move(std::declval<I &>())),
                 typename = R&>
-            using rvalue_reference_t = R;
+            using iter_rvalue_reference_t = R;
 
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T>
@@ -79,7 +87,9 @@ namespace ranges
             template<typename T>
             struct upgrade_iterator_category
             {
-                using type = decltype(detail::upgrade_iterator_category_(_nullptr_v<T>(), _nullptr_v<T>()));
+                using type = decltype(detail::upgrade_iterator_category_(
+                    static_cast<T *>(nullptr),
+                    static_cast<T *>(nullptr)));
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +122,9 @@ namespace ranges
 
             template<typename Tag, typename Reference>
             struct downgrade_iterator_category
-              : decltype(detail::downgrade_iterator_category_(_nullptr_v<Tag>(), _nullptr_v<Tag>(),
+              : decltype(detail::downgrade_iterator_category_(
+                    static_cast<Tag *>(nullptr),
+                    static_cast<Tag *>(nullptr),
                     std::integral_constant<bool, std::is_reference<Reference>::value>()))
             {};
 
@@ -126,11 +138,12 @@ namespace ranges
             iterator_category_helper(T *);
 
             template<typename T>
-            using iterator_category_ = decltype(detail::iterator_category_helper(_nullptr_v<T>()));
+            using iterator_category_ =
+                decltype(detail::iterator_category_helper(static_cast<T *>(nullptr)));
 
             template<typename I>
             struct has_nothrow_iter_move
-              : meta::bool_<noexcept(rvalue_reference_t<I>(ranges::iter_move(std::declval<I &>())))>
+              : meta::bool_<noexcept(iter_rvalue_reference_t<I>(ranges::iter_move(std::declval<I &>())))>
             {};
         } // namespace detail
         /// \endcond
@@ -152,11 +165,8 @@ namespace ranges
         /// @{
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator traits
-        // template<typename I>
-        // using iter_value_t = meta::_t<value_type<I>>;
-
         template<typename I>
-        using rvalue_reference_t = detail::rvalue_reference_t<I>;
+        using iter_rvalue_reference_t = detail::iter_rvalue_reference_t<I>;
 
         template<typename I>
         using iter_common_reference_t = common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
@@ -164,12 +174,16 @@ namespace ranges
         template<typename I>
         using iterator_category_t = meta::_t<iterator_category<I>>;
 
-        // template<typename I>
-        // using iter_difference_t = meta::_t<difference_type<I>>;
-
         template<typename I>
         using size_type_t = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
         /// @}
+
+        /// \cond
+        template<typename I>
+        using rvalue_reference_t
+            RANGES_DEPRECATED("iter_rvalue_reference_t is deprecated; use iter_rvalue_reference_t instead") =
+                detail::iter_rvalue_reference_t<I>;
+        /// \endcond
 
         /// \cond
         namespace detail

@@ -63,7 +63,7 @@ namespace ranges
         using range_reference_t = iter_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_rvalue_reference_t = rvalue_reference_t<iterator_t<Rng>>;
+        using range_rvalue_reference_t = iter_rvalue_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_common_reference_t = iter_common_reference_t<iterator_t<Rng>>;

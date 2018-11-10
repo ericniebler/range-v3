@@ -9,10 +9,10 @@
 # Compilation flags
 include(CheckCXXCompilerFlag)
 macro(ranges_append_flag testname flag ${ARGN})
-    check_cxx_compiler_flag("${flag} ${ARGN}" ${testname})
-    if (${testname})
-        add_compile_options(${flag} ${ARGN})
-    endif()
+  check_cxx_compiler_flag("${flag} ${ARGN}" ${testname})
+  if (${testname})
+    add_compile_options(${flag} ${ARGN})
+  endif()
 endmacro()
 
 # All compilation flags
@@ -42,6 +42,16 @@ if (RANGES_ENV_LINUX AND RANGES_CXX_COMPILER_CLANG)
   # This works around it by replacing __extern_always_inline with inline using a
   # macro:
   ranges_append_flag(RANGES_HAS_D__EXTERN_ALWAYS_INLINE -D__extern_always_inline=inline)
+endif()
+
+# Deep integration support
+if (RANGES_DEEP_STL_INTEGRATION)
+  if (RANGES_CXX_COMPILER_MSVC)
+    add_compile_options(/external:I "${PROJECT_SOURCE_DIR}/include/std")
+  else()
+    add_compile_options(-isystem "${PROJECT_SOURCE_DIR}/include/std")
+  endif()
+  add_compile_definitions(RANGES_DEEP_STL_INTEGRATION=1)
 endif()
 
 # Template diagnostic flags

@@ -16,6 +16,12 @@ option(RANGES_MODULES "Enables use of Clang modules (experimental)." OFF)
 option(RANGES_NATIVE "Enables -march/-mtune=native." ON)
 option(RANGES_VERBOSE_BUILD "Enables debug output from CMake." OFF)
 option(RANGES_LLVM_POLLY "Enables LLVM Polly." OFF)
+option(RANGES_PREFER_REAL_CONCEPTS
+  "Use real concepts instead of emulation if the compiler supports it"
+  ON)
+option(RANGES_DEEP_STL_INTEGRATION
+  "Hijacks the primary std::iterator_traits template to emulate the C++20 std::ranges:: behavior."
+  OFF)
 set(RANGES_INLINE_THRESHOLD -1 CACHE STRING "Force a specific inlining threshold.")
 
 # Enable verbose configure when passing -Wdev to CMake

@@ -284,7 +284,7 @@ namespace test_move_only
 
         using value_type = std::tuple<ranges::iter_value_t<I>>;
         using reference = ranges::common_tuple<ranges::iter_reference_t<I>>;
-        using rvalue_reference = ranges::common_tuple<ranges::rvalue_reference_t<I>>;
+        using rvalue_reference = ranges::common_tuple<ranges::iter_rvalue_reference_t<I>>;
         reference read() const { return reference{*it_}; }
         rvalue_reference move() const { return rvalue_reference{ranges::iter_move(it_)}; }
         void write(reference const &v) const { reference{*it_} = v; }
