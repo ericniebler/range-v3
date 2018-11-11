@@ -95,7 +95,7 @@ int main()
         CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
         CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
         // ...and composable with unique_view
-        auto rng = rng0 | view::unique;
+        auto rng = rng0 | view::unique(equal_to{});
         models<concepts::BidirectionalView>(aux::copy(rng));
         models_not<concepts::RandomAccessRange>(rng);
         models<concepts::BoundedRange>(rng);

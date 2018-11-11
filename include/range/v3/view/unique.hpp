@@ -33,15 +33,28 @@ namespace ranges
         {
             struct unique_fn
             {
+            private:
+                friend view_access;
+                template<typename C,
+                        CONCEPT_REQUIRES_(!Range<C>())>
+                static auto bind(unique_fn unique, C pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(unique, std::placeholders::_1, protect(std::move(pred)))
+                )
+
+            public:
                 template<typename Rng>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
                     EqualityComparable<range_value_type_t<Rng>>>;
 
-                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
-                unique_view<all_t<Rng>> operator()(Rng && rng) const
+                template<typename Rng, typename C = equal_to,
+                        CONCEPT_REQUIRES_(Concept<Rng>())>
+                auto operator()(Rng && rng, C pred = equal_to{}) const ->
+                adjacent_filter_view<all_t<Rng>, decltype(not_fn(pred))>
                 {
-                    return {all(static_cast<Rng&&>(rng)), not_equal_to{}};
+                    return {all(static_cast<Rng&&>(rng)), not_fn(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
