@@ -1,7 +1,5 @@
 #include <experimental/coroutine>
 
-namespace coro = std::experimental::coroutines_v1;
-
 struct present
 {
     struct promise_type
@@ -9,8 +7,8 @@ struct present
         int result;
 
         present get_return_object() { return {*this}; }
-        coro::suspend_never initial_suspend() { return {}; }
-        coro::suspend_never final_suspend() { return {}; }
+        std::experimental::suspend_never initial_suspend() { return {}; }
+        std::experimental::suspend_never final_suspend() { return {}; }
         void return_value(int i) { result = i; }
         void unhandled_exception() {}
     };
@@ -18,7 +16,7 @@ struct present
     promise_type& promise;
 
     bool await_ready() const { return true; }
-    void await_suspend(coro::coroutine_handle<>) const {}
+    void await_suspend(std::experimental::coroutine_handle<>) const {}
     int await_resume() const { return promise.result; }
 };
 
