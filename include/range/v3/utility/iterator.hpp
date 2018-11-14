@@ -667,7 +667,7 @@ namespace ranges
         struct make_ostream_joiner_fn
         {
             template <typename Delim, typename Char, typename Traits,
-                CONCEPT_REQUIRES_(SemiRegular<Delim>())>
+                CONCEPT_REQUIRES_(SemiRegular<detail::decay_t<Delim>>())>
             ostream_joiner<detail::decay_t<Delim>, Char, Traits>
             operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const
             {
