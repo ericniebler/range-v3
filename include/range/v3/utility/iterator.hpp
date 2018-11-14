@@ -623,6 +623,7 @@ namespace ranges
                   typename Traits = std::char_traits<Char>>
         struct ostream_joiner
         {
+            CONCEPT_ASSERT(SemiRegular<Delim>());
             using difference_type = std::ptrdiff_t;
             using char_type       = Char;
             using traits_type     = Traits;
@@ -665,7 +666,8 @@ namespace ranges
 
         struct make_ostream_joiner_fn
         {
-            template <typename Delim, typename Char, typename Traits>
+            template <typename Delim, typename Char, typename Traits,
+                CONCEPT_REQUIRES_(SemiRegular<Delim>())>
             ostream_joiner<detail::decay_t<Delim>, Char, Traits>
             operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const
             {
