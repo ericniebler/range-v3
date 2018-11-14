@@ -211,9 +211,6 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_401490
 #define RANGES_WORKAROUND_MSVC_589046
 #define RANGES_WORKAROUND_MSVC_701425
-#if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-#define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
-#endif
 #endif
 
 #define RANGES_WORKAROUND_MSVC_125882
@@ -224,7 +221,13 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_688606
 #define RANGES_WORKAROUND_MSVC_699982
 #define RANGES_WORKAROUND_MSVC_701385
+
+// Relocate the following into the <1920 section after VS2019 Preview 2 release:
 #define RANGES_WORKAROUND_MSVC_711347
+// MSVC doesn't define __cpp_coroutines even with /await
+#if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+#define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
+#endif
 
 #elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)

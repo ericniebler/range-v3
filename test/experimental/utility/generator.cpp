@@ -10,7 +10,6 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 #include <range/v3/detail/config.hpp>
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <iostream>
 #include <vector>
 #include <range/v3/begin_end.hpp>
@@ -27,6 +26,10 @@
 #include <range/v3/experimental/utility/generator.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
+
+#if RANGES_CXX_COROUTINES < RANGES_CXX_COROUTINES_TS1
+#error This test uses coroutines.
+#endif
 
 template<bool Condition>
 using maybe_sized_generator = meta::if_c<Condition,
@@ -279,6 +282,3 @@ int main()
 
     return ::test_result();
 }
-#else // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-int main() {}
-#endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
