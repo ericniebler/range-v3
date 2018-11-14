@@ -1,3 +1,5 @@
+set(CMAKE_FOLDER "${CMAKE_FOLDER}/utility")
+
 rv3_add_test(test.utility.basic_iterator utility.basic_iterator basic_iterator.cpp)
 rv3_add_test(test.utility.concepts utility.concepts concepts.cpp)
 rv3_add_test(test.utility.common_type utility.common_type common_type.cpp)

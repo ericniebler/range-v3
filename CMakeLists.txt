@@ -12,6 +12,7 @@ project(Range-v3 CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export compilation data-base
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_library(meta INTERFACE)
 target_include_directories(meta INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>)
@@ -71,6 +72,9 @@ else()
   add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
 generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+set_target_properties(headers
+    PROPERTIES FOLDER "test/header"
+)
 
 # Grab the range-v3 version numbers:
 include(${CMAKE_CURRENT_SOURCE_DIR}/Version.cmake)
