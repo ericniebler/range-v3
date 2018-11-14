@@ -103,5 +103,45 @@ int main()
         ::check_equal(rng, {4, 3, 2, 1});
     }
 
+    {
+        auto const caseInsensitiveCompare = [](const std::string& s1, const std::string& s2){
+            if (s1.size() != s2.size())
+                return false;
+            for (unsigned i = 0; i < s1.size(); i++)
+                if (toupper(s1.at(i)) != toupper(s2.at(i)))
+                    return false;
+
+            return true;
+        };
+
+        std::vector<std::string> rgs{"hello", "HELLO", "bye", "Bye", "BYE"};
+        auto rng = rgs | view::unique(caseInsensitiveCompare);
+        has_type<std::string &>(*begin(rng));
+        models<concepts::BidirectionalView>(aux::copy(rng));
+        models_not<concepts::RandomAccessRange>(rng);
+        models<concepts::BoundedRange>(rng);
+        models_not<concepts::SizedRange>(rng);
+        CONCEPT_ASSERT(Range<decltype(rng) const>());
+        models<concepts::BidirectionalView>(aux::copy(rng));
+        ::check_equal(rng, {"hello","bye"});
+        ::check_equal(view::reverse(rng), {"bye","hello"});
+    }
+    
+    {
+        int const rgi[] = {-1, 1, -1, 2, 3, 4, -4, 42, 7};
+        auto rng0 = view::delimit(rgi, 42) | view::reverse;
+        // rng0 is mutable-only...
+        CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
+        CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
+        // ...and composable with unique_view
+        auto rng = rng0 | view::unique([](const int& n1, const int& n2){ return n1==n2 || n1==-n2; })
+                        | view::transform([](const int& n){ return n > 0 ? n: -n;});
+        models<concepts::BidirectionalView>(aux::copy(rng));
+        models_not<concepts::RandomAccessRange>(rng);
+        models<concepts::BoundedRange>(rng);
+        models_not<concepts::SizedRange>(rng);
+        ::check_equal(rng, {4, 3, 2, 1});
+    }
+
     return test_result();
 }
