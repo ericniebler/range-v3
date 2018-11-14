@@ -207,7 +207,7 @@ namespace ranges
                 std::unique_ptr<value_type, detail::return_temporary_buffer> h;
                 if(detail::is_trivially_copy_assignable<value_type>::value && 8 < buf_size)
                 {
-                    buf = std::get_temporary_buffer<value_type>(buf_size);
+                    buf = detail::get_temporary_buffer<value_type>(buf_size);
                     h.reset(buf.first);
                 }
                 detail::merge_adaptive(std::move(begin), std::move(middle), len2_and_end.second,

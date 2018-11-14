@@ -21,8 +21,10 @@
 #ifndef RANGES_V3_UTILITY_MEMORY_HPP
 #define RANGES_V3_UTILITY_MEMORY_HPP
 
+#include <cstdint>
 #include <memory>
 #include <type_traits>
+#include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -36,13 +38,45 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename T>
+            std::pair<T *, std::ptrdiff_t> get_temporary_buffer(std::ptrdiff_t count) noexcept
+            {
+                RANGES_EXPECT(count >= 0);
+                std::size_t n = static_cast<std::size_t>(count);
+                while(n > PTRDIFF_MAX / sizeof(T))
+                    n /= 2;
+
+                void *ptr = nullptr;
+                for(; ptr == nullptr && n > 0; n /= 2)
+                {
+#if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
+                    static_assert(alignof(T) <= alignof(std::max_align_t),
+                        "Sorry: over-aligned types are supported only with C++17.");
+#else // RANGES_CXX_ALIGNED_NEW
+                    if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                        ptr = ::operator new(sizeof(T) * n, std::align_val_t{alignof(T)}, std::nothrow);
+                    else
+#endif // RANGES_CXX_ALIGNED_NEW
+                        ptr = ::operator new(sizeof(T) * n, std::nothrow);
+                }
+
+                return {static_cast<T *>(ptr), static_cast<std::ptrdiff_t>(n)};
+            }
+
             struct return_temporary_buffer
             {
                 template<typename T>
                 void operator()(T *p) const
                 {
-                    if(p)
-                        std::return_temporary_buffer(p);
+#if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
+                    static_assert(alignof(T) <= alignof(std::max_align_t),
+                        "Sorry: over-aligned types are supported only with C++17.");
+#else // RANGES_CXX_ALIGNED_NEW
+                    if RANGES_CONSTEXPR_IF (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+                        ::operator delete(p, std::align_val_t{alignof(T)});
+                    else
+#endif // RANGES_CXX_ALIGNED_NEW
+                        ::operator delete(p);
                 }
             };
 

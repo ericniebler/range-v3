@@ -173,6 +173,9 @@ namespace ranges
 #define RANGES_CXX_IF_CONSTEXPR_11 0L
 #define RANGES_CXX_IF_CONSTEXPR_14 0L
 #define RANGES_CXX_IF_CONSTEXPR_17 201606L
+#define RANGES_CXX_ALIGNED_NEW_11 0L
+#define RANGES_CXX_ALIGNED_NEW_14 0L
+#define RANGES_CXX_ALIGNED_NEW_17 201606L
 
 // Implementation-specific diagnostic control
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -456,6 +459,22 @@ namespace ranges
 #endif // __cpp_deduction_guides
 #endif // RANGES_CXX_DEDUCTION_GUIDES
 
+#ifndef RANGES_CXX_IF_CONSTEXPR
+#ifdef __cpp_if_constexpr
+#define RANGES_CXX_IF_CONSTEXPR __cpp_if_constexpr
+#else
+#define RANGES_CXX_IF_CONSTEXPR RANGES_CXX_FEATURE(IF_CONSTEXPR)
+#endif
+#endif // RANGES_CXX_IF_CONSTEXPR
+
+#ifndef RANGES_CXX_ALIGNED_NEW
+#ifdef __cpp_aligned_new
+#define RANGES_CXX_ALIGNED_NEW __cpp_aligned_new
+#else
+#define RANGES_CXX_ALIGNED_NEW RANGES_CXX_FEATURE(ALIGNED_NEW)
+#endif
+#endif // RANGES_CXX_ALIGNED_NEW
+
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \
     RANGES_DIAGNOSTIC_PUSH                      \
@@ -480,14 +499,6 @@ namespace ranges
 #else
 #define RANGES_INTENDED_MODULAR_ARITHMETIC
 #endif
-
-#ifndef RANGES_CXX_IF_CONSTEXPR
-#ifdef __cpp_if_constexpr
-#define RANGES_CXX_IF_CONSTEXPR __cpp_if_constexpr
-#else
-#define RANGES_CXX_IF_CONSTEXPR RANGES_CXX_FEATURE(IF_CONSTEXPR)
-#endif
-#endif // RANGES_CXX_IF_CONSTEXPR
 
 #ifndef RANGES_CONSTEXPR_IF
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17

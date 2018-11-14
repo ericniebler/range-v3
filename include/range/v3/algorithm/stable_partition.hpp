@@ -136,7 +136,7 @@ namespace ranges
                 using value_type = value_type_t<I>;
                 auto len_end = enumerate(begin, end);
                 auto p = len_end.first >= alloc_limit ?
-                    std::get_temporary_buffer<value_type>(len_end.first) : detail::value_init{};
+                    detail::get_temporary_buffer<value_type>(len_end.first) : detail::value_init{};
                 std::unique_ptr<value_type, detail::return_temporary_buffer> const h{p.first};
                 return stable_partition_fn::impl(begin, len_end.second, pred, proj, len_end.first, p, fi);
             }
@@ -256,7 +256,7 @@ namespace ranges
                 // len >= 2
                 auto len = distance(begin, end) + 1;
                 auto p = len >= alloc_limit ?
-                    std::get_temporary_buffer<value_type>(len) : detail::value_init{};
+                    detail::get_temporary_buffer<value_type>(len) : detail::value_init{};
                 std::unique_ptr<value_type, detail::return_temporary_buffer> const h{p.first};
                 return stable_partition_fn::impl(begin, end, pred, proj, len, p, bi);
             }
