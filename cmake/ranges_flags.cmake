@@ -20,20 +20,14 @@ endmacro()
 message("[range-v3]: C++ std=${RANGES_CXX_STD}")
 if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   ranges_append_flag(RANGES_HAS_CXXSTDCOLON "-std:c++${RANGES_CXX_STD}")
-else()
-  ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
-endif()
-
-# Enable MSVC strict mode
-if (RANGES_CXX_COMPILER_MSVC)
+  # Enable MSVC strict mode
   ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "-permissive-")
-endif()
-
-# Enable "normal" warnings and make them errors:
-if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
+  # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_W3 -W3)
   ranges_append_flag(RANGES_HAS_WX -WX)
 else()
+  ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
+  # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_WALL -Wall)
   ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
   ranges_append_flag(RANGES_HAS_WERROR -Werror)

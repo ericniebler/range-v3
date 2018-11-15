@@ -161,7 +161,7 @@ namespace ranges
                 using D = difference_type_t<I>;
                 using V = value_type_t<I>;
                 D len = end - begin;
-                auto buf = len > 256 ? std::get_temporary_buffer<V>(len) : detail::value_init{};
+                auto buf = len > 256 ? detail::get_temporary_buffer<V>(len) : detail::value_init{};
                 std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};
                 if(buf.first == nullptr)
                     stable_sort_fn::inplace_stable_sort(begin, end, pred, proj);
