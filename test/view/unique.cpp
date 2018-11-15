@@ -94,7 +94,7 @@ int main()
         // rng0 is mutable-only...
         CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
         CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
-        // ...and composable with unique_view
+        // ...and composable
         auto rng = rng0 | view::unique(equal_to{});
         models<concepts::BidirectionalView>(aux::copy(rng));
         models_not<concepts::RandomAccessRange>(rng);
@@ -108,7 +108,7 @@ int main()
             if (s1.size() != s2.size())
                 return false;
             for (unsigned i = 0; i < s1.size(); i++)
-                if (toupper(s1.at(i)) != toupper(s2.at(i)))
+                if (toupper(s1[i]) != toupper(s2[i]))
                     return false;
 
             return true;
@@ -133,7 +133,7 @@ int main()
         // rng0 is mutable-only...
         CONCEPT_ASSERT(ForwardRange<decltype(rng0)>());
         CONCEPT_ASSERT(!ForwardRange<decltype(rng0) const>());
-        // ...and composable with unique_view
+        // ...and composable
         auto rng = rng0 | view::unique([](const int& n1, const int& n2){ return n1==n2 || n1==-n2; })
                         | view::transform([](const int& n){ return n > 0 ? n: -n;});
         models<concepts::BidirectionalView>(aux::copy(rng));

@@ -36,7 +36,7 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename C,
-                        CONCEPT_REQUIRES_(!Range<C>())>
+                         CONCEPT_REQUIRES_(!Range<C>())>
                 static auto bind(unique_fn unique, C pred)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -44,29 +44,27 @@ namespace ranges
                 )
 
             public:
-                template<typename Rng, typename C = equal_to,
-                        typename I = iterator_t<Rng>>
+                template<typename Rng, typename C = equal_to>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    IndirectRelation<C, I>>;
+                    IndirectRelation<C, iterator_t<Rng>>>;
 
                 template<typename Rng, typename C = equal_to,
-                        CONCEPT_REQUIRES_(Concept<Rng, C>())>
-                auto operator()(Rng && rng, C pred = equal_to{}) const ->
+                         CONCEPT_REQUIRES_(Concept<Rng, C>())>
+                auto operator()(Rng && rng, C pred = {}) const ->
                 adjacent_filter_view<all_t<Rng>, decltype(not_fn(pred))>
                 {
-                    return {all(static_cast<Rng&&>(rng)), not_fn(pred)};
+                    return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename C,
-                    CONCEPT_REQUIRES_(!Concept<Rng, C>())>
-                void operator()(Rng &&) const
+                template<typename Rng, typename C = equal_to,
+                         CONCEPT_REQUIRES_(!Concept<Rng, C>())>
+                void operator()(Rng &&, C = {}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::unique operates must be a model the "
                         "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(IndirectRelation<C, I>(),
+                    CONCEPT_ASSERT_MSG(IndirectRelation<C, iterator_t<Rng>>(),
                         "The value type of the range passed to view::unique must be "
                         "EqualityComparable or provide a function that can be callable with two arguments "
                         "of the range's common reference type, and the return type must be "

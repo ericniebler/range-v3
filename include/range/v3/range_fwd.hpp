@@ -721,9 +721,6 @@ namespace ranges
             struct unbounded_fn;
         }
 
-        template<typename Rng>
-        using unique_view = adjacent_filter_view<Rng, not_equal_to>;
-
         namespace view
         {
             struct unique_fn;
