@@ -68,21 +68,6 @@ namespace ranges
         template<typename I = void>
         struct dangling;
 
-        // template<typename ...Ts>
-        // struct common_type;
-
-        // template<typename ...Ts>
-        // using common_type_t = meta::_t<common_type<Ts...>>;
-
-        // template<typename T, typename U, typename TQual, typename UQual>
-        // struct basic_common_reference;
-
-        // template<typename ...Ts>
-        // struct common_reference;
-
-        // template<typename ...Ts>
-        // using common_reference_t = meta::_t<common_reference<Ts...>>;
-
         template<typename>
         struct result_of;
 
@@ -159,18 +144,8 @@ namespace ranges
             value_type_<T>;
 
         template<typename T>
-        struct iterator_category;
-
-        // template<typename T>
-        // struct iterator_category
-        //     RANGES_DEPRECATED("ranges::iterator_category<T>::type is deprecated. "
-        //         "Use std::iterator_traits<T>::iterator_concept instead.") =
-        //     iterator_category_<T>;
-
-        template<typename T>
         struct size_type;
         /// \endcond
-
 
         /// \cond
         namespace detail

@@ -54,9 +54,6 @@ namespace ranges
         using range_difference_type_t = iter_difference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_size_type_t = meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
-
-        template<typename Rng>
         using range_value_type_t = iter_value_t<iterator_t<Rng>>;
 
         template<typename Rng>
@@ -68,8 +65,17 @@ namespace ranges
         template<typename Rng>
         using range_common_reference_t = iter_common_reference_t<iterator_t<Rng>>;
 
+        /// \cond
         template<typename Rng>
-        using range_category_t = iterator_category_t<iterator_t<Rng>>;
+        using range_category_t
+            RANGES_DEPRECATED("range_category_t is deprecated. Use the range concepts instead.") =
+                iterator_category_t<iterator_t<Rng>>;
+
+        template<typename Rng>
+        using range_size_type_t
+            RANGES_DEPRECATED("range_size_type_t is deprecated.") =
+                meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
+        /// \endcond
 
         template<typename Rng>
         using range_common_iterator_t = common_iterator_t<iterator_t<Rng>, sentinel_t<Rng>>;

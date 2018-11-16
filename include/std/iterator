@@ -138,11 +138,15 @@ namespace ranges
             }
 
             template<typename I>
+            using cpp17_readable_iterator_category_t =
+                decltype(detail::cpp17_iterator_category_2_<I>(0));
+
+            template<typename I>
             auto cpp17_iterator_category_(long)
             {
                 return cpp17_iterator_category_2_<I>(0);
             }
-            // Satisfies Cpp17ForwardIterator?
+            // Explicitly declares its category?
             template<typename I>
             typename I::iterator_category cpp17_iterator_category_(int)
             {

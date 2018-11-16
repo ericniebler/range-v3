@@ -52,7 +52,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end, C pred, P proj, forward_iterator_tag)
+            static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag)
             {
                 while(true)
                 {
@@ -74,7 +74,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end_, C pred, P proj, bidirectional_iterator_tag)
+            static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag)
             {
                 I end = ranges::next(begin, end_);
                 while(true)

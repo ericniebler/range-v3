@@ -16,6 +16,11 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+template<typename T>
+using iter_cat_t = typename T::iterator_category;
+template<typename T>
+using has_iter_cat = meta::is_trait<meta::defer<iter_cat_t, T>>;
+
 namespace test_weak_input
 {
     template<typename I>
@@ -47,8 +52,14 @@ namespace test_weak_input
     CPP_assert(ranges::InputIterator<iterator<char *>>);
 
     static_assert(
+        !has_iter_cat<iterator<char *>>::value,
+        "");
+    static_assert(
+        !has_iter_cat<std::iterator_traits<iterator<char *>>>::value,
+        "");
+    static_assert(
         std::is_same<
-            iterator<char *>::iterator_category,
+            iterator<char *>::iterator_concept,
             ranges::input_iterator_tag>::value,
         "");
     static_assert(

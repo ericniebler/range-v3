@@ -28,7 +28,6 @@ namespace {
 
     int forty_two = 42;
     struct lvalue_iterator {
-        using iterator_category = ranges::input_iterator_tag;
         using difference_type = int;
         using value_type = int;
         int& operator*() const { return forty_two; }

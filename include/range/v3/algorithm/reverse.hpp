@@ -33,7 +33,7 @@ namespace ranges
         {
         private:
             template<typename I>
-            static void impl(I begin, I end, bidirectional_iterator_tag)
+            static void impl(I begin, I end, detail::bidirectional_iterator_tag)
             {
                 while(begin != end)
                 {
@@ -45,7 +45,7 @@ namespace ranges
             }
 
             template<typename I>
-            static void impl(I begin, I end, random_access_iterator_tag)
+            static void impl(I begin, I end, detail::random_access_iterator_tag)
             {
                 if(begin != end)
                     for(; begin < --end; ++begin)

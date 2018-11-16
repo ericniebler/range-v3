@@ -168,14 +168,6 @@ namespace ranges
         }
 
         template<typename I>
-        struct iterator_category<iterator_wrapper<I>>
-          : meta::if_c<
-                (bool) InputIterator<I>,
-                meta::id<input_iterator_tag>,
-                meta::nil_>
-        {};
-
-        template<typename I>
         struct readable_traits<iterator_wrapper<I>>
           : meta::if_c<
                 (bool) InputIterator<I>,

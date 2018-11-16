@@ -98,8 +98,8 @@ namespace ranges
             };
 
             template<typename Rng>
-            class sv_base
-              : public view_adaptor<
+            struct sv_base
+              : view_adaptor<
                     sliding_view<Rng>,
                     Rng,
                     is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
@@ -108,7 +108,6 @@ namespace ranges
                     sv_base<Rng>,
                     caching<Rng>::value != cache::none>
             {
-            public:
                 CPP_assert(ForwardRange<Rng>);
                 sv_base() = default;
                 sv_base(Rng rng, range_difference_type_t<Rng> n)

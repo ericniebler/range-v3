@@ -59,7 +59,8 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair const p, forward_iterator_tag fi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair const p,
+                detail::forward_iterator_tag fi)
             {
                 // *begin is known to be false
                 // len >= 1
@@ -121,10 +122,11 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end, C pred, P proj, forward_iterator_tag fi)
+            static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag fi)
             {
                 using difference_type = iter_difference_t<I>;
-                difference_type const alloc_limit = 3;  // might want to make this a function of trivial assignment
+                difference_type const alloc_limit = 3;  // might want to make this a function of
+                                                        // trivial assignment.
                 // Either prove all true and return begin or point to first false
                 while(true)
                 {
@@ -145,7 +147,8 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P, typename D, typename Pair>
-            static I impl(I begin, I end, C pred, P proj, D len, Pair p, bidirectional_iterator_tag bi)
+            static I impl(I begin, I end, C pred, P proj, D len, Pair p,
+                detail::bidirectional_iterator_tag bi)
             {
                 // *begin is known to be false
                 // *end is known to be true
@@ -231,7 +234,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
-            static I impl(I begin, S end_, C pred, P proj, bidirectional_iterator_tag bi)
+            static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag bi)
             {
                 using difference_type = iter_difference_t<I>;
                 using value_type = iter_value_t<I>;

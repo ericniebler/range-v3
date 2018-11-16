@@ -15,7 +15,15 @@
 #ifndef RANGES_V3_DETAIL_CONFIG_HPP
 #define RANGES_V3_DETAIL_CONFIG_HPP
 
+// Grab some version information.
+#ifndef __has_include
 #include <iosfwd>
+#elif __has_include(<version>)
+#include <version>
+#else
+#include <iosfwd>
+#endif
+
 #if (defined(NDEBUG) && !defined(RANGES_ENSURE_MSG)) || \
     (!defined(NDEBUG) && !defined(RANGES_ASSERT) && \
      ((defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5 || defined(__MINGW32__))) || \

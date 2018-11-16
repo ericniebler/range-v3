@@ -37,7 +37,9 @@ namespace ranges
             struct cursor
             {
             private:
-                getlines_range *rng_;
+                friend range_access;
+                using single_pass = std::true_type;
+                getlines_range *rng_ = nullptr;
             public:
                 cursor() = default;
                 explicit cursor(getlines_range &rng)
@@ -53,12 +55,17 @@ namespace ranges
                 }
                 bool equal(default_sentinel) const
                 {
-                    return !*rng_->sin_;
+                    return !rng_->sin_;
+                }
+                bool equal(cursor that) const
+                {
+                    return !rng_->sin_ == !that.rng_->sin_;
                 }
             };
             void next()
             {
-                std::getline(*sin_, str_, delim_);
+                if(!std::getline(*sin_, str_, delim_))
+                    sin_ = nullptr;
             }
             cursor begin_cursor()
             {

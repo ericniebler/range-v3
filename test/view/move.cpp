@@ -33,8 +33,10 @@ int main()
     ::models<SizedViewConcept>(aux::copy(x));
     ::models<RandomAccessIteratorConcept>(x.begin());
     using I = decltype(x.begin());
-    CPP_assert(Same<iterator_tag_of<I>, ranges::random_access_iterator_tag>);
-    CPP_assert(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>);
+    CPP_assert(Same<iterator_tag_of<I>, ranges::detail::random_access_iterator_tag>);
+    CPP_assert(Same<
+        typename std::iterator_traits<I>::iterator_category,
+        ranges::random_access_iterator_tag>);
 
     CHECK(bool(*x.begin() == "'allo"));
 

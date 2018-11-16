@@ -62,7 +62,8 @@ namespace ranges
         }
         /// \endcond
 
-#if RANGES_DEEP_STL_INTEGRATION && !defined(RANGES_DOXYGEN_INVOKED)
+#if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
+    !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_difference_t =
             typename detail::if_then_t<
@@ -123,7 +124,8 @@ namespace ranges
           : detail::size_type_<T>
         {};
 
-#if RANGES_DEEP_STL_INTEGRATION && !defined(RANGES_DOXYGEN_INVOKED)
+#if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION && \
+    !defined(RANGES_DOXYGEN_INVOKED)
         template<typename T>
         using iter_value_t =
             typename detail::if_then_t<

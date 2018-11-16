@@ -50,7 +50,7 @@ namespace ranges
         private:
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                input_iterator_tag, std::false_type)
+                detail::input_iterator_tag, std::false_type)
             {
                 if(begin != end)
                 {
@@ -75,7 +75,7 @@ namespace ranges
 
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                forward_iterator_tag, std::false_type)
+                detail::forward_iterator_tag, std::false_type)
             {
                 if(begin != end)
                 {
@@ -98,7 +98,7 @@ namespace ranges
 
             template<typename I, typename S, typename O, typename C, typename P>
             static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
-                input_iterator_tag, std::true_type)
+                detail::input_iterator_tag, std::true_type)
             {
                 if(begin != end)
                 {

@@ -163,8 +163,8 @@ namespace ranges
                     "Your readable and writable cursor must have a value type and a reference "
                     "type that share a common reference type. See the ranges::common_reference "
                     "type trait.");
+            // BUGBUG make these private:
             public:
-                // BUGBUG make these private:
                 constexpr /*c++14*/
                 reference_t_ read_() const
                     noexcept(noexcept(reference_t_(range_access::read(std::declval<Cur const &>()))))
@@ -177,6 +177,7 @@ namespace ranges
                 {
                     range_access::write(*cur_, (T &&) t);
                 }
+            // public:
                 basic_proxy_reference_() = default;
                 basic_proxy_reference_(basic_proxy_reference_ const &) = default;
                 template<typename OtherCur>
@@ -350,11 +351,105 @@ namespace ranges
             auto iter_cat(random_access_cursor_tag) ->
                 ranges::random_access_iterator_tag;
 
+            template<typename Cur>
+            using cpp20_iter_cat_of_t = decltype(detail::iter_cat(cursor_tag_of<Cur>{}));
+
+            CPP_def
+            (
+                template(typename C)
+                concept Cpp17InputCursor,
+                    InputCursor<C> &&
+                    CursorSentinel<C, C> &&
+                    // Either it is not single-pass, or else we can create a
+                    // proxy for postfix increment.
+                    (
+                        !range_access::single_pass_t<uncvref_t<C>>::value ||
+                        (
+                            Constructible<
+                                range_access::cursor_value_t<C>,
+                                cursor_reference_t<C>> &&
+                            MoveConstructible<range_access::cursor_value_t<C>>
+                        )
+                    )
+            );
+
+            CPP_def
+            (
+                template(typename C)
+                concept Cpp17ForwardCursor,
+                    ForwardCursor<C> &&
+                    std::is_reference<cursor_reference_t<C>>::value
+            );
+
+            using cpp17_input_cursor_tag =
+                concepts::tag<Cpp17InputCursorConcept, cursor_tag>;
+            using cpp17_forward_cursor_tag =
+                concepts::tag<Cpp17ForwardCursorConcept, cpp17_input_cursor_tag>;
+            using cpp17_bidirectional_cursor_tag =
+                concepts::tag<BidirectionalCursorConcept, cpp17_forward_cursor_tag>;
+            using cpp17_random_access_cursor_tag =
+                concepts::tag<RandomAccessCursorConcept, cpp17_bidirectional_cursor_tag>;
+
+            template<typename Cur>
+            using cpp17_cursor_tag_of =
+                concepts::tag_of<
+                    meta::list<
+                        RandomAccessCursorConcept,
+                        BidirectionalCursorConcept,
+                        Cpp17ForwardCursorConcept,
+                        Cpp17InputCursorConcept,
+                        CursorConcept>,
+                    Cur>;
+
+            template<typename Category, typename Base = void>
+            struct with_iterator_category
+              : Base
+            {
+                using iterator_category = Category;
+            };
+
+            template<typename Category>
+            struct with_iterator_category<Category>
+            {
+                using iterator_category = Category;
+            };
+
+            auto cpp17_iter_cat(cpp17_input_cursor_tag) ->
+                ranges::input_iterator_tag;
+            auto cpp17_iter_cat(cpp17_forward_cursor_tag) ->
+                ranges::forward_iterator_tag;
+            auto cpp17_iter_cat(cpp17_bidirectional_cursor_tag) ->
+                ranges::bidirectional_iterator_tag;
+            auto cpp17_iter_cat(cpp17_random_access_cursor_tag) ->
+                ranges::random_access_iterator_tag;
+
+            template<typename Cur>
+            using cpp17_iter_cat_of_t =
+                decltype(detail::cpp17_iter_cat(cpp17_cursor_tag_of<Cur>{}));
+
+            template<typename Cur, typename = void>
+            struct readable_iterator_associated_types_base
+              : range_access::mixin_base_t<Cur>
+            {
+                using range_access::mixin_base_t<Cur>::mixin_base_t;
+            };
+
+            template<typename Cur>
+            struct readable_iterator_associated_types_base<
+                Cur,
+                always_<void, cpp17_iter_cat_of_t<Cur>>>
+              : range_access::mixin_base_t<Cur>
+            {
+                using range_access::mixin_base_t<Cur>::mixin_base_t;
+                using iterator_category = cpp17_iter_cat_of_t<Cur>;
+            };
+
             template<typename Cur, bool Readable /*= (bool) ReadableCursor<Cur>*/>
             struct iterator_associated_types_base_
               : range_access::mixin_base_t<Cur>
             {
-            //protected:
+            // BUGBUG
+            // protected:
                 using iter_reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_tag_t = concepts::tag<detail::OutputCursorConcept, cursor_tag>;
@@ -371,41 +466,58 @@ namespace ranges
 
             template<typename Cur>
             struct iterator_associated_types_base_<Cur, true>
-              : range_access::mixin_base_t<Cur>
+              : readable_iterator_associated_types_base<Cur>
             {
-            //protected:
-                using cursor_tag_t = detail::cursor_tag_of<Cur>;
+            // BUGBUG
+            // protected:
+                using cursor_tag_t = cursor_tag_of<Cur>;
                 using iter_reference_t =
-                    meta::if_<
-                        is_writable_cursor<Cur const>,
+                    if_then_t<
+                        is_writable_cursor<Cur const>::value,
                         basic_proxy_reference<Cur const>,
-                        meta::if_<
-                            is_writable_cursor<Cur>,
+                        if_then_t<
+                            is_writable_cursor<Cur>::value,
                             basic_proxy_reference<Cur>,
                             cursor_reference_t<Cur>>>;
                 using const_reference_t =
-                    meta::if_<
-                        is_writable_cursor<Cur const>,
+                    if_then_t<
+                        is_writable_cursor<Cur const>::value,
                         basic_proxy_reference<Cur const>,
                         cursor_reference_t<Cur>>;
             public:
                 using difference_type = range_access::cursor_difference_t<Cur>;
                 using value_type = range_access::cursor_value_t<Cur>;
                 using reference = iter_reference_t;
-                using iterator_category =
-                    decltype(detail::iter_cat(cursor_tag_t()));
-                using pointer = meta::_t<meta::if_c<
-                    HasCursorArrow<Cur>,
+                using iterator_concept = cpp20_iter_cat_of_t<Cur>;
+                using pointer = meta::_t<if_then_t<
+                    (bool) HasCursorArrow<Cur>,
                     meta::defer<cursor_arrow_t, Cur>,
                     std::add_pointer<reference>>>;
                 using common_reference = common_reference_t<reference, value_type &>;
 
-                using range_access::mixin_base_t<Cur>::mixin_base_t;
+                using readable_iterator_associated_types_base<Cur>::
+                    readable_iterator_associated_types_base;
             };
 
             template<typename Cur>
             using iterator_associated_types_base =
                 iterator_associated_types_base_<Cur, (bool) ReadableCursor<Cur>>;
+
+            template<typename Value>
+            struct postfix_increment_proxy
+            {
+            private:
+                Value cache_;
+            public:
+                template<typename T>
+                constexpr postfix_increment_proxy(T &&t)
+                  : cache_(static_cast<T &&>(t))
+                {}
+                constexpr Value const &operator*() const noexcept
+                {
+                    return cache_;
+                }
+            };
         }
         /// \endcond
 
@@ -428,7 +540,6 @@ namespace ranges
             using mixin_t = range_access::mixin_base_t<Cur>;
             static_assert((bool) detail::Cursor<Cur>, "");
             using assoc_types_ = detail::iterator_associated_types_base<Cur>;
-            using typename assoc_types_::cursor_tag_t;
             using typename assoc_types_::iter_reference_t;
             using typename assoc_types_::const_reference_t;
             constexpr /*c++14*/ Cur &pos() noexcept
@@ -554,21 +665,40 @@ namespace ranges
                 return *this;
             }
 
-            CPP_member
-            constexpr /*c++14*/ auto operator++(int) ->
-                CPP_ret(basic_iterator)(
-                    requires not Same<detail::input_cursor_tag, detail::cursor_tag_of<Cur>>)
+        private:
+            constexpr /*c++14*/ basic_iterator post_increment_(std::false_type, int)
             {
                 basic_iterator tmp{*this};
                 ++*this;
                 return tmp;
             }
-            CPP_member
-            constexpr /*c++14*/ auto operator++(int) ->
-                CPP_ret(void)(
-                    requires Same<detail::input_cursor_tag, detail::cursor_tag_of<Cur>>)
+            // Attempt to satisfy the C++17 iterator requirements by returning a
+            // proxy from postfix increment:
+            template<typename A = assoc_types_, typename V = typename A::value_type>
+            constexpr /*c++14*/
+            auto post_increment_(std::true_type, int) ->
+                CPP_ret(detail::postfix_increment_proxy<V>)(
+                    requires Constructible<V, typename A::reference> &&
+                        MoveConstructible<V>)
+            {
+                detail::postfix_increment_proxy<V> p{**this};
+                ++*this;
+                return p;
+            }
+            constexpr /*c++14*/ void post_increment_(std::true_type, long)
             {
                 ++*this;
+            }
+
+        public:
+            CPP_member
+            constexpr /*c++14*/ auto operator++(int)
+            {
+                return this->post_increment_(
+                    std::is_same<
+                        detail::input_cursor_tag,
+                        detail::cursor_tag_of<Cur>>{},
+                    0);
             }
 
             CPP_member
@@ -858,32 +988,25 @@ namespace ranges
         namespace detail
         {
             template<typename Cur, bool IsReadable>
-            struct std_iterator_traits_;
-            template<typename Cur>
-            using std_iterator_traits =
-                std_iterator_traits_<Cur, (bool) ReadableCursor<Cur>>;
-
-            template<typename Cur, bool IsReadable>
             struct std_iterator_traits_
             {
-                using iterator_category = std::output_iterator_tag;
                 using difference_type =
                     typename iterator_associated_types_base<Cur>::difference_type;
                 using value_type = void;
                 using reference = void;
                 using pointer = void;
+                using iterator_category = std::output_iterator_tag;
+                using iterator_concept = std::output_iterator_tag;
             };
 
             template<typename Cur>
             struct std_iterator_traits_<Cur, true>
               : iterator_associated_types_base<Cur>
-            {
-                using iterator_category =
-                    ::meta::_t<
-                        downgrade_iterator_category<
-                            typename std_iterator_traits_::iterator_category,
-                            typename std_iterator_traits_::reference>>;
-            };
+            {};
+
+            template<typename Cur>
+            using std_iterator_traits =
+                std_iterator_traits_<Cur, (bool) ReadableCursor<Cur>>;
         }
         /// \endcond
     }

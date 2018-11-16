@@ -55,17 +55,21 @@ namespace ranges
                 }
             };
 
-#if RANGES_BROKEN_CPO_LOOKUP
-            template<typename> struct adl_hook {};
-#endif
+            template<bool>
+            struct contiguous_iterator_concept_base
+            {};
+
+            template<>
+            struct contiguous_iterator_concept_base<true>
+            {
+                using iterator_concept = ranges::contiguous_iterator_tag;
+            };
         }
         /// \endcond
 
         template<typename I, typename /*= meta::if_<Iterator<I>>*/>
         struct counted_iterator
-#if RANGES_BROKEN_CPO_LOOKUP
-          : private _counted_iterator_::adl_hook<counted_iterator<I>>
-#endif
+          : _counted_iterator_::contiguous_iterator_concept_base<(bool) ContiguousIterator<I>>
         {
         private:
             CPP_assert(Iterator<I>);
@@ -403,54 +407,6 @@ namespace ranges
             return x + n;
         }
 
-        namespace _counted_iterator_
-        {
-            template<typename I, typename = void>
-            struct value_type_
-            {};
-
-            template<typename I>
-            struct value_type_<I, meta::if_c<Readable<I>>>
-            {
-                using type = iter_value_t<I>;
-            };
-
-            template<typename I, typename = void>
-            struct iterator_category_
-            {};
-
-            template<typename I>
-            struct iterator_category_<I, meta::if_c<InputIterator<I>>>
-            {
-                using type = iterator_category_t<I>;
-            };
-
-            template<typename I, typename = void>
-            struct iterator_traits_
-            {
-                using iterator_category = std::output_iterator_tag;
-                using difference_type = iter_difference_t<I>;
-                using value_type = void;
-                using reference = void;
-                using pointer = void;
-            };
-
-            template<typename I>
-            struct iterator_traits_<I, meta::if_c<InputIterator<I>>>
-            {
-                using iterator_category =
-                    meta::if_c<
-                        (bool)ForwardIterator<I> &&
-                            std::is_reference<iter_reference_t<I>>::value,
-                        std::forward_iterator_tag,
-                        std::input_iterator_tag>;
-                using difference_type = iter_difference_t<I>;
-                using value_type = iter_value_t<I>;
-                using reference = iter_reference_t<I>;
-                using pointer = meta::_t<detail::pointer_type_<I>>;
-            };
-        } // namespace _counted_iterator_
-
         template<typename I>
         auto make_counted_iterator(I i, iter_difference_t<I> n) ->
             CPP_ret(counted_iterator<I>)(
@@ -461,20 +417,41 @@ namespace ranges
 
         template<typename I>
         struct readable_traits<counted_iterator<I>>
-          : meta::if_c<
+          : detail::if_then_t<
                 (bool) Readable<I>,
                 readable_traits<I>,
                 meta::nil_>
-        {};
-
-        template<typename I>
-        struct iterator_category<counted_iterator<I>>
-          : _counted_iterator_::iterator_category_<I>
         {};
     }
 }
 
 /// \cond
+namespace ranges
+{
+    inline namespace v3
+    {
+        namespace _counted_iterator_
+        {
+            template<typename I, typename = void>
+            struct iterator_traits_
+            {
+                using difference_type = iter_difference_t<I>;
+                using value_type = void;
+                using reference = void;
+                using pointer = void;
+                using iterator_category = std::output_iterator_tag;
+            };
+
+            template<typename I>
+            struct iterator_traits_<I, meta::if_c<InputIterator<I>>>
+              : std::iterator_traits<I>
+            {
+                using pointer = void;
+            };
+        } // namespace _counted_iterator_
+    }
+}
+
 namespace std
 {
     template<typename I>

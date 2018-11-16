@@ -44,15 +44,15 @@ namespace ranges
                 template<typename I>
                 constexpr /*c++14*/
                 static void n_impl_(I &i, iter_difference_t<I> n,
-                    input_iterator_tag);
+                    detail::input_iterator_tag);
                 template<typename I>
                 constexpr /*c++14*/
                 static void n_impl_(I &i, iter_difference_t<I> n,
-                    bidirectional_iterator_tag);
+                    detail::bidirectional_iterator_tag);
                 template<typename I>
                 constexpr /*c++14*/
                 static void n_impl_(I &i, iter_difference_t<I> n,
-                    random_access_iterator_tag);
+                    detail::random_access_iterator_tag);
                 // Is there an advance that is find-able by ADL and is preferred
                 // by partial ordering to the poison-pill overload?
                 template<typename I>
@@ -72,11 +72,11 @@ namespace ranges
                 template<typename I, typename D, typename S>
                 constexpr /*c++14*/
                 static D bounded_(I &it, D n, S bound, sentinel_tag,
-                    input_iterator_tag);
+                    detail::input_iterator_tag);
                 template<typename I, typename D>
                 constexpr /*c++14*/
                 static D bounded_(I &it, D n, I bound, sentinel_tag,
-                    bidirectional_iterator_tag);
+                    detail::bidirectional_iterator_tag);
                 template<typename I, typename D, typename S, typename Concept>
                 constexpr /*c++14*/
                 static D bounded_(I &it, D n, S bound, sized_sentinel_tag,
@@ -133,7 +133,7 @@ namespace ranges
             template<typename I>
             constexpr /*c++14*/
             void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
-                input_iterator_tag)
+                detail::input_iterator_tag)
             {
                 RANGES_EXPECT(n >= 0);
                 for(; n > 0; --n)
@@ -142,7 +142,7 @@ namespace ranges
             template<typename I>
             constexpr /*c++14*/
             void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
-                bidirectional_iterator_tag)
+                detail::bidirectional_iterator_tag)
             {
                 if(n > 0)
                     for(; n > 0; --n)
@@ -154,7 +154,7 @@ namespace ranges
             template<typename I>
             constexpr /*c++14*/
             void advance_fn::n_impl_(I &i, iter_difference_t<I> n,
-                random_access_iterator_tag)
+                detail::random_access_iterator_tag)
             {
                 i += n;
             }
@@ -192,7 +192,7 @@ namespace ranges
             template<typename I, typename D, typename S>
             constexpr /*c++14*/
             D advance_fn::bounded_(I &it, D n, S bound, sentinel_tag,
-                input_iterator_tag)
+                detail::input_iterator_tag)
             {
                 RANGES_EXPECT(0 <= n);
                 for(; 0 != n && it != bound; --n)
@@ -202,7 +202,7 @@ namespace ranges
             template<typename I, typename D>
             constexpr /*c++14*/
             D advance_fn::bounded_(I &it, D n, I bound, sentinel_tag,
-                bidirectional_iterator_tag)
+                detail::bidirectional_iterator_tag)
             {
                 if(0 <= n)
                     for(; 0 != n && it != bound; --n)
@@ -800,7 +800,7 @@ namespace ranges
             using iterator_type = I;
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;
-            using iterator_category = input_iterator_tag;
+            using iterator_category = ranges::input_iterator_tag;
             using reference = iter_rvalue_reference_t<I>;
 
             constexpr move_iterator() = default;

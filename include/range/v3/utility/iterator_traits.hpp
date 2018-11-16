@@ -35,111 +35,38 @@ namespace ranges
 
         /// \addtogroup group-core
         /// @{
-        // using input_iterator_tag = std::input_iterator_tag;
-        // using forward_iterator_tag = std::forward_iterator_tag;
-        // using bidirectional_iterator_tag = std::bidirectional_iterator_tag;
-        // using random_access_iterator_tag = std::random_access_iterator_tag;
-        // struct contiguous_iterator_tag
-        //   : random_access_iterator_tag
-        // {};
-
-        using input_iterator_tag =
-            ::concepts::tag<InputIteratorConcept>;
-
-        using forward_iterator_tag =
-            ::concepts::tag<ForwardIteratorConcept, input_iterator_tag>;
-
-        using bidirectional_iterator_tag =
-            ::concepts::tag<BidirectionalIteratorConcept, forward_iterator_tag>;
-
-        using random_access_iterator_tag =
-            ::concepts::tag<RandomAccessIteratorConcept, bidirectional_iterator_tag>;
-
-        using contiguous_iterator_tag =
-            ::concepts::tag<ContiguousIteratorConcept, random_access_iterator_tag>;
+        using input_iterator_tag = std::input_iterator_tag;
+        using forward_iterator_tag = std::forward_iterator_tag;
+        using bidirectional_iterator_tag = std::bidirectional_iterator_tag;
+        using random_access_iterator_tag = std::random_access_iterator_tag;
+        struct contiguous_iterator_tag
+          : random_access_iterator_tag
+        {};
         /// @}
 
         /// \cond
         namespace detail
         {
+            using input_iterator_tag =
+                ::concepts::tag<InputIteratorConcept>;
+
+            using forward_iterator_tag =
+                ::concepts::tag<ForwardIteratorConcept, input_iterator_tag>;
+
+            using bidirectional_iterator_tag =
+                ::concepts::tag<BidirectionalIteratorConcept, forward_iterator_tag>;
+
+            using random_access_iterator_tag =
+                ::concepts::tag<RandomAccessIteratorConcept, bidirectional_iterator_tag>;
+
+            using contiguous_iterator_tag =
+                ::concepts::tag<ContiguousIteratorConcept, random_access_iterator_tag>;
+
             template<typename I,
                 typename = iter_reference_t<I>,
                 typename R = decltype(iter_move(std::declval<I &>())),
                 typename = R&>
             using iter_rvalue_reference_t = R;
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            template<typename T>
-            T upgrade_iterator_category_(T *, void *);
-
-            template<typename T>
-            ranges::input_iterator_tag upgrade_iterator_category_(T *, std::input_iterator_tag *);
-
-            template<typename T>
-            ranges::forward_iterator_tag upgrade_iterator_category_(T *, std::forward_iterator_tag *);
-
-            template<typename T>
-            ranges::bidirectional_iterator_tag upgrade_iterator_category_(T *, std::bidirectional_iterator_tag *);
-
-            template<typename T>
-            ranges::random_access_iterator_tag upgrade_iterator_category_(T *, std::random_access_iterator_tag *);
-
-            template<typename T>
-            struct upgrade_iterator_category
-            {
-                using type = decltype(detail::upgrade_iterator_category_(
-                    static_cast<T *>(nullptr),
-                    static_cast<T *>(nullptr)));
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            template<typename T, typename B>
-            meta::nil_ downgrade_iterator_category_(T *, void *, B);
-
-            template<typename T, typename B>
-            meta::id<T>
-            downgrade_iterator_category_(T *, std::input_iterator_tag *, B);
-
-            template<typename T, typename B>
-            meta::id<T>
-            downgrade_iterator_category_(T *, std::output_iterator_tag *, B);
-
-            template<typename T, typename B>
-            meta::id<std::input_iterator_tag>
-            downgrade_iterator_category_(T *, ranges::input_iterator_tag *, B);
-
-            template<typename T>
-            meta::id<std::forward_iterator_tag>
-            downgrade_iterator_category_(T *, ranges::forward_iterator_tag *, std::true_type);
-
-            template<typename T>
-            meta::id<std::bidirectional_iterator_tag>
-            downgrade_iterator_category_(T *, ranges::bidirectional_iterator_tag *, std::true_type);
-
-            template<typename T>
-            meta::id<std::random_access_iterator_tag>
-            downgrade_iterator_category_(T *, ranges::random_access_iterator_tag *, std::true_type);
-
-            template<typename Tag, typename Reference>
-            struct downgrade_iterator_category
-              : decltype(detail::downgrade_iterator_category_(
-                    static_cast<Tag *>(nullptr),
-                    static_cast<Tag *>(nullptr),
-                    std::integral_constant<bool, std::is_reference<Reference>::value>()))
-            {};
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            template<typename T>
-            meta::if_<std::is_object<T>, ranges::contiguous_iterator_tag>
-            iterator_category_helper(T **);
-
-            template<typename T>
-            meta::_t<upgrade_iterator_category<typename T::iterator_category>>
-            iterator_category_helper(T *);
-
-            template<typename T>
-            using iterator_category_ =
-                decltype(detail::iterator_category_helper(static_cast<T *>(nullptr)));
 
             template<typename I>
             struct has_nothrow_iter_move
@@ -147,19 +74,6 @@ namespace ranges
             {};
         } // namespace detail
         /// \endcond
-
-        /// \addtogroup group-concepts
-        /// @{
-        template<typename T>
-        struct iterator_category
-          : meta::defer<detail::iterator_category_, T>
-        {};
-
-        template<typename T>
-        struct iterator_category<T const>
-          : iterator_category<T>
-        {};
-        /// @}
 
         /// \addtogroup group-core
         /// @{
@@ -170,13 +84,14 @@ namespace ranges
 
         template<typename I>
         using iter_common_reference_t = common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
-
-        template<typename I>
-        using iterator_category_t = meta::_t<iterator_category<I>>;
-
-        template<typename I>
-        using size_type_t = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
         /// @}
+
+        /// \cond
+        template<typename I>
+        using size_type_t
+            RANGES_DEPRECATED("size_type_t is deprecated.") =
+                meta::_t<std::make_unsigned<iter_difference_t<I>>>;
+        /// \endcond
 
         /// \cond
         template<typename I>

@@ -37,7 +37,9 @@ namespace ranges
             struct cursor
             {
             private:
-                istream_range *rng_;
+                friend range_access;
+                using single_pass = std::true_type;
+                istream_range *rng_ = nullptr;
             public:
                 cursor() = default;
                 explicit cursor(istream_range &rng)
@@ -53,12 +55,17 @@ namespace ranges
                 }
                 bool equal(default_sentinel) const
                 {
-                    return !*rng_->sin_;
+                    return !rng_->sin_;
+                }
+                bool equal(cursor that) const
+                {
+                    return !rng_->sin_ == !that.rng_->sin_;
                 }
             };
             void next()
             {
-                *sin_ >> cached();
+                if(!(*sin_ >> cached()))
+                    sin_ = nullptr;
             }
             cursor begin_cursor()
             {

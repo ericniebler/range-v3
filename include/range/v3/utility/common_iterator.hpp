@@ -277,43 +277,45 @@ namespace ranges
                 meta::nil_>
         {};
 
-        template<typename I, typename S>
-        struct iterator_category<common_iterator<I, S>>
-          : meta::if_c<
-                (bool) InputIterator<I>,
-                meta::if_c<
-                    (bool) ForwardIterator<I>,
-                    meta::id<forward_iterator_tag>,
-                    meta::id<input_iterator_tag>>,
-                meta::nil_>
-        {};
-
         /// \cond
         namespace detail
         {
+            template<typename I>
+            auto demote_common_iter_cat(...) ->
+                nil_;
+            template<typename I>
+            auto demote_common_iter_cat(long) ->
+                with_iterator_category<ranges::input_iterator_tag>;
+            template<typename I>
+            auto demote_common_iter_cat(int) ->
+                CPP_ret(with_iterator_category<ranges::forward_iterator_tag>)(
+                    requires DerivedFrom<
+                        typename std::iterator_traits<I>::iterator_category,
+                        ranges::forward_iterator_tag>);
+
             template<typename I, bool = (bool) InputIterator<I>>
             struct common_iterator_std_traits
+              : decltype(detail::demote_common_iter_cat<I>(0))
             {
-                using iterator_category =
-                    meta::if_c<
-                        (bool) ForwardIterator<I> &&
-                            std::is_reference<iter_reference_t<I>>::value,
-                        std::forward_iterator_tag,
-                        std::input_iterator_tag>;
                 using difference_type = iter_difference_t<I>;
                 using value_type = iter_value_t<I>;
                 using reference = iter_reference_t<I>;
                 using pointer = meta::_t<detail::pointer_type_<I>>;
+                using iterator_concept =
+                    if_then_t<
+                        (bool) ForwardIterator<I>,
+                        ranges::forward_iterator_tag,
+                        ranges::input_iterator_tag>;
             };
 
             template<typename I>
             struct common_iterator_std_traits<I, false>
             {
-                using iterator_category = std::output_iterator_tag;
                 using difference_type = iter_difference_t<I>;
                 using value_type = void;
                 using reference = void;
                 using pointer = void;
+                using iterator_category = std::output_iterator_tag;
             };
         }
         /// \endcond

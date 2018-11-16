@@ -65,7 +65,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
             static I1
             impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
-                 forward_iterator_tag, forward_iterator_tag)
+                 detail::forward_iterator_tag, detail::forward_iterator_tag)
             {
                 bool found = false;
                 I1 res;
@@ -105,7 +105,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                 bidirectional_iterator_tag, bidirectional_iterator_tag)
+                 detail::bidirectional_iterator_tag, detail::bidirectional_iterator_tag)
             {
                 // modeled after search algorithm (in reverse)
                 if(begin2 == end2)
@@ -135,7 +135,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
-                 random_access_iterator_tag, random_access_iterator_tag)
+                 detail::random_access_iterator_tag, detail::random_access_iterator_tag)
             {
                 // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
                 auto len2 = end2 - begin2;

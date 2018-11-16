@@ -59,6 +59,14 @@ namespace ranges
             template<bool B, typename T = void>
             using enable_if_t = typename enable_if<B>::template apply<T>;
 
+            void is_objptr_(void const volatile *);
+            #ifdef _MSC_VER
+            // Microsoft's compiler permits function pointers to implicitly
+            // convert to void*.
+            template<class R, class... Args>
+            void is_objptr_(R(*)(Args...)) = delete;
+            #endif
+
             // std::is_object, optimized for compile time.
             template<typename T>
             constexpr bool is_object_(long)
@@ -67,24 +75,31 @@ namespace ranges
             }
             template<typename T>
             constexpr bool is_object_(int,
-                void (*r)(void const volatile*) = nullptr,
                 T *(*q)(T&) = nullptr,
                 T *p = nullptr,
-                decltype(r(q(*p)))* = nullptr)
+                decltype(detail::is_objptr_(q(*p)))* = nullptr)
             {
                 return true;
             }
 
             template<typename T>
-            constexpr bool is_integral_(long)
+            constexpr bool is_integral_(...)
             {
                 return false;
             }
             template<typename T, T = 1>
-            constexpr bool is_integral_(int)
+            constexpr bool is_integral_(long)
             {
                 return true;
             }
+            #if defined(__cpp_nontype_template_parameter_class) && \
+                __cpp_nontype_template_parameter_class > 0
+            template<typename T>
+            constexpr bool is_integral_(int, int T::* = nullptr)
+            {
+                return false;
+            }
+            #endif
 
             template<typename T>
             struct with_difference_type_

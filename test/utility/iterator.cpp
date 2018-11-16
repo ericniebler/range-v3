@@ -179,7 +179,7 @@ void test_845()
 }
 
 // Test the deep integration with the STL
-#if RANGES_DEEP_STL_INTEGRATION
+#if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION
 
 struct _X
 {

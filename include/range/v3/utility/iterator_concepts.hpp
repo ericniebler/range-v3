@@ -28,6 +28,28 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            template<typename I>
+            using iter_traits_t =
+                if_then_t<is_std_iterator_traits_specialized<I>(), std::iterator_traits<I>, I>;
+
+            template<typename I>
+            auto iter_concept_(int) -> typename iter_traits_t<I>::iterator_concept;
+            template<typename I>
+            auto iter_concept_(long) -> typename iter_traits_t<I>::iterator_category;
+            template<typename I>
+            auto iter_concept_(...) ->
+                enable_if_t<
+                    !is_std_iterator_traits_specialized<I>(),
+                    std::random_access_iterator_tag>;
+
+            template<typename I>
+            using iter_concept_t = decltype(iter_concept_<I>(0));
+        }
+
+        /// \endcond
         CPP_def
         (
             template(typename I)
@@ -178,7 +200,7 @@ namespace ranges
             template(typename I)
             concept InputIterator,
                 Iterator<I> && Readable<I> &&
-                DerivedFrom<iterator_category_t<I>, ranges::input_iterator_tag>
+                DerivedFrom<detail::iter_concept_t<I>, ranges::input_iterator_tag>
         );
 
         CPP_def
@@ -187,7 +209,7 @@ namespace ranges
             concept ForwardIterator,
                 InputIterator<I> && Incrementable<I> &&
                 Sentinel<I, I> &&
-                DerivedFrom<iterator_category_t<I>, ranges::forward_iterator_tag>
+                DerivedFrom<detail::iter_concept_t<I>, ranges::forward_iterator_tag>
         );
 
         CPP_def
@@ -202,7 +224,7 @@ namespace ranges
                     concepts::requires_<Same<I, decltype(i--)>>
                 ) &&
                 ForwardIterator<I> &&
-                DerivedFrom<iterator_category_t<I>, ranges::bidirectional_iterator_tag>
+                DerivedFrom<detail::iter_concept_t<I>, ranges::bidirectional_iterator_tag>
         );
 
         CPP_def
@@ -226,7 +248,7 @@ namespace ranges
                 BidirectionalIterator<I> &&
                 StrictTotallyOrdered<I> &&
                 SizedSentinel<I, I> &&
-                DerivedFrom<iterator_category_t<I>, ranges::random_access_iterator_tag>
+                DerivedFrom<detail::iter_concept_t<I>, ranges::random_access_iterator_tag>
         );
 
         CPP_def
@@ -234,7 +256,7 @@ namespace ranges
             template(typename I)
             concept ContiguousIterator,
                 RandomAccessIterator<I> &&
-                DerivedFrom<iterator_category_t<I>, ranges::contiguous_iterator_tag> &&
+                DerivedFrom<detail::iter_concept_t<I>, ranges::contiguous_iterator_tag> &&
                 std::is_lvalue_reference<iter_reference_t<I>>::value &&
                 Same<iter_value_t<I>, uncvref_t<iter_reference_t<I>>>
         );
@@ -251,6 +273,46 @@ namespace ranges
                     ForwardIteratorConcept,
                     InputIteratorConcept>,
                 T>;
+
+        /// \cond
+        namespace detail
+        {
+            template<typename, bool>
+            struct iterator_category_
+            {};
+
+            template<typename I>
+            struct iterator_category_<I, true>
+            {
+            private:
+                static ranges::input_iterator_tag test(detail::input_iterator_tag);
+                static ranges::forward_iterator_tag test(detail::forward_iterator_tag);
+                static ranges::bidirectional_iterator_tag test(detail::bidirectional_iterator_tag);
+                static ranges::random_access_iterator_tag test(detail::random_access_iterator_tag);
+                static ranges::contiguous_iterator_tag test(detail::contiguous_iterator_tag);
+            public:
+                using type = decltype(iterator_category_::test(iterator_tag_of<I>{}));
+            };
+
+            template<typename T>
+            using iterator_category =
+                iterator_category_<
+                    meta::_t<std::remove_const<T>>,
+                    (bool) InputIterator<meta::_t<std::remove_const<T>>>>;
+        }
+        /// \endcond
+
+        /// \cond
+        template<typename I>
+        using iterator_category
+            RANGES_DEPRECATED("iterator_category is deprecated. Use the iterator concepts instead") =
+                detail::iterator_category<I>;
+
+        template<typename I>
+        using iterator_category_t
+            RANGES_DEPRECATED("iterator_category_t is deprecated. Use the iterator concepts instead") =
+                meta::_t<detail::iterator_category<I>>;
+        /// \endcond
 
         // Generally useful to know if an iterator is single-pass or not:
         CPP_def

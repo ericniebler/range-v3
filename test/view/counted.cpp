@@ -18,7 +18,6 @@
 
 struct fortytwo_erator {
     using difference_type = int;
-    using iterator_category = ranges::input_iterator_tag;
     using value_type = int;
     fortytwo_erator() = default;
     int operator*() const { return 42; }
