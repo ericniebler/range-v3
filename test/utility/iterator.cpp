@@ -202,8 +202,7 @@ namespace std
     };
 }
 
-// TODO:
-//static_assert(ranges::InputIterator<_X>, "");
+static_assert(ranges::InputIterator<_X>, "");
 
 struct _Y
 {
@@ -339,11 +338,11 @@ void deep_integration_test()
     static_assert(is_same<iter_difference_t<const int*>, ptrdiff_t>::value, "");
     static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");
 
-    // static_assert(!_IsPrimary<iterator_traits, _X>);
+    static_assert(detail::is_std_iterator_traits_specialized<_X>(), "");
     static_assert(is_same<typename iterator_traits<_X>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_X>, int>::value, "");
 
-    // static_assert(_IsPrimary<iterator_traits, _Y>);
+    static_assert(!detail::is_std_iterator_traits_specialized<_Y>(), "");
     static_assert(is_same<typename iterator_traits<_Y>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_Y>, int>::value, "");
 
@@ -351,34 +350,34 @@ void deep_integration_test()
     // https://bugs.llvm.org/show_bug.cgi?id=39619
 #ifndef _LIBCPP_VERSION
     // iterator_traits uses specializations of ranges::value_type:
-    // static_assert(_IsPrimary<iterator_traits, _Z>);
+    static_assert(!detail::is_std_iterator_traits_specialized<_Z>(), "");
     static_assert(is_same<typename iterator_traits<_Z>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_Z>, int>::value, "");
     static_assert(is_same<typename iterator_traits<_Z>::iterator_category,
                           std::bidirectional_iterator_tag>::value, "");
 #endif
 
-    // static_assert(ranges::InputIterator<WouldBeFwd>);
-    // static_assert(!ranges::ForwardIterator<WouldBeFwd>);
+    static_assert(ranges::InputIterator<WouldBeFwd>, "");
+    static_assert(!ranges::ForwardIterator<WouldBeFwd>, "");
     static_assert(is_same<typename iterator_traits<WouldBeFwd>::iterator_category,
                            std::input_iterator_tag>::value, "");
 
-    // static_assert(ranges::ForwardIterator<WouldBeBidi>);
-    // static_assert(!ranges::BidirectionalIterator<WouldBeBidi>);
+    static_assert(ranges::ForwardIterator<WouldBeBidi>, "");
+    static_assert(!ranges::BidirectionalIterator<WouldBeBidi>, "");
     static_assert(is_same<typename iterator_traits<WouldBeBidi>::iterator_category,
                           std::input_iterator_tag>::value, "");
 
-    // static_assert(ranges::Iterator<OutIter>);
-    // static_assert(!ranges::InputIterator<OutIter>);
+    static_assert(ranges::Iterator<OutIter>, "");
+    static_assert(!ranges::InputIterator<OutIter>, "");
     static_assert(is_same<typename iterator_traits<OutIter>::difference_type,
                           std::ptrdiff_t>::value, "");
     static_assert(is_same<typename iterator_traits<OutIter>::iterator_category,
                           std::output_iterator_tag>::value, "");
 
-    // static_assert(ranges::RandomAccessIterator<int volatile *>);
-    // static_assert(ranges::ContiguousIterator<int volatile *>);
+    static_assert(ranges::RandomAccessIterator<int volatile *>, "");
+    static_assert(ranges::ContiguousIterator<int volatile *>, "");
 
-    // static_assert(ranges::ForwardIterator<bool_iterator>);
+    static_assert(ranges::ForwardIterator<bool_iterator>, "");
     static_assert(is_same<typename iterator_traits<bool_iterator>::iterator_category,
                           std::input_iterator_tag>::value, "");
     // static_assert(_Cpp98InputIterator<int volatile*>);
@@ -399,7 +398,6 @@ void deep_integration_test()
 }
 
 #endif
-
 
 int main()
 {

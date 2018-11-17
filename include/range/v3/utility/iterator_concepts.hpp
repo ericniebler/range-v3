@@ -35,6 +35,12 @@ namespace ranges
             using iter_traits_t =
                 if_then_t<is_std_iterator_traits_specialized<I>(), std::iterator_traits<I>, I>;
 
+            // This is only necessary because is_std_iterator_traits_specialized
+            // was hacked to report false for std::iterator_traits<T volatile *>
+            auto iter_concept_2_(void const volatile *) -> ranges::random_access_iterator_tag;
+            template<typename T>
+            auto iter_concept_2_(T **) -> ranges::contiguous_iterator_tag;
+
             template<typename I>
             auto iter_concept_(int) -> typename iter_traits_t<I>::iterator_concept;
             template<typename I>
@@ -43,7 +49,7 @@ namespace ranges
             auto iter_concept_(...) ->
                 enable_if_t<
                     !is_std_iterator_traits_specialized<I>(),
-                    std::random_access_iterator_tag>;
+                    decltype(iter_concept_2_(static_cast<I *>(nullptr)))>;
 
             template<typename I>
             using iter_concept_t = decltype(iter_concept_<I>(0));

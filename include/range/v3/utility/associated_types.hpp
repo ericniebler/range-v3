@@ -52,6 +52,11 @@ namespace ranges
             template<typename I>
             char (&is_std_iterator_traits_specialized_(void *))[2];
 #endif
+            // The standard iterator_traits<T *> specialization(s) do not count
+            // as user-specialized. This will no longer be necessary in C++20,
+            // and only effects T volatile* until then.
+            template<typename, typename T>
+            char (&is_std_iterator_traits_specialized_(std::iterator_traits<T volatile *> *))[2];
 
             template<typename I>
             constexpr bool is_std_iterator_traits_specialized() noexcept
