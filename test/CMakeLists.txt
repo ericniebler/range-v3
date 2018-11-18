@@ -4,7 +4,7 @@ set(CMAKE_FOLDER "test")
 
 add_library(rv3-tests INTERFACE)
 target_link_libraries(rv3-tests INTERFACE range-v3)
-if (NOT RANGE_V3_TRY_THREAD)
+if (NOT RANGE_V3_THREAD_PROBE)
   target_compile_definitions(rv3-tests INTERFACE "RANGES_CXX_THREAD=0")
 endif()
 if (RANGE_V3_COROUTINE_FLAGS)
