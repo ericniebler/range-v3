@@ -29,28 +29,6 @@ include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
 
-# Test for <thread>
-try_compile(RANGE_V3_TRY_THREAD ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp)
-
-# Test for coroutine TS support
-include(CheckCXXSourceCompiles)
-
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
-if (RANGES_CXX_COMPILER_MSVC)
-  set(CMAKE_REQUIRED_FLAGS "/await")
-  check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGES_HAS_AWAIT)
-  if (RANGES_HAS_AWAIT)
-    set(RANGE_V3_COROUTINE_FLAGS "/await")
-  endif()
-else()
-  set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
-  check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGES_HAS_FCOROUTINES_TS)
-  if (RANGES_HAS_FCOROUTINES_TS)
-    set(RANGE_V3_COROUTINE_FLAGS "-fcoroutines-ts")
-  endif()
-endif()
-unset(CMAKE_REQUIRED_FLAGS)
-
 if(RANGE_V3_DOCS)
   add_subdirectory(doc)
 endif()
