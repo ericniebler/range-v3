@@ -117,7 +117,7 @@ int main()
 
     {
         // remove_if with projection
-        const std::array<my_data, 4> some_my_datas{1, 2, 3, 4};
+        const std::vector<my_data> some_my_datas{{1}, {2}, {3}, {4}};
         auto rng = some_my_datas | ranges::view::remove_if(is_even(), &my_data::i);
         ::check_equal(rng, std::vector<my_data>{{1}, {3}});
     }
