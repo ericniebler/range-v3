@@ -39,6 +39,16 @@ struct is_even
     }
 };
 
+struct my_data
+{
+    int i;
+};
+
+bool operator==(my_data left, my_data right)
+{
+    return left.i == right.i;
+}
+
 int main()
 {
     using namespace ranges;
@@ -103,6 +113,13 @@ int main()
         int const some_ints[] = {1, 2, 3};
         auto a = some_ints | ranges::view::remove_if([](int val) { return val > 0; });
         CHECK(a.empty());
+    }
+
+    {
+        // remove_if with projection
+        const std::array<my_data, 4> some_my_datas{1, 2, 3, 4};
+        auto rng = some_my_datas | ranges::view::remove_if(is_even(), &my_data::i);
+        ::check_equal(rng, std::vector<my_data>{{1}, {3}});
     }
 
     return test_result();

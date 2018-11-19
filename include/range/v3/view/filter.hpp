@@ -29,21 +29,21 @@ namespace ranges
             /// that satisfy the predicate.
             struct filter_fn
             {
-                template<typename Rng, typename Pred>
-                remove_if_view<all_t<Rng>, logical_negate<Pred>>
-                operator()(Rng && rng, Pred pred) const
+                template<typename Rng, typename Pred, typename Proj = ident>
+                remove_if_view<all_t<Rng>, logical_negate<Pred>, Proj>
+                operator()(Rng && rng, Pred pred, Proj proj = Proj{}) const
                 {
                     CONCEPT_ASSERT(Range<Rng>());
                     CONCEPT_ASSERT(IndirectPredicate<Pred, iterator_t<Rng>>());
-                    return {all(static_cast<Rng&&>(rng)), not_fn(std::move(pred))};
+                    return {all(static_cast<Rng&&>(rng)), not_fn(std::move(pred)), std::move(proj)};
                 }
-                template<typename Pred>
-                auto operator()(Pred pred) const ->
+                template<typename Pred, typename Proj = ident>
+                auto operator()(Pred pred, Proj proj = Proj{}) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1,
-                        protect(std::move(pred)))))
+                        protect(std::move(pred)), protect(std::move(proj)))))
                 {
                     return make_pipeable(std::bind(*this, std::placeholders::_1,
-                        protect(std::move(pred))));
+                        protect(std::move(pred)), protect(std::move(proj))));
                 }
             };
 
