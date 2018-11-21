@@ -36,7 +36,7 @@ namespace ranges
             /// \return `begin(rng)[n]`
             template<typename Rng>
             constexpr /*c++14*/
-            auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                 CPP_ret(range_reference_t<Rng>)(
                     requires RandomAccessRange<Rng> && SizedRange<Rng>)
             {
@@ -46,7 +46,7 @@ namespace ranges
             }
 
             /// \return `begin(rng)[n]`
-            template<typename Rng, typename T, typename D = range_difference_type_t<Rng>>
+            template<typename Rng, typename T, typename D = range_difference_t<Rng>>
             constexpr /*c++14*/
             auto operator()(Rng &&rng, T &&t) const ->
                 CPP_ret(range_reference_t<Rng>)(
@@ -64,14 +64,14 @@ namespace ranges
             {
                 CPP_assert_msg(RandomAccessRange<R>,
                     "ranges::at(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-                CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
-                    "ranges::at(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
+                CPP_assert_msg(ConvertibleTo<T, range_difference_t<R>>,
+                    "ranges::at(rng, idx): idx argument must be convertible to range_difference_t<rng>.");
             }
 
         private:
             template<typename Rng>
             constexpr /*c++14*/
-            static void check_throw(Rng &&rng, range_difference_type_t<Rng> n)
+            static void check_throw(Rng &&rng, range_difference_t<Rng> n)
             {
                 (n < 0 || n >= ranges::distance(rng)) ? throw std::out_of_range("ranges::at") : void(0);
             }

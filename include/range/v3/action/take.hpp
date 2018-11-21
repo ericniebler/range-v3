@@ -38,7 +38,7 @@ namespace ranges
                 concept TakeActionConcept,
                     ForwardRange<Rng> &&
                     ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_type_t<Rng>>
+                    ConvertibleTo<T, range_difference_t<Rng>>
             );
 
             struct take_fn
@@ -56,7 +56,7 @@ namespace ranges
                     requires TakeActionConcept<Rng, D>)
                 Rng operator()(Rng &&rng, D &&d) const
                 {
-                    range_difference_type_t<Rng> n = d;
+                    range_difference_t<Rng> n = d;
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
                     return static_cast<Rng &&>(rng);
@@ -74,7 +74,7 @@ namespace ranges
                     using S = sentinel_t<Rng>;
                     CPP_assert_msg(ErasableRange<Rng &, I, S>,
                         "The object on which action::take operates must allow element removal.");
-                    CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_difference_t<Rng>>,
                         "The stride argument to action::take must be convertible to the range's "
                         "difference type.");
                 }

@@ -692,8 +692,7 @@ namespace ranges
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {
             template<typename T>
-            auto operator()(T &&t) const noexcept -> CPP_ret(T &&)(
-                requires not is_reference_wrapper<T>::value)
+            T &&operator()(T &&t) const noexcept
             {
                 return static_cast<T &&>(t);
             }
@@ -709,6 +708,12 @@ namespace ranges
             T &operator()(std::reference_wrapper<T> t) const noexcept
             {
                 return t.get();
+            }
+            /// \overload
+            template<typename T>
+            T &operator()(ref_view<T> t) const noexcept
+            {
+                return t.base();
             }
         };
 

@@ -50,7 +50,7 @@ namespace ranges
                     requires Const && !Other)
                 {}
                 using CRng = meta::const_if_c<Const, Rng>;
-                using value_type = range_value_type_t<Rng>;
+                using value_type = range_value_t<Rng>;
                 range_rvalue_reference_t<CRng> read(iterator_t<CRng> const &it) const
                 {
                     return ranges::iter_move(it);
@@ -86,13 +86,13 @@ namespace ranges
               : move_view::view_adaptor{std::move(rng)}
             {}
             CPP_member
-            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+            auto CPP_fun(size)() (const
                 requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            auto size() -> CPP_ret(range_size_type_t<Rng>)(
+            auto CPP_fun(size)() (
                 requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());

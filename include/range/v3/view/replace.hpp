@@ -88,8 +88,8 @@ namespace ranges
                 concept ReplaceViewConcept,
                     InputRange<Rng> &&
                     Same<detail::decay_t<unwrap_reference_t<Val1>>, detail::decay_t<unwrap_reference_t<Val2>>> &&
-                    EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_type_t<Rng>> &&
-                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_type_t<Rng>> &&
+                    EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_t<Rng>> &&
+                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>> &&
                     CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>> &&
                     CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>
             );
@@ -147,11 +147,11 @@ namespace ranges
                         "InputRange concept.");
                     CPP_assert_msg(Same<V1, V2>,
                         "The two values passed to view::replace must have the same type.");
-                    CPP_assert_msg(EqualityComparableWith<V1, range_value_type_t<Rng>>,
+                    CPP_assert_msg(EqualityComparableWith<V1, range_value_t<Rng>>,
                         "The values passed to view::replace must be EqualityComparableWith "
                         "to the range's value type.");
                     CPP_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
-                            range_value_type_t<Rng>>,
+                            range_value_t<Rng>>,
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
                     CPP_assert_msg(CommonReference<unwrap_reference_t<Val2 const &>,

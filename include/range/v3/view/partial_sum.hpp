@@ -54,7 +54,7 @@ namespace ranges
                 friend struct adaptor<!IsConst>;
                 using CRng = meta::const_if_c<IsConst, Rng>;
                 using partial_sum_view_t = meta::const_if_c<IsConst, partial_sum_view>;
-                semiregular_t<range_value_type_t<Rng>> sum_;
+                semiregular_t<range_value_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
             public:
                 using single_pass = partial_sum_view::single_pass;
@@ -76,7 +76,7 @@ namespace ranges
                         sum_ = *it;
                     return it;
                 }
-                range_value_type_t<Rng> read(iterator_t<CRng>) const
+                range_value_t<Rng> read(iterator_t<CRng>) const
                 {
                     return sum_;
                 }
@@ -84,7 +84,7 @@ namespace ranges
                 {
                     if (++it != ranges::end(rng_->base()))
                     {
-                        auto &current = static_cast<range_value_type_t<Rng> &>(sum_);
+                        auto &current = static_cast<range_value_t<Rng> &>(sum_);
                         sum_ = invoke(rng_->fun_, current, *it);
                     }
                 }
@@ -123,7 +123,7 @@ namespace ranges
               , fun_(std::move(fun))
             {}
             CPP_member
-            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+            auto CPP_fun(size)() (const
                 requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
@@ -141,7 +141,7 @@ namespace ranges
                     ConvertibleTo<
                         invoke_result_t<Fun &, range_common_reference_t<Rng>,
                             range_common_reference_t<Rng>>,
-                        range_value_type_t<Rng>>
+                        range_value_t<Rng>>
             );
 
             struct partial_sum_fn
@@ -178,7 +178,7 @@ namespace ranges
                     CPP_assert_msg(ConvertibleTo<
                         invoke_result_t<Fun &, range_common_reference_t<Rng>,
                             range_common_reference_t<Rng>>,
-                        range_value_type_t<Rng>>,
+                        range_value_t<Rng>>,
                         "The return type of the function passed to view::partial_sum must be "
                         "convertible to the value type of the range.");
                 }

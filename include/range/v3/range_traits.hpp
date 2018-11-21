@@ -21,6 +21,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/size.hpp>
 
 namespace ranges
 {
@@ -45,16 +46,16 @@ namespace ranges
 
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using iterator_t = decltype(begin(std::declval<Rng &>()));
+        using iterator_t = decltype(begin(static_cast<Rng &(*)()>(nullptr)()));
 
         template<typename Rng>
-        using sentinel_t = decltype(end(std::declval<Rng &>()));
+        using sentinel_t = decltype(end(static_cast<Rng &(*)()>(nullptr)()));
 
         template<typename Rng>
-        using range_difference_type_t = iter_difference_t<iterator_t<Rng>>;
+        using range_difference_t = iter_difference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_value_type_t = iter_value_t<iterator_t<Rng>>;
+        using range_value_t = iter_value_t<iterator_t<Rng>>;
 
         template<typename Rng>
         using range_reference_t = iter_reference_t<iterator_t<Rng>>;
@@ -65,7 +66,20 @@ namespace ranges
         template<typename Rng>
         using range_common_reference_t = iter_common_reference_t<iterator_t<Rng>>;
 
+        template<typename Rng>
+        using range_size_t = decltype(ranges::size(static_cast<Rng &(*)()>(nullptr)()));
+
         /// \cond
+        template<typename Rng>
+        using range_difference_type_t
+            RANGES_DEPRECATED("range_difference_type_t is deprecated. Use the range_difference_t instead.") =
+                iter_difference_t<iterator_t<Rng>>;
+
+        template<typename Rng>
+        using range_value_type_t
+            RANGES_DEPRECATED("range_value_type_t is deprecated. Use the range_value_t instead.") =
+                iter_value_t<iterator_t<Rng>>;
+
         template<typename Rng>
         using range_category_t
             RANGES_DEPRECATED("range_category_t is deprecated. Use the range concepts instead.") =
@@ -73,8 +87,8 @@ namespace ranges
 
         template<typename Rng>
         using range_size_type_t
-            RANGES_DEPRECATED("range_size_type_t is deprecated.") =
-                meta::_t<std::make_unsigned<range_difference_type_t<Rng>>>;
+            RANGES_DEPRECATED("range_size_type_t is deprecated. Use range_size_t instead.") =
+                meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
         /// \endcond
 
         template<typename Rng>

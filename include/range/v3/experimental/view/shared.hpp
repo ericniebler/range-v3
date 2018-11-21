@@ -56,9 +56,8 @@ namespace ranges
                 }
 
                 CPP_member
-                auto size() const ->
-                    CPP_ret(range_size_type_t<Rng>)(
-                        requires SizedRange<Rng>)
+                auto CPP_fun(size)() (const
+                    requires SizedRange<Rng>)
                 {
                     return ranges::size(*rng_ptr_);
                 }

@@ -38,7 +38,7 @@ namespace ranges
         private:
             friend range_access;
 
-            range_difference_type_t<Rng> n_ = 0;
+            range_difference_t<Rng> n_ = 0;
 
             template<bool IsConst>
             using CI = counted_iterator<iterator_t<meta::const_if_c<IsConst, Rng>>>;
@@ -97,7 +97,7 @@ namespace ranges
             }
         public:
             take_view() = default;
-            take_view(Rng rng, range_difference_type_t<Rng> n)
+            take_view(Rng rng, range_difference_t<Rng> n)
               : take_view::view_adaptor(std::move(rng)), n_{n}
             {
                 RANGES_EXPECT(n >= 0);
@@ -112,7 +112,7 @@ namespace ranges
                 friend view_access;
 
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n) ->
+                static auto invoke_(Rng &&rng, range_difference_t<Rng> n) ->
                     CPP_ret(take_view<all_t<Rng>>)(
                         requires not SizedRange<Rng> && !is_infinite<Rng>::value)
                 {
@@ -121,7 +121,7 @@ namespace ranges
 
                 CPP_template(typename Rng)(
                     requires SizedRange<Rng> || is_infinite<Rng>::value)
-                static auto CPP_auto_fun(invoke_)(Rng &&rng, range_difference_type_t<Rng> n)
+                static auto CPP_auto_fun(invoke_)(Rng &&rng, range_difference_t<Rng> n)
                 (
                     return take_exactly(
                         static_cast<Rng &&>(rng),
@@ -150,7 +150,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> n) (const)
+                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
                 (
                     return take_fn::invoke_(static_cast<Rng &&>(rng), n)
                 )

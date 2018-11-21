@@ -50,7 +50,7 @@ namespace ranges
                 template(typename Rng, typename Cont)
                 concept ConvertibleToContainerImpl,
                     Range<Cont> && !View<Cont> && MoveConstructible<Cont> &&
-                    ConvertibleTo<range_value_type_t<Rng>, range_value_type_t<Cont>> &&
+                    ConvertibleTo<range_value_t<Rng>, range_value_t<Cont>> &&
                     Constructible<Cont, range_common_iterator_t<Rng>, range_common_iterator_t<Rng>>
             );
 
@@ -102,7 +102,7 @@ namespace ranges
 
             public:
                 CPP_template(typename Rng,
-                    typename Cont = meta::invoke<ToContainer, range_value_type_t<Rng>>)(
+                    typename Cont = meta::invoke<ToContainer, range_value_t<Rng>>)(
                     requires InputRange<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
                 Cont operator()(Rng &&rng) const
                 {
@@ -131,7 +131,7 @@ namespace ranges
 
         /// \overload
         CPP_template(template<typename...> class ContT, typename Rng,
-            typename Cont = meta::invoke<meta::quote<ContT>, range_value_type_t<Rng>>)(
+            typename Cont = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>)(
             requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
         Cont to_(Rng &&rng)
         {

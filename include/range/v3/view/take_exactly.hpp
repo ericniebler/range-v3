@@ -49,13 +49,12 @@ namespace ranges
             {
             private:
                 friend range_access;
-                using difference_type_ = range_difference_type_t<Rng>;
                 Rng rng_;
-                difference_type_ n_;
+                range_difference_t<Rng> n_;
 
             public:
                 take_exactly_view_() = default;
-                take_exactly_view_(Rng rng, difference_type_ n)
+                take_exactly_view_(Rng rng, range_difference_t<Rng> n)
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
@@ -75,15 +74,12 @@ namespace ranges
                 {
                     return {};
                 }
-                range_size_type_t<Rng> size() const
+                auto size() const
                 {
-                    return static_cast<range_size_type_t<Rng>>(n_);
+                    using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+                    return static_cast<size_type>(n_);
                 }
-                Rng & base()
-                {
-                    return rng_;
-                }
-                Rng const & base() const
+                Rng base() const
                 {
                     return rng_;
                 }
@@ -94,12 +90,11 @@ namespace ranges
               : view_interface<take_exactly_view_<Rng, true>, finite>
             {
             private:
-                using difference_type_ = range_difference_type_t<Rng>;
                 Rng rng_;
-                difference_type_ n_;
+                range_difference_t<Rng> n_;
             public:
                 take_exactly_view_() = default;
-                take_exactly_view_(Rng rng, difference_type_ n)
+                take_exactly_view_(Rng rng, range_difference_t<Rng> n)
                   : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_EXPECT(n >= 0);
@@ -113,29 +108,24 @@ namespace ranges
                 {
                     return ranges::begin(rng_) + n_;
                 }
-                template<typename BaseRng = Rng>
-                auto begin() const ->
-                    CPP_ret(iterator_t<BaseRng const>)(
-                        requires Range<BaseRng const>)
+                CPP_member
+                auto CPP_fun(begin)() (const
+                    requires Range<Rng const>)
                 {
                     return ranges::begin(rng_);
                 }
-                template<typename BaseRng = Rng>
-                auto end() const ->
-                    CPP_ret(iterator_t<BaseRng const>)(
-                        requires Range<BaseRng const>)
+                CPP_member
+                auto CPP_fun(end)() (const
+                    requires Range<Rng const>)
                 {
                     return ranges::begin(rng_) + n_;
                 }
-                range_size_type_t<Rng> size() const
+                auto size() const
                 {
-                    return static_cast<range_size_type_t<Rng>>(n_);
+                    using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+                    return static_cast<size_type>(n_);
                 }
-                Rng & base()
-                {
-                    return rng_;
-                }
-                Rng const & base() const
+                Rng base() const
                 {
                     return rng_;
                 }
@@ -157,12 +147,12 @@ namespace ranges
 
                 template<typename Rng>
                 static take_exactly_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_type_t<Rng> n, input_range_tag)
+                invoke_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n,
+                static auto invoke_(Rng &&rng, range_difference_t<Rng> n,
                         random_access_range_tag) ->
                     CPP_ret(iterator_range<iterator_t<Rng>>)(
                         requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
@@ -190,7 +180,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> n) (const)
+                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
                 (
                     return take_exactly_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )

@@ -36,7 +36,6 @@ namespace ranges
         {
         private:
             friend range_access;
-            using size_type_ = size_type_t<I>;
             I it_;
             iter_difference_t<I> n_;
 
@@ -55,8 +54,9 @@ namespace ranges
             {
                 return {};
             }
-            size_type_ size() const
+            auto size() const
             {
+                using size_type_ = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
                 return static_cast<size_type_>(n_);
             }
         };

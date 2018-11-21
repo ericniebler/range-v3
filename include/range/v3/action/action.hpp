@@ -21,6 +21,7 @@
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/ref.hpp>
 
 namespace ranges
 {
@@ -105,7 +106,7 @@ namespace ranges
                     static_assert(!std::is_reference<Rng>(),
                         "You can't pipe an lvalue into an action. Try using std::move on the argument, "
                         "and be sure to save the result somewhere or pipe the result to another action. "
-                        "Or, wrap the argument with std::ref to pass it by reference.");
+                        "Or, wrap the argument with view::ref to pass it by reference.");
                 }
             #endif
 
@@ -140,11 +141,11 @@ namespace ranges
             auto operator|=(Rng &rng, Action &&action) ->
                 CPP_ret(Rng &)(
                     requires is_pipeable<Action>::value && Range<Rng &> &&
-                    Invocable<bitwise_or, ref_t<Rng &>, Action &> &&
-                    Same<ref_t<Rng &>,
-                        invoke_result_t<bitwise_or, ref_t<Rng &>, Action &>>)
+                    Invocable<bitwise_or, ref_view<Rng>, Action &> &&
+                    Same<ref_view<Rng>,
+                        invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
             {
-                ref(rng) | action;
+                view::ref(rng) | action;
                 return rng;
             }
         }

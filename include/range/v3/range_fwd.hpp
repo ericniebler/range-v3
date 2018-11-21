@@ -385,9 +385,6 @@ namespace ranges
         template<typename T>
         struct enable_view;
 
-        template<typename R>
-        struct disable_sized_range;
-
         template<typename S, typename I>
         struct disable_sized_sentinel;
 
@@ -592,6 +589,14 @@ namespace ranges
         namespace view
         {
             struct move_fn;
+        }
+
+        template<typename Rng>
+        struct ref_view;
+
+        namespace view
+        {
+            struct ref_fn;
         }
 
         template<typename Val>

@@ -12,6 +12,7 @@
 #include <memory>
 #include <range/v3/core.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/view/ref.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -36,8 +37,7 @@ int main()
     ::models<LvalueContainerLikeConcept>(v2);
     ::models_not<LvalueContainerLikeConcept>(std::move(v2));
 
-    ::models<LvalueContainerLikeConcept>(ranges::ref(v2));
-    ::models<LvalueContainerLikeConcept>(std::ref(v2));
+    ::models<LvalueContainerLikeConcept>(view::ref(v2));
 
     return ::test_result();
 }

@@ -68,21 +68,21 @@ namespace ranges
                 SemiContainer<T> &&
                 Constructible<
                     uncvref_t<T>,
-                    detail::movable_input_iterator<range_value_type_t<T>>,
-                    detail::movable_input_iterator<range_value_type_t<T>>>
+                    detail::movable_input_iterator<range_value_t<T>>,
+                    detail::movable_input_iterator<range_value_t<T>>>
         );
 
         CPP_def
         (
             template(typename C)
             concept Reservable,
-                requires (C &c, C const &cc, range_size_type_t<C> s)
+                requires (C &c, C const &cc, range_size_t<C> s)
                 (
                     c.reserve(s),
                     cc.capacity(),
                     cc.max_size(),
-                    concepts::requires_<Same<decltype(cc.capacity()), range_size_type_t<C>>>,
-                    concepts::requires_<Same<decltype(cc.max_size()), range_size_type_t<C>>>
+                    concepts::requires_<Same<decltype(cc.capacity()), range_size_t<C>>>,
+                    concepts::requires_<Same<decltype(cc.max_size()), range_size_t<C>>>
                 ) &&
                 Container<C> && SizedRange<C>
         );
@@ -126,6 +126,14 @@ namespace ranges
 
             template<typename T>
             auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept ->
+                CPP_ret(std::true_type)(
+                    requires Container<T>)
+            {
+                return {};
+            }
+
+            template<typename T>
+            auto is_lvalue_container_like(ref_view<T>) noexcept ->
                 CPP_ret(std::true_type)(
                     requires Container<T>)
             {

@@ -106,27 +106,27 @@ int main()
     auto chars = view::ints(std::numeric_limits<char>::min(),
                             std::numeric_limits<char>::max());
     static_assert(RandomAccessRange<decltype(chars)>, "");
-    static_assert(Same<int, range_difference_type_t<decltype(chars)>>, "");
+    static_assert(Same<int, range_difference_t<decltype(chars)>>, "");
     ::models<RandomAccessViewConcept>(aux::copy(chars));
     models<BoundedViewConcept>(aux::copy(chars));
 
     auto shorts = view::ints(std::numeric_limits<unsigned short>::min(),
                              std::numeric_limits<unsigned short>::max());
     models<BoundedViewConcept>(aux::copy(shorts));
-    static_assert(Same<int, range_difference_type_t<decltype(shorts)>>, "");
+    static_assert(Same<int, range_difference_t<decltype(shorts)>>, "");
 
     auto uints = view::closed_indices(
         std::numeric_limits<std::uint_least32_t>::min(),
         std::numeric_limits<std::uint_least32_t>::max() - 1);
     models<BoundedViewConcept>(aux::copy(uints));
-    static_assert(Same<std::int_fast64_t, range_difference_type_t<decltype(uints)>>, "");
+    static_assert(Same<std::int_fast64_t, range_difference_t<decltype(uints)>>, "");
     static_assert(Same<std::uint_fast64_t, decltype(uints.size())>, "");
     CHECK(uints.size() == std::numeric_limits<std::uint32_t>::max());
 
     auto ints = view::closed_indices(
         std::numeric_limits<std::int_least32_t>::min(),
         std::numeric_limits<std::int_least32_t>::max() - 1);
-    static_assert(Same<std::int_fast64_t, range_difference_type_t<decltype(ints)>>, "");
+    static_assert(Same<std::int_fast64_t, range_difference_t<decltype(ints)>>, "");
     static_assert(Same<std::uint_fast64_t, decltype(ints.size())>, "");
     CHECK(ints.size() == std::numeric_limits<std::uint32_t>::max());
 

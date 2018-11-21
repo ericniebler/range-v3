@@ -527,21 +527,22 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_SELECT_CONST_(MAYBE_CONST, ...)                            \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_,                                      \
-          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+        CPP_PP_CHECK(CPP_PP_CAT(                                                \
             CPP_PP_PROBE_CONST_PROBE_, MAYBE_CONST)))                           \
     /**/
 
 #define CPP_PP_PROBE_CONST_PROBE_const CPP_PP_PROBE(~)
 
 #define CPP_FUN_IMPL_SELECT_CONST_1(...)                                        \
-    CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(CPP_PP_CAT(                             \
-        CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__),)(CPP_PP_CAT(                     \
-        CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__))                                  \
+    CPP_PP_EVAL(                                                                \
+        CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                                    \
+        CPP_PP_CAT(CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__),)(                     \
+        CPP_PP_CAT(CPP_FUN_IMPL_EAT_CONST_, __VA_ARGS__))                       \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_(MAYBE_NOEXCEPT, ...)                \
     CPP_PP_CAT(CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_,                             \
-          CPP_PP_CHECK(CPP_PP_CAT(                                              \
+        CPP_PP_CHECK(CPP_PP_CAT(                                                \
             CPP_PP_PROBE_NOEXCEPT_PROBE_, MAYBE_NOEXCEPT)))                     \
     /**/
 
@@ -549,14 +550,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     std::enable_if_t<bool(CPP_PP_CAT(                                           \
-        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)),                              \
+        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__))  &&                           \
+        CPP_true(::concepts::detail::Nil{}),                                    \
         ::concepts::detail::Nil> = {}) const                                    \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
     std::enable_if_t<bool(CPP_PP_CAT(                                           \
         CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(                                 \
-        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))),                             \
+        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) &&                           \
+        CPP_true(::concepts::detail::Nil{}),                                    \
         ::concepts::detail::Nil> = {}) const CPP_PP_EXPAND(                     \
             CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
     /**/
@@ -584,14 +587,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     std::enable_if_t<bool(CPP_PP_CAT(                                           \
-        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)),                              \
+        CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) &&                            \
+        CPP_true(::concepts::detail::Nil{}),                                    \
         ::concepts::detail::Nil> = {})                                          \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
     std::enable_if_t<bool(CPP_PP_CAT(                                           \
         CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(                                 \
-        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))),                             \
+        CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) &&                           \
+        CPP_true(::concepts::detail::Nil{}),                                    \
         ::concepts::detail::Nil> = {}) CPP_PP_EXPAND(                           \
             CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
     /**/

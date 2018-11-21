@@ -46,22 +46,22 @@ namespace ranges
                     range_cardinality<Rng>::value>
         {
             intersperse_view() = default;
-            constexpr intersperse_view(Rng rng, range_value_type_t<Rng> val)
+            constexpr intersperse_view(Rng rng, range_value_t<Rng> val)
               : intersperse_view::view_adaptor{detail::move(rng)}, val_(detail::move(val))
             {}
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+            constexpr auto CPP_fun(size)() (const
+                requires SizedRange<Rng const>)
             {
-                return size_(ranges::size(this->base()));
+                auto const n = ranges::size(this->base());
+                return n ? n * 2 - 1 : 0;
             }
             CPP_member
-            constexpr /*c++14*/ auto size() ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng>)
+            constexpr /*c++14*/ auto CPP_fun(size)() (
+                requires SizedRange<Rng>)
             {
-                return size_(ranges::size(this->base()));
+                auto const n = ranges::size(this->base());
+                return n ? n * 2 - 1 : 0;
             }
         private:
             friend range_access;
@@ -73,10 +73,10 @@ namespace ranges
                 friend struct cursor_adaptor<!Const>;
                 using CRng = meta::const_if_c<Const, Rng>;
                 bool toggle_ = false;
-                range_value_type_t<Rng> val_;
+                range_value_t<Rng> val_;
             public:
                 cursor_adaptor() = default;
-                explicit constexpr cursor_adaptor(range_value_type_t<Rng> const &val)
+                explicit constexpr cursor_adaptor(range_value_t<Rng> const &val)
                   : val_{val}
                 {}
                 template<bool Other>
@@ -92,7 +92,7 @@ namespace ranges
                     toggle_ = first != ranges::end(view.base());
                     return first;
                 }
-                constexpr range_value_type_t<Rng> read(iterator_t<CRng> const &it) const
+                constexpr range_value_t<Rng> read(iterator_t<CRng> const &it) const
                 {
                     return toggle_ ? *it : val_;
                 }
@@ -122,14 +122,14 @@ namespace ranges
                 CPP_member
                 constexpr auto distance_to(iterator_t<CRng> const &it,
                     iterator_t<CRng> const &other_it, cursor_adaptor const &other) const ->
-                    CPP_ret(range_difference_type_t<Rng>)(
+                    CPP_ret(range_difference_t<Rng>)(
                         requires SizedSentinel<iterator_t<CRng>, iterator_t<CRng>>)
                 {
                     return (other_it - it) * 2 + (other.toggle_ - toggle_);
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto advance(iterator_t<CRng> &it, range_difference_type_t<CRng> n) ->
+                auto advance(iterator_t<CRng> &it, range_difference_t<CRng> n) ->
                     CPP_ret(void)(
                         requires RandomAccessRange<CRng>)
                 {
@@ -198,24 +198,20 @@ namespace ranges
             {
                 return {};
             }
-            constexpr range_size_type_t<Rng> size_(range_size_type_t<Rng> const n) const noexcept
-            {
-                return n ? n * 2 - 1 : 0;
-            }
 
-            range_value_type_t<Rng> val_;
+            range_value_t<Rng> val_;
         };
 
         namespace view
         {
             CPP_def
             (
-                template(typename Rng, typename T = range_value_type_t<Rng>)
+                template(typename Rng, typename T = range_value_t<Rng>)
                 (concept IntersperseViewConcept)(Rng, T),
                     InputRange<Rng> &&
-                    ConvertibleTo<T, range_value_type_t<Rng>> &&
-                    ConvertibleTo<range_reference_t<Rng>, range_value_type_t<Rng>> &&
-                    Semiregular<range_value_type_t<Rng>>
+                    ConvertibleTo<T, range_value_t<Rng>> &&
+                    ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
+                    Semiregular<range_value_t<Rng>>
             );
 
             struct intersperse_fn
@@ -232,7 +228,7 @@ namespace ranges
             public:
 
                 template<typename Rng>
-                constexpr auto operator()(Rng &&rng, range_value_type_t<Rng> val) const ->
+                constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
                     CPP_ret(intersperse_view<all_t<Rng>>)(
                         requires IntersperseViewConcept<Rng>)
                 {
@@ -248,7 +244,7 @@ namespace ranges
                     CPP_assert_msg(InputRange<Rng>,
                         "The object on which view::intersperse operates must be a model of the "
                         "InputRange concept.");
-                    using V = range_value_type_t<Rng>;
+                    using V = range_value_t<Rng>;
                     CPP_assert_msg(ConvertibleTo<T, V>,
                         "The value to intersperse in the range must be convertible to the range's "
                         "value type.");

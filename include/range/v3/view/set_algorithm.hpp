@@ -126,7 +126,7 @@ namespace ranges
                 }
 
             public:
-                using value_type = range_value_type_t<constify_if<Rng1>>;
+                using value_type = range_value_t<constify_if<Rng1>>;
                 using single_pass = meta::or_c<SinglePass<iterator_t<R1>>,
                                                SinglePass<iterator_t<R2>>>;
 
@@ -239,11 +239,11 @@ namespace ranges
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CPP_assert_msg(
-                        Invocable<P1&, range_value_type_t<Rng1>>,
+                        Invocable<P1&, range_value_t<Rng1>>,
                         "The first projection function passed to view::set_difference "
                         "must be callable with an argument of the first range's value type.");
                     CPP_assert_msg(
-                        Invocable<P2&, range_value_type_t<Rng2>>,
+                        Invocable<P2&, range_value_t<Rng2>>,
                         "The second projection function passed to view::set_difference "
                         "must be callable with an argument of the second range's value type.");
                 }
@@ -300,7 +300,7 @@ namespace ranges
                 }
 
             public:
-                using value_type = range_value_type_t<R1>;
+                using value_type = range_value_t<R1>;
                 using single_pass = meta::or_c<SinglePass<iterator_t<R1>>,
                                                SinglePass<iterator_t<R2>>>;
 
@@ -412,11 +412,11 @@ namespace ranges
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CPP_assert_msg(
-                        Invocable<P1&, range_value_type_t<Rng1>>,
+                        Invocable<P1&, range_value_t<Rng1>>,
                         "The first projection function passed to view::set_intersection "
                         "must be callable with an argument of the first range's value type.");
                     CPP_assert_msg(
-                        Invocable<P2&, range_value_type_t<Rng2>>,
+                        Invocable<P2&, range_value_t<Rng2>>,
                         "The second projection function passed to view::set_intersection "
                         "must be callable with an argument of the second range's value type.");
                 }
@@ -489,7 +489,7 @@ namespace ranges
                 }
 
             public:
-                using value_type = common_type_t<range_value_type_t<R1>, range_value_type_t<R2>>;
+                using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
                 using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
                 using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<R1>,
                                                                  range_rvalue_reference_t<R2>>;
@@ -588,7 +588,7 @@ namespace ranges
                 template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
                 concept SetUnionViewConcept,
                     InputRange<Rng1> && InputRange<Rng2> &&
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>> &&
+                    Common<range_value_t<Rng1>, range_value_t<Rng2>> &&
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>> &&
                     CommonReference<range_rvalue_reference_t<Rng1>,
                                     range_rvalue_reference_t<Rng2>> &&
@@ -627,7 +627,7 @@ namespace ranges
                     CPP_assert_msg(InputRange<Rng2>,
                         "The second parameter of view::set_union "
                         "must be a model of the InputRange concept.");
-                    CPP_assert_msg(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>,
+                    CPP_assert_msg(Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                         "The value types of the two ranges must share a common type.");
                     CPP_assert_msg(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                         "The reference types of the two ranges must share a common reference.");
@@ -639,11 +639,11 @@ namespace ranges
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CPP_assert_msg(
-                        Invocable<P1&, range_value_type_t<Rng1>>,
+                        Invocable<P1&, range_value_t<Rng1>>,
                         "The first projection function passed to view::set_union "
                         "must be callable with an argument of the first range's value type.");
                     CPP_assert_msg(
-                        Invocable<P2&, range_value_type_t<Rng2>>,
+                        Invocable<P2&, range_value_t<Rng2>>,
                         "The second projection function passed to view::set_union "
                         "must be callable with an argument of the second range's value type.");
                 }
@@ -725,7 +725,7 @@ namespace ranges
                 }
 
             public:
-                using value_type = common_type_t<range_value_type_t<R1>, range_value_type_t<R2>>;
+                using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
                 using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
                 using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<R1>,
                                                                  range_rvalue_reference_t<R2>>;
@@ -825,7 +825,7 @@ namespace ranges
                 template(typename Rng1, typename Rng2, typename C, typename P1, typename P2)
                 concept SetSymmetricDifferenceViewConcept,
                     InputRange<Rng1> && InputRange<Rng2> &&
-                    Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>> &&
+                    Common<range_value_t<Rng1>, range_value_t<Rng2>> &&
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>> &&
                     CommonReference<range_rvalue_reference_t<Rng1>,
                                     range_rvalue_reference_t<Rng2>> &&
@@ -864,7 +864,7 @@ namespace ranges
                     CPP_assert_msg(InputRange<Rng2>,
                         "The second parameter of view::set_symmetric_difference "
                         "must be a model of the InputRange concept.");
-                    CPP_assert_msg(Common<range_value_type_t<Rng1>, range_value_type_t<Rng2>>,
+                    CPP_assert_msg(Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                         "The value types of the two ranges must share a common type.");
                     CPP_assert_msg(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                         "The reference types of the two ranges must share a common reference.");
@@ -876,11 +876,11 @@ namespace ranges
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
                     CPP_assert_msg(
-                        Invocable<P1&, range_value_type_t<Rng1>>,
+                        Invocable<P1&, range_value_t<Rng1>>,
                         "The first projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the first range's value type.");
                     CPP_assert_msg(
-                        Invocable<P2&, range_value_type_t<Rng2>>,
+                        Invocable<P2&, range_value_t<Rng2>>,
                         "The second projection function passed to view::set_symmetric_difference "
                         "must be callable with an argument of the second range's value type.");
                 }

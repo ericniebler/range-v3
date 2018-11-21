@@ -47,7 +47,7 @@ int main()
         ::models_not<BoundedViewConcept>(aux::copy(rng));
         ::models_not<SizedViewConcept>(aux::copy(rng));
         CPP_assert(Same<
-            range_value_type_t<Rng>,
+            range_value_t<Rng>,
             std::tuple<int, std::string, std::string>>);
         CPP_assert(Same<
             range_reference_t<Rng>,
@@ -55,7 +55,7 @@ int main()
         CPP_assert(Same<
             range_rvalue_reference_t<Rng>,
             common_tuple<int &&, std::string const &&, std::string &&>>);
-        CPP_assert(ConvertibleTo<range_value_type_t<Rng> &&,
+        CPP_assert(ConvertibleTo<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>);
         ::models<InputIteratorConcept>(begin(rng));
         ::models_not<ForwardIteratorConcept>(begin(rng));
@@ -150,7 +150,7 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CPP_assert(Same<range_value_type_t<R2>, MoveOnlyString>);
+        CPP_assert(Same<range_value_t<R2>, MoveOnlyString>);
         CPP_assert(Same<range_reference_t<R2>, MoveOnlyString &>);
         CPP_assert(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>);
     }
@@ -162,7 +162,7 @@ int main()
         using I = iterator_t<Rng>;
         CPP_assert(Readable<I>);
         CPP_assert(Same<
-            range_value_type_t<Rng>,
+            range_value_t<Rng>,
             std::pair<MoveOnlyString, MoveOnlyString>>);
         CPP_assert(Same<
             range_reference_t<Rng>,
@@ -192,7 +192,7 @@ int main()
         auto rng0 = view::zip(vi, vs);
         auto rng1 = view::stride(rng0, 2);
         CPP_assert(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>);
-        CPP_assert(Same<range_value_type_t<decltype(rng1)>, range_value_type_t<decltype(rng0)>>);
+        CPP_assert(Same<range_value_t<decltype(rng1)>, range_value_t<decltype(rng0)>>);
     }
 
     // Test for noexcept iter_move

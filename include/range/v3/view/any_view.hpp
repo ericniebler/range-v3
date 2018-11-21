@@ -26,6 +26,7 @@
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE

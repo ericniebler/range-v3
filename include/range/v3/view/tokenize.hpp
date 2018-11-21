@@ -84,11 +84,7 @@ namespace ranges
             {
                 return {};
             }
-            Rng & base()
-            {
-                return rng_;
-            }
-            Rng const & base() const
+            Rng base() const
             {
                 return rng_;
             }
@@ -106,7 +102,7 @@ namespace ranges
                 {
                     CPP_assert(BidirectionalRange<Rng>);
                     CPP_assert(BoundedRange<Rng>);
-                    static_assert(std::is_same<range_value_type_t<Rng>,
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex), sub,
@@ -121,7 +117,7 @@ namespace ranges
                 {
                     CPP_assert(BidirectionalRange<Rng>);
                     CPP_assert(BoundedRange<Rng>);
-                    static_assert(std::is_same<range_value_type_t<Rng>,
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex),
@@ -136,7 +132,7 @@ namespace ranges
                 {
                     CPP_assert(BidirectionalRange<Rng>);
                     CPP_assert(BoundedRange<Rng>);
-                    static_assert(std::is_same<range_value_type_t<Rng>,
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
                     return {all(static_cast<Rng &&>(rng)), static_cast<Regex &&>(rex),

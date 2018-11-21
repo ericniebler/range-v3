@@ -71,7 +71,7 @@ void test_empty_set()
     CHECK(empty(rng));
 
     CPP_assert(std::is_same<
-        range_value_type_t<Rng>,
+        range_value_t<Rng>,
         std::tuple<>>());
     CPP_assert(std::is_same<
         range_reference_t<Rng>,
@@ -111,7 +111,7 @@ void test_empty_range()
     CHECK(size(rng) == 0u);
 
     CPP_assert(std::is_same<
-        range_value_type_t<Rng>,
+        range_value_t<Rng>,
         std::tuple<int, char>>());
     CPP_assert(std::is_same<
         range_reference_t<Rng>,
@@ -239,7 +239,7 @@ int main()
     CHECK(size(rng) == static_cast<std::intmax_t>(size(some_ints) * size(some_strings)));
 
     CPP_assert(std::is_same<
-        range_value_type_t<Rng>,
+        range_value_t<Rng>,
         std::tuple<int, char const *>>());
     CPP_assert(std::is_same<
         range_reference_t<Rng>,

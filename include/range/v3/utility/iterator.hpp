@@ -430,12 +430,13 @@ namespace ranges
             template<typename I, typename S>
             constexpr /*c++14*/
             auto operator()(I const& begin, S end) const ->
-                CPP_ret(size_type_t<I>)(
+                CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<I>>>)(
                     requires SizedSentinel<S, I>)
             {
+                using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
                 iter_difference_t<I> n = end - begin;
                 RANGES_EXPECT(0 <= n);
-                return static_cast<size_type_t<I>>(n);
+                return static_cast<size_type>(n);
             }
         };
 

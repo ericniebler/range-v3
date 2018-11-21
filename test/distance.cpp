@@ -34,7 +34,7 @@ void test_iterators(I begin, S end, ranges::iter_difference_t<I> n)
 }
 
 template<typename Rng>
-void test_range(Rng&& rng, ranges::range_difference_type_t<Rng> n)
+void test_range(Rng&& rng, ranges::range_difference_t<Rng> n)
 {
     using namespace ranges;
 
@@ -42,8 +42,8 @@ void test_range(Rng&& rng, ranges::range_difference_type_t<Rng> n)
     CHECK(distance_compare(rng, n) == 0);
     CHECK(distance_compare(rng, n - 1) > 0);
     CHECK(distance_compare(rng, n + 1) < 0);
-    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::min)()) > 0);
-    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::max)()) < 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0);
 }
 
 template<typename Rng>
@@ -54,16 +54,16 @@ void test_infinite_range(Rng&& rng)
     CHECK(distance_compare(rng, 0) > 0);
     CHECK(distance_compare(rng,-1) > 0);
     CHECK(distance_compare(rng, 1) > 0);
-    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::min)()) > 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
     if (is_infinite<Rng>::value) {
         // For infinite ranges that can be detected by is_infinite<Rng> traits,
         // distance_compare can compute the result in constant time.
-        CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::max)()) > 0);
+        CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
     }
     else {
         // For other infinite ranges, comparing to a huge number might take too much time.
         // Thus commented out the test.
-        // CHECK(distance_compare(rng, (std::numeric_limits<range_difference_type_t<Rng>>::max)()) > 0);
+        // CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
     }
 }
 

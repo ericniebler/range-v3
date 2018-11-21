@@ -94,35 +94,37 @@ namespace ranges
         struct sized_iterator_range
           : view_interface<sized_iterator_range<I, S>>
         {
-        private:
-            template<typename X, typename Y>
-            friend struct sized_iterator_range;
-            iterator_range<I, S> rng_;
-            size_type_t<I> size_;
-        public:
+            using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
             using iterator = I;
             using sentinel = S;
         #ifndef RANGES_DOXYGEN_INVOKED
             using const_iterator = I; // Mostly to avoid spurious errors in Boost.Range
         #endif
 
+        private:
+            template<typename X, typename Y>
+            friend struct sized_iterator_range;
+            iterator_range<I, S> rng_;
+            size_type size_;
+
+        public:
             sized_iterator_range() = default;
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I begin, S end, size_type_t<I> size)
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(I begin, S end, size_type size)
               : rng_{detail::move(begin), detail::move(end)}, size_(size)
             {
             #ifndef NDEBUG
                 RANGES_ASSERT(!(bool)ForwardIterator<I> ||
-                    static_cast<size_type_t<I>>(ranges::distance(rng_)) == size_);
+                    static_cast<size_type>(ranges::distance(rng_)) == size_);
             #endif
             }
             CPP_template(typename X, typename Y)(
                 requires Constructible<I, X> && Constructible<S, Y>)
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type_t<I> size)
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(std::pair<X, Y> rng, size_type size)
               : sized_iterator_range{detail::move(rng).first, detail::move(rng).second, size}
             {}
             CPP_template(typename X, typename Y)(
                 requires Constructible<I, X> && Constructible<S, Y>)
-            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, size_type_t<I> size)
+            RANGES_NDEBUG_CONSTEXPR sized_iterator_range(iterator_range<X, Y> rng, size_type size)
               : sized_iterator_range{detail::move(rng).first(), detail::move(rng).second, size}
             {}
             CPP_template(typename X, typename Y)(
@@ -146,7 +148,7 @@ namespace ranges
             {
                 return rng_.end();
             }
-            size_type_t<I> size() const noexcept
+            size_type size() const noexcept
             {
                 return size_;
             }
@@ -177,7 +179,7 @@ namespace ranges
             /// \overload
             CPP_template(std::size_t N)(
                 requires N == 2)
-            friend constexpr size_type_t<I> get(sized_iterator_range const &p) noexcept
+            friend constexpr size_type get(sized_iterator_range const &p) noexcept
             {
                 return p.size();
             }
@@ -197,7 +199,7 @@ namespace ranges
             /// \return `{begin, end, size}`
             CPP_template(typename I, typename S)(
                 requires Sentinel<S, I>)
-            constexpr sized_iterator_range<I, S> operator()(I begin, S end, size_type_t<I> size) const
+            constexpr sized_iterator_range<I, S> operator()(I begin, S end, meta::_t<std::make_unsigned<iter_difference_t<I>>> size) const
             {
                 CPP_assert(Sentinel<S, I>);
                 return {detail::move(begin), detail::move(end), size};
@@ -258,7 +260,7 @@ namespace std
     template<typename I, typename S>
     struct tuple_element<2, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = ::ranges::v3::size_type_t<I>;
+        using type = typename ::ranges::v3::sized_iterator_range<I, S>::size_type;
     };
 }
 /// \endcond

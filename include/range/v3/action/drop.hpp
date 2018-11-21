@@ -38,7 +38,7 @@ namespace ranges
                 concept DropActionConcept,
                     ForwardRange<Rng> &&
                     ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_type_t<Rng>>
+                    ConvertibleTo<T, range_difference_t<Rng>>
             );
 
             struct drop_fn
@@ -53,9 +53,9 @@ namespace ranges
                 }
             public:
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                     CPP_ret(Rng)(
-                    requires DropActionConcept<Rng, range_difference_type_t<Rng>>)
+                    requires DropActionConcept<Rng, range_difference_t<Rng>>)
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
@@ -73,7 +73,7 @@ namespace ranges
                     using I = iterator_t<Rng>;
                     CPP_assert_msg(ErasableRange<Rng &, I, I>,
                         "The object on which action::drop operates must allow element removal.");
-                    CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_difference_t<Rng>>,
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

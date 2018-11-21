@@ -66,11 +66,5 @@ int main()
     CHECK(l0.end() == li.end());
     CHECK(l0.size() == li.size());
 
-    l0 = view::all(li);
-
-    iterator_range<std::list<int>::iterator> l1 = l0;
-    CHECK(l1.begin() == li.begin());
-    CHECK(l1.end() == li.end());
-
     return ::test_result();
 }

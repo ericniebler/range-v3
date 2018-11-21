@@ -64,7 +64,7 @@ namespace ranges
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
                 using CRng = constify_if<Rng>;
-                using difference_type_ = range_difference_type_t<Rng>;
+                using difference_type_ = range_difference_t<Rng>;
                 using iterator = iterator_t<CRng>;
 
                 cycled_view_t *rng_{};

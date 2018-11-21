@@ -170,7 +170,7 @@ namespace ranges
                 template(typename Rng)
                 concept SplitOnElement,
                     ForwardRange<Rng> &&
-                    Regular<range_value_type_t<Rng>>
+                    Regular<range_value_t<Rng>>
             );
             CPP_def
             (
@@ -178,7 +178,7 @@ namespace ranges
                 concept SplitOnSubRange,
                     ForwardRange<Rng> &&
                     ForwardRange<Sub> &&
-                    EqualityComparableWith<range_value_type_t<Rng>, range_value_type_t<Sub>>
+                    EqualityComparableWith<range_value_t<Rng>, range_value_t<Sub>>
             );
 
             struct split_fn
@@ -208,7 +208,7 @@ namespace ranges
                 template<typename Rng>
                 struct element_pred
                 {
-                    range_value_type_t<Rng> val_;
+                    range_value_t<Rng> val_;
 
                     template<typename S>
                     auto operator()(iterator_t<Rng> cur, S end) const ->
@@ -225,7 +225,7 @@ namespace ranges
                 struct subrange_pred
                 {
                     all_t<Sub> sub_;
-                    range_difference_type_t<Sub> len_;
+                    range_difference_t<Sub> len_;
 
                     subrange_pred() = default;
                     subrange_pred(Sub &&sub)
@@ -267,7 +267,7 @@ namespace ranges
                     return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_value_type_t<Rng> val) const ->
+                auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
                     CPP_ret(split_view<all_t<Rng>, element_pred<Rng>>)(
                         requires SplitOnElement<Rng>)
                 {
@@ -285,12 +285,12 @@ namespace ranges
                 template<typename Rng, typename T>
                 auto operator()(Rng &&, T &&) const volatile ->
                     CPP_ret(void)(
-                        requires not ConvertibleTo<T, range_value_type_t<Rng>>)
+                        requires not ConvertibleTo<T, range_value_t<Rng>>)
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CPP_assert_msg(ConvertibleTo<T, range_value_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_value_t<Rng>>,
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "

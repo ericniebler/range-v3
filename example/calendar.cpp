@@ -190,7 +190,7 @@ namespace cal_example
     class chunk_view : public view_adaptor<chunk_view<Rng>, Rng>
     {
         CPP_assert(ForwardRange<Rng>);
-        ranges::range_difference_type_t<Rng> n_;
+        ranges::range_difference_t<Rng> n_;
         friend range_access;
         class adaptor;
         adaptor begin_adaptor()
@@ -200,7 +200,7 @@ namespace cal_example
 
     public:
         chunk_view() = default;
-        chunk_view(Rng rng, ranges::range_difference_type_t<Rng> n)
+        chunk_view(Rng rng, ranges::range_difference_t<Rng> n)
           : chunk_view::view_adaptor(std::move(rng))
           , n_(n)
         {}
@@ -209,12 +209,12 @@ namespace cal_example
     template<class Rng>
     class chunk_view<Rng>::adaptor : public adaptor_base
     {
-        ranges::range_difference_type_t<Rng> n_;
+        ranges::range_difference_t<Rng> n_;
         sentinel_t<Rng> end_;
 
     public:
         adaptor() = default;
-        adaptor(ranges::range_difference_type_t<Rng> n, sentinel_t<Rng> end)
+        adaptor(ranges::range_difference_t<Rng> n, sentinel_t<Rng> end)
           : n_(n)
           , end_(end)
         {}
@@ -242,7 +242,7 @@ chunk(std::size_t n)
         using Rng = decltype(rng);
         return cal_example::chunk_view<view::all_t<Rng>>{
             view::all(std::forward<Rng>(rng)),
-            static_cast<ranges::range_difference_type_t<Rng>>(n)};
+            static_cast<ranges::range_difference_t<Rng>>(n)};
     });
 }
 
@@ -252,7 +252,7 @@ template<class Rngs>
 class interleave_view : public view_facade<interleave_view<Rngs>>
 {
     friend range_access;
-    std::vector<range_value_type_t<Rngs>> rngs_;
+    std::vector<range_value_t<Rngs>> rngs_;
     struct cursor;
     cursor begin_cursor()
     {
@@ -270,8 +270,8 @@ template<class Rngs>
 struct interleave_view<Rngs>::cursor
 {
     std::size_t n_;
-    std::vector<range_value_type_t<Rngs>> *rngs_;
-    std::vector<iterator_t<range_value_type_t<Rngs>>> its_;
+    std::vector<range_value_t<Rngs>> *rngs_;
+    std::vector<iterator_t<range_value_t<Rngs>>> its_;
     decltype(auto) read() const
     {
         return *its_[n_];
@@ -292,7 +292,7 @@ struct interleave_view<Rngs>::cursor
     }
     CPP_member
     auto equal(cursor const& that) const -> CPP_ret(bool)(
-        requires ForwardRange<range_value_type_t<Rngs>>)
+        requires ForwardRange<range_value_t<Rngs>>)
     {
         return n_ == that.n_ && its_ == that.its_;
     }

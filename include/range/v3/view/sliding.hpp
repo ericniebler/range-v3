@@ -63,7 +63,7 @@ namespace ranges
                   : it_{uncounted(ranges::begin(rng))}
                 {}
                 constexpr uncounted_t<Rng>
-                get(iterator_t<Rng> const &, range_difference_type_t<Rng>) const
+                get(iterator_t<Rng> const &, range_difference_t<Rng>) const
                 {
                     return it_;
                 }
@@ -87,7 +87,7 @@ namespace ranges
                 constexpr trailing(Rng const &) noexcept
                 {}
                 constexpr uncounted_t<Rng>
-                get(iterator_t<Rng> const &it, range_difference_type_t<Rng> n) const
+                get(iterator_t<Rng> const &it, range_difference_t<Rng> n) const
                 {
                     return uncounted(it - (n - 1));
                 }
@@ -110,27 +110,29 @@ namespace ranges
             {
                 CPP_assert(ForwardRange<Rng>);
                 sv_base() = default;
-                sv_base(Rng rng, range_difference_type_t<Rng> n)
+                sv_base(Rng rng, range_difference_t<Rng> n)
                   : sv_base::view_adaptor(std::move(rng)), n_(n)
                 {
                     RANGES_ASSERT(0 < n_);
                 }
                 CPP_member
-                auto size() const ->
-                    CPP_ret(range_size_type_t<Rng>)(
-                        requires SizedRange<Rng const>)
+                auto CPP_fun(size)() (const
+                    requires SizedRange<Rng const>)
                 {
-                    return size_(ranges::size(this->base()));
+                    auto const count = ranges::size(this->base());
+                    auto const n = static_cast<range_size_t<Rng const>>(n_);
+                    return count < n ? 0 : count - n + 1;
                 }
                 CPP_member
-                auto size() ->
-                    CPP_ret(range_size_type_t<Rng>)(
-                        requires SizedRange<Rng>)
+                auto CPP_fun(size)() (
+                    requires SizedRange<Rng>)
                 {
-                    return size_(ranges::size(this->base()));
+                    auto const count = ranges::size(this->base());
+                    auto const n = static_cast<range_size_t<Rng>>(n_);
+                    return count < n ? 0 : count - n + 1;
                 }
             protected:
-                range_difference_type_t<Rng> n_;
+                range_difference_t<Rng> n_;
 
                 optional<iterator_t<Rng>> &cache() &
                 {
@@ -143,12 +145,6 @@ namespace ranges
             private:
                 using cache_t = detail::non_propagating_cache<
                     iterator_t<Rng>, sv_base<Rng>>;
-
-                range_size_type_t<Rng> size_(range_size_type_t<Rng> count) const
-                {
-                    auto const n = static_cast<range_size_type_t<Rng>>(n_);
-                    return count < n ? 0 : count - n + 1;
-                }
             };
         }
 
@@ -180,7 +176,7 @@ namespace ranges
             {
             private:
                 using base_t = sliding_view_detail::trailing<Rng>;
-                range_difference_type_t<Rng> n_ = {};
+                range_difference_t<Rng> n_ = {};
             public:
                 adaptor() = default;
                 adaptor(sliding_view &v)
@@ -209,7 +205,7 @@ namespace ranges
                     --it;
                 }
                 CPP_member
-                auto advance(iterator_t<Rng>& it, range_difference_type_t<Rng> n) ->
+                auto advance(iterator_t<Rng>& it, range_difference_t<Rng> n) ->
                     CPP_ret(void)(
                         requires RandomAccessRange<Rng>)
                 {
@@ -252,7 +248,7 @@ namespace ranges
               : adaptor_base
             {
             private:
-                range_difference_type_t<Rng> n_ = {};
+                range_difference_t<Rng> n_ = {};
             public:
                 adaptor() = default;
                 adaptor(sliding_view &v)
@@ -295,10 +291,10 @@ namespace ranges
             private:
                 friend struct adaptor<!Const>;
                 using CRng = meta::const_if_c<Const, Rng>;
-                range_difference_type_t<Rng> n_ = 0;
+                range_difference_t<Rng> n_ = 0;
             public:
                 adaptor() = default;
-                adaptor(range_difference_type_t<Rng> n)
+                adaptor(range_difference_t<Rng> n)
                   : n_(n)
                 {}
                 template<bool Other>
@@ -358,7 +354,7 @@ namespace ranges
                 }
             public:
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const ->
+                auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                     CPP_ret(sliding_view<all_t<Rng>>)(
                         requires ForwardRange<Rng>)
                 {

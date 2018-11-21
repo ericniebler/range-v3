@@ -65,11 +65,7 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            Rng & base()
-            {
-                return rng_;
-            }
-            Rng const & base() const
+            Rng base() const
             {
                 return rng_;
             }

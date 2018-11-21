@@ -56,7 +56,7 @@ int main()
 
     std::vector<int> vi{1,2,3,4,5,6,7,8,9};
     auto &&rng2 = vi | view::replace_if([](int i){return i == 5;}, 42);
-    CPP_assert(Same<range_value_type_t<decltype(rng2)>, int>);
+    CPP_assert(Same<range_value_t<decltype(rng2)>, int>);
     has_type<int const &>(*begin(rng2));
     has_type<int const &>(iter_move(begin(rng2)));
     models<ViewConcept>(aux::copy(rng2));
@@ -67,7 +67,7 @@ int main()
 
     int forty_two = 42;
     auto &&rng3 = vi | view::replace_if([](int i){return i == 5;}, ref(forty_two));
-    CPP_assert(Same<range_value_type_t<decltype(rng3)>, int>);
+    CPP_assert(Same<range_value_t<decltype(rng3)>, int>);
     has_type<int &>(*begin(rng3));
     has_type<int const &>(iter_move(begin(rng3)));
     models<ViewConcept>(aux::copy(rng3));
@@ -77,7 +77,7 @@ int main()
     ::check_equal(rng3, {1,2,3,4,42,6,7,8,9});
 
     auto &&rng4 = view::ints | view::replace_if([](int i){return i == 5;},42) | view::take(10);
-    CPP_assert(Same<range_value_type_t<decltype(rng4)>, int>);
+    CPP_assert(Same<range_value_t<decltype(rng4)>, int>);
     has_type<int>(*begin(rng4));
     has_type<int>(iter_move(begin(rng4)));
     models<ViewConcept>(aux::copy(rng4));

@@ -53,7 +53,7 @@ private:
     using generator_for = meta::invoke<
         maybe_sized_generator<(bool) ranges::SizedRange<V>>,
         ranges::range_reference_t<V>,
-        ranges::range_value_type_t<V>>;
+        ranges::range_value_t<V>>;
 
     CPP_template(typename V)(
         requires CoroConcept<V> && ranges::View<V>)
@@ -144,7 +144,7 @@ ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 CPP_template(class V, class F)(
     requires ranges::InputView<V> &&
         ranges::IndirectPredicate<F, ranges::iterator_t<V>>)
-ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_type_t<V>>
+ranges::experimental::generator<ranges::range_reference_t<V>, ranges::range_value_t<V>>
 filter(V view, F f)
 {
     RANGES_FOR(auto &&i, view)

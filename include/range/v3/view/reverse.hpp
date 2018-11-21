@@ -102,9 +102,14 @@ namespace ranges
                 return make_reverse_iterator(ranges::begin(rng_));
             }
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+            constexpr /*c++14*/ auto CPP_fun(size)() (
+                requires SizedRange<Rng>)
+            {
+                return ranges::size(rng_);
+            }
+            CPP_member
+            constexpr auto CPP_fun(size)() (const
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(rng_);
             }
@@ -114,20 +119,13 @@ namespace ranges
         {
             struct reverse_fn
             {
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 5
-                // Avoid GCC5 bug that ODR-uses std::declval?!?
-                CPP_template(typename Rng)(
-                    requires BidirectionalRange<Rng>)
-                constexpr /*c++14*/
-#else
-                CPP_template(typename Rng)(
-                    requires BidirectionalRange<Rng>)
-                constexpr
-#endif
-                auto CPP_auto_fun(operator())(Rng &&rng) (const)
-                (
-                    return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
-                )
+                template<typename Rng>
+                constexpr /*c++14*/ auto operator()(Rng &&rng) const ->
+                    CPP_ret(reverse_view<all_t<Rng>>)(
+                        requires BidirectionalRange<Rng>)
+                {
+                    return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
+                }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Rng>

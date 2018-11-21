@@ -46,7 +46,7 @@ namespace ranges
             }
 
             template<typename Rng, typename F, typename P = ident>
-            auto operator()(Rng &&rng, range_difference_type_t<Rng> n, F fun, P proj = P{}) const ->
+            auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires InputRange<Rng> &&
                         MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)

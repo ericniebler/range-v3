@@ -57,6 +57,7 @@ endif()
 # Template diagnostic flags
 ranges_append_flag(RANGES_HAS_FDIAGNOSTIC_SHOW_TEMPLATE_TREE -fdiagnostics-show-template-tree)
 ranges_append_flag(RANGES_HAS_FTEMPLATE_BACKTRACE_LIMIT "-ftemplate-backtrace-limit=0")
+ranges_append_flag(RANGES_HAS_FMACRO_BACKTRACE_LIMIT "-fmacro-backtrace-limit=1")
 
 # Clang modules support
 if (RANGES_MODULES)

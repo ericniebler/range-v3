@@ -33,7 +33,7 @@ namespace ranges
             (
                 template(typename Rng, typename T)
                 class CompatibleDifferenceType,
-                    ConvertibleTo<T, range_difference_type_t<Rng>>
+                    ConvertibleTo<T, range_difference_t<Rng>>
             );
 
             CPP_def
@@ -55,7 +55,7 @@ namespace ranges
             CPP_template(typename Rng)(
                 requires RandomAccessRange<Rng>)
             constexpr /*c++14*/
-            range_reference_t<Rng> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            range_reference_t<Rng> operator()(Rng &&rng, range_difference_t<Rng> n) const
                 noexcept(noexcept(ranges::begin(rng)[n]))
             {
                 RANGES_EXPECT(!(bool)SizedRange<Rng> || n < ranges::distance(rng));
@@ -63,7 +63,7 @@ namespace ranges
             }
             /// \return `begin(rng)[n]`
             CPP_template(typename Rng, typename T, typename Self = index_fn,
-                     typename D = range_difference_type_t<Rng>)(
+                     typename D = range_difference_t<Rng>)(
                 requires RandomAccessRange<Rng> &&
                                   !Same<uncvref_t<T>, D> &&
                                   ConvertibleTo<T, D>)
@@ -81,8 +81,8 @@ namespace ranges
             // {
             //     CPP_assert_msg(RandomAccessRange<R>,
             //         "ranges::index(rng, idx): rng argument must be a model of the RandomAccessRange concept.");
-            //     CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<R>>,
-            //         "ranges::index(rng, idx): idx argument must be convertible to range_difference_type_t<rng>.");
+            //     CPP_assert_msg(ConvertibleTo<T, range_difference_t<R>>,
+            //         "ranges::index(rng, idx): idx argument must be convertible to range_difference_t<rng>.");
             // }
             // /// \endcond
         };

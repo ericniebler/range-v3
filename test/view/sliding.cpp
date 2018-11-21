@@ -65,13 +65,13 @@ namespace
     {
         iterator_t<Rng> iter1_;
         iterator_t<Rng> iter2_;
-        range_difference_type_t<Rng> dist_;
+        range_difference_t<Rng> dist_;
     };
     template<typename Rng>
     struct size_compare_<Rng, true>
     {
         iterator_t<Rng> iter1_;
-        range_difference_type_t<Rng> dist_;
+        range_difference_t<Rng> dist_;
     };
 
     template<typename Rng>

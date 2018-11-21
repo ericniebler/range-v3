@@ -44,7 +44,7 @@ namespace ranges
                     meta::if_c<
                         (bool) ranges::Container<Rng>,
                         uncvref_t<Rng>,
-                        std::vector<range_value_type_t<Rng>>>;
+                        std::vector<range_value_t<Rng>>>;
             public:
                 // BUGBUG something is not right with the actions. It should be possible
                 // to move a container into a split and have elements moved into the result.
@@ -64,7 +64,7 @@ namespace ranges
                 }
                 CPP_template(typename Rng)(
                     requires view::SplitOnElement<Rng>)
-                std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_type_t<Rng> val) const
+                std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
                 {
                     return view::split(rng, std::move(val))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
@@ -79,13 +79,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 CPP_template(typename Rng, typename T)(
-                    requires not ConvertibleTo<T, range_value_type_t<Rng>>)
+                    requires not ConvertibleTo<T, range_value_t<Rng>>)
                 void operator()(Rng &&, T &&) const volatile
                 {
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which action::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CPP_assert_msg(ConvertibleTo<T, range_value_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_value_t<Rng>>,
                         "The delimiter argument to action::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "

@@ -37,7 +37,7 @@ namespace ranges
                 concept StrideActionConcept,
                     ForwardRange<Rng> &&
                     ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_type_t<Rng>> &&
+                    ConvertibleTo<T, range_difference_t<Rng>> &&
                     Permutable<iterator_t<Rng>>
             );
 
@@ -52,9 +52,9 @@ namespace ranges
                     return std::bind(stride, std::placeholders::_1, step);
                 }
             public:
-                CPP_template(typename Rng, typename D = range_difference_type_t<Rng>)(
+                CPP_template(typename Rng, typename D = range_difference_t<Rng>)(
                     requires StrideActionConcept<Rng, D>)
-                Rng operator()(Rng &&rng, range_difference_type_t<Rng> const step) const
+                Rng operator()(Rng &&rng, range_difference_t<Rng> const step) const
                 {
                     using I = iterator_t<Rng>;
                     using S = sentinel_t<Rng>;
@@ -88,7 +88,7 @@ namespace ranges
                     using S = sentinel_t<Rng>;
                     CPP_assert_msg(ErasableRange<Rng &, I, S>,
                         "The object on which action::stride operates must allow element removal.");
-                    CPP_assert_msg(ConvertibleTo<T, range_difference_type_t<Rng>>,
+                    CPP_assert_msg(ConvertibleTo<T, range_difference_t<Rng>>,
                         "The stride argument to action::stride must be convertible to the range's "
                         "difference type.");
                     CPP_assert_msg(Permutable<I>,

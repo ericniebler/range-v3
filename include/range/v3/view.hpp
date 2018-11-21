@@ -48,6 +48,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/partial_sum.hpp>
+#include <range/v3/view/ref.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/repeat_n.hpp>

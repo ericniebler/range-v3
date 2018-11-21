@@ -47,7 +47,7 @@ int main()
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
     auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rng2));
-    CPP_assert(Same<range_value_type_t<decltype(rng2)>, int>);
+    CPP_assert(Same<range_value_t<decltype(rng2)>, int>);
     CPP_assert(Same<decltype(iter_move(begin(rng2))), int &&>);
     models<BoundedViewConcept>(aux::copy(rng2));
     models<SizedViewConcept>(aux::copy(rng2));
@@ -112,7 +112,7 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CPP_assert(Same<range_value_type_t<R2>, MoveOnlyString>);
+        CPP_assert(Same<range_value_t<R2>, MoveOnlyString>);
         CPP_assert(Same<range_reference_t<R2>, MoveOnlyString &>);
         CPP_assert(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>);
     }
@@ -124,7 +124,7 @@ int main()
 
         auto rng = view::transform(v0, v1, [](std::string& s0, std::string& s1){return std::tie(s0, s1);});
         using R = decltype(rng);
-        CPP_assert(Same<range_value_type_t<R>, std::tuple<std::string&, std::string&>>);
+        CPP_assert(Same<range_value_t<R>, std::tuple<std::string&, std::string&>>);
         CPP_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>);
         CPP_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string&, std::string&>>);
 
@@ -146,7 +146,7 @@ int main()
 
         auto rng = view::iter_transform(v0, v1, fun);
         using R = decltype(rng);
-        CPP_assert(Same<range_value_type_t<R>, std::tuple<std::string, std::string>>);
+        CPP_assert(Same<range_value_t<R>, std::tuple<std::string, std::string>>);
         CPP_assert(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>);
         CPP_assert(Same<range_rvalue_reference_t<R>, common_tuple<std::string&&, std::string&&>>);
 
@@ -170,7 +170,7 @@ int main()
         auto rng = view::transform(std::move(r0), std::move(r1),
             [](std::string &s0, std::string &s1){ return std::tie(s0, s1); });
         using R = decltype(rng);
-        CPP_assert(Same<range_value_type_t<R>, std::tuple<std::string &, std::string &>>);
+        CPP_assert(Same<range_value_t<R>, std::tuple<std::string &, std::string &>>);
         CPP_assert(Same<range_reference_t<R>, std::tuple<std::string &, std::string &>>);
         CPP_assert(Same<range_rvalue_reference_t<R>, std::tuple<std::string &, std::string &>>);
 

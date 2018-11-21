@@ -119,13 +119,13 @@ namespace
   }
 
   template<typename Durations> auto compute_mean(Durations &&durations) {
-    using D = ranges::range_value_type_t<Durations>;
+    using D = ranges::range_value_t<Durations>;
     D total = ranges::accumulate(durations, D{}, ranges::plus{}, ranges::convert_to<D>{});
     return total / ranges::size(durations);
   }
 
   template<typename Durations> auto compute_stddev(Durations &&durations) {
-    using D = ranges::range_value_type_t<Durations>;
+    using D = ranges::range_value_t<Durations>;
     using Rep = typename D::rep;
     const auto mean = compute_mean(durations);
     const auto stddev = ranges::accumulate(
@@ -185,7 +185,7 @@ namespace
   struct computation_on_sequence {
     Seq seq;
     Comp comp;
-    std::vector<ranges::range_value_type_t<decltype(seq(std::size_t{}))>> data;
+    std::vector<ranges::range_value_t<decltype(seq(std::size_t{}))>> data;
     computation_on_sequence(Seq s, Comp c, std::size_t max_size)
         : seq(std::move(s)), comp(std::move(c)) {
       data.reserve(max_size);

@@ -47,7 +47,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using difference_type_ = range_difference_type_t<Rng>;
+            using difference_type_ = range_difference_t<Rng>;
             Rng rng_;
             difference_type_ n_;
 
@@ -100,26 +100,22 @@ namespace ranges
                 return ranges::end(rng_);
             }
             CPP_member
-            auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+            auto CPP_fun(size)() (const
                 requires SizedRange<Rng const>)
             {
-                auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
-                auto const n = static_cast<range_size_type_t<Rng>>(n_);
+                auto const s = ranges::size(rng_);
+                auto const n = static_cast<range_size_t<Rng const>>(n_);
                 return s < n ? 0 : s - n;
             }
             CPP_member
-            auto size() -> CPP_ret(range_size_type_t<Rng>)(
+            auto CPP_fun(size)() (
                 requires SizedRange<Rng>)
             {
-                auto const s = static_cast<range_size_type_t<Rng>>(ranges::size(rng_));
-                auto const n = static_cast<range_size_type_t<Rng>>(n_);
+                auto const s = ranges::size(rng_);
+                auto const n = static_cast<range_size_t<Rng>>(n_);
                 return s < n ? 0 : s - n;
             }
-            Rng & base()
-            {
-                return rng_;
-            }
-            Rng const & base() const
+            Rng base() const
             {
                 return rng_;
             }
@@ -150,12 +146,12 @@ namespace ranges
             #endif
                 template<typename Rng>
                 static drop_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_type_t<Rng> n, input_range_tag)
+                invoke_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_type_t<Rng> n, random_access_range_tag) ->
+                static auto invoke_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag) ->
                     CPP_ret(iterator_range<iterator_t<Rng>, sentinel_t<Rng>>)(
                         requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value &&
                             SizedRange<Rng>)
@@ -165,7 +161,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> n) (const)
+                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
                 (
                     return drop_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
                 )

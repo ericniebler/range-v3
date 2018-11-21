@@ -36,7 +36,7 @@ namespace ranges
                 template(typename Rng)
                 concept UniqueViewConcept,
                     ForwardRange<Rng> &&
-                    EqualityComparable<range_value_type_t<Rng>>
+                    EqualityComparable<range_value_t<Rng>>
             );
 
             struct unique_fn
@@ -57,7 +57,7 @@ namespace ranges
                     CPP_assert_msg(ForwardRange<Rng>,
                         "The object on which view::unique operates must be a model the "
                         "ForwardRange concept.");
-                    CPP_assert_msg(EqualityComparable<range_value_type_t<Rng>>,
+                    CPP_assert_msg(EqualityComparable<range_value_t<Rng>>,
                         "The value type of the range passed to view::unique must be "
                         "EqualityComparable.");
                 }

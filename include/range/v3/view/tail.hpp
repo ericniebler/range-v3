@@ -54,14 +54,6 @@ namespace ranges
         {
         private:
             Rng rng_;
-            using size_type_ = range_size_type_t<Rng>;
-            template<typename R>
-            static constexpr size_type_ size_(R &rng)
-            {
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type_)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng));
-            }
         public:
             tail_view() = default;
             tail_view(Rng rng)
@@ -90,22 +82,24 @@ namespace ranges
                 return ranges::end(rng_);
             }
             CPP_member
-            constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto CPP_fun(size)() (
                 requires SizedRange<Rng>)
             {
-                return tail_view::size_(rng_);
+                using size_type = range_size_t<Rng>;
+                return range_cardinality<Rng>::value >= 0
+                  ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+                  : detail::prev_or_zero_(ranges::size(rng_));
             }
             CPP_member
-            constexpr auto size() const -> CPP_ret(size_type_)(
+            constexpr auto CPP_fun(size)() (const
                 requires SizedRange<Rng const>)
             {
-                return tail_view::size_(rng_);
+                using size_type = range_size_t<Rng>;
+                return range_cardinality<Rng>::value >= 0
+                  ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+                  : detail::prev_or_zero_(ranges::size(rng_));
             }
-            Rng & base()
-            {
-                return rng_;
-            }
-            Rng const & base() const
+            Rng base() const
             {
                 return rng_;
             }

@@ -40,7 +40,7 @@ namespace ranges
                     UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<
                         invoke_result_t<Gen &>,
-                        range_difference_type_t<Rng>>
+                        range_difference_t<Rng>>
             );
 
             struct shuffle_fn

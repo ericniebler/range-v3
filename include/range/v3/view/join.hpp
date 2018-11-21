@@ -20,15 +20,14 @@
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/numeric.hpp> // for accumulate
 #include <range/v3/begin_end.hpp>
 #include <range/v3/empty.hpp>
+#include <range/v3/range_for.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/view/transform.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/single.hpp>
@@ -71,26 +70,28 @@ namespace ranges
         {
             CPP_assert(InputRange<Rng>);
             CPP_assert(InputRange<range_reference_t<Rng>>);
-            using size_type = common_type_t<range_size_type_t<Rng>, range_size_type_t<range_reference_t<Rng>>>;
 
             join_view() = default;
             explicit join_view(Rng rng)
               : outer_(view::all(std::move(rng)))
             {}
             CPP_member
-            constexpr auto size() const -> CPP_ret(size_type)(
-                requires detail::join_cardinality<Rng>::value >= 0)
+            constexpr auto size() const -> CPP_ret(std::size_t)(
+                requires (detail::join_cardinality<Rng>::value >= 0))
             {
-                return detail::join_cardinality<Rng>::value;
+                return static_cast<std::size_t>(detail::join_cardinality<Rng>::value);
             }
             CPP_member
-            constexpr /*c++14*/ auto size() -> CPP_ret(size_type)(
+            constexpr /*c++14*/ auto CPP_fun(size)() (
                 requires detail::join_cardinality<Rng>::value < 0 &&
                     range_cardinality<Rng>::value >= 0 &&
-                    (bool) ForwardRange<Rng> &&
-                    (bool) SizedRange<range_reference_t<Rng>>)
+                    ForwardRange<Rng> &&
+                    SizedRange<range_reference_t<Rng>>)
             {
-                return accumulate(view::transform(outer_, ranges::size), size_type{0});
+                range_size_t<range_reference_t<Rng>> n = 0;
+                RANGES_FOR(auto &&inner, outer_)
+                    n += ranges::size(inner);
+                return n;
             }
         private:
             friend range_access;
@@ -164,11 +165,10 @@ namespace ranges
             CPP_assert(InputRange<Rng>);
             CPP_assert(InputRange<range_reference_t<Rng>>);
             CPP_assert(ForwardRange<ValRng>);
-            CPP_assert(Common<range_value_type_t<range_reference_t<Rng>>, range_value_type_t<ValRng>>);
+            CPP_assert(Common<range_value_t<range_reference_t<Rng>>, range_value_t<ValRng>>);
             CPP_assert(Semiregular<common_type_t<
-                range_value_type_t<range_reference_t<Rng>>,
-                range_value_type_t<ValRng>>>);
-            using size_type = common_type_t<range_size_type_t<Rng>, range_size_type_t<range_value_type_t<Rng>>>;
+                range_value_t<range_reference_t<Rng>>,
+                range_value_t<ValRng>>>);
 
             join_view() = default;
             join_view(Rng rng, ValRng val)
@@ -176,21 +176,23 @@ namespace ranges
               , val_(view::all(std::move(val)))
             {}
             CPP_member
-            constexpr auto size() const -> CPP_ret(size_type)(
+            constexpr auto size() const -> CPP_ret(std::size_t)(
                 requires detail::join_cardinality<Rng, ValRng>::value >= 0)
             {
-                return detail::join_cardinality<Rng, ValRng>::value;
+                return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>::value);
             }
             CPP_member
-            auto size() const -> CPP_ret(size_type)(
+            auto CPP_fun(size)() (const
                 requires detail::join_cardinality<Rng, ValRng>::value < 0 &&
                     range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
                     SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
             {
-                return accumulate(view::transform(outer_, ranges::size), size_type{0}) +
-                        (range_cardinality<Rng>::value == 0 ?
-                            0 :
-                            ranges::size(val_) * (range_cardinality<Rng>::value - 1));;
+                range_size_t<range_reference_t<Rng>> n = 0;
+                RANGES_FOR(auto &&inner, outer_)
+                    n += ranges::size(inner);
+                return n + (range_cardinality<Rng>::value == 0
+                    ? 0
+                    : ranges::size(val_) * (range_cardinality<Rng>::value - 1));
             }
         private:
             friend range_access;
@@ -230,7 +232,7 @@ namespace ranges
                 }
             public:
                 using value_type = common_type_t<
-                    range_value_type_t<Inner>, range_value_type_t<ValRng>>;
+                    range_value_t<Inner>, range_value_t<ValRng>>;
                 using reference = common_reference_t<
                     range_reference_t<Inner>, range_reference_t<ValRng>>;
                 using rvalue_reference = common_reference_t<
@@ -321,7 +323,7 @@ namespace ranges
                 {
                     return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-                template<typename Rng, typename Val = range_value_type_t<range_reference_t<Rng>>>
+                template<typename Rng, typename Val = range_value_t<range_reference_t<Rng>>>
                 auto operator()(Rng &&rng, meta::id_t<Val> v) const ->
                     CPP_ret(join_view<all_t<Rng>, single_view<Val>>)(
                         requires JoinableRange<Rng>)
@@ -339,12 +341,12 @@ namespace ranges
                         //requires JoinableRange<Rng> && ForwardRange<ValRng>)
                         requires JoinableRange<Rng> && Range<ValRng> && ForwardIterator<iterator_t<ValRng>>)
                 {
-                    CPP_assert_msg(Common<range_value_type_t<ValRng>,
-                        range_value_type_t<range_reference_t<Rng>>>,
+                    CPP_assert_msg(Common<range_value_t<ValRng>,
+                        range_value_t<range_reference_t<Rng>>>,
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type.");
                     CPP_assert_msg(Semiregular<common_type_t<
-                        range_value_type_t<ValRng>, range_value_type_t<range_reference_t<Rng>>>>,
+                        range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>>>,
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type, and that value type must model the Semiregular "
                         "concept; that is, it must have a default constructor, copy and move "

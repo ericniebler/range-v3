@@ -17,6 +17,7 @@
 
 #include <cstdint>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_access.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -287,7 +288,7 @@ namespace ranges
                     std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
                 }
             public:
-                using value_type = std::tuple<range_value_type_t<Views>...>;
+                using value_type = std::tuple<range_value_t<Views>...>;
 
                 cursor() = default;
                 explicit cursor(begin_tag, constify_if<cartesian_product_view> &view)

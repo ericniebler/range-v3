@@ -65,16 +65,14 @@ namespace ranges
               : indirect_view::view_adaptor{detail::move(rng)}
             {}
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+            constexpr auto CPP_fun(size)() (const
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            constexpr /*c++14*/ auto size() ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng>)
+            constexpr /*c++14*/ auto CPP_fun(size)() (
+                requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }
@@ -87,7 +85,7 @@ namespace ranges
                 template(typename Rng)
                 concept ReadableRange,
                     InputRange<Rng> &&
-                    Readable<range_value_type_t<Rng>>
+                    Readable<range_value_t<Rng>>
             );
 
             struct indirect_fn
@@ -107,7 +105,7 @@ namespace ranges
                     CPP_assert_msg(InputRange<Rng>,
                         "The argument to view::indirect must be a model of the InputRange "
                         "concept");
-                    CPP_assert_msg(Readable<range_value_type_t<Rng>>,
+                    CPP_assert_msg(Readable<range_value_t<Rng>>,
                         "The value type of the range passed to view::indirect must be a model "
                         "of the Readable concept.");
                 }

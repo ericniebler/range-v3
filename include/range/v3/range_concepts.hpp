@@ -130,7 +130,7 @@ namespace ranges
             template(typename T)
             concept ContiguousRange,
                 RandomAccessRange<T> &&
-                Same<range_value_type_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>> &&
+                Same<range_value_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>> &&
                 Same<detail::data_reference_t<T>, range_reference_t<T>>
         );
 
@@ -148,10 +148,10 @@ namespace ranges
             concept SizedRange,
                 requires (T &t)
                 (
-                    size(t),
-                    concepts::requires_<Integral<decltype(size(t))>>
+                    ranges::size(t),
+                    concepts::requires_<Integral<decltype(ranges::size(t))>>
                 ) &&
-                Range<T> && !disable_sized_range<uncvref_t<T>>::value
+                Range<T> && !disable_sized_range<uncvref_t<T>>
         );
 
         ///

@@ -68,8 +68,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
-            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
+            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
             std::tuple<Rngs...> rngs_;
 
@@ -101,7 +100,7 @@ namespace ranges
             template<bool IsConst>
             struct cursor
             {
-                using difference_type = common_type_t<range_difference_type_t<Rngs>...>;
+                using difference_type = common_type_t<range_difference_t<Rngs>...>;
             private:
                 friend struct cursor<!IsConst>;
                 template<typename T>
@@ -345,24 +344,36 @@ namespace ranges
               : rngs_{std::move(rngs)...}
             {}
             CPP_member
-            constexpr auto size() const -> CPP_ret(size_type_)(
+            constexpr auto size() const -> CPP_ret(std::size_t)(
                 requires detail::concat_cardinality<Rngs...>::value >= 0)
             {
-                return static_cast<size_type_>(detail::concat_cardinality<Rngs...>::value);
+                return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
             }
             CPP_member
-            constexpr /*c++14*/ auto size() const -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto CPP_fun(size)() (const
                 requires detail::concat_cardinality<Rngs...>::value < 0 &&
                     And<SizedRange<Rngs const>...>)
             {
-                return const_cast<concat_view *>(this)->size();
+                using size_type = common_type_t<range_size_t<Rngs const>...>;
+                return tuple_foldl(
+                    tuple_transform(
+                        rngs_,
+                        [](auto &&r) -> size_type { return ranges::size(r); }),
+                    size_type{0},
+                    plus{});
             }
             CPP_member
-            constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
+            constexpr /*c++14*/ auto CPP_fun(size)() (
                 requires detail::concat_cardinality<Rngs...>::value < 0 &&
                     And<SizedRange<Rngs>...>)
             {
-                return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
+                using size_type = common_type_t<range_size_t<Rngs>...>;
+                return tuple_foldl(
+                    tuple_transform(
+                        rngs_,
+                        [](auto &&r) -> size_type { return ranges::size(r); }),
+                    size_type{0},
+                    plus{});
             }
         };
 

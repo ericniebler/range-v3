@@ -124,16 +124,14 @@ namespace ranges
               , fun_(std::move(fun))
             {}
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+            constexpr /*c++14*/ auto CPP_fun(size)() (
+                requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            constexpr /*c++14*/ auto size() ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng>)
+            constexpr auto CPP_fun(size)() (const
+                requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());
             }
@@ -163,7 +161,7 @@ namespace ranges
             semiregular_t<Fun> fun_;
             Rng1 rng1_;
             Rng2 rng2_;
-            using difference_type_ = common_type_t<range_difference_type_t<Rng1>, range_difference_type_t<Rng2>>;
+            using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
             static constexpr cardinality my_cardinality = detail::transform2_cardinality(

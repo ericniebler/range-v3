@@ -16,7 +16,6 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -26,25 +25,25 @@ namespace ranges
         /// \addtogroup group-concepts
         // Specialize this if the default is wrong.
         template<typename T>
-        struct disable_sized_range : std::false_type {};
+        constexpr bool disable_sized_range = false;
 
         /// \cond
         namespace _size_
         {
             template<typename T>
-            void size(T const &) = delete;
+            int size(T &&) = delete;
 
-            struct fn : iter_size_fn
+            struct fn
             {
             private:
                 template<typename R>
-                using cbegin_t = decltype(ranges::cbegin(*(R*)nullptr));
+                using begin_t = decltype(ranges::begin(static_cast<R(*)()>(nullptr)()));
                 template<typename R>
-                using cend_t = decltype(ranges::cend(*(R*)nullptr));
+                using end_t = decltype(ranges::end(static_cast<R(*)()>(nullptr)()));
                 template<typename R>
-                using member_size_t = detail::decay_t<decltype((*(R*)nullptr).size())>;
+                using member_size_t = decltype(+(static_cast<R(*)()>(nullptr)()).size());
                 template<typename R>
-                using non_member_size_t = detail::decay_t<decltype(size((*(R*)nullptr)))>;
+                using non_member_size_t = decltype(+size(static_cast<R(*)()>(nullptr)()));
 
                 template<typename R, std::size_t N>
                 static constexpr std::size_t impl_(R (&)[N], int) noexcept
@@ -52,49 +51,58 @@ namespace ranges
                     return N;
                 }
 
+                template<typename R, std::size_t N>
+                static constexpr std::size_t impl_(R (&&)[N], int) noexcept
+                {
+                    return N;
+                }
+
                 // Prefer member if it returns Integral.
                 template<typename R>
-                static constexpr auto impl_(R &r, int) noexcept(noexcept(r.size())) ->
+                static constexpr auto impl_(R &&r, int) noexcept(noexcept(((R &&) r).size())) ->
                     CPP_ret(member_size_t<R>)(
-                        requires Integral<member_size_t<R>> && !disable_sized_range<R>::value)
+                        requires Integral<member_size_t<R>> &&
+                            !disable_sized_range<uncvref_t<R>>)
                 {
-                    return r.size();
+                    return ((R &&) r).size();
                 }
 
                 // Use ADL if it returns Integral.
                 template<typename R>
-                static constexpr auto impl_(R &r, long) noexcept(noexcept(size(r))) ->
+                static constexpr auto impl_(R &&r, long) noexcept(noexcept(size((R &&) r))) ->
                     CPP_ret(non_member_size_t<R>)(
-                        requires Integral<non_member_size_t<R>> && !disable_sized_range<R>::value)
+                        requires Integral<non_member_size_t<R>> &&
+                            !disable_sized_range<uncvref_t<R>>)
                 {
-                    return size(r);
+                    return size((R &&) r);
                 }
 
                 template<typename R>
-                static constexpr /*c++14*/ auto impl_(R &r, ...) ->
-                    CPP_ret(size_type_t<cbegin_t<R>>)(
-                        requires ForwardIterator<cbegin_t<R>> &&
-                            SizedSentinel<cend_t<R>, cbegin_t<R>>)
+                static constexpr /*c++14*/ auto impl_(R &&r, ...) ->
+                    CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<begin_t<R>>>>)(
+                        requires ForwardIterator<begin_t<R>> &&
+                            SizedSentinel<end_t<R>, begin_t<R>>)
                 {
-                    return ranges::iter_size(ranges::cbegin(r), ranges::cend(r));
+                    using size_type = meta::_t<std::make_unsigned<iter_difference_t<begin_t<R>>>>;
+                    return static_cast<size_type>(ranges::end((R &&) r) - ranges::begin((R &&) r));
                 }
 
             public:
-                using iter_size_fn::operator();
-
                 template<typename R>
                 constexpr auto CPP_auto_fun(operator())(R &&r) (const)
                 (
-                    return fn::impl_(r, 42)
+                    return fn::impl_(static_cast<R &&>(r), 42)
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())

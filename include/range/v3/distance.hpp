@@ -48,7 +48,7 @@ namespace ranges
         public:
             using iter_enumerate_fn::operator();
 
-            CPP_template(typename Rng, typename D = range_difference_type_t<Rng>,
+            CPP_template(typename Rng, typename D = range_difference_t<Rng>,
                 typename I = iterator_t<Rng>)(
                 requires Integral<D> && Range<Rng>)
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
@@ -83,7 +83,7 @@ namespace ranges
         public:
             using iter_distance_fn::operator();
 
-            CPP_template(typename Rng, typename D = range_difference_type_t<Rng>)(
+            CPP_template(typename Rng, typename D = range_difference_t<Rng>)(
                 requires Integral<D> && Range<Rng>)
             constexpr /*c++14*/
             D operator()(Rng &&rng, D d = 0) const
@@ -106,19 +106,19 @@ namespace ranges
         private:
             CPP_template(typename Rng)(
                 requires not is_infinite<Rng>::value)
-            int impl_r(Rng &rng, range_difference_type_t<Rng> n, range_tag) const
+            int impl_r(Rng &rng, range_difference_t<Rng> n, range_tag) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
             }
             CPP_template(typename Rng)(
                 requires is_infinite<Rng>::value)
-            int impl_r(Rng &, range_difference_type_t<Rng>, range_tag) const
+            int impl_r(Rng &, range_difference_t<Rng>, range_tag) const
             {
                 // Infinite ranges are always compared to be larger than a finite number.
                 return 1;
             }
             template<typename Rng>
-            int impl_r(Rng &rng, range_difference_type_t<Rng> n, sized_range_tag) const
+            int impl_r(Rng &rng, range_difference_t<Rng> n, sized_range_tag) const
             {
                 auto dist = distance(rng); // O(1) since rng is a SizedRange
                 if(dist > n)
@@ -133,7 +133,7 @@ namespace ranges
 
             CPP_template(typename Rng)(
                 requires Range<Rng>)
-            int operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+            int operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return this->impl_r(rng, n, sized_range_tag_of<Rng>());
             }

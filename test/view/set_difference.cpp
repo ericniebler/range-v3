@@ -55,7 +55,7 @@ int main()
 
         using R = decltype(res);
 
-        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_value_t<R>, int>);
         CPP_assert(Same<range_reference_t<R>, int&>);
         CPP_assert(Same<decltype(iter_move(begin(res))), int &&>);
 
@@ -81,7 +81,7 @@ int main()
 
         using R = decltype(res);
 
-        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_value_t<R>, int>);
         CPP_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>);
         CPP_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>);
 
@@ -106,7 +106,7 @@ int main()
 
         using R = decltype(res);
 
-        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_value_t<R>, int>);
         CPP_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>);
         CPP_assert(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>);
 
@@ -125,7 +125,7 @@ int main()
 
         using R = decltype(res);
 
-        CPP_assert(Same<range_value_type_t<R>, int>);
+        CPP_assert(Same<range_value_t<R>, int>);
         CPP_assert(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>);
         CPP_assert(Same<range_rvalue_reference_t<R>, range_rvalue_reference_t<decltype(i1_infinite)>>);
 
@@ -160,13 +160,13 @@ int main()
     {
         auto res1 = view::set_difference(view::const_(i1_finite), view::const_(i2_finite));
         using R1 = decltype(res1);
-        CPP_assert(Same<range_value_type_t<R1>, int>);
+        CPP_assert(Same<range_value_t<R1>, int>);
         CPP_assert(Same<range_reference_t<R1>, const int&>);
         CPP_assert(Same<range_rvalue_reference_t<R1>, const int&&>);
 
         auto res2 = view::set_difference(view::const_(i1_finite), i2_finite);
         using R2 = decltype(res2);
-        CPP_assert(Same<range_value_type_t<R2>, int>);
+        CPP_assert(Same<range_value_t<R2>, int>);
         CPP_assert(Same<range_reference_t<R2>, const int&>);
         CPP_assert(Same<range_rvalue_reference_t<R2>, const int&&>);
     }
@@ -199,7 +199,7 @@ int main()
                                          ident()
                                         );
         using R1 = decltype(res1);
-        CPP_assert(Same<range_value_type_t<R1>, S>);
+        CPP_assert(Same<range_value_t<R1>, S>);
         CPP_assert(Same<range_reference_t<R1>, S&>);
         CPP_assert(Same<range_rvalue_reference_t<R1>, S&&>);
         ::check_equal(res1, {S{-20}, S{-10}, S{3}, S{20}});
@@ -210,7 +210,7 @@ int main()
                                          [](const S& x){ return x.val; }
                                         );
         using R2 = decltype(res2);
-        CPP_assert(Same<range_value_type_t<R2>, int>);
+        CPP_assert(Same<range_value_t<R2>, int>);
         CPP_assert(Same<range_reference_t<R2>, int>);
         CPP_assert(Same<range_rvalue_reference_t<R2>, int>);
         ::check_equal(res2, {-2, -1, 0, 2, 4, 5, 7, 9});
@@ -241,7 +241,7 @@ int main()
 
         using R = decltype(res);
 
-        CPP_assert(Same<range_value_type_t<R>, MoveOnlyString>);
+        CPP_assert(Same<range_value_t<R>, MoveOnlyString>);
         CPP_assert(Same<range_reference_t<R>, MoveOnlyString &>);
         CPP_assert(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>);
     }

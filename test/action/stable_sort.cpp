@@ -71,7 +71,7 @@ int main()
     CHECK(is_sorted(v));
     CHECK(&v3 == &v);
 
-    auto ref=std::ref(v);
+    auto ref = view::ref(v);
     ref |= action::stable_sort;
 
     // Can pipe a view to a "container" algorithm.

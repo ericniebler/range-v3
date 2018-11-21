@@ -45,7 +45,7 @@ namespace ranges
             auto push_front(Cont &&cont, T &&t) ->
                 CPP_ret(push_front_t<Cont, T>)(
                     requires LvalueContainerLike<Cont> && !Range<T> &&
-                        Constructible<range_value_type_t<Cont>, T>)
+                        Constructible<range_value_t<Cont>, T>)
             {
                 unwrap_reference(cont).push_front(static_cast<T &&>(t));
             }
@@ -67,7 +67,7 @@ namespace ranges
                         push_front(rng, (T &&) t)
                     ) &&
                     InputRange<Rng> &&
-                        (Range<T> || Constructible<range_value_type_t<Rng>, T>)
+                        (Range<T> || Constructible<range_value_t<Rng>, T>)
             );
 
             struct push_front_fn
@@ -100,7 +100,7 @@ namespace ranges
                         "InputRange concept.");
                     CPP_assert_msg(Or<
                         Range<T>,
-                        Constructible<range_value_type_t<Rng>, T>>,
+                        Constructible<range_value_t<Rng>, T>>,
                         "The object to be inserted with action::push_front must either be "
                         "convertible to the range's value type, or else it must be a range "
                         "of elements that are convertible to the range's value type.");

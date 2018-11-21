@@ -63,34 +63,34 @@ namespace ranges
             {
                 stride_view_base_() = default;
                 constexpr /*c++14*/
-                stride_view_base_(Rng &&rng, range_difference_type_t<Rng> const stride)
+                stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
                   : stride_view_adaptor<Rng>{std::move(rng)},
                     stride_{(RANGES_EXPECT(0 < stride), stride)},
                     offset_{calc_offset(meta::bool_<SizedRange<Rng>>{})}
                 {}
             protected:
                 constexpr /*c++14*/
-                void set_offset(range_difference_type_t<Rng> const delta) noexcept
+                void set_offset(range_difference_t<Rng> const delta) noexcept
                 {
                     RANGES_EXPECT(0 <= delta && delta < stride_);
                     if(0 > offset_) offset_ = delta;
                     else RANGES_EXPECT(offset_ == delta);
                 }
                 constexpr /*c++14*/
-                void set_offset(range_difference_type_t<Rng> const) const noexcept
+                void set_offset(range_difference_t<Rng> const) const noexcept
                 {}
                 constexpr /*c++14*/
-                range_difference_type_t<Rng> get_offset(bool check = true) const noexcept
+                range_difference_t<Rng> get_offset(bool check = true) const noexcept
                 {
                     RANGES_EXPECT(!check || 0 <= offset_);
                     return offset_;
                 }
 
-                range_difference_type_t<Rng> stride_;
-                range_difference_type_t<Rng> offset_ = -1;
+                range_difference_t<Rng> stride_;
+                range_difference_t<Rng> offset_ = -1;
             private:
                 constexpr /*c++14*/
-                range_difference_type_t<Rng> calc_offset(std::true_type)
+                range_difference_t<Rng> calc_offset(std::true_type)
                 {
                     if(auto const rem = ranges::distance(this->base()) % stride_)
                         return stride_ - rem;
@@ -98,7 +98,7 @@ namespace ranges
                         return 0;
                 }
                 constexpr /*c++14*/
-                range_difference_type_t<Rng> calc_offset(std::false_type) const noexcept
+                range_difference_t<Rng> calc_offset(std::false_type) const noexcept
                 {
                     return -1;
                 }
@@ -109,21 +109,21 @@ namespace ranges
               : stride_view_adaptor<Rng>
             {
                 stride_view_base_() = default;
-                constexpr stride_view_base_(Rng &&rng, range_difference_type_t<Rng> const stride)
+                constexpr stride_view_base_(Rng &&rng, range_difference_t<Rng> const stride)
                   : stride_view_adaptor<Rng>{std::move(rng)},
                     stride_{(RANGES_EXPECT(0 < stride), stride)}
                 {}
             protected:
                 constexpr /*c++14*/
-                void set_offset(range_difference_type_t<Rng> const) const noexcept
+                void set_offset(range_difference_t<Rng> const) const noexcept
                 {}
                 constexpr /*c++14*/
-                range_difference_type_t<Rng> get_offset(bool = true) const noexcept
+                range_difference_t<Rng> get_offset(bool = true) const noexcept
                 {
                     return 0;
                 }
 
-                range_difference_type_t<Rng> stride_;
+                range_difference_t<Rng> stride_;
             };
         }
         /// \endcond
@@ -203,10 +203,10 @@ namespace ranges
                 template<typename Other>
                 constexpr /*c++14*/ auto distance_to(iterator_t<CRng> const &here,
                         Other const &there) const ->
-                    CPP_ret(range_difference_type_t<Rng>)(
+                    CPP_ret(range_difference_t<Rng>)(
                         requires SizedSentinel<Other, iterator_t<CRng>>)
                 {
-                    range_difference_type_t<Rng> delta = there - here;
+                    range_difference_t<Rng> delta = there - here;
                     if(delta < 0)
                         delta -= rng_->stride_ - 1;
                     else
@@ -215,7 +215,7 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/ auto advance(
-                    iterator_t<CRng> &it, range_difference_type_t<Rng> n) ->
+                    iterator_t<CRng> &it, range_difference_t<Rng> n) ->
                     CPP_ret(void)(
                         requires RandomAccessRange<CRng>)
                 {
@@ -275,30 +275,28 @@ namespace ranges
             {
                 return {*this};
             }
-
-            constexpr range_size_type_t<Rng> size_(range_size_type_t<Rng> const n) const noexcept
-            {
-                return (n + static_cast<range_size_type_t<Rng>>(this->stride_) - 1) /
-                    static_cast<range_size_type_t<Rng>>(this->stride_);
-            }
         public:
             stride_view() = default;
-            constexpr stride_view(Rng rng, range_difference_type_t<Rng> const stride)
+            constexpr stride_view(Rng rng, range_difference_t<Rng> const stride)
               : detail::stride_view_base<Rng>{std::move(rng), stride}
             {}
             CPP_member
-            constexpr /*c++14*/ auto size() ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng>)
+            constexpr /*c++14*/ auto CPP_fun(size)() (
+                requires SizedRange<Rng>)
             {
-                return size_(ranges::size(this->base()));
+                using size_type = range_size_t<Rng>;
+                auto const n = ranges::size(this->base());
+                return (n + static_cast<size_type>(this->stride_) - 1) /
+                    static_cast<size_type>(this->stride_);
             }
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(range_size_type_t<Rng>)(
-                    requires SizedRange<Rng const>)
+            constexpr auto CPP_fun(size)() (const
+                requires SizedRange<Rng const>)
             {
-                return size_(ranges::size(this->base()));
+                using size_type = range_size_t<Rng const>;
+                auto const n = ranges::size(this->base());
+                return (n + static_cast<size_type>(this->stride_) - 1) /
+                    static_cast<size_type>(this->stride_);
             }
         };
 
@@ -318,7 +316,7 @@ namespace ranges
             public:
                 CPP_template(typename Rng)(
                     requires InputRange<Rng>)
-                constexpr auto CPP_auto_fun(operator())(Rng &&rng, range_difference_type_t<Rng> step) (const)
+                constexpr auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> step) (const)
                 (
                     return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step}
                 )

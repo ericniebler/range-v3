@@ -138,7 +138,7 @@ namespace ranges
                     distance(out), static_cast<Gen &&>(gen));
             }
             template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
-            auto operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+            auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
                     Gen &&gen = detail::get_random_engine()) const ->
                 CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
                     requires RandomAccessIterator<O> &&
@@ -149,7 +149,7 @@ namespace ranges
                     std::move(out), n, static_cast<Gen &&>(gen));
             }
             template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
-            auto operator()(Rng &&rng, O out, range_difference_type_t<Rng> n,
+            auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
                 Gen &&gen = detail::get_random_engine()) const ->
                 CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
                     requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&

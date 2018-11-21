@@ -41,7 +41,7 @@ namespace ranges
             auto insert(Cont &&cont, T &&t) -> CPP_ret(
                 insert_result_t<Cont&, T>)(
                 requires LvalueContainerLike<Cont> &&
-                    (!Range<T> && Constructible<range_value_type_t<Cont>, T>))
+                    (!Range<T> && Constructible<range_value_t<Cont>, T>))
             {
                 return unwrap_reference(cont).insert(static_cast<T &&>(t));
             }
@@ -76,7 +76,7 @@ namespace ranges
             auto insert(Cont &&cont, I p, T &&t) -> CPP_ret(
                 insert_result_t<Cont&, I, T>)(
                 requires LvalueContainerLike<Cont> && Iterator<I> &&
-                    (!Range<T> && Constructible<range_value_type_t<Cont>, T>))
+                    (!Range<T> && Constructible<range_value_t<Cont>, T>))
             {
                 return unwrap_reference(cont).insert(p, static_cast<T &&>(t));
             }
@@ -85,7 +85,7 @@ namespace ranges
             auto insert(Cont &&cont, I p, N n, T &&t) -> CPP_ret(
                 insert_result_t<Cont&, I, N, T>)(
                 requires LvalueContainerLike<Cont> && Iterator<I> &&
-                    Integral<N> && Constructible<range_value_type_t<Cont>, T>)
+                    Integral<N> && Constructible<range_value_t<Cont>, T>)
             {
                 return unwrap_reference(cont).insert(p, n, static_cast<T &&>(t));
             }
@@ -95,7 +95,7 @@ namespace ranges
             {
                 template<typename Cont, typename P>
                 auto insert_reserve_helper(
-                    Cont &cont, P const p, range_size_type_t<Cont> const delta) ->
+                    Cont &cont, P const p, range_size_t<Cont> const delta) ->
                     CPP_ret(iterator_t<Cont>)(
                     requires Container<Cont> && Iterator<P> &&
                         RandomAccessReservable<Cont>)
@@ -136,7 +136,7 @@ namespace ranges
                 {
                     using C = common_iterator_t<I, S>;
                     auto &&cont = unwrap_reference(cont_);
-                    auto const delta = static_cast<range_size_type_t<Cont>>(j - i);
+                    auto const delta = static_cast<range_size_t<Cont>>(j - i);
                     auto pos = insert_reserve_helper(cont, std::move(p), delta);
                     return cont.insert(pos, C{std::move(i)}, C{std::move(j)});
                 }
@@ -164,7 +164,7 @@ namespace ranges
                 {
                     using C = range_common_iterator_t<Rng>;
                     auto &&cont = unwrap_reference(cont_);
-                    auto const delta = static_cast<range_size_type_t<Cont>>(ranges::size(rng));
+                    auto const delta = static_cast<range_size_t<Cont>>(ranges::size(rng));
                     auto pos = insert_reserve_helper(cont, std::move(p), delta);
                     return cont.insert(pos, C{ranges::begin(rng)}, C{ranges::end(rng)});
                 }
@@ -216,7 +216,7 @@ namespace ranges
                 auto operator()(Rng &&rng, T &&t) const ->
                     CPP_ret(insert_result_t<Rng, T>)(
                         requires Range<Rng> && !Range<T> &&
-                            Constructible<range_value_type_t<Rng>, T>)
+                            Constructible<range_value_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), static_cast<T &&>(t));
                 }
@@ -251,7 +251,7 @@ namespace ranges
                 auto operator()(Rng &&rng, I p, T &&t) const ->
                     CPP_ret(insert_result_t<Rng, I, T>)(
                         requires Range<Rng> && Iterator<I> && !Range<T> &&
-                            Constructible<range_value_type_t<Rng>, T>)
+                            Constructible<range_value_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), static_cast<T &&>(t));
                 }
@@ -278,7 +278,7 @@ namespace ranges
                 auto operator()(Rng &&rng, I p, N n, T &&t) const ->
                     CPP_ret(insert_result_t<Rng, I, N, T>)(
                         requires Range<Rng> && Iterator<I> && Integral<N> && !Range<T> &&
-                            Constructible<range_value_type_t<Rng>, T>)
+                            Constructible<range_value_t<Rng>, T>)
                 {
                     return insert(static_cast<Rng &&>(rng), std::move(p), n, static_cast<T &&>(t));
                 }

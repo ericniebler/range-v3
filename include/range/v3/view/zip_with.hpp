@@ -158,8 +158,7 @@ namespace ranges
             friend range_access;
             semiregular_t<Fun> fun_;
             std::tuple<Rngs...> rngs_;
-            using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
-            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
+            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
 
             template<bool Const>
             struct cursor;
@@ -194,7 +193,7 @@ namespace ranges
 
             public:
                 using difference_type =
-                    common_type_t<range_difference_type_t<meta::const_if_c<Const, Rngs>>...>;
+                    common_type_t<range_difference_t<meta::const_if_c<Const, Rngs>>...>;
                 using single_pass =
                     meta::or_c<(bool) SinglePass<iterator_t<meta::const_if_c<Const, Rngs>>>...>;
                 using value_type =
@@ -330,14 +329,17 @@ namespace ranges
               , rngs_{std::move(rngs)...}
             {}
             CPP_member
-            constexpr auto size() const ->
-                CPP_ret(size_type_)(requires And<SizedRange<Rngs const>...>)
+            constexpr auto CPP_fun(size)() (const
+                requires And<SizedRange<Rngs const>...>)
             {
+                using size_type = common_type_t<range_size_t<Rngs const>...>;
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
-                    (size_type_)range_cardinality<iter_zip_with_view>::value :
+                    (size_type)range_cardinality<iter_zip_with_view>::value :
                     tuple_foldl(
-                        tuple_transform(rngs_, ranges::size),
-                        (std::numeric_limits<size_type_>::max)(),
+                        tuple_transform(
+                            rngs_,
+                            [](auto&& r) -> size_type { return ranges::size(r); }),
+                        (std::numeric_limits<size_type>::max)(),
                         detail::min_);
             }
         };

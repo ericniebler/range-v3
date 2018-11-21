@@ -47,7 +47,7 @@ namespace ranges
             {
                 using CRng = meta::const_if_c<Const, Rng>;
                 using value_ =
-                    range_value_type_t<CRng>;
+                    range_value_t<CRng>;
                 using reference_ =
                     common_reference_t<value_ const &&, range_reference_t<CRng>>;
                 using rvalue_reference_ =
@@ -93,13 +93,13 @@ namespace ranges
               : const_view::view_adaptor{std::move(rng)}
             {}
             CPP_member
-            constexpr /*c++14*/ auto size() -> CPP_ret(range_size_type_t<Rng>)(
+            constexpr /*c++14*/ auto CPP_fun(size)() (
                 requires SizedRange<Rng>)
             {
                 return ranges::size(this->base());
             }
             CPP_member
-            constexpr auto size() const -> CPP_ret(range_size_type_t<Rng>)(
+            constexpr auto CPP_fun(size)() (const
                 requires SizedRange<Rng const>)
             {
                 return ranges::size(this->base());

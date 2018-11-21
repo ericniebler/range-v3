@@ -53,9 +53,9 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using member_begin_t = detail::decay_t<decltype((*(R*)nullptr).begin())>;
+                using member_begin_t = detail::decay_t<decltype(static_cast<R &(*)()>(nullptr)().begin())>;
                 template<typename R>
-                using non_member_begin_t = detail::decay_t<decltype(begin((*(R*)nullptr)))>;
+                using non_member_begin_t = detail::decay_t<decltype(begin(static_cast<R &(*)()>(nullptr)()))>;
 
                 template<typename R, std::size_t N>
                 static constexpr R *impl_(R (&array)[N], int) noexcept
@@ -91,12 +91,14 @@ namespace ranges
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
@@ -137,11 +139,11 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                using begin_t = decltype(ranges::begin(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using member_end_t = detail::decay_t<decltype((*(R*)nullptr).end())>;
+                using member_end_t = detail::decay_t<decltype(static_cast<R &(*)()>(nullptr)().end())>;
                 template<typename R>
-                using non_member_end_t = detail::decay_t<decltype(end((*(R*)nullptr)))>;
+                using non_member_end_t = detail::decay_t<decltype(end(static_cast<R &(*)()>(nullptr)()))>;
 
                 template<typename R, std::size_t N>
                 static constexpr R *impl_(R (&array)[N], int) noexcept
@@ -177,12 +179,14 @@ namespace ranges
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
@@ -254,11 +258,11 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                using begin_t = decltype(ranges::begin(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using end_t = decltype(ranges::end(*(R*)nullptr));
+                using end_t = decltype(ranges::end(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using member_rbegin_t = detail::decay_t<decltype((*(R*)nullptr).rbegin())>;
+                using member_rbegin_t = detail::decay_t<decltype(static_cast<R &(*)()>(nullptr)().rbegin())>;
 
                 template<typename R, std::size_t N>
                 static constexpr reverse_iterator<R *> impl_(R (&array)[N], int) noexcept
@@ -294,12 +298,14 @@ namespace ranges
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
@@ -327,13 +333,13 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using begin_t = decltype(ranges::begin(*(R*)nullptr));
+                using begin_t = decltype(ranges::begin(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using end_t = decltype(ranges::end(*(R*)nullptr));
+                using end_t = decltype(ranges::end(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using rbegin_t = decltype(ranges::rbegin(*(R*)nullptr));
+                using rbegin_t = decltype(ranges::rbegin(static_cast<R &(*)()>(nullptr)()));
                 template<typename R>
-                using member_rend_t = detail::decay_t<decltype((*(R*)nullptr).rend())>;
+                using member_rend_t = detail::decay_t<decltype(static_cast<R &(*)()>(nullptr)().rend())>;
 
                 template<typename R, std::size_t N>
                 static constexpr reverse_iterator<R *> impl_(R (&array)[N], int) noexcept
@@ -369,12 +375,14 @@ namespace ranges
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())
                 )
 
                 template<typename T, typename Fn = fn>
+                RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
                 constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
                 (
                     return Fn()(ref.get())

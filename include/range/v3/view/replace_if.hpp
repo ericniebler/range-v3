@@ -114,7 +114,7 @@ namespace ranges
                 concept ReplaceIfViewConcept,
                     InputRange<Rng> &&
                     IndirectPredicate<Pred, iterator_t<Rng>> &&
-                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_type_t<Rng>> &&
+                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>> &&
                     CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>> &&
                     CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>
             );
@@ -152,7 +152,7 @@ namespace ranges
                         "objects of the range's common reference type, and the result must be "
                         "convertible to bool.");
                     CPP_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
-                            range_value_type_t<Rng>>,
+                            range_value_t<Rng>>,
                         "The value passed to view::replace must share a common type with the "
                         "range's value type.");
                     CPP_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
