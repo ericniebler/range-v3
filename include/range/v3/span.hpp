@@ -144,7 +144,7 @@ namespace ranges
                     std::is_convertible<concepts::ContiguousRange::element_t<Rng>(*)[], T(*)[]>>;
             template<typename Rng>
             using DynamicConversion = meta::bool_<
-                N == dynamic_extent || (range_cardinality<Rng>::value < cardinality{})>;
+                N == dynamic_extent || (range_cardinality<Rng>::value < cardinality())>;
 
             template<typename Rng,
                 // This multiple-CONCEPT_REQUIRES_ form works around a gcc 4.9 bug.
@@ -331,7 +331,7 @@ namespace ranges
             CONCEPT_REQUIRES_(ContiguousRange<Rng>())>
         span(Rng &&rng) ->
             span<concepts::ContiguousRange::element_t<Rng>,
-                (range_cardinality<Rng>::value < cardinality{}
+                (range_cardinality<Rng>::value < cardinality()
                     ? dynamic_extent
                     : static_cast<detail::span_index_t>(range_cardinality<Rng>::value))>;
 #endif
@@ -363,7 +363,7 @@ namespace ranges
         }
         template<typename Rng,
             CONCEPT_REQUIRES_(ContiguousRange<Rng>() &&
-                range_cardinality<Rng>::value < cardinality{})>
+                range_cardinality<Rng>::value < cardinality())>
         constexpr span<concepts::ContiguousRange::element_t<Rng>>
         make_span(Rng &&rng)
             noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
@@ -373,7 +373,7 @@ namespace ranges
         }
         template<typename Rng,
             CONCEPT_REQUIRES_(ContiguousRange<Rng>() &&
-                range_cardinality<Rng>::value >= cardinality{})>
+                range_cardinality<Rng>::value >= cardinality())>
         constexpr span<concepts::ContiguousRange::element_t<Rng>,
             static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>
         make_span(Rng &&rng)
