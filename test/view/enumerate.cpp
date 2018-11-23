@@ -24,14 +24,14 @@
 using std::begin;
 
 template<class RangeT>
-void test_enumerate_with(RangeT&& range)
+void test_enumerate_with(RangeT &&range)
 {
     auto enumerated_range = ranges::view::enumerate(range);
 
     int idx_ref = 0;
     auto it_ref = begin( range );
 
-    for (auto it = enumerated_range.begin(); it != enumerated_range.end(); ++it)
+    for(auto it = enumerated_range.begin(); it != enumerated_range.end(); ++it)
     {
         const auto idx = std::get<0>(*it);
         const auto value = std::get<1>(*it);
@@ -41,8 +41,8 @@ void test_enumerate_with(RangeT&& range)
     }
 }
 
-int main() {
-
+int main()
+{
     { // test array
         int const es[] = { 9,8,7,6,5,4,3,2,1,0 };
         test_enumerate_with(es);
@@ -74,12 +74,11 @@ int main() {
         test_enumerate_with(std::initializer_list<int>{9, 8, 7, 6, 5, 4, 3, 2, 1});
     }
 
-	{
-		auto range = ranges::view::iota(0, 0);
-		test_enumerate_with(range);
+    {
+        auto range = ranges::view::iota(0, 0);
+        test_enumerate_with(range);
 
-		range = ranges::view::iota(-10000,10000);
-		test_enumerate_with(range);
-	}
-
+        range = ranges::view::iota(-10000,10000);
+        test_enumerate_with(range);
+    }
 }

@@ -21,24 +21,25 @@
 
 namespace ranges
 {
-	inline namespace v3
-	{
-		namespace view
-		{
-			struct enumerate_fn {
-				template<typename Rng,
-					CONCEPT_REQUIRES_(ViewableRange<Rng>())>
-				auto operator()(Rng &&rng) const
-				RANGES_DECLTYPE_AUTO_RETURN
-				(
-					zip(iota(range_difference_type_t<Rng>{}),
-						all(static_cast<Rng &&>(rng)))
-				)
-			};
+    inline namespace v3
+    {
+        namespace view
+        {
+            struct enumerate_fn
+            {
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(ViewableRange<Rng>())>
+                auto operator()(Rng &&rng) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    zip(iota(range_difference_type_t<Rng>{}),
+                        all(static_cast<Rng &&>(rng)))
+                )
+            };
 
-			RANGES_INLINE_VARIABLE(view<enumerate_fn>, enumerate)
-		} // namespace view
-	} // namespace v3
+            RANGES_INLINE_VARIABLE(view<enumerate_fn>, enumerate)
+        } // namespace view
+    } // namespace v3
 } // namespace ranges
 
 #endif
