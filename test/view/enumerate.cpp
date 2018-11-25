@@ -1,6 +1,6 @@
 // Range v3 library
 //
-//  Copyright Casey Carter 2018-present
+//  Copyright MikeGitb 2018-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
