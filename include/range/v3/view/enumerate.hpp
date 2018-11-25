@@ -23,8 +23,12 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
+            /// Lazily pairs each element in a source range with
+            /// its corresponding index.
             struct enumerate_fn
             {
                 template<typename Rng,
@@ -37,8 +41,11 @@ namespace ranges
                 )
             };
 
+            /// \relates enumerate_fn
+            /// \ingroup group-views
             RANGES_INLINE_VARIABLE(view<enumerate_fn>, enumerate)
         } // namespace view
+        /// @}
     } // namespace v3
 } // namespace ranges
 
