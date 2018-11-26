@@ -11,6 +11,7 @@
 //
 
 #include <vector>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/view/exclusive_scan.hpp>
 #include "../test_utils.hpp"
 

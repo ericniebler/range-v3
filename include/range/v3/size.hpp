@@ -37,10 +37,6 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using begin_t = decltype(ranges::begin(static_cast<R(*)()>(nullptr)()));
-                template<typename R>
-                using end_t = decltype(ranges::end(static_cast<R(*)()>(nullptr)()));
-                template<typename R>
                 using member_size_t = decltype(+(static_cast<R(*)()>(nullptr)()).size());
                 template<typename R>
                 using non_member_size_t = decltype(+size(static_cast<R(*)()>(nullptr)()));
@@ -79,42 +75,64 @@ namespace ranges
 
                 template<typename R>
                 static constexpr /*c++14*/ auto impl_(R &&r, ...) ->
-                    CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<begin_t<R>>>>)(
-                        requires ForwardIterator<begin_t<R>> &&
-                            SizedSentinel<end_t<R>, begin_t<R>>)
+                    CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<_begin_::_t<R>>>>)(
+                        requires ForwardIterator<_begin_::_t<R>> &&
+                            SizedSentinel<_end_::_t<R>, _begin_::_t<R>>)
                 {
-                    using size_type = meta::_t<std::make_unsigned<iter_difference_t<begin_t<R>>>>;
+                    using size_type = meta::_t<std::make_unsigned<iter_difference_t<_begin_::_t<R>>>>;
                     return static_cast<size_type>(ranges::end((R &&) r) - ranges::begin((R &&) r));
                 }
 
             public:
                 template<typename R>
-                constexpr auto CPP_auto_fun(operator())(R &&r) (const)
-                (
-                    return fn::impl_(static_cast<R &&>(r), 42)
-                )
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(fn::impl_((R &&) r, 0))) ->
+                    decltype(fn::impl_((R &&) r, 0))
+                {
+                    return fn::impl_((R &&) r, 0);
+                }
 
                 template<typename T, typename Fn = fn>
                 RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-                constexpr auto CPP_auto_fun(operator())(std::reference_wrapper<T> ref) (const)
-                (
-                    return Fn()(ref.get())
-                )
+                constexpr auto operator()(std::reference_wrapper<T> ref) const
+                    noexcept(noexcept(Fn{}(ref.get()))) ->
+                    decltype(Fn{}(ref.get()))
+                {
+                    return Fn{}(ref.get());
+                }
 
                 template<typename T, typename Fn = fn>
                 RANGES_DEPRECATED("Using a reference_wrapper as a Range is deprecated. Use view::ref instead.")
-                constexpr auto CPP_auto_fun(operator())(ranges::reference_wrapper<T> ref) (const)
-                (
-                    return Fn()(ref.get())
-                )
+                constexpr auto operator()(ranges::reference_wrapper<T> ref) const
+                    noexcept(noexcept(Fn{}(ref.get()))) ->
+                    decltype(Fn{}(ref.get()))
+                {
+                    return Fn{}(ref.get());
+                }
             };
         }
         /// \endcond
 
-        /// \ingroup group-core
-        /// \return The result of an unqualified call to `size`
         inline namespace CPOs
         {
+            /// \ingroup group-core
+            /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent to:
+            ///   * `+extent_v<T>` if `T` is an array type.
+            ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
+            ///     `Integral` and `disable_sized_range<remove_cvref_t<T>>` is false.
+            ///   * Otherwise, `+size(E)` if it is a valid expression and its type `I` models
+            ///     `Integral` with overload resolution performed in a context that includes the
+            ///     declaration:
+            ///         \begincode
+            ///         template<class T> void size(T&&) = delete;
+            ///         \endcode
+            ///     and does not include a declaration of `ranges::size`, and
+            ///     `disable_sized_range<remove_cvref_t<T>>` is false.
+            ///   * Otherwise, `+(ranges::end(E) - ranges::begin(E))`, except that `E` is only
+            ///     evaluated once, if it is a valid expression and the types `I` and `S` of
+            ///     `ranges::begin(E)` and `ranges::end(E)` model `SizedSentinel<S, I>` and
+            ///     `ForwardIterator<I>`.
+            ///   * Otherwise, `ranges::size(E)` is ill-formed.
             RANGES_INLINE_VARIABLE(_size_::fn, size)
         }
     }

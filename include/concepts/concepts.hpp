@@ -44,7 +44,9 @@
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
-#if defined(__cpp_concepts) && __cpp_concepts > 0
+#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED != 0
+#define CPP_CXX_CONCEPTS 201800L
+#elif defined(__cpp_concepts) && __cpp_concepts > 0
 // gcc-6 concepts are too buggy to use
 #if !defined(__GNUC__) || defined(__clang__) || __GNUC_MAJOR__ >= 7
 #define CPP_CXX_CONCEPTS __cpp_concepts
@@ -514,6 +516,13 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_fun
+#if CPP_CXX_CONCEPTS
+#define CPP_FUN_IMPL_1_(...)                                                    \
+    (__VA_ARGS__)                                                               \
+    CPP_PP_EXPAND                                                               \
+    /**/
+#define CPP_fun(X) X CPP_FUN_IMPL_1_
+#else
 #define CPP_FUN_IMPL_1_(...)                                                    \
     (__VA_ARGS__                                                                \
         CPP_PP_COMMA_IIF(                                                       \
@@ -615,17 +624,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 // Note: This macro cannot be used when the last function argument is a
 //       parameter pack.
 #define CPP_fun(X) X CPP_FUN_IMPL_1_
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
-// CPP_fun
+// CPP_auto_fun
 // Usage:
 //   template <typename A, typename B>
-//   void CPP_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt
-//       requires Concept1<A> && Concept2<B>)
-//   {}
-//
-// Note: This macro cannot be used when the last function argument is a
-//       parameter pack.
+//   void CPP_auto_fun(foo)(A a, B b)([const]opt [noexcept(true)]opt)opt
+//   (
+//       return a + b
+//   )
 #define CPP_auto_fun(X) X CPP_AUTO_FUN_IMPL_
 #define CPP_AUTO_FUN_IMPL_(...) (__VA_ARGS__) CPP_AUTO_FUN_RETURNS_
 #define CPP_AUTO_FUN_RETURNS_(...)                                              \

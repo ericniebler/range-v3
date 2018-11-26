@@ -27,61 +27,93 @@ namespace ranges
     {
         // Customization point data
         /// \cond
-        namespace data_detail
+        namespace _data_
         {
-            class data_fn
+            struct fn
             {
-                CPP_template(typename Rng,
-                    typename Ptr = decltype(begin(std::declval<Rng &>())))(
-                    requires std::is_pointer<Ptr>::value)
-                static constexpr Ptr impl(Rng &rng, detail::priority_tag<0>)
-                    noexcept(noexcept(begin(rng)))
+            private:
+                template<typename R>
+                using member_data_t =
+                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().data())>;
+
+                template<typename R>
+                static constexpr auto impl_(R &r, detail::priority_tag<2>)
+                    noexcept(noexcept(r.data())) ->
+                        CPP_ret(member_data_t<R &>)(
+                            requires std::is_pointer<member_data_t<R &>>::value)
                 {
-                    return begin(rng);
+                    return r.data();
                 }
-                CPP_template(typename Rng,
-                    typename Ptr = detail::decay_t<decltype(data(std::declval<Rng &>()))>)(
-                    requires std::is_pointer<Ptr>::value)
-                static constexpr Ptr impl(Rng &rng, detail::priority_tag<1>)
-                    noexcept(noexcept(data(rng)))
+                template<typename R>
+                static constexpr auto impl_(R &&r, detail::priority_tag<1>)
+                    noexcept(noexcept(ranges::begin((R &&) r))) ->
+                        CPP_ret(_begin_::_t<R>)(
+                            requires std::is_pointer<_begin_::_t<R>>::value)
                 {
-                    return data(rng);
+                    return ranges::begin((R &&) r);
                 }
-                CPP_template(typename Rng,
-                    typename Ptr = detail::decay_t<decltype(std::declval<Rng &>().data())>)(
-                    requires std::is_pointer<Ptr>::value)
-                static constexpr Ptr impl(Rng &rng, detail::priority_tag<2>)
-                    noexcept(noexcept(rng.data()))
+                template<typename R>
+                static constexpr auto impl_(R &&r, detail::priority_tag<0>)
+                    noexcept(noexcept(ranges::begin((R &&) r) == ranges::end((R &&) r)
+                          ? nullptr
+                          : std::addressof(*ranges::begin((R &&) r)))) ->
+                        CPP_ret(decltype(std::addressof(*ranges::begin((R &&) r))))(
+                            requires ContiguousIterator<_begin_::_t<R>>)
                 {
-                    return rng.data();
+                    return ranges::begin((R &&) r) == ranges::end((R &&) r)
+                      ? nullptr
+                      : std::addressof(*ranges::begin((R &&) r));
                 }
-                template<typename T, std::size_t N>
-                static constexpr T *impl(T (&a)[N], detail::priority_tag<2>) noexcept
-                {
-                    return a + 0;
-                }
+            public:
                 template<typename charT, typename Traits, typename Alloc>
-                static constexpr charT *impl(
-                    std::basic_string<charT, Traits, Alloc> &s,
-                    detail::priority_tag<2>) noexcept
+                constexpr charT *operator()(std::basic_string<charT, Traits, Alloc> &s) const noexcept
                 {
                     // string doesn't have non-const data before C++17
                     return const_cast<charT *>(detail::as_const(s).data());
                 }
-            public:
-                template<typename Rng>
-                constexpr auto CPP_auto_fun(operator())(Rng &rng) (const)
-                (
-                    return data_fn::impl(rng, detail::priority_tag<2>{})
-                )
+
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(fn::impl_((R &&) r, detail::priority_tag<2>{}))) ->
+                    decltype(fn::impl_((R &&) r, detail::priority_tag<2>{}))
+                {
+                    return fn::impl_((R &&) r, detail::priority_tag<2>{});
+                }
+            };
+
+            template<typename R>
+            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+        }
+        /// \endcond
+
+        RANGES_INLINE_VARIABLE(_data_::fn, data)
+
+        /// \cond
+        namespace _cdata_
+        {
+            struct fn
+            {
+                template<typename R>
+                constexpr _data_::_t<R const &> operator()(R const &r) const
+                    noexcept(noexcept(ranges::data(r)))
+                {
+                    return ranges::data(r);
+                }
+                template<typename R>
+                constexpr _data_::_t<R const> operator()(R const &&r) const
+                    noexcept(noexcept(ranges::data((R const &&) r)))
+                {
+                    return ranges::data((R const &&) r);
+                }
             };
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            RANGES_INLINE_VARIABLE(data_detail::data_fn, data)
-        }
+        /// \ingroup group-core
+        /// \param r
+        /// \return The result of calling `ranges::data` with a const-qualified
+        ///    (lvalue or rvalue) reference to `r`.
+        RANGES_INLINE_VARIABLE(_cdata_::fn, cdata)
     }
 }
 

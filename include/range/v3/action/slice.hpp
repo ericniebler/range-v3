@@ -42,7 +42,7 @@ namespace ranges
                     ConvertibleTo<U, range_difference_t<Rng>>
             );
 
-        struct slice_fn
+            struct slice_fn
             {
             private:
                 friend action_access;
