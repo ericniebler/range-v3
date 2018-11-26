@@ -389,6 +389,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Remove elements from the front of a range that satisfy a unary predicate.</DD>
 <DT>\link ranges::v3::view::empty() `view::empty`\endlink</DT>
   <DD>Create an empty range with a given value type.</DD>
+<DT>\link ranges::v3::view::enumerate() `view::enumerate`\endlink</DT>
+  <DD>Pair each element of a range with its index.</DD>
 <DT>\link ranges::v3::view::filter_fn `view::filter`\endlink</DT>
   <DD>Given a source range and a unary predicate, filter the elements that satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor.)</DD>
 <DT>\link ranges::v3::view::for_each_fn `view::for_each`\endlink</DT>
