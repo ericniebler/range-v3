@@ -103,10 +103,7 @@ namespace ranges
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            RANGES_INLINE_VARIABLE(adl_move_detail::iter_move_fn, iter_move)
-        }
+        RANGES_DEFINE_CPO(adl_move_detail::iter_move_fn, iter_move)
 
         /// \cond
         namespace detail

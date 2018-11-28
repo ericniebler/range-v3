@@ -34,6 +34,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace sliding_view_detail
         {
             enum class cache { none, first, last };
@@ -44,6 +45,7 @@ namespace ranges
                 BidirectionalRange<Rng> && BoundedRange<Rng> ? cache::last :
                 cache::first>;
         }
+        /// \endcond
 
         template<typename Rng,
             sliding_view_detail::cache = sliding_view_detail::caching<Rng>::value>

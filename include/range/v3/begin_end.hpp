@@ -116,15 +116,12 @@ namespace ranges
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-core
-            /// \param r
-            /// \return \c r, if \c r is an array. Otherwise, `r.begin()` if that expression is
-            ///   well-formed and returns an Iterator. Otherwise, `begin(r)` if that expression
-            ///   returns an Iterator.
-            RANGES_INLINE_VARIABLE(_begin_::fn, begin)
-        }
+        /// \ingroup group-core
+        /// \param r
+        /// \return \c r, if \c r is an array. Otherwise, `r.begin()` if that expression is
+        ///   well-formed and returns an Iterator. Otherwise, `begin(r)` if that expression
+        ///   returns an Iterator.
+        RANGES_DEFINE_CPO(_begin_::fn, begin)
 
         /// \cond
         namespace _end_
@@ -208,15 +205,12 @@ namespace ranges
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-core
-            /// \param r
-            /// \return \c r+size(r), if \c r is an array. Otherwise, `r.end()` if that expression is
-            ///   well-formed and returns an Iterator. Otherwise, `end(r)` if that expression
-            ///   returns an Iterator.
-            RANGES_INLINE_VARIABLE(_end_::fn, end)
-        }
+        /// \ingroup group-core
+        /// \param r
+        /// \return \c r+size(r), if \c r is an array. Otherwise, `r.end()` if that expression is
+        ///   well-formed and returns an Iterator. Otherwise, `end(r)` if that expression
+        ///   returns an Iterator.
+        RANGES_DEFINE_CPO(_end_::fn, end)
 
         /// \cond
         namespace _cbegin_
@@ -353,17 +347,14 @@ namespace ranges
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-core
-            /// \param r
-            /// \return `make_reverse_iterator(r+size(r))` if r is an array. Otherwise,
-            ///   `r.rbegin()` if that expression is well-formed and returns an Iterator.
-            ///   Otherwise, `make_reverse_iterator(ranges::end(r))` if `ranges::begin(r)`
-            ///   and `ranges::end(r)` are both well-formed and have the same type that
-            ///   satisfies BidirectionalIterator.
-            RANGES_INLINE_VARIABLE(_rbegin_::fn, rbegin)
-        }
+        /// \ingroup group-core
+        /// \param r
+        /// \return `make_reverse_iterator(r+size(r))` if r is an array. Otherwise,
+        ///   `r.rbegin()` if that expression is well-formed and returns an Iterator.
+        ///   Otherwise, `make_reverse_iterator(ranges::end(r))` if `ranges::begin(r)`
+        ///   and `ranges::end(r)` are both well-formed and have the same type that
+        ///   satisfies BidirectionalIterator.
+        RANGES_DEFINE_CPO(_rbegin_::fn, rbegin)
 
         /// \cond
         namespace _rend_
@@ -445,19 +436,15 @@ namespace ranges
         }
         /// \endcond
 
-
-        inline namespace CPOs
-        {
-            /// \ingroup group-core
-            /// \param r
-            /// \return `make_reverse_iterator(r))` if r is an array. Otherwise,
-            ///   `r.rend()` if that expression is well-formed and returns a type that
-            ///   satisfies `Sentinel<S, I>` where `I` is the type of `ranges::rbegin(r)`.
-            ///   Otherwise, `make_reverse_iterator(ranges::begin(r))` if `ranges::begin(r)`
-            ///   and `ranges::end(r)` are both well-formed and have the same type that
-            ///   satisfies BidirectionalIterator.
-            RANGES_INLINE_VARIABLE(_rend_::fn, rend)
-        }
+        /// \ingroup group-core
+        /// \param r
+        /// \return `make_reverse_iterator(r))` if r is an array. Otherwise,
+        ///   `r.rend()` if that expression is well-formed and returns a type that
+        ///   satisfies `Sentinel<S, I>` where `I` is the type of `ranges::rbegin(r)`.
+        ///   Otherwise, `make_reverse_iterator(ranges::begin(r))` if `ranges::begin(r)`
+        ///   and `ranges::end(r)` are both well-formed and have the same type that
+        ///   satisfies BidirectionalIterator.
+        RANGES_DEFINE_CPO(_rend_::fn, rend)
 
         /// \cond
         namespace _crbegin_

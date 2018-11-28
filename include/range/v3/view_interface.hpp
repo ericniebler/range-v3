@@ -75,6 +75,11 @@ namespace ranges
         struct view_interface
           : basic_view<Cardinality>
         {
+        private:
+            static constexpr bool _has_fixed_size() noexcept
+            {
+                return Cardinality >= 0 || Cardinality == infinite;
+            }
         protected:
             constexpr /*c++14*/ Derived &derived() noexcept
             {
@@ -98,28 +103,28 @@ namespace ranges
             CPP_member
             constexpr auto empty() const noexcept ->
                 CPP_ret(bool)(
-                    requires Cardinality >= 0 || Cardinality == infinite)
+                    requires _has_fixed_size())
             {
                 return Cardinality == 0;
             }
+            /// \overload
             template<typename D = Derived>
             constexpr /*c++14*/ auto empty()
                 noexcept(noexcept(bool(ranges::begin(std::declval<D &>()) ==
                     ranges::end(std::declval<D &>())))) ->
                 CPP_ret(bool)(
-                    requires Same<D, Derived> &&
-                        Cardinality < 0 && Cardinality != infinite &&
+                    requires Same<D, Derived> && not _has_fixed_size() &&
                         Range<D> && ForwardIterator<iterator_t<D>>)
             {
                 return bool(ranges::begin(derived()) == ranges::end(derived()));
             }
+            /// \overload
             template<typename D = Derived>
             constexpr auto empty() const
                 noexcept(noexcept(bool(ranges::begin(std::declval<D const &>()) ==
                     ranges::end(std::declval<D const &>())))) ->
                 CPP_ret(bool)(
-                    requires Same<D, Derived> &&
-                        Cardinality < 0 && Cardinality != infinite &&
+                    requires Same<D, Derived> && not _has_fixed_size() &&
                         Range<D const> && ForwardIterator<iterator_t<D const>>)
             {
                 return bool(ranges::begin(derived()) == ranges::end(derived()));
@@ -131,6 +136,7 @@ namespace ranges
             {
                 return !ranges::empty(derived());
             }
+            /// \overload
             CPP_template(typename D = Derived)(
                 requires Same<D, Derived> && detail::CanEmpty<D const>)
             constexpr explicit operator bool() const
@@ -138,7 +144,8 @@ namespace ranges
             {
                 return !ranges::empty(derived());
             }
-            /// Access the size of the range, if it can be determined:
+            /// If the size of the range is known at compile-time and finite,
+            /// return it.
             template<typename D = Derived>
             static constexpr auto size() noexcept ->
                 CPP_ret(std::size_t)(
@@ -146,6 +153,9 @@ namespace ranges
             {
                 return static_cast<std::size_t>(Cardinality);
             }
+            /// If `Sentinel<sentinel_t<Derived>, iterator_t<Derived>>` is satisfied,
+            /// and if `Derived` is a `ForwardRange`, then return `end - begin` cast
+            /// to an unsigned integer.
             template<typename D = Derived>
             constexpr /*c++14*/ auto size() ->
                 CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D>>>)(
@@ -156,6 +166,7 @@ namespace ranges
                 using size_type = meta::_t<std::make_unsigned<range_difference_t<D>>>;
                 return static_cast<size_type>(derived().end() - derived().begin());
             }
+            /// \overload
             template<typename D = Derived>
             constexpr auto size() const ->
                 CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D>>>)(

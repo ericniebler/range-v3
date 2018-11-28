@@ -46,10 +46,10 @@ namespace ranges
 
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using iterator_t = decltype(begin(static_cast<Rng &(*)()>(nullptr)()));
+        using iterator_t = decltype(begin(std::declval<Rng &>()));
 
         template<typename Rng>
-        using sentinel_t = decltype(end(static_cast<Rng &(*)()>(nullptr)()));
+        using sentinel_t = decltype(end(std::declval<Rng &>()));
 
         template<typename Rng>
         using range_difference_t = iter_difference_t<iterator_t<Rng>>;
@@ -67,7 +67,7 @@ namespace ranges
         using range_common_reference_t = iter_common_reference_t<iterator_t<Rng>>;
 
         template<typename Rng>
-        using range_size_t = decltype(ranges::size(static_cast<Rng &(*)()>(nullptr)()));
+        using range_size_t = decltype(ranges::size(std::declval<Rng &>()));
 
         /// \cond
         template<typename Rng>

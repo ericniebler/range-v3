@@ -44,7 +44,7 @@
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
-#if defined(CPP_DOXYGEN_INVOKED) && CPP_DOXYGEN_INVOKED != 0
+#ifdef CPP_DOXYGEN_INVOKED
 #define CPP_CXX_CONCEPTS 201800L
 #elif defined(__cpp_concepts) && __cpp_concepts > 0
 // gcc-6 concepts are too buggy to use
@@ -487,6 +487,11 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
   /**/
 #endif
 
+#ifdef CPP_DOXYGEN_INVOKED
+#define CPP_broken_friend_ret(...)                                              \
+    __VA_ARGS__ CPP_PP_EXPAND                                                   \
+    /**/
+#else
 #define CPP_broken_friend_ret(...)                                              \
     ::concepts::detail::enable_if_t<__VA_ARGS__,                                \
     CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                                          \
@@ -503,6 +508,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<bool (&CPP_true)(::concepts::detail::Nil) =                        \
         ::concepts::detail::CPP_true>                                           \
     /**/
+#endif
 
 #if CPP_CXX_CONCEPTS
 #define CPP_ret(...)                                                            \
@@ -786,15 +792,21 @@ namespace concepts
             ////////////////////////////////////////////////////////////////////////////////////////
             
             CPP_def(
+                template(bool B)
+                (concept True)(B),
+                    B
+            );
+
+            CPP_def(
                 template(typename... Args)
-                (concept True)(Args...),
+                (concept Type)(Args...),
                     true
             );
 
             CPP_def(
                 template(typename T, template<typename...> class C, typename... Args)
                 (concept Valid)(T, C, Args...),
-                    True< C<T, Args...> >
+                    Type< C<T, Args...> >
             );
 
             CPP_def(

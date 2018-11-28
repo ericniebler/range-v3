@@ -256,6 +256,7 @@ namespace ranges
         }
         /// @}
 
+        /// \cond
         namespace detail
         {
             template<bool IsConst,
@@ -429,6 +430,7 @@ namespace ranges
         }
         /// @}
 
+        /// \cond
         namespace detail
         {
             template<bool IsConst,
@@ -656,6 +658,7 @@ namespace ranges
         }
         /// @}
 
+        /// \cond
         namespace detail
         {
             enum class set_symmetric_difference_state_t

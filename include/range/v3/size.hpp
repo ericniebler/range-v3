@@ -37,9 +37,9 @@ namespace ranges
             {
             private:
                 template<typename R>
-                using member_size_t = decltype(+(static_cast<R(*)()>(nullptr)()).size());
+                using member_size_t = decltype(+(std::declval<R>()).size());
                 template<typename R>
-                using non_member_size_t = decltype(+size(static_cast<R(*)()>(nullptr)()));
+                using non_member_size_t = decltype(+size(std::declval<R>()));
 
                 template<typename R, std::size_t N>
                 static constexpr std::size_t impl_(R (&)[N], int) noexcept
@@ -113,28 +113,26 @@ namespace ranges
         }
         /// \endcond
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-core
-            /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent to:
-            ///   * `+extent_v<T>` if `T` is an array type.
-            ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
-            ///     `Integral` and `disable_sized_range<remove_cvref_t<T>>` is false.
-            ///   * Otherwise, `+size(E)` if it is a valid expression and its type `I` models
-            ///     `Integral` with overload resolution performed in a context that includes the
-            ///     declaration:
-            ///         \begincode
-            ///         template<class T> void size(T&&) = delete;
-            ///         \endcode
-            ///     and does not include a declaration of `ranges::size`, and
-            ///     `disable_sized_range<remove_cvref_t<T>>` is false.
-            ///   * Otherwise, `+(ranges::end(E) - ranges::begin(E))`, except that `E` is only
-            ///     evaluated once, if it is a valid expression and the types `I` and `S` of
-            ///     `ranges::begin(E)` and `ranges::end(E)` model `SizedSentinel<S, I>` and
-            ///     `ForwardIterator<I>`.
-            ///   * Otherwise, `ranges::size(E)` is ill-formed.
-            RANGES_INLINE_VARIABLE(_size_::fn, size)
-        }
+        /// \ingroup group-core
+        /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent to:
+        ///   * `+extent_v<T>` if `T` is an array type.
+        ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
+        ///     `Integral` and `disable_sized_range<std::remove_cvref_t<T>>` is false.
+        ///   * Otherwise, `+size(E)` if it is a valid expression and its type `I` models
+        ///     `Integral` with overload resolution performed in a context that includes the
+        ///     declaration:
+        ///     \code
+        ///     template<class T> void size(T&&) = delete;
+        ///     \endcode
+        ///     and does not include a declaration of `ranges::size`, and
+        ///     `disable_sized_range<std::remove_cvref_t<T>>` is false.
+        ///   * Otherwise, `static_cast<U>(ranges::end(E) - ranges::begin(E))` where `U` is
+        ///     `std::make_unsigned_t<iter_difference_t<iterator_t<T>>>`, except that `E` is
+        ///     evaluated once, if it is a valid expression and the types `I` and `S` of
+        ///     `ranges::begin(E)` and `ranges::end(E)` model `SizedSentinel<S, I>` and
+        ///     `ForwardIterator<I>`.
+        ///   * Otherwise, `ranges::size(E)` is ill-formed.
+        RANGES_DEFINE_CPO(_size_::fn, size)
     }
 }
 

@@ -50,12 +50,9 @@ namespace ranges
 
         using concepts::exchange;
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-utility
-            /// \relates concepts::adl_swap_detail::swap_fn
-            using concepts::swap;
-        }
+        /// \ingroup group-utility
+        /// \relates concepts::adl_swap_detail::swap_fn
+        RANGES_DEFINE_CPO(decltype(concepts::swap), swap)
 
         /// \cond
         namespace detail
@@ -190,12 +187,9 @@ namespace ranges
                 adl_swap_detail::is_nothrow_indirectly_swappable_<T, U>>
         {};
 
-        inline namespace CPOs
-        {
-            /// \ingroup group-utility
-            /// \relates adl_swap_detail::iter_swap_fn
-            RANGES_INLINE_VARIABLE(adl_swap_detail::iter_swap_fn, iter_swap)
-        }
+        /// \ingroup group-utility
+        /// \relates adl_swap_detail::iter_swap_fn
+        RANGES_DEFINE_CPO(adl_swap_detail::iter_swap_fn, iter_swap)
     }
 }
 

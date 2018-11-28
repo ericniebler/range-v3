@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct empty_view_base
@@ -38,6 +39,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename T>
         struct empty_view

@@ -97,10 +97,12 @@ namespace ranges
             struct view;
         }
 
+        /// \cond
         namespace adl_advance_detail
         {
             struct advance_fn;
         }
+        /// \endcond
         using adl_advance_detail::advance_fn;
 
         struct advance_to_fn;

@@ -417,7 +417,7 @@ namespace ranges
 #endif  // __cpp_inline_variables
 #endif  // RANGES_CXX_INLINE_VARIABLES
 
-#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 && !defined(RANGES_DOXYGEN_INVOKED)
 #define RANGES_INLINE_VARIABLE(type, name)                          \
     inline namespace                                                \
     {                                                               \
@@ -427,6 +427,19 @@ namespace ranges
 #define RANGES_INLINE_VARIABLE(type, name) \
     inline constexpr type name{};
 #endif // RANGES_CXX_INLINE_VARIABLES
+
+#ifndef RANGES_DOXYGEN_INVOKED
+#define RANGES_DEFINE_CPO(TYPE, NAME) \
+    inline namespace CPOs \
+    { \
+        RANGES_INLINE_VARIABLE(TYPE, NAME) \
+    } \
+    /**/
+#else
+#define RANGES_DEFINE_CPO(TYPE, NAME) \
+    RANGES_INLINE_VARIABLE(TYPE, NAME) \
+    /**/
+#endif
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES
 #if defined(__clang__) && defined(__apple_build_version__)

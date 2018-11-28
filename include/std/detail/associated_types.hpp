@@ -109,8 +109,7 @@ namespace ranges
 
             template<typename T>
             using difference_result_t =
-                decltype(static_cast<T const &(*)()>(nullptr)() -
-                         static_cast<T const &(*)()>(nullptr)());
+                decltype(std::declval<T const &>() - std::declval<T const &>());
 
             template<typename, typename = void>
             struct incrementable_traits_2_

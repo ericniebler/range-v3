@@ -33,6 +33,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename State, typename Value>
@@ -66,6 +67,7 @@ namespace ranges
                     static_cast<cardinality>((sizeof...(Views) > 0))>,
                 meta::quote<detail::product_cardinality>>;
         } // namespace detail
+        /// \endcond
 
         CPP_def
         (
@@ -101,7 +103,7 @@ namespace ranges
             template(typename IsConst, typename...Views)
             (concept CartesianProductViewCanBidi)(IsConst, Views...),
                 // BUGBUG alternation is totally broken.
-                True<> &&
+                Type<> &&
                 (CartesianProductViewCanRandom<IsConst, Views...> ||
                 And<BoundedRange<meta::const_if<IsConst, Views>>...,
                     BidirectionalIterator<iterator_t<

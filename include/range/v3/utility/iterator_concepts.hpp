@@ -135,7 +135,7 @@ namespace ranges
             concept WeaklyIncrementable,
                 requires (I i)
                 (
-                    True<iter_difference_t<I>>,
+                    Type<iter_difference_t<I>>,
                     ++i,
                     i++,
                     concepts::requires_<Same<I&, decltype(++i)>>
@@ -359,6 +359,7 @@ namespace ranges
         template<typename I, typename T>
         using ExclusivelyWritable_ = meta::invoke<detail::exclusively_writable<I>, T>;
 
+        /// \cond
         namespace detail
         {
             template<typename T, typename U>
@@ -420,6 +421,7 @@ namespace ranges
                         meta::quote<variadic_common_reference_>>,
                     Is...>>;
         }
+        /// \endcond
 
         CPP_def
         (

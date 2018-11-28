@@ -34,7 +34,7 @@ namespace ranges
             private:
                 template<typename R>
                 using member_data_t =
-                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().data())>;
+                    detail::decay_t<decltype(std::declval<R>().data())>;
 
                 template<typename R>
                 static constexpr auto impl_(R &r, detail::priority_tag<2>)
@@ -82,7 +82,7 @@ namespace ranges
             };
 
             template<typename R>
-            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+            using _t = decltype(fn{}(std::declval<R>()));
         }
         /// \endcond
 

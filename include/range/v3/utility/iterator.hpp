@@ -31,8 +31,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \addtogroup group-utility
-        /// @{
+        /// \cond
         namespace adl_advance_detail
         {
             template<typename I, typename D>
@@ -119,15 +118,17 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
+
+        /// \addtogroup group-utility
+        /// @{
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
         /// Not to spec: advance is an ADL customization point
-        inline namespace CPOs
-        {
-            RANGES_INLINE_VARIABLE(adl_advance_detail::advance_fn, advance)
-        }
+        RANGES_DEFINE_CPO(adl_advance_detail::advance_fn, advance)
 
+        /// \cond
         namespace adl_advance_detail
         {
             template<typename I>
@@ -229,6 +230,7 @@ namespace ranges
                 return 0;
             }
         }
+        /// \endcond
 
         struct next_fn
         {

@@ -19,6 +19,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 
+#ifndef RANGES_DOXYGEN_INVOKED
 namespace boost
 {
     /// \brief Boost Range specialisation point, for making Boost ranges out of range-v3 views
@@ -74,5 +75,8 @@ namespace boost                                                                 
     {                                                                           \
     };                                                                          \
 }
+#else
+#define RANGES_SATISFY_BOOST_RANGE(view_name)
+#endif
 
 #endif

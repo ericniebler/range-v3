@@ -42,7 +42,7 @@ namespace ranges
             (
                 template(typename Cont)
                 concept HasAllocatorType,
-                    True<typename Cont::allocator_type>
+                    Type<typename Cont::allocator_type>
             );
 
             CPP_def

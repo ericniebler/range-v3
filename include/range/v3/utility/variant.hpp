@@ -28,6 +28,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T, std::size_t N, typename Index>
@@ -124,6 +125,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
     }
 }
 
