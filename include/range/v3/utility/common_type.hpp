@@ -90,8 +90,8 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common<T &&, U &&, meta::if_<meta::and_<
-                std::is_convertible<T, _rref_res<T, U>>,
-                std::is_convertible<U, _rref_res<T, U>>>>>
+                detail::is_convertible<T, _rref_res<T, U>>,
+                detail::is_convertible<U, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -101,7 +101,7 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common<T &, U &&, meta::if_<
-                std::is_convertible<U, _builtin_common_t<T &, U const &>>>>
+                detail::is_convertible<U, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -126,8 +126,8 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common_rr<T, U, meta::if_<meta::and_<
-                std::is_convertible<T, _rref_res<T, U>>,
-                std::is_convertible<U, _rref_res<T, U>>>>>
+                detail::is_convertible<T, _rref_res<T, U>>,
+                detail::is_convertible<U, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -145,7 +145,7 @@ namespace ranges
             {};
             template<typename T, typename U>
             struct _builtin_common_lr<T, U, meta::if_<
-                std::is_convertible<U, _builtin_common_t<T &, U const &>>>>
+                detail::is_convertible<U, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>

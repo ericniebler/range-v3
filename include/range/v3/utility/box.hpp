@@ -142,7 +142,8 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Element, typename Tag = void, detail::box_compress = detail::box_compression<Element>()>
+        template<typename Element, typename Tag = void,
+            detail::box_compress = detail::box_compression<Element>()>
         class box
         {
             Element value;
@@ -153,13 +154,15 @@ namespace ranges
               : value{}
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    detail::is_convertible<E, Element>::value)>
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    !detail::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : value(static_cast<E&&>(e))
@@ -190,13 +193,15 @@ namespace ranges
               : Element{}
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    detail::is_convertible<E, Element>::value)>
             constexpr box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    !detail::is_convertible<E, Element>::value)>
             constexpr explicit box(E && e)
                 noexcept(std::is_nothrow_constructible<Element, E>::value)
               : Element(static_cast<E&&>(e))
@@ -224,11 +229,13 @@ namespace ranges
             constexpr box() noexcept
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    detail::is_convertible<E, Element>::value)>
             constexpr box(E &&) noexcept
             {}
             template<typename E,
-                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value && !std::is_convertible<E, Element>::value)>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
+                    !detail::is_convertible<E, Element>::value)>
             constexpr explicit box(E &&) noexcept
             {}
 
