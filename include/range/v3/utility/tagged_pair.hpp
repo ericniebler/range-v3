@@ -68,7 +68,7 @@ namespace ranges
             template<typename Other>
             using can_convert =
                 meta::bool_<!std::is_same<Other, Base>::value &&
-                    std::is_convertible<Other, Base>::value>;
+                    detail::is_convertible<Other, Base>::value>;
         public:
             tagged() = default;
             using base_t::base_t;

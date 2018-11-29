@@ -436,7 +436,7 @@ void test_case_from_container_constructor()
         use_span(get_temp_vector());
     }
 
-    CONCEPT_ASSERT(!std::is_convertible<const std::vector<int>, span<const char>>::value);
+    CONCEPT_ASSERT(!ranges::detail::is_convertible<const std::vector<int>, span<const char>>::value);
 
     {
         auto get_temp_string = []() -> const std::string { return {}; };
@@ -1008,8 +1008,8 @@ void test_case_fixed_size_conversions()
     }
 
     // initialization or assignment to static span that REDUCES size is NOT ok
-    CONCEPT_ASSERT(!std::is_convertible<decltype((arr)), span<int, 2>>::value);
-    CONCEPT_ASSERT(!std::is_convertible<span<int, 4>, span<int, 2>>::value);
+    CONCEPT_ASSERT(!ranges::detail::is_convertible<decltype((arr)), span<int, 2>>::value);
+    CONCEPT_ASSERT(!ranges::detail::is_convertible<span<int, 4>, span<int, 2>>::value);
 
 
     // you can convert statically

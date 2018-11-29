@@ -71,8 +71,8 @@ RANGES_CXX14_CONSTEXPR auto test_rit_(It beg, It end) -> bool {
     if (ranges::next(beg, 4) != end) { return false; }
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 1) { return false; }
-    if (std::is_convertible<ranges::iterator_concept<It>,
-                            ranges::concepts::BidirectionalIterator*>{}) {
+    if (ranges::detail::is_convertible<ranges::iterator_concept<It>,
+                                       ranges::concepts::BidirectionalIterator*>{}) {
         auto end_m1_2 = It{ranges::prev(end, 1)};
         if (*end_m1_2 != 1) { return false; }
     }

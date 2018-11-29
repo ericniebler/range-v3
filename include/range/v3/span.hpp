@@ -141,7 +141,7 @@ namespace ranges
             using CompatibleRange =
                 meta::and_<meta::bool_<!Same<span, uncvref_t<Rng>>()>,
                     SizedRange<Rng>, ContiguousRange<Rng>,
-                    std::is_convertible<concepts::ContiguousRange::element_t<Rng>(*)[], T(*)[]>>;
+                    detail::is_convertible<concepts::ContiguousRange::element_t<Rng>(*)[], T(*)[]>>;
             template<typename Rng>
             using DynamicConversion = meta::bool_<
                 N == dynamic_extent || (range_cardinality<Rng>::value < cardinality())>;

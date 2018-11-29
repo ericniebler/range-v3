@@ -345,6 +345,14 @@ namespace ranges
 
             template<typename T>
             using remove_rvalue_reference_t = meta::_t<remove_rvalue_reference<T>>;
+
+            // Workaround bug in the Standard Library:
+            // From cannot be an incomplete class type despite that
+            // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
+            // in such a case.
+            template<typename From, typename To>
+            using is_convertible =
+                std::is_convertible<meta::_t<std::add_rvalue_reference<From>>, To>;
         }
         /// \endcond
 

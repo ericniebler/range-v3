@@ -40,5 +40,27 @@ int main()
         CHECK(&*begin(rng) == some_ints + 0);
     }
 
+#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14
+    {
+        // regression test for #946
+        class Data;
+
+        struct Test
+        {
+            std::vector<Data*> m_list;
+
+            auto list()
+            {
+                return m_list | ranges::view::indirect;
+            }
+        };
+
+        class Data
+        {};
+
+        CHECK(Test{std::vector<Data*>(42)}.list().size() == 42u);
+    }
+#endif // RANGES_CXX_RETURN_TYPE_DEDUCTION
+
     return test_result();
 }
