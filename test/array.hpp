@@ -55,8 +55,6 @@ namespace test {
 
         value_type elems_[N > 0 ? N : 1];
 
-        // No explicit construct/copy/destroy for aggregate type
-        RANGES_CXX14_CONSTEXPR array() = default;
         RANGES_CXX14_CONSTEXPR void fill(const value_type& u)
         {
             ranges::fill_n(elems_, N, u);
