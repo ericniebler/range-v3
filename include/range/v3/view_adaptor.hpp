@@ -311,8 +311,8 @@ namespace ranges
             }
             // If the adaptor has an iter_move function, use it.
             template<typename A = Adapt, typename X = decltype(
-                std::declval<A const&>().iter_move(
-                    std::declval<BaseIter const&>()))>
+                std::declval<A const &>().iter_move(
+                    std::declval<BaseIter const &>()))>
             X iter_move_(int) const
                 noexcept(noexcept(std::declval<A const &>().iter_move(
                     std::declval<BaseIter const &>())))
