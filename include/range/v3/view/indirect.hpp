@@ -39,25 +39,50 @@ namespace ranges
         {
         private:
             friend range_access;
+
+            template<bool IsConst>
             struct adaptor
               : adaptor_base
             {
-                constexpr auto read(iterator_t<Rng> const &it) const
+                friend adaptor<true>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
+
+                adaptor() = default;
+                template<bool Other,
+                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                constexpr adaptor(adaptor<Other>) noexcept
+                {}
+
+                constexpr auto read(iterator_t<CRng> const &it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     **it
                 )
-                constexpr auto iter_move(iterator_t<Rng> const &it) const
+                constexpr auto iter_move(iterator_t<CRng> const &it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     ranges::iter_move(*it)
                 )
             };
-            constexpr adaptor begin_adaptor() const noexcept
+
+            CONCEPT_REQUIRES(!simple_view<Rng>())
+            RANGES_CXX14_CONSTEXPR adaptor<false> begin_adaptor() noexcept
             {
                 return {};
             }
-            constexpr adaptor end_adaptor() const noexcept
+            CONCEPT_REQUIRES(Range<Rng const>())
+            constexpr adaptor<true> begin_adaptor() const noexcept
+            {
+                return {};
+            }
+
+            CONCEPT_REQUIRES(!simple_view<Rng>())
+            RANGES_CXX14_CONSTEXPR adaptor<false> end_adaptor() noexcept
+            {
+                return {};
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
+            constexpr adaptor<true> end_adaptor() const noexcept
             {
                 return {};
             }
@@ -71,7 +96,7 @@ namespace ranges
             {
                 return ranges::size(this->base());
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(!SizedRange<Rng const>() && SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
             {
                 return ranges::size(this->base());
