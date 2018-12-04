@@ -291,6 +291,100 @@ sentinel. That is only necessary if the underlying range's sentinel type models
 BidirectionalIterator. That's a finer point that you shouldn't worry about right
 now.)*
 
+## Create Custom Iterators
+
+Here is example of Range v3 compatible RandomAcess proxy iterator.
+Iterator return std::pair key/value (aka zip).
+
+~~~~~~~{.cpp}
+    using KeyIter   = typename std::vector<Key>::iterator;
+    using ValueIter = typename std::vector<Value>::iterator;
+
+    struct cursor {
+
+        // basic_iterator derives from "mixin", if present, so it can be used
+        // to inject things into the public interface of the iterator
+        struct mixin : ranges::basic_mixin<cursor>
+        {
+            using ranges::basic_mixin<cursor>::basic_mixin;
+
+            // It is necessary to expose constructor in this way
+            mixin(KeyIter key_iterator, ValueIter value_iterator)
+                : mixin{ cursor(key_iterator, value_iterator) }
+            {}
+
+            KeyIter key_iterator() {
+                return this->get().key_iterator;
+            }
+            ValueIter value_iterator() {
+                return this->get().value_iterator;
+            }
+        };
+
+        // This is for dereference operator.
+        using cursor_value_t = std::pair<Key, Value&>;
+        cursor_value_t read() const {
+            return {*key_iterator, *value_iterator};
+        }
+
+        // arrow for operator-> . It is not required.
+        struct arrow_proxy
+        {
+            cursor_value_t value;
+            cursor_value_t* operator->() { return std::addressof(value); }
+        };
+        arrow_proxy arrow() const {
+            return arrow_proxy{ read() };
+        }
+
+        bool equal(const cursor& other) const {
+            return key_iterator == other.key_iterator;
+        }
+
+        void next() { 
+            key_iterator++;
+            value_iterator++;
+        }
+
+        // prev optional. Required for Bidirectional iterator
+        void prev() { 
+            key_iterator--;
+            value_iterator--;
+        }
+
+        // advance and distance_to are optional. Required for RandomAcess iterator
+        void advance(std::ptrdiff_t n) { 
+            key_iterator   += n;
+            value_iterator += n;
+        }
+        std::ptrdiff_t distance_to(const cursor& other) const {
+            return other.key_iterator - this->key_iterator;
+        }
+
+        cursor() = default;
+        cursor(KeyIter key_iterator, ValueIter value_iterator)
+            : key_iterator(key_iterator)
+            , value_iterator(value_iterator)
+        {}
+
+        KeyIter   key_iterator;
+        ValueIter value_iterator;
+    };
+
+    using iterator = ranges::basic_iterator<cursor>;
+
+    void test(){
+      std::vector<Key>   keys;
+      std::vector<Value> values;
+      
+      iterator iter(keys.begin(), values.begin());
+      std::pair<Key, Value&> p = *iter;
+
+      auto key_iter = iter.key_iterator();
+    }
+~~~~~~~
+
+
 ## Constrain Functions with Concepts
 
 The Range v3 library makes heavy use of concepts to constrain functions, control
