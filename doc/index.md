@@ -332,6 +332,7 @@ Iterator return std::pair key/value (aka zip).
         {
             cursor_value_t value;
             cursor_value_t* operator->() { return std::addressof(value); }
+            operator cursor_value_t*()   { return std::addressof(value); }
         };
         arrow_proxy arrow() const {
             return arrow_proxy{ read() };
