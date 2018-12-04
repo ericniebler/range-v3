@@ -38,19 +38,6 @@ cxx_binary(
 )
 
 cxx_binary(
-  name = 'count_if',
-  srcs = [
-    'count_if.cpp',
-  ],
-  deps = [
-    '//:range-v3',
-  ],
-  compiler_flags = [
-    '-std=c++14',
-  ],
-)
-
-cxx_binary(
   name = 'fibonacci',
   srcs = [
     'fibonacci.cpp',
