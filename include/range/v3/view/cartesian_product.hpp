@@ -27,6 +27,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 
 namespace ranges
 {
@@ -71,6 +72,7 @@ namespace ranges
                 detail::cartesian_product_cardinality<Views...>::value>
         {
             friend range_access;
+            CONCEPT_ASSERT(sizeof...(Views) != 0);
             CONCEPT_ASSERT(meta::strict_and<ForwardView<Views>...>::value);
             using CanConst = meta::strict_and<
                 Range<Views const>...>;
@@ -377,32 +379,6 @@ RANGES_DIAGNOSTIC_POP
             }
         };
 
-#ifdef RANGES_WORKAROUND_MSVC_125882
-        template<>
-        class cartesian_product_view<>
-          : public view_facade<cartesian_product_view<>, cardinality(0)>
-        {
-            friend range_access;
-            struct cursor
-            {
-                using value_type = std::tuple<>;
-
-                common_tuple<> read() const { return {}; }
-                void next() {}
-                bool equal(default_sentinel) const { return true; }
-                bool equal(cursor const &) const { return true; }
-                void prev() {}
-                std::ptrdiff_t distance_to(cursor const &) const { return 0; }
-                void advance(std::ptrdiff_t) {}
-            };
-            cursor begin_cursor() const { return {}; }
-            cursor end_cursor() const { return {}; }
-        public:
-            cartesian_product_view() = default;
-            std::size_t size() const { return 0; }
-        };
-#endif // RANGES_WORKAROUND_MSVC_125882
-
         namespace view
         {
             struct cartesian_product_fn
@@ -411,10 +387,18 @@ RANGES_DIAGNOSTIC_POP
                 using Constraint = meta::strict_and<ForwardRange<Rngs>...>;
 
                 template<typename... Rngs,
-                    CONCEPT_REQUIRES_(Constraint<Rngs...>())>
-                constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
+                    CONCEPT_REQUIRES_(sizeof...(Rngs) != 0 && Constraint<Rngs...>())>
+                constexpr cartesian_product_view<all_t<Rngs>...>
+                operator()(Rngs &&... rngs) const
                 {
-                    return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
+                    return cartesian_product_view<all_t<Rngs>...>{
+                        all(static_cast<Rngs &&>(rngs))...};
+                }
+
+                CONCEPT_REQUIRES(Constraint<>())
+                constexpr empty_view<std::tuple<>> operator()() const noexcept
+                {
+                    return {};
                 }
 
                 template<typename... Rngs,

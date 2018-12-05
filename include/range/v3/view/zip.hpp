@@ -23,6 +23,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_tuple.hpp>
+#include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 #include <range/v3/view/zip_with.hpp>
 
 RANGES_DISABLE_WARNINGS
@@ -107,6 +109,8 @@ namespace ranges
         struct zip_view
           : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
         {
+            CONCEPT_ASSERT(sizeof...(Rngs) != 0);
+
             zip_view() = default;
             explicit zip_view(Rngs...rngs)
               : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
@@ -118,15 +122,22 @@ namespace ranges
         {
             struct zip_fn
             {
-                template<typename ...Rngs>
+                template<typename...Rngs>
                 using Concept = meta::and_<InputRange<Rngs>...>;
 
                 template<typename...Rngs,
-                    CONCEPT_REQUIRES_(Concept<Rngs...>())>
+                    CONCEPT_REQUIRES_(sizeof...(Rngs) != 0 && Concept<Rngs...>())>
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_<Range<Rngs>...>());
-                    return zip_view<all_t<Rngs>...>{all(static_cast<Rngs&&>(rngs))...};
+                    return zip_view<all_t<Rngs>...>{
+                        all(static_cast<Rngs &&>(rngs))...};
+                }
+
+                CONCEPT_REQUIRES(Concept<>())
+                constexpr empty_view<std::tuple<>> operator()() const noexcept
+                {
+                    return {};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
