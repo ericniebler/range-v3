@@ -134,12 +134,20 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Fun = plus>
-                static auto bind(partial_sum_fn partial_sum, Fun fun = {})
+                template<typename Fun>
+                static auto bind(partial_sum_fn partial_sum, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(partial_sum, std::placeholders::_1,
                         protect(std::move(fun))))
+                )
+                template<typename Fun = plus>
+                RANGES_DEPRECATED("Use \"ranges::view::partial_sum\" instead of \"ranges::view::partial_sum()\".")
+                static auto bind(partial_sum_fn partial_sum)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(partial_sum, std::placeholders::_1,
+                        Fun{}))
                 )
             public:
                 template<typename Rng, typename Fun>
@@ -151,16 +159,17 @@ namespace ranges
                             range_common_reference_t<Rng>>,
                         range_value_type_t<Rng>>>;
 
-                template<typename Rng, typename Fun,
+                template<typename Rng, typename Fun = plus,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                partial_sum_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
+                partial_sum_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun = {}) const
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
+
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun,
+                template<typename Rng, typename Fun = plus,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng &&, Fun) const
+                void operator()(Rng &&, Fun = {}) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "

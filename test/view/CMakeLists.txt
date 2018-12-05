@@ -27,6 +27,7 @@ rv3_add_test(test.view.linear_distribute view.linear_distribute linear_distribut
 rv3_add_test(test.view.map view.map keys_value.cpp)
 rv3_add_test(test.view.move view.move move.cpp)
 rv3_add_test(test.view.partial_sum view.partial_sum partial_sum.cpp)
+rv3_add_test(test.view.partial_sum_depr view.partial_sum_depr partial_sum_depr.cpp)
 rv3_add_test(test.view.repeat view.repeat repeat.cpp)
 rv3_add_test(test.view.remove_if view.remove_if remove_if.cpp)
 rv3_add_test(test.view.replace view.replace replace.cpp)
