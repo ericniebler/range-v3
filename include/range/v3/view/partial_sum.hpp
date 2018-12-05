@@ -141,6 +141,14 @@ namespace ranges
                     make_pipeable(std::bind(partial_sum, std::placeholders::_1,
                         protect(std::move(fun))))
                 )
+                template<typename Fun = plus>
+                RANGES_DEPRECATED("Use \"ranges::view::partial_sum\" instead of \"ranges::view::partial_sum()\".")
+                static auto bind(partial_sum_fn partial_sum)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(partial_sum, std::placeholders::_1,
+                        Fun{}))
+                )
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
@@ -157,6 +165,7 @@ namespace ranges
                 {
                     return {all(static_cast<Rng&&>(rng)), std::move(fun)};
                 }
+
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun = plus,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
