@@ -26,7 +26,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
-#include <range/v3/utility/static_const.hpp>    
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 RANGES_DISABLE_WARNINGS
@@ -51,7 +51,7 @@ namespace ranges
             using projection_box = box<semiregular_t<Proj>, struct projection_tag>;
         public:
             remove_if_view() = default;
-            constexpr remove_if_view(Rng rng, Pred pred, Proj proj)
+            constexpr remove_if_view(Rng rng, Pred pred, Proj proj = Proj{})
               : remove_if_view::view_adaptor{detail::move(rng)}
               , predicate_box(detail::move(pred))
               , projection_box(detail::move(proj))
@@ -163,7 +163,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred, typename Proj = ident,
                     CONCEPT_REQUIRES_(!Constraint<Rng, Pred, Proj>())>
-                void operator()(Rng &&, Pred) const
+                void operator()(Rng &&, Pred, Proj = Proj{}) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::remove_if must be a model of the "
