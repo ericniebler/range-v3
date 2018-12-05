@@ -235,5 +235,16 @@ int main()
         ::check_equal(rng, {P{0,4},P{1,5}, P{2,6}, P{3,7}});
     }
 
+    {
+        // Test with no ranges
+        auto rng = view::zip();
+        using R = decltype(rng);
+        CONCEPT_ASSERT(Same<range_value_type_t<R>, std::tuple<>>());
+        CONCEPT_ASSERT(ContiguousRange<R>());
+        static_assert(ranges::range_cardinality<R>::value == ranges::cardinality(0), "");
+        CHECK(ranges::begin(rng) == ranges::end(rng));
+        CHECK(ranges::size(rng) == 0u);
+    }
+
     return test_result();
 }

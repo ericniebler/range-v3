@@ -33,6 +33,7 @@
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 
 namespace ranges
 {
@@ -147,7 +148,9 @@ namespace ranges
                     meta::quote<detail::zip_cardinality>>::value>
         {
         private:
+            CONCEPT_ASSERT(sizeof...(Rngs) != 0);
             friend range_access;
+
             semiregular_t<Fun> fun_;
             std::tuple<Rngs...> rngs_;
             using difference_type_ = common_type_t<range_difference_type_t<Rngs>...>;
@@ -338,6 +341,8 @@ namespace ranges
         struct zip_with_view
           : iter_zip_with_view<indirected<Fun>, Rngs...>
         {
+            CONCEPT_ASSERT(sizeof...(Rngs) != 0);
+
             zip_with_view() = default;
             explicit zip_with_view(Rngs ...rngs)
               : iter_zip_with_view<indirected<Fun>, Rngs...>{
@@ -356,14 +361,21 @@ namespace ranges
                 template<typename Fun, typename... Rngs>
                 using Concept = detail::IterZipWithConcept<Fun, Rngs...>;
 
-                template<typename...Rngs, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                template<typename Fun, typename... Rngs,
+                    CONCEPT_REQUIRES_(sizeof...(Rngs) != 0 && Concept<Fun, Rngs...>())>
+                iter_zip_with_view<Fun, all_t<Rngs>...>
+                operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(static_cast<Rngs&&>(rngs))...
+                        all(static_cast<Rngs &&>(rngs))...
                     };
+                }
+
+                template<typename Fun, CONCEPT_REQUIRES_(Concept<Fun>())>
+                constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
+                {
+                    return {};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -399,20 +411,27 @@ namespace ranges
 
             struct zip_with_fn
             {
-                template<typename Fun, typename ...Rngs>
+                template<typename Fun, typename...Rngs>
                 using Concept = meta::and_<
                     InputRange<Rngs>...,
                     CopyConstructible<Fun>,
                     Invocable<Fun&, range_reference_t<Rngs> &&...>>;
 
-                template<typename...Rngs, typename Fun,
-                    CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
+                template<typename Fun, typename...Rngs,
+                    CONCEPT_REQUIRES_(sizeof...(Rngs) != 0 && Concept<Fun, Rngs...>())>
+                zip_with_view<Fun, all_t<Rngs>...>
+                operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        all(static_cast<Rngs&&>(rngs))...
+                        all(static_cast<Rngs &&>(rngs))...
                     };
+                }
+
+                template<typename Fun, CONCEPT_REQUIRES_(Concept<Fun>())>
+                constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
+                {
+                    return {};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

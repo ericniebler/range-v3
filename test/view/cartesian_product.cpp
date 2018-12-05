@@ -45,13 +45,13 @@ struct printer {
     }
 };
 
-namespace ranges {
+namespace std {
     template<typename... Ts>
     std::ostream &operator<<(std::ostream &os, std::tuple<Ts...> const &t)
     {
         os << '(';
         auto first = true;
-        tuple_for_each(t, printer{os, first});
+        ::ranges::tuple_for_each(t, ::printer{os, first});
         os << ')';
         return os;
     }
@@ -75,7 +75,7 @@ void test_empty_set()
         std::tuple<>>());
     CONCEPT_ASSERT(std::is_same<
         range_reference_t<Rng>,
-        common_tuple<>>());
+        std::tuple<>&>());
 
     std::initializer_list<common_tuple<>> control{};
     ::check_equal(rng, control);
@@ -83,7 +83,7 @@ void test_empty_set()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == size(rng));
+    CHECK(decltype(size(rng))(last - first) == size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)

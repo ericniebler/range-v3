@@ -213,7 +213,6 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
 #endif
 
-#define RANGES_WORKAROUND_MSVC_125882 // Multiple defaulted copy constructors/assignment operators are not supported
 #define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
 #define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
 #define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define this operator"
