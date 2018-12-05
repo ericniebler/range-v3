@@ -9,13 +9,13 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <iterator>
 #include <functional>
+#include <iterator>
 #include <range/v3/core.hpp>
-#include <range/v3/view/partial_sum.hpp>
-#include <range/v3/view/counted.hpp>
-#include <range/v3/view/reverse.hpp>
 #include <range/v3/utility/copy.hpp>
+#include <range/v3/view/counted.hpp>
+#include <range/v3/view/partial_sum.hpp>
+#include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -25,7 +25,7 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto && rng = rgi | view::partial_sum();
+    auto && rng = rgi | view::partial_sum;
     has_type<int &>(*begin(rgi));
     has_type<int>(*begin(rng));
     models<concepts::SizedView>(aux::copy(rng));
@@ -52,8 +52,15 @@ int main()
     CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
 
     {
-        auto rng = debug_input_view<int const>{rgi} | view::partial_sum();
+        auto rng = debug_input_view<int const>{rgi} | view::partial_sum;
         ::check_equal(rng, {1, 3, 6, 10, 15, 21, 28, 36, 45, 55});
+    }
+
+    {
+        static int const some_ints[] = {0,1,2,3,4};
+        auto t1 = ranges::view::partial_sum(some_ints);
+        auto t2 = some_ints | ranges::view::partial_sum;
+        ::check_equal(t1, t2);
     }
 
     return test_result();
