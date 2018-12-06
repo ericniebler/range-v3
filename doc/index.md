@@ -341,7 +341,7 @@ Iterator return key/value (aka zip).
             Value& value;
 
             // make this conversion explicit, so
-            // common_reference<KeyValue, KeyValueRef> = KeyValueRef
+            // common_type_t<KeyValue, KeyValueRef> = KeyValueRef
             explicit operator KeyValue() const {
                 return { key, value };
             }
