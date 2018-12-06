@@ -293,7 +293,7 @@ now.)*
 
 ## Create Custom Iterators
 
-Here is example of Range v3 compatible RandomAcess proxy iterator.
+Here is example of Range v3 compatible RandomAccess proxy iterator.
 Iterator return std::pair key/value (aka zip).
 
 ~~~~~~~{.cpp}
