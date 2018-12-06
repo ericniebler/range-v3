@@ -293,8 +293,8 @@ now.)*
 
 ## Create Custom Iterators
 
-Here is example of Range v3 compatible RandomAcess proxy iterator.
-Iterator return std::pair key/value (aka zip).
+Here is example of Range v3 compatible RandomAccess proxy iterator.
+Iterator return key/value (aka zip).
 
 ~~~~~~~{.cpp}
     using KeyIter   = typename std::vector<Key>::iterator;
@@ -321,21 +321,38 @@ Iterator return std::pair key/value (aka zip).
             }
         };
 
-        // This is for dereference operator.
-        using cursor_value_t = std::pair<Key, Value&>;
-        cursor_value_t read() const {
-            return {*key_iterator, *value_iterator};
-        }
+        struct KeyValueRef;
 
-        // arrow for operator-> . It is not required.
-        struct arrow_proxy
-        {
-            cursor_value_t value;
-            cursor_value_t* operator->() { return std::addressof(value); }
-            operator cursor_value_t*()   { return std::addressof(value); }
+        // We return references, make them convertible to values and vice versa.
+        // For tuples/pairs, it is already implemenmted by ranges::common_pair<Key&, Value&>.
+        // Which implements similiar to KeyValue <=> KeyValueRef conversions.
+        struct KeyValue {
+            Key key;
+            Value value;
+
+            operator KeyValueRef() const {
+                auto& self_mut = const_cast<KeyValue&>(*this);
+                return { self_mut.key, self_mut.value };
+            }
         };
-        arrow_proxy arrow() const {
-            return arrow_proxy{ read() };
+
+        struct KeyValueRef {
+            Key& key;
+            Value& value;
+
+            // make this conversion explicit, so
+            // common_reference<KeyValue, KeyValueRef> = KeyValueRef
+            explicit operator KeyValue() const {
+                return { key, value };
+            }
+        };
+
+        // explicitly specify value type
+        using value_type = KeyValue;
+
+        // This is for dereference operator.
+        KeyValueRef read() const {
+            return { *key_iterator, *value_iterator };
         }
 
         bool equal(const cursor& other) const {
@@ -343,14 +360,14 @@ Iterator return std::pair key/value (aka zip).
         }
 
         void next() { 
-            key_iterator++;
-            value_iterator++;
+            ++key_iterator;
+            ++value_iterator;
         }
 
         // prev optional. Required for Bidirectional iterator
         void prev() { 
-            key_iterator--;
-            value_iterator--;
+            --key_iterator;
+            --value_iterator;
         }
 
         // advance and distance_to are optional. Required for RandomAcess iterator
@@ -379,11 +396,15 @@ Iterator return std::pair key/value (aka zip).
       std::vector<Value> values;
       
       iterator iter(keys.begin(), values.begin());
-      std::pair<Key, Value&> p = *iter;
+      auto key_value = *iter;
+      Key&   key   = key_value.key;
+      Value& velue = key_value.value;
 
       auto key_iter = iter.key_iterator();
     }
 ~~~~~~~
+
+For more information, see [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic)
 
 
 ## Constrain Functions with Concepts
