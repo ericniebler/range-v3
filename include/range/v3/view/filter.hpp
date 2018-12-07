@@ -27,29 +27,12 @@ namespace ranges
         {
             /// Given a source range and a unary predicate, filter the elements
             /// that satisfy the predicate.
-            struct filter_fn
-            {
-                template<typename Rng, typename Pred, typename Proj = ident>
-                remove_if_view<all_t<Rng>, logical_negate<Pred>, Proj>
-                operator()(Rng && rng, Pred pred, Proj proj = Proj{}) const
-                {
-                    CONCEPT_ASSERT(Range<Rng>());
-                    CONCEPT_ASSERT(IndirectPredicate<Pred, iterator_t<Rng>>());
-                    return {all(static_cast<Rng&&>(rng)), not_fn(std::move(pred)), std::move(proj)};
-                }
-                template<typename Pred, typename Proj = ident>
-                auto operator()(Pred pred, Proj proj = Proj{}) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1,
-                        protect(std::move(pred)), protect(std::move(proj)))))
-                {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1,
-                        protect(std::move(pred)), protect(std::move(proj))));
-                }
-            };
+            struct filter_fn : details::remove_if_fn_base<not_fn_fn>
+            {};
 
             /// \relates filter_fn
             /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(filter_fn, filter)
+            RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
         }
     }
 }
