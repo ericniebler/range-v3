@@ -121,51 +121,55 @@ namespace ranges
         RANGES_INLINE_VARIABLE(detail::to_container_fn<meta::quote<std::vector>>,
                                to_vector)
 
-
         /// \brief For initializing a container of the specified type with the elements of an Range
         template<template<typename...> class ContT>
-        detail::to_container_fn<meta::quote<ContT>> to_()
+        auto to_() ->
+            detail::to_container_fn<meta::quote<ContT>>
         {
             return {};
         }
 
         /// \overload
-        CPP_template(template<typename...> class ContT, typename Rng,
-            typename Cont = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>)(
-            requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
-        Cont to_(Rng &&rng)
+        template<template<typename...> class ContT, typename Rng>
+        auto to_(Rng &&rng) ->
+            CPP_ret(ContT<range_value_t<Rng>>)(
+                requires Range<Rng> &&
+                    detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
 
         /// \overload
-        CPP_template(template<typename...> class ContT, typename T,
-            typename Cont = meta::invoke<meta::quote<ContT>, T>)(
-            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
-        Cont to_(std::initializer_list<T> list)
+        template<template<typename...> class ContT, typename T>
+        auto to_(std::initializer_list<T> il) ->
+            CPP_ret(ContT<T>)(
+                requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
         {
-            return list | ranges::to_<ContT>();
+            return il | ranges::to_<ContT>();
         }
 
         /// \overload
         template<typename Cont>
-        detail::to_container_fn<meta::id<Cont>> to_()
+        auto to_() ->
+            detail::to_container_fn<meta::id<Cont>>
         {
             return {};
         }
 
         /// \overload
-        CPP_template(typename Cont, typename Rng)(
-            requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
-        Cont to_(Rng &&rng)
+        template<typename Cont, typename Rng>
+        auto to_(Rng &&rng) ->
+            CPP_ret(Cont)(
+                requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
 
         /// \overload
-        CPP_template(typename Cont, typename T)(
-            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
-        Cont to_(std::initializer_list<T> list)
+        template<typename Cont, typename T>
+        auto to_(std::initializer_list<T> list) ->
+            CPP_ret(Cont)(
+                requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
         {
             return list | ranges::to_<Cont>();
         }

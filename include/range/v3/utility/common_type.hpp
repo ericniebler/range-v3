@@ -85,23 +85,23 @@ namespace concepts
     struct common_type<common_tuple<Ts...>, common_tuple<Us...>>;
 
     // A common reference for std::pairs
-    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    template<typename F1, typename S1, typename F2, typename S2, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<common_pair<F1, S1>, std::pair<F2, S2>, Qual1, Qual2>;
 
-    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    template<typename F1, typename S1, typename F2, typename S2, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<std::pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>;
 
-    template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+    template<typename F1, typename S1, typename F2, typename S2, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<common_pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>;
 
     // A common reference for std::tuples
-    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    template<typename ...Ts, typename ...Us, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<common_tuple<Ts...>, std::tuple<Us...>, Qual1, Qual2>;
 
-    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    template<typename ...Ts, typename ...Us, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<std::tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>;
 
-    template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+    template<typename ...Ts, typename ...Us, template<typename> class Qual1, template<typename> class Qual2>
     struct basic_common_reference<common_tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>;
     /// \endcond
 }

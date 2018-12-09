@@ -227,7 +227,11 @@ namespace concepts
 
         /// Users can specialize this to hook the \c CommonReference concept.
         /// \sa `common_reference`
-        template<typename T, typename U, typename TQual, typename UQual>
+        template<
+            typename T,
+            typename U,
+            template<typename> class TQual,
+            template<typename> class UQual>
         struct basic_common_reference
         {};
 
@@ -239,35 +243,43 @@ namespace concepts
             using _lref =
                 meta::quote_trait<std::add_lvalue_reference>;
 
-            template<typename T>
+            template<typename>
             struct _xref
             {
-                using type = meta::quote_trait<meta::id>;
+                template<typename T>
+                using invoke = T;
             };
             template<typename T>
             struct _xref<T &&>
             {
-                using type = meta::compose<_rref, meta::_t<_xref<T>>>;
+                template<typename U>
+                using invoke =
+                    meta::_t<std::add_rvalue_reference<meta::invoke<_xref<T>, U>>>;
             };
             template<typename T>
             struct _xref<T &>
             {
-                using type = meta::compose<_lref, meta::_t<_xref<T>>>;
+                template<typename U>
+                using invoke =
+                    meta::_t<std::add_lvalue_reference<meta::invoke<_xref<T>, U>>>;
             };
             template<typename T>
             struct _xref<T const>
             {
-                using type = meta::quote_trait<std::add_const>;
+                template<typename U>
+                using invoke = U const;
             };
             template<typename T>
             struct _xref<T volatile>
             {
-                using type = meta::quote_trait<std::add_volatile>;
+                template<typename U>
+                using invoke = U volatile;
             };
             template<typename T>
             struct _xref<T const volatile>
             {
-                using type = meta::quote_trait<std::add_cv>;
+                template<typename U>
+                using invoke = U const volatile;
             };
 
             template<typename T, typename U>
@@ -275,8 +287,8 @@ namespace concepts
                 basic_common_reference<
                     remove_cvref_t<T>,
                     remove_cvref_t<U>,
-                    meta::_t<_xref<T>>,
-                    meta::_t<_xref<U>>>;
+                    _xref<T>::template invoke,
+                    _xref<U>::template invoke>;
 
             template<typename T, typename U, typename = void>
             struct _common_reference2
@@ -286,17 +298,10 @@ namespace concepts
                     common_type<T, U>>
             {};
 
-        #if 0 //!defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
-            template<typename T, typename U>
-            struct _common_reference2<T, U, meta::if_<meta::is_trait<_builtin_common<T, U>>>>
-              : _builtin_common<T, U>
-            {};
-        #else
             template<typename T, typename U>
             struct _common_reference2<T, U, meta::if_<std::is_reference<_builtin_common_t<T, U>>>>
               : _builtin_common<T, U>
             {};
-        #endif
         }
         /// \endcond
 
