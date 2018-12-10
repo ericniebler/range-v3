@@ -105,7 +105,7 @@ namespace ranges
                 // BUGBUG alternation is totally broken.
                 Type<> &&
                 (CartesianProductViewCanRandom<IsConst, Views...> ||
-                And<BoundedRange<meta::const_if<IsConst, Views>>...,
+                And<CommonRange<meta::const_if<IsConst, Views>>...,
                     BidirectionalIterator<iterator_t<
                         meta::const_if<IsConst, Views>>>...>)
         );
@@ -275,17 +275,17 @@ namespace ranges
                         at_end ||
                             bool(std::get<N - 1>(its_) == ranges::end(std::get<N - 1>(view_->views_))));
                 }
-                cursor(end_tag, constify_if<cartesian_product_view> &view, std::true_type) // Bounded
+                cursor(end_tag, constify_if<cartesian_product_view> &view, std::true_type) // Common
                   : cursor(begin_tag{}, view)
                 {
-                    CPP_assert(BoundedView<meta::at_c<meta::list<Views...>, 0>>);
+                    CPP_assert(CommonView<meta::at_c<meta::list<Views...>, 0>>);
                     std::get<0>(its_) = ranges::end(std::get<0>(view.views_));
                 }
-                cursor(end_tag, constify_if<cartesian_product_view> &view, std::false_type) // !Bounded
+                cursor(end_tag, constify_if<cartesian_product_view> &view, std::false_type) // !Common
                   : cursor(begin_tag{}, view)
                 {
                     using View0 = meta::at_c<meta::list<Views...>, 0>;
-                    CPP_assert(!BoundedView<View0> && RandomAccessRange<View0> &&
+                    CPP_assert(!CommonView<View0> && RandomAccessRange<View0> &&
                         SizedRange<View0>);
                     std::get<0>(its_) += ranges::distance(std::get<0>(view.views_));
                 }
@@ -303,7 +303,7 @@ namespace ranges
                 }
                 explicit cursor(end_tag, constify_if<cartesian_product_view> &view)
                   : cursor(end_tag{}, view,
-                        meta::bool_<BoundedView<meta::at_c<meta::list<Views...>, 0>>>{})
+                        meta::bool_<CommonView<meta::at_c<meta::list<Views...>, 0>>>{})
                 {}
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(

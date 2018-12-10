@@ -30,7 +30,7 @@ namespace ranges
         {
             /// \return `*prev(end(rng))`
             CPP_template(typename Rng)(
-                requires BoundedRange<Rng> && BidirectionalRange<Rng>)
+                requires CommonRange<Rng> && BidirectionalRange<Rng>)
             constexpr /*c++14*/
             range_reference_t<Rng> operator()(Rng &&rng) const
             {

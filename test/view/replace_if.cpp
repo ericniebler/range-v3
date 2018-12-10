@@ -25,7 +25,7 @@ RANGES_DIAGNOSTIC_IGNORE("-Wmaybe-uninitialized")
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/replace_if.hpp>
-#include <range/v3/view/bounded.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -45,7 +45,7 @@ int main()
     models<InputIteratorConcept>(begin(rng));
     models_not<ForwardIteratorConcept>(begin(rng));
 
-    auto && tmp = rng | view::bounded;
+    auto && tmp = rng | view::common;
     has_type<int const &>(*begin(tmp));
     models<BoundedViewConcept>(aux::copy(tmp));
     models_not<SizedViewConcept>(aux::copy(tmp));

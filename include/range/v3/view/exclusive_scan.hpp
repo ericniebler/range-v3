@@ -61,7 +61,7 @@ namespace ranges {
             semiregular_t<T> init_;
             semiregular_t<Fun> fun_;
             using single_pass = meta::bool_<SinglePass<iterator_t<Rng>>>;
-            using use_sentinel_t = meta::bool_<!BoundedRange<Rng> || single_pass{}>;
+            using use_sentinel_t = meta::bool_<!CommonRange<Rng> || single_pass{}>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base

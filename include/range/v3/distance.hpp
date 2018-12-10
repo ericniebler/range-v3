@@ -41,7 +41,7 @@ namespace ranges
                 return iter_enumerate(begin(rng), end(rng), d);
             }
             template<typename Rng, typename D, typename I = iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, bounded_range_tag, sized_range_tag) const
+            std::pair<D, I> impl_r(Rng &rng, D d, common_range_tag, sized_range_tag) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
@@ -55,7 +55,7 @@ namespace ranges
             {
                 // Better not be trying to compute the distance of an infinite range:
                 RANGES_EXPECT(!is_infinite<Rng>::value);
-                auto result = this->impl_r(rng, d, bounded_range_tag_of<Rng>(),
+                auto result = this->impl_r(rng, d, common_range_tag_of<Rng>(),
                     sized_range_tag_of<Rng>());
                 RANGES_EXPECT(result.first >= d);
                 return result;

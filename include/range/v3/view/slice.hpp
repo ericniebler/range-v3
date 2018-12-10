@@ -52,8 +52,8 @@ namespace ranges
             {
                 if(0 > i)
                 {
-                    // If it's not bounded and we know the size, faster to count from the front
-                    if(SizedRange<Rng> && !BoundedRange<Rng>)
+                    // If it's not common and we know the size, faster to count from the front
+                    if(SizedRange<Rng> && !CommonRange<Rng>)
                         return next(ranges::begin(rng), distance(rng) + i);
                     // Otherwise, probably faster to count from the back.
                     return next(ranges::next(ranges::begin(rng), ranges::end(rng)), i);
@@ -205,7 +205,7 @@ namespace ranges
                 template<typename Rng>
                 static auto invoke_(Rng &&rng, range_difference_t<Rng> from,
                         range_difference_t<Rng> count, random_access_range_tag,
-                        bounded_range_tag = {}) ->
+                        common_range_tag = {}) ->
                     CPP_ret(iterator_range<iterator_t<Rng>>)(
                         requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
                 {
@@ -284,7 +284,7 @@ namespace ranges
                         detail::from_end_<range_difference_t<Rng>> to) const ->
                     CPP_ret(decltype(slice_fn::invoke_(
                             static_cast<Rng &&>(rng), from.dist_, to.dist_ - from.dist_,
-                            range_tag_of<Rng>{}, bounded_range_tag_of<Rng>{})))(
+                            range_tag_of<Rng>{}, common_range_tag_of<Rng>{})))(
                         requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
                 {
                     static_assert(!is_infinite<Rng>(),
@@ -292,7 +292,7 @@ namespace ranges
                     RANGES_EXPECT(from.dist_ <= to.dist_);
                     return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{});
+                        common_range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end)
                 template<typename Rng>
@@ -308,14 +308,14 @@ namespace ranges
                 auto operator()(Rng &&rng, detail::from_end_<range_difference_t<Rng>> from, end_fn) const ->
                     CPP_ret(decltype(slice_fn::invoke_(
                             static_cast<Rng &&>(rng), from.dist_, -from.dist_, range_tag_of<Rng>{},
-                            bounded_range_tag_of<Rng>{})))(
+                            common_range_tag_of<Rng>{})))(
                         requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
                         -from.dist_, range_tag_of<Rng>{},
-                        bounded_range_tag_of<Rng>{});
+                        common_range_tag_of<Rng>{});
                 }
             };
 

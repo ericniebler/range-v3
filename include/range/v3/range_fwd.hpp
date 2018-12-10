@@ -467,11 +467,11 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct bounded_view;
+        struct common_view;
 
         namespace view
         {
-            struct bounded_fn;
+            struct common_fn;
         }
 
         template<typename Rng>
@@ -661,10 +661,10 @@ namespace ranges
         namespace detail
         {
             template<typename Rng>
-            struct is_random_access_bounded_;
+            struct is_random_access_common_;
 
             template<typename Rng,
-                bool IsRandomAccessBounded = is_random_access_bounded_<Rng>::value>
+                bool IsRandomAccessBounded = is_random_access_common_<Rng>::value>
             struct take_exactly_view_;
         }
         /// \endcond

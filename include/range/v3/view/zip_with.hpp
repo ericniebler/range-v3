@@ -291,7 +291,7 @@ namespace ranges
             template<bool Const>
             using end_cursor_t =
                 meta::if_c<
-                    concepts::and_v<(bool) BoundedRange<Rngs>...,
+                    concepts::and_v<(bool) CommonRange<Rngs>...,
                         !(bool) SinglePass<iterator_t<Rngs>>...>,
                     cursor<Const>,
                     sentinel<Const>>;

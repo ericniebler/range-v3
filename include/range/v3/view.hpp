@@ -25,6 +25,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>

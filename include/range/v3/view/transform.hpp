@@ -63,7 +63,7 @@ namespace ranges
             friend range_access;
             semiregular_t<Fun> fun_;
             using use_sentinel_t =
-                meta::bool_<!BoundedRange<Rng> || SinglePass<iterator_t<Rng>>>;
+                meta::bool_<!CommonRange<Rng> || SinglePass<iterator_t<Rng>>>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -263,7 +263,7 @@ namespace ranges
 
             using end_cursor_t =
                 meta::if_c<
-                    (bool)(BoundedRange<Rng1> && BoundedRange<Rng2> &&
+                    (bool)(CommonRange<Rng1> && CommonRange<Rng2> &&
                         !SinglePass<iterator_t<Rng1>> &&
                         !SinglePass<iterator_t<Rng2>>),
                     cursor,

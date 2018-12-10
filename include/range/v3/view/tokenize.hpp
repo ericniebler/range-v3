@@ -42,7 +42,7 @@ namespace ranges
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
-            CPP_assert(BidirectionalView<Rng> && BoundedRange<Rng>);
+            CPP_assert(BidirectionalView<Rng> && CommonRange<Rng>);
             CPP_assert(Semiregular<Regex>);
             CPP_assert(Semiregular<SubMatchRange>);
 
@@ -101,7 +101,7 @@ namespace ranges
                         std::regex_constants::match_default) const
                 {
                     CPP_assert(BidirectionalRange<Rng>);
-                    CPP_assert(BoundedRange<Rng>);
+                    CPP_assert(CommonRange<Rng>);
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
@@ -116,7 +116,7 @@ namespace ranges
                         std::regex_constants::match_default) const
                 {
                     CPP_assert(BidirectionalRange<Rng>);
-                    CPP_assert(BoundedRange<Rng>);
+                    CPP_assert(CommonRange<Rng>);
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");
@@ -131,7 +131,7 @@ namespace ranges
                         std::regex_constants::match_default) const
                 {
                     CPP_assert(BidirectionalRange<Rng>);
-                    CPP_assert(BoundedRange<Rng>);
+                    CPP_assert(CommonRange<Rng>);
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename detail::decay_t<Regex>::value_type>::value,
                         "The character range and the regex have different character types");

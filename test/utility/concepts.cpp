@@ -246,8 +246,8 @@ static_assert(ranges::EqualityComparableWith<int &, IntComparable &>, "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_range_tag_of<std::vector<int>>,
-        ranges::bounded_range_tag
+        ranges::common_range_tag_of<std::vector<int>>,
+        ranges::common_range_tag
     >::value, "");
 
 static_assert(
@@ -258,7 +258,7 @@ static_assert(
 
 static_assert(
     std::is_same<
-        ranges::bounded_view_tag_of<ranges::istream_range<int>>,
+        ranges::common_view_tag_of<ranges::istream_range<int>>,
         ranges::view_tag
     >::value, "");
 

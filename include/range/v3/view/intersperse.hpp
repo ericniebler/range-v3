@@ -171,14 +171,14 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/ auto end_adaptor() ->
                 CPP_ret(cursor_adaptor<false>)(
-                    requires BoundedRange<Rng> && !SinglePass<iterator_t<Rng>>)
+                    requires CommonRange<Rng> && !SinglePass<iterator_t<Rng>>)
             {
                 return cursor_adaptor<false>{val_};
             }
             CPP_member
             constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(sentinel_adaptor<false>)(
-                    requires not BoundedRange<Rng> || SinglePass<iterator_t<Rng>>)
+                    requires not CommonRange<Rng> || SinglePass<iterator_t<Rng>>)
             {
                 return {};
             }
@@ -186,7 +186,7 @@ namespace ranges
             constexpr auto end_adaptor() const ->
                 CPP_ret(cursor_adaptor<true>)(
                     requires Range<CRng> &&
-                        (BoundedRange<CRng> && !SinglePass<iterator_t<CRng>>))
+                        (CommonRange<CRng> && !SinglePass<iterator_t<CRng>>))
             {
                 return cursor_adaptor<true>{val_};
             }
@@ -194,7 +194,7 @@ namespace ranges
             constexpr auto end_adaptor() const noexcept ->
                 CPP_ret(sentinel_adaptor<true>)(
                     requires Range<CRng> &&
-                        (!BoundedRange<CRng> || SinglePass<iterator_t<CRng>>))
+                        (!CommonRange<CRng> || SinglePass<iterator_t<CRng>>))
             {
                 return {};
             }

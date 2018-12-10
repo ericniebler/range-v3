@@ -18,7 +18,7 @@
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/view/bounded.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/map.hpp>
@@ -30,7 +30,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-
 int main()
 {
     using namespace ranges;
@@ -38,11 +37,11 @@ int main()
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<std::string> const vs{"hello", "goodbye", "hello", "goodbye"};
 
-    // All bounded ranges, but one single-pass
+    // All common ranges, but one single-pass
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
-        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
+        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::common);
         using Rng = decltype((rng));
         ::models_not<BoundedViewConcept>(aux::copy(rng));
         ::models_not<SizedViewConcept>(aux::copy(rng));
@@ -66,7 +65,7 @@ int main()
                                  V{3, "goodbye", "ringo"}});
     }
 
-    // Mixed ranges and bounded ranges
+    // Mixed ranges and common ranges
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
@@ -211,7 +210,7 @@ int main()
         auto rg3 = rg2 | view::take_while([](std::unique_ptr<int> &){return true;});
         auto x = view::zip(rg1, rg3);
         ::models_not<BoundedRangeConcept>(x);
-        auto y = x | view::bounded;
+        auto y = x | view::common;
         std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(y.begin());
         auto it = x.begin();
         static_assert(noexcept(iter_move(it)), "");
@@ -221,7 +220,7 @@ int main()
     {
         std::vector<int> vec{0,1,2};
         auto rng = vec | view::for_each([](int i) { return ranges::yield(i); });
-        ranges::distance(view::zip(view::ints(0), rng) | view::bounded);
+        ranges::distance(view::zip(view::ints(0), rng) | view::common);
     }
 
     {

@@ -315,7 +315,7 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             meta::if_<
-                meta::and_c<(bool) BoundedRange<Rngs>...>,
+                meta::and_c<(bool) CommonRange<Rngs>...>,
                 cursor<meta::and_c<simple_view<Rngs>()...>::value>,
                 sentinel<meta::and_c<simple_view<Rngs>()...>::value>>
             end_cursor()
@@ -331,7 +331,7 @@ namespace ranges
             CPP_member
             auto end_cursor() const ->
                 CPP_ret(meta::if_<
-                    meta::and_c<(bool) BoundedRange<Rngs const>...>,
+                    meta::and_c<(bool) CommonRange<Rngs const>...>,
                     cursor<true>,
                     sentinel<true>>)(
                         requires And<Range<Rngs const>...>)

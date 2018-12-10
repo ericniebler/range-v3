@@ -40,7 +40,7 @@ namespace ranges
         struct reverse_view
           : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
-                iterator_t<Rng>, reverse_view<Rng>, !BoundedRange<Rng>>
+                iterator_t<Rng>, reverse_view<Rng>, !CommonRange<Rng>>
         {
         private:
             CPP_assert(BidirectionalRange<Rng>);
@@ -80,12 +80,12 @@ namespace ranges
             constexpr /*c++14*/
             reverse_iterator<iterator_t<Rng>> begin()
             {
-                return begin_(meta::bool_<(bool) BoundedRange<Rng>>{});
+                return begin_(meta::bool_<(bool) CommonRange<Rng>>{});
             }
             template<typename CRng = Rng const>
             constexpr auto begin() const ->
                 CPP_ret(reverse_iterator<iterator_t<CRng>>)(
-                    requires BoundedRange<CRng>)
+                    requires CommonRange<CRng>)
             {
                 return make_reverse_iterator(ranges::end(rng_));
             }
@@ -97,7 +97,7 @@ namespace ranges
             template<typename CRng = Rng const>
             constexpr auto end() const ->
                 CPP_ret(reverse_iterator<iterator_t<CRng>>)(
-                    requires BoundedRange<CRng>)
+                    requires CommonRange<CRng>)
             {
                 return make_reverse_iterator(ranges::begin(rng_));
             }

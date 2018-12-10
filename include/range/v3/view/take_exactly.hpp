@@ -36,16 +36,16 @@ namespace ranges
         namespace detail
         {
             template<typename Rng>
-            struct is_random_access_bounded_
-              : meta::bool_<(bool) RandomAccessRange<Rng> && (bool) BoundedRange<Rng>>
+            struct is_random_access_common_
+              : meta::bool_<(bool) RandomAccessRange<Rng> && (bool) CommonRange<Rng>>
             {};
 
             // BUGBUG Per the discussion in https://github.com/ericniebler/stl2/issues/63, it's
-            // unclear if we can infer anything from RandomAccessRange<Rng> && BoundedRange<Rng>
+            // unclear if we can infer anything from RandomAccessRange<Rng> && CommonRange<Rng>
             template<typename Rng,
-                bool IsRandomAccessBounded /*= is_random_access_bounded_<Rng>::value*/>
+                bool IsRandomAccessCommon /*= is_random_access_common_<Rng>::value*/>
             struct take_exactly_view_
-              : view_interface<take_exactly_view_<Rng, IsRandomAccessBounded>>
+              : view_interface<take_exactly_view_<Rng, IsRandomAccessCommon>>
             {
             private:
                 friend range_access;

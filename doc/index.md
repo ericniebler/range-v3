@@ -363,12 +363,12 @@ provides, and a blurb about how each is intended to be used.
   <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
 <DT>\link ranges::v3::any_view `any_view<T>(rng)`\endlink</DT>
   <DD>Type-erased range of elements with value type `T`; can store _any_ range with this value type.</DD>
-<DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
-  <DD>Convert the source range to a *bounded* range, where the type of the `end` is the same as the `begin`. Useful for iterating over a range with C++'s range-based `for` loop.</DD>
 <DT>\link ranges::v3::view::cartesian_product_fn `view::cartesian_product`\endlink</DT>
   <DD>Enumerates the n-ary cartesian product of `n` ranges, i.e., generates all `n`-tuples `(e1, e2, ... , en)` where `e1` is an element of the first range, `e2` is an element of the second range, etc.</DD>
 <DT>\link ranges::v3::view::chunk_fn `view::chunk`\endlink</DT>
   <DD>Given a source range and an integer *N*, produce a range of contiguous ranges where each inner range has *N* contiguous elements. The final range may have fewer than *N* elements.</DD>
+<DT>\link ranges::v3::view::common_fn `view::common`\endlink</DT>
+  <DD>Convert the source range to a *common* range, where the type of the `end` is the same as the `begin`. Useful for calling algorithms in the `std::` namespace.</DD>
 <DT>\link ranges::v3::view::concat_fn `view::concat`\endlink</DT>
   <DD>Given *N* source ranges, produce a result range that is the concatenation of all of them.</DD>
 <DT>\link ranges::v3::view::const_fn `view::const_`\endlink</DT>

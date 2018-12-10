@@ -13,169 +13,41 @@
 #ifndef RANGES_V3_VIEW_BOUNDED_HPP
 #define RANGES_V3_VIEW_BOUNDED_HPP
 
-#include <type_traits>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/utility/common_iterator.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/all.hpp>
-#include <range/v3/view/view.hpp>
+#include <range/v3/view/common.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// \addtogroup group-views
-        /// @{
-
-        namespace detail
-        {
-            /// \cond
-            CPP_def
-            (
-                template(typename R)
-                concept RA_and_Sized,
-                    RandomAccessRange<R> && SizedRange<R>
-            );
-
-            template<typename R>
-            using bounded_iterator_t = meta::if_c<RA_and_Sized<R>,
-                iterator_t<R>,
-                common_iterator_t<iterator_t<R>, sentinel_t<R>>>;
-            /// \endcond
-        }
-
+        /// \cond
         template<typename Rng>
-        struct bounded_view
-          : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
-        {
-        private:
-            CPP_assert(View<Rng>);
-            CPP_assert(!BoundedView<Rng>);
-
-            Rng rng_;
-
-            sentinel_t<Rng> end_(std::false_type)
-            {
-                return ranges::end(rng_);
-            }
-            iterator_t<Rng> end_(std::true_type)
-            {
-                return ranges::begin(rng_) + ranges::distance(rng_);
-            }
-            template<typename R = Rng const>
-            auto end_(std::false_type) const ->
-                CPP_ret(sentinel_t<R>)(
-                    requires Range<R &>)
-            {
-                return ranges::end(rng_);
-            }
-            template<typename R = Rng const>
-            auto end_(std::true_type) const ->
-                CPP_ret(iterator_t<R>)(
-                    requires Range<R &>)
-            {
-                return ranges::begin(rng_) + ranges::distance(rng_);
-            }
-        public:
-            bounded_view() = default;
-            explicit bounded_view(Rng rng)
-              : rng_(detail::move(rng))
-            {}
-            Rng base() const
-            {
-                return rng_;
-            }
-
-            detail::bounded_iterator_t<Rng> begin()
-            {
-                return detail::bounded_iterator_t<Rng>{ranges::begin(rng_)};
-            }
-            detail::bounded_iterator_t<Rng> end()
-            {
-                return detail::bounded_iterator_t<Rng>{
-                    end_(meta::bool_<detail::RA_and_Sized<Rng>>{})};
-            }
-            CPP_member
-            auto CPP_fun(size)() (
-                requires SizedRange<Rng>)
-            {
-                return ranges::size(rng_);
-            }
-
-            template<typename R = Rng const>
-            auto begin() const ->
-                CPP_ret(detail::bounded_iterator_t<R>)(
-                    requires Range<R &>)
-            {
-                return detail::bounded_iterator_t<R>{ranges::begin(rng_)};
-            }
-            template<typename R = Rng const>
-            auto end() const ->
-                CPP_ret(detail::bounded_iterator_t<R>)(
-                    requires Range<R &>)
-            {
-                return detail::bounded_iterator_t<R>{
-                    end_(meta::bool_<detail::RA_and_Sized<R>>{})};
-            }
-            CPP_member
-            auto CPP_fun(size)() (const
-                requires SizedRange<Rng const>)
-            {
-                return ranges::size(rng_);
-            }
-        };
+        using bounded_view
+            RANGES_DEPRECATED("The name bounded_view is deprecated. "
+                              "Please use common_view instead.") =
+                common_view<Rng>;
+        /// \endcond
 
         namespace view
         {
-            struct bounded_fn
+            /// \cond
+            inline namespace
             {
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(bounded_view<all_t<Rng>>)(
-                        requires Range<Rng> && !BoundedRange<Rng>)
-                {
-                    return bounded_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
-                }
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(all_t<Rng>)(
-                        requires Range<Rng> && BoundedRange<Rng>)
-                {
-                    return all(static_cast<Rng &&>(rng));
-                }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not Range<Rng>)
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "Rng is not a model of the Range concept");
-                }
-            #endif
-            };
+                RANGES_DEPRECATED("The name view::bounded is deprecated. "
+                                  "Please use view::common instead.")
+                constexpr auto &bounded = common;
+            }
+            /// \endcond
 
-            /// \relates bounded_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<bounded_fn>, bounded)
-
+            /// \cond
             template<typename Rng>
-            using bounded_t =
-                decltype(bounded(std::declval<Rng>()));
+            using bounded_t
+                RANGES_DEPRECATED("The name view::bounded_t is deprecated. "
+                                  "Please use view::common_t instead.") =
+                    decltype(common(std::declval<Rng>()));
+            /// \endcond
         }
         /// @}
     }
 }
-
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::bounded_view)
 
 #endif

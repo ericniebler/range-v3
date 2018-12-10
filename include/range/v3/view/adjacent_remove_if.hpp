@@ -87,7 +87,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/ auto end_adaptor() ->
                 CPP_ret(adaptor)(
-                    requires BoundedRange<Rng>)
+                    requires CommonRange<Rng>)
             {
                 if(BidirectionalRange<Rng>) cache_begin();
                 return {*this};
@@ -95,7 +95,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/ auto end_adaptor() noexcept ->
                 CPP_ret(adaptor_base)(
-                    requires not BoundedRange<Rng>)
+                    requires not CommonRange<Rng>)
             {
                 return {};
             }

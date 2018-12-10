@@ -137,10 +137,19 @@ namespace ranges
         CPP_def
         (
             template(typename T)
-            concept BoundedRange,
+            concept CommonRange,
                 Range<T> &&
                 Same<iterator_t<T>, sentinel_t<T>>
         );
+
+        /// \cond
+        CPP_def
+        (
+            template(typename T)
+            concept BoundedRange,
+                CommonRange<T>
+        );
+        /// \endcond
 
         CPP_def
         (
@@ -212,9 +221,18 @@ namespace ranges
         CPP_def
         (
             template(typename T)
-            concept BoundedView,
-                View<T> && BoundedRange<T>
+            concept CommonView,
+                View<T> && CommonRange<T>
         );
+
+        /// \cond
+        CPP_def
+        (
+            template(typename T)
+            concept BoundedView,
+                CommonView<T>
+        );
+        /// \endcond
 
         CPP_def
         (
@@ -245,14 +263,14 @@ namespace ranges
                 T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_range_tag_of
-        using bounded_range_tag = ::concepts::tag<BoundedRangeConcept, range_tag>;
+        // common_range_tag_of
+        using common_range_tag = ::concepts::tag<CommonRangeConcept, range_tag>;
 
         template<typename T>
-        using bounded_range_tag_of =
+        using common_range_tag_of =
             ::concepts::tag_of<
                 meta::list<
-                    BoundedRangeConcept,
+                    CommonRangeConcept,
                     RangeConcept>,
                 T>;
 
@@ -269,15 +287,15 @@ namespace ranges
                 T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_view_tag_of
+        // common_view_tag_of
         using view_tag = ::concepts::tag<ViewConcept, range_tag>;
-        using bounded_view_tag = ::concepts::tag<BoundedViewConcept, view_tag>;
+        using common_view_tag = ::concepts::tag<CommonViewConcept, view_tag>;
 
         template<typename T>
-        using bounded_view_tag_of =
+        using common_view_tag_of =
             ::concepts::tag_of<
                 meta::list<
-                    BoundedViewConcept,
+                    CommonViewConcept,
                     ViewConcept,
                     RangeConcept>,
                 T>;

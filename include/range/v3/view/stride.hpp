@@ -146,16 +146,16 @@ namespace ranges
                     (SizedRange<Rng const> || !BidirectionalRange<Rng const>);
             }
 
-            // If the underlying range doesn't model BoundedRange, then we can't
+            // If the underlying range doesn't model CommonRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
-            // BoundedView, adapt it anyway.
+            // CommonView, adapt it anyway.
             template<bool Const>
             static constexpr bool can_bound() noexcept
             {
                 using CRng = meta::const_if_c<Const, Rng>;
-                return BoundedRange<CRng>
+                return CommonRange<CRng>
                     && (SizedRange<CRng> || !BidirectionalRange<CRng>);
             }
 

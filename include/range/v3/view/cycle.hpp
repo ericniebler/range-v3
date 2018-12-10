@@ -45,7 +45,7 @@ namespace ranges
         struct cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
-                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>>
+                iterator_t<Rng>, cycled_view<Rng>, !CommonRange<Rng>>
         {
         private:
             CPP_assert(ForwardRange<Rng>);
@@ -53,7 +53,7 @@ namespace ranges
             Rng rng_;
 
             using cache_t = detail::non_propagating_cache<
-                iterator_t<Rng>, cycled_view<Rng>, !BoundedRange<Rng>>;
+                iterator_t<Rng>, cycled_view<Rng>, !CommonRange<Rng>>;
 
             template<bool IsConst>
             struct cursor
@@ -122,7 +122,7 @@ namespace ranges
                     if(++it_ == end)
                     {
                         ++n_;
-                        this->set_end_(meta::bool_<(bool) BoundedRange<CRng>>{});
+                        this->set_end_(meta::bool_<(bool) CommonRange<CRng>>{});
                         it_ = ranges::begin(rng_->rng_);
                     }
                 }
@@ -134,7 +134,7 @@ namespace ranges
                     {
                         RANGES_EXPECT(n_ > 0); // decrementing the begin iterator?!
                         --n_;
-                        it_ = this->get_end_(meta::bool_<(bool) BoundedRange<CRng>>{});
+                        it_ = this->get_end_(meta::bool_<(bool) CommonRange<CRng>>{});
                     }
                     --it_;
                 }
@@ -146,7 +146,7 @@ namespace ranges
                         return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
-                        meta::bool_<(bool) BoundedRange<CRng>>{}, meta::bool_<true>());
+                        meta::bool_<(bool) CommonRange<CRng>>{}, meta::bool_<true>());
                     auto const dist = end - begin;
                     auto const d = it_ - begin;
                     auto const off = (d + n) % dist;
@@ -164,19 +164,19 @@ namespace ranges
                         return that.it_ - it_;
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
-                        meta::bool_<(bool) BoundedRange<Rng>>{}, meta::bool_<true>());
+                        meta::bool_<(bool) CommonRange<Rng>>{}, meta::bool_<true>());
                     auto const dist = end - begin;
                     return (that.n_ - n_) * dist + (that.it_ - it_);
                 }
             };
 
-            cursor<simple_view<Rng>() && (bool) BoundedRange<Rng const>> begin_cursor()
+            cursor<simple_view<Rng>() && (bool) CommonRange<Rng const>> begin_cursor()
             {
                 return {*this};
             }
             CPP_member
             auto begin_cursor() const -> CPP_ret(cursor<true>)(
-                requires BoundedRange<Rng const>)
+                requires CommonRange<Rng const>)
             {
                 return {*this};
             }

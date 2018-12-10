@@ -42,7 +42,7 @@ namespace ranges
             template<typename Rng>
             using caching = std::integral_constant<cache,
                 RandomAccessRange<Rng> && SizedRange<Rng> ? cache::none :
-                BidirectionalRange<Rng> && BoundedRange<Rng> ? cache::last :
+                BidirectionalRange<Rng> && CommonRange<Rng> ? cache::last :
                 cache::first>;
         }
         /// \endcond
@@ -219,7 +219,7 @@ namespace ranges
             {
                 return {*this};
             }
-            meta::if_c<BoundedRange<Rng>, adaptor, adaptor_base> end_adaptor()
+            meta::if_c<CommonRange<Rng>, adaptor, adaptor_base> end_adaptor()
             {
                 return {*this};
             }

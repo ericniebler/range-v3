@@ -16,7 +16,7 @@
 #include <range/v3/istream_range.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/replace.hpp>
-#include <range/v3/view/bounded.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
@@ -38,7 +38,7 @@ int main()
     models<InputIteratorConcept>(begin(rng));
     models_not<ForwardIteratorConcept>(begin(rng));
 
-    auto && tmp = rng | view::bounded;
+    auto && tmp = rng | view::common;
     CPP_assert(Same<range_value_t<decltype((tmp))>, int>);
     has_type<int const &>(*begin(tmp));
     models<BoundedViewConcept>(aux::copy(tmp));

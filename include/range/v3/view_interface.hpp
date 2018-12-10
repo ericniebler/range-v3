@@ -198,7 +198,7 @@ namespace ranges
             constexpr /*c++14*/ auto back() ->
                 CPP_ret(range_reference_t<D>)(
                     requires Same<D, Derived> &&
-                        BoundedRange<D> &&
+                        CommonRange<D> &&
                         BidirectionalRange<D>)
             {
                 return *prev(derived().end());
@@ -208,7 +208,7 @@ namespace ranges
             constexpr /*c++14*/ auto back() const ->
                 CPP_ret(range_reference_t<D const>)(
                     requires Same<D, Derived> &&
-                        BoundedRange<D const> &&
+                        CommonRange<D const> &&
                         BidirectionalRange<D const>)
             {
                 return *prev(derived().end());
