@@ -297,6 +297,9 @@ Here is example of Range v3 compatible RandomAccess proxy iterator.
 Iterator return key/value (aka zip).
 
 ~~~~~~~{.cpp}
+    #include <range/v3/utility/basic_iterator.hpp>
+    #include <range/v3/utility/common_tuple.hpp>
+
     using KeyIter   = typename std::vector<Key>::iterator;
     using ValueIter = typename std::vector<Value>::iterator;
 
@@ -304,54 +307,11 @@ Iterator return key/value (aka zip).
 
         // basic_iterator derives from "mixin", if present, so it can be used
         // to inject things into the public interface of the iterator
-        struct mixin : ranges::basic_mixin<cursor>
-        {
-            using ranges::basic_mixin<cursor>::basic_mixin;
+        struct mixin;
 
-            // It is necessary to expose constructor in this way
-            mixin(KeyIter key_iterator, ValueIter value_iterator)
-                : mixin{ cursor(key_iterator, value_iterator) }
-            {}
-
-            KeyIter key_iterator() {
-                return this->get().key_iterator;
-            }
-            ValueIter value_iterator() {
-                return this->get().value_iterator;
-            }
-        };
-
-        struct KeyValueRef;
-
-        // We return references, make them convertible to values and vice versa.
-        // For tuples/pairs, it is already implemenmted by ranges::common_pair<Key&, Value&>.
-        // Which implements similiar to KeyValue <=> KeyValueRef conversions.
-        struct KeyValue {
-            Key key;
-            Value value;
-
-            operator KeyValueRef() const {
-                auto& self_mut = const_cast<KeyValue&>(*this);
-                return { self_mut.key, self_mut.value };
-            }
-        };
-
-        struct KeyValueRef {
-            Key& key;
-            Value& value;
-
-            // make this conversion explicit, so
-            // common_type_t<KeyValue, KeyValueRef> = KeyValueRef
-            explicit operator KeyValue() const {
-                return { key, value };
-            }
-        };
-
-        // explicitly specify value type
-        using value_type = KeyValue;
-
-        // This is for dereference operator.
-        KeyValueRef read() const {
+        // This is for dereference operator.        
+        using value_type = ranges::common_pair<Key, Value>;
+        ranges::common_pair<Key&, Value&> read() const {
             return { *key_iterator, *value_iterator };
         }
 
@@ -389,20 +349,41 @@ Iterator return key/value (aka zip).
         ValueIter value_iterator;
     };
 
+    struct cursor::mixin : ranges::basic_mixin<cursor>
+    {
+      using ranges::basic_mixin<cursor>::basic_mixin;
+
+      // It is necessary to expose constructor in this way
+      mixin(KeyIter key_iterator, ValueIter value_iterator)
+        : mixin{ cursor(key_iterator, value_iterator) }
+      {}
+
+      KeyIter key_iterator() {
+        return this->get().key_iterator;
+      }
+      ValueIter value_iterator() {
+        return this->get().value_iterator;
+      }
+    };    
+
     using iterator = ranges::basic_iterator<cursor>;
 
     void test(){
-      std::vector<Key>   keys;
-      std::vector<Value> values;
+      std::vector<Key>   keys   = {1};
+      std::vector<Value> values = {10};
       
       iterator iter(keys.begin(), values.begin());
-      auto key_value = *iter;
-      Key&   key   = key_value.key;
-      Value& velue = key_value.value;
+      auto   pair  = *iter;
+      Key&   key   = pair.first;
+      Value& value = pair.second;
 
       auto key_iter = iter.key_iterator();
     }
 ~~~~~~~
+
+`read()` return references. So, we implicitly specify `value_type`.  
+ `ranges::common_pair` have conversions:  
+`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`  
 
 For more information, see [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic)
 
