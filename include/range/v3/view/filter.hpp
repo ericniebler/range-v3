@@ -25,10 +25,9 @@ namespace ranges
     {
         namespace view
         {
-            /// Given a source range and a unary predicate, filter the elements
-            /// that satisfy the predicate.
-            struct filter_fn : details::remove_if_fn_base<not_fn_fn>
-            {};
+            /// Given a source range, unary predicate, and optional projection,
+            /// present a view of the elements that satisfy the predicate.
+            using filter_fn = remove_if_fn_<not_fn_fn>;
 
             /// \relates filter_fn
             /// \ingroup group-views
