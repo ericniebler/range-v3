@@ -98,7 +98,7 @@ namespace ranges
 
 #if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
         template<class T>
-        explicit single_view(T&&) -> single_view<detail::decay_t<T>>;
+        explicit single_view(T &&) -> single_view<detail::decay_t<T>>;
 #endif
 
         namespace view
@@ -112,21 +112,6 @@ namespace ranges
                 {
                     return single_view<Val>{std::move(value)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For error reporting
-                template<typename Arg, typename Val = detail::decay_t<Arg>>
-                auto operator()(Arg &&) const ->
-                    CPP_ret(void)(
-                        requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-                {
-                    CPP_assert_msg(CopyConstructible<Val>,
-                        "The object passed to view::single must be a model of the CopyConstructible "
-                        "concept; that is, it needs to be copy and move constructible, and destructible.");
-                    CPP_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
-                        "The object type passed to view::single must be initializable from the "
-                        "actual argument expression.");
-                }
-            #endif
             };
 
             /// \relates single_fn

@@ -48,7 +48,7 @@
 #define CPP_CXX_CONCEPTS 201800L
 #elif defined(__cpp_concepts) && __cpp_concepts > 0
 // gcc-6 concepts are too buggy to use
-#if !defined(__GNUC__) || defined(__clang__) || __GNUC_MAJOR__ >= 7
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ >= 7
 #define CPP_CXX_CONCEPTS __cpp_concepts
 #else
 #define CPP_CXX_CONCEPTS 0L
@@ -364,37 +364,9 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 //     (requires Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
-// or
-//   CPP_template (class A, typename B)
-//     (requires requires (expr1, expr2, expr3) && Concept1<A> && Concept2<B>)
-//   void foo(A a, B b)
-//   {}
 #if CPP_CXX_CONCEPTS
 #define CPP_template(...)                                                       \
-    template<__VA_ARGS__> CPP_TEMPLATE_AUX_                                     \
-    /**/
-#define CPP_TEMPLATE_AUX_(...)                                                  \
-    CPP_TEMPLATE_AUX_4(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__))            \
-    /**/
-#define CPP_TEMPLATE_AUX_3_requires
-#define CPP_TEMPLATE_AUX_4(...)                                                 \
-    CPP_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                               \
-    /**/
-#define CPP_TEMPLATE_AUX_5(REQUIRES, ...)                                       \
-    CPP_PP_CAT(                                                                 \
-        CPP_TEMPLATE_AUX_5_,                                                    \
-        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
-    /**/
-// No requires expression:
-#define CPP_TEMPLATE_AUX_5_0(...)                                               \
-    requires __VA_ARGS__                                                        \
-    /**/
-// Requires expression
-#define CPP_TEMPLATE_AUX_5_1(...)                                               \
-    CPP_PP_CAT(CPP_TEMPLATE_AUX_6_, __VA_ARGS__)                                \
-    /**/
-#define CPP_TEMPLATE_AUX_6_requires(...)                                        \
-    requires requires { __VA_ARGS__; }                                          \
+    template<__VA_ARGS__> CPP_PP_EXPAND                                         \
     /**/
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
@@ -409,29 +381,10 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     bool (&CPP_true)(::concepts::detail::Nil) =                                 \
         ::concepts::detail::CPP_true,                                           \
     std::enable_if_t<                                                           \
-        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
-            CPP_TEMPLATE_AUX_3_, __VA_ARGS__))) &&                              \
+        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&                 \
         CPP_true(::concepts::detail::Nil{}), int> = 0>                          \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
-#define CPP_TEMPLATE_AUX_4(...)                                                 \
-    CPP_TEMPLATE_AUX_5(__VA_ARGS__,)(__VA_ARGS__)                               \
-    /**/
-#define CPP_TEMPLATE_AUX_5(REQUIRES, ...)                                       \
-    CPP_PP_CAT(                                                                 \
-        CPP_TEMPLATE_AUX_5_,                                                    \
-        CPP_PP_CHECK(CPP_PP_CAT(CPP_PP_REQUIRES_PROBE_, REQUIRES)))             \
-    /**/
-// No requires expression:
-#define CPP_TEMPLATE_AUX_5_0(...)                                               \
-    __VA_ARGS__                                                                 \
-    /**/
-#define CPP_TEMPLATE_AUX_5_1(...)                                               \
-    CPP_PP_CAT(CPP_TEMPLATE_AUX_6_, __VA_ARGS__)                                \
-    /**/
-#define CPP_TEMPLATE_AUX_6_requires(...)                                        \
-    ::concepts::detail::requires_<decltype(__VA_ARGS__)>()                      \
-    /**/
 #define CPP_member                                                              \
     CPP_broken_friend_member                                                    \
     /**/
@@ -455,16 +408,14 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 // No noexcept-clause:
 #define CPP_CTOR_REQUIRES_0(...)                                                \
     std::enable_if_t<                                                           \
-        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
-            CPP_TEMPLATE_AUX_3_, __VA_ARGS__))) &&                              \
+        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&                              \
         CPP_true(::concepts::detail::Nil{}), ::concepts::detail::Nil> = {})     \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_REQUIRES_1(...)                                                \
     std::enable_if_t<                                                           \
-        (bool)(CPP_TEMPLATE_AUX_4(CPP_PP_CAT(                                   \
-            CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(                                    \
-                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__)))) &&                      \
+        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(                                    \
+                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__))) &&                      \
         CPP_true(::concepts::detail::Nil{}), ::concepts::detail::Nil> = {})     \
         CPP_PP_EXPAND(                                                          \
             CPP_PP_CAT(CPP_CTOR_SHOW_NOEXCEPT_, __VA_ARGS__)))                  \

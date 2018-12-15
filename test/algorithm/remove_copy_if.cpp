@@ -56,7 +56,7 @@ test_range()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
     int ib[sa];
-    std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_iterator_range(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
+    std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_subrange(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
     CHECK(base(r.first) == ia + sa);
     CHECK(base(r.second) == ib + sa-3);
     CHECK(ib[0] == 0);
@@ -157,7 +157,7 @@ int main()
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr unsigned sa = ranges::size(ia);
         S ib[sa];
-        auto r = ranges::remove_copy_if(ranges::view::all(ia), ib, [](int i){return i == 2;}, &S::i);
+        auto r = ranges::remove_copy_if(std::move(ia), ib, [](int i){return i == 2;}, &S::i);
         CHECK(r.first.get_unsafe() == ia + sa);
         CHECK(r.second == ib + sa-3);
         CHECK(ib[0].i == 0);

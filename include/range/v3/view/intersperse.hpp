@@ -18,7 +18,6 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -81,7 +80,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(cursor_adaptor)(cursor_adaptor<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : toggle_(that.toggle_)
                   , val_(std::move(that.val_))
                 {}
@@ -148,7 +147,7 @@ namespace ranges
                 sentinel_adaptor() = default;
                 template<bool Other>
                 CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                 {}
                 static constexpr bool empty(iterator_t<CRng> const &it,
                     cursor_adaptor<Const> const &, sentinel_t<CRng> const &sent)
@@ -204,16 +203,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename T = range_value_t<Rng>)
-                (concept IntersperseViewConcept)(Rng, T),
-                    InputRange<Rng> &&
-                    ConvertibleTo<T, range_value_t<Rng>> &&
-                    ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
-                    Semiregular<range_value_t<Rng>>
-            );
-
             struct intersperse_fn
             {
             private:
@@ -226,37 +215,15 @@ namespace ranges
                         std::move(t)));
                 }
             public:
-
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
                     CPP_ret(intersperse_view<all_t<Rng>>)(
-                        requires IntersperseViewConcept<Rng>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
+                            Semiregular<range_value_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(val)};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const ->
-                    CPP_ret(void)(
-                        requires not IntersperseViewConcept<Rng, T>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::intersperse operates must be a model of the "
-                        "InputRange concept.");
-                    using V = range_value_t<Rng>;
-                    CPP_assert_msg(ConvertibleTo<T, V>,
-                        "The value to intersperse in the range must be convertible to the range's "
-                        "value type.");
-                    CPP_assert_msg(ConvertibleTo<range_reference_t<Rng>, V>,
-                        "The range's reference type must be convertible to the range's "
-                        "value type.");
-                    CPP_assert_msg(Semiregular<V>,
-                        "The range on which view::intersperse operates must have a value type that "
-                        "models the Semiregular concept; that is, it must be default constructible, "
-                        "copy and move constructible, and destructible.");
-                }
-            #endif
             };
 
             /// \relates intersperse_fn

@@ -134,14 +134,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Pred)
-                concept SearchableRange,
-                    InputRange<Rng> &&
-                    IndirectPredicate<Pred, iterator_t<Rng>>
-            );
-
             struct remove_if_fn
             {
             private:
@@ -153,28 +145,15 @@ namespace ranges
                         protect(std::move(pred))));
                 }
             public:
-                CPP_template(typename Rng, typename Pred)(
-                    requires SearchableRange<Rng, Pred>)
-                constexpr /*c++14*/ auto CPP_auto_fun(operator())(Rng &&rng, Pred pred) (const)
-                (
-                    return remove_if_view<all_t<Rng>, Pred>{
-                        all(static_cast<Rng &&>(rng)), std::move(pred)}
-                )
-            #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred>
-                auto operator()(Rng &&, Pred) const ->
-                    CPP_ret(void)(
-                        requires not SearchableRange<Rng, Pred>)
+                constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
+                    CPP_ret(remove_if_view<all_t<Rng>, Pred>)(
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            IndirectPredicate<Pred, iterator_t<Rng>>)
                 {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument to view::remove_if must be a model of the "
-                        "InputRange concept");
-                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
-                        "The second argument to view::remove_if must be callable with "
-                        "a value of the range, and the return type must be convertible "
-                        "to bool");
+                    return remove_if_view<all_t<Rng>, Pred>{
+                        all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
-            #endif
             };
 
             /// \relates remove_if_fn

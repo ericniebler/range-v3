@@ -92,7 +92,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(sentinel)(sentinel<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : end_(std::move(that.end_))
                 {}
             };
@@ -260,7 +260,7 @@ namespace ranges
                   , its_{emplaced_index<cranges-1>, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 template<bool Other>
-                CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && !Other)
+                CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && (!Other))
                   : rng_(that.rng_)
                   , its_(std::move(that.its_))
                 {}
@@ -382,10 +382,10 @@ namespace ranges
             struct concat_fn
             {
                 template<typename...Rngs>
-                concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
+                auto operator()(Rngs &&... rngs) const ->
+                    CPP_ret(concat_view<all_t<Rngs>...>)(
+                        requires And<(ViewableRange<Rngs> && InputRange<Rngs>)...>)
                 {
-                    static_assert(meta::and_c<(bool)InputRange<Rngs>...>::value,
-                        "Expecting Input Ranges");
                     return concat_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }
             };

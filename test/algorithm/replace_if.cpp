@@ -48,7 +48,7 @@ void test_rng()
 {
     int ia[] = {0, 1, 2, 3, 4};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-    auto rng = ranges::make_iterator_range(Iter(ia), Sent(ia+sa));
+    auto rng = ranges::make_subrange(Iter(ia), Sent(ia+sa));
     Iter i = ranges::replace_if(rng, [](int i){return i==2;}, 5);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -96,7 +96,7 @@ int main()
     {
         using P = std::pair<int,std::string>;
         P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-        auto i = ranges::replace_if(ranges::view::all(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
+        auto i = ranges::replace_if(std::move(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
             &std::pair<int,std::string>::first);
         CHECK(ia[0] == P{0,"0"});
         CHECK(ia[1] == P{1,"1"});

@@ -41,7 +41,7 @@ namespace ranges
                 InputIterator<I> &&
                 WeaklyIncrementable<O> &&
                 CopyConstructible<F> &&
-                Writable<O, indirect_invoke_result_t<F&, projected<I, P>>>
+                Writable<O, indirect_result_t<F&, projected<I, P>>>
         );
 
         /// \ingroup group-concepts
@@ -53,7 +53,7 @@ namespace ranges
                 InputIterator<I1> &&
                 WeaklyIncrementable<O> &&
                 CopyConstructible<F> &&
-                Writable<O, indirect_invoke_result_t<F&, projected<I0, P0>, projected<I1, P1>>>
+                Writable<O, indirect_result_t<F&, projected<I0, P0>, projected<I1, P1>>>
         );
 
         /// \addtogroup group-algorithms

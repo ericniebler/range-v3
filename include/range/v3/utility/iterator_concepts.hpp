@@ -24,6 +24,10 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
 
+#ifdef _GLIBCXX_DEBUG
+#include <debug/safe_iterator.h>
+#endif
+
 namespace ranges
 {
     inline namespace v3
@@ -33,26 +37,34 @@ namespace ranges
         {
             template<typename I>
             using iter_traits_t =
-                if_then_t<is_std_iterator_traits_specialized<I>(), std::iterator_traits<I>, I>;
+                if_then_t<is_std_iterator_traits_specialized_<I>, std::iterator_traits<I>, I>;
 
-            // This is only necessary because is_std_iterator_traits_specialized
-            // was hacked to report false for std::iterator_traits<T volatile *>
-            auto iter_concept_2_(void const volatile *) -> ranges::random_access_iterator_tag;
+#if defined(_GLIBCXX_DEBUG)
+            template<typename T, typename Seq>
+            auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, int) -> ranges::contiguous_iterator_tag;
+#endif
+#if defined(__GLIBCXX__)
+            template<typename T, typename Seq>
+            auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, int) -> ranges::contiguous_iterator_tag;
+#endif
+#if defined(_LIBCPP_VERSION)
             template<typename T>
-            auto iter_concept_2_(T **) -> ranges::contiguous_iterator_tag;
-
+            auto iter_concept_(std::__wrap_iter<T *>, int) -> ranges::contiguous_iterator_tag;
+#endif
+            template<typename T>
+            auto iter_concept_(T *, int) -> ranges::contiguous_iterator_tag;
             template<typename I>
-            auto iter_concept_(int) -> typename iter_traits_t<I>::iterator_concept;
+            auto iter_concept_(I, int) -> typename iter_traits_t<I>::iterator_concept;
             template<typename I>
-            auto iter_concept_(long) -> typename iter_traits_t<I>::iterator_category;
+            auto iter_concept_(I, long) -> typename iter_traits_t<I>::iterator_category;
             template<typename I>
-            auto iter_concept_(...) ->
+            auto iter_concept_(I, ...) ->
                 enable_if_t<
-                    !is_std_iterator_traits_specialized<I>(),
-                    decltype(iter_concept_2_(static_cast<I *>(nullptr)))>;
+                    !is_std_iterator_traits_specialized_<I>,
+                    ranges::random_access_iterator_tag>;
 
             template<typename I>
-            using iter_concept_t = decltype(iter_concept_<I>(0));
+            using iter_concept_t = decltype(iter_concept_(std::declval<I>(), 0));
         }
 
         /// \endcond
@@ -465,32 +477,36 @@ namespace ranges
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // indirect_invoke_result
-        /// \cond
+        // indirect_result_t
         template<typename Fun, typename... Is>
-        using indirect_invoke_result_t =
+        using indirect_result_t =
             meta::if_c<
                 meta::and_c<(bool) Readable<Is>...>::value,
                 invoke_result_t<Fun, iter_reference_t<Is>...>>;
 
+        /// \cond
         template<typename Fun, typename... Is>
-        struct indirect_invoke_result
+        using indirect_invoke_result_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
+            indirect_result_t<Fun, Is...>;
+
+        template<typename Fun, typename... Is>
+        struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_invoke_result
           : meta::defer<indirect_invoke_result_t, Fun, Is...>
         {};
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // indirect_result_of
         template<typename Sig>
         struct indirect_result_of
         {};
 
         template<typename Fun, typename... Is>
-        struct indirect_result_of<Fun(Is...)>
-          : meta::defer<indirect_invoke_result_t, Fun, Is...>
+        struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_result_of<Fun(Is...)>
+          : meta::defer<indirect_result_t, Fun, Is...>
         {};
 
         template<typename Sig>
-        using indirect_result_of_t = meta::_t<indirect_result_of<Sig>>;
+        using indirect_result_of_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
+            meta::_t<indirect_result_of<Sig>>;
+        /// \endcond
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Project struct, for "projecting" a Readable with a unary callable
@@ -500,7 +516,7 @@ namespace ranges
             template<typename I, typename Proj>
             struct projected_
             {
-                using reference = indirect_invoke_result_t<Proj &, I>;
+                using reference = indirect_result_t<Proj &, I>;
                 using value_type = uncvref_t<reference>;
                 reference operator*() const;
             };
@@ -608,8 +624,6 @@ namespace ranges
 // HACKHACK: workaround underconstrained operator- for libstdc++ debug iterator wrapper
 // by intentionally creating an ambiguity when the wrapped types don't support the
 // necessary operation.
-#include <debug/safe_iterator.h>
-
 namespace __gnu_debug
 {
     template<typename I1, typename I2, typename Seq>

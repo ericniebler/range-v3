@@ -111,7 +111,7 @@ int main()
         using Rng = decltype(rng);
         CPP_assert(InputView<Rng>);
         CPP_assert(!ForwardRange<Rng>);
-        CPP_assert(BoundedRange<Rng>);
+        CPP_assert(CommonRange<Rng>);
         ::check_equal(rng, {1,2,3,4});
     }
 

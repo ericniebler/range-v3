@@ -19,13 +19,13 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -73,7 +73,7 @@ namespace ranges
             (
                 template(typename Rng, typename Val)
                 concept Delimitable,
-                    Range<Rng> &&
+                    ViewableRange<Rng> &&
                     EqualityComparableWith<Val, range_common_reference_t<Rng>>
             );
 
@@ -95,19 +95,6 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(value)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Val>
-                auto operator()(Rng &&, Val) const ->
-                    CPP_ret(void)(
-                        requires not Delimitable<Rng, Val>)
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "Rng must model the Range concept");
-                    CPP_assert_msg(EqualityComparableWith<Val, range_common_reference_t<Rng>>,
-                        "The delimiting value type must be EqualityComparableWith to the "
-                        "range's common reference type.");
-                }
-            #endif
             };
 
             struct delimit_fn : view<delimit_impl_fn>
@@ -116,7 +103,7 @@ namespace ranges
 
                 template<typename I, typename Val>
                 auto operator()(I begin, Val value) const ->
-                    CPP_ret(delimit_view<iterator_range<I, unreachable>, Val>)(
+                    CPP_ret(delimit_view<subrange<I, unreachable>, Val>)(
                         requires InputIterator<I>)
                 {
                     return {{std::move(begin), {}}, std::move(value)};

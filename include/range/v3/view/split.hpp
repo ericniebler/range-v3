@@ -20,7 +20,6 @@
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
@@ -120,7 +119,7 @@ namespace ranges
                 cursor() = default;
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
                 {}
             };
@@ -255,54 +254,32 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 auto operator()(Rng &&rng, Fun fun) const ->
                     CPP_ret(split_view<all_t<Rng>, Fun>)(
-                        requires SplitOnFunction<Rng, Fun>)
+                        requires ViewableRange<Rng> && SplitOnFunction<Rng, Fun>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
                 template<typename Rng, typename Fun>
                 auto operator()(Rng &&rng, Fun fun) const ->
                     CPP_ret(split_view<all_t<Rng>, predicate_pred<Rng, Fun>>)(
-                        requires SplitOnPredicate<Rng, Fun>)
+                        requires ViewableRange<Rng> && SplitOnPredicate<Rng, Fun>)
                 {
-                    return {all(static_cast<Rng &&>(rng)), predicate_pred<Rng, Fun>{std::move(fun)}};
+                    return {all(static_cast<Rng &&>(rng)),
+                            predicate_pred<Rng, Fun>{std::move(fun)}};
                 }
                 template<typename Rng>
                 auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
                     CPP_ret(split_view<all_t<Rng>, element_pred<Rng>>)(
-                        requires SplitOnElement<Rng>)
+                        requires ViewableRange<Rng> && SplitOnElement<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
                 }
                 template<typename Rng, typename Sub>
                 auto operator()(Rng &&rng, Sub &&sub) const ->
                     CPP_ret(split_view<all_t<Rng>, subrange_pred<Rng, Sub>>)(
-                        requires SplitOnSubRange<Rng, Sub>)
+                        requires ViewableRange<Rng> && SplitOnSubRange<Rng, Sub>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const volatile ->
-                    CPP_ret(void)(
-                        requires not ConvertibleTo<T, range_value_t<Rng>>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which view::split operates must be a model of the "
-                        "ForwardRange concept.");
-                    CPP_assert_msg(ConvertibleTo<T, range_value_t<Rng>>,
-                        "The delimiter argument to view::split must be one of the following: "
-                        "(1) A single element of the range's value type, where the value type is a "
-                        "model of the Regular concept, "
-                        "(2) A ForwardRange whose value type is EqualityComparableWith to the input "
-                        "range's value type, "
-                        "(3) A Predicate that is callable with one argument of the range's reference "
-                        "type, or "
-                        "(4) A Callable that accepts two arguments, the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, I> where I is the "
-                        "input range's iterator type.");
-                }
-            #endif
             };
 
             /// \relates split_fn

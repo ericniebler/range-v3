@@ -291,7 +291,7 @@ namespace ranges
               : adaptor_base
             {
             private:
-                friend struct adaptor<!Const>;
+                friend adaptor<!Const>;
                 using CRng = meta::const_if_c<Const, Rng>;
                 range_difference_t<Rng> n_ = 0;
             public:
@@ -300,7 +300,8 @@ namespace ranges
                   : n_(n)
                 {}
                 template<bool Other>
-                CPP_ctor(adaptor)(adaptor<Other> that)(requires Const && !Other)
+                CPP_ctor(adaptor)(adaptor<Other> that)(
+                    requires Const && (!Other))
                   : n_(that.n_)
                 {}
                 iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> &v) const
@@ -362,31 +363,6 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
-
-                // For the sake of better error messages:
-            #ifndef RANGES_DOXYGEN_INVOKED
-            private:
-                template<typename Int>
-                static auto bind(sliding_fn, Int) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Integral<Int>)
-                {
-                    CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::sliding must be Integral");
-                    return {};
-                }
-            public:
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T) const ->
-                    CPP_ret(void)(
-                        requires not (ForwardRange<Rng> && Integral<T>))
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The first argument to view::sliding must be a model of the ForwardRange concept");
-                    CPP_assert_msg(Integral<T>,
-                        "The second argument to view::sliding must be a model of the Integral concept");
-                }
-            #endif
             };
 
             /// \relates sliding_fn

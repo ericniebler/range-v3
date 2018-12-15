@@ -31,12 +31,73 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace _iterator_range_
+        {
+            struct adl_hook_
+            {};
+
+            // A temporary iterator_range can be safely passed to ranges::begin and ranges::end.
+            template<class I, class S>
+            constexpr I begin(iterator_range<I, S> &&r)
+            noexcept(std::is_nothrow_copy_constructible<I>::value)
+            {
+                return r.begin();
+            }
+            template<class I, class S>
+            constexpr I begin(iterator_range<I, S> const &&r)
+            noexcept(std::is_nothrow_copy_constructible<I>::value)
+            {
+                return r.begin();
+            }
+            template<class I, class S>
+            constexpr S end(iterator_range<I, S> &&r)
+            noexcept(std::is_nothrow_copy_constructible<S>::value)
+            {
+                return r.end();
+            }
+            template<class I, class S>
+            constexpr S end(iterator_range<I, S> const &&r)
+            noexcept(std::is_nothrow_copy_constructible<S>::value)
+            {
+                return r.end();
+            }
+
+            // A temporary sized_iterator_range can be safely passed to ranges::begin and ranges::end.
+            template<class I, class S>
+            constexpr I begin(sized_iterator_range<I, S> &&r)
+            noexcept(std::is_nothrow_copy_constructible<I>::value)
+            {
+                return r.begin();
+            }
+            template<class I, class S>
+            constexpr I begin(sized_iterator_range<I, S> const &&r)
+            noexcept(std::is_nothrow_copy_constructible<I>::value)
+            {
+                return r.begin();
+            }
+            template<class I, class S>
+            constexpr S end(sized_iterator_range<I, S> &&r)
+            noexcept(std::is_nothrow_copy_constructible<S>::value)
+            {
+                return r.end();
+            }
+            template<class I, class S>
+            constexpr S end(sized_iterator_range<I, S> const &&r)
+            noexcept(std::is_nothrow_copy_constructible<S>::value)
+            {
+                return r.end();
+            }
+        }
+        /// \endcond
+
         /// \addtogroup group-core
         /// @{
         template<typename I, typename S /*= I*/>
         struct iterator_range
           : tagged_compressed_tuple<tag::begin(I), tag::end(S)>
           , view_interface<iterator_range<I, S>>
+          , _iterator_range_::adl_hook_
         {
         private:
             using base_t = tagged_compressed_tuple<tag::begin(I), tag::end(S)>;
@@ -93,6 +154,7 @@ namespace ranges
         template<typename I, typename S /* = I */>
         struct sized_iterator_range
           : view_interface<sized_iterator_range<I, S>>
+          , _iterator_range_::adl_hook_
         {
             using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
             using iterator = I;

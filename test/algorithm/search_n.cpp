@@ -35,44 +35,76 @@ test_iter_impl()
 {
     int ia[] = {0, 1, 2, 3, 4, 5};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 0) == Iter(ia));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 0) == Iter(ia+0));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 0) == Iter(ia+sa));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 0) == Iter(ia+sa));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 3) == Iter(ia));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 3) == Iter(ia+3));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 3) == Iter(ia+sa));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 3) == Iter(ia+sa));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 5) == Iter(ia));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 5) == Iter(ia+5));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 5) == Iter(ia+sa));
-    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 5) == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 0).begin() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 0).end() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 0).begin() == Iter(ia+0));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 0).end() == Iter(ia+1));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 0).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 0).end() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 0).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 0).end() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 3).begin() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 3).end() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 3).begin() == Iter(ia+3));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 3).end() == Iter(ia+4));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 3).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 3).end() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 3).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 3).end() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 5).begin() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 0, 5).end() == Iter(ia));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 5).begin() == Iter(ia+5));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 1, 5).end() == Iter(ia+6));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 5).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), 2, 5).end() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 5).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(Iter(ia), Sent(ia+sa), sa, 5).end() == Iter(ia+sa));
 
     int ib[] = {0, 0, 1, 1, 2, 2};
     const unsigned sb = sizeof(ib)/sizeof(ib[0]);
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 0) == Iter(ib));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 0) == Iter(ib+0));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 0) == Iter(ib+0));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 0) == Iter(ib+sb));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 0) == Iter(ib+sb));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 1) == Iter(ib));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 1) == Iter(ib+2));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 1) == Iter(ib+2));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 1) == Iter(ib+sb));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 1) == Iter(ib+sb));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 2) == Iter(ib));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 2) == Iter(ib+4));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 2) == Iter(ib+4));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 2) == Iter(ib+sb));
-    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 2) == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 0).begin() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 0).end() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 0).begin() == Iter(ib+0));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 0).end() == Iter(ib+1));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 0).begin() == Iter(ib+0));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 0).end() == Iter(ib+2));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 0).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 0).end() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 0).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 0).end() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 1).begin() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 1).end() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 1).begin() == Iter(ib+2));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 1).end() == Iter(ib+3));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 1).begin() == Iter(ib+2));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 1).end() == Iter(ib+4));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 1).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 1).end() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 1).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 1).end() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 2).begin() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 0, 2).end() == Iter(ib));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 2).begin() == Iter(ib+4));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 1, 2).end() == Iter(ib+5));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 2).begin() == Iter(ib+4));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 2, 2).end() == Iter(ib+6));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 2).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), 3, 2).end() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 2).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(Iter(ib), Sent(ib+sb), sb, 2).end() == Iter(ib+sb));
 
     int ic[] = {0, 0, 0};
     const unsigned sc = sizeof(ic)/sizeof(ic[0]);
-    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 0, 0) == Iter(ic));
-    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 1, 0) == Iter(ic));
-    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 2, 0) == Iter(ic));
-    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 3, 0) == Iter(ic));
-    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 4, 0) == Iter(ic+sc));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 0, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 0, 0).end() == Iter(ic));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 1, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 1, 0).end() == Iter(ic+1));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 2, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 2, 0).end() == Iter(ic+2));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 3, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 3, 0).end() == Iter(ic+3));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 4, 0).begin() == Iter(ic+sc));
+    CHECK(ranges::search_n(Iter(ic), Sent(ic+sc), 4, 0).end() == Iter(ic+sc));
 }
 
 template<class Iter, class Iter2>
@@ -93,44 +125,44 @@ test_range_impl()
 {
     int ia[] = {0, 1, 2, 3, 4, 5};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 0, 0) == Iter(ia));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 1, 0) == Iter(ia+0));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 2, 0) == Iter(ia+sa));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), sa, 0) == Iter(ia+sa));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 0, 3) == Iter(ia));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 1, 3) == Iter(ia+3));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 2, 3) == Iter(ia+sa));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), sa, 3) == Iter(ia+sa));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 0, 5) == Iter(ia));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 1, 5) == Iter(ia+5));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), 2, 5) == Iter(ia+sa));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), sa, 5) == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 0, 0).begin() == Iter(ia));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 1, 0).begin() == Iter(ia+0));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 2, 0).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), sa, 0).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 0, 3).begin() == Iter(ia));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 1, 3).begin() == Iter(ia+3));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 2, 3).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), sa, 3).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 0, 5).begin() == Iter(ia));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 1, 5).begin() == Iter(ia+5));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 2, 5).begin() == Iter(ia+sa));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ia), Sent(ia+sa)), sa, 5).begin() == Iter(ia+sa));
 
     int ib[] = {0, 0, 1, 1, 2, 2};
     const unsigned sb = sizeof(ib)/sizeof(ib[0]);
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 0, 0) == Iter(ib));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 1, 0) == Iter(ib+0));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 2, 0) == Iter(ib+0));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 3, 0) == Iter(ib+sb));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), sb, 0) == Iter(ib+sb));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 0, 1) == Iter(ib));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 1, 1) == Iter(ib+2));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 2, 1) == Iter(ib+2));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 3, 1) == Iter(ib+sb));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), sb, 1) == Iter(ib+sb));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 0, 2) == Iter(ib));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 1, 2) == Iter(ib+4));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 2, 2) == Iter(ib+4));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), 3, 2) == Iter(ib+sb));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ib), Sent(ib+sb))), sb, 2) == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 0, 0).begin() == Iter(ib));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 1, 0).begin() == Iter(ib+0));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 2, 0).begin() == Iter(ib+0));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 3, 0).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), sb, 0).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 0, 1).begin() == Iter(ib));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 1, 1).begin() == Iter(ib+2));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 2, 1).begin() == Iter(ib+2));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 3, 1).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), sb, 1).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 0, 2).begin() == Iter(ib));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 1, 2).begin() == Iter(ib+4));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 2, 2).begin() == Iter(ib+4));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), 3, 2).begin() == Iter(ib+sb));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ib), Sent(ib+sb)), sb, 2).begin() == Iter(ib+sb));
 
     int ic[] = {0, 0, 0};
     const unsigned sc = sizeof(ic)/sizeof(ic[0]);
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ic), Sent(ic+sc))), 0, 0) == Iter(ic));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ic), Sent(ic+sc))), 1, 0) == Iter(ic));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ic), Sent(ic+sc))), 2, 0) == Iter(ic));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ic), Sent(ic+sc))), 3, 0) == Iter(ic));
-    CHECK(ranges::search_n(::as_lvalue(ranges::make_iterator_range(Iter(ic), Sent(ic+sc))), 4, 0) == Iter(ic+sc));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ic), Sent(ic+sc)), 0, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ic), Sent(ic+sc)), 1, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ic), Sent(ic+sc)), 2, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ic), Sent(ic+sc)), 3, 0).begin() == Iter(ic));
+    CHECK(ranges::search_n(ranges::make_subrange(Iter(ic), Sent(ic+sc)), 4, 0).begin() == Iter(ic+sc));
 }
 
 template<class Iter, class Iter2>
@@ -174,27 +206,36 @@ int main()
     {
         S const in[] = {{0}, {1}, {2}, {2}, {4}, {5}};
 
-        S const *p = ranges::search_n(in, 2, 2, std::equal_to<int>{}, &S::i);
-        CHECK(p == in+2);
+        auto sub = ranges::search_n(in, 2, 2, std::equal_to<int>{}, &S::i);
+        CHECK(sub.begin() == in+2);
+        CHECK(sub.end() == in+4);
     }
 
     // Test counted ranges
     {
         int in[] = {0,1,2,2,4,5};
         auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
-        auto it = ranges::search_n(rng, 2, 2);
-        CHECK(base(it.base()) == in+2);
-        CHECK(it.count() == 4);
+        auto sub = ranges::search_n(rng, 2, 2);
+        CHECK(base(sub.begin().base()) == in+2);
+        CHECK(base(sub.end().base()) == in+4);
+        CHECK(sub.begin().count() == 4);
+        CHECK(sub.end().count() == 2);
 
-        auto it2 = ranges::search_n(rng, 3, 2);
-        CHECK(base(it2.base()) == in+6);
-        CHECK(it2.count() == 0);
+        auto sub2 = ranges::search_n(rng, 3, 2);
+        CHECK(base(sub2.begin().base()) == in+6);
+        CHECK(base(sub2.end().base()) == in+6);
+        CHECK(sub2.begin().count() == 0);
+        CHECK(sub2.end().count() == 0);
     }
 
     // Test rvalue ranges
     {
         int ib[] = {0, 0, 1, 1, 2, 2};
-        CHECK(ranges::search_n(ranges::view::all(ib), 2, 1).get_unsafe() == ib+2);
+        CHECK(ranges::search_n(ranges::view::all(ib), 2, 1).begin() == ib+2);
+    }
+    {
+        int ib[] = {0, 0, 1, 1, 2, 2};
+        CHECK(ranges::search_n(std::move(ib), 2, 1).get_unsafe().begin() == ib+2);
     }
 
     return ::test_result();

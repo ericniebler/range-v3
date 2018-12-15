@@ -47,7 +47,7 @@ namespace
         else
             CHECK(i == last);
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         i = ranges::min_element(rng);
         if (first != last)
         {
@@ -102,7 +102,7 @@ namespace
         else
             CHECK(i == last);
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         i = ranges::min_element(rng, std::greater<int>());
         if (first != last)
         {

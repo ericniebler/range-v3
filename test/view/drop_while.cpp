@@ -54,7 +54,7 @@ int main()
         using R = decltype(rng);
         CPP_assert(InputView<R>);
         CPP_assert(!ForwardRange<R>);
-        CPP_assert(!BoundedRange<R>);
+        CPP_assert(!CommonRange<R>);
         CPP_assert(Same<int const&, range_reference_t<R>>);
         ::check_equal(rng, {4,5,6,7,8,9});
     }

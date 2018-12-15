@@ -136,14 +136,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Pred)
-                concept AdjacentRemoveIfConcept,
-                    ForwardRange<Rng> &&
-                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
-            );
-
             struct adjacent_remove_if_fn
             {
             private:
@@ -158,24 +150,11 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(adjacent_remove_if_view<all_t<Rng>, Pred>)(
-                        requires AdjacentRemoveIfConcept<Rng, Pred>)
+                        requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                            IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred>
-                auto operator()(Rng &&, Pred) const ->
-                    CPP_ret(void)(
-                        requires not AdjacentRemoveIfConcept<Rng, Pred>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "Rng must model the ForwardRange concept");
-                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>,
-                        iterator_t<Rng>>,
-                        "Pred must be callable with two arguments of the range's common "
-                        "reference type, and it must return something convertible to bool.");
-                }
-            #endif
             };
 
             /// \relates adjacent_remove_if_fn

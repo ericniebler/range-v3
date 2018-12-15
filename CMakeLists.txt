@@ -40,13 +40,13 @@ include(CheckCXXSourceCompiles)
 
 # Test for coroutine TS support
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_CORO_TEST_CODE)
-set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts")
+set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts -std=c++14")
 check_cxx_source_compiles("${RANGE_V3_CORO_TEST_CODE}" RANGE_V3_HAS_FCOROUTINES_TS)
 unset(CMAKE_REQUIRED_FLAGS)
 
 # Test for concepts support
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/concepts_test_code.cpp" RANGE_V3_CONCEPTS_TEST_CODE)
-set(CMAKE_REQUIRED_FLAGS "-fconcepts")
+set(CMAKE_REQUIRED_FLAGS "-fconcepts -std=c++14")
 check_cxx_source_compiles("${RANGE_V3_CONCEPTS_TEST_CODE}" RANGE_V3_HAS_FCONCEPTS)
 unset(CMAKE_REQUIRED_FLAGS)
 

@@ -26,7 +26,7 @@ int main()
 {
     using namespace ranges;
 
-    // Reverse a random-access, bounded, sized range
+    // Reverse a random-access, common, sized range
     std::vector<int> rgv{0,1,2,3,4,5,6,7,8,9};
     auto const rng0 = rgv | view::reverse;
     models<ViewConcept>(aux::copy(rng0));
@@ -37,8 +37,8 @@ int main()
     ::check_equal(rng0, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng0 | view::reverse, {0,1,2,3,4,5,6,7,8,9});
 
-    // Reverse another random-access, non-bounded, sized range
-    auto cnt = view::counted(rgv.begin(), 10);
+    // Reverse another random-access, non-common, sized range
+    auto cnt = counted_view<std::vector<int>::iterator>(rgv.begin(), 10);
     models_not<BoundedRangeConcept>(cnt);
     auto const rng1 = rgv | view::reverse;
     models<ViewConcept>(aux::copy(rng1));
@@ -49,7 +49,7 @@ int main()
     ::check_equal(rng1, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng1 | view::reverse, {0,1,2,3,4,5,6,7,8,9});
 
-    // Reverse a random-access, non-bounded, non-sized range
+    // Reverse a random-access, non-common, non-sized range
     auto sz = view::c_str((char const*)"hello");
     auto rng2 = sz | view::reverse;
     models<ViewConcept>(aux::copy(rng2));
@@ -62,7 +62,7 @@ int main()
     ::check_equal(rng2, {'o','l','l','e','h'});
     ::check_equal(rng2 | view::reverse, {'h','e','l','l','o'});
 
-    // Reverse a bidirectional, bounded, sized range
+    // Reverse a bidirectional, common, sized range
     std::list<int> rgl{0,1,2,3,4,5,6,7,8,9};
     auto const rng3 = rgl | view::reverse;
     models<ViewConcept>(aux::copy(rng3));

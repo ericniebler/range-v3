@@ -95,7 +95,7 @@ namespace ranges
             explicit CPP_ctor(recursive_range_fn)(Fun fun)(
                 requires CopyConstructible<Fun> && Invocable<Fun&> &&
                     ConvertibleTo<invoke_result_t<Fun&>, any_input_view<Ref>>)
-              : fun_{[=]{return view::concat(invoke(fun), view::empty<value_type>());}}
+              : fun_{[=]{return view::concat(invoke(fun), view::empty<value_type>);}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

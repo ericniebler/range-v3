@@ -21,6 +21,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
 #include <range/v3/version.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 /// \defgroup group-utility Utility
 /// Utility classes
@@ -203,13 +204,24 @@ namespace ranges
                 return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
             }
 
-            template<typename T>
-            constexpr T const &as_const(T & t) noexcept
+            struct as_const_fn
             {
-                return t;
-            }
+                template<typename T>
+                constexpr T const &operator()(T &t) const noexcept
+                {
+                    return t;
+                }
+                template<typename T>
+                constexpr T const &&operator()(T &&t) const noexcept
+                {
+                    return (T &&) t;
+                }
+            };
+
+            RANGES_INLINE_VARIABLE(as_const_fn, as_const)
+
             template<typename T>
-            void as_const(T const &&) = delete;
+            using as_const_t = decltype(as_const(std::declval<T>()));
 
             template<typename T>
             using decay_t = meta::_t<std::decay<T>>;

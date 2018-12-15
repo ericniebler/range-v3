@@ -108,17 +108,6 @@ namespace ranges
         /// @{
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Pred, typename Val)
-                concept ReplaceIfViewConcept,
-                    InputRange<Rng> &&
-                    IndirectPredicate<Pred, iterator_t<Rng>> &&
-                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>> &&
-                    CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>> &&
-                    CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>
-            );
-
             struct replace_if_fn
             {
             private:
@@ -133,38 +122,14 @@ namespace ranges
                 template<typename Rng, typename Pred, typename Val>
                 auto operator()(Rng &&rng, Pred pred, Val new_value) const ->
                     CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)(
-                        requires ReplaceIfViewConcept<Rng, Pred, Val>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            IndirectPredicate<Pred, iterator_t<Rng>> &&
+                            Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>> &&
+                            CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>> &&
+                            CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), {std::move(pred), std::move(new_value)}};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For error reporting
-                template<typename Rng, typename Pred, typename Val>
-                auto operator()(Rng &&, Pred, Val) const ->
-                    CPP_ret(void)(
-                        requires not ReplaceIfViewConcept<Rng, Pred, Val>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::replace_if operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
-                        "The function passed to view::replace_if must be callable with "
-                        "objects of the range's common reference type, and the result must be "
-                        "convertible to bool.");
-                    CPP_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
-                            range_value_t<Rng>>,
-                        "The value passed to view::replace must share a common type with the "
-                        "range's value type.");
-                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
-                            range_reference_t<Rng>>,
-                        "The value passed to view::replace must share a reference with the "
-                        "range's reference type.");
-                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val const &>,
-                            range_rvalue_reference_t<Rng>>,
-                        "The value passed to view::replace must share a reference with the "
-                        "range's rvalue reference type.");
-                }
-            #endif
             };
 
             /// \relates replace_if_fn

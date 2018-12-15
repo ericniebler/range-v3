@@ -55,9 +55,9 @@ struct range_call
 
     template<class B, class E, class... Args>
     auto operator()(B &&It, E &&e, Args &&... args) const
-     -> ranges::iterator_t<decltype(ranges::make_iterator_range(begin_t{It}, sentinel_t{e}))>
+     -> ranges::iterator_t<decltype(ranges::make_subrange(begin_t{It}, sentinel_t{e}))>
     {
-        auto rng = ranges::make_iterator_range(begin_t{It}, sentinel_t{e});
+        auto rng = ranges::make_subrange(begin_t{It}, sentinel_t{e});
         return ranges::unique(rng, std::forward<Args>(args)...);
     }
 };
@@ -151,6 +151,14 @@ int main()
     {
         int a[] = {0, 1, 1, 1, 2, 2, 2};
         auto r = ranges::unique(ranges::view::all(a));
+        CHECK(r == a + 3);
+        CHECK(a[0] == 0);
+        CHECK(a[1] == 1);
+        CHECK(a[2] == 2);
+    }
+    {
+        int a[] = {0, 1, 1, 1, 2, 2, 2};
+        auto r = ranges::unique(std::move(a));
         CHECK(r.get_unsafe() == a + 3);
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);

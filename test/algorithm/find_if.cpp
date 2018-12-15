@@ -58,10 +58,12 @@ int main()
     pi = find_if(ia, [](int i){return i == 10;});
     CHECK(pi == ia+s);
 
-    auto pj = find_if(view::all(ia), [](int i){return i == 3;});
+    auto pj = find_if(std::move(ia), [](int i){return i == 3;});
     CHECK(*pj.get_unsafe() == 3);
-    pj = find_if(view::all(ia), [](int i){return i == 10;});
+    pj = find_if(std::move(ia), [](int i){return i == 10;});
     CHECK(pj.get_unsafe() == ia+s);
+    auto* ignore = find_if(ranges::view::all(ia), [](int i){return i == 10;});
+    (void)ignore;
 
     S sa[] = {{0}, {1}, {2}, {3}, {4}, {5}};
     S *ps = find_if(sa, [](int i){return i == 3;}, &S::i_);

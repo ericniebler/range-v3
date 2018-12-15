@@ -55,7 +55,7 @@ test_range()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
     int ib[sa];
-    std::pair<InIter, OutIter> r = ranges::remove_copy(::as_lvalue(ranges::make_iterator_range(InIter(ia), Sent(ia+sa))), OutIter(ib), 2);
+    std::pair<InIter, OutIter> r = ranges::remove_copy(::as_lvalue(ranges::make_subrange(InIter(ia), Sent(ia+sa))), OutIter(ib), 2);
     CHECK(base(r.first) == ia + sa);
     CHECK(base(r.second) == ib + sa-3);
     CHECK(ib[0] == 0);
@@ -156,7 +156,7 @@ int main()
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr unsigned sa = ranges::size(ia);
         S ib[sa];
-        auto r = ranges::remove_copy(ranges::view::all(ia), ib, 2, &S::i);
+        auto r = ranges::remove_copy(std::move(ia), ib, 2, &S::i);
         CHECK(r.first.get_unsafe() == ia + sa);
         CHECK(r.second == ib + sa-3);
         CHECK(ib[0].i == 0);
@@ -168,12 +168,6 @@ int main()
 
         // Some tests for sanitizing an algorithm result
         static_assert(std::is_same<decltype(r), ranges::tagged_pair<ranges::tag::in(ranges::dangling<S *>), ranges::tag::out(S *)>>::value, "");
-        auto r2 = ranges::sanitize(r);
-        static_assert(std::is_same<decltype(r2), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
-        auto r3 = ranges::sanitize(const_cast<decltype(r) const &>(r));
-        static_assert(std::is_same<decltype(r3), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
-        auto r4 = ranges::sanitize(std::move(r));
-        static_assert(std::is_same<decltype(r4), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
     }
 
     return ::test_result();

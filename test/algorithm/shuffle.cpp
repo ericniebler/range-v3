@@ -55,7 +55,7 @@ int main()
         for (auto p : {&a, &b, &c})
             ranges::iota(*p, 0);
         std::minstd_rand g1, g2 = g1;
-        auto rng = ranges::make_iterator_range(random_access_iterator<int*>(a.data()), sentinel<int*>(a.data() + N));
+        auto rng = ::MakeTestRange(random_access_iterator<int*>(a.data()), sentinel<int*>(a.data() + N));
         ranges::shuffle(rng, g1);
         CHECK(!ranges::equal(a, b));
 

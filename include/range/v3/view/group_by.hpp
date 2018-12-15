@@ -20,7 +20,6 @@
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
@@ -30,6 +29,7 @@
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/take_while.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -74,7 +74,7 @@ namespace ranges
                     }
                 };
                 auto read() const ->
-                    take_while_view<iterator_range<iterator_t<CRng>, sentinel_t<CRng>>, pred>
+                    take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }
@@ -98,7 +98,7 @@ namespace ranges
                 cursor() = default;
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : cur_(std::move(that.cur_))
                   , last_(std::move(last_))
                   , fun_(std::move(that.fun_))
@@ -111,7 +111,7 @@ namespace ranges
             template<typename CRng = Rng const>
             auto begin_cursor() const ->
                 CPP_ret(cursor<true>)(
-                    requires Range<CRng>() &&
+                    requires Range<CRng> &&
                         Invocable<
                             Fun const&,
                             range_common_reference_t<CRng>,
@@ -129,14 +129,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept GroupByViewConcept,
-                    ForwardRange<Rng> &&
-                    IndirectRelation<Fun, iterator_t<Rng>>
-            );
-
             struct group_by_fn
             {
             private:
@@ -151,26 +143,11 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 auto operator()(Rng &&rng, Fun fun) const ->
                     CPP_ret(group_by_view<all_t<Rng>, Fun>)(
-                        requires GroupByViewConcept<Rng, Fun>)
+                        requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                            IndirectRelation<Fun, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not GroupByViewConcept<Rng, Fun>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which view::group_by operates must be a model of the "
-                        "ForwardRange concept.");
-                    CPP_assert_msg(IndirectRelation<Fun, iterator_t<Rng>>,
-                        "The function passed to view::group_by must be callable with two arguments "
-                        "of the range's common reference type, and its return type must be "
-                        "convertible to bool.");
-                }
-            #endif
             };
 
             /// \relates group_by_fn

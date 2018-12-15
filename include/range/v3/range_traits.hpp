@@ -33,8 +33,16 @@ namespace ranges
             template<typename T>
             struct is_range_;
 
+            template<typename T>
+            struct is_forwarding_range_;
+
             template<typename I, typename S>
-            using common_iterator_t = meta::if_c<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
+            using common_iterator_t =
+                meta::if_c<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
+
+            CPP_template(class R, class U)(
+                requires is_range_<R>::value)
+            using maybe_dangling_ = if_then_t<is_forwarding_range_<R>::value, U, dangling<U>>;
         }
         /// \endcond
 
@@ -96,10 +104,7 @@ namespace ranges
 
         template<typename Rng>
         using safe_iterator_t =
-            meta::if_<
-                std::is_lvalue_reference<Rng>,
-                meta::if_c<(bool) detail::is_range_<Rng>{}, iterator_t<Rng>>,
-                dangling<iterator_t<Rng>>>;
+            detail::maybe_dangling_<Rng, iterator_t<Rng>>;
 
         /// \cond
         namespace detail

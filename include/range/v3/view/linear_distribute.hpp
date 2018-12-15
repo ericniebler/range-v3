@@ -91,24 +91,12 @@ namespace ranges
             /// If `n == 1` returns `to`.
             struct linear_distribute_fn
             {
-                CPP_template(typename T)(
-                    requires std::is_arithmetic<T>::value)
-                constexpr auto CPP_auto_fun(operator())(T from, T to, std::ptrdiff_t n) (const)
-                (
-                    return linear_distribute_view<T>{from, to, n}
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename T>
-                auto operator()(T, T, std::ptrdiff_t) const ->
-                    CPP_ret(void)(
-                        requires not std::is_arithmetic<T>::value)
+                constexpr auto CPP_fun(operator())(T from, T to, std::ptrdiff_t n) (const
+                    requires std::is_arithmetic<T>::value)
                 {
-                    CPP_assert_msg(std::is_arithmetic<T>(),
-                        "The object passed to view::linear_distribute must model the Arithmetic "
-                        "concept; that is, it must be one of the native integer of floating-point types");
+                    return linear_distribute_view<T>{from, to, n};
                 }
-            #endif
             };
 
             /// \relates linear_distribute_fn

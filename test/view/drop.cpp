@@ -79,7 +79,7 @@ int main()
 
     {
         int some_ints[] = {0,1,2};
-        auto rng = make_iterator_range(some_ints + 0, some_ints + 1);
+        auto rng = make_subrange(some_ints + 0, some_ints + 1);
         auto rng2 = view::drop(rng, 2);
         CHECK(begin(rng2) == some_ints + 1);
         CHECK(size(rng2) == 0u);

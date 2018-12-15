@@ -156,7 +156,7 @@ public:
     constexpr /*c++14*/ explicit input_iterator(It it) : it_(it) {}
     template<class U, bool USized>
     constexpr /*c++14*/ CPP_ctor(input_iterator)(const input_iterator<U, USized>& u)(
-        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
+        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -213,7 +213,7 @@ public:
     constexpr /*c++14*/ explicit forward_iterator(It it) : it_(it) {}
     template<class U, bool USized>
     constexpr /*c++14*/ CPP_ctor(forward_iterator)(const forward_iterator<U, USized>& u)(
-        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
+        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -265,7 +265,7 @@ public:
     constexpr /*c++14*/ explicit bidirectional_iterator(It it) : it_(it) {}
     template<class U, bool USized>
     constexpr /*c++14*/ CPP_ctor(bidirectional_iterator)(const bidirectional_iterator<U, USized>& u)(
-        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
+        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -314,7 +314,7 @@ public:
     constexpr /*c++14*/ explicit random_access_iterator(It it) : it_(it) {}
     template<class U>
     constexpr /*c++14*/ CPP_ctor(random_access_iterator)(const random_access_iterator<U>& u)(
-        requires std::is_convertible<U, It>::value) :it_(u.it_) {}
+        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -417,5 +417,20 @@ struct sentinel_type<I<It>, Sized>
 {
     using type = sentinel<It, Sized>;
 };
+
+template<class I, class S>
+struct TestRange
+{
+    I first;
+    S second;
+    constexpr I begin() const { return first; }
+    constexpr S end() const { return second; }
+};
+
+template<class I, class S>
+TestRange<I, S> MakeTestRange(I i, S s)
+{
+    return {i, s};
+}
 
 #endif  // RANGES_TEST_ITERATORS_HPP

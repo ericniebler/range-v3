@@ -43,6 +43,17 @@ namespace ranges
             };
 
             template<typename T>
+            static std::false_type contiguous_2_(long);
+            template<typename T>
+            static typename T::contiguous contiguous_2_(int);
+
+            template<typename T>
+            struct contiguous_
+            {
+                using type = decltype(range_access::contiguous_2_<T>(42));
+            };
+
+            template<typename T>
             static meta::id<basic_mixin<T>> mixin_base_2_(long);
             template<typename T>
             static meta::id<typename T::mixin> mixin_base_2_(int);
@@ -55,6 +66,9 @@ namespace ranges
         public:
             template<typename Cur>
             using single_pass_t = meta::_t<single_pass_<Cur>>;
+
+            template<typename Cur>
+            using contiguous_t = meta::_t<contiguous_<Cur>>;
 
             template<typename Cur>
             using mixin_base_t = meta::_t<mixin_base_<Cur>>;
@@ -309,6 +323,17 @@ namespace ranges
             CPP_def
             (
                 template(typename T)
+                concept ContiguousCursor,
+                    requires (T &t)
+                    (
+                        concepts::requires_<std::is_lvalue_reference<decltype(range_access::read(t))>::value>
+                    ) &&
+                    RandomAccessCursor<T> &&
+                    range_access::contiguous_t<uncvref_t<T>>::value
+            );
+            CPP_def
+            (
+                template(typename T)
                 concept InfiniteCursor,
                     T::is_infinite::value
             );
@@ -328,10 +353,14 @@ namespace ranges
             using random_access_cursor_tag =
                 concepts::tag<RandomAccessCursorConcept, bidirectional_cursor_tag>;
 
+            using contiguous_cursor_tag =
+                concepts::tag<ContiguousCursorConcept, random_access_cursor_tag>;
+
             template<typename T>
             using cursor_tag_of =
                 concepts::tag_of<
                     meta::list<
+                        ContiguousCursorConcept,
                         RandomAccessCursorConcept,
                         BidirectionalCursorConcept,
                         ForwardCursorConcept,

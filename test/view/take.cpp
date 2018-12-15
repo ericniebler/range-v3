@@ -114,7 +114,7 @@ int main()
     auto rng7 = c_str | view::take(20);
     check_equal(rng7, {'h','e','l','l','o',' ','w','o','r','l','d'});
 
-    iterator_range<std::list<int>::iterator> rl{l.begin(), l.end()};
+    subrange<std::list<int>::iterator> rl{l.begin(), l.end()};
     models<BidirectionalRangeConcept>(rl);
     models<BoundedViewConcept>(aux::copy(rl));
     models_not<SizedViewConcept>(aux::copy(rl));

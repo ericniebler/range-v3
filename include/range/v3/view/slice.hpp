@@ -21,7 +21,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -30,6 +29,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/drop_exactly.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -173,8 +173,9 @@ namespace ranges
                 CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
                     requires Integral<Int>)
             {
-                RANGES_EXPECT(0 <= static_cast<meta::_t<std::make_signed<Int>>>(dist));
-                return {-static_cast<meta::_t<std::make_signed<Int>>>(dist)};
+                using SInt = meta::_t<std::make_signed<Int>>;
+                RANGES_EXPECT(0 <= static_cast<SInt>(dist));
+                return detail::from_end_<SInt>{-static_cast<SInt>(dist)};
             }
         }
         /// \endcond
@@ -197,17 +198,17 @@ namespace ranges
 
                 template<typename Rng>
                 static slice_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_t<Rng> from, range_difference_t<Rng> count,
+                impl_(Rng &&rng, range_difference_t<Rng> from, range_difference_t<Rng> count,
                     input_range_tag, range_tag = {})
                 {
                     return {all(static_cast<Rng &&>(rng)), from, count};
                 }
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_t<Rng> from,
+                static auto impl_(Rng &&rng, range_difference_t<Rng> from,
                         range_difference_t<Rng> count, random_access_range_tag,
                         common_range_tag = {}) ->
-                    CPP_ret(iterator_range<iterator_t<Rng>>)(
-                        requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
+                    CPP_ret(subrange<iterator_t<Rng>>)(
+                        requires ForwardingRange_<Rng>)
                 {
                     auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                     return {it, it + count};
@@ -246,155 +247,77 @@ namespace ranges
                 {
                     return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
                 }
-
             public:
                 // slice(rng, 2, 4)
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_t<Rng> from,
-                        range_difference_t<Rng> to) const ->
-                    CPP_ret(decltype(slice_fn::invoke_(
-                            static_cast<Rng &&>(rng), from, to - from, range_tag_of<Rng>{})))(
-                        requires InputRange<Rng>)
+                auto CPP_fun(operator())(
+                    Rng &&rng,
+                    range_difference_t<Rng> from,
+                    range_difference_t<Rng> to) (const
+                        requires ViewableRange<Rng> && InputRange<Rng>)
                 {
                     RANGES_EXPECT(0 <= from && from <= to);
-                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from, to - from,
+                    return slice_fn::impl_(static_cast<Rng &&>(rng), from, to - from,
                         range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end-2)
                 //  TODO Support Forward, non-Sized ranges by returning a range that
                 //       doesn't know it's size?
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_t<Rng> from,
-                        detail::from_end_<range_difference_t<Rng>> to) const ->
-                    CPP_ret(decltype(slice_fn::invoke_(
-                            static_cast<Rng &&>(rng), from, distance(rng) + to.dist_ - from,
-                            range_tag_of<Rng>{})))(
-                        requires InputRange<Rng> && SizedRange<Rng>)
+                auto CPP_fun(operator())(
+                    Rng &&rng,
+                    range_difference_t<Rng> from,
+                    detail::from_end_of_t<Rng> to) (const
+                        requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
                 {
-                    static_assert(!is_infinite<Rng>(),
+                    static_assert(!is_infinite<Rng>::value,
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
-                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from,
+                    return slice_fn::impl_(static_cast<Rng &&>(rng), from,
                         distance(rng) + to.dist_ - from, range_tag_of<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
                 template<typename Rng>
-                auto operator()(Rng &&rng, detail::from_end_<range_difference_t<Rng>> from,
-                        detail::from_end_<range_difference_t<Rng>> to) const ->
-                    CPP_ret(decltype(slice_fn::invoke_(
-                            static_cast<Rng &&>(rng), from.dist_, to.dist_ - from.dist_,
-                            range_tag_of<Rng>{}, common_range_tag_of<Rng>{})))(
-                        requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
+                auto CPP_fun(operator())(
+                    Rng &&rng,
+                    detail::from_end_of_t<Rng> from,
+                    detail::from_end_of_t<Rng> to) (const
+                        requires ViewableRange<Rng> &&
+                            (ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>)))
                 {
-                    static_assert(!is_infinite<Rng>(),
+                    static_assert(!is_infinite<Rng>::value,
                         "Can't index from the end of an infinite range!");
                     RANGES_EXPECT(from.dist_ <= to.dist_);
-                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
+                    return slice_fn::impl_(static_cast<Rng &&>(rng), from.dist_,
                         to.dist_ - from.dist_, range_tag_of<Rng>{},
                         common_range_tag_of<Rng>{});
                 }
                 // slice(rng, 4, end)
                 template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_t<Rng> from, end_fn) const ->
-                    CPP_ret(decltype(ranges::view::drop_exactly(static_cast<Rng &&>(rng), from)))(
-                        requires InputRange<Rng>)
+                auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> from, end_fn) (const
+                    requires ViewableRange<Rng> && InputRange<Rng>)
                 {
                     RANGES_EXPECT(0 <= from);
                     return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
                 }
                 // slice(rng, end-4, end)
                 template<typename Rng>
-                auto operator()(Rng &&rng, detail::from_end_<range_difference_t<Rng>> from, end_fn) const ->
-                    CPP_ret(decltype(slice_fn::invoke_(
-                            static_cast<Rng &&>(rng), from.dist_, -from.dist_, range_tag_of<Rng>{},
-                            common_range_tag_of<Rng>{})))(
-                        requires ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>))
+                auto CPP_fun(operator())(Rng &&rng, detail::from_end_of_t<Rng> from, end_fn) (const
+                    requires ViewableRange<Rng> &&
+                        (ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>)))
                 {
-                    static_assert(!is_infinite<Rng>(),
+                    static_assert(!is_infinite<Rng>::value,
                         "Can't index from the end of an infinite range!");
-                    return slice_fn::invoke_(static_cast<Rng &&>(rng), from.dist_,
+                    return slice_fn::impl_(static_cast<Rng &&>(rng), from.dist_,
                         -from.dist_, range_tag_of<Rng>{},
                         common_range_tag_of<Rng>{});
                 }
             };
 
-            struct _slice_fn
-              : slice_fn
-            {
-                using slice_fn::operator();
-            #ifndef RANGES_DOXYGEN_INVOKED
-                //
-                // These overloads are strictly so that users get better error messages
-                // when they try to slice things in a way that doesn't support the operation.
-                //
-
-                // slice(rng, 2, 4)
-                template<typename Rng>
-                auto operator()(Rng &&, range_difference_t<Rng>, range_difference_t<Rng>) const ->
-                    CPP_ret(void)(
-                        requires not InputRange<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be sliced must be a model of the InputRange concept.");
-                }
-                // slice(rng, 4, end-2)
-                template<typename Rng>
-                auto operator()(Rng &&, range_difference_t<Rng>,
-                        detail::from_end_<range_difference_t<Rng>>) const ->
-                    CPP_ret(void)(
-                        requires not (InputRange<Rng> && SizedRange<Rng>))
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be sliced must be a model of the InputRange concept.");
-                    CPP_assert_msg(SizedRange<Rng>,
-                        "When slicing a range with a positive start offset and a stop offset "
-                        "measured from the end, the range must be a model of the SizedRange "
-                        "concept; that is, its size must be known.");
-                }
-                // slice(rng, end-4, end-2)
-                template<typename Rng>
-                auto operator()(Rng &&, detail::from_end_<range_difference_t<Rng>>,
-                        detail::from_end_<range_difference_t<Rng>>) const ->
-                    CPP_ret(void)(
-                        requires not ((InputRange<Rng> && SizedRange<Rng>) || ForwardRange<Rng>))
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be sliced must be a model of the InputRange concept.");
-                    CPP_assert_msg(SizedRange<Rng> || ForwardRange<Rng>,
-                        "When slicing a range with a start and stop offset measured from the end, "
-                        "the range must either be a model of the SizedRange concept (its size "
-                        "must be known), or it must be a model of the ForwardRange concept.");
-                }
-                // slice(rng, 4, end)
-                template<typename Rng>
-                auto operator()(Rng &&, range_difference_t<Rng>, end_fn) const ->
-                    CPP_ret(void)(
-                        requires not (InputRange<Rng>))
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be sliced must be a model of the InputRange concept.");
-                }
-                // slice(rng, end-4, end)
-                template<typename Rng>
-                auto operator()(Rng &&, detail::from_end_<range_difference_t<Rng>>,
-                        end_fn) const ->
-                    CPP_ret(void)(
-                        requires not ((InputRange<Rng> && SizedRange<Rng>) || ForwardRange<Rng>))
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be sliced must be a model of the InputRange concept.");
-                    CPP_assert_msg(SizedRange<Rng> || ForwardRange<Rng>,
-                        "When slicing a range with a start and stop offset measured from the end, "
-                        "the range must either be a model of the SizedRange concept (its size "
-                        "must be known), or it must be a model of the ForwardRange concept.");
-                }
-            #endif
-            };
-
             /// \relates _slice_fn
             /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<_slice_fn>, slice)
+            RANGES_INLINE_VARIABLE(view<slice_fn>, slice)
         }
         /// @}
     }

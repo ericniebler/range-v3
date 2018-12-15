@@ -55,7 +55,7 @@ namespace ranges
                 adaptor() = default;
                 template<bool Other>
                 constexpr CPP_ctor(adaptor)(adaptor<Other>)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                 {}
                 reference_ read(iterator_t<CRng> const &it) const
                 {
@@ -111,10 +111,10 @@ namespace ranges
             struct const_fn
             {
                 template<typename Rng>
-                const_view<all_t<Rng>> operator()(Rng &&rng) const
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(const_view<all_t<Rng>>)(
+                        requires ViewableRange<Rng> && InputRange<Rng>)
                 {
-                    CPP_assert_msg(Range<Rng>,
-                        "Rng must be a model of the Range concept");
                     return const_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
             };

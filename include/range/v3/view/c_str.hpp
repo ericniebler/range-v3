@@ -15,7 +15,7 @@
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -68,7 +68,7 @@ namespace ranges
                 // Fixed-length
                 template<typename Char, std::size_t N>
                 auto operator()(Char (&sz)[N]) const ->
-                    CPP_ret(ranges::iterator_range<Char *>)(
+                    CPP_ret(ranges::subrange<Char *>)(
                         requires detail::is_char_type<Char>::value)
                 {
                     return {&sz[0], &sz[N-1]};
@@ -78,7 +78,7 @@ namespace ranges
                 template<typename Char>
                 auto operator()(Char *sz) const volatile ->
                     CPP_ret(ranges::delimit_view<
-                        ranges::iterator_range<Char *, ranges::unreachable>,
+                        ranges::subrange<Char *, ranges::unreachable>,
                         meta::_t<std::remove_cv<Char>>>)(
                     requires detail::is_char_type<Char>::value)
                 {

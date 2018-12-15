@@ -19,12 +19,12 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -37,7 +37,7 @@ namespace ranges
                 template<typename I, typename V, typename R = ordered_less, typename P = ident>
                 auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
                         P proj = P{}) const ->
-                    CPP_ret(iterator_range<I>)(
+                    CPP_ret(subrange<I>)(
                         requires BinarySearchable<I, V, R, P>)
                 {
                     if(0 < dist)

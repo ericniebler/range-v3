@@ -17,12 +17,12 @@
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -68,17 +68,16 @@ namespace ranges
                 template<typename I>
                 auto operator()(I it, iter_difference_t<I> n) const ->
                     CPP_ret(counted_view<I>)(
-                        requires Iterator<I>)
+                        requires Iterator<I> && (!RandomAccessIterator<I>))
                 {
                     return {std::move(it), n};
                 }
-                // TODO Once we support contiguous iterators, we can generalize this.
-                // (Note: it's not possible for RandomAccessIterators in general because
-                // of cyclic iterators.
-                template<typename T>
-                iterator_range<T*> operator()(T *t, std::ptrdiff_t n) const
+                template<typename I>
+                auto operator()(I it, iter_difference_t<I> n) const ->
+                    CPP_ret(subrange<I>)(
+                        requires RandomAccessIterator<I>)
                 {
-                    return {t, t + n};
+                    return {it, it + n};
                 }
             };
 

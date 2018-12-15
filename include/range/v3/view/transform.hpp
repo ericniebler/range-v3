@@ -82,7 +82,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : fun_(std::move(that.fun_))
                 {}
 
@@ -102,7 +102,7 @@ namespace ranges
             }
             template<typename CRng = Rng const>
             auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
-                requires Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>)
+                requires Range<CRng> && Invocable<Fun const&, iterator_t<CRng>>)
             {
                 return {fun_};
             }
@@ -113,7 +113,7 @@ namespace ranges
             template<typename CRng = Rng const>
             auto end_adaptor() const ->
                 CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
-                    requires Range<CRng>() && Invocable<Fun const&, iterator_t<CRng>>)
+                    requires Range<CRng> && Invocable<Fun const&, iterator_t<CRng>>)
             {
                 return {fun_};
             }
@@ -388,61 +388,6 @@ namespace ranges
                             all(static_cast<Rng2 &&>(rng2)),
                             std::move(fun)};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not IterTansformableRange<Rng, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::iter_transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function passed to view::iter_transform must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, iterator_t<Rng>>,
-                        "The function passed to view::iter_transform must be callable with an argument "
-                        "of the range's iterator type.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, copy_tag, iterator_t<Rng>>,
-                        "The function passed to view::iter_transform must be callable with "
-                        "copy_tag and an argument of the range's iterator type.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, move_tag, iterator_t<Rng>>,
-                        "The function passed to view::iter_transform must be callable with "
-                        "move_tag and an argument of the range's iterator type.");
-                }
-
-                template<typename Rng1, typename Rng2, typename Fun>
-                auto operator()(Rng1 &&, Rng2 &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not IterTansformableRanges<Rng1, Rng2, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng1>,
-                        "The first object on which view::iter_transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(InputRange<Rng2>,
-                        "The second object on which view::iter_transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function passed to view::iter_transform must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, iterator_t<Rng1>, iterator_t<Rng2>>,
-                        "The function passed to view::iter_transform must be callable with argument "
-                        "of the ranges' iterator types.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, copy_tag, iterator_t<Rng1>, iterator_t<Rng2>>,
-                        "The function passed to view::iter_transform must be callable with "
-                        "copy_tag and arguments of the ranges' iterator types.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, move_tag, iterator_t<Rng1>, iterator_t<Rng2>>,
-                        "The function passed to view::iter_transform must be callable with "
-                        "move_tag and arguments of the rangess iterator types.");
-                }
-            #endif
             };
 
             /// \relates iter_transform_fn
@@ -459,25 +404,20 @@ namespace ranges
             (
                 template(typename Rng, typename Fun)
                 concept TransformableRange,
-                    requires (Fun &fun, iterator_t<Rng> it)
-                    (
-                        non_void(ranges::invoke(fun, *it))
-                    ) &&
-                    InputRange<Rng> &&
-                    CopyConstructible<Fun>
+                    ViewableRange<Rng> && InputRange<Rng> &&
+                    CopyConstructible<Fun> &&
+                    (!std::is_void<indirect_result_t<Fun &, iterator_t<Rng>>>::value)
             );
 
             CPP_def
             (
                 template(typename Rng1, typename Rng2, typename Fun)
                 concept TransformableRanges,
-                    requires (Fun &fun, iterator_t<Rng1> it1, iterator_t<Rng2> it2)
-                    (
-                        non_void(ranges::invoke(fun, *it1, *it2))
-                    ) &&
-                    InputRange<Rng1> &&
-                    InputRange<Rng2> &&
-                    CopyConstructible<Fun>
+                    ViewableRange<Rng1> && InputRange<Rng1> &&
+                    ViewableRange<Rng2> && InputRange<Rng2> &&
+                    CopyConstructible<Fun> &&
+                    (!std::is_void<
+                        indirect_result_t<Fun &, iterator_t<Rng1>, iterator_t<Rng2>>>::value)
             );
 
             struct transform_fn
@@ -507,54 +447,6 @@ namespace ranges
                     return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)),
                         std::move(fun)};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not TransformableRange<Rng, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function passed to view::transform must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, range_reference_t<Rng>>,
-                        "The function passed to view::transform must be callable with an argument "
-                        "of the range's reference type.");
-                    CPP_assert_msg(
-                        !Same<void, invoke_result_t<Fun&, range_reference_t<Rng>>>,
-                        "The function passed to view::transform must return non-void when called "
-                        "with an argument of the range's reference type.");
-                }
-
-                template<typename Rng1, typename Rng2, typename Fun>
-                auto operator()(Rng1 &&, Rng2 &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not TransformableRanges<Rng1, Rng2, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng1>,
-                        "The first object on which view::transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(InputRange<Rng2>,
-                        "The second object on which view::transform operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function passed to view::transform must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>,
-                        "The function passed to view::transform must be callable with arguments "
-                        "of the ranges' reference types.");
-                    CPP_assert_msg(
-                        !Same<void, invoke_result_t<
-                            Fun&, range_reference_t<Rng1>, range_reference_t<Rng2>>>,
-                        "The function passed to view::transform must return non-void when called "
-                        "with arguments of the ranges' reference types.");
-                }
-            #endif
             };
 
             /// \relates transform_fn

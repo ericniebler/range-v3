@@ -67,7 +67,7 @@ test_range()
     int r1[10] = {0};
     int r2[10] = {0};
     typedef std::tuple<Iter, output_iterator<int*>,  int*> P;
-    P p = ranges::partition_copy(::as_lvalue(ranges::make_iterator_range(Iter(std::begin(ia)),
+    P p = ranges::partition_copy(::as_lvalue(ranges::make_subrange(Iter(std::begin(ia)),
                                                            Sent(std::end(ia)))),
                                  output_iterator<int*>(r1), r2, is_odd());
     CHECK(std::get<0>(p) == Iter(std::end(ia)));
@@ -115,7 +115,7 @@ void test_rvalue()
     const S ia[] = {S{1}, S{2}, S{3}, S{4}, S{6}, S{8}, S{5}, S{7}};
     S r1[10] = {S{0}};
     S r2[10] = {S{0}};
-    auto p = ranges::partition_copy(ranges::view::all(ia), r1, r2, is_odd(), &S::i);
+    auto p = ranges::partition_copy(std::move(ia), r1, r2, is_odd(), &S::i);
     CHECK(ranges::get<0>(p).get_unsafe() == std::end(ia));
     CHECK(ranges::get<1>(p) == r1 + 4);
     CHECK(r1[0].i == 1);

@@ -5,7 +5,7 @@
         requires RandomAccessIterator<I>() &&
             SizedSentinel<S, I>() &&
             is_contiguous_iterator<I>())
-    iterator_range<std::add_pointer_t<iter_reference_t<I>>>
+    subrange<std::add_pointer_t<iter_reference_t<I>>>
     as_contiguous_range(I begin, S end)
     {
         if(begin == end)

@@ -64,7 +64,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : sum_(std::move(that.sum_))
                   , rng_(that.rng_)
                 {}
@@ -102,8 +102,7 @@ namespace ranges
             template<typename CRng = Rng const>
             auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
                 requires Range<CRng> &&
-                    Invocable<Fun const&, range_common_reference_t<CRng>,
-                        range_common_reference_t<CRng>>)
+                    IndirectInvocable<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return {*this};
             }
@@ -111,8 +110,7 @@ namespace ranges
             auto end_adaptor() const ->
                 CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
                     requires Range<CRng> &&
-                        Invocable<Fun const&, range_common_reference_t<CRng>,
-                            range_common_reference_t<CRng>>)
+                        IndirectInvocable<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return {*this};
             }
@@ -132,18 +130,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept PartialSumViewConcept,
-                    InputRange<Rng> &&
-                    IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>> &&
-                    ConvertibleTo<
-                        invoke_result_t<Fun &, range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>>,
-                        range_value_t<Rng>>
-            );
-
             struct partial_sum_fn
             {
             private:
@@ -158,31 +144,14 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 auto operator()(Rng &&rng, Fun fun) const ->
                     CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
-                        requires PartialSumViewConcept<Rng, Fun>)
+                        requires InputRange<Rng> &&
+                            IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>> &&
+                            ConvertibleTo<
+                                indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>,
+                                range_value_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(fun)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not PartialSumViewConcept<Rng, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument passed to view::partial_sum must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(IndirectInvocable<Fun, iterator_t<Rng>,
-                        iterator_t<Rng>>,
-                        "The second argument passed to view::partial_sum must be callable with "
-                        "two values from the range passed as the first argument.");
-                    CPP_assert_msg(ConvertibleTo<
-                        invoke_result_t<Fun &, range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>>,
-                        range_value_t<Rng>>,
-                        "The return type of the function passed to view::partial_sum must be "
-                        "convertible to the value type of the range.");
-                }
-            #endif
             };
 
             /// \relates partial_sum_fn

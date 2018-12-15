@@ -33,6 +33,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -53,7 +54,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename D, typename V, typename C, typename P>
-            static I sized_impl(I const begin_, S end, D const d_, D count,
+            static subrange<I> sized_impl(I const begin_, S end, D const d_, D count,
                 V const &val, C &pred, P &proj)
             {
                 D d = d_; // always the distance from begin to end
@@ -64,7 +65,10 @@ namespace ranges
                     while(true)
                     {
                         if(d < count)  // return the end if we've run out of room
-                            return ranges::next(recounted(begin_, std::move(begin), d_ - d), std::move(end));
+                        {
+                            auto e = ranges::next(recounted(begin_, std::move(begin), d_ - d), std::move(end));
+                            return {e, e};
+                        }
                         if(invoke(pred, invoke(proj, *begin), val))
                             break;
                         ++begin;
@@ -76,7 +80,8 @@ namespace ranges
                     while(true)
                     {
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
-                            return recounted(begin_, std::move(begin), d_ - d);
+                            return {recounted(begin_, std::move(begin), d_ - d),
+                                    recounted(begin_, std::move(++m), d_ - d)};
                         ++m;  // No need to check, we know we have room to match successfully
                         if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
                         {
@@ -89,7 +94,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename D, typename V, typename C, typename P>
-            static I impl(I begin, S end, D count, V const &val, C &pred, P &proj)
+            static subrange<I> impl(I begin, S end, D count, V const &val, C &pred, P &proj)
             {
                 while(true)
                 {
@@ -97,7 +102,7 @@ namespace ranges
                     while(true)
                     {
                         if(begin == end)  // return end if no element matches val
-                            return begin;
+                            return {begin, begin};
                         if(invoke(pred, invoke(proj, *begin), val))
                             break;
                         ++begin;
@@ -108,9 +113,9 @@ namespace ranges
                     while(true)
                     {
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
-                            return begin;
+                            return {begin, ++m};
                         if(++m == end)  // Otherwise if source exhausted, pattern not found
-                            return m;
+                            return {m, m};
                         if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
                         {
                             begin = next(std::move(m));
@@ -123,11 +128,11 @@ namespace ranges
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident>
             auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
-                CPP_ret(I)(
+                CPP_ret(subrange<I>)(
                     requires Searchnable<I, V, C, P> && Sentinel<S, I>)
             {
                 if(count <= 0)
-                    return begin;
+                    return {begin, begin};
                 if(SizedSentinel<S, I>)
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
@@ -139,11 +144,11 @@ namespace ranges
             template<typename Rng, typename V, typename C = equal_to, typename P = ident>
             auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
+                CPP_ret(safe_subrange_t<Rng>)(
                     requires Searchnable<iterator_t<Rng>, V, C, P> && Range<Rng>)
             {
                 if(count <= 0)
-                    return begin(rng);
+                    return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
                 if(SizedRange<Rng>)
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);

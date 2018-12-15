@@ -33,6 +33,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -56,8 +57,8 @@ namespace ranges
         private:
             template<typename I1, typename S1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2>
-            static I1 sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2, S2 end2, D2 d2,
-                C &pred, P1 &proj1, P2 &proj2)
+            static subrange<I1> sized_impl(I1 const begin1_, S1 end1, D1 const d1_,
+                I2 begin2, S2 end2, D2 d2, C &pred, P1 &proj1, P2 &proj2)
             {
                 D1 d1 = d1_;
                 auto begin1 = uncounted(begin1_);
@@ -67,7 +68,12 @@ namespace ranges
                     while(true)
                     {
                         if(d1 < d2)  // return the end if we've run out of room
-                            return ranges::next(recounted(begin1_, std::move(begin1), d1_ - d1), std::move(end1));
+                        {
+                            auto e = ranges::next(
+                                recounted(begin1_, std::move(begin1), d1_ - d1),
+                                std::move(end1));
+                            return {e, e};
+                        }
                         if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                             break;
                         ++begin1;
@@ -79,7 +85,10 @@ namespace ranges
                     while(true)
                     {
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
-                            return recounted(begin1_, std::move(begin1), d1_ - d1);
+                        {
+                            return {recounted(begin1_, std::move(begin1), d1_ - d1),
+                                    recounted(begin1_, std::move(++m1), d1_ - d1)};
+                        }
                         ++m1;  // No need to check, we know we have room to match successfully
                         if(!invoke(pred, invoke(proj1, *m1), invoke(proj2, *m2)))  // if there is a mismatch, restart with a new begin1
                         {
@@ -91,8 +100,10 @@ namespace ranges
                 }
             }
 
-            template<typename I1, typename S1, typename I2, typename S2, typename C, typename P1, typename P2>
-            static I1 impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred, P1 &proj1, P2 &proj2)
+            template<typename I1, typename S1, typename I2, typename S2, typename C,
+                typename P1, typename P2>
+            static subrange<I1> impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred,
+                P1 &proj1, P2 &proj2)
             {
                 while(true)
                 {
@@ -100,7 +111,7 @@ namespace ranges
                     while(true)
                     {
                         if(begin1 == end1)  // return end1 if no element matches *begin2
-                            return begin1;
+                            return {begin1, begin1};
                         if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
                             break;
                         ++begin1;
@@ -111,9 +122,9 @@ namespace ranges
                     while(true)
                     {
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
-                            return begin1;
+                            return {begin1, ++m1};
                         if(++m1 == end1)  // Otherwise if source exhausted, pattern not found
-                            return m1;
+                            return {m1, m1};
                         if(!invoke(pred, invoke(proj1, *m1), invoke(proj2, *m2)))  // if there is a mismatch, restart with a new begin1
                         {
                             ++begin1;
@@ -127,11 +138,11 @@ namespace ranges
                 typename P1 = ident, typename P2 = ident>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-                CPP_ret(I1)(
+                CPP_ret(subrange<I1>)(
                     requires Sentinel<S1, I1> && Sentinel<S2, I2> && Searchable<I1, I2, C, P1, P2>)
             {
                 if(begin2 == end2)
-                    return begin1;
+                    return {begin1, begin1};
                 if(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
                     return search_fn::sized_impl(std::move(begin1), std::move(end1),
                         distance(begin1, end1), std::move(begin2), std::move(end2),
@@ -145,12 +156,12 @@ namespace ranges
                 typename P2 = ident>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(safe_iterator_t<Rng1>)(
+                CPP_ret(safe_subrange_t<Rng1>)(
                     requires Range<Rng1> && Range<Rng2> &&
                         Searchable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {
                 if(empty(rng2))
-                    return begin(rng1);
+                    return subrange<iterator_t<Rng1>>{begin(rng1), begin(rng1)};
                 if(SizedRange<Rng1> && SizedRange<Rng2>)
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);

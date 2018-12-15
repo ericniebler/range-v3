@@ -23,6 +23,9 @@
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/transform.hpp>
 
+// TODO: Reuse subrange's PairLike concept here and have get_first and get_second
+// dispatch through get<>()
+
 namespace ranges
 {
     inline namespace v3
@@ -76,8 +79,8 @@ namespace ranges
             (
                 template(typename T)
                 concept PairLike,
-                    Invocable<get_first const&, T> &&
-                    Invocable<get_second const&, T>
+                    Invocable<get_first const &, T> &&
+                    Invocable<get_second const &, T>
             );
         }
         /// \endcond
@@ -86,68 +89,28 @@ namespace ranges
         /// @{
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng)
-                concept KeysViewConcept,
-                    InputRange<Rng> &&
-                    detail::PairLike<range_reference_t<Rng>>
-            );
-
             struct keys_fn
             {
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(keys_range_view<all_t<Rng>>)(
-                        requires KeysViewConcept<Rng>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            detail::PairLike<range_reference_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_first{}};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not KeysViewConcept<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The argument of view::keys must be a model of the InputRange concept.");
-                    CPP_assert_msg(detail::PairLike<range_reference_t<Rng>>,
-                        "The value type of the range passed to view::keys must look like a std::pair; "
-                        "That is, it must have first and second data members.");
-                }
-            #endif
             };
-
-            CPP_def
-            (
-                template(typename Rng)
-                concept ValuesViewConcept,
-                    InputRange<Rng> &&
-                    detail::PairLike<range_reference_t<Rng>>
-            );
 
             struct values_fn
             {
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(values_view<all_t<Rng>>)(
-                        requires ValuesViewConcept<Rng>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            detail::PairLike<range_reference_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), detail::get_second{}};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not ValuesViewConcept<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The argument of view::values must be a model of the InputRange concept.");
-                    CPP_assert_msg(detail::PairLike<range_reference_t<Rng>>,
-                        "The value type of the range passed to view::values must look like a std::pair; "
-                        "That is, it must have first and second data members.");
-                }
-            #endif
             };
 
             /// \relates keys_fn

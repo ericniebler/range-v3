@@ -31,6 +31,7 @@ namespace ranges
         private:
             I it_;
         public:
+            unbounded_view() = default;
             constexpr explicit unbounded_view(I it)
               : it_(detail::move(it))
             {}
@@ -49,9 +50,10 @@ namespace ranges
             struct unbounded_fn
             {
                 template<typename I>
-                constexpr unbounded_view<I> operator()(I it) const
+                constexpr auto operator()(I it) const ->
+                    CPP_ret(unbounded_view<I>)(
+                        requires InputIterator<I>)
                 {
-                    CPP_assert(InputIterator<I>);
                     return unbounded_view<I>{detail::move(it)};
                 }
             };

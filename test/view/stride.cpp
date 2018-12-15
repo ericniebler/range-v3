@@ -40,7 +40,7 @@ int main()
         using R = decltype(rng);
         CPP_assert(RandomAccessView<R>);
         CPP_assert(!ContiguousRange<R>);
-        CPP_assert(BoundedRange<R>);
+        CPP_assert(CommonRange<R>);
         CPP_assert(SizedRange<R>);
         CPP_assert(Range<R const>);
         ::check_equal(rng | view::reverse,
@@ -54,7 +54,7 @@ int main()
         using R = decltype(rng);
         CPP_assert(InputView<R>);
         CPP_assert(!ForwardRange<R>);
-        CPP_assert(!BoundedRange<R>);
+        CPP_assert(!CommonRange<R>);
         CPP_assert(!SizedRange<R>);
         CPP_assert(!Range<R const>);
         check_equal(rng, {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
@@ -67,7 +67,7 @@ int main()
         using R = decltype(rng);
         CPP_assert(BidirectionalView<R>);
         CPP_assert(!RandomAccessRange<R>);
-        CPP_assert(BoundedRange<R>);
+        CPP_assert(CommonRange<R>);
         CPP_assert(SizedRange<R>);
         CPP_assert(Range<R const>);
         ::check_equal(rng,
@@ -110,7 +110,7 @@ int main()
         using R = decltype(rng);
         CPP_assert(InputView<R>);
         CPP_assert(!ForwardRange<R>);
-        CPP_assert(!BoundedRange<R>);
+        CPP_assert(!CommonRange<R>);
         CPP_assert(SizedRange<R>);
         CPP_assert(!Range<R const>);
         ::check_equal(rng, {0,2,4,6});
@@ -119,12 +119,12 @@ int main()
     {
         std::list<int> li;
         copy(v, back_inserter(li));
-        iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
+        subrange<std::list<int>::const_iterator> tmp{li.begin(), li.end()};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
         CPP_assert(BidirectionalView<R>);
         CPP_assert(!RandomAccessRange<R>);
-        CPP_assert(!BoundedRange<R>);
+        CPP_assert(!CommonRange<R>);
         CPP_assert(!SizedRange<R>);
         CPP_assert(!Range<R const>);
         ::check_equal(rng,
@@ -136,12 +136,13 @@ int main()
     {
         std::list<int> li;
         copy(v, back_inserter(li));
-        sized_iterator_range<std::list<int>::const_iterator> tmp{li.begin(), li.end(), li.size()};
+        using CLI = std::list<int>::const_iterator;
+        subrange<CLI, CLI, subrange_kind::sized> tmp{li};
         auto rng = tmp | view::stride(3);
         using R = decltype(rng);
         CPP_assert(BidirectionalView<R>);
         CPP_assert(!RandomAccessRange<R>);
-        CPP_assert(BoundedRange<R>);
+        CPP_assert(CommonRange<R>);
         CPP_assert(SizedRange<R>);
         CPP_assert(Range<R const>);
         CHECK((*--rng.end()) == 48);

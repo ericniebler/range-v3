@@ -41,17 +41,49 @@ namespace ranges
             template<typename T>
             void begin(T &&) = delete;
             template<typename T>
-            void begin(std::initializer_list<T> &&) = delete;
+            void begin(std::initializer_list<T>) = delete;
+
+            template<class I>
+            auto is_iterator(I) -> CPP_ret(void)(requires Iterator<I>);
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasMemberBegin,
+                    requires (T &t)
+                    (
+                        _begin_::is_iterator(t.begin())
+                    ) &&
+                    std::is_lvalue_reference<T>::value
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasNonMemberBegin,
+                    requires (T &&t)
+                    (
+                        _begin_::is_iterator(begin((T &&) t))
+                    )
+            );
 
             struct fn
             {
             private:
+                template<bool>
+                struct impl_
+                {
+                    // HasMemberBegin == true
+                    template<typename R>
+                    constexpr auto operator()(R &&r) const
+                        noexcept(noexcept(r.begin()))
+                    {
+                        return r.begin();
+                    }
+                };
+
                 template<typename R>
-                using member_begin_t =
-                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().begin())>;
-                template<typename R>
-                using non_member_begin_t =
-                    detail::decay_t<decltype(begin(static_cast<R (*)()>(nullptr)()))>;
+                using impl = impl_<HasMemberBegin<R>>;
 
             public:
                 template<typename R, std::size_t N>
@@ -63,25 +95,12 @@ namespace ranges
                     return array;
                 }
 
-                // Prefer member if it returns Iterator.
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                    // TODO: noexcept and guaranteed copy elision
-                    noexcept(noexcept(static_cast<member_begin_t<R &>>(r.begin()))) ->
-                    CPP_ret(member_begin_t<R &>)(
-                        requires Iterator<member_begin_t<R &>>)
+                constexpr auto CPP_fun(operator())(R &&r) (const
+                    noexcept(noexcept(impl<R>{}((R &&) r)))
+                    requires (HasMemberBegin<R> || HasNonMemberBegin<R>))
                 {
-                    return r.begin();
-                }
-
-                // Use ADL if it returns Iterator.
-                template<typename R>
-                constexpr auto operator()(R &&r) const volatile
-                    noexcept(noexcept(static_cast<non_member_begin_t<R>>(begin((R &&) r)))) ->
-                    CPP_ret(non_member_begin_t<R>)(
-                        requires Iterator<non_member_begin_t<R>>)
-                {
-                    return begin((R &&) r);
+                    return impl<R>{}((R &&) r);
                 }
 
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
@@ -111,8 +130,20 @@ namespace ranges
                 }
             };
 
+            // HasMemberBegin == false
+            template<>
+            struct fn::impl_<false>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(begin((R &&) r)))
+                {
+                    return begin((R &&) r);
+                }
+            };
+
             template<typename R>
-            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+            using _t = decltype(fn{}(std::declval<R>()));
         }
         /// \endcond
 
@@ -131,17 +162,49 @@ namespace ranges
             template<typename T>
             void end(T &&) = delete;
             template<typename T>
-            void end(std::initializer_list<T> &&) = delete;
+            void end(std::initializer_list<T>) = delete;
+
+            template<typename I, typename S>
+            auto is_sentinel(S) -> CPP_ret(void)(requires Sentinel<S, I>);
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasMemberEnd,
+                    requires (T &t)
+                    (
+                        _end_::is_sentinel<_begin_::_t<T>>(t.end())
+                    ) &&
+                    std::is_lvalue_reference<T>::value
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasNonMemberEnd,
+                    requires (T &&t)
+                    (
+                        _end_::is_sentinel<_begin_::_t<T>>(end((T &&) t))
+                    )
+            );
 
             struct fn
             {
             private:
+                template<bool>
+                struct impl_
+                {
+                    // HasMemberEnd == true
+                    template<typename R>
+                    constexpr auto operator()(R &&r) const
+                        noexcept(noexcept(r.end()))
+                    {
+                        return r.end();
+                    }
+                };
+
                 template<typename R>
-                using member_end_t =
-                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().end())>;
-                template<typename R>
-                using non_member_end_t =
-                    detail::decay_t<decltype(end(static_cast<R (*)()>(nullptr)()))>;
+                using impl = impl_<HasMemberEnd<R>>;
 
             public:
                 template<typename R, std::size_t N>
@@ -153,24 +216,12 @@ namespace ranges
                     return array + N;
                 }
 
-                // Prefer member if it returns Sentinel.
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                    noexcept(noexcept(static_cast<member_end_t<R &>>(r.end()))) ->
-                    CPP_ret(member_end_t<R &>)(
-                        requires Sentinel<member_end_t<R &>, _begin_::_t<R &>>)
+                constexpr auto CPP_fun(operator())(R &&r) (const
+                    noexcept(noexcept(impl<R>{}((R &&) r)))
+                    requires (HasMemberEnd<R> || HasNonMemberEnd<R>))
                 {
-                    return r.end();
-                }
-
-                // Use ADL if it returns Sentinel.
-                template<typename R>
-                constexpr auto operator()(R &&r) const volatile
-                    noexcept(noexcept(static_cast<non_member_end_t<R>>(end((R &&) r)))) ->
-                    CPP_ret(non_member_end_t<R>)(
-                        requires Sentinel<non_member_end_t<R>, _begin_::_t<R>>)
-                {
-                    return end((R &&) r);
+                    return impl<R>{}((R &&) r);
                 }
 
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
@@ -200,8 +251,20 @@ namespace ranges
                 }
             };
 
+            // HasMemberEnd == false
+            template<>
+            struct fn::impl_<false>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(end((R &&) r)))
+                {
+                    return end((R &&) r);
+                }
+            };
+
             template<typename R>
-            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+            using _t = decltype(fn{}(std::declval<R>()));
         }
         /// \endcond
 
@@ -218,17 +281,10 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr _begin_::_t<R const &> operator()(R const &r) const
-                    noexcept(noexcept(ranges::begin(r)))
+                constexpr _begin_::_t<detail::as_const_t<R>> operator()(R &&r) const
+                    noexcept(noexcept(ranges::begin(detail::as_const((R &&) r))))
                 {
-                    return ranges::begin(r);
-                }
-
-                template<typename R>
-                constexpr _begin_::_t<R const> operator()(R const &&r) const
-                    noexcept(noexcept(ranges::begin((R const &&) r)))
-                {
-                    return ranges::begin((R const &&) r);
+                    return ranges::begin(detail::as_const((R &&) r));
                 }
             };
         }
@@ -246,16 +302,10 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr _end_::_t<R const &> operator()(R const &r) const
-                    noexcept(noexcept(ranges::end(r)))
+                constexpr _end_::_t<detail::as_const_t<R>> operator()(R &&r) const
+                    noexcept(noexcept(ranges::end(detail::as_const((R &&) r))))
                 {
-                    return ranges::end(r);
-                }
-                template<typename R>
-                constexpr _end_::_t<R const> operator()(R const &&r) const
-                    noexcept(noexcept(ranges::end((R const &&) r)))
-                {
-                    return ranges::end((R const &&) r);
+                    return ranges::end(detail::as_const((R &&) r));
                 }
             };
         }
@@ -272,55 +322,72 @@ namespace ranges
         {
             template<typename R>
             void rbegin(R &&) = delete;
+            // Non-standard, to keep unqualified rbegin(r) from finding std::rbegin
+            // and returning a std::reverse_iterator.
             template<typename T>
             void rbegin(std::initializer_list<T>) = delete;
+            template<typename T, std::size_t N>
+            void rbegin(T (&)[N]) = delete;
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasMemberRBegin,
+                    requires (T &t)
+                    (
+                        _begin_::is_iterator(t.rbegin())
+                    ) &&
+                    std::is_lvalue_reference<T>::value
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasNonMemberRBegin,
+                    requires (T &&t)
+                    (
+                        _begin_::is_iterator(rbegin((T &&) t))
+                    )
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept CanReverseEnd,
+                    requires (T &&t)
+                    (
+                        // make_reverse_iterator is constrained with
+                        // BidirectionalIterator.
+                        ranges::make_reverse_iterator(ranges::end((T &&) t))
+                    ) &&
+                    Same<_begin_::_t<T>, _end_::_t<T>>
+            );
 
             struct fn
             {
             private:
-                template<typename R>
-                using member_rbegin_t =
-                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().rbegin())>;
-                template<typename R>
-                using non_member_rbegin_t =
-                    detail::decay_t<decltype(rbegin(static_cast<R (*)()>(nullptr)()))>;
+                // HasMemberRBegin == true
+                template<int>
+                struct impl_
+                {
+                    template<typename R>
+                    constexpr auto operator()(R &&r) const
+                        noexcept(noexcept(r.rbegin()))
+                    {
+                        return r.rbegin();
+                    }
+                };
 
                 template<typename R>
-                static constexpr auto impl_(R &&r, int)
-                    noexcept(noexcept(static_cast<non_member_rbegin_t<R>>(rbegin((R &&) r)))) ->
-                    CPP_ret(non_member_rbegin_t<R>)(
-                        requires Iterator<non_member_rbegin_t<R>>)
-                {
-                    return rbegin((R &&) r);
-                }
-
-                template<typename R>
-                static constexpr auto impl_(R &&r, long)
-                    noexcept(noexcept(ranges::make_reverse_iterator(ranges::end((R &&) r)))) ->
-                    CPP_ret(reverse_iterator<_end_::_t<R>>)(
-                        requires Same<_begin_::_t<R>, _end_::_t<R>> &&
-                            BidirectionalIterator<_end_::_t<R>>)
-                {
-                    return ranges::make_reverse_iterator(ranges::end(r));
-                }
+                using impl = impl_<HasMemberRBegin<R> ? 0 : HasNonMemberRBegin<R> ? 1 : 2>;
 
             public:
-                // Prefer member if it returns Iterator.
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                    noexcept(noexcept(static_cast<member_rbegin_t<R &>>(r.rbegin()))) ->
-                    CPP_ret(member_rbegin_t<R &>)(
-                        requires Iterator<member_rbegin_t<R &>>)
+                constexpr auto CPP_fun(operator())(R &&r) (const
+                    noexcept(noexcept(impl<R>{}((R &&) r)))
+                    requires (HasMemberRBegin<R> || HasNonMemberRBegin<R> || CanReverseEnd<R>))
                 {
-                    return r.rbegin();
-                }
-
-                template<typename R>
-                constexpr auto operator()(R &&r) const volatile
-                    noexcept(noexcept(fn::impl_((R &&) r, 0))) ->
-                    decltype(fn::impl_((R &&) r, 0))
-                {
-                    return fn::impl_((R &&) r, 0);
+                    return impl<R>{}((R &&) r);
                 }
 
                 template<typename T, typename Fn = fn>
@@ -342,8 +409,32 @@ namespace ranges
                 }
             };
 
+            // HasNonMemberRBegin == true
+            template<>
+            struct fn::impl_<1>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(rbegin((R &&) r)))
+                {
+                    return rbegin((R &&) r);
+                }
+            };
+
+            // CanReverseEnd
+            template<>
+            struct fn::impl_<2>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(ranges::make_reverse_iterator(ranges::end((R &&) r))))
+                {
+                    return ranges::make_reverse_iterator(ranges::end((R &&) r));
+                }
+            };
+
             template<typename R>
-            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+            using _t = decltype(fn{}(std::declval<R>()));
         }
         /// \endcond
 
@@ -361,55 +452,72 @@ namespace ranges
         {
             template<typename R>
             void rend(R &&) = delete;
+            // Non-standard, to keep unqualified rend(r) from finding std::rend
+            // and returning a std::reverse_iterator.
             template<typename T>
             void rend(std::initializer_list<T>) = delete;
+            template<typename T, std::size_t N>
+            void rend(T (&)[N]) = delete;
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasMemberREnd,
+                    requires (T &t)
+                    (
+                        _end_::is_sentinel<_rbegin_::_t<T &>>(t.rend())
+                    ) &&
+                    std::is_lvalue_reference<T>::value
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept HasNonMemberREnd,
+                    requires (T &&t)
+                    (
+                        _end_::is_sentinel<_rbegin_::_t<T &>>(rend((T &&) t))
+                    )
+            );
+
+            CPP_def
+            (
+                template(typename T)
+                concept CanReverseBegin,
+                    requires (T &&t)
+                    (
+                        // make_reverse_iterator is constrained with
+                        // BidirectionalIterator.
+                        ranges::make_reverse_iterator(ranges::begin((T &&) t))
+                    ) &&
+                    Same<_begin_::_t<T>, _end_::_t<T>>
+            );
 
             struct fn
             {
             private:
-                template<typename R>
-                using member_rend_t =
-                    detail::decay_t<decltype(static_cast<R (*)()>(nullptr)().rend())>;
-                template<typename R>
-                using non_member_rend_t =
-                    detail::decay_t<decltype(rend(static_cast<R (*)()>(nullptr)()))>;
+                // HasMemberRBegin == true
+                template<int>
+                struct impl_
+                {
+                    template<typename R>
+                    constexpr auto operator()(R &&r) const
+                        noexcept(noexcept(r.rend()))
+                    {
+                        return r.rend();
+                    }
+                };
 
                 template<typename R>
-                static constexpr auto impl_(R &&r, int)
-                    noexcept(noexcept(static_cast<non_member_rend_t<R>>(rend((R &&) r)))) ->
-                    CPP_ret(non_member_rend_t<R>)(
-                        requires Sentinel<non_member_rend_t<R>, _rbegin_::_t<R>>)
-                {
-                    return rend((R &&) r);
-                }
-
-                template<typename R>
-                static constexpr auto impl_(R &&r, long)
-                    noexcept(noexcept(ranges::make_reverse_iterator(ranges::begin((R &&) r)))) ->
-                    CPP_ret(reverse_iterator<_begin_::_t<R>>)(
-                        requires Same<_begin_::_t<R>, _end_::_t<R>> &&
-                            BidirectionalIterator<_begin_::_t<R>>)
-                {
-                    return ranges::make_reverse_iterator(ranges::begin(r));
-                }
+                using impl = impl_<HasMemberREnd<R> ? 0 : HasNonMemberREnd<R> ? 1 : 2>;
 
             public:
-                // Prefer member if it returns Iterator.
                 template<typename R>
-                constexpr auto operator()(R &r) const
-                    noexcept(noexcept(static_cast<member_rend_t<R &>>(r.rend()))) ->
-                    CPP_ret(member_rend_t<R &>)(
-                        requires Sentinel<member_rend_t<R &>, _rbegin_::_t<R &>>)
+                constexpr auto CPP_fun(operator())(R &&r) (const
+                    noexcept(noexcept(impl<R>{}((R &&) r)))
+                    requires (HasMemberREnd<R> || HasNonMemberREnd<R> || CanReverseBegin<R>))
                 {
-                    return r.rend();
-                }
-
-                template<typename R>
-                constexpr auto operator()(R &&r) const volatile
-                    noexcept(noexcept(fn::impl_((R &&) r, 0))) ->
-                    decltype(fn::impl_((R &&) r, 0))
-                {
-                    return fn::impl_((R &&) r, 0);
+                    return impl<R>{}((R &&) r);
                 }
 
                 template<typename T, typename Fn = fn>
@@ -431,8 +539,32 @@ namespace ranges
                 }
             };
 
+            // HasNonMemberREnd == true
+            template<>
+            struct fn::impl_<1>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(rend((R &&) r)))
+                {
+                    return rend((R &&) r);
+                }
+            };
+
+            // CanReverseBegin
+            template<>
+            struct fn::impl_<2>
+            {
+                template<typename R>
+                constexpr auto operator()(R &&r) const
+                    noexcept(noexcept(ranges::make_reverse_iterator(ranges::begin((R &&) r))))
+                {
+                    return ranges::make_reverse_iterator(ranges::begin((R &&) r));
+                }
+            };
+
             template<typename R>
-            using _t = decltype(fn{}(static_cast<R (*)()>(nullptr)()));
+            using _t = decltype(fn{}(std::declval<R>()));
         }
         /// \endcond
 
@@ -452,16 +584,10 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr _rbegin_::_t<R const &> operator()(R const &r) const
-                    noexcept(noexcept(ranges::rbegin(r)))
+                constexpr _rbegin_::_t<detail::as_const_t<R>> operator()(R &&r) const
+                    noexcept(noexcept(ranges::rbegin(detail::as_const((R &&) r))))
                 {
-                    return ranges::rbegin(r);
-                }
-                template<typename R>
-                constexpr _rbegin_::_t<R const> operator()(R const &&r) const
-                    noexcept(noexcept(ranges::rbegin((R const &&) r)))
-                {
-                    return ranges::rbegin((R const &&) r);
+                    return ranges::rbegin(detail::as_const((R &&) r));
                 }
             };
         }
@@ -479,16 +605,10 @@ namespace ranges
             struct fn
             {
                 template<typename R>
-                constexpr _rend_::_t<R const &> operator()(R const &r) const
-                    noexcept(noexcept(ranges::rend(r)))
+                constexpr _rend_::_t<detail::as_const_t<R>> operator()(R &&r) const
+                    noexcept(noexcept(ranges::rend(detail::as_const((R &&) r))))
                 {
-                    return ranges::rend(r);
-                }
-                template<typename R>
-                constexpr _rend_::_t<R const> operator()(R const &&r) const
-                    noexcept(noexcept(ranges::rend((R const &&) r)))
-                {
-                    return ranges::rend((R const &&) r);
+                    return ranges::rend(detail::as_const((R &&) r));
                 }
             };
         }

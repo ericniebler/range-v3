@@ -1057,7 +1057,7 @@ int main()
         .check([&](S *r){ CHECK(r == i185+1); });
 
     // Test rvalue range
-    auto res = ranges::is_heap_until(ranges::view::all(i185), std::greater<int>(), &S::i);
+    auto res = ranges::is_heap_until(std::move(i185), std::greater<int>(), &S::i);
     CHECK(res.get_unsafe() == i185+1);
 
     return ::test_result();

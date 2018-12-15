@@ -53,13 +53,13 @@ int main()
     }
 
     {
-        auto rng = view::empty<int>() | view::tail;
+        auto rng = view::empty<int> | view::tail;
         static_assert(0 == size(rng), "");
         CPP_assert(Same<empty_view<int>, decltype(rng)>);
     }
 
     {
-        tail_view<empty_view<int>> const rng(view::empty<int>());
+        tail_view<empty_view<int>> const rng(view::empty<int>);
         static_assert(0 == size(rng), "");
     }
 

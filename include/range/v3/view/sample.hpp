@@ -148,7 +148,7 @@ namespace ranges
                 }
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : base_t(static_cast<typename cursor<Other>::base_t &&>(
                       static_cast<typename cursor<Other>::base_t &>(that)))
                 {}
@@ -199,24 +199,10 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename URNG)
-                concept Constraint,
-                    InputRange<Rng> &&
-                    UniformRandomNumberGenerator<URNG> &&
-                    ConvertibleTo<
-                        invoke_result_t<URNG &>,
-                        range_difference_t<Rng>> &&
-                    (
-                        SizedRange<Rng> ||
-                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
-                        ForwardRange<Rng>)
-            );
-
             /// Returns a random sample of a range of length `size(range)`.
-            class sample_fn
+            struct sample_fn
             {
+            private:
                 friend view_access;
                 template<typename Size, typename URNG = detail::default_random_engine>
                 static auto CPP_fun(bind)(sample_fn fn, Size n,
@@ -226,45 +212,23 @@ namespace ranges
                     return make_pipeable(std::bind(fn, std::placeholders::_1, n,
                         bind_forward<URNG &>(urng)));
                 }
-
             public:
                 template<typename Rng, typename URNG = detail::default_random_engine>
                 auto operator()(Rng &&rng, range_difference_t<Rng> sample_size,
                         URNG &generator = detail::get_random_engine()) const ->
                     CPP_ret(sample_view<all_t<Rng>, URNG>)(
-                        requires Constraint<Rng, URNG>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            UniformRandomNumberGenerator<URNG> &&
+                            ConvertibleTo<invoke_result_t<URNG &>, range_difference_t<Rng>> &&
+                            (SizedRange<Rng> ||
+                             SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
+                             ForwardRange<Rng>))
                 {
                     return sample_view<all_t<Rng>, URNG>{
-                        all(static_cast<Rng &&>(rng)), sample_size, generator
-                    };
+                        all(static_cast<Rng &&>(rng)),
+                        sample_size,
+                        generator};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename URNG = detail::default_random_engine>
-                auto operator()(Rng &&, URNG && = URNG{}) const ->
-                    CPP_ret(void)(
-                        requires not Constraint<Rng, URNG>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::sample operates must satisfy the InputRange "
-                        "concept.");
-                    CPP_assert_msg(UniformRandomNumberGenerator<URNG>,
-                        "The generator passed to view::sample must satisfy the "
-                        "UniformRandomNumberGenerator concept.");
-                    CPP_assert_msg(Or<
-                        SizedRange<Rng>,
-                        SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>,
-                        ForwardRange<Rng>>,
-                        "The underlying range for view::sample must either satisfy the SizedRange"
-                        "concept, have iterator and sentinel types that satisfy the "
-                        "SizedSentinel concept, or be a forward range.");
-                    CPP_assert_msg(ConvertibleTo<
-                        invoke_result_t<URNG &>,
-                        range_difference_t<Rng>>,
-                        "The random generator passed to view::sample has to have a return type "
-                        "convertible to the base iterator difference type.");
-                }
-            #endif
             };
 
             /// \relates sample_fn

@@ -35,35 +35,36 @@ namespace ranges
         {
 #if defined(__GLIBCXX__)
             template<typename I>
-            char (&is_std_iterator_traits_specialized_(std::__iterator_traits<I> *))[2];
+            char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I> *))[2];
             template<typename I>
-            char is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_impl_(void *);
 #elif defined(_LIBCPP_VERSION)
             template<typename I, bool B>
-            char (&is_std_iterator_traits_specialized_(std::__iterator_traits<I, B> *))[2];
+            char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I, B> *))[2];
             template<typename I>
-            char is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_impl_(void *);
 #elif defined(_MSVC_STL_VERSION)
             template<typename I>
-            char (&is_std_iterator_traits_specialized_(std::_Iterator_traits_base<I> *))[2];
+            char (&is_std_iterator_traits_specialized_impl_(std::_Iterator_traits_base<I> *))[2];
             template<typename I>
-            char is_std_iterator_traits_specialized_(void *);
+            char is_std_iterator_traits_specialized_impl_(void *);
 #else
             template<typename I>
-            char (&is_std_iterator_traits_specialized_(void *))[2];
+            char (&is_std_iterator_traits_specialized_impl_(void *))[2];
 #endif
-            // The standard iterator_traits<T *> specialization(s) do not count
-            // as user-specialized. This will no longer be necessary in C++20,
-            // and only effects T volatile* until then.
             template<typename, typename T>
-            char (&is_std_iterator_traits_specialized_(std::iterator_traits<T volatile *> *))[2];
+            char (&is_std_iterator_traits_specialized_impl_(std::iterator_traits<T *> *))[2];
 
             template<typename I>
-            constexpr bool is_std_iterator_traits_specialized() noexcept
-            {
-                using iter_traits_ptr = std::iterator_traits<I> *;
-                return 1 == sizeof(is_std_iterator_traits_specialized_<I>(iter_traits_ptr{}));
-            }
+            constexpr bool is_std_iterator_traits_specialized_ =
+                1 == sizeof(is_std_iterator_traits_specialized_impl_<I>(
+                    static_cast<std::iterator_traits<I> *>(nullptr)));
+
+            // The standard iterator_traits<T *> specialization(s) do not count
+            // as user-specialized. This will no longer be necessary in C++20.
+            // This helps with `T volatile*` and `void *`.
+            template<typename T>
+            constexpr bool is_std_iterator_traits_specialized_<T *> = false;
         }
         /// \endcond
 
@@ -72,7 +73,7 @@ namespace ranges
         template<typename T>
         using iter_difference_t =
             typename detail::if_then_t<
-                detail::is_std_iterator_traits_specialized<T>(),
+                detail::is_std_iterator_traits_specialized_<T>,
                 std::iterator_traits<T>,
                 incrementable_traits<T>>::difference_type;
 #else
@@ -134,7 +135,7 @@ namespace ranges
         template<typename T>
         using iter_value_t =
             typename detail::if_then_t<
-                detail::is_std_iterator_traits_specialized<T>(),
+                detail::is_std_iterator_traits_specialized_<T>,
                 std::iterator_traits<T>,
                 readable_traits<T>>::value_type;
 #else

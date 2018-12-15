@@ -106,33 +106,6 @@ namespace ranges
                 {
                     return generate_view<G>{std::move(g)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename G>
-                auto operator()(G) const ->
-                    CPP_ret(void)(
-                        requires not GenerateViewConcept<G>)
-                {
-                    check<G>();
-                }
-                template<typename G>
-                static void check()
-                {
-                    CPP_assert_msg(Invocable<G&>,
-                        "The function object G must be callable with no arguments.");
-                    CPP_assert_msg(MoveConstructible<G>,
-                        "The function object G must be MoveConstructible.");
-                    using T = invoke_result_t<G &>;
-                    using D = detail::decay_t<T>;
-                    CPP_assert_msg(std::is_object<D>(),
-                        "The return type of the function object G must decay to an object type.");
-                    CPP_assert_msg(Constructible<D, T>,
-                        "The decayed return type of the function object G must be Constructible from the "
-                        "return type of G.");
-                    CPP_assert_msg(Assignable<D&, T>,
-                        "The decayed return type of the function object G must be Assignable from the "
-                        "return type of G.");
-                }
-            #endif
             };
 
             /// \relates generate_fn

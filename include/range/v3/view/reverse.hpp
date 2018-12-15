@@ -67,12 +67,6 @@ namespace ranges
             explicit constexpr reverse_view(Rng rng)
               : rng_(detail::move(rng))
             {}
-            template<typename O>
-            explicit constexpr CPP_ctor(reverse_view)(O&& o)(
-                requires ViewableRange<not_self_<O>> &&
-                    BidirectionalRange<O> && Constructible<Rng, view::all_t<O>>)
-              : rng_(view::all(static_cast<O &&>(o)))
-            {}
             Rng base() const
             {
                 return rng_;
@@ -122,22 +116,10 @@ namespace ranges
                 template<typename Rng>
                 constexpr /*c++14*/ auto operator()(Rng &&rng) const ->
                     CPP_ret(reverse_view<all_t<Rng>>)(
-                        requires BidirectionalRange<Rng>)
+                        requires ViewableRange<Rng> && BidirectionalRange<Rng>)
                 {
                     return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For error reporting
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not BidirectionalRange<Rng>)
-                {
-                    CPP_assert_msg(BidirectionalRange<Rng>,
-                        "The object on which view::reverse operates must model the "
-                        "BidirectionalRange concept.");
-                }
-            #endif
             };
 
             /// \relates reverse_fn

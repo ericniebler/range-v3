@@ -315,7 +315,7 @@ int main()
         int ir[] = {1, 2, 3, 3, 3, 4, 4};
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
-        auto res = ranges::set_difference(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        auto res = ranges::set_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK((res.first.get_unsafe() - ia) == sa);
         CHECK((res.second - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res.second, ir, ir+sr, std::less<int>(), &U::k) == false);
@@ -324,7 +324,7 @@ int main()
         int irr[] = {6};
         static const int srr = sizeof(irr)/sizeof(irr[0]);
         auto res2 = ranges::set_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
-        CHECK((res2.first.get_unsafe() - ib) == sb);
+        CHECK((res2.first - ib) == sb);
         CHECK((res2.second - ic) == srr);
         CHECK(ranges::lexicographical_compare(ic, res2.second, ir, irr+srr, std::less<int>(), &U::k) == false);
     }

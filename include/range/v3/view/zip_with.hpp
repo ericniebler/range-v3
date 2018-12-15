@@ -177,7 +177,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(sentinel)(sentinel<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : ends_(std::move(that.ends_))
                 {}
             };
@@ -205,7 +205,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : fun_(std::move(that.fun_)), its_(std::move(that.its_))
                 {}
                 auto CPP_auto_fun(read)() (const)
@@ -366,86 +366,35 @@ namespace ranges
                 template<typename...Rngs, typename Fun>
                 auto operator()(Fun fun, Rngs &&... rngs) const ->
                     CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
-                        requires IterZipWithViewConcept<Fun, Rngs...>)
+                        requires And<ViewableRange<Rngs>...> &&
+                            IterZipWithViewConcept<Fun, Rngs...>)
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
                         all(static_cast<Rngs &&>(rngs))...
                     };
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Fun, typename...Rngs>
-                auto operator()(Fun, Rngs &&...) const ->
-                    CPP_ret(void)(
-                        requires not IterZipWithViewConcept<Fun, Rngs...>)
-                {
-                    CPP_assert_msg(And<InputRange<Rngs>...>,
-                        "All of the objects passed to view::iter_zip_with must model the InputRange "
-                        "concept");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function object passed to view::iter_zip_with must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, iterator_t<Rngs>...>,
-                        "The function passed to view::iter_zip_with must be callable with arguments "
-                        "of the ranges' iterator types.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, copy_tag, iterator_t<Rngs>...>,
-                        "The function passed to view::iter_zip_with must be callable with "
-                        "copy_tag and arguments of the ranges' iterator types.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, move_tag, iterator_t<Rngs>...>,
-                        "The function passed to view::iter_zip_with must be callable with "
-                        "move_tag and arguments of the ranges' iterator types.");
-                }
-            #endif
             };
 
             /// \relates iter_zip_with_fn
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(iter_zip_with_fn, iter_zip_with)
 
-            CPP_def
-            (
-                template(typename Fun, typename ...Rngs)
-                (concept ZipWithViewConcept)(Fun, Rngs...),
-                    And<InputRange<Rngs>...> &&
-                    CopyConstructible<Fun> &&
-                    Invocable<Fun&, range_reference_t<Rngs> &&...>
-            );
-
             struct zip_with_fn
             {
                 template<typename...Rngs, typename Fun>
                 auto operator()(Fun fun, Rngs &&... rngs) const ->
                     CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)(
-                        requires ZipWithViewConcept<Fun, Rngs...>)
+                        requires And<ViewableRange<Rngs>...> &&
+                            And<InputRange<Rngs>...> &&
+                            CopyConstructible<Fun> &&
+                            Invocable<Fun&, range_reference_t<Rngs> &&...>)
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
                         all(static_cast<Rngs &&>(rngs))...
                     };
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Fun, typename...Rngs>
-                auto operator()(Fun, Rngs &&...) const ->
-                    CPP_ret(void)(
-                        requires not ZipWithViewConcept<Fun, Rngs...>)
-                {
-                    CPP_assert_msg(And<InputRange<Rngs>...>,
-                        "All of the objects passed to view::zip_with must model the InputRange "
-                        "concept");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function object passed to view::zip_with must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, range_reference_t<Rngs> &&...>,
-                        "The function passed to view::zip_with must be callable with arguments "
-                        "of the ranges' reference types.");
-                }
-            #endif
             };
 
             /// \relates zip_with_fn

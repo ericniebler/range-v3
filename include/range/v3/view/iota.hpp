@@ -427,14 +427,14 @@ namespace ranges
             private:
                 template<typename From>
                 static detail::take_exactly_view_<iota_view<From>, true>
-                impl(From from, From to, random_access_incrementable_tag)
+                impl_(From from, From to, random_access_incrementable_tag)
                 {
                     auto n = detail::iota_minus_(std::move(to), from);
                     return {iota_view<From>{std::move(from)}, n};
                 }
                 template<typename From, typename To>
                 static iota_view<From, To>
-                impl(From from, To to, weakly_incrementable_tag)
+                impl_(From from, To to, weakly_incrementable_tag)
                 {
                     return {std::move(from), std::move(to)};
                 }
@@ -447,63 +447,22 @@ namespace ranges
                     return iota_view<From>{std::move(value)};
                 }
                 template<typename From, typename To>
-                meta::if_c<
-                    WeaklyIncrementable<From> && WeaklyEqualityComparableWith<From, To>,
-                    meta::if_c<
-                        RandomAccessIncrementable<From> && Same<From, To>,
-                        detail::take_exactly_view_<iota_view<From>, true>,
-                        iota_view<From, To>>>
-                operator()(From from, To to) const;
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename From>
-                auto operator()(From) const ->
-                    CPP_ret(void)(
-                        requires not WeaklyIncrementable<From>)
+                auto CPP_fun(operator())(From from, To to) (const
+                    requires WeaklyIncrementable<From> && WeaklyEqualityComparableWith<From, To>)
                 {
-                    CPP_assert_msg(WeaklyIncrementable<From>,
-                        "The object passed to view::iota must model the WeaklyIncrementable "
-                        "concept; that is, it must have pre- and post-increment operators and it "
-                        "must have a difference_type");
+                    return iota_fn::impl_(
+                        std::move(from),
+                        std::move(to),
+                        incrementable_tag_of<From>{});
                 }
-                template<typename From, typename To>
-                auto operator()(From, To) const ->
-                    CPP_ret(void)(
-                        requires not (WeaklyIncrementable<From> &&
-                            WeaklyEqualityComparableWith<From, To>))
-                {
-                    CPP_assert_msg(WeaklyIncrementable<From>,
-                        "The object passed to view::iota must model the WeaklyIncrementable "
-                        "concept; that is, it must have pre- and post-increment operators and it "
-                        "must have a difference_type");
-                    CPP_assert_msg(WeaklyEqualityComparableWith<From, To>,
-                        "The two arguments passed to view::iota must be WeaklyEqualityComparableWith "
-                        "with == and !=");
-                }
-            #endif
             };
-
-            template<typename From, typename To>
-            meta::if_c<
-                WeaklyIncrementable<From> && WeaklyEqualityComparableWith<From, To>,
-                meta::if_c<
-                    RandomAccessIncrementable<From> && Same<From, To>,
-                    detail::take_exactly_view_<iota_view<From>, true>,
-                    iota_view<From, To>>>
-            iota_fn::operator()(From from, To to) const
-            {
-                return iota_fn::impl(
-                    std::move(from),
-                    std::move(to),
-                    incrementable_tag_of<From>{});
-            }
 
             struct closed_iota_fn
             {
             private:
                 template<typename From>
                 static detail::take_exactly_view_<iota_view<From>, true>
-                impl(From from, From to, random_access_incrementable_tag)
+                impl_(From from, From to, random_access_incrementable_tag)
                 {
                     return {
                         iota_view<From>{std::move(from)},
@@ -512,40 +471,21 @@ namespace ranges
                 }
                 template<typename From, typename To>
                 static closed_iota_view<From, To>
-                impl(From from, To to, weakly_incrementable_tag)
+                impl_(From from, To to, weakly_incrementable_tag)
                 {
                     return {std::move(from), std::move(to)};
                 }
             public:
-                CPP_template(typename From, typename To)(
+                template<typename From, typename To>
+                auto CPP_fun(operator())(From from, To to) (const
                     requires WeaklyIncrementable<From> &&
                         WeaklyEqualityComparableWith<From, To>)
-                meta::if_c<
-                    RandomAccessIncrementable<From> && Same<From, To>,
-                    detail::take_exactly_view_<iota_view<From>, true>,
-                    closed_iota_view<From, To>>
-                operator()(From from, To to) const
                 {
-                    return closed_iota_fn::impl(
+                    return closed_iota_fn::impl_(
                         std::move(from),
                         std::move(to),
                         incrementable_tag_of<From>{});
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename From, typename To)(
-                    requires not (WeaklyIncrementable<From> &&
-                        WeaklyEqualityComparableWith<From, To>))
-                void operator()(From, To) const
-                {
-                    CPP_assert_msg(WeaklyIncrementable<From>,
-                        "The object passed to view::closed_iota must model the WeaklyIncrementable "
-                        "concept; that is, it must have pre- and post-increment operators and it "
-                        "must have a difference_type");
-                    CPP_assert_msg(WeaklyEqualityComparableWith<From, To>,
-                        "The two arguments passed to view::closed_iota must be "
-                        "WeaklyEqualityComparableWith with == and !=");
-                }
-            #endif
             };
 
             /// \relates iota_fn
@@ -568,33 +508,13 @@ namespace ranges
                 {
                     return iota_view<Val>{value};
                 }
-
-                CPP_template(typename Val)(
+                template<typename Val>
+                auto CPP_fun(operator())(Val from, Val to) (const
                     requires Integral<Val>)
-                auto CPP_auto_fun(operator())(Val from, Val to) (const)
-                (
+                {
                     return detail::take_exactly_view_<iota_view<Val>, true>
-                        {iota_view<Val>{from}, detail::ints_open_distance_(from, to)}
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Val>
-                auto operator()(Val) const ->
-                    CPP_ret(void)(
-                        requires not Integral<Val>)
-                {
-                    CPP_assert_msg(Integral<Val>,
-                        "The object passed to view::ints must be Integral");
+                        {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};
                 }
-                template<typename Val>
-                auto operator()(Val, Val) const ->
-                    CPP_ret(void)(
-                        requires not Integral<Val>)
-                {
-                    CPP_assert_msg(Integral<Val>,
-                        "The object passed to view::ints must be Integral");
-                }
-            #endif
             };
 
             /// \relates ints_fn

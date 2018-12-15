@@ -33,7 +33,7 @@ void test_const_forward_range(Rng const &rng)
 {
     auto r = rng | view::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!BoundedRange<decltype(r)>, "");
+    static_assert(!CommonRange<decltype(r)>, "");
     CHECK(distance(r | view::take_exactly(0)) == 0);
     CHECK(distance(r | view::take_exactly(1)) == 1);
     CHECK(distance(r | view::take_exactly(2)) == 2);
@@ -76,7 +76,7 @@ void test_const_forward_reversed_range(Rng const &rng)
 
     auto r = rng | view::reverse | view::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
-    static_assert(!BoundedRange<decltype(r)>, "");
+    static_assert(!CommonRange<decltype(r)>, "");
 
     CHECK(distance(r | view::take_exactly(0)) == 0);
     CHECK(distance(r | view::take_exactly(1)) == 1);

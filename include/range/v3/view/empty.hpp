@@ -65,15 +65,18 @@ namespace ranges
             {
                 return nullptr;
             }
+            RANGES_DEPRECATED("Replace view::empty<T>() with view::empty<>. "
+                "It is now a variable template.")
+            empty_view operator()() const
+            {
+                return *this;
+            }
         };
 
         namespace view
         {
             template<typename T>
-            empty_view<T> empty()
-            {
-                return {};
-            }
+            /*inline*/ constexpr empty_view<T> empty {};
         }
     }
 }

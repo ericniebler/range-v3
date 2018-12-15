@@ -115,35 +115,16 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename ...Rngs)
-                (concept ZipViewConcept)(Rngs...),
-                    And<InputRange<Rngs>...>
-            );
-
             struct zip_fn
             {
                 template<typename...Rngs>
                 auto operator()(Rngs &&... rngs) const ->
                     CPP_ret(zip_view<all_t<Rngs>...>)(
-                        requires ZipViewConcept<Rngs...>)
+                        requires And<ViewableRange<Rngs>...> &&
+                            And<InputRange<Rngs>...>)
                 {
-                    CPP_assert(And<Range<Rngs>...>);
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename...Rngs>
-                auto operator()(Rngs &&...) const ->
-                    CPP_ret(void)(
-                        requires not ZipViewConcept<Rngs...>)
-                {
-                    CPP_assert_msg(And<InputRange<Rngs>...>,
-                        "All of the objects passed to view::zip must model the InputRange "
-                        "concept");
-                }
-            #endif
             };
 
             /// \relates zip_fn

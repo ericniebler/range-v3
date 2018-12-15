@@ -24,7 +24,7 @@ struct my_reverse_view
 {
 private:
     CPP_assert(ranges::BidirectionalRange<BidiRange>);
-    CPP_assert(ranges::BoundedRange<BidiRange>);
+    CPP_assert(ranges::CommonRange<BidiRange>);
     friend ranges::range_access;
     using base_iterator_t = ranges::iterator_t<BidiRange>;
 

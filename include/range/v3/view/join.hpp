@@ -311,48 +311,12 @@ namespace ranges
             (
                 template(typename Rng)
                 concept JoinableRange,
-                    InputRange<Rng> && InputRange<range_reference_t<Rng>>
+                    ViewableRange<Rng> && InputRange<Rng> &&
+                    InputRange<range_reference_t<Rng>>
             );
 
             struct join_fn
             {
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(join_view<all_t<Rng>>)(
-                        requires JoinableRange<Rng>)
-                {
-                    return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
-                }
-                template<typename Rng, typename Val = range_value_t<range_reference_t<Rng>>>
-                auto operator()(Rng &&rng, meta::id_t<Val> v) const ->
-                    CPP_ret(join_view<all_t<Rng>, single_view<Val>>)(
-                        requires JoinableRange<Rng>)
-                {
-                    CPP_assert_msg(Semiregular<Val>,
-                        "To join a range of ranges with a value, the value type must be a model of "
-                        "the Semiregular concept; that is, it must have a default constructor, "
-                        "copy and move constructors, and a destructor.");
-                    return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
-                }
-                template<typename Rng, typename ValRng>
-                auto operator()(Rng &&rng, ValRng &&val) const ->
-                    CPP_ret(join_view<all_t<Rng>, all_t<ValRng>>)(
-                        // For some reason, this gives gcc problems:
-                        //requires JoinableRange<Rng> && ForwardRange<ValRng>)
-                        requires JoinableRange<Rng> && Range<ValRng> && ForwardIterator<iterator_t<ValRng>>)
-                {
-                    CPP_assert_msg(Common<range_value_t<ValRng>,
-                        range_value_t<range_reference_t<Rng>>>,
-                        "To join a range of ranges with another range, all the ranges must have "
-                        "a common value type.");
-                    CPP_assert_msg(Semiregular<common_type_t<
-                        range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>>>,
-                        "To join a range of ranges with another range, all the ranges must have "
-                        "a common value type, and that value type must model the Semiregular "
-                        "concept; that is, it must have a default constructor, copy and move "
-                        "constructors, and a destructor.");
-                    return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
-                }
             private:
                friend view_access;
                template<typename T>
@@ -361,6 +325,37 @@ namespace ranges
                {
                    return make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)));
                }
+               template<typename Rng>
+               using inner_value_t = range_value_t<range_reference_t<Rng>>;
+            public:
+                template<typename Rng>
+                auto operator()(Rng &&rng) const ->
+                    CPP_ret(join_view<all_t<Rng>>)(
+                        requires JoinableRange<Rng>)
+                {
+                    return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
+                }
+                template<typename Rng>
+                auto operator()(Rng &&rng, inner_value_t<Rng> v) const ->
+                    CPP_ret(join_view<all_t<Rng>, single_view<inner_value_t<Rng>>>)(
+                        requires JoinableRange<Rng> &&
+                            Semiregular<inner_value_t<Rng>>)
+                {
+                    return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
+                }
+                template<typename Rng, typename ValRng>
+                auto operator()(Rng &&rng, ValRng &&val) const ->
+                    CPP_ret(join_view<all_t<Rng>, all_t<ValRng>>)(
+                        requires JoinableRange<Rng> &&
+                            ForwardRange<ValRng> &&
+                            Common<range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>> &&
+                            Semiregular<
+                                common_type_t<
+                                    range_value_t<ValRng>,
+                                    range_value_t<range_reference_t<Rng>>>>)
+                {
+                    return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
+                }
             };
 
             /// \relates join_fn

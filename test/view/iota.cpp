@@ -88,8 +88,8 @@ int main()
     using namespace ranges;
 
     {
-      static_assert(RandomAccessRange<decltype(view::iota(0))>, "");
-      static_assert(!SizedRange<decltype(view::iota(0))>, "");
+        static_assert(RandomAccessRange<decltype(view::iota(0))>, "");
+        static_assert(!SizedRange<decltype(view::iota(0))>, "");
     }
 
     char const *sz = "hello world";

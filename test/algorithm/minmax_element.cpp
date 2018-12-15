@@ -53,7 +53,7 @@ namespace
             CHECK(p.second == last);
         }
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         p = ranges::minmax_element(rng);
         if (first != last)
         {
@@ -137,7 +137,7 @@ namespace
             CHECK(p.second == last);
         }
 
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ::MakeTestRange(first, last);
         p = ranges::minmax_element(rng, comp);
         if (first != last)
         {

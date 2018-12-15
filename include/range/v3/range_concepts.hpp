@@ -68,16 +68,34 @@ namespace ranges
         ///
         /// Range concepts below
         ///
+
+        /// \cond
+        CPP_def
+        (
+            template(typename T)
+            concept RangeImpl_,
+                requires(T &&t) (
+                    ranges::begin(static_cast<T &&>(t)), // not necessarily equality-preserving
+                    ranges::end(static_cast<T &&>(t))
+                )
+        );
+        /// \endcond
+
         CPP_def
         (
             template(typename T)
             concept Range,
-                //Sentinel<sentinel_t<T>, iterator_t<T>>
-                requires (T& t)
-                (
-                    ranges::end(t)
-                )
+                RangeImpl_<T &>
         );
+
+        /// \cond
+        CPP_def
+        (
+            template(typename T)
+            concept ForwardingRange_,
+                Range<T> && RangeImpl_<T>
+        );
+        /// \endcond
 
         CPP_def
         (
@@ -86,60 +104,118 @@ namespace ranges
                 Range<T> && OutputIterator<iterator_t<T>, V>
         );
 
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept InputRange_,
+                InputIterator<iterator_t<T>>
+        );
+        /// \endcond
+
         CPP_def
         (
             template(typename T)
             concept InputRange,
-                Range<T> && InputIterator<iterator_t<T>>
+                Range<T> && InputRange_<T>
         );
+
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept ForwardRange_,
+                ForwardIterator<iterator_t<T>>
+        );
+        /// \endcond
 
         CPP_def
         (
             template(typename T)
             concept ForwardRange,
-                InputRange<T> && ForwardIterator<iterator_t<T>>
+                InputRange<T> && ForwardRange_<T>
         );
+
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept BidirectionalRange_,
+                BidirectionalIterator<iterator_t<T>>
+        );
+        /// \endcond
 
         CPP_def
         (
             template(typename T)
             concept BidirectionalRange,
-                ForwardRange<T> && BidirectionalIterator<iterator_t<T>>
+                ForwardRange<T> && BidirectionalRange_<T>
         );
+
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept RandomAccessRange_,
+                RandomAccessIterator<iterator_t<T>>
+        );
+        /// \endcond
 
         CPP_def
         (
             template(typename T)
             concept RandomAccessRange,
-                BidirectionalRange<T> && RandomAccessIterator<iterator_t<T>>
+                BidirectionalRange<T> && RandomAccessRange_<T>
         );
 
         /// \cond
         namespace detail
         {
             template<typename Rng>
-            using data_reference_t = decltype(*data(std::declval<Rng&>()));
+            using data_t = decltype(ranges::data(std::declval<Rng&>()));
 
             template<typename Rng>
-            using element_t = meta::_t<std::remove_reference<data_reference_t<Rng>>>;
+            using element_t = meta::_t<std::remove_pointer<data_t<Rng>>>;
         }
+        /// \endcond
+
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept ContiguousRange_,
+                ContiguousIterator<iterator_t<T>> &&
+                Same<detail::data_t<T>, meta::_t<std::add_pointer<iter_reference_t<iterator_t<T>>>>>
+        );
         /// \endcond
 
         CPP_def
         (
             template(typename T)
             concept ContiguousRange,
-                RandomAccessRange<T> &&
-                Same<range_value_t<T>, meta::_t<std::remove_cv<detail::element_t<T>>>> &&
-                Same<detail::data_reference_t<T>, range_reference_t<T>>
+                RandomAccessRange<T> && ContiguousRange_<T>
         );
+
+        /// \cond
+        // Needed to work around a bug in GCC
+        CPP_def
+        (
+            template(typename T)
+            concept CommonRange_,
+                Same<iterator_t<T>, sentinel_t<T>>
+        );
+        /// \endcond
 
         CPP_def
         (
             template(typename T)
             concept CommonRange,
-                Range<T> &&
-                Same<iterator_t<T>, sentinel_t<T>>
+                Range<T> && CommonRange_<T>
         );
 
         /// \cond
@@ -239,6 +315,13 @@ namespace ranges
             template(typename T)
             concept SizedView,
                 View<T> && SizedRange<T>
+        );
+
+        CPP_def
+        (
+            template(typename T)
+            concept ViewableRange,
+                Range<T> && (ForwardingRange_<T> || View<detail::decay_t<T>>)
         );
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,7 +465,12 @@ namespace ranges
 
             template<typename T>
             struct is_range_
-              : meta::bool_<(bool)Range<T>>
+              : meta::bool_<(bool) Range<T>>
+            {};
+
+            template<typename T>
+            struct is_forwarding_range_
+              : meta::bool_<(bool) ForwardingRange_<T>>
             {};
         }
         /// \endcond

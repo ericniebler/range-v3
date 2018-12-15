@@ -20,6 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/algorithm/min.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <memory>
 #include <random>
 #include <numeric>
@@ -39,7 +40,7 @@ namespace
     test_iter(Iter first, Sent last)
     {
         RANGES_ENSURE(first != last);
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ranges::make_subrange(first, last);
         auto v1 = ranges::min(rng);
         for (Iter i = first; i != last; ++i)
             CHECK(!(*i < v1));
@@ -72,7 +73,7 @@ namespace
     test_iter_comp(Iter first, Sent last)
     {
         RANGES_ENSURE(first != last);
-        auto rng = ranges::make_iterator_range(first, last);
+        auto rng = ranges::make_subrange(first, last);
         auto v = ranges::min(rng, std::greater<int>());
         for (Iter i = first; i != last; ++i)
             CHECK(!std::greater<int>()(*i, v));

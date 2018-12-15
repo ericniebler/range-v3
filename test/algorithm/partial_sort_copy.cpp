@@ -153,7 +153,7 @@ int main()
         for (int i = 0; i < N; ++i)
             input[i].i = i;
         std::shuffle(input, input+N, gen);
-        auto r = ranges::partial_sort_copy(input, ranges::view::all(output), std::less<int>(), &S::i, &U::i);
+        auto r = ranges::partial_sort_copy(input, std::move(output), std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
         CHECK(r.get_unsafe() == e);
         int i = 0;

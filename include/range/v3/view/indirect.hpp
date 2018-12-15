@@ -80,36 +80,18 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng)
-                concept ReadableRange,
-                    InputRange<Rng> &&
-                    Readable<range_value_t<Rng>>
-            );
-
             struct indirect_fn
             {
-                CPP_template(typename Rng)(
-                    requires ReadableRange<Rng>)
-                constexpr auto CPP_auto_fun(operator())(Rng &&rng) (const)
-                (
-                    return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))}
-                )
-            #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not ReadableRange<Rng>)
+                constexpr auto CPP_fun(operator())(Rng &&rng) (const
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        // We shouldn't need to strip references to test if something
+                        // is readable. https://github.com/ericniebler/stl2/issues/594
+                        //Readable<range_reference_t<Rng>>)
+                        (bool) Readable<range_value_t<Rng>>) // Cast to bool needed for GCC (???)
                 {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The argument to view::indirect must be a model of the InputRange "
-                        "concept");
-                    CPP_assert_msg(Readable<range_value_t<Rng>>,
-                        "The value type of the range passed to view::indirect must be a model "
-                        "of the Readable concept.");
+                    return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-            #endif
             };
 
             /// \relates indirect_fn

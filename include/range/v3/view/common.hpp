@@ -15,7 +15,6 @@
 
 #include <type_traits>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
@@ -141,27 +140,17 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(common_view<all_t<Rng>>)(
-                        requires Range<Rng> && !CommonRange<Rng>)
+                        requires ViewableRange<Rng> && (!CommonRange<Rng>))
                 {
                     return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(all_t<Rng>)(
-                        requires Range<Rng> && CommonRange<Rng>)
+                        requires ViewableRange<Rng> && CommonRange<Rng>)
                 {
                     return all(static_cast<Rng &&>(rng));
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not Range<Rng>)
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "Rng is not a model of the Range concept");
-                }
-            #endif
             };
 
             /// \relates common_fn

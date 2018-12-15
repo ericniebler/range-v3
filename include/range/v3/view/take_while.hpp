@@ -60,7 +60,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : pred_(std::move(that.pred_))
                 {}
                 bool empty(iterator_t<CRng> const &it, sentinel_t<CRng> const &end) const
@@ -74,7 +74,7 @@ namespace ranges
             }
             template<typename CRng = Rng const>
             auto end_adaptor() const -> CPP_ret(sentinel_adaptor<true>)(
-                requires Range<CRng>() && Invocable<Pred const&, iterator_t<CRng>>)
+                requires Range<CRng> && Invocable<Pred const&, iterator_t<CRng>>)
             {
                 return {pred_};
             }
@@ -99,15 +99,6 @@ namespace ranges
 
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Pred)
-                concept IterPredicateRange,
-                    InputRange<Rng> &&
-                    Predicate<Pred&, iterator_t<Rng>> &&
-                    CopyConstructible<Pred>
-            );
-
             struct iter_take_while_fn
             {
             private:
@@ -122,36 +113,13 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)(
-                        requires IterPredicateRange<Rng, Pred>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            Predicate<Pred&, iterator_t<Rng>> &&
+                            CopyConstructible<Pred>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred>
-                auto operator()(Rng &&, Pred) const ->
-                    CPP_ret(void)(
-                        requires not IterPredicateRange<Rng, Pred>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::take_while operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(Predicate<Pred&, iterator_t<Rng>>,
-                        "The function passed to view::take_while must be callable with objects of "
-                        "the range's iterator type, and its result type must be convertible to "
-                        "bool.");
-                    CPP_assert_msg(CopyConstructible<Pred>,
-                        "The function object passed to view::take_while must be CopyConstructible.");
-                }
-            #endif
             };
-
-            CPP_def
-            (
-                template(typename Rng, typename Pred)
-                concept IndirectPredicateRange,
-                    InputRange<Rng> &&
-                    IndirectPredicate<Pred&, iterator_t<Rng>>
-            );
 
             struct take_while_fn
             {
@@ -167,25 +135,11 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(take_while_view<all_t<Rng>, Pred>)(
-                        requires IndirectPredicateRange<Rng, Pred>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            IndirectPredicate<Pred &, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred>
-                auto operator()(Rng &&, Pred) const ->
-                    CPP_ret(void)(
-                        requires not IndirectPredicateRange<Rng, Pred>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::take_while operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>>,
-                        "The function passed to view::take_while must be callable with objects of "
-                        "the range's common reference type, and its result type must be "
-                        "convertible to bool.");
-                }
-            #endif
             };
 
             /// \relates iter_take_while_fn

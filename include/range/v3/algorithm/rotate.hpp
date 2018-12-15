@@ -25,7 +25,6 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -33,9 +32,10 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/move_backward.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
-#include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -47,7 +47,7 @@ namespace ranges
         {
         private:
             template<typename I> // Forward
-            static iterator_range<I> rotate_left(I begin, I end)
+            static subrange<I> rotate_left(I begin, I end)
             {
                 iter_value_t<I> tmp = iter_move(begin);
                 I lm1 = move(next(begin), end, begin).second;
@@ -56,7 +56,7 @@ namespace ranges
             }
 
             template<typename I> // Bidirectional
-            static iterator_range<I> rotate_right(I begin, I end)
+            static subrange<I> rotate_right(I begin, I end)
             {
                 I lm1 = prev(end);
                 iter_value_t<I> tmp = iter_move(lm1);
@@ -66,7 +66,7 @@ namespace ranges
             }
 
             template<typename I, typename S> // Forward
-            static iterator_range<I> rotate_forward(I begin, I middle, S end)
+            static subrange<I> rotate_forward(I begin, I middle, S end)
             {
                 I i = middle;
                 while(true)
@@ -112,7 +112,7 @@ namespace ranges
             }
 
             template<typename I> // Random
-            static iterator_range<I> rotate_gcd(I begin, I middle, I end)
+            static subrange<I> rotate_gcd(I begin, I middle, I end)
             {
                 auto const m1 = middle - begin;
                 auto const m2 = end - middle;
@@ -143,13 +143,13 @@ namespace ranges
             }
 
             template<typename I, typename S>
-            static iterator_range<I> rotate_(I begin, I middle, S end, detail::forward_iterator_tag)
+            static subrange<I> rotate_(I begin, I middle, S end, detail::forward_iterator_tag)
             {
                 return rotate_fn::rotate_forward(begin, middle, end);
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, detail::forward_iterator_tag)
+            static subrange<I> rotate_(I begin, I middle, I end, detail::forward_iterator_tag)
             {
                 using value_type = iter_value_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -161,7 +161,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end,
+            static subrange<I> rotate_(I begin, I middle, I end,
                 detail::bidirectional_iterator_tag)
             {
                 using value_type = iter_value_t<I>;
@@ -176,7 +176,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end,
+            static subrange<I> rotate_(I begin, I middle, I end,
                 detail::random_access_iterator_tag)
             {
                 using value_type = iter_value_t<I>;
@@ -194,7 +194,7 @@ namespace ranges
         public:
             template<typename I, typename S>
             auto operator()(I begin, I middle, S end) const ->
-                CPP_ret(iterator_range<I>)(
+                CPP_ret(subrange<I>)(
                     requires Permutable<I> && Sentinel<S, I>)
             {
                 if(begin == middle)
@@ -211,7 +211,7 @@ namespace ranges
 
             template<typename Rng, typename I = iterator_t<Rng>>
             auto operator()(Rng &&rng, I middle) const ->
-                CPP_ret(meta::if_<std::is_lvalue_reference<Rng>, iterator_range<I>, dangling<iterator_range<I>>>)(
+                CPP_ret(safe_subrange_t<Rng>)(
                     requires Range<Rng> && Permutable<I>)
             {
                 return (*this)(begin(rng), std::move(middle), end(rng));

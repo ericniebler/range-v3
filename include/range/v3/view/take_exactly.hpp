@@ -20,13 +20,13 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -147,15 +147,15 @@ namespace ranges
 
                 template<typename Rng>
                 static take_exactly_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
+                impl_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_t<Rng> n,
+                static auto impl_(Rng &&rng, range_difference_t<Rng> n,
                         random_access_range_tag) ->
-                    CPP_ret(iterator_range<iterator_t<Rng>>)(
-                        requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value)
+                    CPP_ret(subrange<iterator_t<Rng>>)(
+                        requires ForwardingRange_<Rng>)
                 {
                     return {begin(rng), next(begin(rng), n)};
                 }
@@ -166,38 +166,14 @@ namespace ranges
                 {
                     return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int>
-                static auto bind(take_exactly_fn, Int) -> CPP_ret(detail::null_pipe)(
-                    requires not Integral<Int>)
-                {
-                    CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::take must satisfy the Integral concept.");
-                    return {};
-                }
-            #endif
 
             public:
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
-                (
-                    return take_exactly_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const ->
-                    CPP_ret(void)(
-                        requires not InputRange<Rng>)
+                template<typename Rng>
+                auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+                    requires ViewableRange<Rng> && InputRange<Rng>)
                 {
-                    CPP_assert_msg(InputRange<T>,
-                        "The object on which view::take operates must be a model of the InputRange "
-                        "concept.");
-                    CPP_assert_msg(Integral<T>,
-                        "The second argument to view::take must be a model of the Integral concept.");
+                    return take_exactly_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
                 }
-            #endif
             };
 
             /// \relates take_exactly_fn

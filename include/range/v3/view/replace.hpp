@@ -82,18 +82,6 @@ namespace ranges
         /// @{
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Val1, typename Val2)
-                concept ReplaceViewConcept,
-                    InputRange<Rng> &&
-                    Same<detail::decay_t<unwrap_reference_t<Val1>>, detail::decay_t<unwrap_reference_t<Val2>>> &&
-                    EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_t<Rng>> &&
-                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>> &&
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>> &&
-                    CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>
-            );
-
             struct replace_fn
             {
             private:
@@ -106,64 +94,21 @@ namespace ranges
                     return make_pipeable(std::bind(replace, std::placeholders::_1,
                         std::move(old_value), std::move(new_value)));
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For error reporting
-                template<typename Val1, typename Val2>
-                static auto bind(replace_fn, Val1, Val2) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Same<
-                            detail::decay_t<unwrap_reference_t<Val1>>,
-                            detail::decay_t<unwrap_reference_t<Val1>>>)
-                {
-                    CPP_assert_msg(
-                        Same<
-                            detail::decay_t<unwrap_reference_t<Val1>>,
-                            detail::decay_t<unwrap_reference_t<Val1>>>,
-                        "The two values passed to view::replace must have the same type.");
-                    return {};
-                }
-            #endif
             public:
                 template<typename Rng, typename Val1, typename Val2>
                 auto operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const ->
                     CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)(
-                        requires ReplaceViewConcept<Rng, Val1, Val2>)
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            Same<detail::decay_t<unwrap_reference_t<Val1>>, detail::decay_t<unwrap_reference_t<Val2>>> &&
+                            EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_t<Rng>> &&
+                            Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>> &&
+                            CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>> &&
+                            CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)),
                             {static_cast<Val1 &&>(old_value),
                              static_cast<Val2 &&>(new_value)}};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For error reporting
-                template<typename Rng, typename Val1, typename Val2>
-                auto operator()(Rng &&, Val1 &&, Val2 &&) const ->
-                    CPP_ret(void)(
-                        requires not ReplaceViewConcept<Rng, Val1, Val2>)
-                {
-                    using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
-                    using V2 = detail::decay_t<unwrap_reference_t<Val2>>;
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument to view::replace must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(Same<V1, V2>,
-                        "The two values passed to view::replace must have the same type.");
-                    CPP_assert_msg(EqualityComparableWith<V1, range_value_t<Rng>>,
-                        "The values passed to view::replace must be EqualityComparableWith "
-                        "to the range's value type.");
-                    CPP_assert_msg(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
-                            range_value_t<Rng>>,
-                        "The value passed to view::replace must share a common type with the "
-                        "range's value type.");
-                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val2 const &>,
-                            range_reference_t<Rng>>,
-                        "The value passed to view::replace must share a reference with the "
-                        "range's reference type.");
-                    CPP_assert_msg(CommonReference<unwrap_reference_t<Val2 const &>,
-                            range_rvalue_reference_t<Rng>>,
-                        "The value passed to view::replace must share a reference with the "
-                        "range's rvalue reference type.");
-                }
-            #endif
             };
 
             /// \relates replace_fn

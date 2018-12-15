@@ -338,11 +338,11 @@ void deep_integration_test()
     static_assert(is_same<iter_difference_t<const int*>, ptrdiff_t>::value, "");
     static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");
 
-    static_assert(detail::is_std_iterator_traits_specialized<_X>(), "");
+    static_assert(detail::is_std_iterator_traits_specialized_<_X>, "");
     static_assert(is_same<typename iterator_traits<_X>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_X>, int>::value, "");
 
-    static_assert(!detail::is_std_iterator_traits_specialized<_Y>(), "");
+    static_assert(!detail::is_std_iterator_traits_specialized_<_Y>, "");
     static_assert(is_same<typename iterator_traits<_Y>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_Y>, int>::value, "");
 
@@ -350,7 +350,7 @@ void deep_integration_test()
     // https://bugs.llvm.org/show_bug.cgi?id=39619
 #ifndef _LIBCPP_VERSION
     // iterator_traits uses specializations of ranges::value_type:
-    static_assert(!detail::is_std_iterator_traits_specialized<_Z>(), "");
+    static_assert(!detail::is_std_iterator_traits_specialized_<_Z>, "");
     static_assert(is_same<typename iterator_traits<_Z>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<_Z>, int>::value, "");
     static_assert(is_same<typename iterator_traits<_Z>::iterator_category,

@@ -98,7 +98,7 @@ namespace ranges
                   : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
                 template<bool Other>
-                CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && !Other)
+                CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && (!Other))
                   : rng_(that.rng_)
                   , it_(std::move(that.it_))
                 {}
@@ -197,29 +197,14 @@ namespace ranges
             /// range.
             struct cycle_fn
             {
-            private:
-                friend view_access;
-            public:
                 /// \pre <tt>!empty(rng)</tt>
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(cycled_view<all_t<Rng>>)(
-                        requires ForwardRange<Rng>)
+                        requires ViewableRange<Rng> && ForwardRange<Rng>)
                 {
                     return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-
-#ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not ForwardRange<Rng>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which view::cycle operates must be a "
-                        "model of the ForwardRange concept.");
-                }
-#endif
             };
 
             /// \relates cycle_fn

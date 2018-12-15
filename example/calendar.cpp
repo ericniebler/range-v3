@@ -220,7 +220,7 @@ namespace cal_example
         {}
         auto read(iterator_t<Rng> it) const
         {
-            return view::take(make_iterator_range(std::move(it), end_), n_);
+            return view::take(make_subrange(std::move(it), end_), n_);
         }
         void next(iterator_t<Rng> &it)
         {

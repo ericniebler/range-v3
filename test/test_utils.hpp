@@ -18,11 +18,11 @@
 #include <meta/meta.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/view/subrange.hpp>
 #include "./debug_view.hpp"
 #include "./simple_test.hpp"
 #include "./test_iterators.hpp"
@@ -164,8 +164,8 @@ public:
         {
             check(e1(begin, end));
             check(e1(begin, S{base(end)}));
-            check(e2(::rvalue_if<RvalueOK>(ranges::make_iterator_range(begin, end))));
-            check(e2(::rvalue_if<RvalueOK>(ranges::make_iterator_range(begin, S{base(end)}))));
+            check(e2(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end))));
+            check(e2(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)}))));
         }};
     }
     template<typename I, typename...Rest>
@@ -189,8 +189,8 @@ public:
         {
             check(algo_(begin, end, rest...));
             check(algo_(begin, S{base(end)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::make_iterator_range(begin, end)), rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::make_iterator_range(begin, S{base(end)})), rest...));
+            check(algo_(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end)), rest...));
+            check(algo_(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)})), rest...));
         }};
     }
 #endif
@@ -221,10 +221,10 @@ public:
         {
             check(e1(begin1, end1, begin2, end2));
             check(e1(begin1, S1{base(end1)}, begin2, S2{base(end2)}));
-            check(e2(::rvalue_if<RvalueOK1>(ranges::make_iterator_range(begin1, end1)),
-                     ::rvalue_if<RvalueOK2>(ranges::make_iterator_range(begin2, end2))));
-            check(e2(::rvalue_if<RvalueOK1>(ranges::make_iterator_range(begin1, S1{base(end1)})),
-                     ::rvalue_if<RvalueOK2>(ranges::make_iterator_range(begin2, S2{base(end2)}))));
+            check(e2(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, end1)),
+                     ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, end2))));
+            check(e2(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, S1{base(end1)})),
+                     ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, S2{base(end2)}))));
         }};
     }
     template<typename I1, typename I2, typename...Rest>
@@ -249,11 +249,11 @@ public:
         {
             check(algo_(begin1, end1, begin2, end2, rest...));
             check(algo_(begin1, S1{base(end1)}, begin2, S2{base(end2)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_iterator_range(begin1, end1)),
-                        ::rvalue_if<RvalueOK2>(ranges::make_iterator_range(begin2, end2)),
+            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, end1)),
+                        ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, end2)),
                         rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_iterator_range(begin1, S1{base(end1)})),
-                        ::rvalue_if<RvalueOK2>(ranges::make_iterator_range(begin2, S2{base(end2)})),
+            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, S1{base(end1)})),
+                        ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, S2{base(end2)})),
                         rest...));
         }};
     }

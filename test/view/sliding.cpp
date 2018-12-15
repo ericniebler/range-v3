@@ -42,12 +42,12 @@ namespace
     {}
 
     template<typename Adapted>
-    void test_bounded(Adapted& a, std::true_type)
+    void test_common(Adapted& a, std::true_type)
     {
         ::models<BoundedRangeConcept>(a);
     }
     // template<typename Adapted>
-    // void test_bounded(Adapted&, std::false_type)
+    // void test_common(Adapted&, std::false_type)
     // {}
 
     template<typename Adapted>
@@ -76,7 +76,9 @@ namespace
 
     template<typename Rng>
     using size_compare =
-        size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && BoundedRange<Rng>)>;
+        size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && CommonRange<Rng>)>;
+
+    template<class> struct undef;
 
     template<typename Base>
     void test_finite()
@@ -86,12 +88,17 @@ namespace
         using Adapted = decltype(rng);
         test_size(rng, meta::bool_<SizedRange<Base>>{});
 
+        using IterTagOfBase =
+            meta::if_c<ContiguousIterator<iterator_t<Base>>,
+                ranges::detail::random_access_iterator_tag,
+                iterator_tag_of<iterator_t<Base>>>;
+
         CPP_assert(Same<
-            iterator_tag_of<iterator_t<Base>>,
+            IterTagOfBase,
             iterator_tag_of<iterator_t<Adapted>>>);
 
         auto it = ranges::begin(rng);
-        test_bounded(rng, meta::bool_<BoundedRange<Base>>{});
+        test_common(rng, meta::bool_<CommonRange<Base>>{});
 
         for (auto i = 0; i <= N - K; ++i)
         {

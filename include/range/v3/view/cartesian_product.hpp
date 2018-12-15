@@ -307,7 +307,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst_ && !Other)
+                    requires IsConst_ && (!Other))
                   : view_(that.view_)
                   , its_(std::move(that.its_))
                 {}
@@ -415,22 +415,10 @@ namespace ranges
                 template<typename... Rngs>
                 constexpr auto operator()(Rngs &&... rngs) const ->
                     CPP_ret(cartesian_product_view<all_t<Rngs>...>)(
-                        requires concepts::And<ForwardRange<Rngs>...>)
+                        requires concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
                 {
                     return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename... Rngs>
-                auto operator()(Rngs &&...) const ->
-                    CPP_ret(void)(
-                        requires not concepts::And<ForwardRange<Rngs>...>)
-                {
-                    static_assert(And<ForwardRange<Rngs>...>,
-                        "All of the ranges passed to view::cartesian_product must model the "
-                        "ForwardRange concept.");
-                }
-            #endif
             };
 
             RANGES_INLINE_VARIABLE(cartesian_product_fn, cartesian_product)

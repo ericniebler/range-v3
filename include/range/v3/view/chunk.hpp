@@ -19,7 +19,6 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
@@ -38,6 +37,18 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            template<typename Rng, bool Const>
+            constexpr bool can_sized_sentinel_() noexcept
+            {
+                using I = iterator_t<meta::const_if_c<Const, Rng>>;
+                return (bool) SizedSentinel<I, I>;
+            }
+        }
+        /// \endcond
+
         /// \addtogroup group-views
         /// @{
         template<typename Rng, bool IsForwardRange>
@@ -52,16 +63,10 @@ namespace ranges
             CPP_assert(ForwardRange<Rng>);
 
             template<bool Const>
-            static constexpr bool CanSizedSentinel() noexcept
-            {
-                using I = iterator_t<meta::const_if_c<Const, Rng>>;
-                return (bool) SizedSentinel<I, I>;
-            }
-            template<bool Const>
             using offset_t =
                 meta::if_c<
                     BidirectionalRange<meta::const_if_c<Const, Rng>> ||
-                        chunk_view_::CanSizedSentinel<Const>(),
+                        detail::can_sized_sentinel_<Rng, Const>(),
                     range_difference_t<Rng>,
                     constant<range_difference_t<Rng>, 0>>;
 
@@ -101,18 +106,18 @@ namespace ranges
                 {}
                 template<bool Other>
                 constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : box<offset_t<Const>>(that.offset())
                   , n_(that.n_)
                   , end_(that.end_)
                 {}
                 constexpr /*c++14*/
                 auto read(iterator_t<CRng> const &it) const ->
-                    decltype(view::take(make_iterator_range(it, end_), n_))
+                    decltype(view::take(make_subrange(it, end_), n_))
                 {
                     RANGES_EXPECT(it != end_);
                     RANGES_EXPECT(0 == offset());
-                    return view::take(make_iterator_range(it, end_), n_);
+                    return view::take(make_subrange(it, end_), n_);
                 }
                 constexpr /*c++14*/
                 void next(iterator_t<CRng> &it)
@@ -134,7 +139,7 @@ namespace ranges
                 auto distance_to(iterator_t<CRng> const &here, iterator_t<CRng> const &there,
                     adaptor const &that) const ->
                         CPP_ret(range_difference_t<Rng>)(
-                            requires CanSizedSentinel<Const>())
+                            requires detail::can_sized_sentinel_<Rng, Const>())
                 {
                     auto const delta = (there - here) + (that.offset() - offset());
                     // This can fail for cyclic base ranges when the chunk size does not divide the
@@ -440,35 +445,10 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                     CPP_ret(chunk_view<all_t<Rng>>)(
-                        requires InputRange<Rng>)
+                        requires ViewableRange<Rng> && InputRange<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
-
-                // For the sake of better error messages:
-            #ifndef RANGES_DOXYGEN_INVOKED
-            private:
-                template<typename Int>
-                static auto bind(chunk_fn, Int) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Integral<Int>)
-                {
-                    CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::chunk must be Integral");
-                    return {};
-                }
-            public:
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T) const ->
-                    CPP_ret(void)(
-                        requires not (InputRange<Rng> && Integral<T>))
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument to view::chunk must satisfy the InputRange concept");
-                    CPP_assert_msg(Integral<T>,
-                        "The second argument to view::chunk must satisfy the Integral concept");
-                }
-            #endif
             };
 
             /// \relates chunk_fn

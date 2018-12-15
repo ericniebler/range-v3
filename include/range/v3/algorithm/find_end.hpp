@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -63,20 +64,24 @@ namespace ranges
         {
         private:
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
-            static I1
+            static subrange<I1>
             impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred, P proj,
                  detail::forward_iterator_tag, detail::forward_iterator_tag)
             {
                 bool found = false;
-                I1 res;
+                I1 res_begin, res_end;
                 if(begin2 == end2)
-                    return ranges::next(begin1, end1);
+                {
+                    auto e1 = ranges::next(begin1, end1);
+                    return {e1, e1};
+                }
                 while(true)
                 {
                     while(true)
                     {
                         if(begin1 == end1)
-                            return found ? res : begin1;
+                            return {(found ? res_begin : begin1),
+                                    (found ? res_end : begin1)};
                         if(invoke(pred, invoke(proj, *begin1), *begin2))
                             break;
                         ++begin1;
@@ -87,12 +92,14 @@ namespace ranges
                     {
                         if(++tmp2 == end2)
                         {
-                            res = begin1++;
+                            res_begin = begin1++;
+                            res_end = ++tmp1;
                             found = true;
                             break;
                         }
                         if(++tmp1 == end1)
-                            return found ? res : tmp1;
+                            return {(found ? res_begin : tmp1),
+                                    (found ? res_end : tmp1)};
                         if(!invoke(pred, invoke(proj, *tmp1), *tmp2))
                         {
                             ++begin1;
@@ -103,29 +110,36 @@ namespace ranges
             }
 
             template<typename I1, typename I2, typename R, typename P>
-            static I1
+            static subrange<I1>
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                  detail::bidirectional_iterator_tag, detail::bidirectional_iterator_tag)
             {
                 // modeled after search algorithm (in reverse)
                 if(begin2 == end2)
-                    return end1;  // Everything matches an empty sequence
+                    return {end1, end1};  // Everything matches an empty sequence
                 I1 l1 = end1;
                 I2 l2 = end2;
                 --l2;
                 while(true)
                 {
-                    // Find end element in sequence 1 that matches *(end2-1), with a mininum of loop checks
-                        // return end1 if no element matches *begin2
-                    do  if(begin1 == l1) return end1;
+                    // Find end element in sequence 1 that matches *(end2-1), with a mininum of loop
+                    // checks
+                    do
+                        // return {end1,end1} if no element matches *begin2
+                        if(begin1 == l1)
+                            return {end1, end1};
                     while(!invoke(pred, invoke(proj, *--l1), *l2));
                     // *l1 matches *l2, now match elements before here
                     I1 m1 = l1;
                     I2 m2 = l2;
-                        // If pattern exhausted, m1 is the answer (works for 1 element pattern)
-                    do  if(m2 == begin2) return m1;
+                    do
+                        // If pattern exhausted, {m1,++l1} is the answer
+                        // (works for 1 element pattern)
+                        if(m2 == begin2)
+                            return {m1, ++l1};
                         // Otherwise if source exhausted, pattern not found
-                        else if(m1 == begin1) return end1;
+                        else if(m1 == begin1)
+                            return {end1, end1};
                         // if there is a mismatch, restart with a new l1
                         // else there is a match, check next elements
                     while(invoke(pred, invoke(proj, *--m1), *--m2));
@@ -133,28 +147,32 @@ namespace ranges
             }
 
             template<typename I1, typename I2, typename R, typename P>
-            static I1
+            static subrange<I1>
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred, P proj,
                  detail::random_access_iterator_tag, detail::random_access_iterator_tag)
             {
                 // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
                 auto len2 = end2 - begin2;
                 if(len2 == 0)
-                    return end1;
+                    return {end1, end1};
                 auto len1 = end1 - begin1;
                 if(len1 < len2)
-                    return end1;
-                const I1 s = begin1 + (len2 - 1);  // End of pattern match can't go before here
+                    return {end1, end1};
+                I1 const start = begin1 + (len2 - 1);  // End of pattern match can't go before here
                 I1 l1 = end1;
                 I2 l2 = end2;
                 --l2;
                 while(true)
                 {
-                    do if(s == l1) return end1;
+                    do
+                        if(start == l1)
+                            return {end1, end1};
                     while(!invoke(pred, invoke(proj, *--l1), *l2));
                     I1 m1 = l1;
                     I2 m2 = l2;
-                    do  if(m2 == begin2) return m1;
+                    do 
+                        if(m2 == begin2)
+                            return {m1, ++l1};
                     // no need to check range on m1 because s guarantees we have enough source
                     while(invoke(pred, invoke(proj, *--m1), *--m2));
                 }
@@ -164,7 +182,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
                 typename P = ident>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const ->
-                CPP_ret(I1)(
+                CPP_ret(subrange<I1>)(
                     requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
                         Sentinel<S2, I2> && IndirectRelation<R, projected<I1, P>, I2>)
             {
@@ -178,7 +196,7 @@ namespace ranges
 
             template<typename Rng1, typename Rng2, typename R = equal_to, typename P = ident>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng1>)(
+                CPP_ret(safe_subrange_t<Rng1>)(
                     requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
                         IndirectRelation<R, projected<iterator_t<Rng1>, P>, iterator_t<Rng2>>)
             {

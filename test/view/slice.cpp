@@ -119,7 +119,7 @@ int main()
     {
         auto letters = view::closed_iota('a','g');
         static_assert(RandomAccessView<decltype(letters)>, "");
-        static_assert(BoundedView<decltype(letters)>, "");
+        static_assert(CommonView<decltype(letters)>, "");
         ::check_equal(letters[{2,end-2}], {'c','d','e'});
     }
 

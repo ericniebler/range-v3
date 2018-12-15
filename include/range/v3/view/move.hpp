@@ -47,7 +47,7 @@ namespace ranges
                 adaptor() = default;
                 template<bool Other>
                 constexpr CPP_ctor(adaptor)(adaptor<Other>)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                 {}
                 using CRng = meta::const_if_c<Const, Rng>;
                 using value_type = range_value_t<Rng>;
@@ -106,21 +106,10 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(move_view<all_t<Rng>>)(
-                        requires InputRange<Rng>)
+                        requires ViewableRange<Rng> && InputRange<Rng>)
                 {
                     return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const ->
-                    CPP_ret(void)(
-                        requires not InputRange<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The argument passed to view::move must be a model of the InputRange "
-                        "concept.");
-                }
-            #endif
             };
 
             /// \relates move_fn

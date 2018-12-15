@@ -100,15 +100,6 @@ namespace ranges
                 {
                     return generate_n_view<G>{std::move(g), n};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename G>
-                auto operator()(G, std::size_t) const ->
-                    CPP_ret(void)(
-                        requires not GenerateViewConcept<G>)
-                {
-                    generate_fn::check<G>();
-                }
-            #endif
             };
 
             /// \relates generate_n_fn

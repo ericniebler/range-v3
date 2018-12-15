@@ -477,7 +477,7 @@ namespace ranges
 #define RANGES_RE_ENABLE_WARNINGS
 #endif
 
-#if __has_cpp_attribute(no_unique_address)
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(no_unique_address)
 #define RANGES_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #else
 #define RANGES_NO_UNIQUE_ADDRESS
@@ -537,6 +537,24 @@ namespace ranges {
 #endif
 #ifndef RANGES_BROKEN_CPO_LOOKUP
 #define RANGES_BROKEN_CPO_LOOKUP 0
+#endif
+
+#ifndef RANGES_NODISCARD
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard)
+#if defined(__clang__) && __cplusplus < 201703L
+// clang complains about using nodiscard in C++14 mode.
+#define RANGES_NODISCARD                                                        \
+    RANGES_DIAGNOSTIC_PUSH                                                      \
+    RANGES_DIAGNOSTIC_IGNORE("-Wc++1z-extensions")                              \
+    [[nodiscard]]                                                               \
+    RANGES_DIAGNOSTIC_POP                                                       \
+    /**/
+#else
+#define RANGES_NODISCARD [[nodiscard]]
+#endif
+#else
+#define RANGES_NODISCARD
+#endif
 #endif
 
 #endif

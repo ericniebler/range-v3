@@ -13,6 +13,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 struct S
 {
@@ -43,7 +44,7 @@ int main()
     CHECK(sum == 24);
 
     sum = 0;
-    CHECK(ranges::for_each(ranges::make_iterator_range(v1.begin(), v1.end()), fun).in().get_unsafe() == v1.end());
+    CHECK(ranges::for_each(::MakeTestRange(v1.begin(), v1.end()), fun).in().get_unsafe() == v1.end());
     CHECK(sum == 12);
 
     return ::test_result();

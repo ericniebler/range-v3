@@ -35,7 +35,7 @@ namespace
     };
 
     template<std::size_t N>
-    ranges::iterator_range<char const*> c_str(char const (&sz)[N])
+    ranges::subrange<char const*> c_str(char const (&sz)[N])
     {
         return {&sz[0], &sz[N-1]};
     }
@@ -122,7 +122,7 @@ int main()
 
     {
         std::string str("meow");
-        auto rng = view::split(str, view::empty<char>());
+        auto rng = view::split(str, view::empty<char>);
         CHECK(distance(rng) == 4);
         if(distance(rng) == 4)
         {

@@ -93,7 +93,6 @@ int main()
         std::vector<int> diff;
         set_difference(i1_infinite | view::take(1000), i2_infinite | view::take(1000), back_inserter(diff));
         ::check_equal(res | view::take(5), diff | view::take(5));
-
     }
 
     // difference between a finite and an infinite range

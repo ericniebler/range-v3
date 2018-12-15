@@ -306,16 +306,16 @@ int main()
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res1 =
-            ranges::set_symmetric_difference(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+            ranges::set_symmetric_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK(ranges::get<0>(res1).get_unsafe() == ranges::end(ia));
-        CHECK(ranges::get<1>(res1).get_unsafe() == ranges::end(ib));
+        CHECK(ranges::get<1>(res1) == ranges::end(ib));
         CHECK((ranges::get<2>(res1) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
         auto res2 =
-            ranges::set_symmetric_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
-        CHECK(ranges::get<0>(res2).get_unsafe() == ranges::end(ib));
+            ranges::set_symmetric_difference(ranges::view::all(ib), std::move(ia), ic, std::less<int>(), &T::j, &S::i);
+        CHECK(ranges::get<0>(res2) == ranges::end(ib));
         CHECK(ranges::get<1>(res2).get_unsafe() == ranges::end(ia));
         CHECK((ranges::get<2>(res2) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);

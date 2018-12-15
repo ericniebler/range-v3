@@ -51,7 +51,7 @@ namespace ranges
                 adaptor() = default;
                 template<bool Other>
                 CPP_ctor(adaptor)(adaptor<Other>)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                 {}
                 CI<IsConst> begin(meta::const_if_c<IsConst, take_view> &rng) const
                 {
@@ -65,7 +65,7 @@ namespace ranges
                 sentinel_adaptor() = default;
                 template<bool Other>
                 CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                 {}
                 bool empty(CI<IsConst> const &that, S<IsConst> const &sent) const
                 {
@@ -112,21 +112,21 @@ namespace ranges
                 friend view_access;
 
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_t<Rng> n) ->
+                static auto impl_(Rng &&rng, range_difference_t<Rng> n) ->
                     CPP_ret(take_view<all_t<Rng>>)(
                         requires not SizedRange<Rng> && !is_infinite<Rng>::value)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
 
-                CPP_template(typename Rng)(
+                template<typename Rng>
+                static auto CPP_fun(impl_)(Rng &&rng, range_difference_t<Rng> n)(
                     requires SizedRange<Rng> || is_infinite<Rng>::value)
-                static auto CPP_auto_fun(invoke_)(Rng &&rng, range_difference_t<Rng> n)
-                (
+                {
                     return take_exactly(
                         static_cast<Rng &&>(rng),
-                        is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
-                )
+                        is_infinite<Rng>::value ? n : ranges::min(n, distance(rng)));
+                }
 
                 template<typename Int>
                 static auto CPP_fun(bind)(take_fn take, Int n)(
@@ -135,39 +135,13 @@ namespace ranges
                     return make_pipeable(std::bind(take, std::placeholders::_1, n));
                 }
 
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int>
-                static auto bind(take_fn, Int) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Integral<Int>)
-                {
-                    CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::take must be a model of the Integral concept.");
-                    return {};
-                }
-            #endif
-
             public:
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
-                (
-                    return take_fn::invoke_(static_cast<Rng &&>(rng), n)
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const ->
-                    CPP_ret(void)(
-                        requires not InputRange<Rng>)
+                template<typename Rng>
+                auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+                    requires ViewableRange<Rng> && InputRange<Rng>)
                 {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::take operates must be a model of the InputRange "
-                        "concept.");
-                    CPP_assert_msg(Integral<T>,
-                        "The second argument to view::take must be a model of the Integral concept.");
+                    return take_fn::impl_(static_cast<Rng &&>(rng), n);
                 }
-            #endif
             };
 
             /// \relates take_fn

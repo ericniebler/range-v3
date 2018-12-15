@@ -65,7 +65,7 @@ void test_empty_set()
         static_cast<cardinality>(0));
 
     CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(BoundedRange<Rng>);
+    CPP_assert(CommonRange<Rng>);
     CPP_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
     CHECK(empty(rng));
@@ -96,7 +96,7 @@ void test_empty_set()
 void test_empty_range()
 {
     int some_ints[] = {0,1,2,3};
-    auto e = view::empty<char>();
+    auto e = view::empty<char>;
     auto rng = view::cartesian_product(
         span<int, size(some_ints)>{some_ints},
         e
@@ -106,7 +106,7 @@ void test_empty_range()
         static_cast<cardinality>(0));
 
     CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(BoundedRange<Rng>);
+    CPP_assert(CommonRange<Rng>);
     CPP_assert(SizedRange<Rng>);
     CHECK(size(rng) == 0u);
 
@@ -234,7 +234,7 @@ int main()
         range_cardinality<decltype(some_strings)>::value);
 
     CPP_assert(RandomAccessView<Rng>);
-    CPP_assert(BoundedRange<Rng>);
+    CPP_assert(CommonRange<Rng>);
     CPP_assert(SizedRange<Rng>);
     CHECK(size(rng) == static_cast<std::intmax_t>(size(some_ints) * size(some_strings)));
 

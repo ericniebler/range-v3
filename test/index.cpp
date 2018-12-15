@@ -53,7 +53,7 @@ int main()
                                 ranges::view::c_str("ranges::at")));
         }
 
-        auto viv = ranges::make_iterator_range(vi.begin(), vi.end());
+        auto viv = ranges::make_subrange(vi.begin(), vi.end());
         CHECK(viv.at(0) == 1);
         CHECK(viv.at(1) == 2);
         CHECK(viv.at(2) == 3);

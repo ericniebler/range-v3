@@ -19,6 +19,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
@@ -52,8 +53,8 @@ int main()
             ia[i] = 2 * i;
         for(int i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
-        auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
-        auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
+        auto r0 = ranges::make_subrange(ia.get(), ia.get() + N);
+        auto r1 = ranges::make_subrange(ib.get(), ib.get() + N);
         auto r = ranges::merge(r0, r1, ic.get());
         CHECK(ranges::get<0>(r) == ia.get() + N);
         CHECK(ranges::get<1>(r) == ib.get() + N);
@@ -73,8 +74,8 @@ int main()
             ia[i] = 2 * i;
         for(int i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
-        auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
-        auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
+        auto r0 = ::MakeTestRange(ia.get(), ia.get() + N);
+        auto r1 = ::MakeTestRange(ib.get(), ib.get() + N);
         auto r = ranges::merge(std::move(r0), std::move(r1), ic.get());
         CHECK(ranges::get<0>(r).get_unsafe() == ia.get() + N);
         CHECK(ranges::get<1>(r).get_unsafe() == ib.get() + N);

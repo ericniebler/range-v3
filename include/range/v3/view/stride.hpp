@@ -173,7 +173,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : rng_(that.rng_)
                 {}
                 constexpr /*c++14*/ void next(iterator_t<CRng> &it)
@@ -314,42 +314,13 @@ namespace ranges
                     return make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)));
                 }
             public:
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                constexpr auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> step) (const)
-                (
-                    return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step}
-                )
-
-                // For the purpose of better error messages:
-            #ifndef RANGES_DOXYGEN_INVOKED
-            private:
-                template<typename Difference>
-                static auto bind(stride_fn, const Difference &) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Integral<Difference>)
+                template<typename Rng>
+                constexpr auto operator()(Rng &&rng, range_difference_t<Rng> step) const ->
+                    CPP_ret(stride_view<all_t<Rng>>)(
+                        requires ViewableRange<Rng> && InputRange<Rng>)
                 {
-                    CPP_assert_msg(Integral<Difference>,
-                        "The value to be used as the step in a call to view::stride must be a "
-                        "model of the Integral concept that is convertible to the range's "
-                        "difference type.");
-                    return {};
+                    return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};
                 }
-            public:
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const ->
-                    CPP_ret(void)(
-                        requires not InputRange<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object to be operated on by view::stride should be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(Integral<T>,
-                        "The value to be used as the step in a call to view::stride must be a "
-                        "model of the Integral concept that is convertible to the range's "
-                        "difference type.");
-                }
-            #endif
             };
 
             /// \relates stride_fn

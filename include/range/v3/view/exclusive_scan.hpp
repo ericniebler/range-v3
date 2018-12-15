@@ -21,7 +21,8 @@
 namespace ranges {
     inline namespace v3 {
         /// \cond
-        namespace detail {
+        namespace detail
+        {
             CPP_def
             (
                 template(typename Rng, typename T, typename Fun)
@@ -43,7 +44,7 @@ namespace ranges {
         (
             template(typename Rng, typename T, typename Fun)
             concept ExclusiveScanConstraint,
-                InputRange<Rng> &&
+                ViewableRange<Rng> && InputRange<Rng> &&
                 CopyConstructible<T> &&
                 detail::ExclusiveScanConstraint2<Rng, T, Fun>
         );
@@ -91,7 +92,7 @@ namespace ranges {
                 {}
                 template<bool Other>
                 CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires IsConst && !Other)
+                    requires IsConst && (!Other))
                   : rng_(that.rng_)
                 {}
                 iterator_t<CRng> begin(exclusive_scan_view_t &)
@@ -175,29 +176,6 @@ namespace ranges {
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
                 }
-
-#ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T, typename Fun = plus>
-                auto operator()(Rng &&, T, Fun = Fun{}) const ->
-                    CPP_ret(void)(
-                        requires not ExclusiveScanConstraint<Rng, T, Fun>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument passed to view::exclusive_scan must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(CopyConstructible<T>,
-                        "The second argument passed to view::exclusive_scan must be a model of the "
-                        "CopyConstructible concept.");
-                    CPP_assert_msg(Invocable<Fun &, T, range_reference_t<Rng>>,
-                        "The third argument passed to view::exclusive_scan must be invokable with "
-                        "the init value passed as the first argument, and "
-                        "a value from the range passed as the second argument.");
-                    CPP_assert_msg(
-                        Assignable<T &, invoke_result_t<Fun &, T, range_reference_t<Rng>>>,
-                        "The result of invoking the third argument must be assignable to the init "
-                        "value.");
-                }
-#endif
             };
 
             /// \relates exclusive_scan_fn

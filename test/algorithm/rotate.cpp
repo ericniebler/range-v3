@@ -32,7 +32,7 @@ template<class Iter, class Sent = Iter>
 void test()
 {
     using namespace ranges;
-    using Res = iterator_range<Iter>;
+    using Res = subrange<Iter>;
 
     int ia[] = {0};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
@@ -264,6 +264,18 @@ int main()
     {
         int rgi[] = {0,1,2,3,4,5};
         auto r = ranges::rotate(ranges::view::all(rgi), rgi+2);
+        CHECK(r.begin() == rgi+4);
+        CHECK(r.end() == ranges::end(rgi));
+        CHECK(rgi[0] == 2);
+        CHECK(rgi[1] == 3);
+        CHECK(rgi[2] == 4);
+        CHECK(rgi[3] == 5);
+        CHECK(rgi[4] == 0);
+        CHECK(rgi[5] == 1);
+    }
+    {
+        int rgi[] = {0,1,2,3,4,5};
+        auto r = ranges::rotate(std::move(rgi), rgi+2);
         CHECK(r.get_unsafe().begin() == rgi+4);
         CHECK(r.get_unsafe().end() == ranges::end(rgi));
         CHECK(rgi[0] == 2);

@@ -55,14 +55,6 @@ namespace ranges
             return (bool) SimpleView<Rng>;
         }
 
-        CPP_def
-        (
-            template(typename Rng)
-            concept ViewableRange,
-                Range<Rng> &&
-                (std::is_lvalue_reference<Rng>::value || View<uncvref_t<Rng>>)
-        );
-
         namespace view
         {
             /// \addtogroup group-views
@@ -109,45 +101,25 @@ namespace ranges
                 friend pipeable_access;
 
                 // Piping requires range arguments or lvalue containers.
-                CPP_template(typename Rng, typename Vw)(
-                    requires ViewConcept<View, Rng>)
-                static auto CPP_auto_fun(pipe)(Rng &&rng, Vw &&v)
-                (
-                    return v.view_(static_cast<Rng &&>(rng))
-                )
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error messages:
                 template<typename Rng, typename Vw>
-                static auto pipe(Rng &&, Vw &&) ->
-                    CPP_ret(void)(
-                        requires not ViewConcept<View const, Rng>)
+                static auto CPP_fun(pipe)(Rng &&rng, Vw &&v)(
+                    requires ViewableRange<Rng> && Invocable<View &, Rng>)
                 {
-                    CPP_assert_msg(Range<Rng>,
-                        "The type Rng must be a model of the Range concept.");
-                    // BUGBUG This isn't a very helpful message. This is probably the wrong place
-                    // to put this check:
-                    CPP_assert_msg(Invocable<View&, Rng>,
-                        "This view is not callable with this range type.");
-                    static_assert((bool)ranges::View<Rng> || std::is_lvalue_reference<Rng>(),
-                        "You can't pipe an rvalue container into a view. First, save the container into "
-                        "a named variable, and then pipe it to the view.");
+                    return v.view_(static_cast<Rng &&>(rng));
                 }
-            #endif
-
             public:
                 view() = default;
                 view(View a)
                   : view_(std::move(a))
                 {}
 
-                // Calling directly requires View arguments or lvalue containers.
+                // Calling directly requires a ViewableRange.
                 CPP_template(typename Rng, typename...Rest)(
-                    requires ViewConcept<View const, Rng, Rest...>)
-                auto CPP_auto_fun(operator())(Rng &&rng, Rest &&... rest) (const)
-                (
-                    return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...)
-                )
+                    requires ViewableRange<Rng> && Invocable<View const &, Rng, Rest...>)
+                auto operator()(Rng &&rng, Rest &&... rest) const
+                {
+                    return view_(static_cast<Rng &&>(rng), static_cast<Rest &&>(rest)...);
+                }
 
                 // Currying overload.
                 template<typename...Ts, typename V = View>

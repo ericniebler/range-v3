@@ -159,7 +159,7 @@ CPP_template(class V, class F)(
         ranges::IndirectInvocable<F, ranges::iterator_t<V>>)
 meta::invoke<
     maybe_sized_generator<(bool) ranges::SizedRange<V>>,
-    ranges::indirect_result_of_t<F &(ranges::iterator_t<V>)>>
+    ranges::indirect_result_t<F &, ranges::iterator_t<V>>>
 transform(V view, F f)
 {
     if /* constexpr */ (ranges::SizedRange<V>)

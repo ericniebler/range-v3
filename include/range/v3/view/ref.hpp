@@ -30,11 +30,40 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \cond
-#if RANGES_BROKEN_CPO_LOOKUP
-        namespace _ref_view_ { template<typename> struct adl_hook {}; }
-#endif
+        template<typename Rng>
+        struct ref_view;
 
+        /// \cond
+        namespace _ref_view_
+        {
+            struct adl_hook
+            {};
+
+            template<typename Rng>
+            constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng)
+                noexcept(noexcept(rng.begin()))
+            {
+                return rng.begin();
+            }
+            template<typename Rng>
+            constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng)
+                noexcept(noexcept(rng.begin()))
+            {
+                return rng.begin();
+            }
+            template<typename Rng>
+            constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng)
+                noexcept(noexcept(rng.end()))
+            {
+                return rng.end();
+            }
+            template<typename Rng>
+            constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng)
+                noexcept(noexcept(rng.end()))
+            {
+                return rng.end();
+            }
+        }
         /// \endcond
 
         /// \addtogroup group-views
@@ -42,9 +71,7 @@ namespace ranges
         template<typename Rng>
         struct ref_view
           : view_interface<ref_view<Rng>>
-#if RANGES_BROKEN_CPO_LOOKUP
-          , private _ref_view_::adl_hook<ref_view<Rng>>
-#endif
+          , private _ref_view_::adl_hook
         {
         private:
             CPP_assert(Range<Rng>);
@@ -90,37 +117,7 @@ namespace ranges
             {
                 return ranges::data(*rng_);
             }
-#if !RANGES_BROKEN_CPO_LOOKUP
-            friend constexpr iterator_t<Rng> begin(ref_view &&rng)
-                noexcept(noexcept(rng.begin()))
-            {
-                return rng.begin();
-            }
-            friend constexpr sentinel_t<Rng> end(ref_view &&rng)
-                noexcept(noexcept(rng.end()))
-            {
-                return rng.end();
-            }
-#endif
         };
-
-#if RANGES_BROKEN_CPO_LOOKUP
-        namespace _ref_view_
-        {
-            template<typename Rng>
-            constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng)
-                noexcept(noexcept(rng.begin()))
-            {
-                return rng.begin();
-            }
-            template<typename Rng>
-            constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng)
-                noexcept(noexcept(rng.end()))
-            {
-                return rng.end();
-            }
-        }
-#endif
 
         namespace view
         {
@@ -133,6 +130,8 @@ namespace ranges
                 {
                     return ref_view<Rng>(rng);
                 }
+                template<typename Rng>
+                void operator()(Rng const &&rng) const = delete;
             };
 
             /// \relates const_fn

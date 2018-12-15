@@ -13,8 +13,6 @@
 #ifndef RANGES_V3_UTILITY_STATIC_CONST_HPP
 #define RANGES_V3_UTILITY_STATIC_CONST_HPP
 
-#include <range/v3/range_fwd.hpp>
-
 namespace ranges
 {
     inline namespace v3

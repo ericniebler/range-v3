@@ -107,22 +107,10 @@ namespace ranges
                 template<typename Val>
                 auto operator()(Val value, std::ptrdiff_t n) const ->
                     CPP_ret(repeat_n_view<Val>)(
-                        requires CopyConstructible<Val> && std::is_object<Val>::value)
+                        requires CopyConstructible<Val>)
                 {
                     return repeat_n_view<Val>{std::move(value), n};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Val>
-                auto operator()(Val, std::ptrdiff_t) const ->
-                    CPP_ret(void)(
-                        requires not (CopyConstructible<Val> && std::is_object<Val>::value))
-                {
-                    CPP_assert_msg(std::is_object<Val>::value,
-                        "The value passed to view::repeat must be an object.");
-                    CPP_assert_msg(CopyConstructible<Val>,
-                        "The value passed to view::repeat must be CopyConstructible.");
-                }
-            #endif
             };
 
             /// \relates repeat_n_fn

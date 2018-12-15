@@ -56,7 +56,7 @@ namespace ranges
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(safe_iterator_t<Rng0>)(
-                    requires Range<Rng0> && Range<Rng1> && ForwardIterator<iterator_t<Rng1>> &&
+                    requires Range<Rng0> && ForwardRange<Rng1> &&
                         AsymmetricallyComparable<iterator_t<Rng0>, iterator_t<Rng1>, R, P0, P1>)
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(pred),

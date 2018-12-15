@@ -38,7 +38,7 @@ namespace ranges
             (
                 template(typename Rng, typename Pred)
                 concept AdjacentFilter,
-                    ForwardRange<Rng> &&
+                    ViewableRange<Rng> && ForwardRange<Rng> &&
                     IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
             );
         }
@@ -73,7 +73,7 @@ namespace ranges
                 {}
                 template<bool Other>
                 constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
-                    requires Const && !Other)
+                    requires Const && (!Other))
                   : rng_(that.rng_)
                 {}
                 constexpr /*c++14*/ void next(iterator_t<CRng> &it) const
@@ -157,19 +157,6 @@ namespace ranges
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Pred>
-                auto operator()(Rng &&, Pred) const ->
-                    CPP_ret(void)(
-                        requires not detail::AdjacentFilter<Rng, Pred>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "Rng must model the ForwardRange concept");
-                    CPP_assert_msg(IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>,
-                        "Pred must be callable with two arguments of the range's common "
-                        "reference type, and it must return something convertible to bool.");
-                }
-            #endif
             };
 
             /// \relates adjacent_filter_fn

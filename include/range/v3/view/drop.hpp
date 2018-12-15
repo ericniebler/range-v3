@@ -16,7 +16,6 @@
 
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
@@ -30,6 +29,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {
@@ -39,7 +39,9 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct drop_view
-          : view_interface<drop_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+          : view_interface<
+                drop_view<Rng>,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>,
                 drop_view<Rng>,
@@ -133,50 +135,26 @@ namespace ranges
                 {
                     return make_pipeable(std::bind(drop, std::placeholders::_1, n));
                 }
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Int>
-                static auto bind(drop_fn, Int) ->
-                    CPP_ret(detail::null_pipe)(
-                        requires not Integral<Int>)
-                {
-                    CPP_assert_msg(Integral<Int>,
-                        "The object passed to view::drop must be Integral");
-                    return {};
-                }
-            #endif
                 template<typename Rng>
-                static drop_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
+                static auto impl_(Rng &&rng, range_difference_t<Rng> n, input_range_tag) ->
+                    drop_view<all_t<Rng>>
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
                 template<typename Rng>
-                static auto invoke_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag) ->
-                    CPP_ret(iterator_range<iterator_t<Rng>, sentinel_t<Rng>>)(
-                        requires not View<uncvref_t<Rng>> && std::is_lvalue_reference<Rng>::value &&
-                            SizedRange<Rng>)
+                static auto impl_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag) ->
+                    CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)(
+                        requires ForwardingRange_<Rng> && SizedRange<Rng>)
                 {
                     return {begin(rng) + ranges::min(n, distance(rng)), end(rng)};
                 }
             public:
-                CPP_template(typename Rng)(
-                    requires InputRange<Rng>)
-                auto CPP_auto_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const)
-                (
-                    return drop_fn::invoke_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{})
-                )
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T) const ->
-                    CPP_ret(void)(
-                        requires not (InputRange<Rng> && Integral<T>))
+                template<typename Rng>
+                auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+                    requires ViewableRange<Rng> && InputRange<Rng>)
                 {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The first argument to view::drop must be a model of the InputRange concept");
-                    CPP_assert_msg(Integral<T>,
-                        "The second argument to view::drop must be a model of the Integral concept");
+                    return drop_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
                 }
-            #endif
             };
 
             /// \relates drop_fn

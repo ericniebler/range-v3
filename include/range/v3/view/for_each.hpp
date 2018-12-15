@@ -34,14 +34,6 @@ namespace ranges
     {
         namespace view
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept ForEachViewConcept,
-                    TransformableRange<Rng, Fun> &&
-                    InputRange<invoke_result_t<Fun&, range_reference_t<Rng>>>
-            );
-
             /// Lazily applies an unary function to each element in the source
             /// range that returns another range (possibly empty), flattening
             /// the result.
@@ -55,37 +47,15 @@ namespace ranges
                     return make_pipeable(std::bind(for_each, std::placeholders::_1,
                         protect(std::move(fun))));
                 }
-
             public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires ForEachViewConcept<Rng, Fun>)
-                auto CPP_auto_fun(operator())(Rng &&rng, Fun fun) (const)
-                (
-                    return join(transform(static_cast<Rng &&>(rng), std::move(fun)))
-                )
-
-        #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun) const ->
-                    CPP_ret(void)(
-                        requires not ForEachViewConcept<Rng, Fun>)
+                auto CPP_fun(operator())(Rng &&rng, Fun fun) (const
+                    requires ViewableRange<Rng> &&
+                        TransformableRange<Rng, Fun> &&
+                        InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>)
                 {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which view::for_each operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(
-                        CopyConstructible<Fun>,
-                        "The function passed to view::for_each must be CopyConstructible.");
-                    CPP_assert_msg(
-                        Invocable<Fun&, range_reference_t<Rng>>,
-                        "The function passed to view::for_each must be callable with an argument "
-                        "of the range's reference type.");
-                    CPP_assert_msg(InputRange<invoke_result_t<
-                        Fun&, range_reference_t<Rng>>>,
-                        "To use view::for_each, the function F must return a model of the InputRange "
-                        "concept.");
+                    return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
                 }
-        #endif
             };
 
             /// \relates for_each_fn
@@ -102,21 +72,6 @@ namespace ranges
             {
                 return view::single(std::move(v));
             }
-
-        #ifndef RANGES_DOXYGEN_INVOKED
-            template<typename Arg, typename Val = detail::decay_t<Arg>>
-            auto operator()(Arg &&) const ->
-                CPP_ret(void)(
-                    requires not (CopyConstructible<Val> && Constructible<Val, Arg>))
-            {
-                CPP_assert_msg(CopyConstructible<Val>,
-                    "The object passed to yield must be a model of the CopyConstructible "
-                    "concept; that is, it needs to be copy and move constructible, and destructible.");
-                CPP_assert_msg(!CopyConstructible<Val> || Constructible<Val, Arg>,
-                    "The object type passed to yield must be initializable from the "
-                    "actual argument expression.");
-            }
-        #endif
         };
 
         /// \relates yield_fn
@@ -154,9 +109,10 @@ namespace ranges
         struct lazy_yield_if_fn
         {
             template<typename F>
-            generate_n_view<F> operator()(bool b, F f) const
+            auto operator()(bool b, F f) const ->
+                CPP_ret(generate_n_view<F>)(
+                    requires Invocable<F &>)
             {
-                CPP_assert(Invocable<F&>);
                 return view::generate_n(std::move(f), b ? 1 : 0);
             }
         };
@@ -168,11 +124,10 @@ namespace ranges
 
         /// \cond
         CPP_template(typename Rng, typename Fun)(
-            requires Range<Rng> && CopyConstructible<Fun> &&
-                Invocable<Fun&, range_common_reference_t<Rng>> &&
-                Range<invoke_result_t<Fun&, range_common_reference_t<Rng>>>)
-        auto operator >>= (Rng &&rng, Fun fun) ->
-            decltype(view::for_each(static_cast<Rng &&>(rng), std::move(fun)))
+            requires ViewableRange<Rng> &&
+                view::TransformableRange<Rng, Fun> &&
+                InputRange<invoke_result_t<Fun&, range_reference_t<Rng>>>)
+        auto operator >>= (Rng &&rng, Fun fun)
         {
             return view::for_each(static_cast<Rng &&>(rng), std::move(fun));
         }
