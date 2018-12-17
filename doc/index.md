@@ -293,8 +293,8 @@ now.)*
 
 ## Create Custom Iterators
 
-Here is example of Range v3 compatible RandomAccess proxy iterator.
-Iterator return key/value (aka zip).
+Here is an example of Range v3 compatible RandomAccess proxy iterator.
+The iterator returns a key/value pair, like the `zip` view.
 
 ~~~~~~~{.cpp}
     #include <range/v3/utility/basic_iterator.hpp>
@@ -309,8 +309,8 @@ Iterator return key/value (aka zip).
         // to inject things into the public interface of the iterator
         struct mixin;
 
-        // This is for dereference operator.        
-        using value_type = ranges::common_pair<Key, Value>;
+        // This is for dereference operator.      
+        using value_type = std::pair<Key, Value>; 
         ranges::common_pair<Key&, Value&> read() const {
             return { *key_iterator, *value_iterator };
         }
@@ -373,19 +373,24 @@ Iterator return key/value (aka zip).
       std::vector<Value> values = {10};
       
       iterator iter(keys.begin(), values.begin());
-      auto   pair  = *iter;
+      ranges::common_pair<Key&, Value&> pair = *iter;
       Key&   key   = pair.first;
       Value& value = pair.second;
 
+      assert(&key   == &keys[0]);
+      assert(&value == &values[0]);      
+
       auto key_iter = iter.key_iterator();
+      assert(key_iter == keys.begin());
     }
 ~~~~~~~
 
-`read()` return references. So, we implicitly specify `value_type`.  
- `ranges::common_pair` have conversions:  
-`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`  
+`read()` returns references. So, we explicitly specify `value_type`.  
+ `ranges::common_pair` has conversions:  
+`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.  
+All `ranges::common_pair`s converts to their `std::pair` equivalents, also.
 
-For more information, see [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0186r0.html#basic-iterators-iterators.basic)
+For more information, see [http://wg21.link/P0186#basic-iterators-iterators.basic](http://wg21.link/P0186#basic-iterators-iterators.basic)
 
 
 ## Constrain Functions with Concepts
