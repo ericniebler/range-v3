@@ -55,7 +55,7 @@ namespace ranges
                 result_t &&read() const
                 {
                     if (!view_->val_)
-                        view_->val_ = view_->gen_();
+                        view_->val_.emplace(view_->gen_());
                     return static_cast<result_t &&>(
                         static_cast<result_t &>(*view_->val_));
                 }
