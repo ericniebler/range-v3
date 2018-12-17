@@ -303,10 +303,11 @@ var searchData=
   ['reservable',['Reservable',['../structranges_1_1v3_1_1concepts_1_1_reservable.html',1,'ranges::v3::concepts']]],
   ['reserveandassignable',['ReserveAndAssignable',['../structranges_1_1v3_1_1concepts_1_1_reserve_and_assignable.html',1,'ranges::v3::concepts']]],
   ['result_5fof',['result_of',['../structranges_1_1v3_1_1result__of.html',1,'ranges::v3']]],
-  ['result_5fof_3c_20fun_28args_2e_2e_2e_29_2c_20meta_3a_3avoid_5f_3c_20decltype_28invoke_28std_3a_3adeclval_3c_20fun_20_3e_28_29_2c_20std_3a_3adeclval_3c_20args_20_3e_28_29_2e_2e_2e_29_29_3e_20_3e',['result_of&lt; Fun(Args...), meta::void_&lt; decltype(invoke(std::declval&lt; Fun &gt;(), std::declval&lt; Args &gt;()...))&gt; &gt;',['../structranges_1_1v3_1_1result__of_3_01_fun_07_args_8_8_8_08_00_01meta_1_1void___3_01decltype_07ina4ae5f371b7e4219812ac8ba5ab6d0b1.html',1,'ranges::v3']]],
+  ['result_5fof_3c_20fun_28args_2e_2e_2e_29_3e',['result_of&lt; Fun(Args...)&gt;',['../structranges_1_1v3_1_1result__of_3_01_fun_07_args_8_8_8_08_4.html',1,'ranges::v3']]],
   ['reverse_5fcopy_5ffn',['reverse_copy_fn',['../structranges_1_1v3_1_1reverse__copy__fn.html',1,'ranges::v3']]],
   ['reverse_5ffn',['reverse_fn',['../structranges_1_1v3_1_1action_1_1reverse__fn.html',1,'ranges::v3::action::reverse_fn'],['../structranges_1_1v3_1_1reverse__fn.html',1,'ranges::v3::reverse_fn'],['../structranges_1_1v3_1_1view_1_1reverse__fn.html',1,'ranges::v3::view::reverse_fn']]],
   ['reverse_5fview',['reverse_view',['../structranges_1_1v3_1_1reverse__view.html',1,'ranges::v3']]],
+  ['reverse_5fview_3c_20reverse_5fview_3c_20rng_20_3e_20_3e',['reverse_view&lt; reverse_view&lt; Rng &gt; &gt;',['../structranges_1_1v3_1_1reverse__view_3_01reverse__view_3_01_rng_01_4_01_4.html',1,'ranges::v3']]],
   ['rotate_5fcopy_5ffn',['rotate_copy_fn',['../structranges_1_1v3_1_1rotate__copy__fn.html',1,'ranges::v3']]],
   ['rotate_5ffn',['rotate_fn',['../structranges_1_1v3_1_1rotate__fn.html',1,'ranges::v3']]]
 ];

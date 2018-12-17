@@ -108,11 +108,11 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1copy__backward__
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9bebb9200ba5fbf55b4404844a87e2ba"><td class="memTemplParams" colspan="2"><a id="a9bebb9200ba5fbf55b4404844a87e2ba"></a>
 template&lt;typename I , typename S , typename O , requires  = (                    BidirectionalIterator&lt;I&gt;() &amp;&amp; Sentinel&lt;S, I&gt;() &amp;&amp;                    BidirectionalIterator&lt;O&gt;() &amp;&amp;                    IndirectlyCopyable&lt;I, O&gt;()                )&gt; </td></tr>
-<tr class="memitem:a9bebb9200ba5fbf55b4404844a87e2ba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end_, O out) const</td></tr>
+<tr class="memitem:a9bebb9200ba5fbf55b4404844a87e2ba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end_, O out) const</td></tr>
 <tr class="separator:a9bebb9200ba5fbf55b4404844a87e2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd5992dffda8703931e66c8dc4900050"><td class="memTemplParams" colspan="2"><a id="afd5992dffda8703931e66c8dc4900050"></a>
 template&lt;typename Rng , typename O , typename I  = iterator_t&lt;Rng&gt;, requires  = (                    BidirectionalRange&lt;Rng&gt;() &amp;&amp;                    BidirectionalIterator&lt;O&gt;() &amp;&amp;                    IndirectlyCopyable&lt;I, O&gt;()                )&gt; </td></tr>
-<tr class="memitem:afd5992dffda8703931e66c8dc4900050"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(safe_iterator_t&lt; Rng &gt;), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, O out) const</td></tr>
+<tr class="memitem:afd5992dffda8703931e66c8dc4900050"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::in(safe_iterator_t&lt; Rng &gt;), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, O out) const</td></tr>
 <tr class="separator:afd5992dffda8703931e66c8dc4900050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

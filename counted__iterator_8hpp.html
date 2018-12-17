@@ -98,7 +98,6 @@ $(document).ready(function(){initNavTree('counted__iterator_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">counted_iterator.hpp File Reference</div>  </div>
@@ -107,8 +106,6 @@ $(document).ready(function(){initNavTree('counted__iterator_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1iterator__category__.html">ranges::v3::_counted_iterator_::iterator_category_&lt; I, typename &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1iterator__category___3_01_i_00_01meta_1_1if___3_0cdc9b2bbb9a101a7e373e8c547d3e00e.html">ranges::v3::_counted_iterator_::iterator_category_&lt; I, meta::if_&lt; InputIterator&lt; I &gt; &gt; &gt;</a></td></tr>
@@ -121,17 +118,14 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1value__type___3_01_i_00_01meta_1_1if___3_01_readable_3_01_i_01_4_01_4_01_4.html">ranges::v3::_counted_iterator_::value_type_&lt; I, meta::if_&lt; Readable&lt; I &gt; &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1counted__iterator.html">ranges::v3::counted_iterator&lt; I, typename &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1counted__iterator.html">ranges::v3::counted_iterator&lt; I, typename &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iterator__category_3_01counted__iterator_3_01_i_01_4_01_4.html">ranges::v3::iterator_category&lt; counted_iterator&lt; I &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1value__type_3_01counted__iterator_3_01_i_01_4_01_4.html">ranges::v3::value_type&lt; counted_iterator&lt; I &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a2198f6547ffe630544d3c1d3f78d8db9"><td class="memTemplParams" colspan="2"><a id="a2198f6547ffe630544d3c1d3f78d8db9"></a>
-template&lt;typename I &gt; </td></tr>
-<tr class="memitem:a2198f6547ffe630544d3c1d3f78d8db9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::counted_iterator</b> = _counted_iterator_::counted_iterator&lt; I, <a class="el" href="group__logical.html#ga433228617142da594a03300b7550628a">meta::if_</a>&lt; Iterator&lt; I &gt; &gt;&gt;</td></tr>
-<tr class="separator:a2198f6547ffe630544d3c1d3f78d8db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -139,62 +133,62 @@ Functions</h2></td></tr>
 template&lt;typename I , requires  = (Iterator&lt;I&gt;())&gt; </td></tr>
 <tr class="memitem:ac0f3c5007a375043a18fbbcdbcc59805"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_counted_iterator</b> (I i, difference_type_t&lt; I &gt; n)</td></tr>
 <tr class="separator:ac0f3c5007a375043a18fbbcdbcc59805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5651b460cd9c3cc20a4250f238c1cd7"><td class="memTemplParams" colspan="2"><a id="ae5651b460cd9c3cc20a4250f238c1cd7"></a>
+<tr class="memitem:a4abb8634c784aa5911f25f4a2778bdfa"><td class="memTemplParams" colspan="2"><a id="a4abb8634c784aa5911f25f4a2778bdfa"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:ae5651b460cd9c3cc20a4250f238c1cd7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator!=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:ae5651b460cd9c3cc20a4250f238c1cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1ffd3de2b7b6ee0e07d0bd8a45ed680"><td class="memTemplParams" colspan="2"><a id="ac1ffd3de2b7b6ee0e07d0bd8a45ed680"></a>
+<tr class="memitem:a4abb8634c784aa5911f25f4a2778bdfa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:a4abb8634c784aa5911f25f4a2778bdfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1115eecfd40564c3cda1bd59cbc3241b"><td class="memTemplParams" colspan="2"><a id="a1115eecfd40564c3cda1bd59cbc3241b"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:ac1ffd3de2b7b6ee0e07d0bd8a45ed680"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator!=</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel y)</td></tr>
-<tr class="separator:ac1ffd3de2b7b6ee0e07d0bd8a45ed680"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af20d042d3d0c0574cb0ccda5af306f90"><td class="memTemplParams" colspan="2"><a id="af20d042d3d0c0574cb0ccda5af306f90"></a>
+<tr class="memitem:a1115eecfd40564c3cda1bd59cbc3241b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel y)</td></tr>
+<tr class="separator:a1115eecfd40564c3cda1bd59cbc3241b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d9f807e1a95833390b5026c4c865ba5"><td class="memTemplParams" colspan="2"><a id="a3d9f807e1a95833390b5026c4c865ba5"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:af20d042d3d0c0574cb0ccda5af306f90"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator!=</b> (default_sentinel x, const counted_iterator&lt; I &gt; &amp;y)</td></tr>
-<tr class="separator:af20d042d3d0c0574cb0ccda5af306f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e92a08c8d640146d7b7019a5a41389b"><td class="memTemplParams" colspan="2"><a id="a0e92a08c8d640146d7b7019a5a41389b"></a>
+<tr class="memitem:a3d9f807e1a95833390b5026c4c865ba5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (default_sentinel x, const counted_iterator&lt; I &gt; &amp;y)</td></tr>
+<tr class="separator:a3d9f807e1a95833390b5026c4c865ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de6e414d7bc6e20d64a042f2d53e94a"><td class="memTemplParams" colspan="2"><a id="a9de6e414d7bc6e20d64a042f2d53e94a"></a>
 template&lt;typename I , requires  = (RandomAccessIterator&lt;I&gt;())&gt; </td></tr>
-<tr class="memitem:a0e92a08c8d640146d7b7019a5a41389b"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator+</b> (difference_type_t&lt; I &gt; n, const counted_iterator&lt; I &gt; &amp;x)</td></tr>
-<tr class="separator:a0e92a08c8d640146d7b7019a5a41389b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45153f3da2d9933b064e48846c784ae9"><td class="memTemplParams" colspan="2"><a id="a45153f3da2d9933b064e48846c784ae9"></a>
+<tr class="memitem:a9de6e414d7bc6e20d64a042f2d53e94a"><td class="memTemplItemLeft" align="right" valign="top">counted_iterator&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator+</b> (difference_type_t&lt; I &gt; n, const counted_iterator&lt; I &gt; &amp;x)</td></tr>
+<tr class="separator:a9de6e414d7bc6e20d64a042f2d53e94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae01e6fd74591d67e9ad32b56b45fd32d"><td class="memTemplParams" colspan="2"><a id="ae01e6fd74591d67e9ad32b56b45fd32d"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:a45153f3da2d9933b064e48846c784ae9"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator-</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:a45153f3da2d9933b064e48846c784ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2448ae37c9813e7b69fe2e1f92e6223"><td class="memTemplParams" colspan="2"><a id="aa2448ae37c9813e7b69fe2e1f92e6223"></a>
+<tr class="memitem:ae01e6fd74591d67e9ad32b56b45fd32d"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:ae01e6fd74591d67e9ad32b56b45fd32d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ab499b2682bb991a283edba6cbe5339"><td class="memTemplParams" colspan="2"><a id="a3ab499b2682bb991a283edba6cbe5339"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:aa2448ae37c9813e7b69fe2e1f92e6223"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator-</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel)</td></tr>
-<tr class="separator:aa2448ae37c9813e7b69fe2e1f92e6223"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af472eec00ef78444484a755cdb1febc8"><td class="memTemplParams" colspan="2"><a id="af472eec00ef78444484a755cdb1febc8"></a>
+<tr class="memitem:a3ab499b2682bb991a283edba6cbe5339"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel)</td></tr>
+<tr class="separator:a3ab499b2682bb991a283edba6cbe5339"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a904f1791103512b1fe23b974d55ca7ca"><td class="memTemplParams" colspan="2"><a id="a904f1791103512b1fe23b974d55ca7ca"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:af472eec00ef78444484a755cdb1febc8"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator-</b> (default_sentinel, const counted_iterator&lt; I &gt; &amp;y)</td></tr>
-<tr class="separator:af472eec00ef78444484a755cdb1febc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54dc1819c762fdf6950aff9bd36a5f04"><td class="memTemplParams" colspan="2"><a id="a54dc1819c762fdf6950aff9bd36a5f04"></a>
+<tr class="memitem:a904f1791103512b1fe23b974d55ca7ca"><td class="memTemplItemLeft" align="right" valign="top">difference_type_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (default_sentinel, const counted_iterator&lt; I &gt; &amp;y)</td></tr>
+<tr class="separator:a904f1791103512b1fe23b974d55ca7ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ab36d24aa65376eb9cb05ac8fb07ea3"><td class="memTemplParams" colspan="2"><a id="a2ab36d24aa65376eb9cb05ac8fb07ea3"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:a54dc1819c762fdf6950aff9bd36a5f04"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator&lt;</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:a54dc1819c762fdf6950aff9bd36a5f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ee78afae1fef96f574963649ad2457b"><td class="memTemplParams" colspan="2"><a id="a0ee78afae1fef96f574963649ad2457b"></a>
+<tr class="memitem:a2ab36d24aa65376eb9cb05ac8fb07ea3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&lt;</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:a2ab36d24aa65376eb9cb05ac8fb07ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec9d5d4cdc95a4c2bdb6f2400ab4eba8"><td class="memTemplParams" colspan="2"><a id="aec9d5d4cdc95a4c2bdb6f2400ab4eba8"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:a0ee78afae1fef96f574963649ad2457b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator&lt;=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:a0ee78afae1fef96f574963649ad2457b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98bab29a109632f35ffad58b7e3944c2"><td class="memTemplParams" colspan="2"><a id="a98bab29a109632f35ffad58b7e3944c2"></a>
+<tr class="memitem:aec9d5d4cdc95a4c2bdb6f2400ab4eba8"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&lt;=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:aec9d5d4cdc95a4c2bdb6f2400ab4eba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84625e1ba99feba3ba447271a0f440ec"><td class="memTemplParams" colspan="2"><a id="a84625e1ba99feba3ba447271a0f440ec"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:a98bab29a109632f35ffad58b7e3944c2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator==</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:a98bab29a109632f35ffad58b7e3944c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9909d44d2627504e8ebd23f283099ef9"><td class="memTemplParams" colspan="2"><a id="a9909d44d2627504e8ebd23f283099ef9"></a>
+<tr class="memitem:a84625e1ba99feba3ba447271a0f440ec"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:a84625e1ba99feba3ba447271a0f440ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7c1140445e6c145769cf088fce92fe7"><td class="memTemplParams" colspan="2"><a id="af7c1140445e6c145769cf088fce92fe7"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:a9909d44d2627504e8ebd23f283099ef9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator==</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel)</td></tr>
-<tr class="separator:a9909d44d2627504e8ebd23f283099ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f1fe0bf48e29d7c39499c419e5141eb"><td class="memTemplParams" colspan="2"><a id="a0f1fe0bf48e29d7c39499c419e5141eb"></a>
+<tr class="memitem:af7c1140445e6c145769cf088fce92fe7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (const counted_iterator&lt; I &gt; &amp;x, default_sentinel)</td></tr>
+<tr class="separator:af7c1140445e6c145769cf088fce92fe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ce4b054388e422497f2536b62eb72d4"><td class="memTemplParams" colspan="2"><a id="a6ce4b054388e422497f2536b62eb72d4"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:a0f1fe0bf48e29d7c39499c419e5141eb"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator==</b> (default_sentinel, const counted_iterator&lt; I &gt; &amp;x)</td></tr>
-<tr class="separator:a0f1fe0bf48e29d7c39499c419e5141eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49f21b0acaa68850682a7659f9af61e5"><td class="memTemplParams" colspan="2"><a id="a49f21b0acaa68850682a7659f9af61e5"></a>
+<tr class="memitem:a6ce4b054388e422497f2536b62eb72d4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (default_sentinel, const counted_iterator&lt; I &gt; &amp;x)</td></tr>
+<tr class="separator:a6ce4b054388e422497f2536b62eb72d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0b875d68de29cfadb08848e050b79d4"><td class="memTemplParams" colspan="2"><a id="af0b875d68de29cfadb08848e050b79d4"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:a49f21b0acaa68850682a7659f9af61e5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator&gt;</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:a49f21b0acaa68850682a7659f9af61e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae33a2527573ba425e3431b57d902b72e"><td class="memTemplParams" colspan="2"><a id="ae33a2527573ba425e3431b57d902b72e"></a>
+<tr class="memitem:af0b875d68de29cfadb08848e050b79d4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&gt;</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:af0b875d68de29cfadb08848e050b79d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33c1f780c2d167e04b88a7e1d49fc755"><td class="memTemplParams" colspan="2"><a id="a33c1f780c2d167e04b88a7e1d49fc755"></a>
 template&lt;typename I1 , typename I2 , requires  = (Common&lt;I1, I2&gt;())&gt; </td></tr>
-<tr class="memitem:ae33a2527573ba425e3431b57d902b72e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::_counted_iterator_::operator&gt;=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
-<tr class="separator:ae33a2527573ba425e3431b57d902b72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33c1f780c2d167e04b88a7e1d49fc755"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator&gt;=</b> (const counted_iterator&lt; I1 &gt; &amp;x, const counted_iterator&lt; I2 &gt; &amp;y)</td></tr>
+<tr class="separator:a33c1f780c2d167e04b88a7e1d49fc755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -109,11 +109,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2a20ee607718280bfe15a6ddd99a1552"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classranges_1_1v3_1_1box.html#a2a20ee607718280bfe15a6ddd99a1552">box</a> () noexcept(std::is_nothrow_default_constructible&lt; <a class="el" href="class_element.html">Element</a> &gt;::value)</td></tr>
 <tr class="separator:a2a20ee607718280bfe15a6ddd99a1552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memTemplParams" colspan="2"><a id="a135505d326b8eb2117f6bfe55a59b2d1"></a>
-template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp;                    detail::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
 <tr class="memitem:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
 <tr class="separator:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memTemplParams" colspan="2"><a id="a135505d326b8eb2117f6bfe55a59b2d1"></a>
-template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; !std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp;                    !detail::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
 <tr class="memitem:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;e) noexcept(std::is_nothrow_constructible&lt; <a class="el" href="class_element.html">Element</a>, E &gt;::value)</td></tr>
 <tr class="separator:a135505d326b8eb2117f6bfe55a59b2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3124862dfc8936560ebc7d9e53a8ab13"><td class="memItemLeft" align="right" valign="top"><a id="a3124862dfc8936560ebc7d9e53a8ab13"></a>

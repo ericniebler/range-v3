@@ -114,17 +114,21 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1iter__zip__with__fn.
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a4b07a2fec71c7ca3276111e8d9f7f40f"><td class="memTemplParams" colspan="2"><a id="a4b07a2fec71c7ca3276111e8d9f7f40f"></a>
-template&lt;typename Fun , typename ... Rngs&gt; </td></tr>
-<tr class="memitem:a4b07a2fec71c7ca3276111e8d9f7f40f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rngs &gt;... &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; Fun &gt;(), <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; Fun &amp;, iterator_t&lt; Rngs &gt;... &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; Fun &amp;, <a class="el" href="structranges_1_1v3_1_1copy__tag.html">copy_tag</a>, iterator_t&lt; Rngs &gt;... &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; Fun &amp;, <a class="el" href="structranges_1_1v3_1_1move__tag.html">move_tag</a>, iterator_t&lt; Rngs &gt;... &gt; &gt;</td></tr>
-<tr class="separator:a4b07a2fec71c7ca3276111e8d9f7f40f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0308641b9b39f14571f38478a4bb336"><td class="memTemplParams" colspan="2"><a id="ae0308641b9b39f14571f38478a4bb336"></a>
+template&lt;typename Fun , typename... Rngs&gt; </td></tr>
+<tr class="memitem:ae0308641b9b39f14571f38478a4bb336"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = detail::IterZipWithConcept&lt; Fun, Rngs... &gt;</td></tr>
+<tr class="separator:ae0308641b9b39f14571f38478a4bb336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2ce58f961b6700b0856d8513d59109d7"><td class="memTemplParams" colspan="2"><a id="a2ce58f961b6700b0856d8513d59109d7"></a>
-template&lt;typename... Rngs, typename Fun , requires  = (Concept&lt;Fun, Rngs...&gt;())&gt; </td></tr>
+template&lt;typename Fun , typename... Rngs, requires  = (sizeof...(Rngs) != 0 &amp;&amp; Concept&lt;Fun, Rngs...&gt;())&gt; </td></tr>
 <tr class="memitem:a2ce58f961b6700b0856d8513d59109d7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html">iter_zip_with_view</a>&lt; Fun, all_t&lt; Rngs &gt;... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun fun, Rngs &amp;&amp;... rngs) const</td></tr>
 <tr class="separator:a2ce58f961b6700b0856d8513d59109d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab30ea9d20643a297c2843f51dc2d7fe1"><td class="memTemplParams" colspan="2"><a id="ab30ea9d20643a297c2843f51dc2d7fe1"></a>
+template&lt;typename Fun , requires  = (Concept&lt;Fun&gt;())&gt; </td></tr>
+<tr class="memitem:ab30ea9d20643a297c2843f51dc2d7fe1"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1empty__view.html">empty_view</a>&lt; <a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt;&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun) const noexcept</td></tr>
+<tr class="separator:ab30ea9d20643a297c2843f51dc2d7fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

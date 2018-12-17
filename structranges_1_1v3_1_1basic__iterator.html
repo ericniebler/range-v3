@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1basic__iterator.
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:ae34cc3456f1aa7d1300bd1c2d9fa7490"><td class="memTemplParams" colspan="2"><a id="ae34cc3456f1aa7d1300bd1c2d9fa7490"></a>
-template&lt;typename Cur2 &gt; </td></tr>
+template&lt;typename &gt; </td></tr>
 <tr class="memitem:ae34cc3456f1aa7d1300bd1c2d9fa7490"><td class="memTemplItemLeft" align="right" valign="top">struct&#160;</td><td class="memTemplItemRight" valign="bottom"><b>basic_iterator</b></td></tr>
 <tr class="separator:ae34cc3456f1aa7d1300bd1c2d9fa7490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a083a050d4211b15a1a7fd54bcb29ca05"><td class="memTemplParams" colspan="2"><a id="a083a050d4211b15a1a7fd54bcb29ca05"></a>
@@ -175,15 +175,9 @@ template&lt;class S , requires  = (detail::CursorSentinel&lt;S, Cur&gt;())&gt; <
 <tr class="separator:a50e99e6522af6f60fc11d99b0055c8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7e1fbc74f837e6a4eb58b6aace8d6bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ae7e1fbc74f837e6a4eb58b6aace8d6bc">operator&gt;=</a> (<a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a> const &amp;left, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a> const &amp;right)</td></tr>
 <tr class="separator:ae7e1fbc74f837e6a4eb58b6aace8d6bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c48ddea8576fc85cc618420bec48592"><td class="memItemLeft" align="right" valign="top"><a id="a6c48ddea8576fc85cc618420bec48592"></a>
-struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::range_access</b></td></tr>
-<tr class="separator:a6c48ddea8576fc85cc618420bec48592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad6c87e02a9c5a64d2fd0bcf77f7d7fad"><td class="memItemLeft" align="right" valign="top"><a id="ad6c87e02a9c5a64d2fd0bcf77f7d7fad"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>basic_iterator</b> (Cur pos)</td></tr>
-<tr class="separator:ad6c87e02a9c5a64d2fd0bcf77f7d7fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38024356a9ea54285cc0ebdef2379321"><td class="memTemplParams" colspan="2"><a id="a38024356a9ea54285cc0ebdef2379321"></a>
 template&lt;typename OtherCur , requires  = (ConvertibleTo&lt;OtherCur, Cur&gt;() &amp;&amp;                    Constructible&lt;mixin_t, OtherCur&gt;())&gt; </td></tr>
 <tr class="memitem:a38024356a9ea54285cc0ebdef2379321"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>basic_iterator</b> (<a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a>&lt; OtherCur &gt; that)</td></tr>
@@ -221,11 +215,11 @@ template&lt;typename C  = Cur, requires  = (!detail::HasCursorArrow&lt;Cur&gt;()
 <tr class="memitem:a3498c1c82d7e9e692954af648820c5ed"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::add_pointer&lt; const_reference_t &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-&gt;</b> () const noexcept(noexcept(*std::declval&lt; <a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a> const &amp;&gt;()))</td></tr>
 <tr class="separator:a3498c1c82d7e9e692954af648820c5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2c6c8bea40ea4080addc6e2a6053d06"><td class="memTemplParams" colspan="2"><a id="af2c6c8bea40ea4080addc6e2a6053d06"></a>
-template&lt;typename T , requires  = (!Same&lt;detail::decay_t&lt;T&gt;, basic_iterator&gt;() &amp;&amp;                    !detail::HasCursorNext&lt;Cur&gt;() &amp;&amp; detail::WritableCursor&lt;Cur, T&gt;())&gt; </td></tr>
+template&lt;typename T , requires  = (!Same&lt;uncvref_t&lt;T&gt;, basic_iterator&gt;() &amp;&amp;                    !detail::HasCursorNext&lt;Cur&gt;() &amp;&amp; detail::WritableCursor&lt;Cur, T&gt;())&gt; </td></tr>
 <tr class="memitem:af2c6c8bea40ea4080addc6e2a6053d06"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (T &amp;&amp;t) noexcept(noexcept(std::declval&lt; Cur &amp;&gt;().write(static_cast&lt; T &amp;&amp;&gt;(t))))</td></tr>
 <tr class="separator:af2c6c8bea40ea4080addc6e2a6053d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef80a209e9058418ba228f9e928049b6"><td class="memTemplParams" colspan="2"><a id="aef80a209e9058418ba228f9e928049b6"></a>
-template&lt;typename T , requires  = (!Same&lt;detail::decay_t&lt;T&gt;, basic_iterator&gt;() &amp;&amp;                    !detail::HasCursorNext&lt;Cur&gt;() &amp;&amp; detail::WritableCursor&lt;Cur const, T&gt;())&gt; </td></tr>
+template&lt;typename T , requires  = (!Same&lt;uncvref_t&lt;T&gt;, basic_iterator&gt;() &amp;&amp;                    !detail::HasCursorNext&lt;Cur&gt;() &amp;&amp; detail::WritableCursor&lt;Cur const, T&gt;())&gt; </td></tr>
 <tr class="memitem:aef80a209e9058418ba228f9e928049b6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a> const  &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (T &amp;&amp;t) const noexcept(noexcept(std::declval&lt; Cur const &amp;&gt;().write(static_cast&lt; T &amp;&amp;&gt;(t))))</td></tr>
 <tr class="separator:aef80a209e9058418ba228f9e928049b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39dbb7d2d401a2c53f4d0466636a7213"><td class="memItemLeft" align="right" valign="top">const_reference_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a39dbb7d2d401a2c53f4d0466636a7213">operator[]</a> (<a class="el" href="structranges_1_1v3_1_1difference__type.html">difference_type</a> n) const</td></tr>
@@ -729,8 +723,6 @@ template&lt;typename Cur&gt; </div>
 </div><div class="memdoc">
 <dl class="section pre"><dt>Precondition</dt><dd>detail::RandomAccessCursor&lt;Cur&gt;() </dd></dl>
 
-<p class="reference">References <a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a>.</p>
-
 </div>
 </div>
 <a id="a9924f6b4f7650a2308e27ec75bc7f4c3"></a>
@@ -794,8 +786,6 @@ template&lt;typename Cur&gt; </div>
       </table>
 </div><div class="memdoc">
 <dl class="section pre"><dt>Precondition</dt><dd>detail::RandomAccessCursor&lt;Cur&gt;() </dd></dl>
-
-<p class="reference">References <a class="el" href="group__group-utility.html#gad0b4e45e8ad1e530dfe9018f2119aeed">ranges::v3::advance</a>.</p>
 
 </div>
 </div>

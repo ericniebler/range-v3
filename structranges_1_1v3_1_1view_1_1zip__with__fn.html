@@ -114,17 +114,21 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1zip__with__fn.html">
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a07ffba0e50cd1b8ef54e6c2f549d66e5"><td class="memTemplParams" colspan="2"><a id="a07ffba0e50cd1b8ef54e6c2f549d66e5"></a>
-template&lt;typename Fun , typename ... Rngs&gt; </td></tr>
-<tr class="memitem:a07ffba0e50cd1b8ef54e6c2f549d66e5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rngs &gt;... &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; Fun &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; Fun &amp;, range_reference_t&lt; Rngs &gt; &amp;&amp;... &gt; &gt;</td></tr>
-<tr class="separator:a07ffba0e50cd1b8ef54e6c2f549d66e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5c3a290b771e4039675957111e8c05b"><td class="memTemplParams" colspan="2"><a id="ac5c3a290b771e4039675957111e8c05b"></a>
+template&lt;typename Fun , typename... Rngs&gt; </td></tr>
+<tr class="memitem:ac5c3a290b771e4039675957111e8c05b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rngs &gt;..., <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; Fun &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invocable</a>&lt; Fun &amp;, range_reference_t&lt; Rngs &gt; &amp;&amp;... &gt; &gt;</td></tr>
+<tr class="separator:ac5c3a290b771e4039675957111e8c05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acda7c000cbcb184d29da7f42f19d19ce"><td class="memTemplParams" colspan="2"><a id="acda7c000cbcb184d29da7f42f19d19ce"></a>
-template&lt;typename... Rngs, typename Fun , requires  = (Concept&lt;Fun, Rngs...&gt;())&gt; </td></tr>
+template&lt;typename Fun , typename... Rngs, requires  = (sizeof...(Rngs) != 0 &amp;&amp; Concept&lt;Fun, Rngs...&gt;())&gt; </td></tr>
 <tr class="memitem:acda7c000cbcb184d29da7f42f19d19ce"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1zip__with__view.html">zip_with_view</a>&lt; Fun, all_t&lt; Rngs &gt;... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun fun, Rngs &amp;&amp;... rngs) const</td></tr>
 <tr class="separator:acda7c000cbcb184d29da7f42f19d19ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20af850af06ad0bc026ec52265f3e5d7"><td class="memTemplParams" colspan="2"><a id="a20af850af06ad0bc026ec52265f3e5d7"></a>
+template&lt;typename Fun , requires  = (Concept&lt;Fun&gt;())&gt; </td></tr>
+<tr class="memitem:a20af850af06ad0bc026ec52265f3e5d7"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1empty__view.html">empty_view</a>&lt; <a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt;&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun) const noexcept</td></tr>
+<tr class="separator:a20af850af06ad0bc026ec52265f3e5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

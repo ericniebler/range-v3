@@ -2,6 +2,7 @@ var searchData=
 [
   ['id',['id',['../structmeta_1_1id.html',1,'meta::id&lt; T &gt;'],['../structmeta_1_1v1_1_1id.html',1,'meta::v1::id&lt; T &gt;']]],
   ['ident',['ident',['../structranges_1_1v3_1_1ident.html',1,'ranges::v3']]],
+  ['identity_5fadaptor',['identity_adaptor',['../structranges_1_1v3_1_1identity__adaptor.html',1,'ranges::v3']]],
   ['impl',['impl',['../structranges_1_1v3_1_1action_1_1action__access_1_1impl.html',1,'ranges::v3::action::action_access::impl&lt; Action &gt;'],['../structranges_1_1v3_1_1pipeable__access_1_1impl.html',1,'ranges::v3::pipeable_access::impl&lt; Pipeable &gt;'],['../structranges_1_1v3_1_1view_1_1view__access_1_1impl.html',1,'ranges::v3::view::view_access::impl&lt; View &gt;']]],
   ['impl_3c_20pipeable_20_26_20_3e',['impl&lt; Pipeable &amp; &gt;',['../structranges_1_1v3_1_1pipeable__access_1_1impl_3_01_pipeable_01_6_01_4.html',1,'ranges::v3::pipeable_access']]],
   ['implfn',['ImplFn',['../class_impl_fn.html',1,'']]],
@@ -38,6 +39,7 @@ var searchData=
   ['ints_5ffn',['ints_fn',['../structranges_1_1v3_1_1view_1_1ints__fn.html',1,'ranges::v3::view']]],
   ['invocable',['Invocable',['../structranges_1_1v3_1_1concepts_1_1_invocable.html',1,'ranges::v3::concepts']]],
   ['invoke_5ffn',['invoke_fn',['../structranges_1_1v3_1_1invoke__fn.html',1,'ranges::v3']]],
+  ['invoke_5fresult',['invoke_result',['../structranges_1_1v3_1_1invoke__result.html',1,'ranges::v3']]],
   ['iota_5ffn',['iota_fn',['../structranges_1_1v3_1_1iota__fn.html',1,'ranges::v3::iota_fn'],['../structranges_1_1v3_1_1view_1_1iota__fn.html',1,'ranges::v3::view::iota_fn']]],
   ['iota_5fview',['iota_view',['../structranges_1_1v3_1_1iota__view.html',1,'ranges::v3']]],
   ['iota_5fview_3c_20from_2c_20void_20_3e',['iota_view&lt; From, void &gt;',['../structranges_1_1v3_1_1iota__view_3_01_from_00_01void_01_4.html',1,'ranges::v3']]],
@@ -83,7 +85,6 @@ var searchData=
   ['iter_5fzip_5fwith_5fview_3c_20indirected_3c_20fun_20_3e_2c_20rngs_2e_2e_2e_20_3e',['iter_zip_with_view&lt; indirected&lt; Fun &gt;, Rngs... &gt;',['../structranges_1_1v3_1_1iter__zip__with__view.html',1,'ranges::v3']]],
   ['iterator',['Iterator',['../structranges_1_1v3_1_1concepts_1_1_iterator.html',1,'ranges::v3::concepts']]],
   ['iterator_5fcategory',['iterator_category',['../structranges_1_1v3_1_1iterator__category.html',1,'ranges::v3']]],
-  ['iterator_5fcategory_3c_20common_5fiterator_3c_20i_2c_20s_20_3e_20_3e',['iterator_category&lt; common_iterator&lt; I, S &gt; &gt;',['../structranges_1_1v3_1_1iterator__category_3_01common__iterator_3_01_i_00_01_s_01_4_01_4.html',1,'ranges::v3']]],
   ['iterator_5fcategory_3c_20counted_5fiterator_3c_20i_20_3e_20_3e',['iterator_category&lt; counted_iterator&lt; I &gt; &gt;',['../structranges_1_1v3_1_1iterator__category_3_01counted__iterator_3_01_i_01_4_01_4.html',1,'ranges::v3']]],
   ['iterator_5fcategory_3c_20iterator_5fwrapper_3c_20i_20_3e_20_3e',['iterator_category&lt; iterator_wrapper&lt; I &gt; &gt;',['../structranges_1_1v3_1_1iterator__category_3_01iterator__wrapper_3_01_i_01_4_01_4.html',1,'ranges::v3']]],
   ['iterator_5fcategory_3c_20t_20const_20_3e',['iterator_category&lt; T const &gt;',['../structranges_1_1v3_1_1iterator__category_3_01_t_01const_01_4.html',1,'ranges::v3']]],

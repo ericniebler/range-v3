@@ -122,11 +122,11 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>composed</b> (Second second, First first)</td></tr>
 <tr class="separator:a67134653d85445302233b2a5c8ae8e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0adc613f6594e4db01d1f79613e9d39b"><td class="memTemplParams" colspan="2"><a id="a0adc613f6594e4db01d1f79613e9d39b"></a>
-template&lt;typename... Ts, typename FirstResultT  = result_of_t&lt;First&amp;(Ts &amp;&amp;...)&gt;&gt; </td></tr>
+template&lt;typename... Ts, typename FirstResultT  = invoke_result_t&lt;First&amp;, Ts...&gt;&gt; </td></tr>
 <tr class="memitem:a0adc613f6594e4db01d1f79613e9d39b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Ts &amp;&amp;...ts) noexcept(noexcept(decltype(composed::do_(std::declval&lt; First &amp;&gt;(), std::declval&lt; Second &amp;&gt;(), std::is_void&lt; FirstResultT &gt;{},(Ts &amp;&amp;) ts...))(composed::do_(std::declval&lt; First &amp;&gt;(), std::declval&lt; Second &amp;&gt;(), std::is_void&lt; FirstResultT &gt;{},(Ts &amp;&amp;) ts...)))) -&gt; decltype(composed::do_(std::declval&lt; First &amp;&gt;(), std::declval&lt; Second &amp;&gt;(), std::is_void&lt; FirstResultT &gt;</td></tr>
 <tr class="separator:a0adc613f6594e4db01d1f79613e9d39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6438218f4181687ba9dbf1f0cc4866d3"><td class="memTemplParams" colspan="2"><a id="a6438218f4181687ba9dbf1f0cc4866d3"></a>
-template&lt;typename... Ts, typename FirstResultT  = result_of_t&lt;First const &amp;(Ts &amp;&amp;...)&gt;&gt; </td></tr>
+template&lt;typename... Ts, typename FirstResultT  = invoke_result_t&lt;First const &amp;, Ts...&gt;&gt; </td></tr>
 <tr class="memitem:a6438218f4181687ba9dbf1f0cc4866d3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Ts &amp;&amp;...ts) const noexcept(noexcept(decltype(composed::do_(std::declval&lt; First const &amp;&gt;(), std::declval&lt; Second const &amp;&gt;(), std::is_void&lt; FirstResultT &gt;{},(Ts &amp;&amp;) ts...))(composed::do_(std::declval&lt; First const &amp;&gt;(), std::declval&lt; Second const &amp;&gt;(), std::is_void&lt; FirstResultT &gt;{},(Ts &amp;&amp;) ts...)))) -&gt; decltype(composed::do_(std::declval&lt; First const &amp;&gt;(), std::declval&lt; Second const &amp;&gt;(), std::is_void&lt; FirstResultT &gt;</td></tr>
 <tr class="separator:a6438218f4181687ba9dbf1f0cc4866d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['tag',['tag',['../structranges_1_1v3_1_1nullopt__t_1_1tag.html',1,'ranges::v3::nullopt_t']]],
-  ['tagged',['tagged',['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html',1,'ranges::v3::tagged_detail']]],
+  ['tagged',['tagged',['../classranges_1_1v3_1_1tagged.html',1,'ranges::v3']]],
   ['tagged_5fcompressed_5ftuple',['tagged_compressed_tuple',['../classtagged__compressed__tuple.html',1,'']]],
   ['tail_5ffn',['tail_fn',['../structranges_1_1v3_1_1view_1_1tail__fn.html',1,'ranges::v3::view']]],
   ['tail_5fview',['tail_view',['../structranges_1_1v3_1_1tail__view.html',1,'ranges::v3']]],
@@ -23,9 +23,9 @@ var searchData=
   ['transformed',['transformed',['../structranges_1_1v3_1_1transformed.html',1,'ranges::v3']]],
   ['tuple',['tuple',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20iterator_5ft_3c_20constify_5fif_3c_20views_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; constify_if&lt; Views &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
-  ['tuple_3c_20iterator_5ft_3c_20rngs_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; Rngs &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
+  ['tuple_3c_20iterator_5ft_3c_20meta_3a_3aconst_5fif_5fc_3c_20const_2c_20rngs_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; meta::const_if_c&lt; Const, Rngs &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20rngs_2e_2e_2e_20_3e',['tuple&lt; Rngs... &gt;',['../classstd_1_1tuple.html',1,'std']]],
-  ['tuple_3c_20sentinel_5ft_3c_20rngs_20_3e_2e_2e_2e_20_3e',['tuple&lt; sentinel_t&lt; Rngs &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
+  ['tuple_3c_20sentinel_5ft_3c_20meta_3a_3aconst_5fif_5fc_3c_20const_2c_20rngs_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; sentinel_t&lt; meta::const_if_c&lt; Const, Rngs &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20ts_2e_2e_2e_20_3e',['tuple&lt; Ts... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20views_2e_2e_2e_20_3e',['tuple&lt; Views... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_5fapply_5ffn',['tuple_apply_fn',['../structranges_1_1v3_1_1tuple__apply__fn.html',1,'ranges::v3']]],

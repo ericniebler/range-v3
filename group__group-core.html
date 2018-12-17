@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('group__group-core.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -108,6 +109,11 @@ $(document).ready(function(){initNavTree('group__group-core.html','');});
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <p>Core range functionality. </p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceranges_1_1v3_1_1_c_p_os"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3_1_1_c_p_os.html">ranges::v3::CPOs</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__base.html">ranges::v3::adaptor_base</a></td></tr>
@@ -229,10 +235,6 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:gab3f1dfd50e9a63600f478c0dcc028493"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::range_value_type_t</b> = concepts::InputRange::value_t&lt; Rng &gt;</td></tr>
 <tr class="separator:gab3f1dfd50e9a63600f478c0dcc028493"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa52f41789dc1a5597117a2d43dbfb854"><td class="memTemplParams" colspan="2"><a id="gaa52f41789dc1a5597117a2d43dbfb854"></a>
-template&lt;typename I &gt; </td></tr>
-<tr class="memitem:gaa52f41789dc1a5597117a2d43dbfb854"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::reference_t</b> = concepts::Readable::reference_t&lt; I &gt;</td></tr>
-<tr class="separator:gaa52f41789dc1a5597117a2d43dbfb854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga97c110ca28a2246d5af6d7c72f9437ae"><td class="memTemplParams" colspan="2"><a id="ga97c110ca28a2246d5af6d7c72f9437ae"></a>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga97c110ca28a2246d5af6d7c72f9437ae"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::rvalue_reference_t</b> = concepts::Readable::rvalue_reference_t&lt; I &gt;</td></tr>
@@ -290,24 +292,12 @@ Variables</h2></td></tr>
 <tr class="separator:ga34dd26b265a4934e6e5754b73464b31f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga97f65425e123092ad49e02834a0e8eba"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1back__fn.html">back_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga97f65425e123092ad49e02834a0e8eba">ranges::v3::back</a> {}</td></tr>
 <tr class="separator:ga97f65425e123092ad49e02834a0e8eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga094e9f98be9ed128ba4b6d23fbf99015"><td class="memItemLeft" align="right" valign="top">constexpr _begin_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">ranges::v3::begin</a> {}</td></tr>
-<tr class="separator:ga094e9f98be9ed128ba4b6d23fbf99015"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5490a220243e7fd27758bf128878e165"><td class="memItemLeft" align="right" valign="top">constexpr _cbegin_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga5490a220243e7fd27758bf128878e165">ranges::v3::cbegin</a> {}</td></tr>
-<tr class="separator:ga5490a220243e7fd27758bf128878e165"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga950813b0caa51e2d7c47bd0cb8a02a84"><td class="memItemLeft" align="right" valign="top">constexpr _cend_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga950813b0caa51e2d7c47bd0cb8a02a84">ranges::v3::cend</a> {}</td></tr>
-<tr class="separator:ga950813b0caa51e2d7c47bd0cb8a02a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga109b71aaa74279fb4d22685f9964f561"><td class="memItemLeft" align="right" valign="top">constexpr _crbegin_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga109b71aaa74279fb4d22685f9964f561">ranges::v3::crbegin</a> {}</td></tr>
-<tr class="separator:ga109b71aaa74279fb4d22685f9964f561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga309eee12767ab4d9b6b01c1c75f85e74"><td class="memItemLeft" align="right" valign="top">constexpr _crend_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga309eee12767ab4d9b6b01c1c75f85e74">ranges::v3::crend</a> {}</td></tr>
-<tr class="separator:ga309eee12767ab4d9b6b01c1c75f85e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae77f7b6b33494f548b1bba9cf7a30985"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1distance__fn.html">distance_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gae77f7b6b33494f548b1bba9cf7a30985">ranges::v3::distance</a> {}</td></tr>
 <tr class="separator:gae77f7b6b33494f548b1bba9cf7a30985"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad16934d0fd0cfafd1c74e70349a7aa02"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1distance__compare__fn.html">distance_compare_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gad16934d0fd0cfafd1c74e70349a7aa02">ranges::v3::distance_compare</a> {}</td></tr>
 <tr class="separator:gad16934d0fd0cfafd1c74e70349a7aa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa6cc5a86498c23681ebc5276f432f862"><td class="memItemLeft" align="right" valign="top">constexpr _empty_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaa6cc5a86498c23681ebc5276f432f862">ranges::v3::empty</a> {}</td></tr>
 <tr class="separator:gaa6cc5a86498c23681ebc5276f432f862"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6e1ed0455c69f1a3536870eb05141260"><td class="memItemLeft" align="right" valign="top">constexpr _end_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga6e1ed0455c69f1a3536870eb05141260">ranges::v3::end</a> {}</td></tr>
-<tr class="separator:ga6e1ed0455c69f1a3536870eb05141260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaea4cba33b3f10f828c5c3418a6b271a7"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1enumerate__fn.html">enumerate_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaea4cba33b3f10f828c5c3418a6b271a7">ranges::v3::enumerate</a> {}</td></tr>
 <tr class="separator:gaea4cba33b3f10f828c5c3418a6b271a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6dff9c25c486dcbc71307b450a872645"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1front__fn.html">front_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga6dff9c25c486dcbc71307b450a872645">ranges::v3::front</a> {}</td></tr>
@@ -322,14 +312,8 @@ constexpr <a class="el" href="structranges_1_1v3_1_1getlines__fn.html">getlines_
 <tr class="separator:gac68a09086002062df6bc9e2247d1667d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf295cac4cc679ca932ce873fbbcbc806"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1make__iterator__range__fn.html">make_iterator_range_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaf295cac4cc679ca932ce873fbbcbc806">ranges::v3::make_iterator_range</a> {}</td></tr>
 <tr class="separator:gaf295cac4cc679ca932ce873fbbcbc806"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2355e32e7932cc939dcd713b721a695e"><td class="memItemLeft" align="right" valign="top">constexpr _rbegin_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga2355e32e7932cc939dcd713b721a695e">ranges::v3::rbegin</a> {}</td></tr>
-<tr class="separator:ga2355e32e7932cc939dcd713b721a695e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5e3a352ca5ba2f02d0e85df43117580a"><td class="memItemLeft" align="right" valign="top">constexpr _rend_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga5e3a352ca5ba2f02d0e85df43117580a">ranges::v3::rend</a> {}</td></tr>
-<tr class="separator:ga5e3a352ca5ba2f02d0e85df43117580a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8fdb936df3d1d1ca06016ca925f4a7d"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1sanitize__fn.html">sanitize_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#gae8fdb936df3d1d1ca06016ca925f4a7d">ranges::v3::sanitize</a> {}</td></tr>
 <tr class="separator:gae8fdb936df3d1d1ca06016ca925f4a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6b329c314ecd47d2e1f06b7712df7b71"><td class="memItemLeft" align="right" valign="top">constexpr _size_::fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga6b329c314ecd47d2e1f06b7712df7b71">ranges::v3::size</a> {}</td></tr>
-<tr class="separator:ga6b329c314ecd47d2e1f06b7712df7b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa0e5926a948bbde0a851d17c6720b88b"><td class="memItemLeft" align="right" valign="top"><a id="gaa0e5926a948bbde0a851d17c6720b88b"></a>
 constexpr detail::to_container_fn&lt; <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; std::vector &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::to_vector</b> {}</td></tr>
 <tr class="separator:gaa0e5926a948bbde0a851d17c6720b88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -464,123 +448,6 @@ template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToConta
 
 </div>
 </div>
-<a id="ga094e9f98be9ed128ba4b6d23fbf99015"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga094e9f98be9ed128ba4b6d23fbf99015">&#9670;&nbsp;</a></span>begin</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _begin_::fn ranges::v3::begin {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>r</code>, if <code>r</code> is an array. Otherwise, <code><a class="el" href="group__group-core.html#ga094e9f98be9ed128ba4b6d23fbf99015">r.begin()</a></code> if that expression is well-formed and returns an Iterator. Otherwise, <code>begin(r)</code> if that expression returns an Iterator. </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1tokenize__view.html#a1e8358d57d3da755ce9f240a117a3ee7">ranges::v3::tokenize_view&lt; Rng, Regex, SubMatchRange &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1tail__view.html#a37f1415912b35365d43811c97558fd45">ranges::v3::tail_view&lt; Rng &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1front__fn.html#a552ac3260a11ed707c034ba2d80bbc68">ranges::v3::front_fn::operator()()</a>, <a class="el" href="structranges_1_1v3_1_1at__fn.html#a89e2186abc3c7bdb48a7258d846004a0">ranges::v3::at_fn::operator()()</a>, and <a class="el" href="structranges_1_1v3_1_1index__fn.html#a905bb7fed19ff2080de1f7e6555f280d">ranges::v3::index_fn::operator()()</a>.</p>
-
-</div>
-</div>
-<a id="ga5490a220243e7fd27758bf128878e165"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5490a220243e7fd27758bf128878e165">&#9670;&nbsp;</a></span>cbegin</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _cbegin_::fn ranges::v3::cbegin {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of calling <code>ranges::begin</code> with a const-qualified reference to r. </dd></dl>
-
-</div>
-</div>
-<a id="ga950813b0caa51e2d7c47bd0cb8a02a84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga950813b0caa51e2d7c47bd0cb8a02a84">&#9670;&nbsp;</a></span>cend</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _cend_::fn ranges::v3::cend {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of calling <code>ranges::end</code> with a const-qualified reference to r. </dd></dl>
-
-</div>
-</div>
-<a id="ga109b71aaa74279fb4d22685f9964f561"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga109b71aaa74279fb4d22685f9964f561">&#9670;&nbsp;</a></span>crbegin</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _crbegin_::fn ranges::v3::crbegin {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of calling <code>ranges::rbegin</code> with a const-qualified reference to r. </dd></dl>
-
-</div>
-</div>
-<a id="ga309eee12767ab4d9b6b01c1c75f85e74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga309eee12767ab4d9b6b01c1c75f85e74">&#9670;&nbsp;</a></span>crend</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _crend_::fn ranges::v3::crend {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of calling <code>ranges::rend</code> with a const-qualified reference to r. </dd></dl>
-
-</div>
-</div>
 <a id="gae77f7b6b33494f548b1bba9cf7a30985"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae77f7b6b33494f548b1bba9cf7a30985">&#9670;&nbsp;</a></span>distance</h2>
 
@@ -596,7 +463,7 @@ template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToConta
 <p><code>#include &lt;<a class="el" href="distance_8hpp.html">range/v3/distance.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1distance__fn.html">distance_fn</a></code> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1index__fn.html#a905bb7fed19ff2080de1f7e6555f280d">ranges::v3::index_fn::operator()()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1chunk__view.html#a9a33b51b54538fbc5a7f84ab2c565aa1">ranges::v3::chunk_view&lt; Rng, bool &gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1chunk__view_3_01_rng_00_01false_01_4.html#a05227733bbd9d08e712115be2703fff0">ranges::v3::chunk_view&lt; Rng, false &gt;::size()</a>.</p>
 
 </div>
 </div>
@@ -634,41 +501,24 @@ template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToConta
 
 </div>
 </div>
-<a id="ga6e1ed0455c69f1a3536870eb05141260"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6e1ed0455c69f1a3536870eb05141260">&#9670;&nbsp;</a></span>end</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _end_::fn ranges::v3::end {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>r+size</code>(r), if <code>r</code> is an array. Otherwise, <code><a class="el" href="group__group-core.html#ga6e1ed0455c69f1a3536870eb05141260">r.end()</a></code> if that expression is well-formed and returns an Iterator. Otherwise, <code>end(r)</code> if that expression returns an Iterator. </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="structranges_1_1v3_1_1view__interface.html#a63803c5324ee40459599def14354adb8">ranges::v3::view_interface&lt; partial_sum_view&lt; Rng, Fun &gt;, Cardinality &gt;::back()</a>, <a class="el" href="structranges_1_1v3_1_1tokenize__view.html#a1e8358d57d3da755ce9f240a117a3ee7">ranges::v3::tokenize_view&lt; Rng, Regex, SubMatchRange &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1tail__view.html#a37f1415912b35365d43811c97558fd45">ranges::v3::tail_view&lt; Rng &gt;::begin()</a>, <a class="el" href="structranges_1_1v3_1_1tail__view.html#a5298f7cd108db089ead272446b820503">ranges::v3::tail_view&lt; Rng &gt;::end()</a>, <a class="el" href="structranges_1_1v3_1_1drop__view.html#aba189e605f08018b4e93e095393320cf">ranges::v3::drop_view&lt; Rng &gt;::end()</a>, and <a class="el" href="structranges_1_1v3_1_1back__fn.html#a4bbf4f8c3a44fc606040abce994845ed">ranges::v3::back_fn::operator()()</a>.</p>
-
-</div>
-</div>
 <a id="gaea4cba33b3f10f828c5c3418a6b271a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaea4cba33b3f10f828c5c3418a6b271a7">&#9670;&nbsp;</a></span>enumerate</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">constexpr <a class="el" href="structranges_1_1v3_1_1enumerate__fn.html">enumerate_fn</a> ranges::v3::enumerate {}</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="distance_8hpp.html">range/v3/distance.hpp</a>&gt;</code></p>
@@ -746,52 +596,6 @@ template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToConta
 
 </div>
 </div>
-<a id="ga2355e32e7932cc939dcd713b721a695e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2355e32e7932cc939dcd713b721a695e">&#9670;&nbsp;</a></span>rbegin</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _rbegin_::fn ranges::v3::rbegin {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>make_reverse_iterator(r+size(r))</code> if r is an array. Otherwise, <code><a class="el" href="group__group-core.html#ga2355e32e7932cc939dcd713b721a695e">r.rbegin()</a></code> if that expression is well-formed and returns an Iterator. Otherwise, <code>make_reverse_iterator(ranges::end(r))</code> if <code>ranges::begin(r)</code> and <code>ranges::end(r)</code> are both well-formed and have the same type that satisfies BidirectionalIterator. </dd></dl>
-
-</div>
-</div>
-<a id="ga5e3a352ca5ba2f02d0e85df43117580a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5e3a352ca5ba2f02d0e85df43117580a">&#9670;&nbsp;</a></span>rend</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _rend_::fn ranges::v3::rend {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="begin__end_8hpp.html">range/v3/begin_end.hpp</a>&gt;</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">r</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>make_reverse_iterator(r))</code> if r is an array. Otherwise, <code><a class="el" href="group__group-core.html#ga5e3a352ca5ba2f02d0e85df43117580a">r.rend()</a></code> if that expression is well-formed and returns a type that satisfies <code>Sentinel&lt;S, I&gt;</code> where <code>I</code> is the type of <code>ranges::rbegin(r)</code>. Otherwise, <code>make_reverse_iterator(ranges::begin(r))</code> if <code>ranges::begin(r)</code> and <code>ranges::end(r)</code> are both well-formed and have the same type that satisfies BidirectionalIterator. </dd></dl>
-
-</div>
-</div>
 <a id="gae8fdb936df3d1d1ca06016ca925f4a7d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae8fdb936df3d1d1ca06016ca925f4a7d">&#9670;&nbsp;</a></span>sanitize</h2>
 
@@ -806,23 +610,6 @@ template&lt;typename Cont , typename T , requires  = (detail::ConvertibleToConta
 
 <p><code>#include &lt;<a class="el" href="dangling_8hpp.html">range/v3/utility/dangling.hpp</a>&gt;</code></p>
 <dl class="section return"><dt>Returns</dt><dd>the result of replacing all <code>ranges::dangling&lt;T&gt;</code> objects with <code>ranges::dangling&lt;void&gt;</code>, introspecting <code>std::pair</code> and <code><a class="el" href="classstd_1_1tuple.html">std::tuple</a></code> objects recursively. </dd></dl>
-
-</div>
-</div>
-<a id="ga6b329c314ecd47d2e1f06b7712df7b71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6b329c314ecd47d2e1f06b7712df7b71">&#9670;&nbsp;</a></span>size</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr _size_::fn ranges::v3::size {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="size_8hpp.html">range/v3/size.hpp</a>&gt;</code></p>
-<dl class="section return"><dt>Returns</dt><dd>The result of an unqualified call to <code>size</code> Not to spec per N4651: allow non-const size functions (See <a href="https://github.com/ericniebler/range-v3/issues/385">https://github.com/ericniebler/range-v3/issues/385</a>) </dd></dl>
 
 </div>
 </div>

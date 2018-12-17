@@ -107,12 +107,12 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1generate__fn.htm
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a098aded86afcbdf6c975f96fb3c74d71"><td class="memTemplParams" colspan="2"><a id="a098aded86afcbdf6c975f96fb3c74d71"></a>
-template&lt;typename O , typename S , typename F , requires  = (Invocable&lt;F&amp;&gt;() &amp;&amp;                    OutputIterator&lt;O, result_of_t&lt;F&amp;()&gt;&gt;() &amp;&amp;                    Sentinel&lt;S, O&gt;())&gt; </td></tr>
-<tr class="memitem:a098aded86afcbdf6c975f96fb3c74d71"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::out(O), tag::fun(F)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (O begin, S end, F fun) const</td></tr>
+template&lt;typename O , typename S , typename F , requires  = (Invocable&lt;F &amp;&gt;() &amp;&amp;                    OutputIterator&lt;O, invoke_result_t&lt;F &amp;&gt;&gt;() &amp;&amp;                    Sentinel&lt;S, O&gt;())&gt; </td></tr>
+<tr class="memitem:a098aded86afcbdf6c975f96fb3c74d71"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::out(O), tag::fun(F)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (O begin, S end, F fun) const</td></tr>
 <tr class="separator:a098aded86afcbdf6c975f96fb3c74d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45748f91f64bec2e1345cdbd58f6c554"><td class="memTemplParams" colspan="2"><a id="a45748f91f64bec2e1345cdbd58f6c554"></a>
-template&lt;typename Rng , typename F , typename O  = iterator_t&lt;Rng&gt;, requires  = (Invocable&lt;F&amp;&gt;() &amp;&amp;                    OutputRange&lt;Rng, result_of_t&lt;F&amp;()&gt;&gt;())&gt; </td></tr>
-<tr class="memitem:a45748f91f64bec2e1345cdbd58f6c554"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::out(safe_iterator_t&lt; Rng &gt;), tag::fun(F)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, F fun) const</td></tr>
+template&lt;typename Rng , typename F , typename O  = iterator_t&lt;Rng&gt;, requires  = (Invocable&lt;F &amp;&gt;() &amp;&amp;                    OutputRange&lt;Rng, invoke_result_t&lt;F &amp;&gt;&gt;())&gt; </td></tr>
+<tr class="memitem:a45748f91f64bec2e1345cdbd58f6c554"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::out(safe_iterator_t&lt; Rng &gt;), tag::fun(F)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, F fun) const</td></tr>
 <tr class="separator:a45748f91f64bec2e1345cdbd58f6c554"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

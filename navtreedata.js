@@ -35,8 +35,13 @@ var NAVTREE =
       [ "Range Actions", "index.html#range-actions", null ],
       [ "Examples", "index.html#example-section", [
         [ "hello ranges", "index.html#example-hello", null ],
+        [ "any_of, all_of, none_of", "index.html#example-any-all-none", null ],
         [ "count", "index.html#example-count", null ],
-        [ "count_if", "index.html#example-count_if", null ]
+        [ "count_if", "index.html#example-count_if", null ],
+        [ "find, find_if, find_if_not on sequence containers", "index.html#example-find", null ],
+        [ "for_each on sequence containers", "index.html#example-for_each-seq", null ],
+        [ "for_each on associative containers", "index.html#example-for_each-assoc", null ],
+        [ "is_sorted", "index.html#example-is_sorted", null ]
       ] ]
     ] ],
     [ "Reference", "modules.html", "modules" ],
@@ -56,21 +61,21 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"common__tuple_8hpp.html#ac6dfa8b99d38a3adfc66eb8a1f6c8a95",
-"group__group-algorithms.html#gaa9101051c87fe779484bac4efeaf3d50",
-"group__group-views.html#gaeda943b575b98a90bf9258883d1f085f",
-"interleave_8hpp.html#a83a50ae334ae555f89c17d51c83cbbef",
-"meta_8hpp.html#ga9f3a3adf2556161e23d0b181d075498a",
-"sliding_8hpp.html#a6e1f68c8cf0f7535af8fdf1bec212fe7",
-"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1remove__if__view_3_01_ts_8_8_8_01_4_01const_01_4.html",
-"structranges_1_1v3_1_1action_1_1reverse__fn.html#a2f29f7e0b37292c8c41b09324ff4cec1",
-"structranges_1_1v3_1_1common__iterator.html#af683078ac63023c4c8c6cf18464605e2",
-"structranges_1_1v3_1_1count__if__fn.html",
-"structranges_1_1v3_1_1insert__fn.html",
-"structranges_1_1v3_1_1move__sentinel.html#aa523424b36cbfb42674fc2cd9566da36",
-"structranges_1_1v3_1_1scope__exit.html#a00b2879e9f642d1d7363a6d39bcbe27b",
-"structranges_1_1v3_1_1view_1_1chunk__fn.html",
-"structranges_1_1v3_1_1yield__fn.html"
+"common__tuple_8hpp.html#aac525d8dc5c56939e5ba4319b8e97127",
+"group__group-algorithms.html#ga97b82a20c332217b2703e47be2b093ca",
+"group__group-views.html#gaeab874f67edfb948c2a004e514ae14c4",
+"inner__product_8hpp.html#a8a4d59ad08b655e60c621128b3606679",
+"meta_8hpp.html#ga92d2a7a8db96f187d73e1242a3a4ee0c",
+"semiregular_8hpp.html",
+"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1iter__take__while__view_3_01_ts_8_8_8_01_4_01_4.html",
+"structranges_1_1v3_1_1action_1_1slice__fn.html#a3d15dbac738d6501270ea27d7f969662",
+"structranges_1_1v3_1_1common__tuple.html#a28e7c0a8977da4d4d02bfe0c1fcf7233",
+"structranges_1_1v3_1_1counted__iterator.html#add1bb91f3e75ce5779255012195da691",
+"structranges_1_1v3_1_1indirect__view.html#ae7d16f55b3229def4e031c1a8d7358a3",
+"structranges_1_1v3_1_1move__iterator.html#a0ad119f163cd6cf0ff34a9930997359d",
+"structranges_1_1v3_1_1replace__fn.html#ae0e256d041a6e297a38a30574084b7eb",
+"structranges_1_1v3_1_1tuple__for__each__fn.html",
+"structranges_1_1v3_1_1view__facade.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

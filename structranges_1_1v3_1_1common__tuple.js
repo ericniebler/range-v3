@@ -15,5 +15,8 @@ var structranges_1_1v3_1_1common__tuple =
     [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#a2610582e51737bc251a52635f77664b5", null ],
     [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#a1330d61d795c909e8a3865fa635986fe", null ],
     [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#a2e2e693a1f03f305f52bd7f179be8bdc", null ],
-    [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#ae3aad80c00b8e5c2cfebad0390dddc75", null ]
+    [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#ae3aad80c00b8e5c2cfebad0390dddc75", null ],
+    [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#a28e7c0a8977da4d4d02bfe0c1fcf7233", null ],
+    [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#a3ce697238d64d133849a90773778ae85", null ],
+    [ "common_tuple", "structranges_1_1v3_1_1common__tuple.html#af70bfa00b93066f254b96d71b418aa65", null ]
 ];

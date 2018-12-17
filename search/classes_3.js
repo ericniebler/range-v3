@@ -7,6 +7,7 @@ var searchData=
   ['defer',['defer',['../structmeta_1_1defer.html',1,'meta::defer&lt; C, Ts &gt;'],['../structmeta_1_1v1_1_1defer.html',1,'meta::v1::defer&lt; C, Ts &gt;']]],
   ['defer_3c_20detail_3a_3aiterator_5fcategory_5f_2c_20t_20_3e',['defer&lt; detail::iterator_category_, T &gt;',['../structmeta_1_1defer.html',1,'meta']]],
   ['defer_3c_20detail_3a_3avalue_5ftype_5f_2c_20t_20_3e',['defer&lt; detail::value_type_, T &gt;',['../structmeta_1_1defer.html',1,'meta']]],
+  ['defer_3c_20invoke_5fresult_5ft_2c_20fun_2c_20args_2e_2e_2e_20_3e',['defer&lt; invoke_result_t, Fun, Args... &gt;',['../structmeta_1_1defer.html',1,'meta']]],
   ['defer_5fi',['defer_i',['../structmeta_1_1defer__i.html',1,'meta::defer_i&lt; T, C, Is &gt;'],['../structmeta_1_1v1_1_1defer__i.html',1,'meta::v1::defer_i&lt; T, C, Is &gt;']]],
   ['delimit_5ffn',['delimit_fn',['../structranges_1_1v3_1_1view_1_1delimit__fn.html',1,'ranges::v3::view']]],
   ['delimit_5fimpl_5ffn',['delimit_impl_fn',['../structranges_1_1v3_1_1view_1_1delimit__impl__fn.html',1,'ranges::v3::view']]],

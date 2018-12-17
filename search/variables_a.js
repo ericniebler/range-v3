@@ -5,6 +5,7 @@ var searchData=
   ['make_5fcommon_5ftuple',['make_common_tuple',['../group__group-utility.html#ga85d624a417336a4492c6563deae8fcd4',1,'ranges::v3']]],
   ['make_5fheap',['make_heap',['../group__group-algorithms.html#ga377d29badc80ef8f86e5e3876ab5c1d8',1,'ranges::v3']]],
   ['make_5fiterator_5frange',['make_iterator_range',['../group__group-core.html#gaf295cac4cc679ca932ce873fbbcbc806',1,'ranges::v3']]],
+  ['make_5fostream_5fjoiner',['make_ostream_joiner',['../group__group-utility.html#ga2e57cfbef8b622a5b45353ee77ce4708',1,'ranges::v3']]],
   ['make_5fpipeable',['make_pipeable',['../group__group-utility.html#ga9421f091b207dbe3e5ea63db5d36550a',1,'ranges::v3']]],
   ['make_5ftuple',['make_tuple',['../group__group-utility.html#ga9808273ef5ec1ecaf6200f7ca5f4d667',1,'ranges::v3']]],
   ['make_5fview',['make_view',['../group__group-views.html#ga8d9cf14e40cd0d2e3d0955f773e70749',1,'ranges::v3::view']]],

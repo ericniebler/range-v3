@@ -18,7 +18,14 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
     ] ],
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
     [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],
-    [ "bounded.hpp", "bounded_8hpp.html", "bounded_8hpp" ],
+    [ "bounded.hpp", "bounded_8hpp.html", [
+      [ "range_const_iterator< ::ranges::v3::bounded_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::bounded_view< Ts... > const >()> >", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_0d33542743c977a0c4956ed133dd26abd.html", "structboost_1_1range__const__iterator_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_0d33542743c977a0c4956ed133dd26abd" ],
+      [ "range_mutable_iterator< ::ranges::v3::bounded_view< Ts... >, ::meta::if_c<(bool)::ranges::BoundedRange< ::ranges::v3::bounded_view< Ts... > >()> >", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4a77a61e696af4c1aebec5f95fef86da5.html", "structboost_1_1range__mutable__iterator_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4a77a61e696af4c1aebec5f95fef86da5" ],
+      [ "range_size< ::ranges::v3::bounded_view< Ts... > >", "structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_01_4.html", null ],
+      [ "range_size< ::ranges::v3::bounded_view< Ts... > const >", "structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_01const_01_4.html", null ],
+      [ "range_value< ::ranges::v3::bounded_view< Ts... > >", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_01_4.html", "structboost_1_1range__value_3_01_1_1ranges_1_1v3_1_1bounded__view_3_01_ts_8_8_8_01_4_01_4" ],
+      [ "bounded_fn", "structranges_1_1v3_1_1view_1_1bounded__fn.html", "structranges_1_1v3_1_1view_1_1bounded__fn" ]
+    ] ],
     [ "c_str.hpp", "c__str_8hpp.html", null ],
     [ "cartesian_product.hpp", "cartesian__product_8hpp.html", "cartesian__product_8hpp" ],
     [ "chunk.hpp", "chunk_8hpp.html", [
@@ -95,6 +102,10 @@ var dir_b00b1d9d00cc44a1bf5374fbcb141bf4 =
       [ "drop_while_fn", "structranges_1_1v3_1_1view_1_1drop__while__fn.html", "structranges_1_1v3_1_1view_1_1drop__while__fn" ]
     ] ],
     [ "empty.hpp", "view_2empty_8hpp.html", "view_2empty_8hpp" ],
+    [ "enumerate.hpp", "enumerate_8hpp.html", [
+      [ "enumerate_fn", "structranges_1_1v3_1_1view_1_1enumerate__fn.html", "structranges_1_1v3_1_1view_1_1enumerate__fn" ]
+    ] ],
+    [ "exclusive_scan.hpp", "exclusive__scan_8hpp.html", "exclusive__scan_8hpp" ],
     [ "filter.hpp", "filter_8hpp.html", [
       [ "filter_fn", "structranges_1_1v3_1_1view_1_1filter__fn.html", "structranges_1_1v3_1_1view_1_1filter__fn" ]
     ] ],

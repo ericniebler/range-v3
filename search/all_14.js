@@ -1,7 +1,7 @@
 var searchData=
 [
   ['tag',['tag',['../structranges_1_1v3_1_1nullopt__t_1_1tag.html',1,'ranges::v3::nullopt_t']]],
-  ['tagged',['tagged',['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html',1,'ranges::v3::tagged_detail::tagged&lt; Base, Tags &gt;'],['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a8adf6535297981be1c2aef6f3ff43c80',1,'ranges::v3::tagged_detail::tagged::tagged(Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)'],['../classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a0290f2cb92d9ea5615c77b0aac11e0cf',1,'ranges::v3::tagged_detail::tagged::tagged(Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)']]],
+  ['tagged',['tagged',['../classranges_1_1v3_1_1tagged.html',1,'ranges::v3::tagged&lt; Base, Tags &gt;'],['../classranges_1_1v3_1_1tagged.html#a8b6d59d3f5f0956ab6e4293998c1cf3d',1,'ranges::v3::tagged::tagged(Base &amp;&amp;that) noexcept(std::is_nothrow_move_constructible&lt; Base &gt;::value)'],['../classranges_1_1v3_1_1tagged.html#ad88c6ad29335360ac7ba42084670163f',1,'ranges::v3::tagged::tagged(Base const &amp;that) noexcept(std::is_nothrow_copy_constructible&lt; Base &gt;::value)']]],
   ['tagged_5fcompressed_5ftuple',['tagged_compressed_tuple',['../classtagged__compressed__tuple.html',1,'']]],
   ['tagged_5fpair_2ehpp',['tagged_pair.hpp',['../tagged__pair_8hpp.html',1,'']]],
   ['tagged_5ftuple_2ehpp',['tagged_tuple.hpp',['../tagged__tuple_8hpp.html',1,'']]],
@@ -40,9 +40,9 @@ var searchData=
   ['transpose',['transpose',['../group__transformation.html#ga386fa55fefb4aa3f4df3227379916839',1,'meta::transpose()'],['../group__lazy__transformation.html#ga380ef764edf25a09e9ef20afa7daffa7',1,'meta::lazy::transpose()']]],
   ['tuple',['tuple',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20iterator_5ft_3c_20constify_5fif_3c_20views_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; constify_if&lt; Views &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
-  ['tuple_3c_20iterator_5ft_3c_20rngs_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; Rngs &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
+  ['tuple_3c_20iterator_5ft_3c_20meta_3a_3aconst_5fif_5fc_3c_20const_2c_20rngs_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; iterator_t&lt; meta::const_if_c&lt; Const, Rngs &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20rngs_2e_2e_2e_20_3e',['tuple&lt; Rngs... &gt;',['../classstd_1_1tuple.html',1,'std']]],
-  ['tuple_3c_20sentinel_5ft_3c_20rngs_20_3e_2e_2e_2e_20_3e',['tuple&lt; sentinel_t&lt; Rngs &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
+  ['tuple_3c_20sentinel_5ft_3c_20meta_3a_3aconst_5fif_5fc_3c_20const_2c_20rngs_20_3e_20_3e_2e_2e_2e_20_3e',['tuple&lt; sentinel_t&lt; meta::const_if_c&lt; Const, Rngs &gt; &gt;... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20ts_2e_2e_2e_20_3e',['tuple&lt; Ts... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_3c_20views_2e_2e_2e_20_3e',['tuple&lt; Views... &gt;',['../classstd_1_1tuple.html',1,'std']]],
   ['tuple_5falgorithm_2ehpp',['tuple_algorithm.hpp',['../tuple__algorithm_8hpp.html',1,'']]],

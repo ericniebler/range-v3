@@ -129,11 +129,11 @@ template&lt;typename ElementType &gt; </td></tr>
 <tr class="memitem:aeb6dc4381a110f197aed2f981b453835"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; ElementType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (ElementType *first, ElementType *last) noexcept</td></tr>
 <tr class="separator:aeb6dc4381a110f197aed2f981b453835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memTemplParams" colspan="2"><a id="ac67f56f5e1810d4a9a49f3ad5b8781ca"></a>
-template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &lt; cardinality{})&gt; </td></tr>
+template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &lt; cardinality())&gt; </td></tr>
 <tr class="memitem:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; concepts::ContiguousRange::element_t&lt; Rng &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (Rng &amp;&amp;rng) noexcept(noexcept(ranges::data(rng), ranges::size(rng)))</td></tr>
 <tr class="separator:ac67f56f5e1810d4a9a49f3ad5b8781ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe454cc8a7db3d24885617199789d01a"><td class="memTemplParams" colspan="2"><a id="afe454cc8a7db3d24885617199789d01a"></a>
-template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &gt;= cardinality{})&gt; </td></tr>
+template&lt;typename Rng , requires  = (ContiguousRange&lt;Rng&gt;() &amp;&amp;                range_cardinality&lt;Rng&gt;::value &gt;= cardinality())&gt; </td></tr>
 <tr class="memitem:afe454cc8a7db3d24885617199789d01a"><td class="memTemplItemLeft" align="right" valign="top">constexpr span&lt; concepts::ContiguousRange::element_t&lt; Rng &gt;, static_cast&lt; detail::span_index_t &gt;range_cardinality&lt; Rng &gt;::value)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_span</b> (Rng &amp;&amp;rng) noexcept(noexcept(ranges::data(rng)))</td></tr>
 <tr class="separator:afe454cc8a7db3d24885617199789d01a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

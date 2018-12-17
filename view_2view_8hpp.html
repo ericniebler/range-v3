@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('view_2view_8hpp.html','');});
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">view.hpp File Reference</div>  </div>
@@ -107,6 +108,8 @@ $(document).ready(function(){initNavTree('view_2view_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1_simple_view.html">ranges::v3::SimpleView</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1make__view__fn.html">ranges::v3::view::make_view_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view.html">ranges::v3::view::view&lt; View &gt;</a></td></tr>
@@ -118,10 +121,17 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga45db01bcf34c703b20a8da79f574c24c"><td class="memTemplParams" colspan="2">
+<tr class="memitem:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memTemplParams" colspan="2"><a id="a17b3fdb179090d2a0fd61ae150dcf328"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ga45db01bcf34c703b20a8da79f574c24c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::ViewableRange</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; Range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga910651a3a621d5419cbbb4e8c71512a1">meta::or_</a>&lt; std::is_lvalue_reference&lt; Rng &gt;, View&lt; uncvref_t&lt; Rng &gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:ga45db01bcf34c703b20a8da79f574c24c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ViewableRange</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; Range&lt; Rng &gt;, <a class="el" href="group__logical.html#ga910651a3a621d5419cbbb4e8c71512a1">meta::or_</a>&lt; std::is_lvalue_reference&lt; Rng &gt;, View&lt; uncvref_t&lt; Rng &gt; &gt;&gt; &gt;</td></tr>
+<tr class="separator:a17b3fdb179090d2a0fd61ae150dcf328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memTemplParams" colspan="2"><a id="a1b823054d4c1ebbe9eb5066e951af88f"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::simple_view</b> ()</td></tr>
+<tr class="separator:a1b823054d4c1ebbe9eb5066e951af88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

@@ -107,11 +107,11 @@ $(document).ready(function(){initNavTree('classranges_1_1v3_1_1box_3_01_element_
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a579a61c60a2a196d18777c181e75b8ec"><td class="memTemplParams" colspan="2"><a id="a579a61c60a2a196d18777c181e75b8ec"></a>
-template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp;                    detail::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
 <tr class="memitem:a579a61c60a2a196d18777c181e75b8ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;) noexcept</td></tr>
 <tr class="separator:a579a61c60a2a196d18777c181e75b8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a579a61c60a2a196d18777c181e75b8ec"><td class="memTemplParams" colspan="2"><a id="a579a61c60a2a196d18777c181e75b8ec"></a>
-template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp; !std::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
+template&lt;typename E , requires  = (std::is_constructible&lt;Element, E&gt;::value &amp;&amp;                    !detail::is_convertible&lt;E, Element&gt;::value)&gt; </td></tr>
 <tr class="memitem:a579a61c60a2a196d18777c181e75b8ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>box</b> (E &amp;&amp;) noexcept</td></tr>
 <tr class="separator:a579a61c60a2a196d18777c181e75b8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f4a85376665f7ac80d517598dc8345c"><td class="memItemLeft" align="right" valign="top"><a id="a3f4a85376665f7ac80d517598dc8345c"></a>

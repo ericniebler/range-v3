@@ -97,7 +97,6 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_wri
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1concepts_1_1_writable-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -105,19 +104,12 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_wri
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:ae06dc14ed9146b887ff971be632dee1e"><td class="memTemplParams" colspan="2"><a id="ae06dc14ed9146b887ff971be632dee1e"></a>
-template&lt;typename Out &gt; </td></tr>
-<tr class="memitem:ae06dc14ed9146b887ff971be632dee1e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reference_t</b> = Readable::reference_t&lt; Out &gt;</td></tr>
-<tr class="separator:ae06dc14ed9146b887ff971be632dee1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad381e3f0b235f0b22f0a109a728d9bb4"><td class="memTemplParams" colspan="2"><a id="ad381e3f0b235f0b22f0a109a728d9bb4"></a>
+<tr class="memitem:a444a84947f55922980bbbb470590deb9"><td class="memTemplParams" colspan="2"><a id="a444a84947f55922980bbbb470590deb9"></a>
 template&lt;typename Out , typename T &gt; </td></tr>
-<tr class="memitem:ad381e3f0b235f0b22f0a109a728d9bb4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (Out &amp;&amp;o, T &amp;&amp;t) -&gt; decltype(concepts::valid_expr(((void)(*o=(T &amp;&amp;) t), 42),((void)(*((Out &amp;&amp;) o)=(T &amp;&amp;) t), 42),((void)(const_cast&lt; reference_t&lt; Out &gt; const &amp;&amp;&gt;(*o)=(T &amp;&amp;) t), 42),((void)(const_cast&lt; reference_t&lt; Out &gt; const &amp;&amp;&gt;(*((Out &amp;&amp;) o))=(T &amp;&amp;) t), 42)))</td></tr>
-<tr class="separator:ad381e3f0b235f0b22f0a109a728d9bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a444a84947f55922980bbbb470590deb9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (Out &amp;&amp;o, T &amp;&amp;t) -&gt; decltype(concepts::valid_expr(((void)(*o=static_cast&lt; T &amp;&amp;&gt;(t)), 42),((void)(*static_cast&lt; Out &amp;&amp;&gt;(o)=static_cast&lt; T &amp;&amp;&gt;(t)), 42),((void)(const_cast&lt; reference_t&lt; Out &gt; const &amp;&amp;&gt;(*o)=static_cast&lt; T &amp;&amp;&gt;(t)), 42),((void)(const_cast&lt; reference_t&lt; Out &gt; const &amp;&amp;&gt;(*static_cast&lt; Out &amp;&amp;&gt;(o))=static_cast&lt; T &amp;&amp;&gt;(t)), 42)))</td></tr>
+<tr class="separator:a444a84947f55922980bbbb470590deb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

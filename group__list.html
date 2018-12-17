@@ -119,19 +119,19 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gab42ade21726298d3795e5e6d83d65d85"><td class="memTemplParams" colspan="2"><a id="gab42ade21726298d3795e5e6d83d65d85"></a>
+<tr class="memitem:gaee98eb04d205d60b5bea16c8313f5a94"><td class="memTemplParams" colspan="2"><a id="gaee98eb04d205d60b5bea16c8313f5a94"></a>
 template&lt;typename Sequence &gt; </td></tr>
-<tr class="memitem:gab42ade21726298d3795e5e6d83d65d85"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gab42ade21726298d3795e5e6d83d65d85">meta::as_list</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::as_list_&lt; Sequence &gt; &gt;</td></tr>
-<tr class="memdesc:gab42ade21726298d3795e5e6d83d65d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> in a way determined by <code><a class="el" href="group__invocation.html#gaa20b4002ec6b258dec0b11affe7d9cdc" title="Evaluate the Callable F with the arguments Args. ">meta::invoke</a></code>. <br /></td></tr>
-<tr class="separator:gab42ade21726298d3795e5e6d83d65d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacdbdab68fed6a2dd5088d68ac66f20b1"><td class="memTemplParams" colspan="2">template&lt;typename List , typename N &gt; </td></tr>
-<tr class="memitem:gacdbdab68fed6a2dd5088d68ac66f20b1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gacdbdab68fed6a2dd5088d68ac66f20b1">meta::at</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::at_&lt; List, N &gt; &gt;</td></tr>
-<tr class="memdesc:gacdbdab68fed6a2dd5088d68ac66f20b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="group__list.html#gacdbdab68fed6a2dd5088d68ac66f20b1">More...</a><br /></td></tr>
-<tr class="separator:gacdbdab68fed6a2dd5088d68ac66f20b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga53011e5e5e710cae7b0e84b42fcd8641"><td class="memTemplParams" colspan="2">template&lt;typename List , std::size_t N&gt; </td></tr>
-<tr class="memitem:ga53011e5e5e710cae7b0e84b42fcd8641"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga53011e5e5e710cae7b0e84b42fcd8641">meta::at_c</a> = <a class="el" href="group__list.html#gacdbdab68fed6a2dd5088d68ac66f20b1">at</a>&lt; List, <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; N &gt; &gt;</td></tr>
-<tr class="memdesc:ga53011e5e5e710cae7b0e84b42fcd8641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="group__list.html#ga53011e5e5e710cae7b0e84b42fcd8641">More...</a><br /></td></tr>
-<tr class="separator:ga53011e5e5e710cae7b0e84b42fcd8641"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee98eb04d205d60b5bea16c8313f5a94"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaee98eb04d205d60b5bea16c8313f5a94">meta::as_list</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::as_list_&lt; detail::uncvref_t&lt; Sequence &gt; &gt;&gt;</td></tr>
+<tr class="memdesc:gaee98eb04d205d60b5bea16c8313f5a94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> in a way determined by <code><a class="el" href="group__invocation.html#ga1457cc6fc58a5b4ac69dbeb36da1f6f3" title="Applies the Callable C using the types in the type list List as arguments. ">meta::apply</a></code>. <br /></td></tr>
+<tr class="separator:gaee98eb04d205d60b5bea16c8313f5a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78e81b314535c3515bb3c01c725ec086"><td class="memTemplParams" colspan="2">template&lt;typename List , typename N &gt; </td></tr>
+<tr class="memitem:ga78e81b314535c3515bb3c01c725ec086"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga78e81b314535c3515bb3c01c725ec086">meta::at</a> = <a class="el" href="group__list.html#gaa1577d9b1044c2c34af3805e756e615d">at_c</a>&lt; List, N::type::value &gt;</td></tr>
+<tr class="memdesc:ga78e81b314535c3515bb3c01c725ec086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="group__list.html#ga78e81b314535c3515bb3c01c725ec086">More...</a><br /></td></tr>
+<tr class="separator:ga78e81b314535c3515bb3c01c725ec086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa1577d9b1044c2c34af3805e756e615d"><td class="memTemplParams" colspan="2">template&lt;typename List , std::size_t N&gt; </td></tr>
+<tr class="memitem:gaa1577d9b1044c2c34af3805e756e615d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaa1577d9b1044c2c34af3805e756e615d">meta::at_c</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::at_&lt; List, N &gt; &gt;</td></tr>
+<tr class="memdesc:gaa1577d9b1044c2c34af3805e756e615d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="group__list.html#gaa1577d9b1044c2c34af3805e756e615d">More...</a><br /></td></tr>
+<tr class="separator:gaa1577d9b1044c2c34af3805e756e615d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad179c25255c75209d171ac7b7f3798a0"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:gad179c25255c75209d171ac7b7f3798a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gad179c25255c75209d171ac7b7f3798a0">meta::back</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt; detail::back_&lt; List &gt; &gt;</td></tr>
 <tr class="memdesc:gad179c25255c75209d171ac7b7f3798a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the last element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="group__list.html#gad179c25255c75209d171ac7b7f3798a0">More...</a><br /></td></tr>
@@ -178,8 +178,8 @@ template&lt;typename List &gt; </td></tr>
 <tr class="separator:gad3a42ffe5a3789ca77b32080b1ae6f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="gacdbdab68fed6a2dd5088d68ac66f20b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacdbdab68fed6a2dd5088d68ac66f20b1">&#9670;&nbsp;</a></span>at</h2>
+<a id="ga78e81b314535c3515bb3c01c725ec086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga78e81b314535c3515bb3c01c725ec086">&#9670;&nbsp;</a></span>at</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,7 +187,7 @@ template&lt;typename List &gt; </td></tr>
 template&lt;typename List , typename N &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__list.html#gacdbdab68fed6a2dd5088d68ac66f20b1">meta::at</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::at_&lt;List, N&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__list.html#ga78e81b314535c3515bb3c01c725ec086">meta::at</a> = typedef <a class="el" href="group__list.html#gaa1577d9b1044c2c34af3805e756e615d">at_c</a>&lt;List, N::type::value&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -195,12 +195,12 @@ template&lt;typename List , typename N &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
-<a id="ga53011e5e5e710cae7b0e84b42fcd8641"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga53011e5e5e710cae7b0e84b42fcd8641">&#9670;&nbsp;</a></span>at_c</h2>
+<a id="gaa1577d9b1044c2c34af3805e756e615d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa1577d9b1044c2c34af3805e756e615d">&#9670;&nbsp;</a></span>at_c</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,7 +208,7 @@ template&lt;typename List , typename N &gt; </div>
 template&lt;typename List , std::size_t N&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__list.html#ga53011e5e5e710cae7b0e84b42fcd8641">meta::at_c</a> = typedef <a class="el" href="group__list.html#gacdbdab68fed6a2dd5088d68ac66f20b1">at</a>&lt;List, <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt;N&gt; &gt;</td>
+          <td class="memname">using <a class="el" href="group__list.html#gaa1577d9b1044c2c34af3805e756e615d">meta::at_c</a> = typedef <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">_t</a>&lt;detail::at_&lt;List, N&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -216,7 +216,7 @@ template&lt;typename List , std::size_t N&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -237,7 +237,7 @@ template&lt;typename List &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the last element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ template&lt;typename List &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -279,7 +279,7 @@ template&lt;typename List &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the first element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_2.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -308,7 +308,7 @@ template&lt;typename N , typename T  = void&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_4.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_6.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -329,7 +329,7 @@ template&lt;std::size_t N, typename T  = void&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
-<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_4.png"/>. </dd></dl>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_6.png"/>. </dd></dl>
 
 </div>
 </div>

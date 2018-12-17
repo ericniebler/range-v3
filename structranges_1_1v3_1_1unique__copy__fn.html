@@ -107,11 +107,11 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1unique__copy__fn
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9ace0257e5a1cc77be2f29e93836aea3"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename O , typename C  = equal_to, typename P  = ident, requires  = (UniqueCopyable&lt;I, O, C, P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </td></tr>
-<tr class="memitem:a9ace0257e5a1cc77be2f29e93836aea3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unique__copy__fn.html#a9ace0257e5a1cc77be2f29e93836aea3">operator()</a> (I begin, S end, O out, C pred=C{}, P proj=P{}) const</td></tr>
+<tr class="memitem:a9ace0257e5a1cc77be2f29e93836aea3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::in(I), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unique__copy__fn.html#a9ace0257e5a1cc77be2f29e93836aea3">operator()</a> (I begin, S end, O out, C pred=C{}, P proj=P{}) const</td></tr>
 <tr class="memdesc:a9ace0257e5a1cc77be2f29e93836aea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function unique_copy  <a href="#a9ace0257e5a1cc77be2f29e93836aea3">More...</a><br /></td></tr>
 <tr class="separator:a9ace0257e5a1cc77be2f29e93836aea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2012431264bbc8ad1f620396a3b589f7"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename O , typename C  = equal_to, typename P  = ident, typename I  = iterator_t&lt;Rng&gt;, requires  = (UniqueCopyable&lt;I, O, C, P&gt;() &amp;&amp; Range&lt;Rng&gt;())&gt; </td></tr>
-<tr class="memitem:a2012431264bbc8ad1f620396a3b589f7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt; tag::in(safe_iterator_t&lt; Rng &gt;), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unique__copy__fn.html#a2012431264bbc8ad1f620396a3b589f7">operator()</a> (Rng &amp;&amp;rng, O out, C pred=C{}, P proj=P{}) const</td></tr>
+<tr class="memitem:a2012431264bbc8ad1f620396a3b589f7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt; tag::in(safe_iterator_t&lt; Rng &gt;), tag::out(O)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unique__copy__fn.html#a2012431264bbc8ad1f620396a3b589f7">operator()</a> (Rng &amp;&amp;rng, O out, C pred=C{}, P proj=P{}) const</td></tr>
 <tr class="separator:a2012431264bbc8ad1f620396a3b589f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -124,7 +124,7 @@ Public Member Functions</h2></td></tr>
 template&lt;typename I , typename S , typename O , typename C  = equal_to, typename P  = ident, requires  = (UniqueCopyable&lt;I, O, C, P&gt;() &amp;&amp; Sentinel&lt;S, I&gt;())&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt;tag::in(I), tag::out(O)&gt; ranges::v3::unique_copy_fn::operator() </td>
+          <td class="memname"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt;tag::in(I), tag::out(O)&gt; ranges::v3::unique_copy_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">I&#160;</td>
           <td class="paramname"><em>begin</em>, </td>
@@ -180,7 +180,7 @@ template&lt;typename I , typename S , typename O , typename C  = equal_to, typen
 template&lt;typename Rng , typename O , typename C  = equal_to, typename P  = ident, typename I  = iterator_t&lt;Rng&gt;, requires  = (UniqueCopyable&lt;I, O, C, P&gt;() &amp;&amp; Range&lt;Rng&gt;())&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html">tagged_pair</a>&lt;tag::in(safe_iterator_t&lt;Rng&gt;), tag::out(O)&gt; ranges::v3::unique_copy_fn::operator() </td>
+          <td class="memname"><a class="el" href="classranges_1_1v3_1_1tagged.html">tagged_pair</a>&lt;tag::in(safe_iterator_t&lt;Rng&gt;), tag::out(O)&gt; ranges::v3::unique_copy_fn::operator() </td>
           <td>(</td>
           <td class="paramtype">Rng &amp;&amp;&#160;</td>
           <td class="paramname"><em>rng</em>, </td>

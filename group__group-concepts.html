@@ -156,6 +156,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same_3_01_t_00_01_us_8_8_8_01_4.html">ranges::v3::concepts::Same::same&lt; T, Us... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_satisfies.html">ranges::v3::concepts::Satisfies</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_semi_regular.html">ranges::v3::concepts::SemiRegular</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_signed_integral.html">ranges::v3::concepts::SignedIntegral</a></td></tr>
@@ -196,7 +198,8 @@ Macros</h2></td></tr>
 <tr class="memitem:ga410bb8a09f3df9b18b3c931cc463ca07"><td class="memItemLeft" align="right" valign="top"><a id="ga410bb8a09f3df9b18b3c931cc463ca07"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_ASSERT</b>(...)&#160;&#160;&#160;static_assert((__VA_ARGS__), &quot;Concept check failed: &quot; #__VA_ARGS__)</td></tr>
 <tr class="separator:ga410bb8a09f3df9b18b3c931cc463ca07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES</b>(...)</td></tr>
+<tr class="memitem:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memItemLeft" align="right" valign="top"><a id="gac3de29984e30e1f48c4064edc9ce2efc"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES</b>(...)&#160;&#160;&#160;template&lt;CONCEPT_REQUIRES_(__VA_ARGS__)&gt; \</td></tr>
 <tr class="separator:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a080d0094b7d9296a0c4b7ee5ce7f1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES_</b>(...)</td></tr>
 <tr class="separator:ga0a080d0094b7d9296a0c4b7ee5ce7f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -493,10 +496,6 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename C , typename ... Is&gt; </td></tr>
 <tr class="memitem:gaa13e5d33340ee4b46b7d5446956e6863"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::MoveIndirectInvocable</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; detail::common_result_indirect_invocable_&lt; C, Is... &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">MoveConstructible</a>&lt; C &gt; &gt;</td></tr>
 <tr class="separator:gaa13e5d33340ee4b46b7d5446956e6863"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga72bf43d48e766c76b0838de0c9c6e6b6"><td class="memTemplParams" colspan="2"><a id="ga72bf43d48e766c76b0838de0c9c6e6b6"></a>
-template&lt;typename I0 , typename I1 , typename Out , typename C  = ordered_less, typename P0  = ident, typename P1  = ident&gt; </td></tr>
-<tr class="memitem:ga72bf43d48e766c76b0838de0c9c6e6b6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::MoveMergeable</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I0 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I1 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">WeaklyIncrementable</a>&lt; Out &gt;, IndirectRelation&lt; C, projected&lt; I0, P0 &gt;, projected&lt; I1, P1 &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">IndirectlyMovable</a>&lt; I0, Out &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">IndirectlyMovable</a>&lt; I1, Out &gt; &gt;</td></tr>
-<tr class="separator:ga72bf43d48e766c76b0838de0c9c6e6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5bebddde76cdd7b9a9e9132245d583b7"><td class="memTemplParams" colspan="2"><a id="ga5bebddde76cdd7b9a9e9132245d583b7"></a>
 template&lt;typename Out , typename T &gt; </td></tr>
 <tr class="memitem:ga5bebddde76cdd7b9a9e9132245d583b7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::OutputIterator</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_output_iterator.html">concepts::OutputIterator</a>, Out, T &gt;</td></tr>
@@ -565,6 +564,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga043f7f47de2047a72c64d5b0c88aa238"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Readable</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_readable.html">concepts::Readable</a>, T &gt;</td></tr>
 <tr class="separator:ga043f7f47de2047a72c64d5b0c88aa238"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ed1a03af2b3df461e4b9ecbccb04168"><td class="memTemplParams" colspan="2"><a id="ga5ed1a03af2b3df461e4b9ecbccb04168"></a>
+template&lt;typename R &gt; </td></tr>
+<tr class="memitem:ga5ed1a03af2b3df461e4b9ecbccb04168"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::reference_t</b> = detail::reference_t_&lt; R &gt;</td></tr>
+<tr class="separator:ga5ed1a03af2b3df461e4b9ecbccb04168"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga95e79deac30824da52523c2135dcf99e"><td class="memTemplParams" colspan="2"><a id="ga95e79deac30824da52523c2135dcf99e"></a>
 template&lt;typename T , typename U , typename... Rest&gt; </td></tr>
 <tr class="memitem:ga95e79deac30824da52523c2135dcf99e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::CommonReference::reference_t</b> = common_reference_t&lt; T, U, Rest... &gt;</td></tr>
@@ -633,6 +636,10 @@ template&lt;typename ... Ts&gt; </td></tr>
 template&lt;typename ... Ts&gt; </td></tr>
 <tr class="memitem:ga0ee6aa16628def5625314a82406673a8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Same::same_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same.html">same</a>&lt; Ts... &gt; &gt;</td></tr>
 <tr class="separator:ga0ee6aa16628def5625314a82406673a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memTemplParams" colspan="2"><a id="gabb7d1545bb8c0382d0165e28c67caa3d"></a>
+template&lt;typename T , template&lt; typename... &gt; class Trait, typename ... Ts&gt; </td></tr>
+<tr class="memitem:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Satisfies</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_satisfies.html">concepts::Satisfies</a>, T, <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; Trait &gt;, Ts... &gt;</td></tr>
+<tr class="separator:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8e4a75c17bf29c2549cded7a632dbe8a"><td class="memTemplParams" colspan="2"><a id="ga8e4a75c17bf29c2549cded7a632dbe8a"></a>
 template&lt;typename I1 , typename I2 , typename C  = equal_to, typename P1  = ident, typename P2  = ident&gt; </td></tr>
 <tr class="memitem:ga8e4a75c17bf29c2549cded7a632dbe8a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Searchable</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ForwardIterator</a>&lt; I1 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ForwardIterator</a>&lt; I2 &gt;, Comparable&lt; I1, I2, C, P1, P2 &gt; &gt;</td></tr>
@@ -713,14 +720,14 @@ template&lt;typename T , typename U  = T&gt; </td></tr>
 template&lt;typename T , typename U  = T&gt; </td></tr>
 <tr class="memitem:gac4dd1f5cfdd62967c3273cc9fc0559a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::TotallyOrdered</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_totally_ordered.html">concepts::TotallyOrdered</a>, T, U &gt;</td></tr>
 <tr class="separator:gac4dd1f5cfdd62967c3273cc9fc0559a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab2c03bf9a6dc8d8172a3ffab2b3d6add"><td class="memTemplParams" colspan="2"><a id="gab2c03bf9a6dc8d8172a3ffab2b3d6add"></a>
+<tr class="memitem:ga4453d6695cf72368861f1f4ad258f570"><td class="memTemplParams" colspan="2"><a id="ga4453d6695cf72368861f1f4ad258f570"></a>
 template&lt;typename I , typename O , typename F , typename P  = ident&gt; </td></tr>
-<tr class="memitem:gab2c03bf9a6dc8d8172a3ffab2b3d6add"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable1</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">WeaklyIncrementable</a>&lt; O &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; F &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Writable</a>&lt; O, indirect_result_of_t&lt; F &amp;(projected&lt; I, P &gt;)&gt; &gt;&gt;</td></tr>
-<tr class="separator:gab2c03bf9a6dc8d8172a3ffab2b3d6add"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4fd66762626716d499f7529032a85b0a"><td class="memTemplParams" colspan="2"><a id="ga4fd66762626716d499f7529032a85b0a"></a>
+<tr class="memitem:ga4453d6695cf72368861f1f4ad258f570"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable1</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">WeaklyIncrementable</a>&lt; O &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; F &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Writable</a>&lt; O, indirect_invoke_result_t&lt; F &amp;, projected&lt; I, P &gt; &gt;&gt; &gt;</td></tr>
+<tr class="separator:ga4453d6695cf72368861f1f4ad258f570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memTemplParams" colspan="2"><a id="ga9156be97c0c6a38a8d6517cfee34e8a8"></a>
 template&lt;typename I0 , typename I1 , typename O , typename F , typename P0  = ident, typename P1  = ident&gt; </td></tr>
-<tr class="memitem:ga4fd66762626716d499f7529032a85b0a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable2</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I0 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I1 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">WeaklyIncrementable</a>&lt; O &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; F &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Writable</a>&lt; O, indirect_result_of_t&lt; F &amp;(projected&lt; I0, P0 &gt;, projected&lt; I1, P1 &gt;)&gt; &gt;&gt;</td></tr>
-<tr class="separator:ga4fd66762626716d499f7529032a85b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Transformable2</b> = <a class="el" href="group__logical.html#ga34bd8a8bde417a34d0bd9bbbff2ba63b">meta::strict_and</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I0 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterator</a>&lt; I1 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">WeaklyIncrementable</a>&lt; O &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">CopyConstructible</a>&lt; F &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Writable</a>&lt; O, indirect_invoke_result_t&lt; F &amp;, projected&lt; I0, P0 &gt;, projected&lt; I1, P1 &gt; &gt;&gt; &gt;</td></tr>
+<tr class="separator:ga9156be97c0c6a38a8d6517cfee34e8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga85094343cd0fb208c61ca7e4149b751c"><td class="memTemplParams" colspan="2"><a id="ga85094343cd0fb208c61ca7e4149b751c"></a>
 template&lt;typename Gen &gt; </td></tr>
 <tr class="memitem:ga85094343cd0fb208c61ca7e4149b751c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::UniformRandomNumberGenerator</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_uniform_random_number_generator.html">concepts::UniformRandomNumberGenerator</a>, Gen &gt;</td></tr>
@@ -771,9 +778,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gad99fc3dd3444068bb99324f874f54fdc"><td class="memItemLeft" align="right" valign="top"><a id="gad99fc3dd3444068bb99324f874f54fdc"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::concepts::Assignable::concepts::has_type</b> ((T &amp;&amp;) t=(U &amp;&amp;) u)))</td></tr>
 <tr class="separator:gad99fc3dd3444068bb99324f874f54fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4277881c996c2d24da69653d660b0dce"><td class="memItemLeft" align="right" valign="top"><a id="ga4277881c996c2d24da69653d660b0dce"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::concepts::DerivedFrom::concepts::is_true</b> (std::is_convertible&lt; <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; T &gt;&gt; *, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; U &gt;&gt; *&gt;{})))</td></tr>
-<tr class="separator:ga4277881c996c2d24da69653d660b0dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7ed41ed65d02745d9a17ddda0624683"><td class="memItemLeft" align="right" valign="top"><a id="gae7ed41ed65d02745d9a17ddda0624683"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::concepts::DerivedFrom::concepts::is_true</b> (detail::is_convertible&lt; <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; T &gt;&gt; *, <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; std::remove_cv&lt; U &gt;&gt; *&gt;{})))</td></tr>
+<tr class="separator:gae7ed41ed65d02745d9a17ddda0624683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7086ce27b15fe6a4033adb4b18e3dbd9"><td class="memItemLeft" align="right" valign="top"><a id="ga7086ce27b15fe6a4033adb4b18e3dbd9"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::concepts::Common::concepts::model_of</b> ()</td></tr>
 <tr class="separator:ga7086ce27b15fe6a4033adb4b18e3dbd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -806,6 +813,10 @@ template&lt;typename Concept , typename ... Ts&gt; </td></tr>
 template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:ga81079dc5b7490dac2a8fe8a8d53c998d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::refines&lt; Concepts &gt;::requires_</b> ()</td></tr>
 <tr class="separator:ga81079dc5b7490dac2a8fe8a8d53c998d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5dc727d1fa389f8857a92b2471b07034"><td class="memTemplParams" colspan="2"><a id="ga5dc727d1fa389f8857a92b2471b07034"></a>
+template&lt;typename T , typename Trait , typename ... Ts&gt; </td></tr>
+<tr class="memitem:ga5dc727d1fa389f8857a92b2471b07034"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Satisfies::requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::is_true(<a class="el" href="group__invocation.html#gaa20b4002ec6b258dec0b11affe7d9cdc">meta::invoke</a>&lt; Trait, T, Ts... &gt;</td></tr>
+<tr class="separator:ga5dc727d1fa389f8857a92b2471b07034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1d24f2d69aa1a9ef6068320c7fc37fe9"><td class="memTemplParams" colspan="2"><a id="ga1d24f2d69aa1a9ef6068320c7fc37fe9"></a>
 template&lt;typename ... Ts&gt; </td></tr>
 <tr class="memitem:ga1d24f2d69aa1a9ef6068320c7fc37fe9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::concepts::Same::requires_</b> () -&gt; decltype(concepts::valid_expr(concepts::is_true(same_t&lt; Ts... &gt;</td></tr>
@@ -920,26 +931,6 @@ template&lt;typename Ret , typename T &gt; </td></tr>
 <tr class="separator:ga48fe5927c9a856ba89a37aed1c18d556"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gac3de29984e30e1f48c4064edc9ce2efc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac3de29984e30e1f48c4064edc9ce2efc">&#9670;&nbsp;</a></span>CONCEPT_REQUIRES</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CONCEPT_REQUIRES</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="utility_2concepts_8hpp.html">range/v3/utility/concepts.hpp</a>&gt;</code></p>
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;                                                                       \</div><div class="line">        int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                      \</div><div class="line">        typename std::enable_if&lt;                                                    \</div><div class="line">            (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),  \</div><div class="line">            int                                                                     \</div><div class="line">        &gt;::type = 0&gt;                                                                \</div></div><!-- fragment -->
-</div>
-</div>
 <a id="ga0a080d0094b7d9296a0c4b7ee5ce7f1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga0a080d0094b7d9296a0c4b7ee5ce7f1c">&#9670;&nbsp;</a></span>CONCEPT_REQUIRES_</h2>
 
@@ -957,7 +948,7 @@ template&lt;typename Ret , typename T &gt; </td></tr>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="utility_2concepts_8hpp.html">range/v3/utility/concepts.hpp</a>&gt;</code></p>
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">int</span> CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \</div><div class="line">    typename std::enable_if&lt;                                                        \</div><div class="line">        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),      \</div><div class="line">        int                                                                         \</div><div class="line">    &gt;::type = 0                                                                     \</div></div><!-- fragment -->
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">bool</span> CONCEPT_PP_CAT(_concept_requires_, __LINE__) = <span class="keyword">false</span>,         \</div><div class="line">    typename std::enable_if&lt;                                           \</div><div class="line">        CONCEPT_PP_CAT(_concept_requires_, __LINE__) || (__VA_ARGS__)  \</div><div class="line">    &gt;::type* = <span class="keyword">nullptr</span>                                                 \</div></div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

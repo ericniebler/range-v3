@@ -115,17 +115,46 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1zip__fn.html">zip_fn
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:adaf731c38246d196dfdb966f4c68c806"><td class="memTemplParams" colspan="2"><a id="adaf731c38246d196dfdb966f4c68c806"></a>
-template&lt;typename ... Rngs&gt; </td></tr>
+template&lt;typename... Rngs&gt; </td></tr>
 <tr class="memitem:adaf731c38246d196dfdb966f4c68c806"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rngs &gt;... &gt;</td></tr>
 <tr class="separator:adaf731c38246d196dfdb966f4c68c806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:add4b71e72df7083b3341dc95fea29541"><td class="memTemplParams" colspan="2"><a id="add4b71e72df7083b3341dc95fea29541"></a>
-template&lt;typename... Rngs, requires  = (Concept&lt;Rngs...&gt;())&gt; </td></tr>
+template&lt;typename... Rngs, requires  = (sizeof...(Rngs) != 0 &amp;&amp; Concept&lt;Rngs...&gt;())&gt; </td></tr>
 <tr class="memitem:add4b71e72df7083b3341dc95fea29541"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1zip__view.html">zip_view</a>&lt; all_t&lt; Rngs &gt;... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rngs &amp;&amp;... rngs) const</td></tr>
 <tr class="separator:add4b71e72df7083b3341dc95fea29541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add684b2e23a7e93583206c9802aad81b"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structranges_1_1v3_1_1empty__view.html">empty_view</a>&lt; <a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt;&gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1zip__fn.html#add684b2e23a7e93583206c9802aad81b">operator()</a> () const noexcept</td></tr>
+<tr class="separator:add684b2e23a7e93583206c9802aad81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="add684b2e23a7e93583206c9802aad81b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add684b2e23a7e93583206c9802aad81b">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="structranges_1_1v3_1_1empty__view.html">empty_view</a>&lt;<a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt;&gt; &gt; ranges::v3::view::zip_fn::operator() </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section pre"><dt>Precondition</dt><dd>Concept&lt;&gt;() </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

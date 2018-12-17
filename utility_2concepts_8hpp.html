@@ -152,6 +152,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same_3_01_t_00_01_us_8_8_8_01_4.html">ranges::v3::concepts::Same::same&lt; T, Us... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_satisfies.html">ranges::v3::concepts::Satisfies</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_semi_regular.html">ranges::v3::concepts::SemiRegular</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_signed_integral.html">ranges::v3::concepts::SignedIntegral</a></td></tr>
@@ -181,7 +183,8 @@ Macros</h2></td></tr>
 <tr class="memitem:a2c0cb1b6248dc73781de76988b56c9f8"><td class="memItemLeft" align="right" valign="top"><a id="a2c0cb1b6248dc73781de76988b56c9f8"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_PP_CAT_</b>(X,  Y)&#160;&#160;&#160;X ## Y</td></tr>
 <tr class="separator:a2c0cb1b6248dc73781de76988b56c9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES</b>(...)</td></tr>
+<tr class="memitem:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES</b>(...)&#160;&#160;&#160;template&lt;CONCEPT_REQUIRES_(__VA_ARGS__)&gt; \</td></tr>
 <tr class="separator:gac3de29984e30e1f48c4064edc9ce2efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a080d0094b7d9296a0c4b7ee5ce7f1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES_</b>(...)</td></tr>
 <tr class="separator:ga0a080d0094b7d9296a0c4b7ee5ce7f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,6 +294,10 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename ... Ts&gt; </td></tr>
 <tr class="memitem:ga55d864ca0f33258c982ea2827fceaf50"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Same</b> = concepts::Same::same_t&lt; Ts... &gt;</td></tr>
 <tr class="separator:ga55d864ca0f33258c982ea2827fceaf50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memTemplParams" colspan="2">
+template&lt;typename T , template&lt; typename... &gt; class Trait, typename ... Ts&gt; </td></tr>
+<tr class="memitem:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Satisfies</b> = concepts::models&lt; concepts::Satisfies, T, <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; Trait &gt;, Ts... &gt;</td></tr>
+<tr class="separator:gabb7d1545bb8c0382d0165e28c67caa3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga021a7bb587cc756bafefb525773bc4a8"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga021a7bb587cc756bafefb525773bc4a8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::SemiRegular</b> = concepts::models&lt; concepts::SemiRegular, T &gt;</td></tr>

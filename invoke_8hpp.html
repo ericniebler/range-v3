@@ -109,6 +109,8 @@ $(document).ready(function(){initNavTree('invoke_8hpp.html','');});
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1invoke__fn.html">ranges::v3::invoke_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1invoke__result.html">ranges::v3::invoke_result&lt; Fun, Args &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__reference__wrapper.html">ranges::v3::is_reference_wrapper&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__reference__wrapper_3_01reference__wrapper_3_01_t_01_4_01_4.html">ranges::v3::is_reference_wrapper&lt; reference_wrapper&lt; T &gt; &gt;</a></td></tr>
@@ -117,13 +119,17 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1reference__wrapper.html">ranges::v3::reference_wrapper&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of.html">ranges::v3::result_of&lt; Sig, Enable &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of.html">ranges::v3::result_of&lt; Sig &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of_3_01_fun_07_args_8_8_8_08_00_01meta_1_1void___3_01decltype_07ina4ae5f371b7e4219812ac8ba5ab6d0b1.html">ranges::v3::result_of&lt; Fun(Args...), meta::void_&lt; decltype(invoke(std::declval&lt; Fun &gt;(), std::declval&lt; Args &gt;()...))&gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1result__of_3_01_fun_07_args_8_8_8_08_4.html">ranges::v3::result_of&lt; Fun(Args...)&gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memTemplParams" colspan="2">
+template&lt;typename Fun , typename... Args&gt; </td></tr>
+<tr class="memitem:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::invoke_result_t</b> = decltype(invoke(std::declval&lt; Fun &gt;(), std::declval&lt; Args &gt;()...))</td></tr>
+<tr class="separator:gad8cf36b8547e3602e5d46d45db68f2af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabf16e934b2973feeca4cd9144a62dd21"><td class="memTemplParams" colspan="2">
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gabf16e934b2973feeca4cd9144a62dd21"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::is_reference_wrapper_t</b> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; is_reference_wrapper&lt; T &gt; &gt;</td></tr>

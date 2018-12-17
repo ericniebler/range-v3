@@ -114,17 +114,17 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1view.html">view</a>&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ac1c735a2a8900525ce392890076a3a6b"><td class="memTemplParams" colspan="2"><a id="ac1c735a2a8900525ce392890076a3a6b"></a>
+<tr class="memitem:a8f23046f397c7a27c27b36c781fc0d23"><td class="memTemplParams" colspan="2"><a id="a8f23046f397c7a27c27b36c781fc0d23"></a>
 template&lt;typename Rng , typename Fun &gt; </td></tr>
-<tr class="memitem:ac1c735a2a8900525ce392890076a3a6b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga17255b9230c6f2841bc24a06ad8375f8">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, IndirectInvocable&lt; Fun, iterator_t&lt; Rng &gt;, iterator_t&lt; Rng &gt; &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">ConvertibleTo</a>&lt; result_of_t&lt; Fun &amp;(range_common_reference_t&lt; Rng &gt; &amp;&amp;, range_common_reference_t&lt; Rng &gt; &amp;&amp;)&gt;, range_value_type_t&lt; Rng &gt; &gt;&gt;</td></tr>
-<tr class="separator:ac1c735a2a8900525ce392890076a3a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f23046f397c7a27c27b36c781fc0d23"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> { return ( make_pipeable(std::bind(partial_sum, std::placeholders::_1, Fun{})) )</td></tr>
+<tr class="separator:a8f23046f397c7a27c27b36c781fc0d23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0c19823bb15b6fb87208d0be0a065a00"><td class="memTemplParams" colspan="2"><a id="a0c19823bb15b6fb87208d0be0a065a00"></a>
-template&lt;typename Rng , typename Fun , requires  = (Concept&lt;Rng, Fun&gt;())&gt; </td></tr>
-<tr class="memitem:a0c19823bb15b6fb87208d0be0a065a00"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1partial__sum__view.html">partial_sum_view</a>&lt; all_t&lt; Rng &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const</td></tr>
-<tr class="separator:a0c19823bb15b6fb87208d0be0a065a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb58cb036e4487e05f3562e736c8ff0e"><td class="memTemplParams" colspan="2"><a id="acb58cb036e4487e05f3562e736c8ff0e"></a>
+template&lt;typename Rng , typename Fun  = plus, requires  = (Concept&lt;Rng, Fun&gt;())&gt; </td></tr>
+<tr class="memitem:acb58cb036e4487e05f3562e736c8ff0e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1partial__sum__view.html">partial_sum_view</a>&lt; all_t&lt; Rng &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun={}) const</td></tr>
+<tr class="separator:acb58cb036e4487e05f3562e736c8ff0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

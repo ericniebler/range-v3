@@ -34,6 +34,7 @@ var utility_2concepts_8hpp =
     [ "MoveConstructible", "utility_2concepts_8hpp.html#ga05f2545a4c9773bed86a019d8d2ce62c", null ],
     [ "Regular", "utility_2concepts_8hpp.html#gad8f570af1d872e2b6fe00f235c14d165", null ],
     [ "Same", "utility_2concepts_8hpp.html#ga55d864ca0f33258c982ea2827fceaf50", null ],
+    [ "Satisfies", "utility_2concepts_8hpp.html#gabb7d1545bb8c0382d0165e28c67caa3d", null ],
     [ "SemiRegular", "utility_2concepts_8hpp.html#ga021a7bb587cc756bafefb525773bc4a8", null ],
     [ "SignedIntegral", "utility_2concepts_8hpp.html#gae6be884a50d38fc8c5723e84a79295eb", null ],
     [ "Swappable", "utility_2concepts_8hpp.html#ga33c6c4c22027e93dad8888a18a6352f9", null ],

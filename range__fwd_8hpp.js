@@ -1,9 +1,9 @@
 var range__fwd_8hpp =
 [
-    [ "counted_iterator", "structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html", "structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator" ],
     [ "action", "structranges_1_1v3_1_1action_1_1action.html", "structranges_1_1v3_1_1action_1_1action" ],
     [ "basic_view", "structranges_1_1v3_1_1basic__view.html", null ],
     [ "begin_tag", "structranges_1_1v3_1_1begin__tag.html", null ],
+    [ "common_iterator", "structranges_1_1v3_1_1common__iterator.html", null ],
     [ "compressed_pair", "structranges_1_1v3_1_1compressed__pair.html", null ],
     [ "copy_tag", "structranges_1_1v3_1_1copy__tag.html", null ],
     [ "default_sentinel", "structranges_1_1v3_1_1default__sentinel.html", null ],

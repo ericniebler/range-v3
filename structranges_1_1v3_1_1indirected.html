@@ -120,10 +120,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a72d27fc5b9697ece624096cb3b25775b"><td class="memItemLeft" align="right" valign="top"><a id="a72d27fc5b9697ece624096cb3b25775b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>indirected</b> (<a class="el" href="class_fn.html">Fn</a> fn)</td></tr>
 <tr class="separator:a72d27fc5b9697ece624096cb3b25775b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9490615dbdda933d6da85ebbb0ccc20b"><td class="memTemplParams" colspan="2"><a id="a9490615dbdda933d6da85ebbb0ccc20b"></a>
+<tr class="memitem:ace522a79d2e96affa55e2e2d22fc383b"><td class="memTemplParams" colspan="2"><a id="ace522a79d2e96affa55e2e2d22fc383b"></a>
 template&lt;typename ... Its&gt; </td></tr>
-<tr class="memitem:a9490615dbdda933d6da85ebbb0ccc20b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="structranges_1_1v3_1_1copy__tag.html">copy_tag</a>, Its...) const -&gt; result_of_t&lt; <a class="el" href="class_fn.html">Fn</a> &amp;(decltype(*std::declval&lt; Its &gt;())...)&gt;</td></tr>
-<tr class="separator:a9490615dbdda933d6da85ebbb0ccc20b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace522a79d2e96affa55e2e2d22fc383b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="structranges_1_1v3_1_1copy__tag.html">copy_tag</a>, Its...) const -&gt; invoke_result_t&lt; <a class="el" href="class_fn.html">Fn</a> &amp;, reference_t&lt; Its &gt;... &gt;</td></tr>
+<tr class="separator:ace522a79d2e96affa55e2e2d22fc383b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23807cb530721913b5952f7638279e31"><td class="memTemplParams" colspan="2"><a id="a23807cb530721913b5952f7638279e31"></a>
 template&lt;typename ... Its&gt; </td></tr>
 <tr class="memitem:a23807cb530721913b5952f7638279e31"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Its ...its) noexcept(noexcept(decltype(invoke(std::declval&lt; <a class="el" href="class_fn.html">Fn</a> &amp;&gt;(), *its...))(invoke(std::declval&lt; <a class="el" href="class_fn.html">Fn</a> &amp;&gt;(), *its...)))) -&gt; decltype(invoke(std::declval&lt; <a class="el" href="class_fn.html">Fn</a> &amp;&gt;(), *its...))</td></tr>

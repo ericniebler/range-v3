@@ -116,10 +116,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="structranges_1_1v3_1_1basic__mixin.html#a7aff9a69882482cc7bac73a067dca9b0">ranges::v3::basic_mixin&lt; T &gt;</a>
 </li>
 <li>begin()
-: <a class="el" href="structranges_1_1v3_1_1drop__view.html#a433f613b3f593dc2e4ec6109fdb82445">ranges::v3::drop_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1tail__view.html#a37f1415912b35365d43811c97558fd45">ranges::v3::tail_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1tokenize__view.html#a1e8358d57d3da755ce9f240a117a3ee7">ranges::v3::tokenize_view&lt; Rng, Regex, SubMatchRange &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1view__facade.html#a7277f3974b58fdb75804d833aa1e000f">ranges::v3::view_facade&lt; Derived, Cardinality &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1view__facade.html#a7277f3974b58fdb75804d833aa1e000f">ranges::v3::view_facade&lt; Derived, Cardinality &gt;</a>
 </li>
 <li>box()
 : <a class="el" href="classranges_1_1v3_1_1box.html#a2a20ee607718280bfe15a6ddd99a1552">ranges::v3::box&lt; Element, Tag, box_compress &gt;</a>
@@ -139,7 +136,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="structranges_1_1v3_1_1common__tuple.html#afcf9aafd6f64c42e9c825fd09a7152bb">ranges::v3::common_tuple&lt; Ts &gt;</a>
 </li>
 <li>cycled_view()
-: <a class="el" href="structranges_1_1v3_1_1cycled__view.html#a464985d5c0f78fb9ee268c940e12fe58">ranges::v3::cycled_view&lt; Rng &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1cycled__view.html#a29297ec9abfccb387f60c62f77543c3d">ranges::v3::cycled_view&lt; Rng, bool &gt;</a>
 </li>
 </ul>
 
@@ -159,9 +156,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="structranges_1_1v3_1_1view__interface.html#a4cbccea8eefcd83a72fa96963471bfba">ranges::v3::view_interface&lt; Derived, Cardinality &gt;</a>
 </li>
 <li>end()
-: <a class="el" href="structranges_1_1v3_1_1drop__view.html#aba189e605f08018b4e93e095393320cf">ranges::v3::drop_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1tail__view.html#a5298f7cd108db089ead272446b820503">ranges::v3::tail_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1view__facade.html#aedbe7b615d36b3ba3f3d1a193847a169">ranges::v3::view_facade&lt; Derived, Cardinality &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1view__facade.html#aedbe7b615d36b3ba3f3d1a193847a169">ranges::v3::view_facade&lt; Derived, Cardinality &gt;</a>
 </li>
 </ul>
 
@@ -230,40 +225,41 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="structranges_1_1v3_1_1unique__fn.html#a4d5102f6db6f72cee74ad9acdebcd5fc">ranges::v3::unique_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1unwrap__reference__fn.html#a593e0f69eb48492446847aeed8c51db3">ranges::v3::unwrap_reference_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#acc95cfa8908f7d923e07432669ff94f3">ranges::v3::upper_bound_fn</a>
+, <a class="el" href="structranges_1_1v3_1_1view_1_1cartesian__product__fn.html#af58b9a4ce31434a3fcd37d775f8581a8">ranges::v3::view::cartesian_product_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1view_1_1cycle__fn.html#ac06216c7906f9e2f08817a54e0958679">ranges::v3::view::cycle_fn</a>
+, <a class="el" href="structranges_1_1v3_1_1view_1_1zip__fn.html#add684b2e23a7e93583206c9802aad81b">ranges::v3::view::zip_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1with__braced__init__args.html#a68a50be3a1017c2a737cd2c3f18a63c4">ranges::v3::with_braced_init_args&lt; ImplFn &gt;</a>
 </li>
 <li>operator*()
 : <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ac5f8f290315948696ecab3715b5529f0">ranges::v3::basic_iterator&lt; Cur &gt;</a>
 </li>
 <li>operator+()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a9f95e360f1c54263cba43a8c7d2bf473">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#a681222a6cba457c81ccecd545e03d63e">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#ab395404f1f8082ab20db4945b455f905">ranges::v3::move_iterator&lt; I &gt;</a>
 </li>
 <li>operator++()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a811f38e9e714c3ade71dd7e07c335247">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#adca4d1e966d1db1cde923d7aeaab1f56">ranges::v3::basic_iterator&lt; Cur &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1common__iterator.html#abebf0bcc14f9c759a88c903b5d7ad14f">ranges::v3::common_iterator&lt; I, S &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#abae1a5150be1f933c174c46f81b831b0">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#acf54ff341458c17c87f2b1967570474a">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#a1e16549f903cbc918ebfe22cc1783f00">ranges::v3::move_iterator&lt; I &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1raw__storage__iterator.html#ab7390a1f401d7cefa562a8f2b6916df9">ranges::v3::raw_storage_iterator&lt; O, Val &gt;</a>
 </li>
 <li>operator+=()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a2ecb8d4d0f6dcc466709e43dfdbffe8f">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ab0660781a5083d63c85561bd85e34f74">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#ab0660781a5083d63c85561bd85e34f74">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#ad9b237afdc95bbfcff067bb63945f2e3">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#a0a7440df43d10e58da3155a1d060ca4e">ranges::v3::move_iterator&lt; I &gt;</a>
 </li>
 <li>operator-()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a29641caf496a295cc0758d8803997a3e">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#a7788f540e481fe29f2245f6fb0929a4c">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#a0ad119f163cd6cf0ff34a9930997359d">ranges::v3::move_iterator&lt; I &gt;</a>
 </li>
 <li>operator--()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a3664d70df6b9fad9f8a116a069ec82e6">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a717e171fba1553c3b9247c9a9cfbf8dd">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a9924f6b4f7650a2308e27ec75bc7f4c3">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#aee5e7aae429c6f181e253a85d7d28ae5">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#aa090d1fa0def502cfcbc3485170f5cc9">ranges::v3::move_iterator&lt; I &gt;</a>
 </li>
 <li>operator-=()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a6cb689ce32746f78d62987a97cff977c">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a426d54f24dd0aab44fdd03c675b1ae1f">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a426d54f24dd0aab44fdd03c675b1ae1f">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#adfd2f57e653ecdececf628c0c350fb98">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#aa740b0d1c9fce0eb63bee6514c08268f">ranges::v3::move_iterator&lt; I &gt;</a>
 </li>
 <li>operator=()
@@ -271,10 +267,10 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="structranges_1_1v3_1_1raw__storage__iterator.html#a55b2d5f9c42d1582ab69fef4dc0afe93">ranges::v3::raw_storage_iterator&lt; O, Val &gt;</a>
 </li>
 <li>operator[]()
-: <a class="el" href="structranges_1_1v3_1_1__counted__iterator___1_1counted__iterator.html#a81c38aae84002eeccfdae642e9383ef4">ranges::v3::_counted_iterator_::counted_iterator&lt; I, typename &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a39dbb7d2d401a2c53f4d0466636a7213">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+: <a class="el" href="structranges_1_1v3_1_1basic__iterator.html#a39dbb7d2d401a2c53f4d0466636a7213">ranges::v3::basic_iterator&lt; Cur &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1counted__iterator.html#a9e837c9ef070fa170b513f12586172c0">ranges::v3::counted_iterator&lt; I, typename &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__iterator.html#ab9820572a40375de0420211cf7d5c447">ranges::v3::move_iterator&lt; I &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1view__interface.html#a13465e434d0d2f3e3a6d9629a768a05f">ranges::v3::view_interface&lt; Derived, Cardinality &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1view__interface.html#a3607fd97baedd5fdb7f61980d2295ac2">ranges::v3::view_interface&lt; Derived, Cardinality &gt;</a>
 </li>
 </ul>
 
@@ -292,28 +288,29 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="structmeta_1_1list.html#a1fc19362369fd9373308b9926beac87d">meta::list&lt; Ts &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1any__view.html#a90a711655b23809d114df4f1b01e9f7d">ranges::v3::any_view&lt; Ref, Cat, enable &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1any__view_3_01_ref_00_01_cat_00_01meta_1_1if__c_3_07_cat_01_6category_1_1f432f831724d9bdbafd76aa22f86deea6.html#a9f9c5b16bd35a42b40818452fc464698">ranges::v3::any_view&lt; Ref, Cat, meta::if_c&lt;(Cat &amp;category::forward)==category::input &gt; &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1bounded__view.html#aee203b39af91be674097da337cdba03c">ranges::v3::bounded_view&lt; Rng &gt;</a>
-, <a class="el" href="classranges_1_1v3_1_1cartesian__product__view.html#a48746e6f202b0057bd0d23ec3a08bd85">ranges::v3::cartesian_product_view&lt; Views &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1bounded__view.html#a6d3515efe2addf8cb4dfc150fbda67c8">ranges::v3::bounded_view&lt; Rng, bool &gt;</a>
+, <a class="el" href="classranges_1_1v3_1_1cartesian__product__view.html#a7a815471736fe786c99ad43a9038d08d">ranges::v3::cartesian_product_view&lt; Views &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1chunk__view.html#a9a33b51b54538fbc5a7f84ab2c565aa1">ranges::v3::chunk_view&lt; Rng, bool &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1chunk__view_3_01_rng_00_01false_01_4.html#ae379179e9709ecb738a42602007f48ec">ranges::v3::chunk_view&lt; Rng, false &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1concat__view.html#afcb4d25d918a50f914b1444b85eaca00">ranges::v3::concat_view&lt; Rngs &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1const__view.html#a73eae8ad14ede5c807fc42f7729cb7a1">ranges::v3::const_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1drop__exactly__view.html#a3ac83ec2514c5a85e07df500a70f6d48">ranges::v3::drop_exactly_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1chunk__view_3_01_rng_00_01false_01_4.html#a05227733bbd9d08e712115be2703fff0">ranges::v3::chunk_view&lt; Rng, false &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1concat__view.html#a4f28e12284d75040b31d172fd42481f9">ranges::v3::concat_view&lt; Rngs &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1const__view.html#af328ce358be36cb985195494ef0cb91f">ranges::v3::const_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1drop__exactly__view.html#ac8086b6ac9ee1bba1b8171ff2b178071">ranges::v3::drop_exactly_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1drop__view.html#a16e86faf05eb0ff7132d6cbbb442a486">ranges::v3::drop_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1experimental_1_1shared__view.html#af2c18875d2445e787f0d61ed5de87fab">ranges::v3::experimental::shared_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1indirect__view.html#adfe96604fe08dec58e095df3abe129ef">ranges::v3::indirect_view&lt; Rng &gt;</a>
-, <a class="el" href="group__group-views.html#ga4b3419fe9911627120a4f0935a7acaf2">ranges::v3::intersperse_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1exclusive__scan__view.html#a8587da4998eec1690bd08394e25a7685">ranges::v3::exclusive_scan_view&lt; Rng, T, Fun &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1experimental_1_1shared__view.html#a8d7ef7bd3fb962c491d35ae1d89247f2">ranges::v3::experimental::shared_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1indirect__view.html#acf65607005831868524381c264cab94d">ranges::v3::indirect_view&lt; Rng &gt;</a>
+, <a class="el" href="group__group-views.html#ga6f702b7e98dd07242dae23f1d45ac93a">ranges::v3::intersperse_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1iter__transform2__view.html#a23ca412193316293bd68a441a4ec6cbd">ranges::v3::iter_transform2_view&lt; Rng1, Rng2, Fun &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1iter__transform__view.html#aac752d52fc76e2acaa5638f05b7aed7d">ranges::v3::iter_transform_view&lt; Rng, Fun &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1iter__transform__view.html#a9344a2ae2cd6474206e1a1b5b8cd43f1">ranges::v3::iter_transform_view&lt; Rng, Fun &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1iter__zip__with__view.html#adcbf9dc43bf8d2bf4db2ea4ad0b6699a">ranges::v3::iter_zip_with_view&lt; Fun, Rngs &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1join__view.html#aa812cff6e1f49e089393d5be80ab9d0a">ranges::v3::join_view&lt; Rng, ValRng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1join__view_3_01_rng_00_01void_01_4.html#a911be7b6c0295466554a3d80c0ff7318">ranges::v3::join_view&lt; Rng, void &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1move__view.html#a32864ec18f12e4779e29e7f2692c0364">ranges::v3::move_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1partial__sum__view.html#a337410d4f7a89d5f7b3d3e710f2e1155">ranges::v3::partial_sum_view&lt; Rng, Fun &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1reverse__view.html#aa8e23fb9c5f5a609b7b0a6c95d427705">ranges::v3::reverse_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1reverse__view.html#a3ec87f69098406f4d5b1c4c519740628">ranges::v3::reverse_view&lt; Rng &gt;</a>
 , <a class="el" href="classranges_1_1v3_1_1sliding__view__detail_1_1sv__base.html#add33100a22115471c9b82cf15fc57acf">ranges::v3::sliding_view_detail::sv_base&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1stride__view.html#ab93725d70509b93151aba60b3199a7b1">ranges::v3::stride_view&lt; Rng &gt;</a>
-, <a class="el" href="structranges_1_1v3_1_1tail__view.html#ade3953f288cf4b4adc60059cefea4e1b">ranges::v3::tail_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1stride__view.html#abe8992d3f31392462d79ce6ea00edc90">ranges::v3::stride_view&lt; Rng &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1tail__view.html#ab9e0b4fc717909f3286b4dcabc88fbb6">ranges::v3::tail_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1view__interface.html#a27a8406a17066f4b44e0983a96150481">ranges::v3::view_interface&lt; Derived, Cardinality &gt;</a>
 </li>
 </ul>
@@ -321,7 +318,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 <h3><a id="index_t"></a>- t -</h3><ul>
 <li>tagged()
-: <a class="el" href="classranges_1_1v3_1_1tagged__detail_1_1tagged.html#a8adf6535297981be1c2aef6f3ff43c80">ranges::v3::tagged_detail::tagged&lt; Base, Tags &gt;</a>
+: <a class="el" href="classranges_1_1v3_1_1tagged.html#a8b6d59d3f5f0956ab6e4293998c1cf3d">ranges::v3::tagged&lt; Base, Tags &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->

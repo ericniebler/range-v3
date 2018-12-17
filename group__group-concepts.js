@@ -38,7 +38,7 @@ var group__group_concepts =
       [ "requires_", "group__group-concepts.html#ga2c5fbe9b16e567de8d44c56da843a4fc", null ]
     ] ],
     [ "DerivedFrom", "structranges_1_1v3_1_1concepts_1_1_derived_from.html", [
-      [ "concepts::is_true", "group__group-concepts.html#ga4277881c996c2d24da69653d660b0dce", null ],
+      [ "concepts::is_true", "group__group-concepts.html#gae7ed41ed65d02745d9a17ddda0624683", null ],
       [ "requires_", "group__group-concepts.html#ga7bc5c6acffc7350af7d6093d1b8d1952", null ]
     ] ],
     [ "Destructible", "structranges_1_1v3_1_1concepts_1_1_destructible.html", [
@@ -81,6 +81,9 @@ var group__group_concepts =
     ] ],
     [ "same", "structranges_1_1v3_1_1concepts_1_1_same_1_1same.html", null ],
     [ "same< T, Us... >", "structranges_1_1v3_1_1concepts_1_1_same_1_1same_3_01_t_00_01_us_8_8_8_01_4.html", null ],
+    [ "Satisfies", "structranges_1_1v3_1_1concepts_1_1_satisfies.html", [
+      [ "requires_", "group__group-concepts.html#ga5dc727d1fa389f8857a92b2471b07034", null ]
+    ] ],
     [ "SemiRegular", "structranges_1_1v3_1_1concepts_1_1_semi_regular.html", null ],
     [ "SignedIntegral", "structranges_1_1v3_1_1concepts_1_1_signed_integral.html", [
       [ "requires_", "group__group-concepts.html#ga9172214aec253e8ee2478ca2880c77f8", null ]

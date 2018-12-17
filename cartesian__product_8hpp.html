@@ -116,6 +116,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memTemplParams" colspan="2"><a id="a219bb85bbc410db144f5ac62cd36d6f3"></a>
+template&lt;typename... Views&gt; </td></tr>
+<tr class="memitem:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::cartesian_product_cardinality</b> = <a class="el" href="group__transformation.html#gad69d5b6337103436d3721c44ab48902c">meta::fold</a>&lt; <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt; range_cardinality&lt; Views &gt;... &gt;, std::integral_constant&lt; cardinality, static_cast&lt; cardinality &gt;((sizeof...(Views) &gt; 0))&gt;, <a class="el" href="structmeta_1_1quote.html">meta::quote</a>&lt; detail::product_cardinality &gt; &gt;</td></tr>
+<tr class="separator:a219bb85bbc410db144f5ac62cd36d6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f2427b1e3974985c052a4b821a31b46"><td class="memTemplParams" colspan="2"><a id="a6f2427b1e3974985c052a4b821a31b46"></a>
 template&lt;typename State , typename Value &gt; </td></tr>
 <tr class="memitem:a6f2427b1e3974985c052a4b821a31b46"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::product_cardinality</b> = std::integral_constant&lt; cardinality, State::value==0||Value::value==0 ? static_cast&lt; cardinality &gt;(0) :State::value==unknown||Value::value==unknown ? unknown :State::value==infinite||Value::value==infinite ? infinite :State::value==finite||Value::value==finite ? finite :static_cast&lt; cardinality &gt;(State::value *Value::value)&gt;</td></tr>

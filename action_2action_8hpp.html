@@ -118,7 +118,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a27539f1f1392d84b59f2eaad0753794d"><td class="memTemplParams" colspan="2"><a id="a27539f1f1392d84b59f2eaad0753794d"></a>
-template&lt;typename Rng , typename Action , requires  = (is_pipeable&lt;Action&gt;() &amp;&amp; Range&lt;Rng &amp;&gt;() &amp;&amp;                    Invocable&lt;bitwise_or, ref_t&lt;Rng &amp;&gt;, Action &amp;&gt;() &amp;&amp;                    Same&lt;ref_t&lt;Rng &amp;&gt;,                        result_of_t&lt;bitwise_or(ref_t&lt;Rng &amp;&gt; &amp;&amp;, Action &amp;)&gt;&gt;())&gt; </td></tr>
+template&lt;typename Rng , typename Action , requires  = (is_pipeable&lt;Action&gt;() &amp;&amp; Range&lt;Rng &amp;&gt;() &amp;&amp;                    Invocable&lt;bitwise_or, ref_t&lt;Rng &amp;&gt;, Action &amp;&gt;() &amp;&amp;                    Same&lt;ref_t&lt;Rng &amp;&gt;,                        invoke_result_t&lt;bitwise_or, ref_t&lt;Rng &amp;&gt;, Action &amp;&gt;&gt;())&gt; </td></tr>
 <tr class="memitem:a27539f1f1392d84b59f2eaad0753794d"><td class="memTemplItemLeft" align="right" valign="top">Rng &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::action::operator|=</b> (Rng &amp;rng, Action &amp;&amp;action)</td></tr>
 <tr class="separator:a27539f1f1392d84b59f2eaad0753794d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

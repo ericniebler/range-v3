@@ -114,7 +114,7 @@ constexpr <a class="el" href="structranges_1_1v3_1_1view_1_1repeat__fn.html">rep
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4d29344fb8f9aea9edb743986c57e17c"><td class="memTemplParams" colspan="2"><a id="a4d29344fb8f9aea9edb743986c57e17c"></a>
-template&lt;typename Val , requires  = (SemiRegular&lt;Val&gt;())&gt; </td></tr>
+template&lt;typename Val , requires  = (CopyConstructible&lt;Val&gt;() &amp;&amp; std::is_object&lt;Val&gt;())&gt; </td></tr>
 <tr class="memitem:a4d29344fb8f9aea9edb743986c57e17c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1repeat__view.html">repeat_view</a>&lt; Val &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Val value) const</td></tr>
 <tr class="separator:a4d29344fb8f9aea9edb743986c57e17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
