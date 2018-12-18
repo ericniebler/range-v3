@@ -73,12 +73,12 @@ namespace ranges
             range_difference_t<Rng> n_ = 0;
 
             template<bool Const>
-            struct adaptor
+            struct RANGES_EMPTY_BASES adaptor
               : adaptor_base
               , private box<offset_t<Const>>
             {
             private:
-                friend struct adaptor<!Const>;
+                friend adaptor<!Const>;
                 using CRng = meta::const_if_c<Const, Rng>;
 
                 range_difference_t<CRng> n_;

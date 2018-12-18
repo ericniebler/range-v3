@@ -40,6 +40,10 @@
 #endif  // __cpp_inline_variables
 #endif  // CONCEPTS_CXX_INLINE_VARIABLES
 
+#if defined(_MSC_VER) && !defined(__clang__)
+#define CONCEPTS_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#endif
+
 #if CONCEPTS_CXX_INLINE_VARIABLES < 201606L
 #define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
     inline namespace function_objects                                           \
@@ -139,6 +143,10 @@ namespace concepts
 
             template<typename T, std::size_t N>
             void swap(T (&)[N], T (&)[N]) = delete;
+
+#ifdef CONCEPTS_WORKAROUND_MSVC_620035
+            void swap();
+#endif
 
             template<typename T, typename U,
                 typename = decltype(swap(std::declval<T>(), std::declval<U>()))>

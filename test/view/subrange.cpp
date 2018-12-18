@@ -66,11 +66,11 @@ int main()
 	CPP_assert(!Constructible<subrange<const Base*, unreachable>, Derived*, unreachable>);
 	CPP_assert(!Constructible<subrange<Base*, unreachable>, subrange<Derived*, unreachable>>);
 
-	CPP_assert(Constructible<subrange<Base*, Base*, subrange_kind::sized>, Base*, Base*, std::ptrdiff_t>);
-	CPP_assert(!Constructible<subrange<Base*, Base*, subrange_kind::sized>, Derived*, Base*, std::ptrdiff_t>);
-	CPP_assert(Constructible<subrange<const Base*, const Base*, subrange_kind::sized>, Base*, const Base*, std::ptrdiff_t>);
-	CPP_assert(!Constructible<subrange<const Base*, const Base*, subrange_kind::sized>, Derived*, const Base*, std::ptrdiff_t>);
-	CPP_assert(!Constructible<subrange<Base*, Base*, subrange_kind::sized>, subrange<Derived*, Base*>, std::ptrdiff_t>);
+	CPP_assert(Constructible<subrange<Base*, Base*, subrange_kind::sized>, Base*, Base*, std::size_t>);
+	CPP_assert(!Constructible<subrange<Base*, Base*, subrange_kind::sized>, Derived*, Base*, std::size_t>);
+	CPP_assert(Constructible<subrange<const Base*, const Base*, subrange_kind::sized>, Base*, const Base*, std::size_t>);
+	CPP_assert(!Constructible<subrange<const Base*, const Base*, subrange_kind::sized>, Derived*, const Base*, std::size_t>);
+	CPP_assert(!Constructible<subrange<Base*, Base*, subrange_kind::sized>, subrange<Derived*, Base*>, std::size_t>);
 
 	CPP_assert(ConvertibleTo<subrange<Base*, Base*>, std::pair<const Base*, const Base*>>);
 	CPP_assert(!ConvertibleTo<subrange<Derived*, Derived*>, std::pair<Base*, Base*>>);
@@ -82,17 +82,17 @@ int main()
 	CPP_assert(Same<std::vector<int>::iterator,
 		std::tuple_element<1, decltype(r0)>::type>);
 	CPP_assert(SizedRange<decltype(r0)>);
-	CHECK(r0.size() == 4);
+	CHECK(r0.size() == 4u);
 	CHECK(r0.begin() == vi.begin());
 	CHECK(get<0>(r0) == vi.begin());
 	CHECK(r0.end() == vi.end());
 	CHECK(get<1>(r0) == vi.end());
 	r0 = r0.next();
-	CHECK(r0.size() == 3);
+	CHECK(r0.size() == 3u);
 
 	{
-		subrange<std::vector<int>::iterator> rng {vi.begin(), vi.end(), ranges::distance(vi)};
-		CHECK(rng.size() == 4);
+		subrange<std::vector<int>::iterator> rng {vi.begin(), vi.end(), ranges::size(vi)};
+		CHECK(rng.size() == 4u);
 		CHECK(rng.begin() == vi.begin());
 		CHECK(rng.end() == vi.end());
 	}
@@ -115,10 +115,10 @@ int main()
 	r0 = r0.next();
 	++r0.begin();
 	CHECK(r0.begin() == vi.begin()+2);
-	CHECK(r0.size() == 2);
+	CHECK(r0.size() == 2u);
 	r0 = {r0.begin(), --r0.end()}; // --r0.end();
 	CHECK(r0.end() == vi.end()-1);
-	CHECK(r0.size() == 1);
+	CHECK(r0.size() == 1u);
 	CHECK(r0.front() == 3);
 	CHECK(r0.back() == 3);
 
@@ -127,16 +127,15 @@ int main()
 
 	std::list<int> li{1,2,3,4};
     using LI = std::list<int>::iterator;
-	subrange<LI, LI, subrange_kind::sized> l0 {li.begin(), li.end(),
-		static_cast<std::ptrdiff_t>(li.size())};
+	subrange<LI, LI, subrange_kind::sized> l0 {li.begin(), li.end(), li.size()};
 	CPP_assert(View<decltype(l0)> && SizedRange<decltype(l0)>);
 	CHECK(l0.begin() == li.begin());
 	CHECK(l0.end() == li.end());
-	CHECK(l0.size() == static_cast<std::ptrdiff_t>(li.size()));
+	CHECK(l0.size() == li.size());
 	l0 = l0.next();
 	CHECK(l0.begin() == next(li.begin()));
 	CHECK(l0.end() == li.end());
-	CHECK(l0.size() == static_cast<std::ptrdiff_t>(li.size()) - 1);
+	CHECK(l0.size() == li.size() - 1u);
 
 	l0 = view::all(li);
 
@@ -158,8 +157,8 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
 		CPP_assert(Same<decltype(l1), decltype(s1)>);
 	}
 	{
-		subrange s0{vi.begin(), vi.end(), ranges::distance(vi)};
-		subrange s1{li.begin(), li.end(), ranges::distance(li)};
+		subrange s0{vi.begin(), vi.end(), ranges::size(vi)};
+		subrange s1{li.begin(), li.end(), ranges::size(li)};
 		CPP_assert(Same<decltype(r0), decltype(s0)>);
 		CPP_assert(Same<decltype(l0), decltype(s1)>);
 	}
@@ -182,10 +181,10 @@ RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
 		CPP_assert(Same<decltype(l1), decltype(s2)>);
 	}
 	{
-		subrange s0{vi, ranges::distance(vi)};
-		subrange s1{li, ranges::distance(li)};
-		subrange s2{view::all(vi), ranges::distance(vi)};
-		subrange s3{view::all(li), ranges::distance(li)};
+		subrange s0{vi, ranges::size(vi)};
+		subrange s1{li, ranges::size(li)};
+		subrange s2{view::all(vi), ranges::size(vi)};
+		subrange s3{view::all(li), ranges::size(li)};
 		CPP_assert(Same<decltype(r0), decltype(s0)>);
 		CPP_assert(Same<decltype(l0), decltype(s1)>);
 		CPP_assert(Same<decltype(r0), decltype(s2)>);

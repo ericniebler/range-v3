@@ -28,6 +28,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 
 namespace ranges
 {
@@ -118,6 +119,7 @@ namespace ranges
         public: // BUGBUG
             friend range_access;
             CPP_assert(And<ForwardView<Views>...>);
+            CPP_assert(sizeof...(Views) != 0);
 
             static constexpr auto my_cardinality =
                 detail::cartesian_product_cardinality<Views...>::value;
@@ -209,6 +211,8 @@ namespace ranges
                     RANGES_EXPECT(sizeof...(Views) == 0);
                     RANGES_EXPECT(n == 0);
                 }
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
                 template<std::size_t N>
                 void advance_(meta::size_t<N>, std::intmax_t n)
                 {
@@ -258,6 +262,7 @@ namespace ranges
                     using D = iter_difference_t<decltype(first)>;
                     i = first + static_cast<D>(n_mod);
                 }
+RANGES_DIAGNOSTIC_POP
                 void check_at_end_(meta::size_t<0>, bool = false)
                 {
                     static_assert(sizeof...(Views) == 0, "");
@@ -387,7 +392,10 @@ namespace ranges
               : views_{detail::move(views)...}
             {}
             CPP_member
-            constexpr static auto size() noexcept -> CPP_ret(std::intmax_t)(
+#ifndef RANGES_WORKAROUND_MSVC_DC338193
+            static
+#endif // RANGES_WORKAROUND_MSVC_DC338193
+            constexpr auto size() noexcept -> CPP_ret(std::intmax_t)(
                 requires my_cardinality >= 0)
             {
                 return std::intmax_t{my_cardinality};
@@ -415,9 +423,16 @@ namespace ranges
                 template<typename... Rngs>
                 constexpr auto operator()(Rngs &&... rngs) const ->
                     CPP_ret(cartesian_product_view<all_t<Rngs>...>)(
-                        requires concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
+                        requires (sizeof...(Rngs) != 0) &&
+                            concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
                 {
-                    return cartesian_product_view<all_t<Rngs>...>{all((Rngs &&) rngs)...};
+                    return cartesian_product_view<all_t<Rngs>...>{
+                        all(static_cast<Rngs &&>(rngs))...};
+                }
+
+                constexpr empty_view<std::tuple<>> operator()() const noexcept
+                {
+                    return {};
                 }
             };
 

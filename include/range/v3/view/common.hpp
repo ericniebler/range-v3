@@ -49,17 +49,21 @@ namespace ranges
             using common_view_iterator_t = meta::if_c<RA_and_Sized<R>,
                 iterator_t<R>,
                 common_iterator_t<iterator_t<R>, sentinel_t<R>>>;
+
+            template<typename Rng>
+            struct is_common_range
+              : meta::bool_<CommonRange<Rng>>
+            {};
             /// \endcond
         }
 
-        template<typename Rng>
+        template<typename Rng, bool = detail::is_common_range<Rng>::value>
         struct common_view
           : view_interface<common_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
             CPP_assert(View<Rng>);
             CPP_assert(!CommonView<Rng>);
-
             Rng rng_;
 
             sentinel_t<Rng> end_(std::false_type)
@@ -133,6 +137,14 @@ namespace ranges
             }
         };
 
+        template<typename Rng>
+        struct common_view<Rng, true>
+          : identity_adaptor<Rng>
+        {
+            CPP_assert(CommonRange<Rng>);
+            using identity_adaptor<Rng>::identity_adaptor;
+        };
+ 
         namespace view
         {
             struct common_fn
@@ -140,26 +152,15 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng) const ->
                     CPP_ret(common_view<all_t<Rng>>)(
-                        requires ViewableRange<Rng> && (!CommonRange<Rng>))
+                        requires ViewableRange<Rng>)
                 {
                     return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
-                }
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(all_t<Rng>)(
-                        requires ViewableRange<Rng> && CommonRange<Rng>)
-                {
-                    return all(static_cast<Rng &&>(rng));
                 }
             };
 
             /// \relates common_fn
             /// \ingroup group-views
             RANGES_INLINE_VARIABLE(view<common_fn>, common)
-
-            template<typename Rng>
-            using common_t =
-                decltype(common(std::declval<Rng>()));
         }
         /// @}
     }

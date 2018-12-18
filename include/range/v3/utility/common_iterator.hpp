@@ -159,6 +159,15 @@ namespace ranges
                 ++ranges::get<0>(data_);
                 return *this;
             }
+#ifdef RANGES_WORKAROUND_MSVC_677925
+            template<typename I2 = I>
+            auto operator++(int) ->
+                CPP_ret(decltype(std::declval<I2 &>()++))(
+                    requires not ForwardIterator<I2>)
+            {
+                return ranges::get<0>(data_)++;
+            }
+#else // ^^^ workaround ^^^ / vvv no workaround vvv
             CPP_member
             auto operator++(int) ->
                 CPP_ret(decltype(std::declval<I &>()++))(
@@ -166,6 +175,7 @@ namespace ranges
             {
                 return ranges::get<0>(data_)++;
             }
+#endif // RANGES_WORKAROUND_MSVC_677925
             CPP_member
             auto operator++(int) -> CPP_ret(common_iterator)(
                 requires ForwardIterator<I>)

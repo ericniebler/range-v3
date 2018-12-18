@@ -41,33 +41,68 @@ namespace ranges
 
 #if defined(_GLIBCXX_DEBUG)
             template<typename T, typename Seq>
-            auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, int) -> ranges::contiguous_iterator_tag;
+            auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, priority_tag<3>) ->
+                ranges::contiguous_iterator_tag;
 #endif
 #if defined(__GLIBCXX__)
             template<typename T, typename Seq>
-            auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, int) -> ranges::contiguous_iterator_tag;
+            auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, priority_tag<3>) ->
+                ranges::contiguous_iterator_tag;
 #endif
 #if defined(_LIBCPP_VERSION)
             template<typename T>
-            auto iter_concept_(std::__wrap_iter<T *>, int) -> ranges::contiguous_iterator_tag;
+            auto iter_concept_(std::__wrap_iter<T *>, priority_tag<3>) ->
+                ranges::contiguous_iterator_tag;
+#endif
+#if defined(_MSVC_STL_VERSION)
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_Array_iterator>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_Array_const_iterator>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_Vector_iterator> &&
+                        !Same<bool, typename I::value_type>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_Vector_const_iterator> &&
+                        !Same<bool, typename I::value_type>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_String_iterator>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_String_const_iterator>);
+            template<typename I>
+            auto iter_concept_(I, priority_tag<3>) ->
+                CPP_ret(ranges::contiguous_iterator_tag)(
+                    requires Same<I, class I::_String_view_iterator>);
 #endif
             template<typename T>
-            auto iter_concept_(T *, int) -> ranges::contiguous_iterator_tag;
+            auto iter_concept_(T *, priority_tag<3>) -> ranges::contiguous_iterator_tag;
             template<typename I>
-            auto iter_concept_(I, int) -> typename iter_traits_t<I>::iterator_concept;
+            auto iter_concept_(I, priority_tag<2>) -> typename iter_traits_t<I>::iterator_concept;
             template<typename I>
-            auto iter_concept_(I, long) -> typename iter_traits_t<I>::iterator_category;
+            auto iter_concept_(I, priority_tag<1>) -> typename iter_traits_t<I>::iterator_category;
             template<typename I>
-            auto iter_concept_(I, ...) ->
+            auto iter_concept_(I, priority_tag<0>) ->
                 enable_if_t<
                     !is_std_iterator_traits_specialized_<I>,
                     ranges::random_access_iterator_tag>;
 
             template<typename I>
-            using iter_concept_t = decltype(iter_concept_(std::declval<I>(), 0));
+            using iter_concept_t = decltype(iter_concept_(std::declval<I>(), priority_tag<3>{}));
         }
-
         /// \endcond
+
         CPP_def
         (
             template(typename I)

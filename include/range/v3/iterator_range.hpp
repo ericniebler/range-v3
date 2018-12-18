@@ -94,7 +94,7 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
         template<typename I, typename S /*= I*/>
-        struct iterator_range
+        struct RANGES_EMPTY_BASES iterator_range
           : tagged_compressed_tuple<tag::begin(I), tag::end(S)>
           , view_interface<iterator_range<I, S>>
           , _iterator_range_::adl_hook_

@@ -13,6 +13,7 @@
 #include <memory>
 #include <range/v3/core.hpp>
 #include <range/v3/view/indirect.hpp>
+#include <range/v3/view/transform.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -38,6 +39,36 @@ int main()
         ::check_equal(rng, some_ints);
         rng = make_range();
         CHECK(&*begin(rng) == some_ints + 0);
+    }
+
+#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14
+    {
+        // regression test for #946
+        class Data;
+
+        struct Test
+        {
+            std::vector<Data*> m_list;
+
+            auto list()
+            {
+                return m_list | ranges::view::indirect;
+            }
+        };
+
+        class Data
+        {};
+
+        CHECK(Test{std::vector<Data*>(42)}.list().size() == 42u);
+    }
+#endif // RANGES_CXX_RETURN_TYPE_DEDUCTION
+
+    {
+        // regression test for #952
+        int some_ints[42]{};
+        auto a = some_ints | view::transform([](int& i) { return &i; })
+                           | view::indirect;
+        (void) a.begin();
     }
 
     return test_result();

@@ -23,6 +23,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_tuple.hpp>
+#include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 #include <range/v3/view/zip_with.hpp>
 
 RANGES_DISABLE_WARNINGS
@@ -106,6 +108,8 @@ namespace ranges
         struct zip_view
           : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
         {
+            CPP_assert(sizeof...(Rngs) != 0);
+
             zip_view() = default;
             explicit zip_view(Rngs...rngs)
               : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
@@ -121,9 +125,14 @@ namespace ranges
                 auto operator()(Rngs &&... rngs) const ->
                     CPP_ret(zip_view<all_t<Rngs>...>)(
                         requires And<ViewableRange<Rngs>...> &&
-                            And<InputRange<Rngs>...>)
+                            And<InputRange<Rngs>...> && sizeof...(Rngs) != 0)
                 {
                     return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
+                }
+
+                constexpr empty_view<std::tuple<>> operator()() const noexcept
+                {
+                    return {};
                 }
             };
 

@@ -41,14 +41,14 @@ namespace ranges
     {
         /// \addtogroup group-views
         ///@{
-        template<typename Rng>
-        struct cycled_view
+        template<typename Rng, bool /* = (bool) is_infinite<Rng>() */>
+        struct RANGES_EMPTY_BASES cycled_view
           : view_facade<cycled_view<Rng>, infinite>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>, cycled_view<Rng>, !CommonRange<Rng>>
         {
         private:
-            CPP_assert(ForwardRange<Rng>);
+            CPP_assert(ForwardRange<Rng> && !is_infinite<Rng>::value);
             friend range_access;
             Rng rng_;
 
@@ -64,12 +64,11 @@ namespace ranges
                 using constify_if = meta::const_if_c<IsConst, T>;
                 using cycled_view_t = constify_if<cycled_view>;
                 using CRng = constify_if<Rng>;
-                using difference_type_ = range_difference_t<Rng>;
                 using iterator = iterator_t<CRng>;
 
                 cycled_view_t *rng_{};
                 iterator it_{};
-                std::ptrdiff_t n_ = 0;
+                std::intmax_t n_ = 0;
 
                 iterator get_end_(std::true_type, bool = false) const
                 {
@@ -78,7 +77,7 @@ namespace ranges
                 template<bool CanBeEmpty = false>
                 iterator get_end_(std::false_type, meta::bool_<CanBeEmpty> = {}) const
                 {
-                    auto &end_ = static_cast<cache_t&>(*rng_);
+                    auto &end_ = static_cast<cache_t &>(*rng_);
                     RANGES_EXPECT(CanBeEmpty || end_);
                     if(CanBeEmpty && !end_)
                         end_ = ranges::next(it_, ranges::end(rng_->rng_));
@@ -88,7 +87,7 @@ namespace ranges
                 {}
                 void set_end_(std::false_type) const
                 {
-                    auto &end_ = static_cast<cache_t&>(*rng_);
+                    auto &end_ = static_cast<cache_t &>(*rng_);
                     if(!end_)
                         end_ = it_;
                 }
@@ -139,11 +138,9 @@ namespace ranges
                     --it_;
                 }
                 CPP_member
-                auto advance(difference_type_ n) -> CPP_ret(void)(
+                auto advance(std::intmax_t n) -> CPP_ret(void)(
                     requires RandomAccessRange<CRng>)
                 {
-                    if (is_infinite<Rng>::value)
-                        return void(it_ += n);
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
                         meta::bool_<(bool) CommonRange<CRng>>{}, meta::bool_<true>());
@@ -152,16 +149,15 @@ namespace ranges
                     auto const off = (d + n) % dist;
                     n_ += (d + n) / dist;
                     RANGES_EXPECT(n_ >= 0);
-                    it_ = begin + (off < 0 ? off + dist : off);
+                    using D = range_difference_t<Rng>;
+                    it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
                 }
                 CPP_member
                 auto distance_to(cursor const &that) const ->
-                    CPP_ret(difference_type_)(
+                    CPP_ret(std::intmax_t)(
                         requires SizedSentinel<iterator, iterator>)
                 {
                     RANGES_EXPECT(that.rng_ == rng_);
-                    if (is_infinite<Rng>::value)
-                        return that.it_ - it_;
                     auto const begin = ranges::begin(rng_->rng_);
                     auto const end = this->get_end_(
                         meta::bool_<(bool) CommonRange<Rng>>{}, meta::bool_<true>());
@@ -170,7 +166,9 @@ namespace ranges
                 }
             };
 
-            cursor<simple_view<Rng>() && (bool) CommonRange<Rng const>> begin_cursor()
+            CPP_member
+            auto begin_cursor() -> CPP_ret(cursor<false>)(
+                    requires (!simple_view<Rng>() || !CommonRange<Rng const>))
             {
                 return {*this};
             }
@@ -189,6 +187,14 @@ namespace ranges
             {
                 RANGES_EXPECT(!ranges::empty(rng_));
             }
+        };
+
+        template<typename Rng>
+        struct cycled_view<Rng, true>
+          : identity_adaptor<Rng>
+        {
+            CPP_assert(is_infinite<Rng>::value);
+            using identity_adaptor<Rng>::identity_adaptor;
         };
 
         namespace view

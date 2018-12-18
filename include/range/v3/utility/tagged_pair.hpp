@@ -142,7 +142,7 @@ namespace ranges
         /// \endcond
 
         template<typename Base, typename...Tags>
-        class tagged
+        class RANGES_EMPTY_BASES tagged
           : public meta::_t<_tagged_::chain<Base, 0, Tags...>>
 #if RANGES_BROKEN_CPO_LOOKUP
           , private _tagged_::adl_hook<tagged<Base, Tags...>>
@@ -154,7 +154,7 @@ namespace ranges
             template<typename Other>
             using can_convert =
                 meta::bool_<!std::is_same<Other, Base>::value &&
-                    std::is_convertible<Other, Base>::value>;
+                    detail::is_convertible<Other, Base>::value>;
         public:
             tagged() = default;
             using base_t::base_t;

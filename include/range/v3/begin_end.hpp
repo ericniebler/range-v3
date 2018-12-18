@@ -17,6 +17,7 @@
 #include <functional>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <utility>
 #if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
 #include <string_view>
@@ -40,6 +41,11 @@ namespace ranges
             // https://github.com/ericniebler/stl2/issues/139)
             template<typename T>
             void begin(T &&) = delete;
+
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void begin();
+#endif
+
             template<typename T>
             void begin(std::initializer_list<T>) = delete;
 
@@ -161,6 +167,11 @@ namespace ranges
             // https://github.com/ericniebler/stl2/issues/139)
             template<typename T>
             void end(T &&) = delete;
+
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void end();
+#endif
+
             template<typename T>
             void end(std::initializer_list<T>) = delete;
 
@@ -248,6 +259,17 @@ namespace ranges
                     decltype(Fn{}(ref.get()))
                 {
                     return Fn{}(ref.get());
+                }
+
+                template<typename Int>
+                auto operator-(Int dist) const ->
+                    CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
+                        requires Integral<Int>)
+                {
+                    using SInt = meta::_t<std::make_signed<Int>>;
+                    RANGES_EXPECT(0 <= dist);
+                    RANGES_EXPECT(dist <= static_cast<Int>(std::numeric_limits<SInt>::max()));
+                    return detail::from_end_<SInt>{-static_cast<SInt>(dist)};
                 }
             };
 

@@ -139,7 +139,7 @@ namespace ranges
             // as the return type of operator* when the cursor type has a set() member
             // function of the correct signature (i.e., if it can accept a value_type &&).
             template<typename Cur, bool Readable /*= (bool) ReadableCursor<Cur>*/>
-            struct basic_proxy_reference_
+            struct RANGES_EMPTY_BASES basic_proxy_reference_
               : cursor_traits<Cur>
                 // The following adds conversion operators to the common reference
                 // types, so that basic_proxy_reference can model Readable
@@ -526,7 +526,7 @@ namespace ranges
 #endif
 
         template<typename Cur>
-        struct basic_iterator
+        struct RANGES_EMPTY_BASES basic_iterator
           : detail::iterator_associated_types_base<Cur>
 #if RANGES_BROKEN_CPO_LOOKUP
           , private _basic_iterator_::adl_hook<basic_iterator<Cur>>

@@ -38,7 +38,7 @@ namespace ranges
 
             template<typename List, typename Indices> struct compressed_tuple_;
             template<typename... Ts, std::size_t... Is>
-            struct compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>>
+            struct RANGES_EMPTY_BASES compressed_tuple_<meta::list<Ts...>, meta::index_sequence<Is...>>
               : storage<Ts, Is, Ts...>...
             {
                 static_assert(Same<meta::index_sequence<Is...>,

@@ -100,7 +100,7 @@ namespace ranges
             };
 
             template<typename Rng>
-            struct sv_base
+            struct RANGES_EMPTY_BASES sv_base
               : view_adaptor<
                     sliding_view<Rng>,
                     Rng,
@@ -172,7 +172,7 @@ namespace ranges
                 return *first;
             }
 
-            struct adaptor
+            struct RANGES_EMPTY_BASES adaptor
               : adaptor_base
               , sliding_view_detail::trailing<Rng>
             {

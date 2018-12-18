@@ -35,7 +35,7 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng, typename Pred>
-        struct adjacent_remove_if_view
+        struct RANGES_EMPTY_BASES adjacent_remove_if_view
           : view_adaptor<
                 adjacent_remove_if_view<Rng, Pred>,
                 Rng,

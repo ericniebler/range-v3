@@ -31,6 +31,9 @@ namespace concepts
         namespace detail
         {
             template<typename From, typename To>
+            using is_convertible = std::is_convertible<meta::_t<std::add_rvalue_reference<From>>, To>;
+
+            template<typename From, typename To>
             struct _copy_cv_
             {
                 using type = To;
@@ -116,8 +119,8 @@ namespace concepts
             {};
             template<typename T, typename U>
             struct _builtin_common<T &&, U &&, meta::if_<meta::and_<
-                std::is_convertible<T &&, _rref_res<T, U>>,
-                std::is_convertible<U &&, _rref_res<T, U>>>>>
+                is_convertible<T &&, _rref_res<T, U>>,
+                is_convertible<U &&, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -127,7 +130,7 @@ namespace concepts
             {};
             template<typename T, typename U>
             struct _builtin_common<T &, U &&, meta::if_<
-                std::is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+                is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -152,8 +155,8 @@ namespace concepts
             {};
             template<typename T, typename U>
             struct _builtin_common_rr<T, U, meta::if_<meta::and_<
-                std::is_convertible<T &&, _rref_res<T, U>>,
-                std::is_convertible<U &&, _rref_res<T, U>>>>>
+                is_convertible<T &&, _rref_res<T, U>>,
+                is_convertible<U &&, _rref_res<T, U>>>>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -171,7 +174,7 @@ namespace concepts
             {};
             template<typename T, typename U>
             struct _builtin_common_lr<T, U, meta::if_<
-                std::is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+                is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>

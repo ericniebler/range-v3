@@ -10,7 +10,6 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 #include <range/v3/detail/config.hpp>
-#if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
 #include <iostream>
 #include <vector>
 #include <range/v3/begin_end.hpp>
@@ -30,6 +29,10 @@
 
 #ifdef __clang__
 #pragma GCC diagnostic ignored "-Wunused-const-variable"
+#endif
+
+#if RANGES_CXX_COROUTINES < RANGES_CXX_COROUTINES_TS1
+#error This test uses coroutines.
 #endif
 
 template<bool Condition>
@@ -287,6 +290,3 @@ int main()
 
     return ::test_result();
 }
-#else // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
-int main() {}
-#endif // RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1

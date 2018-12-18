@@ -91,6 +91,10 @@ namespace ranges
             template<typename T, typename U>
             void iter_swap(T, U) = delete;
 
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void iter_swap();
+#endif
+
             template<typename T, typename U,
                 typename = decltype(iter_swap(std::declval<T>(), std::declval<U>()))>
             std::true_type try_adl_iter_swap_(int);

@@ -39,23 +39,56 @@ namespace ranges
         {
         private:
             friend range_access;
+
+            template<bool IsConst>
             struct adaptor
               : adaptor_base
             {
-                constexpr auto CPP_auto_fun(read)(iterator_t<Rng> const &it) (const)
+                friend adaptor<!IsConst>;
+                using CRng = meta::const_if_c<IsConst, Rng>;
+
+                adaptor() = default;
+                template<bool Other>
+                constexpr CPP_ctor(adaptor)(adaptor<Other>) (noexcept(true)
+                    requires IsConst && (!Other))
+                {}
+
+                constexpr auto CPP_auto_fun(read)(iterator_t<CRng> const &it) (const)
                 (
                     return **it
                 )
-                constexpr auto CPP_auto_fun(iter_move)(iterator_t<Rng> const &it) (const)
+                constexpr auto CPP_auto_fun(iter_move)(iterator_t<CRng> const &it) (const)
                 (
                     return ranges::iter_move(*it)
                 )
             };
-            constexpr adaptor begin_adaptor() const noexcept
+
+            CPP_member
+            constexpr /*c++14*/ auto begin_adaptor() noexcept ->
+                CPP_ret(adaptor<false>)(
+                    requires (!simple_view<Rng>()))
             {
                 return {};
             }
-            constexpr adaptor end_adaptor() const noexcept
+            CPP_member
+            constexpr auto begin_adaptor() const noexcept ->
+                CPP_ret(adaptor<true>)(
+                    requires Range<Rng const>)
+            {
+                return {};
+            }
+
+            CPP_member
+            constexpr /*c++14*/ auto end_adaptor() noexcept ->
+                CPP_ret(adaptor<false>)(
+                    requires (!simple_view<Rng>()))
+            {
+                return {};
+            }
+            CPP_member
+            constexpr auto end_adaptor() const noexcept ->
+                CPP_ret(adaptor<true>)(
+                    requires Range<Rng const>)
             {
                 return {};
             }

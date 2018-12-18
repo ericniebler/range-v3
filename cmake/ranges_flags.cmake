@@ -18,17 +18,18 @@ endmacro()
 # All compilation flags
 # Language flag: version of the C++ standard to use
 message("[range-v3]: C++ std=${RANGES_CXX_STD}")
-if (RANGES_CXX_COMPILER_CLANGCL)
+if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   ranges_append_flag(RANGES_HAS_CXXSTDCOLON "-std:c++${RANGES_CXX_STD}")
-else()
-  ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
-endif()
-
-# Enable "normal" warnings and make them errors:
-if (RANGES_CXX_COMPILER_CLANGCL)
+  set(RANGES_STD_FLAG "-std:c++${RANGES_CXX_STD}")
+  # Enable MSVC strict mode
+  ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "-permissive-")
+  # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_W3 -W3)
   ranges_append_flag(RANGES_HAS_WX -WX)
 else()
+  ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
+  set(RANGES_STD_FLAG "-std=c++${RANGES_CXX_STD}")
+  # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_WALL -Wall)
   ranges_append_flag(RANGES_HAS_WEXTRA -Wextra)
   ranges_append_flag(RANGES_HAS_WERROR -Werror)
@@ -175,6 +176,50 @@ if (RANGES_NATIVE)
   ranges_append_flag(RANGES_HAS_MARCH_NATIVE "-march=native")
   ranges_append_flag(RANGES_HAS_MTUNE_NATIVE "-mtune=native")
 endif()
+
+include(CheckCXXSourceCompiles)
+
+set(CMAKE_REQUIRED_FLAGS ${RANGES_STD_FLAG})
+# Probe for <thread>
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp" RANGE_V3_PROBE_CODE)
+check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_THREAD_PROBE)
+unset(RANGE_V3_PROBE_CODE)
+
+# Probe for library and compiler support for aligned new
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/aligned_new_probe.cpp" RANGE_V3_PROBE_CODE)
+check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_ALIGNED_NEW_PROBE)
+unset(RANGE_V3_PROBE_CODE)
+unset(CMAKE_REQUIRED_FLAGS)
+
+# Probe for coroutine TS support
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/coro_test_code.cpp" RANGE_V3_PROBE_CODE)
+if(RANGES_CXX_COMPILER_MSVC)
+  set(CMAKE_REQUIRED_FLAGS "/await")
+  check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGES_HAS_AWAIT)
+  if(RANGES_HAS_AWAIT)
+    set(RANGE_V3_COROUTINE_FLAGS "/await")
+  endif()
+elseif(RANGES_CXX_COMPILER_CLANG)
+  set(CMAKE_REQUIRED_FLAGS "-fcoroutines-ts ${RANGES_STD_FLAG}")
+  check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGES_HAS_FCOROUTINES_TS)
+  if(RANGES_HAS_FCOROUTINES_TS)
+    set(RANGE_V3_COROUTINE_FLAGS "-fcoroutines-ts")
+  endif()
+endif()
+unset(CMAKE_REQUIRED_FLAGS)
+unset(RANGE_V3_PROBE_CODE)
+
+# Test for concepts support
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/concepts_test_code.cpp" RANGE_V3_PROBE_CODE)
+if(RANGES_CXX_COMPILER_GCC OR RANGES_CXX_COMPILER_CLANG)
+  set(CMAKE_REQUIRED_FLAGS "-fconcepts ${RANGES_STD_FLAG}")
+  check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_HAS_FCONCEPTS)
+  if(RANGE_V3_HAS_FCONCEPTS)
+    set(RANGE_V3_CONCEPTS_FLAGS "-fconcepts")
+  endif()
+endif()
+unset(CMAKE_REQUIRED_FLAGS)
+unset(RANGE_V3_PROBE_CODE)
 
 if (RANGES_VERBOSE_BUILD)
   message("[range-v3]: C++ flags: ${CMAKE_CXX_FLAGS}")

@@ -28,6 +28,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -37,7 +38,7 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
-        struct reverse_view
+        struct RANGES_EMPTY_BASES reverse_view
           : view_interface<reverse_view<Rng>, range_cardinality<Rng>::value>
           , private detail::non_propagating_cache<
                 iterator_t<Rng>, reverse_view<Rng>, !CommonRange<Rng>>
@@ -59,9 +60,6 @@ namespace ranges
                     end_ = ranges::next(ranges::begin(rng_), ranges::end(rng_));
                 return make_reverse_iterator(*end_);
             }
-            template<typename T>
-            using not_self_ =
-                meta::if_c<!std::is_same<reverse_view, detail::decay_t<T>>::value, T>;
         public:
             reverse_view() = default;
             explicit constexpr reverse_view(Rng rng)
@@ -106,6 +104,24 @@ namespace ranges
                 requires SizedRange<Rng const>)
             {
                 return ranges::size(rng_);
+            }
+        };
+
+        template<typename Rng>
+        struct reverse_view<reverse_view<Rng>>
+          : Rng
+        {
+            CPP_assert(BidirectionalRange<Rng>);
+            CPP_assert(Same<detail::decay_t<decltype(std::declval<reverse_view<Rng>>().base())>, Rng>);
+
+            reverse_view() = default;
+            explicit constexpr reverse_view(reverse_view<Rng> rng)
+              : Rng(rng.base())
+            {}
+
+            constexpr reverse_view<Rng> base() const
+            {
+                return reverse_view<Rng>{*this};
             }
         };
 

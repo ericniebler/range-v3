@@ -32,60 +32,110 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename T, typename U)
-                concept SliceActionConcept,
-                    ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_t<Rng>> &&
-                    ConvertibleTo<U, range_difference_t<Rng>>
-            );
-
             struct slice_fn
             {
             private:
                 friend action_access;
+
+                template <typename D>
+                using diff_t = range_difference_t<D>;
+
+                // Overloads for the pipe syntax: rng | action::slice(from, to)
                 template<typename D>
                 static auto CPP_fun(bind)(slice_fn slice, D from, D to)(
                     requires Integral<D>)
                 {
                     return std::bind(slice, std::placeholders::_1, from, to);
                 }
-            public:
-                // TODO support slice from end.
-                CPP_template(typename Rng,
-                    typename I = iterator_t<Rng>,
-                    typename D = range_difference_t<Rng>)(
-                    requires SliceActionConcept<Rng, D, D>)
-                Rng operator()(Rng &&rng, range_difference_t<Rng> from,
-                    range_difference_t<Rng> to) const
+                template<typename D>
+                static auto CPP_fun(bind)(slice_fn slice, D from, detail::from_end_<D> to)(
+                    requires Integral<D>)
                 {
-                    RANGES_EXPECT(from <= to);
-                    ranges::action::erase(rng, next(begin(rng), to), end(rng));
+                    return std::bind(slice, std::placeholders::_1, from, to);
+                }
+                template<typename D>
+                static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from, detail::from_end_<D> to)(
+                    requires Integral<D>)
+                {
+                    return std::bind(slice, std::placeholders::_1, from, to);
+                }
+                template<typename D>
+                static auto CPP_fun(bind)(slice_fn slice, D from, end_fn const &to)(
+                    requires Integral<D>)
+                {
+                    return std::bind(slice, std::placeholders::_1, from, to);
+                }
+                template<typename D>
+                static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from, end_fn const &to)(
+                    requires Integral<D>)
+                {
+                    return std::bind(slice, std::placeholders::_1, from, to);
+                }
+            public:
+                template<typename Rng, typename I = iterator_t<Rng>>
+                auto operator()(Rng &&rng, diff_t<Rng> from, diff_t<Rng> to) const ->
+                    CPP_ret(Rng)(
+                        requires ForwardRange<Rng> && ErasableRange<Rng &, I, I>)
+                {
+                    RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
+                    RANGES_EXPECT(!SizedRange<Rng> || to <= distance(rng));
+                    ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                    ranges::action::erase(rng, next(begin(rng), to - from), end(rng));
+                    return static_cast<Rng &&>(rng);
+                }
+
+                template<typename Rng, typename I = iterator_t<Rng>>
+                auto operator()(Rng &&rng, diff_t<Rng> from, detail::from_end_<diff_t<Rng>> to) const ->
+                    CPP_ret(Rng)(
+                        requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
+                {
+                    RANGES_EXPECT(0 <= from && to.dist_ <= 0);
+                    RANGES_EXPECT(!SizedRange<Rng> || from - to.dist_ <= distance(rng));
+                    ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                    if (to.dist_ != 0)
+                    {
+                        auto const last = next(begin(rng), end(rng));
+                        ranges::action::erase(rng, prev(last, -to.dist_), last);
+                    }
+                    return static_cast<Rng &&>(rng);
+                }
+
+                template<typename Rng, typename I = iterator_t<Rng>>
+                auto operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from, detail::from_end_<diff_t<Rng>> to) const ->
+                    CPP_ret(Rng)(
+                        requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
+                {
+                    RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
+                    RANGES_EXPECT(!SizedRange<Rng> || 0 <= distance(rng) + from.dist_);
+                    auto last = next(begin(rng), end(rng));
+                    ranges::action::erase(rng, prev(last, -to.dist_), last);
+                    last = next(begin(rng), end(rng));
+                    ranges::action::erase(rng, begin(rng), prev(last, to.dist_ - from.dist_));
+                    return static_cast<Rng &&>(rng);
+                }
+
+                template<typename Rng, typename I = iterator_t<Rng>>
+                auto operator()(Rng &&rng, diff_t<Rng> from, end_fn const &) const ->
+                    CPP_ret(Rng)(
+                        requires ForwardRange<Rng> && ErasableRange<Rng &, I, I>)
+                {
+                    RANGES_EXPECT(0 <= from);
+                    RANGES_EXPECT(!SizedRange<Rng> || from <= distance(rng));
                     ranges::action::erase(rng, begin(rng), next(begin(rng), from));
                     return static_cast<Rng &&>(rng);
                 }
 
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T, typename U)(
-                    requires not SliceActionConcept<Rng, T, U>)
-                void operator()(Rng &&, T &&, U &&) const
+                template<typename Rng, typename I = iterator_t<Rng>>
+                auto operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from, end_fn const &) const ->
+                    CPP_ret(Rng)(
+                        requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
                 {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::slice operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
-                        "The object on which action::slice operates must allow element "
-                        "removal.");
-                    CPP_assert_msg((bool) ConvertibleTo<T, range_difference_t<Rng>> &&
-                            (bool) ConvertibleTo<U, range_difference_t<Rng>>,
-                        "The bounds passed to action::slice must be convertible to the range's "
-                        "difference type. TODO slicing from the end with 'end-2' syntax is not "
-                        "supported yet, sorry!");
+                    RANGES_EXPECT(from.dist_ <= 0);
+                    RANGES_EXPECT(!SizedRange<Rng> || 0 <= distance(rng) + from.dist_);
+                    auto const last = next(begin(rng), end(rng));
+                    ranges::action::erase(rng, begin(rng), prev(last, -from.dist_));
+                    return static_cast<Rng &&>(rng);
                 }
-            #endif
             };
 
             /// \ingroup group-actions

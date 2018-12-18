@@ -24,7 +24,7 @@ int main()
     using namespace ranges;
 
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
-    constexpr unsigned cia = size(ia);
+    constexpr auto cia = size(ia);
 
     CHECK(count(input_iterator<const int*>(ia),
                 sentinel<const int*>(ia + cia), 2) == 3);
@@ -41,7 +41,7 @@ int main()
                       sentinel<const int*>(ia)), 2) == 0);
 
     S sa[] = {{0}, {1}, {2}, {2}, {0}, {1}, {2}, {3}};
-    constexpr unsigned csa = size(ia);
+    constexpr auto csa = size(ia);
 
     CHECK(count(input_iterator<const S*>(sa),
                 sentinel<const S*>(sa + csa), 2, &S::i) == 3);

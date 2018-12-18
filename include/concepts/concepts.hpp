@@ -790,11 +790,15 @@ namespace concepts
             );
 
             /// \cond
+            // Workaround bug in the Standard Library:
+            // From cannot be an incomplete class type despite that
+            // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
+            // in such a case.
             CPP_def
             (
                 template(typename From, typename To)
                 concept ImplicitlyConvertibleTo,
-                    std::is_convertible<From, To>::value
+                    std::is_convertible<typename std::add_rvalue_reference<From>::type, To>::value
             );
 
             CPP_def

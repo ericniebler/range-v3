@@ -134,15 +134,22 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Fun = plus>
-                static auto bind(partial_sum_fn partial_sum, Fun fun = {})
+                template<typename Fun>
+                static auto bind(partial_sum_fn partial_sum, Fun fun)
                 {
                     return make_pipeable(std::bind(partial_sum, std::placeholders::_1,
                         protect(std::move(fun))));
                 }
+                template<typename Fun = plus>
+                RANGES_DEPRECATED("Use \"ranges::view::partial_sum\" instead of \"ranges::view::partial_sum()\".")
+                static auto bind(partial_sum_fn partial_sum)
+                {
+                    return make_pipeable(std::bind(partial_sum, std::placeholders::_1,
+                        Fun{}));
+                }
             public:
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&rng, Fun fun) const ->
+                template<typename Rng, typename Fun = plus>
+                auto operator()(Rng &&rng, Fun fun = {}) const ->
                     CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
                         requires InputRange<Rng> &&
                             IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>> &&

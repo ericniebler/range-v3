@@ -15,7 +15,6 @@
 #define RANGES_V3_UTILITY_CONCEPTS_HPP
 
 #include <range/v3/range_fwd.hpp>
-
 #include <concepts/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/common_type.hpp>

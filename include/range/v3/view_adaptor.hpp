@@ -84,7 +84,11 @@ namespace ranges
             {
                 adaptor_value_type_() = default;
                 using compressed_pair<BaseIter, Adapt>::compressed_pair;
+#ifdef RANGES_WORKAROUND_MSVC_688606
+                using value_type = value_type_t<Adapt>;
+#else // ^^^ workaround ^^^ / vvv no workaround vvv
                 using value_type = typename Adapt::value_type;
+#endif // RANGES_WORKAROUND_MSVC_688606
             };
         }
         /// \endcond
@@ -329,8 +333,8 @@ namespace ranges
             }
             // If the adaptor has an iter_move function, use it.
             template<typename A = Adapt, typename X = decltype(
-                std::declval<A const&>().iter_move(
-                    std::declval<BaseIter const&>()))>
+                std::declval<A const &>().iter_move(
+                    std::declval<BaseIter const &>()))>
             X iter_move_(int) const
                 noexcept(noexcept(std::declval<A const &>().iter_move(
                     std::declval<BaseIter const &>())))

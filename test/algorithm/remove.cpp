@@ -35,7 +35,7 @@ void
 test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     Iter r = ranges::remove(Iter(ia), Sent(ia+sa), 2);
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
@@ -51,8 +51,8 @@ void
 test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
-    constexpr unsigned sa = ranges::size(ia);
-    Iter r = ranges::remove(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), 2);
+    constexpr auto sa = ranges::size(ia);
+    Iter r = ranges::remove(ranges::make_subrange(Iter(ia), Sent(ia+sa)), 2);
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -96,7 +96,7 @@ test_range_rvalue()
     ia[4].reset(new int(4));
     ia[6].reset(new int(3));
     ia[7].reset(new int(4));
-    Iter r = ranges::remove(::as_lvalue(ranges::make_subrange(Iter(ia), Sent(ia+sa))), std::unique_ptr<int>());
+    Iter r = ranges::remove(ranges::make_subrange(Iter(ia), Sent(ia+sa)), std::unique_ptr<int>());
     CHECK(base(r) == ia + sa-3);
     CHECK(*ia[0] == 0);
     CHECK(*ia[1] == 1);
@@ -147,7 +147,7 @@ int main()
 
     // Check projection
     S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr unsigned sa = ranges::size(ia);
+    constexpr auto sa = ranges::size(ia);
     S* r = ranges::remove(ia, 2, &S::i);
     CHECK(r == ia + sa-3);
     CHECK(ia[0].i == 0);
@@ -159,7 +159,7 @@ int main()
 
     // Check rvalue range
     S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr unsigned sa2 = ranges::size(ia2);
+    constexpr auto sa2 = ranges::size(ia2);
     auto r2 = ranges::remove(std::move(ia2), 2, &S::i);
     CHECK(r2.get_unsafe() == ia2 + sa2-3);
     CHECK(ia2[0].i == 0);

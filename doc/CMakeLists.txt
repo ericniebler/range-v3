@@ -8,11 +8,16 @@ if (NOT DOXYGEN_FOUND)
     return()
 endif()
 
+set(CMAKE_FOLDER "doc")
+
 configure_file(Doxyfile.in Doxyfile @ONLY)
 add_custom_target(doc.check
     COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
     COMMENT "Running Doxygen to validate the documentation"
     VERBATIM
+)
+set_target_properties(doc.check
+    PROPERTIES FOLDER ${CMAKE_FOLDER}
 )
 
 # if (NOT TARGET benchmarks)
@@ -30,6 +35,9 @@ add_custom_target(doc
 #     DEPENDS benchmarks
     VERBATIM
 )
+set_target_properties(doc
+    PROPERTIES FOLDER ${CMAKE_FOLDER}
+)
 
 if (NOT GIT_FOUND)
     message(STATUS
@@ -45,6 +53,9 @@ add_custom_target(gh-pages.clean
     COMMENT "Cleaning up doc/gh-pages"
     VERBATIM
 )
+set_target_properties(gh-pages.clean
+    PROPERTIES FOLDER ${CMAKE_FOLDER}
+)
 
 add_custom_target(gh-pages.copy
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/html ${CMAKE_CURRENT_LIST_DIR}/gh-pages
@@ -52,6 +63,9 @@ add_custom_target(gh-pages.copy
     COMMENT "Copying the documentation from ${CMAKE_CURRENT_BINARY_DIR}/html to doc/gh-pages"
     DEPENDS doc gh-pages.clean
     VERBATIM
+)
+set_target_properties(gh-pages.copy
+    PROPERTIES FOLDER ${CMAKE_FOLDER}
 )
 
 execute_process(
@@ -67,4 +81,7 @@ add_custom_target(gh-pages.update
     COMMENT "Updating the gh-pages branch with freshly built documentation"
     DEPENDS gh-pages.copy
     VERBATIM
+)
+set_target_properties(gh-pages.update
+    PROPERTIES FOLDER ${CMAKE_FOLDER}
 )

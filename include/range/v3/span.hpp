@@ -111,7 +111,7 @@ namespace ranges
             template(typename Rng, typename T)
             concept SpanCompatibleRange,
                 SizedRange<Rng> && ContiguousRange<Rng> &&
-                std::is_convertible<
+                detail::is_convertible<
                     detail::element_t<Rng>(*)[],
                     T(*)[]>::value
         );
@@ -121,7 +121,7 @@ namespace ranges
             template(typename Rng, detail::span_index_t N)
             (concept SpanDynamicConversion)(Rng, N),
                 N == dynamic_extent ||
-                    range_cardinality<Rng>::value < cardinality{}
+                    range_cardinality<Rng>::value < cardinality()
         );
 
         CPP_def
@@ -133,7 +133,7 @@ namespace ranges
         /// \endcond
 
         template<typename T, detail::span_index_t N = dynamic_extent>
-        struct span
+        struct RANGES_EMPTY_BASES span
           : public view_interface<span<T, N>,
                 (N == dynamic_extent ? finite : static_cast<cardinality>(N))>,
             public detail::span_extent<N>
@@ -233,7 +233,7 @@ namespace ranges
                         data_ + Offset, Count == dynamic_extent ? size() - Offset : Count};
             }
             template<index_type Offset>
-            constexpr span<T, N >= Offset ? N - Offset : dynamic_extent> subspan() const noexcept
+            constexpr span<T, (N >= Offset ? N - Offset : dynamic_extent)> subspan() const noexcept
             {
                 static_assert(Offset >= 0,
                     "Offset of first element to extract cannot be negative.");
@@ -344,7 +344,7 @@ namespace ranges
             requires ContiguousRange<Rng>)
         span(Rng &&rng) ->
             span<detail::element_t<Rng>,
-                (range_cardinality<Rng>::value < cardinality{}
+                (range_cardinality<Rng>::value < cardinality()
                     ? dynamic_extent
                     : static_cast<detail::span_index_t>(range_cardinality<Rng>::value))>;
 #endif
@@ -376,7 +376,7 @@ namespace ranges
         }
         CPP_template(typename Rng)(
             requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value < cardinality{})
+                range_cardinality<Rng>::value < cardinality())
         constexpr span<detail::element_t<Rng>>
         make_span(Rng &&rng)
             noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
@@ -386,7 +386,7 @@ namespace ranges
         }
         CPP_template(typename Rng)(
             requires ContiguousRange<Rng> &&
-                range_cardinality<Rng>::value >= cardinality{})
+                range_cardinality<Rng>::value >= cardinality())
         constexpr span<detail::element_t<Rng>,
             static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>
         make_span(Rng &&rng)

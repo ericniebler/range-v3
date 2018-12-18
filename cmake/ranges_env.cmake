@@ -22,6 +22,11 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
   if (RANGES_VERBOSE_BUILD)
     message("[range-v3]: compiler is gcc.")
   endif()
+elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+  set (RANGES_CXX_COMPILER_MSVC TRUE)
+  if (RANGES_VERBOSE_BUILD)
+    message("[range-v3]: compiler is msvc.")
+  endif()
 else()
   message("[range-v3 warning]: unknown compiler ${CMAKE_CXX_COMPILER_ID} !")
 endif()
@@ -45,14 +50,16 @@ else()
   message("[range-v3 warning]: unknown system ${CMAKE_SYSTEM_NAME} !")
 endif()
 
-# Clang-CL will blow up with various parts of the standard library
-# if compiling with -std less than c++14.
-if (RANGES_CXX_COMPILER_CLANGCL)
-  if (RANGES_CXX_STD EQUAL 11)
-    set(CMAKE_CXX_STANDARD 14)
+if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
+  # Clang-CL will blow up in the standard library if compiling with less than
+  # C++14, and MSVC doesn't support less than C++14 at all.
+  if (RANGES_CXX_STD LESS 14)
     set(RANGES_CXX_STD 14)
   endif()
-  target_compile_definitions(range-v3 INTERFACE _SILENCE_CXX17_TEMPORARY_BUFFER_DEPRECATION_WARNING)
+  # MSVC is currently supported only in 17+ mode
+  if (RANGES_CXX_COMPILER_MSVC AND RANGES_CXX_STD LESS 17)
+    set(RANGES_CXX_STD 17)
+  endif()
 endif()
 
 # Build type

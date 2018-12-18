@@ -27,6 +27,14 @@ using namespace ranges;
 
 namespace
 {
+    namespace ebo_test
+    {
+        struct empty1 {};
+        struct empty2 {};
+        struct refines : empty1, empty2 {};
+    }
+    constexpr bool broken_ebo = sizeof(ebo_test::refines) > sizeof(ebo_test::empty1);
+
     constexpr auto N = 7;
     constexpr auto K = 3;
     CPP_assert(K < N);
@@ -108,7 +116,7 @@ namespace
 
         test_prev(rng, it, meta::bool_<BidirectionalRange<Base>>{});
 
-        if (!ranges::v3::detail::broken_ebo)
+        if (!broken_ebo)
         {
             CHECK(sizeof(it) == sizeof(size_compare<Base>));
         }

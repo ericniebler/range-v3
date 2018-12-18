@@ -120,7 +120,7 @@ namespace ranges
                 {
                     return ranges::begin(rng_) + n_;
                 }
-                auto size() const
+                meta::_t<std::make_unsigned<range_difference_t<Rng>>> size() const
                 {
                     using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
                     return static_cast<size_type>(n_);

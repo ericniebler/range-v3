@@ -213,8 +213,8 @@ static_assert(!concepts::Copyable<int const>, "");
 static_assert(!concepts::Copyable<moveonly>, "");
 static_assert(!concepts::Copyable<nonmovable>, "");
 
-// static_assert(concepts::Predicate<std::less<int>, int, int>(), "");
-// static_assert(!concepts::Predicate<std::less<int>, char*, int>(), "");
+// static_assert(concepts::Predicate<std::less<int>, int, int>, "");
+// static_assert(!concepts::Predicate<std::less<int>, char*, int>, "");
 
 static_assert(concepts::Swappable<int &>, "");
 static_assert(concepts::Swappable<int>, "");

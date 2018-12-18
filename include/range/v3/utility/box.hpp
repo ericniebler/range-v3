@@ -126,7 +126,7 @@ namespace ranges
             {
                 return box_compress::ebo;
             }
-#ifndef _MSC_VER
+#ifndef RANGES_WORKAROUND_MSVC_249830
             // MSVC pukes passing non-constant-expression objects to constexpr
             // functions, so do not coalesce.
             template<typename T, typename = meta::if_<
@@ -144,7 +144,8 @@ namespace ranges
         }
         /// \endcond
 
-        template<typename Element, typename Tag = void, detail::box_compress = detail::box_compression<Element>()>
+        template<typename Element, typename Tag = void,
+            detail::box_compress = detail::box_compression<Element>()>
         class box
         {
             Element value;

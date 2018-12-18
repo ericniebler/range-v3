@@ -88,6 +88,21 @@ namespace ranges
             template<typename Rng>
             using all_t = decltype(all(std::declval<Rng>()));
         }
+
+        template<typename Rng>
+        struct identity_adaptor
+          : Rng
+        {
+            CPP_assert(View<Rng>);
+
+            identity_adaptor() = default;
+            constexpr explicit identity_adaptor(Rng const &rng)
+              : Rng(rng)
+            {}
+            constexpr explicit identity_adaptor(Rng &&rng)
+              : Rng(detail::move(rng))
+            {}
+        };
         /// @}
     }
 }

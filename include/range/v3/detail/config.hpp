@@ -189,10 +189,12 @@ namespace ranges
 #define RANGES_CXX_IF_CONSTEXPR_11 0L
 #define RANGES_CXX_IF_CONSTEXPR_14 0L
 #define RANGES_CXX_IF_CONSTEXPR_17 201606L
+#define RANGES_CXX_ALIGNED_NEW_11 0L
+#define RANGES_CXX_ALIGNED_NEW_14 0L
+#define RANGES_CXX_ALIGNED_NEW_17 201606L
 
 // Implementation-specific diagnostic control
 #if defined(_MSC_VER) && !defined(__clang__)
-#define RANGES_CXX_VER _MSVC_LANG
 #define RANGES_DIAGNOSTIC_PUSH __pragma(warning(push))
 #define RANGES_DIAGNOSTIC_POP __pragma(warning(pop))
 #define RANGES_DIAGNOSTIC_IGNORE_PRAGMAS __pragma(warning(disable:4068))
@@ -215,11 +217,35 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS RANGES_DIAGNOSTIC_IGNORE(4996)
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+// Ignores both "divide by zero" and "mod by zero":
+#define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO \
+    RANGES_DIAGNOSTIC_IGNORE(4723) RANGES_DIAGNOSTIC_IGNORE(4724)
 
-#else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
-// Generic configuration using SD-6 feature test macros with fallback to __cplusplus
-#define RANGES_CXX_VER __cplusplus
-#if defined(__GNUC__) || defined(__clang__)
+#define RANGES_CXX_VER _MSVC_LANG
+
+#if _MSC_VER < 1920
+#define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
+#define RANGES_WORKAROUND_MSVC_401490 // conversion of constant expressions with representable values is NOT narrowing
+#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
+#define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
+#endif
+
+#define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
+#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define this operator"
+#define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference for pointer-to-array i
+#define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control during specialization matching
+#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error
+#define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
+
+// Relocate the following into the <1920 section after VS2019 Preview 2 release:
+#define RANGES_WORKAROUND_MSVC_711347
+// MSVC doesn't define __cpp_coroutines even with /await
+#if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+#define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
+#endif
+
+#elif defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
 #define RANGES_DIAGNOSTIC_PUSH RANGES_PRAGMA(GCC diagnostic push)
 #define RANGES_DIAGNOSTIC_POP RANGES_PRAGMA(GCC diagnostic pop)
@@ -247,6 +273,16 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-declarations")
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE RANGES_DIAGNOSTIC_IGNORE("-Wdeprecated-this-capture")
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME RANGES_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
+#define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
+
+#define RANGES_WORKAROUND_CWG_1554
+#ifdef __clang__
+#define RANGES_WORKAROUND_CLANG_37556
+#else // __GNUC__
+#if __GNUC__ < 6
+#define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
+#endif
+#endif
 
 #else
 #define RANGES_DIAGNOSTIC_PUSH
@@ -269,8 +305,13 @@ namespace ranges
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
 #define RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_THIS_CAPTURE
 #define RANGES_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#define RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
 #endif
-#endif // MSVC/Generic configuration switch
+
+// Configuration via feature-test macros, with fallback to __cplusplus
+#ifndef RANGES_CXX_VER
+#define RANGES_CXX_VER __cplusplus
+#endif
 
 #define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_ ## y ## _ ## z
 #define RANGES_CXX_FEATURE_CONCAT(y, z) RANGES_CXX_FEATURE_CONCAT2(y, z)
@@ -463,6 +504,27 @@ namespace ranges
 #endif
 #endif // RANGES_CXX_VA_OPT
 
+#ifndef RANGES_CXX_IF_CONSTEXPR
+#ifdef __cpp_if_constexpr
+#define RANGES_CXX_IF_CONSTEXPR __cpp_if_constexpr
+#else
+#define RANGES_CXX_IF_CONSTEXPR RANGES_CXX_FEATURE(IF_CONSTEXPR)
+#endif
+#endif // RANGES_CXX_IF_CONSTEXPR
+
+// Not enough for the compiler to support this; the stdlib must support it too.
+#ifndef RANGES_CXX_ALIGNED_NEW
+#if (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 4000)
+#if defined(__cpp_aligned_new)
+#define RANGES_CXX_ALIGNED_NEW __cpp_aligned_new
+#else
+#define RANGES_CXX_ALIGNED_NEW RANGES_CXX_FEATURE(ALIGNED_NEW)
+#endif
+#else // _LIBCPP_VERSION < 4000 || __GLIBCXX__ < 20170502
+#define RANGES_CXX_ALIGNED_NEW 0L
+#endif
+#endif // RANGES_CXX_ALIGNED_NEW
+
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \
     RANGES_DIAGNOSTIC_PUSH                      \
@@ -494,18 +556,6 @@ namespace ranges
 #define RANGES_INTENDED_MODULAR_ARITHMETIC
 #endif
 
-#ifndef RANGES_USE_LEGACY_CONCEPTS
-#define RANGES_USE_LEGACY_CONCEPTS 1 //0
-#endif
-
-#ifndef RANGES_CXX_IF_CONSTEXPR
-#ifdef __cpp_if_constexpr
-#define RANGES_CXX_IF_CONSTEXPR __cpp_if_constexpr
-#else
-#define RANGES_CXX_IF_CONSTEXPR RANGES_CXX_FEATURE(IF_CONSTEXPR)
-#endif
-#endif // RANGES_CXX_IF_CONSTEXPR
-
 #ifndef RANGES_CONSTEXPR_IF
 #if RANGES_CXX_IF_CONSTEXPR >= RANGES_CXX_IF_CONSTEXPR_17
 #define RANGES_CONSTEXPR_IF constexpr
@@ -514,26 +564,11 @@ namespace ranges
 #endif
 #endif // RANGES_CONSTEXPR_IF
 
-namespace ranges {
-    inline namespace v3 {
-        namespace detail {
-            namespace ebo_test {
-                struct empty1 {};
-                struct empty2 {};
-                struct empty3 {};
-                struct refines : empty1, empty2, empty3 {};
-            }
-            constexpr bool broken_ebo = sizeof(ebo_test::refines) > sizeof(ebo_test::empty1);
-        }
-    }
-}
-
-#if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED)
-#if defined(__clang__) // Workaround https://bugs.llvm.org/show_bug.cgi?id=37556
+#if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED) && \
+    (defined(RANGES_WORKAROUND_CLANG_37556) || \
+     defined(RANGES_WORKAROUND_GCC_UNFILED0) || \
+     defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_WORKAROUND_MSVC_620035))
 #define RANGES_BROKEN_CPO_LOOKUP 1
-#elif defined(__GNUC__) && __GNUC__ < 6 // Workaround unknown GCC bug
-#define RANGES_BROKEN_CPO_LOOKUP 1
-#endif
 #endif
 #ifndef RANGES_BROKEN_CPO_LOOKUP
 #define RANGES_BROKEN_CPO_LOOKUP 0
@@ -554,6 +589,14 @@ namespace ranges {
 #endif
 #else
 #define RANGES_NODISCARD
+#endif
+#endif
+
+#ifndef RANGES_EMPTY_BASES
+#ifdef _MSC_VER
+#define RANGES_EMPTY_BASES __declspec(empty_bases)
+#else
+#define RANGES_EMPTY_BASES
 #endif
 #endif
 

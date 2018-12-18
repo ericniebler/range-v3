@@ -2,8 +2,8 @@
 
     ```
     CPP_template(typename I, typename S)(
-        requires RandomAccessIterator<I>() &&
-            SizedSentinel<S, I>() &&
+        requires RandomAccessIterator<I> &&
+            SizedSentinel<S, I> &&
             is_contiguous_iterator<I>())
     subrange<std::add_pointer_t<iter_reference_t<I>>>
     as_contiguous_range(I begin, S end)

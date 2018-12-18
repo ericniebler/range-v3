@@ -31,7 +31,11 @@ namespace ranges
         namespace _size_
         {
             template<typename T>
-            int size(T &&) = delete;
+            void size(T &&) = delete;
+
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void size();
+#endif
 
             struct fn
             {

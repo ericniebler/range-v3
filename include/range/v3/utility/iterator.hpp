@@ -34,6 +34,10 @@ namespace ranges
         /// \cond
         namespace adl_advance_detail
         {
+#ifdef RANGES_WORKAROUND_MSVC_620035
+            void advance();
+#endif
+
             template<typename I, typename D>
             void advance(I&, D) = delete;
 
@@ -633,6 +637,66 @@ namespace ranges
             ostream_type *sout_;
             Char const *delim_;
         };
+
+        template <typename Delim, typename Char = char,
+                  typename Traits = std::char_traits<Char>>
+        struct ostream_joiner
+        {
+            CPP_assert(Semiregular<Delim>);
+            using difference_type = std::ptrdiff_t;
+            using char_type       = Char;
+            using traits_type     = Traits;
+            using ostream_type    = std::basic_ostream<Char, Traits>;
+
+            constexpr ostream_joiner() = default;
+            ostream_joiner(ostream_type &s, Delim const &d)
+              : delim_(d), sout_(std::addressof(s)), first_(true)
+            {}
+            ostream_joiner(ostream_type &s, Delim &&d)
+              : delim_(std::move(d)), sout_(std::addressof(s)), first_(true)
+            {}
+            template <typename T>
+            ostream_joiner& operator=(T const &value)
+            {
+                RANGES_EXPECT(sout_);
+                if (!first_)
+                    *sout_ << delim_;
+                first_ = false;
+                *sout_ << value;
+                return *this;
+            }
+            ostream_joiner& operator*() noexcept
+            {
+                return *this;
+            }
+            ostream_joiner& operator++() noexcept
+            {
+                return *this;
+            }
+            ostream_joiner& operator++(int) noexcept
+            {
+                return *this;
+            }
+          private:
+            Delim delim_;
+            ostream_type *sout_;
+            bool first_;
+        };
+
+        struct make_ostream_joiner_fn
+        {
+            template <typename Delim, typename Char, typename Traits>
+            auto operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const ->
+                CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)(
+                    requires Semiregular<detail::decay_t<Delim>>)
+            {
+                return {s, std::forward<Delim>(d)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_ostream_joiner_fn`
+        RANGES_INLINE_VARIABLE(make_ostream_joiner_fn, make_ostream_joiner)
 
         template<typename Char, typename Traits = std::char_traits<Char>>
         struct ostreambuf_iterator

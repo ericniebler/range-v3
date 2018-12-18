@@ -33,6 +33,7 @@
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/empty.hpp>
 
 namespace ranges
 {
@@ -155,7 +156,9 @@ namespace ranges
                     meta::quote<detail::zip_cardinality>>::value>
         {
         private:
+            CPP_assert(sizeof...(Rngs) != 0);
             friend range_access;
+
             semiregular_t<Fun> fun_;
             std::tuple<Rngs...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
@@ -348,6 +351,8 @@ namespace ranges
         struct zip_with_view
           : iter_zip_with_view<indirected<Fun>, Rngs...>
         {
+            CPP_assert(sizeof...(Rngs) != 0);
+
             zip_with_view() = default;
             explicit zip_with_view(Rngs ...rngs)
               : iter_zip_with_view<indirected<Fun>, Rngs...>{
@@ -367,12 +372,21 @@ namespace ranges
                 auto operator()(Fun fun, Rngs &&... rngs) const ->
                     CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
                         requires And<ViewableRange<Rngs>...> &&
-                            IterZipWithViewConcept<Fun, Rngs...>)
+                            IterZipWithViewConcept<Fun, Rngs...> &&
+                            sizeof...(Rngs) != 0)
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
                         all(static_cast<Rngs &&>(rngs))...
                     };
+                }
+
+                template<typename Fun>
+                constexpr auto operator()(Fun) const noexcept ->
+                    CPP_ret(empty_view<std::tuple<>>)(
+                        requires IterZipWithViewConcept<Fun>)
+                {
+                    return {};
                 }
             };
 
@@ -388,12 +402,21 @@ namespace ranges
                         requires And<ViewableRange<Rngs>...> &&
                             And<InputRange<Rngs>...> &&
                             CopyConstructible<Fun> &&
-                            Invocable<Fun&, range_reference_t<Rngs> &&...>)
+                            Invocable<Fun&, range_reference_t<Rngs> &&...> &&
+                            sizeof...(Rngs) != 0)
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
                         all(static_cast<Rngs &&>(rngs))...
                     };
+                }
+
+                template<typename Fun>
+                constexpr auto operator()(Fun) const noexcept ->
+                    CPP_ret(empty_view<std::tuple<>>)(
+                        requires CopyConstructible<Fun> && Invocable<Fun&>)
+                {
+                    return {};
                 }
             };
 

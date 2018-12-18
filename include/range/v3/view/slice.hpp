@@ -165,21 +165,6 @@ namespace ranges
         }
         /// \endcond
 
-        /// \cond
-        namespace _end_
-        {
-            template<typename Int>
-            auto operator-(end_fn, Int dist) ->
-                CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
-                    requires Integral<Int>)
-            {
-                using SInt = meta::_t<std::make_signed<Int>>;
-                RANGES_EXPECT(0 <= static_cast<SInt>(dist));
-                return detail::from_end_<SInt>{-static_cast<SInt>(dist)};
-            }
-        }
-        /// \endcond
-
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
