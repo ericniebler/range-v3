@@ -512,9 +512,10 @@ namespace ranges
 #endif
 #endif // RANGES_CXX_IF_CONSTEXPR
 
-// Not enough for the compiler to support this; the stdlib must support it too.
+// Its not enough for the compiler to support this; the stdlib must support it too.
 #ifndef RANGES_CXX_ALIGNED_NEW
-#if (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 4000)
+#if (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 4000) && \
+    (!defined(__GLIBCXX__) || (defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE >= 7))
 #if defined(__cpp_aligned_new)
 #define RANGES_CXX_ALIGNED_NEW __cpp_aligned_new
 #else

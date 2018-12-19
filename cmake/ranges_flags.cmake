@@ -52,7 +52,7 @@ if (RANGES_DEEP_STL_INTEGRATION)
   else()
     add_compile_options(-isystem "${PROJECT_SOURCE_DIR}/include/std")
   endif()
-  add_compile_definitions(RANGES_DEEP_STL_INTEGRATION=1)
+  add_compile_options(-DRANGES_DEEP_STL_INTEGRATION=1)
 endif()
 
 # Template diagnostic flags
