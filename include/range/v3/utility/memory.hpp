@@ -43,11 +43,11 @@ namespace ranges
             {
                 RANGES_EXPECT(count >= 0);
                 std::size_t n = static_cast<std::size_t>(count);
-                while(n > PTRDIFF_MAX / sizeof(T))
-                    n /= 2;
+                if (n > PTRDIFF_MAX / sizeof(T))
+                    n = PTRDIFF_MAX / sizeof(T);
 
                 void *ptr = nullptr;
-                for(; ptr == nullptr && n > 0; n /= 2)
+                for (; ptr == nullptr && n > 0; n /= 2)
                 {
 #if RANGES_CXX_ALIGNED_NEW < RANGES_CXX_ALIGNED_NEW_17
                     static_assert(alignof(T) <= alignof(std::max_align_t),
