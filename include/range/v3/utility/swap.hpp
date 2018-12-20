@@ -114,7 +114,7 @@ namespace ranges
                     (void) swap((T &&) t, (U &&) u)
                 )
 
-                // For instrinsicly swappable (i.e., movable) types for which
+                // For intrinsically swappable (i.e., movable) types for which
                 // a swap overload cannot be found via ADL, swap by moving.
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
@@ -127,7 +127,7 @@ namespace ranges
                     (void)(b = ranges::exchange(a, (T &&) b))
                 )
 
-                // For arrays of instrinsicly swappable (i.e., movable) types
+                // For arrays of intrinsically swappable (i.e., movable) types
                 // for which a swap overload cannot be found via ADL, swap array
                 // elements by moving.
                 template<typename T, typename U, std::size_t N>
