@@ -102,11 +102,10 @@ void test_rng()
                              make_subrange(forward_iterator<const int*>(ib),
                              forward_iterator<const int*>(ib + sb))) ==
                              input_iterator<const int*>(ia+1));
-    CHECK(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
                              make_subrange(forward_iterator<const int*>(ib),
-                             forward_iterator<const int*>(ib + sb))).get_unsafe() ==
-                             input_iterator<const int*>(ia+1));
+                             forward_iterator<const int*>(ib + sb)))));
     int ic[] = {7};
     CHECK(rng::find_first_of(make_subrange(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
@@ -123,21 +122,18 @@ void test_rng()
                              make_subrange(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic+1))) ==
                              input_iterator<const int*>(ia));
-    CHECK(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
                              make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic + 1))).get_unsafe() ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
+                             forward_iterator<const int*>(ic + 1)))));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
                              make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic))).get_unsafe() ==
-                             input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
+                             forward_iterator<const int*>(ic)))));
+    CHECK(::is_dangling(rng::find_first_of(::MakeTestRange(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia)),
                              make_subrange(forward_iterator<const int*>(ic),
-                             forward_iterator<const int*>(ic+1))).get_unsafe() ==
-                             input_iterator<const int*>(ia));
+                             forward_iterator<const int*>(ic+1)))));
 }
 
 void test_rng_pred()

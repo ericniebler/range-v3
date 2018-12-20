@@ -18,6 +18,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 struct my_int
 {
@@ -65,8 +66,8 @@ int main()
 
     CHECK(ranges::lower_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first) == &a[2]);
     CHECK(ranges::lower_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first) == &c[2]);
-    CHECK(ranges::lower_bound(std::move(a), 1, less(), &std::pair<int, int>::first).get_unsafe() == &a[2]);
-    CHECK(ranges::lower_bound(std::move(c), 1, less(), &std::pair<int, int>::first).get_unsafe() == &c[2]);
+    CHECK(::is_dangling(ranges::lower_bound(std::move(a), 1, less(), &std::pair<int, int>::first)));
+    CHECK(::is_dangling(ranges::lower_bound(std::move(c), 1, less(), &std::pair<int, int>::first)));
 
     return test_result();
 }

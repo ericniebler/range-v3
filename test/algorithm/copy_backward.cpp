@@ -15,6 +15,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 int main()
 {
@@ -41,7 +42,7 @@ int main()
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     auto res2 = ranges::copy_backward(std::move(a), end(out));
-    CHECK(res2.first.get_unsafe() == end(a));
+    CHECK(::is_dangling(res2.first));
     CHECK(res2.second == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 

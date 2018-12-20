@@ -401,8 +401,8 @@ int main()
     /// Rvalue range test:
     {
         A as[] = {{0}, {1}, {2}, {3}, {4}};
-        CHECK(ranges::is_sorted_until(std::move(as), std::less<int>{}, &A::a).get_unsafe() == ranges::end(as));
-        CHECK(ranges::is_sorted_until(std::move(as), std::greater<int>{}, &A::a).get_unsafe() == ranges::next(ranges::begin(as),1));
+        CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::less<int>{}, &A::a)));
+        CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::greater<int>{}, &A::a)));
     }
 
     return ::test_result();

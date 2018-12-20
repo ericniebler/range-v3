@@ -302,7 +302,7 @@ int main()
             v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
-        CHECK(ranges::sort(std::move(v), std::less<int>{}, &S::i).get_unsafe() == v.end());
+        CHECK(::is_dangling(ranges::sort(std::move(v), std::less<int>{}, &S::i)));
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
             CHECK(v[i].i == i);

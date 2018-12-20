@@ -159,7 +159,7 @@ int main()
     {
         int a[] = {0, 1, 1, 1, 2, 2, 2};
         auto r = ranges::unique(std::move(a));
-        CHECK(r.get_unsafe() == a + 3);
+        CHECK(::is_dangling(r));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
         CHECK(a[2] == 2);

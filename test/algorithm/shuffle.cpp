@@ -67,7 +67,7 @@ int main()
         CHECK(!ranges::equal(b, c));
 
         ranges::iota(a, 0);
-        CHECK(ranges::shuffle(std::move(rng), g1).get_unsafe().base() == a.data() + N);
+        CHECK(::is_dangling(ranges::shuffle(std::move(rng), g1)));
         CHECK(!ranges::equal(a, c));
     }
 

@@ -11,6 +11,7 @@
 #define RANGES_TEST_ITERATORS_HPP
 
 #include <iterator>
+#include <range/v3/utility/dangling.hpp>
 
 template<class It, bool Sized = false>
 class sentinel;
@@ -431,6 +432,16 @@ template<class I, class S>
 TestRange<I, S> MakeTestRange(I i, S s)
 {
     return {i, s};
+}
+
+template<typename T>
+constexpr bool is_dangling(T)
+{
+    return false;
+}
+constexpr bool is_dangling(::ranges::dangling)
+{
+    return true;
 }
 
 #endif  // RANGES_TEST_ITERATORS_HPP

@@ -308,7 +308,6 @@ int main()
     // Test rvalue ranges
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        static const int sa = sizeof(ia)/sizeof(ia[0]);
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
         static const int sb = sizeof(ib)/sizeof(ib[0]);
         U ic[20];
@@ -316,7 +315,7 @@ int main()
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res = ranges::set_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
-        CHECK((res.first.get_unsafe() - ia) == sa);
+        CHECK(::is_dangling(res.first));
         CHECK((res.second - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res.second, ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});

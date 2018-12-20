@@ -18,6 +18,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 struct my_int
 {
@@ -65,18 +66,18 @@ int main()
 
     CHECK(ranges::upper_bound(ranges::view::all(a), a[2]) == &a[3]);
     CHECK(ranges::upper_bound(ranges::view::all(c), c[3]) == &c[4]);
-    CHECK(ranges::upper_bound(std::move(a), a[2]).get_unsafe() == &a[3]);
-    CHECK(ranges::upper_bound(std::move(c), c[3]).get_unsafe() == &c[4]);
+    CHECK(::is_dangling(ranges::upper_bound(std::move(a), a[2])));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(c), c[3])));
 
     CHECK(ranges::upper_bound(ranges::view::all(a), a[4], less()) == &a[5]);
     CHECK(ranges::upper_bound(ranges::view::all(c), c[5], less()) == &c[6]);
-    CHECK(ranges::upper_bound(std::move(a), a[4], less()).get_unsafe() == &a[5]);
-    CHECK(ranges::upper_bound(std::move(c), c[5], less()).get_unsafe() == &c[6]);
+    CHECK(::is_dangling(ranges::upper_bound(std::move(a), a[4], less())));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(c), c[5], less())));
 
     CHECK(ranges::upper_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first) == &a[4]);
     CHECK(ranges::upper_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first) == &c[4]);
-    CHECK(ranges::upper_bound(std::move(a), 1, less(), &std::pair<int, int>::first).get_unsafe() == &a[4]);
-    CHECK(ranges::upper_bound(std::move(c), 1, less(), &std::pair<int, int>::first).get_unsafe() == &c[4]);
+    CHECK(::is_dangling(ranges::upper_bound(std::move(a), 1, less(), &std::pair<int, int>::first)));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(c), 1, less(), &std::pair<int, int>::first)));
 
     return test_result();
 }

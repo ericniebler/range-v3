@@ -306,7 +306,7 @@ int main()
         int rgi[] = {0,1,2,3,4,5};
         int rgo[6] = {0};
         auto r = ranges::rotate_copy(std::move(rgi), rgi+2, rgo);
-        CHECK(r.first.get_unsafe() == ranges::end(rgi));
+        CHECK(::is_dangling(r.first));
         CHECK(r.second == ranges::end(rgo));
         CHECK(rgo[0] == 2);
         CHECK(rgo[1] == 3);

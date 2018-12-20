@@ -360,7 +360,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_template
 // Usage:
-//   CPP_template (typename A, typename B)
+//   CPP_template(typename A, typename B)
 //     (requires Concept1<A> && Concept2<B>)
 //   void foo(A a, B b)
 //   {}
@@ -719,6 +719,10 @@ namespace concepts
             {
                 return true;
             }
+
+            template<typename T>
+            using remove_cvref_t =
+                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
         } // namespace detail
 
         template<typename T>
@@ -742,38 +746,44 @@ namespace concepts
             // Utility concepts
             ////////////////////////////////////////////////////////////////////////////////////////
             
-            CPP_def(
+            CPP_def
+            (
                 template(bool B)
                 (concept True)(B),
                     B
             );
 
-            CPP_def(
+            CPP_def
+            (
                 template(typename... Args)
                 (concept Type)(Args...),
                     true
             );
 
-            CPP_def(
+            CPP_def
+            (
                 template(typename T, template<typename...> class C, typename... Args)
                 (concept Valid)(T, C, Args...),
                     Type< C<T, Args...> >
             );
 
-            CPP_def(
-                template (class T, template<typename...> class Trait, typename... Args)
+            CPP_def
+            (
+                template(class T, template<typename...> class Trait, typename... Args)
                 (concept Satisfies)(T, Trait, Args...),
                     static_cast<bool>(Trait<T, Args...>::type::value)
             );
 
-            CPP_def(
-                template (bool...Bs)
+            CPP_def
+            (
+                template(bool...Bs)
                 (concept And)(Bs...),
                     and_v<Bs...>
             );
 
-            CPP_def(
-                template (bool...Bs)
+            CPP_def
+            (
+                template(bool...Bs)
                 (concept Or)(Bs...),
                     or_v<Bs...>
             );
@@ -794,6 +804,13 @@ namespace concepts
             // From cannot be an incomplete class type despite that
             // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
             // in such a case.
+            CPP_def
+            (
+                template(typename A, typename B)
+                concept NotSameAs_,
+                    not Same<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>
+            );
+
             CPP_def
             (
                 template(typename From, typename To)

@@ -80,13 +80,13 @@ namespace
 
         std::shuffle(array, array+N, gen);
         auto res3 = ranges::partial_sort(::MakeTestRange(array, array+N), array+M);
-        CHECK(res3.get_unsafe() == array+N);
+        CHECK(::is_dangling(res3));
         for(int i = 0; i < M; ++i)
             CHECK(array[i] == i);
 
         std::shuffle(array, array+N, gen);
         auto res4 = ranges::partial_sort(::MakeTestRange(I{array}, S{array+N}), I{array+M});
-        CHECK(res4.get_unsafe().base() == array+N);
+        CHECK(::is_dangling(res4));
         for(int i = 0; i < M; ++i)
             CHECK(array[i] == i);
 

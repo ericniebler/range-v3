@@ -158,7 +158,7 @@ int main()
         constexpr auto sa = ranges::size(ia);
         S ib[sa];
         auto r = ranges::remove_copy_if(std::move(ia), ib, [](int i){return i == 2;}, &S::i);
-        CHECK(r.first.get_unsafe() == ia + sa);
+        CHECK(::is_dangling(r.first));
         CHECK(r.second == ib + sa-3);
         CHECK(ib[0].i == 0);
         CHECK(ib[1].i == 1);

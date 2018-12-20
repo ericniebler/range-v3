@@ -79,7 +79,7 @@ namespace
         std::sort(ia, ia+M);
         std::sort(ia+M, ia+N);
         auto res2 = ranges::inplace_merge(::MakeTestRange(Iter(ia), Sent(ia+N)), Iter(ia+M));
-        CHECK(res2.get_unsafe() == Iter(ia+N));
+        CHECK(::is_dangling(res2));
         if(N > 0)
         {
             CHECK(ia[0] == 0);

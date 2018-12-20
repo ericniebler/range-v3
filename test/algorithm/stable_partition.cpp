@@ -434,7 +434,7 @@ int main()
     {  // check mixed
         S ap[] = { {{0, 1}}, {{0, 2}}, {{1, 1}}, {{1, 2}}, {{2, 1}}, {{2, 2}}, {{3, 1}}, {{3, 2}}, {{4, 1}}, {{4, 2}} };
         auto r = ranges::stable_partition(std::move(ap), odd_first(), &S::p);
-        CHECK(r.get_unsafe() == ap + 4);
+        CHECK(::is_dangling(r));
         CHECK(ap[0].p == P{1, 1});
         CHECK(ap[1].p == P{1, 2});
         CHECK(ap[2].p == P{3, 1});

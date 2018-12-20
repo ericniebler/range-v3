@@ -103,7 +103,7 @@ int main()
         CHECK(ia[2] == P{42,"42"});
         CHECK(ia[3] == P{3,"3"});
         CHECK(ia[4] == P{4,"4"});
-        CHECK(i.get_unsafe() == ranges::end(ia));
+        CHECK(::is_dangling(i));
     }
 
     return ::test_result();

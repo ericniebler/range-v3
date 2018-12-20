@@ -265,7 +265,7 @@ int main()
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res = ranges::set_union(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
-        CHECK(ranges::get<0>(res).get_unsafe() == ranges::end(ia));
+        CHECK(::is_dangling(ranges::get<0>(res)));
         CHECK(ranges::get<1>(res) == ranges::end(ib));
         CHECK((ranges::get<2>(res) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res), ir, ir+sr, std::less<int>(), &U::k) == false);
@@ -273,7 +273,7 @@ int main()
 
         auto res2 = ranges::set_union(std::move(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK(ranges::get<1>(res2) == ranges::end(ia));
-        CHECK(ranges::get<0>(res2).get_unsafe() == ranges::end(ib));
+        CHECK(::is_dangling(ranges::get<0>(res2)));
         CHECK((ranges::get<2>(res2) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);
     }

@@ -44,7 +44,7 @@ int main()
     CHECK(sum == 24);
 
     sum = 0;
-    CHECK(ranges::for_each(::MakeTestRange(v1.begin(), v1.end()), fun).in().get_unsafe() == v1.end());
+    CHECK(::is_dangling(ranges::for_each(::MakeTestRange(v1.begin(), v1.end()), fun).in()));
     CHECK(sum == 12);
 
     return ::test_result();

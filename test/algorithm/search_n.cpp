@@ -235,7 +235,7 @@ int main()
     }
     {
         int ib[] = {0, 0, 1, 1, 2, 2};
-        CHECK(ranges::search_n(std::move(ib), 2, 1).get_unsafe().begin() == ib+2);
+        CHECK(::is_dangling(ranges::search_n(std::move(ib), 2, 1)));
     }
 
     return ::test_result();

@@ -17,6 +17,7 @@
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/view/delimit.hpp>
 #include "../simple_test.hpp"
+#include "../test_iterators.hpp"
 
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14 && RANGES_CONSTEXPR_INVOKE
 constexpr /*c++14*/
@@ -76,7 +77,7 @@ int main()
         auto str = delimit(sz, '\0');
         auto res3 = ranges::copy(std::move(str), buf);
         *res3.second = '\0';
-        CHECK(res3.first.get_unsafe() == std::next(begin(str), static_cast<std::ptrdiff_t>(std::strlen(sz))));
+        CHECK(::is_dangling(res3.first));
         CHECK(res3.second == buf + std::strlen(sz));
         CHECK(std::strcmp(sz, buf) == 0);
     }

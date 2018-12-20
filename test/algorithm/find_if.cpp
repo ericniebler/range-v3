@@ -59,9 +59,9 @@ int main()
     CHECK(pi == ia+s);
 
     auto pj = find_if(std::move(ia), [](int i){return i == 3;});
-    CHECK(*pj.get_unsafe() == 3);
+    CHECK(::is_dangling(pj));
     pj = find_if(std::move(ia), [](int i){return i == 10;});
-    CHECK(pj.get_unsafe() == ia+s);
+    CHECK(::is_dangling(pj));
     auto* ignore = find_if(ranges::view::all(ia), [](int i){return i == 10;});
     (void)ignore;
 

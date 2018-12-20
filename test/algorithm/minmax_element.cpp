@@ -74,14 +74,14 @@ namespace
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(!(*j < *res.get_unsafe().first));
+                CHECK(is_dangling(res.min()));
                 CHECK(!(*p.second < *j));
             }
         }
         else
         {
-            CHECK(res.get_unsafe().first == last);
-            CHECK(res.get_unsafe().second == last);
+            CHECK(is_dangling(res.min()));
+            CHECK(is_dangling(res.max()));
         }
     }
 
@@ -154,19 +154,8 @@ namespace
         }
 
         auto res = ranges::minmax_element(std::move(rng), comp);
-        if (first != last)
-        {
-            for (Iter j = first; j != last; ++j)
-            {
-                CHECK(!comp(*j, *res.get_unsafe().first));
-                CHECK(!comp(*res.get_unsafe().second, *j));
-            }
-        }
-        else
-        {
-            CHECK(res.get_unsafe().first == last);
-            CHECK(res.get_unsafe().second == last);
-        }
+        CHECK(is_dangling(res.min()));
+        CHECK(is_dangling(res.max()));
     }
 
     template<class Iter, class Sent = Iter>

@@ -66,7 +66,6 @@ namespace ranges
         template<typename...>
         struct variant;
 
-        template<typename I = void>
         struct dangling;
 
         template<typename>

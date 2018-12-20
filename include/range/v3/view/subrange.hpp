@@ -43,12 +43,6 @@ namespace ranges
 
             CPP_def
             (
-                template(typename A, typename B)
-                concept NotSameAs_,
-                    not Same<uncvref_t<A>, uncvref_t<B>>
-            );
-            CPP_def
-            (
                 template(typename From, typename To)
                 concept ConvertibleToNotSlicing_,
                     ConvertibleTo<From, To> &&
@@ -258,7 +252,7 @@ namespace ranges
 
             template<typename R>
             constexpr CPP_ctor(subrange)(R&& r) (
-                requires detail::defer::NotSameAs_<R, subrange> &&
+                requires defer::NotSameAs_<R, subrange> &&
                     detail::defer::RangeConvertibleTo_<R, I, S> &&
                     defer::True<!detail::store_size_<K, S, I>()>)
               : subrange{ranges::begin(r), ranges::end(r)}
@@ -266,7 +260,7 @@ namespace ranges
 
             template<typename R>
             constexpr /*c++14*/ CPP_ctor(subrange)(R&& r) (
-                requires detail::defer::NotSameAs_<R, subrange> &&
+                requires defer::NotSameAs_<R, subrange> &&
                     detail::defer::RangeConvertibleTo_<R, I, S> &&
                     defer::True<detail::store_size_<K, S, I>()> &&
                     defer::SizedRange<R>)
@@ -294,7 +288,7 @@ namespace ranges
             }
 
             CPP_template(typename PairLike)(
-                requires detail::defer::NotSameAs_<PairLike, subrange> &&
+                requires defer::NotSameAs_<PairLike, subrange> &&
                     detail::defer::PairLikeConvertibleFrom_<PairLike, const I&, const S&>)
             constexpr operator PairLike() const
             {

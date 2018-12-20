@@ -178,10 +178,9 @@ int main()
     {
         // Check rvalue range
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-        constexpr auto sa = ranges::size(ia);
         using namespace std::placeholders;
         auto r = ranges::remove_if(std::move(ia), std::bind(std::equal_to<int>(), _1, 2), &S::i);
-        CHECK(r.get_unsafe() == ia + sa-3);
+        CHECK(::is_dangling(r));
         CHECK(ia[0].i == 0);
         CHECK(ia[1].i == 1);
         CHECK(ia[2].i == 3);
@@ -189,7 +188,7 @@ int main()
         CHECK(ia[4].i == 3);
         CHECK(ia[5].i == 4);
 
-        static_assert(std::is_same<decltype(r), ranges::dangling<S *>>::value, "");
+        static_assert(std::is_same<decltype(r), ranges::dangling>::value, "");
     }
 
     return ::test_result();

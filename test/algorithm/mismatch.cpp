@@ -59,20 +59,20 @@ void test_range()
     CHECK(ranges::mismatch(rng1, Iter(ib)) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
     auto r1 = ranges::mismatch(std::move(rng1), Iter(ib));
-    CHECK(r1.first.get_unsafe() == Iter(ia+3));
+    CHECK(::is_dangling(r1.first));
     CHECK(r1.second == Iter(ib+3));
     auto rng2 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     auto rng3 = ::MakeTestRange(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng2,rng3) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
     auto r2 = ranges::mismatch(std::move(rng2), std::move(rng3));
-    CHECK(r2.first.get_unsafe() == Iter(ia+3));
-    CHECK(r2.second.get_unsafe() == Iter(ib+3));
+    CHECK(::is_dangling(r2.first));
+    CHECK(::is_dangling(r2.second));
     auto r3 = ranges::mismatch(rng2, std::move(rng3));
     CHECK(r3.first == Iter(ia+3));
-    CHECK(r3.second.get_unsafe() == Iter(ib+3));
+    CHECK(::is_dangling(r3.second));
     auto r4 = ranges::mismatch(std::move(rng2), rng3);
-    CHECK(r4.first.get_unsafe() == Iter(ia+3));
+    CHECK(::is_dangling(r4.first));
     CHECK(r4.second == Iter(ib+3));
     auto rng4 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     auto rng5 = ::MakeTestRange(Iter(ib),Sent(ib + 2));

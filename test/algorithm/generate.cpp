@@ -62,7 +62,7 @@ test()
     CHECK(ia[1] == 10);
     CHECK(ia[2] == 11);
     CHECK(ia[3] == 12);
-    CHECK(res2.first.get_unsafe() == Iter(ia + n));
+    CHECK(::is_dangling(res2.first));
     CHECK(res2.second.i_ == 13);
 }
 

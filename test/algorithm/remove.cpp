@@ -159,9 +159,8 @@ int main()
 
     // Check rvalue range
     S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
-    constexpr auto sa2 = ranges::size(ia2);
     auto r2 = ranges::remove(std::move(ia2), 2, &S::i);
-    CHECK(r2.get_unsafe() == ia2 + sa2-3);
+    CHECK(::is_dangling(r2));
     CHECK(ia2[0].i == 0);
     CHECK(ia2[1].i == 1);
     CHECK(ia2[2].i == 3);

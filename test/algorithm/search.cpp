@@ -230,7 +230,7 @@ int main()
     {
         int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
         int ie[] = {1, 2, 3};
-        CHECK(ranges::search(std::move(ib), ie).get_unsafe().begin() == ib+4);
+        CHECK(::is_dangling(ranges::search(std::move(ib), ie)));
     }
 
     return ::test_result();

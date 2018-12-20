@@ -79,7 +79,7 @@ namespace ranges
                 T *p = nullptr,
                 decltype(detail::is_objptr_(q(*p)))* = nullptr)
             {
-                return true;
+                return (void)p, (void)q, true;
             }
 
             template<typename T>

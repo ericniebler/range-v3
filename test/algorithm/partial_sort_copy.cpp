@@ -155,7 +155,7 @@ int main()
         std::shuffle(input, input+N, gen);
         auto r = ranges::partial_sort_copy(input, std::move(output), std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
-        CHECK(r.get_unsafe() == e);
+        CHECK(::is_dangling(r));
         int i = 0;
         for (U* x = output; x < e; ++x, ++i)
             CHECK(x->i == i);

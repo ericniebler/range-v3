@@ -211,11 +211,7 @@ int main()
 
     // Test rvalue range
     auto r2 = ranges::partition(std::move(ia), is_odd(), &S::i);
-    CHECK(r2.get_unsafe() == ia + 5);
-    for (S* i = ia; i < r2.get_unsafe(); ++i)
-        CHECK(is_odd()(i->i));
-    for (S* i = r2.get_unsafe(); i < ia+sa; ++i)
-        CHECK(!is_odd()(i->i));
+    CHECK(::is_dangling(r2));
 
     return ::test_result();
 }

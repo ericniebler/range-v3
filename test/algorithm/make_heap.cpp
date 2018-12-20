@@ -71,7 +71,7 @@ namespace
         CHECK(std::is_heap(ia, ia+N));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(::MakeTestRange(ia, ia+N)).get_unsafe() == ia+N);
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, ia+N))));
         CHECK(std::is_heap(ia, ia+N));
 
         delete [] ia;
@@ -87,7 +87,7 @@ namespace
         CHECK(std::is_heap(ia, ia+N));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N))).get_unsafe() == ia+N);
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N)))));
         CHECK(std::is_heap(ia, ia+N));
 
         delete [] ia;
@@ -125,7 +125,7 @@ namespace
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(::MakeTestRange(ia, ia+N), std::greater<int>()).get_unsafe() == ia+N);
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, ia+N), std::greater<int>())));
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         delete [] ia;
@@ -141,7 +141,7 @@ namespace
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         std::shuffle(ia, ia+N, gen);
-        CHECK(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
+        CHECK(::is_dangling(ranges::make_heap(::MakeTestRange(ia, sentinel<int*>(ia+N)), std::greater<int>())));
         CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
 
         delete [] ia;

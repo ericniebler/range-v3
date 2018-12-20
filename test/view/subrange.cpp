@@ -48,9 +48,9 @@ int main()
 		decltype(::algorithm(std::declval<ref_view<int[42]>>()))>);
 
 	// non-ReferenceableRange rvalue ranges dangle:
-	CPP_assert(Same<dangling<subrange<std::vector<int>::iterator>>,
+	CPP_assert(Same<dangling,
 		decltype(::algorithm(std::declval<std::vector<int>>()))>);
-	CPP_assert(Same<dangling<subrange<std::vector<int>::iterator>>,
+	CPP_assert(Same<dangling,
 		decltype(::algorithm(std::move(vi)))>);
 
 	// Test that slicing conversions are not allowed.

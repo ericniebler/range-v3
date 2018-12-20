@@ -42,7 +42,7 @@ namespace ranges
 
             CPP_template(class R, class U)(
                 requires is_range_<R>::value)
-            using maybe_dangling_ = if_then_t<is_forwarding_range_<R>::value, U, dangling<U>>;
+            using maybe_dangling_ = if_then_t<is_forwarding_range_<R>::value, U, dangling>;
         }
         /// \endcond
 

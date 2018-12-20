@@ -53,7 +53,7 @@ test_char()
     CHECK(ca[1] == 3);
     CHECK(ca[2] == 3);
     CHECK(ca[3] == 3);
-    CHECK(j.get_unsafe() == Iter(ca + 4));
+    CHECK(::is_dangling(j));
 }
 
 template<class Iter, class Sent = Iter>

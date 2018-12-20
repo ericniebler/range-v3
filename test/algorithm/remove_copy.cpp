@@ -157,7 +157,7 @@ int main()
         constexpr auto sa = ranges::size(ia);
         S ib[sa];
         auto r = ranges::remove_copy(std::move(ia), ib, 2, &S::i);
-        CHECK(r.first.get_unsafe() == ia + sa);
+        CHECK(::is_dangling(r.first));
         CHECK(r.second == ib + sa-3);
         CHECK(ib[0].i == 0);
         CHECK(ib[1].i == 1);
@@ -167,7 +167,9 @@ int main()
         CHECK(ib[5].i == 4);
 
         // Some tests for sanitizing an algorithm result
-        static_assert(std::is_same<decltype(r), ranges::tagged_pair<ranges::tag::in(ranges::dangling<S *>), ranges::tag::out(S *)>>::value, "");
+        static_assert(std::is_same<decltype(r),
+            ranges::tagged_pair<ranges::tag::in(ranges::dangling),
+                                ranges::tag::out(S *)>>::value, "");
     }
 
     return ::test_result();

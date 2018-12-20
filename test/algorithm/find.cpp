@@ -56,7 +56,7 @@ int main()
     CHECK(pi == ia+s);
 
     auto pj = find(std::move(ia), 3);
-    CHECK(*pj.get_unsafe() == 3);
+    CHECK(::is_dangling(pj));
     auto pj2 = find(view::all(ia), 10);
     CHECK(pj2 == ia+s);
 
