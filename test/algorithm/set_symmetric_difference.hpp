@@ -43,20 +43,19 @@ test_iter()
     auto set_symmetric_difference = ::make_testable_2(ranges::set_symmetric_difference);
 
     set_symmetric_difference(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb), OutIter(ic)).
-        check([&](std::tuple<Iter1, Iter2, OutIter> res)
+        check([&](ranges::set_symmetric_difference_result<Iter1, Iter2, OutIter> res)
         {
-            //(void)(::test_impl::S{__FILE__, __LINE__, ""} ->* (base(std::get<2>(res)) - ic) == sr);
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
+            CHECK((base(res.out) - ic) == sr);
+            CHECK(std::lexicographical_compare(ic, base(res.out), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
 
     set_symmetric_difference(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), OutIter(ic)).
-        check([&](std::tuple<Iter1, Iter2, OutIter> res)
+        check([&](ranges::set_symmetric_difference_result<Iter1, Iter2, OutIter> res)
         {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
+            CHECK((base(res.out) - ic) == sr);
+            CHECK(std::lexicographical_compare(ic, base(res.out), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -77,19 +76,19 @@ test_comp()
     auto set_symmetric_difference = ::make_testable_2(ranges::set_symmetric_difference);
 
     set_symmetric_difference(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb), OutIter(ic), std::less<int>()).
-        check([&](std::tuple<Iter1, Iter2, OutIter> res)
+        check([&](ranges::set_symmetric_difference_result<Iter1, Iter2, OutIter> res)
         {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
+            CHECK((base(res.out) - ic) == sr);
+            CHECK(std::lexicographical_compare(ic, base(res.out), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
 
     set_symmetric_difference(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), OutIter(ic), std::less<int>()).
-        check([&](std::tuple<Iter1, Iter2, OutIter> res)
+        check([&](ranges::set_symmetric_difference_result<Iter1, Iter2, OutIter> res)
         {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
+            CHECK((base(res.out) - ic) == sr);
+            CHECK(std::lexicographical_compare(ic, base(res.out), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -285,16 +284,16 @@ int main()
         int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
-        std::tuple<S *, T *, U *> res1 =
+        ranges::set_symmetric_difference_result<S *, T *, U *> res1 =
             ranges::set_symmetric_difference(ia, ib, ic, std::less<int>(), &S::i, &T::j);
-        CHECK((std::get<2>(res1) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == false);
+        CHECK((res1.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res1.out, ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
-        std::tuple<T *, S *, U *> res2 =
+        ranges::set_symmetric_difference_result<T *, S *, U *> res2 =
             ranges::set_symmetric_difference(ib, ia, ic, std::less<int>(), &T::j, &S::i);
-        CHECK((std::get<2>(res2) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);
+        CHECK((res2.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res2.out, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 
     // Test rvalue ranges
@@ -307,18 +306,18 @@ int main()
 
         auto res1 =
             ranges::set_symmetric_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
-        CHECK(::is_dangling(ranges::get<0>(res1)));
-        CHECK(ranges::get<1>(res1) == ranges::end(ib));
-        CHECK((ranges::get<2>(res1) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == false);
+        CHECK(::is_dangling(res1.in1));
+        CHECK(res1.in2 == ranges::end(ib));
+        CHECK((res1.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res1.out, ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
         auto res2 =
             ranges::set_symmetric_difference(ranges::view::all(ib), std::move(ia), ic, std::less<int>(), &T::j, &S::i);
-        CHECK(ranges::get<0>(res2) == ranges::end(ib));
-        CHECK(::is_dangling(ranges::get<1>(res2)));
-        CHECK((ranges::get<2>(res2) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, ranges::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);
+        CHECK(res2.in1 == ranges::end(ib));
+        CHECK(::is_dangling(res2.in2));
+        CHECK((res2.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res2.out, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 #endif
 

@@ -62,7 +62,7 @@ namespace ranges
                     auto tmpbuf = make_raw_buffer(buf);
                     if(len1 <= len2)
                     {
-                        auto p = ranges::move(begin, middle, tmpbuf.begin()).second;
+                        auto p = ranges::move(begin, middle, tmpbuf.begin()).out;
                         merge(make_move_iterator(buf), make_move_iterator(p.base().base()),
                             make_move_iterator(std::move(middle)),
                             make_move_iterator(std::move(end)), std::move(begin),
@@ -70,7 +70,7 @@ namespace ranges
                     }
                     else
                     {
-                        auto p = ranges::move(middle, end, tmpbuf.begin()).second;
+                        auto p = ranges::move(middle, end, tmpbuf.begin()).out;
                         using RBi = ranges::reverse_iterator<I>;
                         using Rv = ranges::reverse_iterator<iter_value_t<I> *>;
                         merge(make_move_iterator(RBi{std::move(middle)}),

@@ -18,11 +18,10 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
 
 namespace ranges
 {
@@ -30,11 +29,14 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename F>
+        using for_each_result = detail::in_fun_result<I, F>;
+
         struct for_each_fn
         {
             template<typename I, typename S, typename F, typename P = ident>
             auto operator()(I begin, S end, F fun, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::fun(F)>)(
+                CPP_ret(for_each_result<I, F>)(
                     requires InputIterator<I> && Sentinel<S, I> &&
                         MoveIndirectInvocable<F, projected<I, P>>)
             {
@@ -47,11 +49,11 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident>
             auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>)(
+                CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
                     requires InputRange<Rng> &&
                         MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
             {
-                return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in(),
+                return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};
             }
         };

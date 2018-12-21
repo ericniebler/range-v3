@@ -37,8 +37,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -46,13 +45,16 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I0, typename I1, typename O>
+        using merge_result = detail::in1_in2_out_result<I0, I1, O>;
+
         struct merge_fn
         {
             template<typename I0, typename S0, typename I1, typename S1, typename O,
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident>
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
                     P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                CPP_ret(merge_result<I0, I1, O>)(
                     requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                         Mergeable<I0, I1, O, C, P0, P1>)
             {
@@ -70,17 +72,15 @@ namespace ranges
                     }
                 }
                 auto t0 = copy(begin0, end0, out);
-                auto t1 = copy(begin1, end1, t0.second);
-                return make_tagged_tuple<tag::in1, tag::in2, tag::out>(t0.first, t1.first, t1.second);
+                auto t1 = copy(begin1, end1, t0.out);
+                return {t0.in, t1.in, t1.out};
             }
 
             template<typename Rng0, typename Rng1, typename O, typename C = ordered_less,
                 typename P0 = ident, typename P1 = ident>
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<tag::in1(safe_iterator_t<Rng0>),
-                                     tag::in2(safe_iterator_t<Rng1>),
-                                     tag::out(O)>)(
+                CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)(
                     requires Range<Rng0> && Range<Rng1> &&
                         Mergeable<iterator_t<Rng0>, iterator_t<Rng1>, O, C, P0, P1>)
             {

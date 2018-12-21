@@ -36,9 +36,9 @@ int main()
             ib[i] = 2 * i + 1;
         auto r = ranges::merge(ia.get(), ia.get() + N,
             ib.get(), ib.get() + N, ic.get());
-        CHECK(ranges::get<0>(r) == ia.get() + N);
-        CHECK(ranges::get<1>(r) == ib.get() + N);
-        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
+        CHECK(r.in1 == ia.get() + N);
+        CHECK(r.in2 == ib.get() + N);
+        CHECK(r.out == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
@@ -56,9 +56,9 @@ int main()
         auto r0 = ranges::make_subrange(ia.get(), ia.get() + N);
         auto r1 = ranges::make_subrange(ib.get(), ib.get() + N);
         auto r = ranges::merge(r0, r1, ic.get());
-        CHECK(ranges::get<0>(r) == ia.get() + N);
-        CHECK(ranges::get<1>(r) == ib.get() + N);
-        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
+        CHECK(r.in1 == ia.get() + N);
+        CHECK(r.in2 == ib.get() + N);
+        CHECK(r.out == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
@@ -77,18 +77,15 @@ int main()
         auto r0 = ::MakeTestRange(ia.get(), ia.get() + N);
         auto r1 = ::MakeTestRange(ib.get(), ib.get() + N);
         auto r = ranges::merge(std::move(r0), std::move(r1), ic.get());
-        CHECK(::is_dangling(ranges::get<0>(r)));
-        CHECK(::is_dangling(ranges::get<1>(r)));
-        CHECK(ranges::get<2>(r) == ic.get() + 2 * N);
+        CHECK(::is_dangling(r.in1));
+        CHECK(::is_dangling(r.in2));
+        CHECK(r.out == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
         CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
 
-        // Some tests for sanitizing an algorithm result
         static_assert(std::is_same<decltype(r),
-            ranges::tagged_tuple<ranges::tag::in1(ranges::dangling),
-                                 ranges::tag::in2(ranges::dangling),
-                                 ranges::tag::out(int *)>>::value, "");
+            ranges::merge_result<ranges::dangling, ranges::dangling, int *>>::value, "");
     }
 
     return ::test_result();

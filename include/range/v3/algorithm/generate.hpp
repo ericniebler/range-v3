@@ -20,8 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -29,11 +28,14 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename O, typename F>
+        using generate_result = detail::out_fun_result<O, F>;
+
         struct generate_fn
         {
             template<typename O, typename S, typename F>
             auto operator()(O begin, S end, F fun) const ->
-                CPP_ret(tagged_pair<tag::out(O), tag::fun(F)>)(
+                CPP_ret(generate_result<O, F>)(
                     requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
             {
                 for(; begin != end; ++begin)
@@ -43,10 +45,10 @@ namespace ranges
 
             template<typename Rng, typename F, typename O = iterator_t<Rng>>
             auto operator()(Rng &&rng, F fun) const ->
-                CPP_ret(tagged_pair<tag::out(safe_iterator_t<Rng>), tag::fun(F)>)(
+                CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
                     requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
             {
-                return {(*this)(begin(rng), end(rng), ref(fun)).out(),
+                return {(*this)(begin(rng), end(rng), ref(fun)).out,
                     detail::move(fun)};
             }
         };

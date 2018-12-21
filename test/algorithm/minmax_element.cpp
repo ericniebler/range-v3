@@ -38,19 +38,19 @@ namespace
     void
     test_iter(Iter first, Sent last)
     {
-        std::pair<Iter, Iter> p = ranges::minmax_element(first, last);
+        ranges::minmax_element_result<Iter> p = ranges::minmax_element(first, last);
         if (first != last)
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(!(*j < *p.first));
-                CHECK(!(*p.second < *j));
+                CHECK(!(*j < *p.min));
+                CHECK(!(*p.max < *j));
             }
         }
         else
         {
-            CHECK(p.first == last);
-            CHECK(p.second == last);
+            CHECK(p.min == last);
+            CHECK(p.max == last);
         }
 
         auto rng = ::MakeTestRange(first, last);
@@ -59,14 +59,14 @@ namespace
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(!(*j < *p.first));
-                CHECK(!(*p.second < *j));
+                CHECK(!(*j < *p.min));
+                CHECK(!(*p.max < *j));
             }
         }
         else
         {
-            CHECK(p.first == last);
-            CHECK(p.second == last);
+            CHECK(p.min == last);
+            CHECK(p.max == last);
         }
 
         auto res = ranges::minmax_element(std::move(rng));
@@ -74,14 +74,14 @@ namespace
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(is_dangling(res.min()));
-                CHECK(!(*p.second < *j));
+                CHECK(is_dangling(res.min));
+                CHECK(!(*p.max < *j));
             }
         }
         else
         {
-            CHECK(is_dangling(res.min()));
-            CHECK(is_dangling(res.max()));
+            CHECK(is_dangling(res.min));
+            CHECK(is_dangling(res.max));
         }
     }
 
@@ -110,9 +110,9 @@ namespace
             std::unique_ptr<int[]> a{new int[N]};
             std::fill_n(a.get(), N, 5);
             std::shuffle(a.get(), a.get()+N, gen);
-            std::pair<Iter, Iter> p = ranges::minmax_element(Iter(a.get()), Sent(a.get()+N));
-            CHECK(base(p.first) == a.get());
-            CHECK(base(p.second) == a.get()+N-1);
+            ranges::minmax_element_result<Iter> p = ranges::minmax_element(Iter(a.get()), Sent(a.get()+N));
+            CHECK(base(p.min) == a.get());
+            CHECK(base(p.max) == a.get()+N-1);
         }
     }
 
@@ -122,19 +122,19 @@ namespace
     {
         typedef std::greater<int> Compare;
         Compare comp;
-        std::pair<Iter, Iter> p = ranges::minmax_element(first, last, comp);
+        ranges::minmax_element_result<Iter> p = ranges::minmax_element(first, last, comp);
         if (first != last)
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(!comp(*j, *p.first));
-                CHECK(!comp(*p.second, *j));
+                CHECK(!comp(*j, *p.min));
+                CHECK(!comp(*p.max, *j));
             }
         }
         else
         {
-            CHECK(p.first == last);
-            CHECK(p.second == last);
+            CHECK(p.min == last);
+            CHECK(p.max == last);
         }
 
         auto rng = ::MakeTestRange(first, last);
@@ -143,19 +143,19 @@ namespace
         {
             for (Iter j = first; j != last; ++j)
             {
-                CHECK(!comp(*j, *p.first));
-                CHECK(!comp(*p.second, *j));
+                CHECK(!comp(*j, *p.min));
+                CHECK(!comp(*p.max, *j));
             }
         }
         else
         {
-            CHECK(p.first == last);
-            CHECK(p.second == last);
+            CHECK(p.min == last);
+            CHECK(p.max == last);
         }
 
         auto res = ranges::minmax_element(std::move(rng), comp);
-        CHECK(is_dangling(res.min()));
-        CHECK(is_dangling(res.max()));
+        CHECK(is_dangling(res.min));
+        CHECK(is_dangling(res.max));
     }
 
     template<class Iter, class Sent = Iter>
@@ -185,9 +185,9 @@ namespace
             std::shuffle(a.get(), a.get()+N, gen);
             typedef std::greater<int> Compare;
             Compare comp;
-            std::pair<Iter, Iter> p = ranges::minmax_element(Iter(a.get()), Sent(a.get()+N), comp);
-            CHECK(base(p.first) == a.get());
-            CHECK(base(p.second) == a.get()+N-1);
+            ranges::minmax_element_result<Iter> p = ranges::minmax_element(Iter(a.get()), Sent(a.get()+N), comp);
+            CHECK(base(p.min) == a.get());
+            CHECK(base(p.max) == a.get()+N-1);
         }
     }
 
@@ -233,9 +233,9 @@ int main()
 
     // Works with projections?
     S s[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};
-    std::pair<S const *, S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);
-    CHECK(ps.first->i == -4);
-    CHECK(ps.second->i == 40);
+    ranges::minmax_element_result<S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);
+    CHECK(ps.min->i == -4);
+    CHECK(ps.max->i == 40);
 
     return test_result();
 }

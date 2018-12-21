@@ -88,9 +88,9 @@ namespace ranges
                         make_move_sentinel(end), begin, buf, std::ref(pred), std::ref(proj));
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    ranges::move(p.first, res.out2().base().base(), res.out1());
+                    ranges::move(p.first, res.out2.base().base(), res.out1);
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
-                    return res.out1();
+                    return res.out1;
                 }
                 // Else not enough buffer, do in place
                 // len >= 3
@@ -181,13 +181,13 @@ namespace ranges
                     ++buf;
                     auto res = partition_copy(make_move_iterator(next(begin)),
                         make_move_sentinel(end), begin, buf, std::ref(pred), std::ref(proj));
-                    begin = res.out1();
+                    begin = res.out1;
                     // move *end, known to be true
-                    *begin = iter_move(res.in());
+                    *begin = iter_move(res.in);
                     ++begin;
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    move(p.first, res.out2().base().base(), begin);
+                    move(p.first, res.out2.base().base(), begin);
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
                     return begin;
                 }

@@ -21,8 +21,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -30,11 +29,14 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using copy_backward_result = detail::in_out_result<I, O>;
+
         struct copy_backward_fn
         {
             template<typename I, typename S, typename O>
             auto operator()(I begin, S end_, O out) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(copy_backward_result<I, O>)(
                     requires BidirectionalIterator<I> && Sentinel<S, I> &&
                         BidirectionalIterator<O> && IndirectlyCopyable<I, O>)
             {
@@ -46,7 +48,7 @@ namespace ranges
 
             template<typename Rng, typename O>
             auto operator()(Rng &&rng, O out) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(copy_backward_result<safe_iterator_t<Rng>, O>)(
                     requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
                         IndirectlyCopyable<iterator_t<Rng>, O>)
             {

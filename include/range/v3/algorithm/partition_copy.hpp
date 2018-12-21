@@ -25,8 +25,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -47,11 +46,14 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O0, typename O1>
+        using partition_copy_result = detail::in_out1_out2_result<I, O0, O1>;
+
         struct partition_copy_fn
         {
             template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident>
             auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-                CPP_ret(tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>)(
+                CPP_ret(partition_copy_result<I, O0, O1>)(
                     requires PartitionCopyable<I, O0, O1, C, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin)
@@ -68,12 +70,12 @@ namespace ranges
                         ++o1;
                     }
                 }
-                return make_tagged_tuple<tag::in, tag::out1, tag::out2>(begin, o0, o1);
+                return {begin, o0, o1};
             }
 
             template<typename Rng, typename O0, typename O1, typename C, typename P = ident>
             auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-                CPP_ret(tagged_tuple<tag::in(safe_iterator_t<Rng>), tag::out1(O0), tag::out2(O1)>)(
+                CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)(
                     requires PartitionCopyable<iterator_t<Rng>, O0, O1, C, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),

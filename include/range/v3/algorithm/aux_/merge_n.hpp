@@ -39,8 +39,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -48,16 +47,19 @@ namespace ranges
     {
         namespace aux
         {
+            template<typename I0, typename I1, typename O>
+            using merge_n_result = detail::in1_in2_out_result<I0, I1, O>;
+
             struct merge_n_fn
             {
                 template<typename I0, typename I1, typename O, typename C = ordered_less,
                     typename P0 = ident, typename P1 = ident>
                 auto operator()(I0 begin0, iter_difference_t<I0> n0, I1 begin1,
                         iter_difference_t<I1> n1, O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const ->
-                    CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                    CPP_ret(merge_n_result<I0, I1, O>)(
                         requires Mergeable<I0, I1, O, C, P0, P1>)
                 {
-                    using T = tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>;
+                    using T = merge_n_result<I0, I1, O>;
                     auto n0orig = n0;
                     auto n1orig = n1;
                     auto b0 = uncounted(begin0);
@@ -68,15 +70,15 @@ namespace ranges
                         {
                             auto res = copy_n(b1, n1, out);
                             begin0 = recounted(begin0, b0, n0orig);
-                            begin1 = recounted(begin1, res.first, n1orig);
-                            return T{begin0, begin1, res.second};
+                            begin1 = recounted(begin1, res.in, n1orig);
+                            return T{begin0, begin1, res.out};
                         }
                         if(0 == n1)
                         {
                             auto res = copy_n(b0, n0, out);
-                            begin0 = recounted(begin0, res.first, n0orig);
+                            begin0 = recounted(begin0, res.in, n0orig);
                             begin1 = recounted(begin1, b1, n1orig);
-                            return T{begin0, begin1, res.second};
+                            return T{begin0, begin1, res.out};
                         }
                         if(invoke(r, invoke(p1, *b1), invoke(p0, *b0)))
                         {

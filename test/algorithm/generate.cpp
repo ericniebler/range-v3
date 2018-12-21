@@ -40,30 +40,30 @@ test()
 {
     const unsigned n = 4;
     int ia[n] = {0};
-    std::pair<Iter, gen_test> res = ranges::generate(Iter(ia), Sent(ia + n), gen_test(1));
+    ranges::generate_result<Iter, gen_test> res = ranges::generate(Iter(ia), Sent(ia + n), gen_test(1));
     CHECK(ia[0] == 1);
     CHECK(ia[1] == 2);
     CHECK(ia[2] == 3);
     CHECK(ia[3] == 4);
-    CHECK(res.first == Iter(ia + n));
-    CHECK(res.second.i_ == 5);
+    CHECK(res.out == Iter(ia + n));
+    CHECK(res.fun.i_ == 5);
 
     auto rng = ::MakeTestRange(Iter(ia), Sent(ia + n));
-    res = ranges::generate(rng, res.second);
+    res = ranges::generate(rng, res.fun);
     CHECK(ia[0] == 5);
     CHECK(ia[1] == 6);
     CHECK(ia[2] == 7);
     CHECK(ia[3] == 8);
-    CHECK(res.first == Iter(ia + n));
-    CHECK(res.second.i_ == 9);
+    CHECK(res.out == Iter(ia + n));
+    CHECK(res.fun.i_ == 9);
 
-    auto res2 = ranges::generate(std::move(rng), res.second);
+    auto res2 = ranges::generate(std::move(rng), res.fun);
     CHECK(ia[0] == 9);
     CHECK(ia[1] == 10);
     CHECK(ia[2] == 11);
     CHECK(ia[3] == 12);
-    CHECK(::is_dangling(res2.first));
-    CHECK(res2.second.i_ == 13);
+    CHECK(::is_dangling(res2.out));
+    CHECK(res2.fun.i_ == 13);
 }
 
 void test2()

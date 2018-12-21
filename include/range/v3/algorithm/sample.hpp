@@ -26,7 +26,6 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
 
 RANGES_DISABLE_WARNINGS
 
@@ -45,12 +44,15 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using sample_result = detail::in_out_result<I, O>;
+
         class sample_fn
         {
             template<typename I, typename S, typename O, typename Gen = detail::default_random_engine&>
             static auto sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
                     iter_difference_t<I> n, Gen &&gen) ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(sample_result<I, O>)(
                     requires SampleAlgoConcept<I, S, O, Gen>)
             {
                 std::uniform_int_distribution<iter_difference_t<I>> dist;
@@ -72,7 +74,7 @@ namespace ranges
                 typename Gen = detail::default_random_engine&>
             auto operator()(I first, S last, O out, iter_difference_t<I> n,
                     Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(sample_result<I, O>)(
                     requires SampleAlgoConcept<I, S, O, Gen> &&
                         (ForwardIterator<I> || SizedSentinel<S, I>))
             {
@@ -84,7 +86,7 @@ namespace ranges
                 typename Gen = detail::default_random_engine&>
             auto operator()(I first, S last, O out, iter_difference_t<I> n,
                 Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(sample_result<I, O>)(
                     requires RandomAccessIterator<O> && SampleAlgoConcept<I, S, O, Gen> &&
                         !(ForwardIterator<I> || SizedSentinel<S, I>) )
             {
@@ -115,7 +117,7 @@ namespace ranges
                 typename Gen = detail::default_random_engine&>
             auto operator()(I first, S last, ORng &&out,
                     Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)(
+                CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(
                     requires SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
                         (ForwardIterator<I> || SizedSentinel<S, I>) &&
                         (ForwardRange<ORng> || SizedRange<ORng>))
@@ -128,7 +130,7 @@ namespace ranges
                 typename Gen = detail::default_random_engine&>
             auto operator()(I first, S last, ORng &&out,
                     Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>)(
+                CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(
                     requires RandomAccessIterator<iterator_t<ORng>> &&
                         SampleAlgoConcept<I, S, iterator_t<ORng>, Gen> &&
                         !(ForwardIterator<I> || SizedSentinel<S, I>) &&
@@ -140,7 +142,7 @@ namespace ranges
             template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
             auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
                     Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(
                     requires RandomAccessIterator<O> &&
                         SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
                         !(ForwardRange<Rng> || SizedRange<Rng>))
@@ -151,7 +153,7 @@ namespace ranges
             template<typename Rng, typename O, typename Gen = detail::default_random_engine&>
             auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
                 Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(
                     requires SampleAlgoConcept<iterator_t<Rng>, sentinel_t<Rng>, O, Gen> &&
                         (ForwardRange<Rng> || SizedRange<Rng>))
             {
@@ -160,7 +162,7 @@ namespace ranges
             }
             template<typename IRng, typename ORng, typename Gen = detail::default_random_engine&>
             auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<IRng>), tag::out(safe_iterator_t<ORng>)>)(
+                CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)(
                     requires RandomAccessIterator<iterator_t<ORng>> &&
                         SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>, iterator_t<ORng>, Gen> &&
                             !(ForwardRange<IRng> || SizedRange<IRng>) &&
@@ -171,7 +173,7 @@ namespace ranges
             }
             template<typename IRng, typename ORng, typename Gen = detail::default_random_engine&>
             auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<IRng>), tag::out(safe_iterator_t<ORng>)>)(
+                CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)(
                     requires SampleAlgoConcept<iterator_t<IRng>, sentinel_t<IRng>, iterator_t<ORng>, Gen> &&
                         (ForwardRange<IRng> || SizedRange<IRng>) &&
                         (ForwardRange<ORng> || SizedRange<ORng>))

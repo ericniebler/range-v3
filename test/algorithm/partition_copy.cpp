@@ -42,17 +42,17 @@ test_iter()
     const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
     int r1[10] = {0};
     int r2[10] = {0};
-    typedef std::tuple<Iter, output_iterator<int*>,  int*> P;
+    typedef ranges::partition_copy_result<Iter, output_iterator<int*>,  int*> P;
     P p = ranges::partition_copy(Iter(std::begin(ia)),
                                  Sent(std::end(ia)),
                                  output_iterator<int*>(r1), r2, is_odd());
-    CHECK(std::get<0>(p) == Iter(std::end(ia)));
-    CHECK(std::get<1>(p).base() == r1 + 4);
+    CHECK(p.in == Iter(std::end(ia)));
+    CHECK(p.out1.base() == r1 + 4);
     CHECK(r1[0] == 1);
     CHECK(r1[1] == 3);
     CHECK(r1[2] == 5);
     CHECK(r1[3] == 7);
-    CHECK(std::get<2>(p) == r2 + 4);
+    CHECK(p.out2 == r2 + 4);
     CHECK(r2[0] == 2);
     CHECK(r2[1] == 4);
     CHECK(r2[2] == 6);
@@ -66,17 +66,17 @@ test_range()
     const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
     int r1[10] = {0};
     int r2[10] = {0};
-    typedef std::tuple<Iter, output_iterator<int*>,  int*> P;
+    typedef ranges::partition_copy_result<Iter, output_iterator<int*>,  int*> P;
     P p = ranges::partition_copy(::as_lvalue(ranges::make_subrange(Iter(std::begin(ia)),
                                                            Sent(std::end(ia)))),
                                  output_iterator<int*>(r1), r2, is_odd());
-    CHECK(std::get<0>(p) == Iter(std::end(ia)));
-    CHECK(std::get<1>(p).base() == r1 + 4);
+    CHECK(p.in == Iter(std::end(ia)));
+    CHECK(p.out1.base() == r1 + 4);
     CHECK(r1[0] == 1);
     CHECK(r1[1] == 3);
     CHECK(r1[2] == 5);
     CHECK(r1[3] == 7);
-    CHECK(std::get<2>(p) == r2 + 4);
+    CHECK(p.out2 == r2 + 4);
     CHECK(r2[0] == 2);
     CHECK(r2[1] == 4);
     CHECK(r2[2] == 6);
@@ -94,15 +94,15 @@ void test_proj()
     const S ia[] = {S{1}, S{2}, S{3}, S{4}, S{6}, S{8}, S{5}, S{7}};
     S r1[10] = {S{0}};
     S r2[10] = {S{0}};
-    typedef std::tuple<S const *, S*,  S*> P;
+    typedef ranges::partition_copy_result<S const *, S*,  S*> P;
     P p = ranges::partition_copy(ia, r1, r2, is_odd(), &S::i);
-    CHECK(std::get<0>(p) == std::end(ia));
-    CHECK(std::get<1>(p) == r1 + 4);
+    CHECK(p.in == std::end(ia));
+    CHECK(p.out1 == r1 + 4);
     CHECK(r1[0].i == 1);
     CHECK(r1[1].i == 3);
     CHECK(r1[2].i == 5);
     CHECK(r1[3].i == 7);
-    CHECK(std::get<2>(p) == r2 + 4);
+    CHECK(p.out2 == r2 + 4);
     CHECK(r2[0].i == 2);
     CHECK(r2[1].i == 4);
     CHECK(r2[2].i == 6);
@@ -116,13 +116,13 @@ void test_rvalue()
     S r1[10] = {S{0}};
     S r2[10] = {S{0}};
     auto p = ranges::partition_copy(std::move(ia), r1, r2, is_odd(), &S::i);
-    CHECK(::is_dangling(ranges::get<0>(p)));
-    CHECK(ranges::get<1>(p) == r1 + 4);
+    CHECK(::is_dangling(p.in));
+    CHECK(p.out1 == r1 + 4);
     CHECK(r1[0].i == 1);
     CHECK(r1[1].i == 3);
     CHECK(r1[2].i == 5);
     CHECK(r1[3].i == 7);
-    CHECK(ranges::get<2>(p) == r2 + 4);
+    CHECK(p.out2 == r2 + 4);
     CHECK(r2[0].i == 2);
     CHECK(r2[1].i == 4);
     CHECK(r2[2].i == 6);

@@ -22,8 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -45,11 +44,14 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using unique_copy_result = detail::in_out_result<I, O>;
+
         struct unique_copy_fn
         {
         private:
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
+            static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
                 detail::input_iterator_tag, std::false_type)
             {
                 if(begin != end)
@@ -74,7 +76,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
+            static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
                 detail::forward_iterator_tag, std::false_type)
             {
                 if(begin != end)
@@ -97,7 +99,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred, P proj,
+            static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
                 detail::input_iterator_tag, std::true_type)
             {
                 if(begin != end)
@@ -124,7 +126,7 @@ namespace ranges
             /// \pre `C` is a model of the `Relation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident>
             auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(unique_copy_result<I, O>)(
                     requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
@@ -135,7 +137,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename O, typename C = equal_to, typename P = ident>
             auto operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(
                     requires UniqueCopyable<iterator_t<Rng>, O, C, P> && Range<Rng>)
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),

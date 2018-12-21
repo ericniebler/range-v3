@@ -53,7 +53,7 @@ namespace ranges
                             IndirectlyCopyable<I, B> && Mergeable<B, I, I, C, P, P>)
                 {
                     copy_n(begin0, n0, buff);
-                    return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out();
+                    return merge_n(buff, n0, begin1, n1, begin0, r, p, p).out;
                 }
             };
 

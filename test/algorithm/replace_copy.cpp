@@ -35,9 +35,9 @@ void test_iter()
     int ia[] = {0, 1, 2, 3, 4};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
     int ib[sa] = {0};
-    std::pair<InIter, OutIter> r = ranges::replace_copy(InIter(ia), Sent(ia+sa), OutIter(ib), 2, 5);
-    CHECK(base(r.first) == ia + sa);
-    CHECK(base(r.second) == ib + sa);
+    ranges::replace_copy_result<InIter, OutIter> r = ranges::replace_copy(InIter(ia), Sent(ia+sa), OutIter(ib), 2, 5);
+    CHECK(base(r.in) == ia + sa);
+    CHECK(base(r.out) == ib + sa);
     CHECK(ib[0] == 0);
     CHECK(ib[1] == 1);
     CHECK(ib[2] == 5);
@@ -52,9 +52,9 @@ void test_rng()
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
     int ib[sa] = {0};
     auto rng = ranges::make_subrange(InIter(ia), Sent(ia+sa));
-    std::pair<InIter, OutIter> r = ranges::replace_copy(rng, OutIter(ib), 2, 5);
-    CHECK(base(r.first) == ia + sa);
-    CHECK(base(r.second) == ib + sa);
+    ranges::replace_copy_result<InIter, OutIter> r = ranges::replace_copy(rng, OutIter(ib), 2, 5);
+    CHECK(base(r.in) == ia + sa);
+    CHECK(base(r.out) == ib + sa);
     CHECK(ib[0] == 0);
     CHECK(ib[1] == 1);
     CHECK(ib[2] == 5);
@@ -109,9 +109,9 @@ int main()
         using P = std::pair<int, std::string>;
         P in[] = {{0, "0"}, {1, "1"}, {2, "2"}, {3, "3"}, {4, "4"}};
         P out[ranges::size(in)] = {};
-        std::pair<P *, P *> r = ranges::replace_copy(in, out, 2, P{5, "5"}, &std::pair<int, std::string>::first);
-        CHECK(r.first == ranges::end(in));
-        CHECK(r.second == ranges::end(out));
+        ranges::replace_copy_result<P *, P *> r = ranges::replace_copy(in, out, 2, P{5, "5"}, &std::pair<int, std::string>::first);
+        CHECK(r.in == ranges::end(in));
+        CHECK(r.out == ranges::end(out));
         CHECK(out[0] == P{0, "0"});
         CHECK(out[1] == P{1, "1"});
         CHECK(out[2] == P{5, "5"});

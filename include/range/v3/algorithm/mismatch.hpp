@@ -23,8 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -46,13 +45,16 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I1, typename I2>
+        using mismatch_result = detail::in1_in2_result<I1, I2>;
+
         struct mismatch_fn
         {
             template<typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident>
             auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(tagged_pair<tag::in1(I1), tag::in2(I2)>)(
+                CPP_ret(mismatch_result<I1, I2>)(
                     requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1>)
             {
                 for(; begin1 != end1; ++begin1, ++begin2)
@@ -64,7 +66,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to, typename P1 = ident, typename P2 = ident>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(tagged_pair<tag::in1(I1), tag::in2(I2)>)(
+                CPP_ret(mismatch_result<I1, I2>)(
                     requires Mismatchable<I1, I2, C, P1, P2> && Sentinel<S1, I1> && Sentinel<S2, I2>)
             {
                 for(; begin1 != end1 &&  begin2 != end2; ++begin1, ++begin2)
@@ -77,7 +79,7 @@ namespace ranges
                 typename P2 = ident>
             auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-                CPP_ret(tagged_pair<tag::in1(safe_iterator_t<Rng1>), tag::in2(uncvref_t<I2Ref>)>)(
+                CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)(
                     requires InputRange<Rng1> && Iterator<uncvref_t<I2Ref>> &&
                         Mismatchable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
             {
@@ -89,8 +91,7 @@ namespace ranges
                 typename P2 = ident>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(tagged_pair<tag::in1(safe_iterator_t<Rng1>),
-                                    tag::in2(safe_iterator_t<Rng2>)>)(
+                CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(
                     requires InputRange<Rng1> && InputRange<Rng2> &&
                         Mismatchable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {

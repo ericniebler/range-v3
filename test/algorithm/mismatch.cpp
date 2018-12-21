@@ -32,20 +32,20 @@ void test_iter()
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
     constexpr auto sa = ranges::size(ia);
     int ib[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    using Pair = std::pair<Iter, Iter>;
+    using Res = ranges::mismatch_result<Iter, Iter>;
     CHECK(ranges::mismatch(Iter(ia), Sent(ia + sa), Iter(ib)) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     CHECK(ranges::mismatch(Iter(ia),Sent(ia + sa),Iter(ib),Sent(ib + sa)) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     CHECK(ranges::mismatch(Iter(ia),Sent(ia + sa),Iter(ib),Sent(ib + 2)) ==
-                           Pair{Iter(ia+2),Iter(ib+2)});
+                           Res{Iter(ia+2),Iter(ib+2)});
 
     CHECK(ranges::mismatch(Iter(ia),Sent(ia + sa),Iter(ib),std::equal_to<int>()) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     CHECK(ranges::mismatch(Iter(ia),Sent(ia + sa),Iter(ib),Sent(ib + sa),std::equal_to<int>()) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     CHECK(ranges::mismatch(Iter(ia), Sent(ia + sa), Iter(ib), Sent(ib + 2), std::equal_to<int>()) ==
-                           Pair{Iter(ia+2),Iter(ib+2)});
+                           Res{Iter(ia+2),Iter(ib+2)});
 }
 
 template<typename Iter, typename Sent = Iter>
@@ -54,42 +54,42 @@ void test_range()
     int ia[] = {0, 1, 2, 2, 0, 1, 2, 3};
     constexpr auto sa = ranges::size(ia);
     int ib[] = {0, 1, 2, 3, 0, 1, 2, 3};
-    using Pair = std::pair<Iter, Iter>;
+    using Res = ranges::mismatch_result<Iter, Iter>;
     auto rng1 = ::MakeTestRange(Iter(ia), Sent(ia + sa));
     CHECK(ranges::mismatch(rng1, Iter(ib)) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     auto r1 = ranges::mismatch(std::move(rng1), Iter(ib));
-    CHECK(::is_dangling(r1.first));
-    CHECK(r1.second == Iter(ib+3));
+    CHECK(::is_dangling(r1.in1));
+    CHECK(r1.in2 == Iter(ib+3));
     auto rng2 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     auto rng3 = ::MakeTestRange(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng2,rng3) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     auto r2 = ranges::mismatch(std::move(rng2), std::move(rng3));
-    CHECK(::is_dangling(r2.first));
-    CHECK(::is_dangling(r2.second));
+    CHECK(::is_dangling(r2.in1));
+    CHECK(::is_dangling(r2.in2));
     auto r3 = ranges::mismatch(rng2, std::move(rng3));
-    CHECK(r3.first == Iter(ia+3));
-    CHECK(::is_dangling(r3.second));
+    CHECK(r3.in1 == Iter(ia+3));
+    CHECK(::is_dangling(r3.in2));
     auto r4 = ranges::mismatch(std::move(rng2), rng3);
-    CHECK(::is_dangling(r4.first));
-    CHECK(r4.second == Iter(ib+3));
+    CHECK(::is_dangling(r4.in1));
+    CHECK(r4.in2 == Iter(ib+3));
     auto rng4 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     auto rng5 = ::MakeTestRange(Iter(ib),Sent(ib + 2));
     CHECK(ranges::mismatch(rng4,rng5) ==
-                           Pair{Iter(ia+2),Iter(ib+2)});
+                           Res{Iter(ia+2),Iter(ib+2)});
 
     auto rng6 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     CHECK(ranges::mismatch(rng6,Iter(ib),std::equal_to<int>()) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     auto rng7 = ::MakeTestRange(Iter(ia),Sent(ia + sa));
     auto rng8 = ::MakeTestRange(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng7,rng8,std::equal_to<int>()) ==
-                           Pair{Iter(ia+3),Iter(ib+3)});
+                           Res{Iter(ia+3),Iter(ib+3)});
     auto rng9 = ::MakeTestRange(Iter(ia), Sent(ia + sa));
     auto rng10 = ::MakeTestRange(Iter(ib), Sent(ib + 2));
     CHECK(ranges::mismatch(rng9,rng10,std::equal_to<int>()) ==
-                           Pair{Iter(ia+2),Iter(ib+2)});
+                           Res{Iter(ia+2),Iter(ib+2)});
 }
 
 struct S
@@ -122,16 +122,16 @@ int main()
     // Works with projections?
     S s1[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};
     int const i1[] = {1,2,3,4,5,6,7,8,9};
-    std::pair<S const *, int const *> ps1
+    ranges::mismatch_result<S const *, int const *> ps1
         = ranges::mismatch(s1, i1, std::equal_to<int>(), &S::i);
-    CHECK(ps1.first->i == -4);
-    CHECK(*ps1.second == 5);
+    CHECK(ps1.in1->i == -4);
+    CHECK(*ps1.in2 == 5);
 
     S s2[] = {S{1},S{2},S{3},S{4},S{5},S{6},S{40},S{7},S{8},S{9}};
-    std::pair<S const *, S const *> ps2
+    ranges::mismatch_result<S const *, S const *> ps2
         = ranges::mismatch(s1, s2, std::equal_to<int>(), &S::i, &S::i);
-    CHECK(ps2.first->i == -4);
-    CHECK(ps2.second->i == 5);
+    CHECK(ps2.in1->i == -4);
+    CHECK(ps2.in2->i == 5);
 
     return test_result();
 }

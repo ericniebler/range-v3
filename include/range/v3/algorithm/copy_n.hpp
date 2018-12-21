@@ -25,8 +25,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -34,11 +33,14 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using copy_n_result = detail::in_out_result<I, O>;
+
         struct copy_n_fn
         {
             template<typename I, typename O, typename P = ident>
             auto operator()(I begin, iter_difference_t<I> n, O out) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(copy_n_result<I, O>)(
                     requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {
                 RANGES_EXPECT(0 <= n);

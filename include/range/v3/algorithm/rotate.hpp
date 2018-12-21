@@ -50,7 +50,7 @@ namespace ranges
             static subrange<I> rotate_left(I begin, I end)
             {
                 iter_value_t<I> tmp = iter_move(begin);
-                I lm1 = move(next(begin), end, begin).second;
+                I lm1 = move(next(begin), end, begin).out;
                 *lm1 = std::move(tmp);
                 return {lm1, end};
             }
@@ -60,7 +60,7 @@ namespace ranges
             {
                 I lm1 = prev(end);
                 iter_value_t<I> tmp = iter_move(lm1);
-                I fp1 = move_backward(begin, lm1, end).second;
+                I fp1 = move_backward(begin, lm1, end).out;
                 *begin = std::move(tmp);
                 return {fp1, end};
             }

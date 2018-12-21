@@ -25,9 +25,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/utility/tagged_tuple.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -58,12 +56,18 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using unary_transform_result = detail::in_out_result<I, O>;
+
+        template<typename I1, typename I2, typename O>
+        using binary_transform_result = detail::in1_in2_out_result<I1, I2, O>;
+
         struct transform_fn
         {
             // Single-range variant
             template<typename I, typename S, typename O, typename F, typename P = ident>
             auto operator()(I begin, S end, O out, F fun, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(unary_transform_result<I, O>)(
                     requires Sentinel<S, I> && Transformable1<I, O, F, P>)
             {
                 for(; begin != end; ++begin, ++out)
@@ -73,7 +77,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename F, typename P = ident>
             auto operator()(Rng &&rng, O out, F fun, P proj = P{}) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)(
                     requires Range<Rng> && Transformable1<iterator_t<Rng>, O, F, P>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(fun),
@@ -85,23 +89,20 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident>
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                CPP_ret(binary_transform_result<I0, I1, O>)(
                     requires Sentinel<S0, I0> && Sentinel<S1, I1> &&
                         Transformable2<I0, I1, O, F, P0, P1>)
             {
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                     *out = invoke(fun, invoke(proj0, *begin0), invoke(proj1, *begin1));
-                return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{begin0, begin1, out};
+                return {begin0, begin1, out};
             }
 
             template<typename Rng0, typename Rng1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident>
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<
-                    tag::in1(safe_iterator_t<Rng0>),
-                    tag::in2(safe_iterator_t<Rng1>),
-                    tag::out(O)>)(
+                CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)(
                     requires Range<Rng0> && Range<Rng1> &&
                         Transformable2<iterator_t<Rng0>, iterator_t<Rng1>, O, F, P0, P1>)
             {
@@ -114,7 +115,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident>
             auto operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>)(
+                CPP_ret(binary_transform_result<I0, I1, O>)(
                     requires Sentinel<S0, I0> &&
                         Transformable2<I0, I1, O, F, P0, P1>)
             {
@@ -126,7 +127,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident>
             auto operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const ->
-                CPP_ret(tagged_tuple<tag::in1(safe_iterator_t<Rng0>), tag::in2(uncvref_t<I1Ref>), tag::out(O)>)(
+                CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)(
                     requires Range<Rng0> && Iterator<uncvref_t<I1Ref>> &&
                         Transformable2<iterator_t<Rng0>, uncvref_t<I1Ref>, O, F, P0, P1>)
             {

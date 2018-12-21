@@ -22,8 +22,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -31,11 +30,14 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename O, typename F>
+        using generate_n_result = detail::out_fun_result<O, F>;
+
         struct generate_n_fn
         {
             template<typename O, typename F>
             auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
-                CPP_ret(tagged_pair<tag::out(O), tag::fun(F)>)(
+                CPP_ret(generate_n_result<O, F>)(
                     requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
             {
                 RANGES_EXPECT(n >= 0);

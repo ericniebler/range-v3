@@ -21,7 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -45,13 +45,16 @@ namespace ranges
                 OutputIterator<O, invoke_result_t<BOp&, invoke_result_t<P&, iter_value_t<I>>, invoke_result_t<P&, iter_value_t<I>>>>
         );
 
+        template<typename I, typename O>
+        using adjacent_difference_result = detail::in_out_result<I, O>;
+
         struct adjacent_difference_fn
         {
             CPP_template(typename I, typename S, typename O, typename S2,
                 typename BOp = minus, typename P = ident)(
                 requires Sentinel<S, I> && Sentinel<S2, O> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            tagged_pair<tag::in(I), tag::out(O)>
+            adjacent_difference_result<I, O>
             operator()(I begin, S end, O result, S2 end_result, BOp bop = BOp{},
                        P proj = P{}) const
             {
@@ -80,7 +83,7 @@ namespace ranges
                 typename P = ident)(
                 requires Sentinel<S, I> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            tagged_pair<tag::in(I), tag::out(O)>
+            adjacent_difference_result<I, O>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(std::move(begin), std::move(end), std::move(result),
@@ -91,7 +94,7 @@ namespace ranges
                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
                 requires Range<Rng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+            adjacent_difference_result<safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), static_cast<ORef &&>(result), std::move(bop),
@@ -103,8 +106,7 @@ namespace ranges
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
-            tagged_pair<tag::in(safe_iterator_t<Rng>),
-                tag::out(safe_iterator_t<ORng>)>
+            adjacent_difference_result<safe_iterator_t<Rng>, safe_iterator_t<ORng>>
             operator()(Rng &&rng, ORng &&result, BOp bop = BOp{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), begin(result), end(result),

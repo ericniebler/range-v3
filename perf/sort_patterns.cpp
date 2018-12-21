@@ -171,12 +171,12 @@ namespace
         }
         auto minmax = ranges::minmax(durations);
         results.emplace_back(
-            result_t{mean_duration, minmax.second, minmax.first, size, deviation});
+            result_t{mean_duration, minmax.max, minmax.min, size, deviation});
         std::cerr << "size: " << size << " iter: " << iter
                   << " dev: " << to_millis(deviation)
                   << " mean: " << to_millis(mean_duration)
-                  << " max: " << to_millis(minmax.second)
-                  << " min: " << to_millis(minmax.first) << '\n';
+                  << " max: " << to_millis(minmax.max)
+                  << " min: " << to_millis(minmax.min) << '\n';
       }
     }
   };
@@ -232,7 +232,8 @@ namespace
   }
 } // unnamed namespace
 
-int main() {
+int main()
+{
   constexpr std::size_t max_size = 2000000;
 
   print(random_uniform_integer_sequence(), 20);

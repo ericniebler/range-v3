@@ -39,13 +39,13 @@ test()
 {
     const unsigned n = 4;
     int ia[n] = {0};
-    std::pair<Iter, gen_test> res = ranges::generate_n(Iter(ia), n, gen_test(1));
+    ranges::generate_n_result<Iter, gen_test> res = ranges::generate_n(Iter(ia), n, gen_test(1));
     CHECK(ia[0] == 1);
     CHECK(ia[1] == 2);
     CHECK(ia[2] == 3);
     CHECK(ia[3] == 4);
-    CHECK(res.first == Iter(ia + n));
-    CHECK(res.second.i_ == 5);
+    CHECK(res.out == Iter(ia + n));
+    CHECK(res.fun.i_ == 5);
 }
 
 void test2()

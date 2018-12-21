@@ -28,28 +28,28 @@ int main()
     std::pair<int, int> out[size(a)] = {};
 
     auto res = ranges::copy_backward(begin(a), end(a), end(out));
-    CHECK(res.first == end(a));
-    CHECK(res.second == begin(out));
+    CHECK(res.in == end(a));
+    CHECK(res.out == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     CHECK(!std::equal(a, a + size(a), out));
 
     res = ranges::copy_backward(a, end(out));
-    CHECK(res.first == end(a));
-    CHECK(res.second == begin(out));
+    CHECK(res.in == end(a));
+    CHECK(res.out == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     auto res2 = ranges::copy_backward(std::move(a), end(out));
-    CHECK(::is_dangling(res2.first));
-    CHECK(res2.second == begin(out));
+    CHECK(::is_dangling(res2.in));
+    CHECK(res2.out == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     auto res3 = ranges::copy_backward(ranges::view::all(a), end(out));
-    CHECK(res3.first == end(a));
-    CHECK(res3.second == begin(out));
+    CHECK(res3.in == end(a));
+    CHECK(res3.out == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     return test_result();

@@ -22,8 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -42,13 +41,16 @@ namespace ranges
 
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using replace_copy_result = detail::in_out_result<I, O>;
+
         struct replace_copy_fn
         {
             template<typename I, typename S, typename O, typename T0, typename T1,
                 typename P = ident>
             auto operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value,
                     P proj = {}) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(replace_copy_result<I, O>)(
                     requires ReplaceCopyable<I, O, T0, T1, P> && Sentinel<S, I>)
             {
                 for(; begin != end; ++begin, ++out)
@@ -65,7 +67,7 @@ namespace ranges
             template<typename Rng, typename O, typename T0, typename T1, typename P = ident>
             auto operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
                     P proj = {}) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(
                     requires ReplaceCopyable<iterator_t<Rng>, O, T0, T1, P> && Range<Rng>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), old_value, new_value,

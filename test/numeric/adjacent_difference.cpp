@@ -42,8 +42,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         const unsigned s = sizeof(ia) / sizeof(ia[0]);
         int ib[s] = {0};
         auto r = adjacent_difference(InIter(ia), InSent(ia + s), OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -57,8 +57,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         int ib[s] = {0};
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto r = adjacent_difference(rng, OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -73,8 +73,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto orng = make_subrange(OutIter(ib), OutIter(ib + s));
         auto r = adjacent_difference(rng, orng);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -89,8 +89,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto orng = make_subrange(OutIter(ib), OutIter(ib + s));
         auto r = adjacent_difference(rng, orng, std::plus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -139,8 +139,8 @@ int main()
         int ib[s] = {0};
         auto r = adjacent_difference(ranges::begin(ia), ranges::begin(ia) + s,
                                      ranges::begin(ib), std::minus<int>(), &S::i);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -153,8 +153,8 @@ int main()
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ib[s] = {0};
         auto r = adjacent_difference(ia, ranges::begin(ib), std::plus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -167,8 +167,8 @@ int main()
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ib[s] = {0};
         auto r = adjacent_difference(ia, ib, std::plus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);

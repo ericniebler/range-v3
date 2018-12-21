@@ -23,8 +23,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+#include <range/v3/algorithm/result_types.hpp>
 
 namespace ranges
 {
@@ -32,23 +31,26 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
+        template<typename I, typename O>
+        using rotate_copy_result = detail::in_out_result<I, O>;
+
         struct rotate_copy_fn
         {
             template<typename I, typename S, typename O, typename P = ident>
             auto operator()(I begin, I middle, S end, O out) const ->
-                CPP_ret(tagged_pair<tag::in(I), tag::out(O)>)(
+                CPP_ret(rotate_copy_result<I, O>)(
                     requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
             {
                 auto res = copy(middle, std::move(end), std::move(out));
                 return {
-                    std::move(res.first),
-                    copy(std::move(begin), middle, std::move(res.second)).second
+                    std::move(res.in),
+                    copy(std::move(begin), middle, std::move(res.out)).out
                 };
             }
 
             template<typename Rng, typename O, typename P = ident>
             auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
-                CPP_ret(tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>)(
+                CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(
                     requires Range<Rng> && WeaklyIncrementable<O> &&
                         IndirectlyCopyable<iterator_t<Rng>, O>)
             {

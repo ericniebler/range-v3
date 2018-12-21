@@ -84,7 +84,7 @@ namespace ranges
                         make_move_iterator(begin + step_size),
                         make_move_iterator(begin + step_size),
                         make_move_iterator(begin + two_step), result,
-                        std::ref(pred), std::ref(proj), std::ref(proj)).out();
+                        std::ref(pred), std::ref(proj), std::ref(proj)).out;
                     begin += two_step;
                 }
                 step_size = ranges::min(D(end - begin), step_size);

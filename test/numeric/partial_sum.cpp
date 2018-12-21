@@ -43,8 +43,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         int ia[] = {1, 2, 3, 4, 5};
         int ib[s] = {0};
         auto r = partial_sum(InIter(ia), InSent(ia + s), OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -58,8 +58,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         int ib[s] = {0};
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto r = partial_sum(rng, OutIter(ib));
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -74,8 +74,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto orng = make_subrange(OutIter(ib), OutIter(ib + s));
         auto r = partial_sum(rng, orng);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -90,8 +90,8 @@ template<class InIter, class OutIter, class InSent = InIter> void test()
         auto rng = make_subrange(InIter(ia), InSent(ia + s));
         auto orng = make_subrange(OutIter(ib), OutIter(ib + s));
         auto r = partial_sum(rng, orng, std::minus<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -140,8 +140,8 @@ int main()
         int ib[s] = {0};
         auto r = partial_sum(ranges::begin(ia), ranges::begin(ia) + s, ranges::begin(ib),
                              std::plus<int>(), &S::i);
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -154,8 +154,8 @@ int main()
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ib[s] = {0};
         auto r = partial_sum(ia, ranges::begin(ib), std::multiplies<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -168,8 +168,8 @@ int main()
         const unsigned s = sizeof(ir) / sizeof(ir[0]);
         int ib[s] = {0};
         auto r = partial_sum(ia, ib, std::multiplies<int>());
-        CHECK(base(std::get<0>(r)) == ia + s);
-        CHECK(base(std::get<1>(r)) == ib + s);
+        CHECK(base(r.in) == ia + s);
+        CHECK(base(r.out) == ib + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ib[i] == ir[i]);
@@ -186,8 +186,8 @@ int main()
         auto rng = view::zip(ia, ib);
         using CR = iter_common_reference_t<iterator_t<decltype(rng)>>;
         auto r = partial_sum(rng, ic, std::multiplies<int>(), [](CR p) {return p.first;});
-        CHECK(base(std::get<0>(r)) == ranges::begin(rng) + s);
-        CHECK(base(std::get<1>(r)) == ic + s);
+        CHECK(base(r.in) == ranges::begin(rng) + s);
+        CHECK(base(r.out) == ic + s);
         for(unsigned i = 0; i < s; ++i)
         {
             CHECK(ic[i] == ir[i]);
