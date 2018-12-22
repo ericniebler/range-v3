@@ -598,7 +598,7 @@ namespace ranges
             {
                 if(valid())
                 {
-                    detail::variant_visit_(index_, data_(), detail::delete_fn{}, ident{});
+                    detail::variant_visit_(index_, data_(), detail::delete_fn{}, identity{});
                     index_ = (std::size_t)-1;
                 }
             }
@@ -671,7 +671,7 @@ namespace ranges
             {
                 this->clear_();
                 detail::construct_fn<N, Args &&...> fn{static_cast<Args &&>(args)...};
-                detail::variant_visit_(N, data_(), std::ref(fn), ident{});
+                detail::variant_visit_(N, data_(), std::ref(fn), identity{});
                 index_ = N;
             }
             constexpr bool valid() const noexcept

@@ -31,7 +31,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O, typename C = equal_to, typename P = ident)
+            template(typename I, typename O, typename C = equal_to, typename P = identity)
             (concept UniqueCopyable)(I, O, C, P),
                 InputIterator<I> &&
                 IndirectRelation<C, projected<I, P>> &&
@@ -124,7 +124,7 @@ namespace ranges
             /// \pre InputView is a model of the `InputView` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `Relation` concept
-            template<typename I, typename S, typename O, typename C = equal_to, typename P = ident>
+            template<typename I, typename S, typename O, typename C = equal_to, typename P = identity>
             auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(unique_copy_result<I, O>)(
                     requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
@@ -135,7 +135,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename O, typename C = equal_to, typename P = ident>
+            template<typename Rng, typename O, typename C = equal_to, typename P = identity>
             auto operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(
                     requires UniqueCopyable<iterator_t<Rng>, O, C, P> && Range<Rng>)

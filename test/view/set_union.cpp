@@ -235,7 +235,7 @@ int main()
     // projections
     {
         auto res1 = view::set_union(b_finite, d_finite,
-                                    ordered_less(),
+                                    less(),
                                     &B::val,
                                     &D::val
                                    );
@@ -246,8 +246,8 @@ int main()
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
 
         auto res2 = view::set_union(view::ints(-2, 10), b_finite,
-                                    ordered_less(),
-                                    ident(),
+                                    less(),
+                                    identity(),
                                     [](const B& x){ return x.val; }
                                    );
         using R2 = decltype(res2);

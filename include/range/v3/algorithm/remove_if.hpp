@@ -32,7 +32,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename C, typename P = ident)
+            template(typename I, typename C, typename P = identity)
             (concept RemovableIf)(I, C, P),
                 ForwardIterator<I> &&
                 IndirectPredicate<C, projected<I, P>> &&
@@ -43,7 +43,7 @@ namespace ranges
         /// @{
         struct remove_if_fn
         {
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires RemovableIf<I, C, P> && Sentinel<S, I>)
@@ -63,7 +63,7 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires RemovableIf<iterator_t<Rng>, C, P> && ForwardRange<Rng>)

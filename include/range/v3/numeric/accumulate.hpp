@@ -28,7 +28,7 @@ namespace ranges
     {
         CPP_def
         (
-            template(typename I, typename T, typename Op = plus, typename P = ident)
+            template(typename I, typename T, typename Op = plus, typename P = identity)
             (concept Accumulateable)(I, T, Op, P),
                 InputIterator<I> &&
                 IndirectInvocable<Op, T *, projected<I, P>> &&
@@ -37,7 +37,7 @@ namespace ranges
 
         struct accumulate_fn
         {
-            CPP_template(typename I, typename S, typename T, typename Op = plus, typename P = ident)(
+            CPP_template(typename I, typename S, typename T, typename Op = plus, typename P = identity)(
                 requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
             T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
             {
@@ -46,7 +46,7 @@ namespace ranges
                 return init;
             }
 
-            CPP_template(typename Rng, typename T, typename Op = plus, typename P = ident)(
+            CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)(
                 requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
             T operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
             {

@@ -42,7 +42,7 @@ namespace ranges
         /// ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename V, typename C = equal_to, typename P = ident)
+            template(typename I, typename V, typename C = equal_to, typename P = identity)
             (concept Searchnable)(I, V, C, P),
                 ForwardIterator<I> &&
                 IndirectRelation<C, projected<I, P>, V const *>
@@ -125,7 +125,7 @@ namespace ranges
                 }
             }
         public:
-            template<typename I, typename S, typename V, typename C = equal_to, typename P = ident>
+            template<typename I, typename S, typename V, typename C = equal_to, typename P = identity>
             auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(subrange<I>)(
@@ -141,7 +141,7 @@ namespace ranges
                         proj);
             }
 
-            template<typename Rng, typename V, typename C = equal_to, typename P = ident>
+            template<typename Rng, typename V, typename C = equal_to, typename P = identity>
             auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng>)(

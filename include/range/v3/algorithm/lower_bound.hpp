@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         struct lower_bound_fn
         {
-            template<typename I, typename S, typename V, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename V, typename C = less, typename P = identity>
             auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires Sentinel<S, I> && BinarySearchable<I, V, C, P>)
@@ -42,7 +42,7 @@ namespace ranges
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));
             }
 
-            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename V, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)

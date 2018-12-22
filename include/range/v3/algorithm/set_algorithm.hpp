@@ -42,8 +42,8 @@ namespace ranges
         /// @{
         struct includes_fn
         {
-            template<typename I1, typename S1, typename I2, typename S2, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident>
+            template<typename I1, typename S1, typename I2, typename S2, typename C = less,
+                typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -59,8 +59,8 @@ namespace ranges
                 return true;
             }
 
-            template<typename Rng1, typename Rng2, typename C = ordered_less, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename C = less, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -82,7 +82,7 @@ namespace ranges
         struct set_union_fn
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident>
+                typename C = less, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(set_union_result<I1, I2, O>)(
@@ -113,8 +113,8 @@ namespace ranges
                 return {begin1, tmp.in, tmp.out};
             }
 
-            template<typename Rng1, typename Rng2, typename O, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename O, typename C = less,
+                typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)(
@@ -133,7 +133,7 @@ namespace ranges
         struct set_intersection_fn
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident>
+                typename C = less, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(O)(
@@ -158,8 +158,8 @@ namespace ranges
                 return out;
             }
 
-            template<typename Rng1, typename Rng2, typename O, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename O, typename C = less,
+                typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(O)(
@@ -182,7 +182,7 @@ namespace ranges
         struct set_difference_fn
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident>
+                typename C = less, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(set_difference_result<I1, O>)(
@@ -212,8 +212,8 @@ namespace ranges
                 return {begin1, out};
             }
 
-            template<typename Rng1, typename Rng2, typename O, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename O, typename C = less,
+                typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)(
@@ -236,7 +236,7 @@ namespace ranges
         struct set_symmetric_difference_fn
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
-                typename C = ordered_less, typename P1 = ident, typename P2 = ident>
+                typename C = less, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(set_symmetric_difference_result<I1, I2, O>)(
@@ -272,8 +272,8 @@ namespace ranges
                 return {begin1, tmp.in, tmp.out};
             }
 
-            template<typename Rng1, typename Rng2, typename O, typename C = ordered_less,
-                typename P1 = ident, typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename O, typename C = less,
+                typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,

@@ -38,7 +38,7 @@ namespace ranges
             /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre `Rng` is a model of the `Range` concept
-            template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename V2, typename C = less, typename P = identity>
             auto operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
@@ -48,7 +48,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V2, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename V2, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V2, C, P>)

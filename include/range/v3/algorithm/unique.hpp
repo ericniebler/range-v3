@@ -41,7 +41,7 @@ namespace ranges
             /// \pre `S` is a model of the `Sentinel` concept
             /// \pre `C` is a model of the `Relation` concept
             ///
-            template<typename I, typename S, typename C = equal_to, typename P = ident>
+            template<typename I, typename S, typename C = equal_to, typename P = identity>
             auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires Sortable<I, C, P> && Sentinel<S, I>)
@@ -58,7 +58,7 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename C = equal_to, typename P = ident>
+            template<typename Rng, typename C = equal_to, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)

@@ -82,7 +82,7 @@ namespace ranges
                 }
 
             public:
-                template<typename I, typename C = ordered_less, typename P = ident>
+                template<typename I, typename C = less, typename P = identity>
                 auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
                     iter_difference_t<I> len2, iter_value_t<I> *buf,
                     std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const ->
@@ -176,7 +176,7 @@ namespace ranges
 
             struct inplace_merge_no_buffer_fn
             {
-                template<typename I, typename C = ordered_less, typename P = ident>
+                template<typename I, typename C = less, typename P = identity>
                 auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
                     iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(void)(
@@ -197,7 +197,7 @@ namespace ranges
         struct inplace_merge_fn
         {
             // TODO reimplement to only need forward iterators
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
@@ -219,7 +219,7 @@ namespace ranges
                 return len2_and_end.second;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)

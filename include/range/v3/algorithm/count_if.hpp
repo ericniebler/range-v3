@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct count_if_fn
         {
-            template<typename I, typename S, typename R, typename P = ident>
+            template<typename I, typename S, typename R, typename P = identity>
             auto operator()(I begin, S end, R pred, P proj = P{}) const ->
                 CPP_ret(iter_difference_t<I>)(
                     requires InputIterator<I> && Sentinel<S, I> &&
@@ -44,7 +44,7 @@ namespace ranges
                 return n;
             }
 
-            template<typename Rng, typename R, typename P = ident>
+            template<typename Rng, typename R, typename P = identity>
             auto operator()(Rng &&rng, R pred, P proj = P{}) const ->
                 CPP_ret(iter_difference_t<iterator_t<Rng>>)(
                     requires InputRange<Rng> &&

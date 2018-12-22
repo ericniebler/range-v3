@@ -42,7 +42,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I1, typename I2, typename C = equal_to, typename P1 = ident, typename P2 = ident)
+            template(typename I1, typename I2, typename C = equal_to, typename P1 = identity, typename P2 = identity)
             (concept IsPermutationable)(I1, I2, C, P1, P2),
                 ForwardIterator<I1> &&
                 ForwardIterator<I2> &&
@@ -101,7 +101,7 @@ namespace ranges
             }
 
         public:
-            template<typename I1, typename S1, typename I2, typename C = equal_to, typename P1 = ident, typename P2 = ident>
+            template<typename I1, typename S1, typename I2, typename C = equal_to, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -148,7 +148,7 @@ namespace ranges
             }
 
             template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident>
+                typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -164,8 +164,8 @@ namespace ranges
                     std::move(proj2));
             }
 
-            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -176,8 +176,8 @@ namespace ranges
                     std::move(proj1), std::move(proj2));
             }
 
-            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
@@ -200,7 +200,7 @@ namespace ranges
 
         struct next_permutation_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
@@ -230,7 +230,7 @@ namespace ranges
                 }
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
@@ -246,7 +246,7 @@ namespace ranges
 
         struct prev_permutation_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
@@ -276,7 +276,7 @@ namespace ranges
                 }
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)

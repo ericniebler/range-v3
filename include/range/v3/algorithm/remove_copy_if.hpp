@@ -31,7 +31,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O, typename C, typename P = ident)
+            template(typename I, typename O, typename C, typename P = identity)
             (concept RemoveCopyableIf)(I, O, C, P),
                 InputIterator<I> &&
                 WeaklyIncrementable<O> &&
@@ -46,7 +46,7 @@ namespace ranges
 
         struct remove_copy_if_fn
         {
-            template<typename I, typename S, typename O, typename C, typename P = ident>
+            template<typename I, typename S, typename O, typename C, typename P = identity>
             auto operator()(I begin, S end, O out, C pred, P proj = P{}) const ->
                 CPP_ret(remove_copy_if_result<I, O>)(
                     requires RemoveCopyableIf<I, O, C, P> && Sentinel<S, I>)
@@ -63,7 +63,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            template<typename Rng, typename O, typename C, typename P = ident>
+            template<typename Rng, typename O, typename C, typename P = identity>
             auto operator()(Rng &&rng, O out, C pred, P proj = P{}) const ->
                 CPP_ret(remove_copy_if_result<safe_iterator_t<Rng>, O>)(
                     requires RemoveCopyableIf<iterator_t<Rng>, O, C, P> && InputRange<Rng>)

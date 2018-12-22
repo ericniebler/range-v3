@@ -46,7 +46,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename C, typename P = ident)
+            template(typename I, typename C, typename P = identity)
             (concept StablePartitionable)(I, C, P),
                 ForwardIterator<I> &&
                 Permutable<I> &&
@@ -268,7 +268,7 @@ namespace ranges
             }
 
         public:
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires StablePartitionable<I, C, P> && Sentinel<S, I>)
@@ -278,7 +278,7 @@ namespace ranges
             }
 
             // BUGBUG Can this be optimized if Rng has O1 size?
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires StablePartitionable<iterator_t<Rng>, C, P> && Range<Rng>)

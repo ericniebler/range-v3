@@ -30,8 +30,8 @@ namespace ranges
         /// @{
         struct lexicographical_compare_fn
         {
-            template<typename I0, typename S0, typename I1, typename S1, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident>
+            template<typename I0, typename S0, typename I1, typename S1, typename C = less,
+                typename P0 = identity, typename P1 = identity>
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(bool)(
@@ -47,8 +47,8 @@ namespace ranges
                 return false;
             }
 
-            template<typename Rng0, typename Rng1, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident>
+            template<typename Rng0, typename Rng1, typename C = less,
+                typename P0 = identity, typename P1 = identity>
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(bool)(

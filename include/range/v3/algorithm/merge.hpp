@@ -51,7 +51,7 @@ namespace ranges
         struct merge_fn
         {
             template<typename I0, typename S0, typename I1, typename S1, typename O,
-                typename C = ordered_less, typename P0 = ident, typename P1 = ident>
+                typename C = less, typename P0 = identity, typename P1 = identity>
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred = C{},
                     P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
                 CPP_ret(merge_result<I0, I1, O>)(
@@ -76,8 +76,8 @@ namespace ranges
                 return {t0.in, t1.in, t1.out};
             }
 
-            template<typename Rng0, typename Rng1, typename O, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident>
+            template<typename Rng0, typename Rng1, typename O, typename C = less,
+                typename P0 = identity, typename P1 = identity>
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(merge_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)(

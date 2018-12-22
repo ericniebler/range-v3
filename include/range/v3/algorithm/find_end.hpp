@@ -180,7 +180,7 @@ namespace ranges
 
         public:
             template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
-                typename P = ident>
+                typename P = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const ->
                 CPP_ret(subrange<I1>)(
                     requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
@@ -194,7 +194,7 @@ namespace ranges
                     iterator_tag_of<I1>(), iterator_tag_of<I2>());
             }
 
-            template<typename Rng1, typename Rng2, typename R = equal_to, typename P = ident>
+            template<typename Rng1, typename Rng2, typename R = equal_to, typename P = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng1>)(
                     requires ForwardRange<Rng1> && ForwardRange<Rng2> &&

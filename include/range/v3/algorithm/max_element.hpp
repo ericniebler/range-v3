@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct max_element_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<C, projected<I, P>>)
@@ -43,7 +43,7 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires ForwardRange<Rng> && IndirectRelation<C, projected<iterator_t<Rng>, P>>)

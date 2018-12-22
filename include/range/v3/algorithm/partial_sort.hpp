@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         struct partial_sort_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
@@ -53,7 +53,7 @@ namespace ranges
                 return i;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{},
                     P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(

@@ -32,7 +32,7 @@ namespace ranges
         {
             CPP_def
             (
-                template(typename Rng, typename C = equal_to, typename P = ident)
+                template(typename Rng, typename C = equal_to, typename P = identity)
                 (concept UniqueActionConcept)(Rng, C, P),
                     ForwardRange<Rng> &&
                     ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
@@ -43,7 +43,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident>
+                template<typename C, typename P = identity>
                 static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})(
                     requires not Range<C>)
                 {
@@ -51,7 +51,7 @@ namespace ranges
                         protect(std::move(proj)));
                 }
             public:
-                CPP_template(typename Rng, typename C = equal_to, typename P = ident)(
+                CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
                     requires UniqueActionConcept<Rng, C, P>)
                 Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
@@ -61,7 +61,7 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename C = equal_to, typename P = ident)(
+                CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
                     requires not UniqueActionConcept<Rng, C, P>)
                 void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {

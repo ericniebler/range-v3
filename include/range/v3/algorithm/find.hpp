@@ -40,7 +40,7 @@ namespace ranges
             /// \pre `S` is a model of the `Sentinel<I>` concept
             /// \pre `P` is a model of the `Invocable<iter_common_reference_t<I>>` concept
             /// \pre The ResultType of `P` is EqualityComparable with V
-            template<typename I, typename S, typename V, typename P = ident>
+            template<typename I, typename S, typename V, typename P = identity>
             auto operator()(I begin, S end, V const &val, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires InputIterator<I> && Sentinel<S, I> &&
@@ -53,7 +53,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V, typename P = ident>
+            template<typename Rng, typename V, typename P = identity>
             auto operator()(Rng &&rng, V const &val, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires InputRange<Rng> &&

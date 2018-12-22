@@ -42,7 +42,7 @@ namespace ranges
             ///      value type of I.
             /// \pre `F` models `Predicate<X>`, where `X` is the result type
             ///      of `Invocable<P, V>`
-            template<typename I, typename S, typename F, typename P = ident>
+            template<typename I, typename S, typename F, typename P = identity>
             auto operator()(I begin, S end, F pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires InputIterator<I> && Sentinel<S, I> &&
@@ -55,7 +55,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename F, typename P = ident>
+            template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires InputRange<Rng> &&

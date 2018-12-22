@@ -196,8 +196,8 @@ namespace ranges
             struct set_difference_fn
             {
             public:
-                template<typename Rng1, typename Rng2, typename C = ordered_less,
-                    typename P1 = ident, typename P2 = ident>
+                template<typename Rng1, typename Rng2, typename C = less,
+                    typename P1 = identity, typename P2 = identity>
                 auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const ->
                     CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
@@ -335,8 +335,8 @@ namespace ranges
             struct set_intersection_fn
             {
             public:
-                template<typename Rng1, typename Rng2, typename C = ordered_less,
-                    typename P1 = ident, typename P2 = ident>
+                template<typename Rng1, typename Rng2, typename C = less,
+                    typename P1 = identity, typename P2 = identity>
                 auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const ->
                     CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
@@ -504,8 +504,8 @@ namespace ranges
             struct set_union_fn
             {
             public:
-                template<typename Rng1, typename Rng2, typename C = ordered_less,
-                    typename P1 = ident, typename P2 = ident>
+                template<typename Rng1, typename Rng2, typename C = less,
+                    typename P1 = identity, typename P2 = identity>
                 auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const ->
                     CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
@@ -698,8 +698,8 @@ namespace ranges
             struct set_symmetric_difference_fn
             {
             public:
-                template<typename Rng1, typename Rng2, typename C = ordered_less,
-                    typename P1 = ident, typename P2 = ident>
+                template<typename Rng1, typename Rng2, typename C = less,
+                    typename P1 = identity, typename P2 = identity>
                 auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                         P2 proj2 = P2{}) const ->
                     CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(

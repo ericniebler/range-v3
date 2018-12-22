@@ -34,7 +34,7 @@ namespace ranges
 
         struct for_each_fn
         {
-            template<typename I, typename S, typename F, typename P = ident>
+            template<typename I, typename S, typename F, typename P = identity>
             auto operator()(I begin, S end, F fun, P proj = P{}) const ->
                 CPP_ret(for_each_result<I, F>)(
                     requires InputIterator<I> && Sentinel<S, I> &&
@@ -47,7 +47,7 @@ namespace ranges
                 return {detail::move(begin), detail::move(fun)};
             }
 
-            template<typename Rng, typename F, typename P = ident>
+            template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
                 CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
                     requires InputRange<Rng> &&

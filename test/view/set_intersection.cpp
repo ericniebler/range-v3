@@ -169,9 +169,9 @@ int main()
 
     {
         auto res1 = view::set_intersection(s_finite, view::ints(-2, 10),
-                                           ordered_less(),
+                                           less(),
                                            &S::val,
-                                           ident()
+                                           identity()
                                           );
         using R1 = decltype(res1);
         CPP_assert(Same<range_value_t<R1>, S>);
@@ -180,8 +180,8 @@ int main()
         ::check_equal(res1, {S{1}, S{3}, S{6}, S{8}});
 
         auto res2 = view::set_intersection(view::ints(-2, 10), s_finite,
-                                           ordered_less(),
-                                           ident(),
+                                           less(),
+                                           identity(),
                                            [](const S& x){ return x.val; }
                                           );
         using R2 = decltype(res2);

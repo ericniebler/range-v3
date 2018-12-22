@@ -582,8 +582,8 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I0, typename I1, typename Out, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident)
+            template(typename I0, typename I1, typename Out, typename C = less,
+                typename P0 = identity, typename P1 = identity)
             (concept Mergeable)(I0, I1, Out, C, P0, P1),
                 InputIterator<I0> &&
                 InputIterator<I1> &&
@@ -595,8 +595,8 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I0, typename I1, typename Out, typename C = ordered_less,
-                typename P0 = ident, typename P1 = ident)
+            template(typename I0, typename I1, typename Out, typename C = less,
+                typename P0 = identity, typename P1 = identity)
             (concept MoveMergeable)(I0, I1, Out, C, P0, P1),
                 InputIterator<I0> &&
                 InputIterator<I1> &&
@@ -608,7 +608,7 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I, typename C = ordered_less, typename P = ident)
+            template(typename I, typename C = less, typename P = identity)
             (concept Sortable)(I, C, P),
                 ForwardIterator<I> &&
                 IndirectRelation<C, projected<I, P>, projected<I, P>> &&
@@ -617,7 +617,7 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I, typename V2, typename C = ordered_less, typename P = ident)
+            template(typename I, typename V2, typename C = less, typename P = identity)
             (concept BinarySearchable)(I, V2, C, P),
                 ForwardIterator<I> &&
                 IndirectRelation<C, projected<I, P>, V2 const *>
@@ -625,8 +625,8 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident)
+            template(typename I1, typename I2, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity)
             (concept AsymmetricallyComparable)(I1, I2, C, P1, P2),
                 InputIterator<I1> &&
                 InputIterator<I2> &&
@@ -635,8 +635,8 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident)
+            template(typename I1, typename I2, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity)
             (concept Comparable)(I1, I2, C, P1, P2),
                 AsymmetricallyComparable<I1, I2, C, P1, P2> &&
                 IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>

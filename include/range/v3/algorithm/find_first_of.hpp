@@ -37,7 +37,7 @@ namespace ranges
             // If we returned pair<I0,I1>, we would need to do an O(N) scan to find the
             // end position.
             template<typename I0, typename S0, typename I1, typename S1, typename R = equal_to,
-                typename P0 = ident, typename P1 = ident>
+                typename P0 = identity, typename P1 = identity>
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred = R{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(I0)(
@@ -51,8 +51,8 @@ namespace ranges
                 return begin0;
             }
 
-            template<typename Rng0, typename Rng1, typename R = equal_to, typename P0 = ident,
-                typename P1 = ident>
+            template<typename Rng0, typename Rng1, typename R = equal_to, typename P0 = identity,
+                typename P1 = identity>
             auto operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(safe_iterator_t<Rng0>)(

@@ -39,7 +39,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename C, typename P = ident)
+            template(typename I, typename C, typename P = identity)
             (concept Partitionable)(I, C, P),
                 ForwardIterator<I> &&
                 Permutable<I> &&
@@ -97,7 +97,7 @@ namespace ranges
                 }
             }
         public:
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires Partitionable<I, C, P> && Sentinel<S, I>)
@@ -106,7 +106,7 @@ namespace ranges
                     std::move(proj), iterator_tag_of<I>());
             }
 
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Partitionable<iterator_t<Rng>, C, P> && Range<Rng>)

@@ -38,7 +38,7 @@ namespace ranges
 
         struct minmax_element_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(minmax_element_result<I>)(
                     requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<C, projected<I, P>>)
@@ -82,7 +82,7 @@ namespace ranges
                 return result;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
                     requires ForwardRange<Rng> &&

@@ -36,7 +36,7 @@ namespace ranges
 
         struct minmax_fn
         {
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(minmax_result<iter_value_t<iterator_t<Rng>>>)(
                     requires InputRange<Rng> && Copyable<iter_value_t<iterator_t<Rng>>> &&
@@ -88,7 +88,7 @@ namespace ranges
                 return result;
             }
 
-            template<typename T, typename C = ordered_less, typename P = ident>
+            template<typename T, typename C = less, typename P = identity>
             constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(minmax_result<T const &>)(
                     requires IndirectRelation<C, projected<const T *, P>>)

@@ -35,8 +35,8 @@ namespace ranges
         /// @{
         struct equal_range_fn
         {
-            template<typename I, typename S, typename V, typename C = ordered_less,
-                typename P = ident>
+            template<typename I, typename S, typename V, typename C = less,
+                typename P = identity>
             auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(subrange<I>)(
                     requires Sentinel<S, I> && !SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
@@ -82,8 +82,8 @@ namespace ranges
                 }
             }
 
-            template<typename I, typename S, typename V, typename C = ordered_less,
-                typename P = ident>
+            template<typename I, typename S, typename V, typename C = less,
+                typename P = identity>
             auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(subrange<I>)(
                     requires SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
@@ -93,7 +93,7 @@ namespace ranges
                     std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename V, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng>)(
                     requires Range<Rng> && !SizedRange<Rng> &&
@@ -102,7 +102,7 @@ namespace ranges
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename V, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename V, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng>)(
                     requires SizedRange<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)

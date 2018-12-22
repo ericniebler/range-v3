@@ -384,8 +384,7 @@ namespace ranges
         struct not_equal_to;
         struct equal_to;
         struct less;
-        struct ordered_less;
-        struct ident;
+        struct identity;
 
         enum cardinality : std::ptrdiff_t
         {

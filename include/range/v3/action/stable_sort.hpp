@@ -36,7 +36,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident>
+                template<typename C, typename P = identity>
                 static auto CPP_fun(bind)(stable_sort_fn stable_sort, C pred, P proj = P{})(
                     requires not Range<C>)
                 {
@@ -44,7 +44,7 @@ namespace ranges
                         protect(std::move(proj)));
                 }
             public:
-                CPP_template(typename Rng, typename C = ordered_less, typename P = ident)(
+                CPP_template(typename Rng, typename C = less, typename P = identity)(
                     requires SortActionConcept<Rng, C, P>)
                 Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
@@ -53,7 +53,7 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename C = ordered_less, typename P = ident)(
+                CPP_template(typename Rng, typename C = less, typename P = identity)(
                     requires not SortActionConcept<Rng, C, P>)
                 void operator()(Rng &&, C && = C{}, P && = P{}) const
                 {

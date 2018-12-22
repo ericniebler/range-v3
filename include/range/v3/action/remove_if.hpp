@@ -35,7 +35,7 @@ namespace ranges
         {
             CPP_def
             (
-                template(typename Rng, typename C, typename P = ident)
+                template(typename Rng, typename C, typename P = identity)
                 (concept RemoveIfActionConcept)(Rng, C, P),
                     ForwardRange<Rng> &&
                     ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
@@ -46,7 +46,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident>
+                template<typename C, typename P = identity>
                 static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})(
                     requires not Range<C>)
                 {
@@ -54,7 +54,7 @@ namespace ranges
                         protect(std::move(proj)));
                 }
             public:
-                CPP_template(typename Rng, typename C, typename P = ident)(
+                CPP_template(typename Rng, typename C, typename P = identity)(
                     requires RemoveIfActionConcept<Rng, C, P>)
                 Rng operator()(Rng &&rng, C pred, P proj = P{}) const
                 {
@@ -64,7 +64,7 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename C, typename P = ident)(
+                CPP_template(typename Rng, typename C, typename P = identity)(
                     requires not RemoveIfActionConcept<Rng, C, P>)
                 void operator()(Rng &&, C &&, P && = P{}) const
                 {

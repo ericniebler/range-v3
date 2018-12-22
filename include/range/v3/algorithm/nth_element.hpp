@@ -101,7 +101,7 @@ namespace ranges
         /// @{
         struct nth_element_fn
         {
-            template<typename I, typename S, typename C = ordered_less, typename P = ident>
+            template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires RandomAccessIterator<I> && Sortable<I, C, P>)
@@ -291,7 +291,7 @@ namespace ranges
                 return end_orig;
             }
 
-            template<typename Rng, typename C = ordered_less, typename P = ident>
+            template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)

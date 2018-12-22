@@ -50,12 +50,12 @@ void not_totally_ordered()
     ranges::equal_range(vec, my_int{10}, compare);
 }
 
-template<class Iter, class Sent, class T, class Proj = ranges::ident>
+template<class Iter, class Sent, class T, class Proj = ranges::identity>
 void
 test(Iter first, Sent last, const T& value, Proj proj = Proj{})
 {
     ranges::subrange<Iter, Iter> i =
-        ranges::equal_range(first, last, value, ranges::ordered_less{}, proj);
+        ranges::equal_range(first, last, value, ranges::less{}, proj);
     for (Iter j = first; j != i.begin(); ++j)
         CHECK(ranges::invoke(proj, *j) < value);
     for (Iter j = i.begin(); j != last; ++j)
@@ -66,7 +66,7 @@ test(Iter first, Sent last, const T& value, Proj proj = Proj{})
         CHECK(value < ranges::invoke(proj, *j));
 
     auto res = ranges::equal_range(
-        ranges::make_subrange(first, last), value, ranges::ordered_less{}, proj);
+        ranges::make_subrange(first, last), value, ranges::less{}, proj);
     for (Iter j = first; j != res.begin(); ++j)
         CHECK(ranges::invoke(proj, *j) < value);
     for (Iter j = res.begin(); j != last; ++j)

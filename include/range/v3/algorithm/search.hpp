@@ -43,7 +43,7 @@ namespace ranges
         CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident)
+                typename P1 = identity, typename P2 = identity)
             (concept Searchable)(I1, I2, C, P1, P2),
                 ForwardIterator<I1> &&
                 ForwardIterator<I2> &&
@@ -135,7 +135,7 @@ namespace ranges
             }
         public:
             template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident>
+                typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                     C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(subrange<I1>)(
@@ -152,8 +152,8 @@ namespace ranges
                         std::move(begin2), std::move(end2), pred, proj1, proj2);
             }
 
-            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(safe_subrange_t<Rng1>)(

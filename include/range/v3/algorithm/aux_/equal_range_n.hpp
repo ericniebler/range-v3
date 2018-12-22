@@ -34,7 +34,7 @@ namespace ranges
         {
             struct equal_range_n_fn
             {
-                template<typename I, typename V, typename R = ordered_less, typename P = ident>
+                template<typename I, typename V, typename R = less, typename P = identity>
                 auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
                         P proj = P{}) const ->
                     CPP_ret(subrange<I>)(

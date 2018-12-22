@@ -34,7 +34,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O0, typename O1, typename C, typename P = ident)
+            template(typename I, typename O0, typename O1, typename C, typename P = identity)
             (concept PartitionCopyable)(I, O0, O1, C, P),
                 InputIterator<I> &&
                 WeaklyIncrementable<O0> &&
@@ -51,7 +51,7 @@ namespace ranges
 
         struct partition_copy_fn
         {
-            template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident>
+            template<typename I, typename S, typename O0, typename O1, typename C, typename P = identity>
             auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
                 CPP_ret(partition_copy_result<I, O0, O1>)(
                     requires PartitionCopyable<I, O0, O1, C, P> && Sentinel<S, I>)
@@ -73,7 +73,7 @@ namespace ranges
                 return {begin, o0, o1};
             }
 
-            template<typename Rng, typename O0, typename O1, typename C, typename P = ident>
+            template<typename Rng, typename O0, typename O1, typename C, typename P = identity>
             auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
                 CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)(
                     requires PartitionCopyable<iterator_t<Rng>, O0, O1, C, P> && Range<Rng>)

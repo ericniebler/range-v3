@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         struct for_each_n_fn
         {
-            template<typename I, typename F, typename P = ident>
+            template<typename I, typename F, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires InputIterator<I> && MoveIndirectInvocable<F, projected<I, P>>)
@@ -44,7 +44,7 @@ namespace ranges
                 return recounted(begin, b, norig);
             }
 
-            template<typename Rng, typename F, typename P = ident>
+            template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires InputRange<Rng> &&

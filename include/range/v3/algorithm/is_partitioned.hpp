@@ -38,7 +38,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename C, typename P = ident)
+            template(typename I, typename C, typename P = identity)
             (concept IsPartitionedable)(I, C, P),
                 InputIterator<I> &&
                 IndirectPredicate<C, projected<I, P>>
@@ -48,7 +48,7 @@ namespace ranges
         /// @{
         struct is_partitioned_fn
         {
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires IsPartitionedable<I, C, P> && Sentinel<S, I>)
@@ -62,7 +62,7 @@ namespace ranges
                 return true;
             }
 
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires IsPartitionedable<iterator_t<Rng>, C, P> && Range<Rng>)

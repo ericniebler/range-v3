@@ -34,7 +34,7 @@ namespace ranges
     {
         CPP_def
         (
-            template(typename I, typename O, typename BOp = minus, typename P = ident)
+            template(typename I, typename O, typename BOp = minus, typename P = identity)
             (concept AdjacentDifferentiable)(I, O, BOp, P),
                 InputIterator<I> &&
                 Invocable<P&, iter_value_t<I>> &&
@@ -51,7 +51,7 @@ namespace ranges
         struct adjacent_difference_fn
         {
             CPP_template(typename I, typename S, typename O, typename S2,
-                typename BOp = minus, typename P = ident)(
+                typename BOp = minus, typename P = identity)(
                 requires Sentinel<S, I> && Sentinel<S2, O> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
             adjacent_difference_result<I, O>
@@ -80,7 +80,7 @@ namespace ranges
             }
 
             CPP_template(typename I, typename S, typename O, typename BOp = minus,
-                typename P = ident)(
+                typename P = identity)(
                 requires Sentinel<S, I> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
             adjacent_difference_result<I, O>
@@ -90,7 +90,7 @@ namespace ranges
                                unreachable{}, std::move(bop), std::move(proj));
             }
 
-            CPP_template(typename Rng, typename ORef, typename BOp = minus, typename P = ident,
+            CPP_template(typename Rng, typename ORef, typename BOp = minus, typename P = identity,
                 typename I = iterator_t<Rng>, typename O = uncvref_t<ORef>)(
                 requires Range<Rng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)
@@ -102,7 +102,7 @@ namespace ranges
             }
 
             CPP_template(typename Rng, typename ORng, typename BOp = minus,
-                typename P = ident, typename I = iterator_t<Rng>,
+                typename P = identity, typename I = iterator_t<Rng>,
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&
                     AdjacentDifferentiable<I, O, BOp, P>)

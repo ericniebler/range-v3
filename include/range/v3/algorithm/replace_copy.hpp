@@ -31,7 +31,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O, typename T0, typename T1, typename P = ident)
+            template(typename I, typename O, typename T0, typename T1, typename P = identity)
             (concept ReplaceCopyable)(I, O, T0, T1, P),
                 InputIterator<I> &&
                 OutputIterator<O, T1 const &> &&
@@ -47,7 +47,7 @@ namespace ranges
         struct replace_copy_fn
         {
             template<typename I, typename S, typename O, typename T0, typename T1,
-                typename P = ident>
+                typename P = identity>
             auto operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value,
                     P proj = {}) const ->
                 CPP_ret(replace_copy_result<I, O>)(
@@ -64,7 +64,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            template<typename Rng, typename O, typename T0, typename T1, typename P = ident>
+            template<typename Rng, typename O, typename T0, typename T1, typename P = identity>
             auto operator()(Rng &&rng, O out, T0 const & old_value, T1 const & new_value,
                     P proj = {}) const ->
                 CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(

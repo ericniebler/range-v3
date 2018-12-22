@@ -45,7 +45,7 @@ namespace ranges
         {
             struct merge_n_with_buffer_fn
             {
-                template<typename I, typename B, typename C = ordered_less, typename P = ident>
+                template<typename I, typename B, typename C = less, typename P = identity>
                 auto operator()(I begin0, iter_difference_t<I> n0, I begin1,
                         iter_difference_t<I> n1, B buff, C r = C{}, P p = P{}) const ->
                     CPP_ret(I)(

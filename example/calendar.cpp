@@ -286,7 +286,7 @@ struct interleave_view<Rngs>::cursor
         return n_ == 0 && its_.end() != mismatch(its_,
                                                  *rngs_,
                                                  std::not_equal_to<>(),
-                                                 ident(),
+                                                 identity(),
                                                  ranges::end)
                                             .in1();
     }

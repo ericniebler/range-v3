@@ -39,7 +39,7 @@ namespace ranges
             /// \pre `S` and `I` model the `Sentinel<S, I>` concept
             /// \pre `R` and `projected<I, P>` model the `IndirectRelation<R, projected<I, P>>` concept
             ///
-            template<typename I, typename S, typename R = ordered_less, typename P = ident>
+            template<typename I, typename S, typename R = less, typename P = identity>
             auto operator()(I begin, S end, R rel = R{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<R, projected<I, P>>)
@@ -48,7 +48,7 @@ namespace ranges
                                        std::move(proj)) == end;
             }
 
-            template<typename Rng, typename R = ordered_less, typename P = ident>
+            template<typename Rng, typename R = less, typename P = identity>
             auto operator()(Rng &&rng, R rel = R{}, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires ForwardRange<Rng> && IndirectRelation<R, projected<iterator_t<Rng>, P>>)

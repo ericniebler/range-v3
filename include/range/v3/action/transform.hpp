@@ -33,7 +33,7 @@ namespace ranges
         {
             CPP_def
             (
-                template(typename Rng, typename F, typename P = ident)
+                template(typename Rng, typename F, typename P = identity)
                 (concept TransformActionConcept)(Rng, F, P),
                     InputRange<Rng> &&
                     Transformable1<iterator_t<Rng>, iterator_t<Rng>, F, P>
@@ -43,7 +43,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename F, typename P = ident>
+                template<typename F, typename P = identity>
                 static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
                     requires not Range<F>)
                 {
@@ -51,7 +51,7 @@ namespace ranges
                         protect(std::move(proj)));
                 }
             public:
-                CPP_template(typename Rng, typename F, typename P = ident)(
+                CPP_template(typename Rng, typename F, typename P = identity)(
                     requires TransformActionConcept<Rng, F, P>)
                 Rng operator()(Rng &&rng, F fun, P proj = P{}) const
                 {
@@ -60,7 +60,7 @@ namespace ranges
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename F, typename P = ident)(
+                CPP_template(typename Rng, typename F, typename P = identity)(
                     requires not TransformActionConcept<Rng, F, P>)
                 void operator()(Rng &&, F &&, P && = P{}) const
                 {

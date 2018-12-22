@@ -32,7 +32,7 @@ namespace ranges
         /// @{
         struct any_of_fn
         {
-            template<typename I, typename S, typename F, typename P = ident>
+            template<typename I, typename S, typename F, typename P = identity>
             auto operator()(I first, S last, F pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires InputIterator<I> && Sentinel<S, I> &&
@@ -44,7 +44,7 @@ namespace ranges
                 return false;
             }
 
-            template<typename Rng, typename F, typename P = ident>
+            template<typename Rng, typename F, typename P = identity>
             auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires InputRange<Rng> &&

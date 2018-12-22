@@ -72,20 +72,23 @@ namespace ranges
             using is_transparent = void;
         };
 
-        struct ordered_less
-          : less
-        {};
+        using ordered_less
+            RANGES_DEPRECATED("Repace uses of ranges::less with ranges::less") =
+                less;
 
-        struct ident
+        struct identity
         {
             template<typename T>
-            constexpr
-            T &&operator()(T &&t) const noexcept
+            constexpr T &&operator()(T &&t) const noexcept
             {
                 return (T &&) t;
             }
             using is_transparent = void;
         };
+
+        using ident
+            RANGES_DEPRECATED("Repace uses of ranges::identity with ranges::identity") =
+                identity;
 
         struct plus
         {
@@ -126,8 +129,7 @@ namespace ranges
         struct bitwise_or
         {
             template<typename T, typename U>
-            constexpr
-            auto operator()(T &&t, U &&u) const ->
+            constexpr auto operator()(T &&t, U &&u) const ->
                 decltype((T &&) t | (U &&) u)
             {
                 return (T &&) t | (U &&) u;
@@ -148,8 +150,7 @@ namespace ranges
         template<typename T>
         struct coerce
         {
-            constexpr
-            T & operator()(T & t) const
+            constexpr T & operator()(T & t) const
             {
                 return t;
             }

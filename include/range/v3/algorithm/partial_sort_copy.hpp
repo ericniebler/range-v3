@@ -32,7 +32,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O, typename C = ordered_less, typename PI = ident, typename PO = ident)
+            template(typename I, typename O, typename C = less, typename PI = identity, typename PO = identity)
             (concept PartialSortCopyConcept)(I, O, C, PI, PO),
                 InputIterator<I> &&
                 RandomAccessIterator<O> &&
@@ -45,8 +45,8 @@ namespace ranges
         /// @{
         struct partial_sort_copy_fn
         {
-            template<typename I, typename SI, typename O, typename SO, typename C = ordered_less,
-                typename PI = ident, typename PO = ident>
+            template<typename I, typename SI, typename O, typename SO, typename C = less,
+                typename PI = identity, typename PO = identity>
             auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
                     PI in_proj = PI{}, PO out_proj = PO{}) const ->
                 CPP_ret(O)(
@@ -74,8 +74,8 @@ namespace ranges
                 return r;
             }
 
-            template<typename InRng, typename OutRng, typename C = ordered_less,
-                typename PI = ident, typename PO = ident>
+            template<typename InRng, typename OutRng, typename C = less,
+                typename PI = identity, typename PO = identity>
             auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                     PO out_proj = PO{}) const ->
                 CPP_ret(safe_iterator_t<OutRng>)(

@@ -26,7 +26,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename C, typename P = ident)
+            template(typename I, typename C, typename P = identity)
             (concept PartitionPointable)(I, C, P),
                 ForwardIterator<I> &&
                 IndirectPredicate<C, projected<I, P>>
@@ -36,7 +36,7 @@ namespace ranges
         {
             struct partition_point_n_fn
             {
-                template<typename I, typename C, typename P = ident>
+                template<typename I, typename C, typename P = identity>
                 auto operator()(I begin, iter_difference_t<I> d, C pred, P proj = P{}) const ->
                     CPP_ret(I)(
                         requires PartitionPointable<I, C, P>)

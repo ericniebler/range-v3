@@ -30,7 +30,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename T0, typename T1, typename P = ident)
+            template(typename I, typename T0, typename T1, typename P = identity)
             (concept Replaceable)(I, T0, T1, P),
                 InputIterator<I> &&
                 IndirectRelation<equal_to, projected<I, P>, T0 const *> &&
@@ -41,7 +41,7 @@ namespace ranges
         /// @{
         struct replace_fn
         {
-            template<typename I, typename S, typename T0, typename T1, typename P = ident>
+            template<typename I, typename S, typename T0, typename T1, typename P = identity>
             auto operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj = {}) const ->
                 CPP_ret(I)(
                     requires Replaceable<I, T0, T1, P> && Sentinel<S, I>)
@@ -52,7 +52,7 @@ namespace ranges
                 return begin;
             }
 
-            template<typename Rng, typename T0, typename T1, typename P = ident>
+            template<typename Rng, typename T0, typename T1, typename P = identity>
             auto operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Replaceable<iterator_t<Rng>, T0, T1, P> && Range<Rng>)

@@ -44,7 +44,7 @@ namespace ranges
 
         struct partition_point_fn
         {
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires PartitionPointable<I, C, P> && Sentinel<S, I> && !SizedSentinel<S, I>)
@@ -67,7 +67,7 @@ namespace ranges
                 }
             }
 
-            template<typename I, typename S, typename C, typename P = ident>
+            template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
                     requires PartitionPointable<I, C, P> && SizedSentinel<S, I>)
@@ -77,7 +77,7 @@ namespace ranges
                     std::move(begin), len, std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires Range<Rng> && !SizedRange<Rng> && PartitionPointable<iterator_t<Rng>, C, P>)
@@ -86,7 +86,7 @@ namespace ranges
                     begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename C, typename P = ident>
+            template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires SizedRange<Rng> && PartitionPointable<iterator_t<Rng>, C, P>)

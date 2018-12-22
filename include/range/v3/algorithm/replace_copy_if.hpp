@@ -31,7 +31,7 @@ namespace ranges
         /// \ingroup group-concepts
         CPP_def
         (
-            template(typename I, typename O, typename C, typename T, typename P = ident)
+            template(typename I, typename O, typename C, typename T, typename P = identity)
             (concept ReplaceCopyIfable)(I, O, C, T, P),
                 InputIterator<I> &&
                 OutputIterator<O, T const &> &&
@@ -46,7 +46,7 @@ namespace ranges
 
         struct replace_copy_if_fn
         {
-            template<typename I, typename S, typename O, typename C, typename T, typename P = ident>
+            template<typename I, typename S, typename O, typename C, typename T, typename P = identity>
             auto operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const ->
                 CPP_ret(replace_copy_if_result<I, O>)(
                     requires ReplaceCopyIfable<I, O, C, T, P> && Sentinel<S, I>)
@@ -62,7 +62,7 @@ namespace ranges
                 return {begin, out};
             }
 
-            template<typename Rng, typename O, typename C, typename T, typename P = ident>
+            template<typename Rng, typename O, typename C, typename T, typename P = identity>
             auto operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const ->
                 CPP_ret(replace_copy_if_result<safe_iterator_t<Rng>, O>)(
                     requires ReplaceCopyIfable<iterator_t<Rng>, O, C, T, P> && Range<Rng>)

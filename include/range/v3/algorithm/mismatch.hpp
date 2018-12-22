@@ -36,7 +36,7 @@ namespace ranges
         CPP_def
         (
             template(typename I1, typename I2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident)
+                typename P1 = identity, typename P2 = identity)
             (concept Mismatchable)(I1, I2, C, P1, P2),
                 InputIterator<I1> &&
                 InputIterator<I2> &&
@@ -51,7 +51,7 @@ namespace ranges
         struct mismatch_fn
         {
             template<typename I1, typename S1, typename I2, typename C = equal_to,
-                typename P1 = ident, typename P2 = ident>
+                typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(mismatch_result<I1, I2>)(
@@ -63,7 +63,7 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to, typename P1 = ident, typename P2 = ident>
+            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to, typename P1 = identity, typename P2 = identity>
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(mismatch_result<I1, I2>)(
@@ -75,8 +75,8 @@ namespace ranges
                 return {begin1, begin2};
             }
 
-            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
                     P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
                 CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)(
@@ -87,8 +87,8 @@ namespace ranges
                     std::move(proj1), std::move(proj2));
             }
 
-            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident>
+            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
+                typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(

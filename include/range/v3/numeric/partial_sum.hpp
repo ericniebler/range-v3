@@ -58,7 +58,7 @@ namespace ranges
 
         CPP_def
         (
-            template(typename I, typename O, typename BOp = plus, typename P = ident)
+            template(typename I, typename O, typename BOp = plus, typename P = identity)
             (concept PartialSummable)(I, O, BOp, P),
                 InputIterator<I> &&
                 IndirectSemigroup<projected<projected<I, detail::as_value_type_t<I>>, P>, BOp> &&
@@ -71,7 +71,7 @@ namespace ranges
         struct partial_sum_fn
         {
             CPP_template(typename I, typename S1, typename O, typename S2,
-                typename BOp = plus, typename P = ident)(
+                typename BOp = plus, typename P = identity)(
                 requires Sentinel<S1, I> && Sentinel<S2, O> &&
                     PartialSummable<I, O, BOp, P>)
             partial_sum_result<I, O>
@@ -97,7 +97,7 @@ namespace ranges
             }
 
             CPP_template(typename I, typename S, typename O, typename BOp = plus,
-                typename P = ident)(
+                typename P = identity)(
                 requires Sentinel<S, I> && PartialSummable<I, O, BOp, P>)
             partial_sum_result<I, O>
             operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
@@ -107,7 +107,7 @@ namespace ranges
             }
 
             CPP_template(typename Rng, typename ORef, typename BOp = plus,
-                typename P = ident, typename I = iterator_t<Rng>,
+                typename P = identity, typename I = iterator_t<Rng>,
                 typename O = uncvref_t<ORef>)(
                 requires Range<Rng> && PartialSummable<I, O, BOp, P>)
             partial_sum_result<safe_iterator_t<Rng>, O>
@@ -118,7 +118,7 @@ namespace ranges
             }
 
             CPP_template(typename Rng, typename ORng, typename BOp = plus,
-                typename P = ident, typename I = iterator_t<Rng>,
+                typename P = identity, typename I = iterator_t<Rng>,
                 typename O = iterator_t<ORng>)(
                 requires Range<Rng> && Range<ORng> &&
                     PartialSummable<I, O, BOp, P>)
