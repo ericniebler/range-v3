@@ -23,7 +23,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/associated_types.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invoke.hpp>
 #include <range/v3/utility/move.hpp>

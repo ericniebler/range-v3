@@ -36,6 +36,9 @@ namespace ranges
         RANGES_DEFINE_TAG_SPECIFIER(engine)
         RANGES_DEFINE_TAG_SPECIFIER(range)
         RANGES_DEFINE_TAG_SPECIFIER(size)
+
+        RANGES_DEFINE_TAG_SPECIFIER(first)
+        RANGES_DEFINE_TAG_SPECIFIER(second)
     }
 }
 

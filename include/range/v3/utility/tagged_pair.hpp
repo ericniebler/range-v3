@@ -21,6 +21,9 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 namespace ranges
 {
     inline namespace v3
@@ -33,123 +36,38 @@ namespace ranges
 
             template<typename T>
             using tag_elem = meta::back<meta::as_list<T>>;
-        }
-
-        namespace _tagged_
-        {
-            template<typename Base>
-            struct wrap_base : Base
-            {
-                wrap_base() = default;
-                using Base::Base;
-#if !defined(__clang__) || __clang_major__ > 3
-                CPP_member
-                constexpr CPP_ctor(wrap_base)(Base&& base)(
-                    noexcept(std::is_nothrow_move_constructible<Base>::value)
-                    requires MoveConstructible<Base>)
-                  : Base(static_cast<Base&&>(base))
-                {}
-                CPP_member
-                constexpr CPP_ctor(wrap_base)(Base const& base)(
-                    noexcept(std::is_nothrow_copy_constructible<Base>::value)
-                    requires CopyConstructible<Base>)
-                  : Base(base)
-                {}
-#else
-                // Clang 3.x have a problem with inheriting constructors
-                // that causes the declarations in the preceeding PP block to get
-                // instantiated too early.
-                CPP_template(typename B = Base)(
-                    requires MoveConstructible<B>)
-                constexpr wrap_base(Base&& base)
-                    noexcept(std::is_nothrow_move_constructible<Base>::value)
-                  : Base(static_cast<Base&&>(base))
-                {}
-                CPP_template(typename B = Base)(
-                    requires CopyConstructible<B>)
-                constexpr wrap_base(Base const& base)
-                    noexcept(std::is_nothrow_copy_constructible<Base>::value)
-                  : Base(base)
-                {}
-#endif
-            };
-
-            template<std::size_t I, typename Base>
-            constexpr auto get(wrap_base<Base> &wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<I>(static_cast<Base &>(wb))
-            )
-            template<std::size_t I, typename Base>
-            constexpr auto get(wrap_base<Base> const &wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<I>(static_cast<Base const &>(wb))
-            )
-            template<std::size_t I, typename Base>
-            constexpr auto get(wrap_base<Base> &&wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<I>(static_cast<Base &&>(wb))
-            )
-            template<std::size_t I, typename Base>
-            constexpr auto get(wrap_base<Base> const &&wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<I>(static_cast<Base const &&>(wb))
-            )
-            template<typename T, typename Base>
-            constexpr auto get(wrap_base<Base> &wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<T>(static_cast<Base &>(wb))
-            )
-            template<typename T, typename Base>
-            constexpr auto get(wrap_base<Base> const &wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<T>(static_cast<Base const &>(wb))
-            )
-            template<typename T, typename Base>
-            constexpr auto get(wrap_base<Base> &&wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<T>(static_cast<Base &&>(wb))
-            )
-            template<typename T, typename Base>
-            constexpr auto get(wrap_base<Base> const &&wb)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::adl_get<T>(static_cast<Base const &&>(wb))
-            )
 
             template<typename Base, std::size_t, typename...>
-            struct chain
+            struct tagged_chain
             {
-                using type = wrap_base<Base>;
+                using type = _tuple_wrapper_::forward_tuple_interface<Base>;
             };
             template<typename Base, std::size_t I, typename First, typename... Rest>
-            struct chain<Base, I, First, Rest...>
+            struct tagged_chain<Base, I, First, Rest...>
             {
                 using type = typename First::template getter<
-                    Base, I, meta::_t<chain<Base, I + 1, Rest...>>>;
+                    Base, I, meta::_t<tagged_chain<Base, I + 1, Rest...>>>;
             };
+        }
 
 #if RANGES_BROKEN_CPO_LOOKUP
-            template<typename> struct adl_hook {};
-#endif
+        namespace _tagged_
+        {
+            struct adl_hook_
+            {};
         } // namespace _tagged_
+#endif
         /// \endcond
 
         template<typename Base, typename...Tags>
-        class RANGES_EMPTY_BASES tagged
-          : public meta::_t<_tagged_::chain<Base, 0, Tags...>>
+        class RANGES_EMPTY_BASES RANGES_DEPRECATED("Class template tagged is deprecated.") tagged
+          : public meta::_t<detail::tagged_chain<Base, 0, Tags...>>
 #if RANGES_BROKEN_CPO_LOOKUP
-          , private _tagged_::adl_hook<tagged<Base, Tags...>>
+          , private _tagged_::adl_hook_
 #endif
         {
             CPP_assert(Same<Base, uncvref_t<Base>>);
-            using base_t = meta::_t<_tagged_::chain<Base, 0, Tags...>>;
+            using base_t = meta::_t<detail::tagged_chain<Base, 0, Tags...>>;
 
             template<typename Other>
             using can_convert =
@@ -254,12 +172,13 @@ namespace ranges
 #endif
 
         template<typename F, typename S>
-        using tagged_pair =
+        using tagged_pair  RANGES_DEPRECATED("ranges::tagged_pair is deprecated.") =
             tagged<std::pair<detail::tag_elem<F>, detail::tag_elem<S>>,
                    detail::tag_spec<F>, detail::tag_spec<S>>;
 
         template<typename Tag1, typename Tag2, typename T1, typename T2,
             typename R = tagged_pair<Tag1(bind_element_t<T1>), Tag2(bind_element_t<T2>)>>
+        RANGES_DEPRECATED("ranges::make_tagged_pair is deprecated.")
         constexpr R make_tagged_pair(T1 &&t1, T2 &&t2)
             noexcept(std::is_nothrow_constructible<R, T1, T2>::value)
         {
@@ -311,7 +230,6 @@ namespace ranges
     }                                                                                \
     /**/
 
-RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std

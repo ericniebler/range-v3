@@ -22,7 +22,6 @@
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/tagspec.hpp>
@@ -95,53 +94,81 @@ namespace ranges
         /// @{
         template<typename I, typename S /*= I*/>
         struct RANGES_EMPTY_BASES iterator_range
-          : tagged_compressed_tuple<tag::begin(I), tag::end(S)>
-          , view_interface<iterator_range<I, S>>
+          : view_interface<iterator_range<I, S>>
+          , compressed_pair<I, S>
           , _iterator_range_::adl_hook_
         {
         private:
-            using base_t = tagged_compressed_tuple<tag::begin(I), tag::end(S)>;
+            template<typename, typename>
+            friend struct iterator_range;
+            template<typename, typename>
+            friend struct sized_iterator_range;
+            compressed_pair<I, S> &base() noexcept
+            {
+                return *this;
+            }
+            compressed_pair<I, S> const &base() const noexcept
+            {
+                return *this;
+            }
+            using compressed_pair<I, S>::first;
+            using compressed_pair<I, S>::second;
         public:
             using iterator = I;
             using sentinel = S;
-        #ifndef RANGES_DOXYGEN_INVOKED
+            /// \cond
             using const_iterator = I; // Mostly to avoid spurious errors in Boost.Range
-        #endif
+            /// \endcond
 
-            using base_t::begin;
-            using base_t::end;
+            constexpr /*c++14*/ I &begin() &
+            {
+                return this->first();
+            }
+            constexpr I const &begin() const &
+            {
+                return this->first();
+            }
+
+            constexpr /*c++14*/ S &end() &
+            {
+                return this->second();
+            }
+            constexpr S const &end() const &
+            {
+                return this->second();
+            }
 
             iterator_range() = default;
             constexpr iterator_range(I begin, S end)
-              : base_t{detail::move(begin), detail::move(end)}
+              : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
             {}
             CPP_template(typename X, typename Y)(
                 requires Constructible<I, X> && Constructible<S, Y>)
             constexpr iterator_range(iterator_range<X, Y> rng)
-              : base_t{detail::move(rng.begin()), detail::move(rng.end())}
+              : compressed_pair<I, S>{detail::move(rng.begin()), detail::move(rng.end())}
             {}
             CPP_template(typename X, typename Y)(
                 requires Constructible<I, X> && Constructible<S, Y>)
             explicit constexpr iterator_range(std::pair<X, Y> rng)
-              : base_t{detail::move(rng.first), detail::move(rng.second)}
+              : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
             {}
             CPP_template(typename X, typename Y)(
                 requires Assignable<I &, X> && Assignable<S &, Y>)
             iterator_range &operator=(iterator_range<X, Y> rng)
             {
-                begin() = detail::move(rng).begin();
-                end() = detail::move(rng).end();
+                base().first() = std::move(rng.base()).first();
+                base().second() = std::move(rng.base()).second();
                 return *this;
             }
             CPP_template(typename X, typename Y)(
                 requires ConvertibleTo<I, X> && ConvertibleTo<S, Y>)
             constexpr operator std::pair<X, Y>() const
             {
-                return {begin(), end()};
+                return {base().first(), base().second()};
             }
             constexpr bool empty() const
             {
-                return begin() == end();
+                return base().first() == base().second();
             }
         };
 

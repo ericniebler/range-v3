@@ -26,8 +26,7 @@
 #include <range/v3/view_facade.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
-#include <range/v3/utility/optional.hpp>
+#include <range/v3/utility/optional.hpp> // for non_propagating_cache
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/take.hpp>
@@ -221,50 +220,18 @@ namespace ranges
 
             using iter_cache_t = detail::non_propagating_cache<iterator_t<Rng>>;
 
-            mutable compressed_tuple<
-                Rng,                          // base
-                range_difference_t<Rng>,      // n
-                range_difference_t<Rng>,      // remainder
-                iter_cache_t                  // it
-            > data_{};
+            Rng base_;
+            range_difference_t<Rng> n_;
+            range_difference_t<Rng> remainder_;
+            mutable iter_cache_t it_cache_;
 
-            constexpr /*c++14*/ Rng &base() noexcept
-            {
-                return ranges::get<0>(data_);
-            }
-            constexpr Rng const &base() const noexcept
-            {
-                return ranges::get<0>(data_);
-            }
-            constexpr /*c++14*/ range_difference_t<Rng> &n() noexcept
-            {
-                return ranges::get<1>(data_);
-            }
-            constexpr range_difference_t<Rng> const &n() const noexcept
-            {
-                return ranges::get<1>(data_);
-            }
-
-            constexpr /*c++14*/ range_difference_t<Rng> &remainder() noexcept
-            {
-                return ranges::get<2>(data_);
-            }
-            constexpr range_difference_t<Rng> const &remainder() const noexcept
-            {
-                return ranges::get<2>(data_);
-            }
-
-            constexpr iter_cache_t &it_cache() const noexcept
-            {
-                return ranges::get<3>(data_);
-            }
             constexpr /*c++14*/ iterator_t<Rng> &it() noexcept
             {
-                return *it_cache();
+                return *it_cache_;
             }
             constexpr iterator_t<Rng> const &it() const noexcept
             {
-                return *it_cache();
+                return *it_cache_;
             }
 
             struct outer_cursor
@@ -284,7 +251,7 @@ namespace ranges
                     bool done() const noexcept
                     {
                         RANGES_EXPECT(rng_);
-                        return rng_->remainder() == 0;
+                        return rng_->remainder_ == 0;
                     }
                     constexpr /*c++14*/
                     bool equal(default_sentinel) const noexcept
@@ -308,9 +275,9 @@ namespace ranges
                     {
                         RANGES_EXPECT(!done());
                         ++rng_->it();
-                        --rng_->remainder();
-                        if(rng_->remainder() != 0 && rng_->it() == ranges::end(rng_->base()))
-                            rng_->remainder() = 0;
+                        --rng_->remainder_;
+                        if(rng_->remainder_ != 0 && rng_->it() == ranges::end(rng_->base_))
+                            rng_->remainder_ = 0;
                     }
                     CPP_member
                     constexpr /*c++14*/
@@ -319,8 +286,8 @@ namespace ranges
                             requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                     {
                         RANGES_EXPECT(rng_);
-                        auto const d = ranges::end(rng_->base()) - rng_->it();
-                        return ranges::min(d, rng_->remainder());
+                        auto const d = ranges::end(rng_->base_) - rng_->it();
+                        return ranges::min(d, rng_->remainder_);
                     }
                 public:
                     inner_view() = default;
@@ -355,7 +322,7 @@ namespace ranges
                 bool done() const
                 {
                     RANGES_EXPECT(rng_);
-                    return rng_->it() == ranges::end(rng_->base()) && rng_->remainder() != 0;
+                    return rng_->it() == ranges::end(rng_->base_) && rng_->remainder_ != 0;
                 }
                 constexpr /*c++14*/
                 bool equal(default_sentinel) const
@@ -366,8 +333,8 @@ namespace ranges
                 void next()
                 {
                     RANGES_EXPECT(!done());
-                    ranges::advance(rng_->it(), rng_->remainder(), ranges::end(rng_->base()));
-                    rng_->remainder() = rng_->n();
+                    ranges::advance(rng_->it(), rng_->remainder_, ranges::end(rng_->base_));
+                    rng_->remainder_ = rng_->n_;
                 }
                 CPP_member
                 constexpr /*c++14*/
@@ -376,13 +343,13 @@ namespace ranges
                         requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_EXPECT(rng_);
-                    auto d = ranges::end(rng_->base()) - rng_->it();
-                    if(d < rng_->remainder())
+                    auto d = ranges::end(rng_->base_) - rng_->it();
+                    if(d < rng_->remainder_)
                         return 1;
 
-                    d -= rng_->remainder();
-                    d = (d + rng_->n() - 1) / rng_->n();
-                    d += (rng_->remainder() != 0);
+                    d -= rng_->remainder_;
+                    d = (d + rng_->n_ - 1) / rng_->n_;
+                    d += (rng_->remainder_ != 0);
                     return d;
                 }
             };
@@ -390,32 +357,36 @@ namespace ranges
             constexpr /*c++14*/
             outer_cursor begin_cursor() noexcept
             {
-                it_cache() = ranges::begin(base());
+                it_cache_ = ranges::begin(base_);
                 return outer_cursor{*this};
             }
             template<typename Size>
             constexpr /*c++14*/ Size size_(Size base_size) const
             {
-                auto const n = static_cast<Size>(this->n());
+                auto const n = static_cast<Size>(this->n_);
                 return base_size / n + (0 != base_size % n);
             }
         public:
             chunk_view_() = default;
             constexpr /*c++14*/
             chunk_view_(Rng rng, range_difference_t<Rng> n)
-              : data_{detail::move(rng), (RANGES_EXPECT(0 < n), n), n, nullopt}
+              : base_(detail::move(rng)), n_((RANGES_EXPECT(0 < n), n)), remainder_(n), it_cache_{nullopt}
             {}
             CPP_member
             constexpr auto CPP_fun(size)() (const
                 requires SizedRange<Rng const>)
             {
-                return size_(ranges::size(base()));
+                return size_(ranges::size(base_));
             }
             CPP_member
             constexpr /*c++14*/ auto CPP_fun(size)() (
                 requires SizedRange<Rng>)
             {
-                return size_(ranges::size(base()));
+                return size_(ranges::size(base_));
+            }
+            Rng base() const
+            {
+                return base_;
             }
         };
 

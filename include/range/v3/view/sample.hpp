@@ -21,7 +21,6 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
 #include <range/v3/algorithm/tagspec.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -79,57 +78,43 @@ namespace ranges
         template<typename Rng, typename URNG>
         class sample_view
           : public view_facade<sample_view<Rng, URNG>, finite>
-          , tagged_compressed_tuple<
-                tag::range(Rng),
-                tag::size(mutable_<range_difference_t<Rng>>),
-                tag::engine(reference_wrapper<URNG>)>
         {
             friend range_access;
             using D = range_difference_t<Rng>;
-            using base_t = tagged_compressed_tuple<
-                tag::range(Rng), tag::size(mutable_<D>), tag::engine(reference_wrapper<URNG>)>;
-            using base_t::engine;
-            using base_t::range;
-            using base_t::size;
+            Rng rng_;
+            // Mutable is OK here because sample_view is an Input view.
+            mutable range_difference_t<Rng> size_;
+            URNG *engine_;
 
             template<bool IsConst>
             class cursor
-              : tagged_compressed_tuple<
-                    tag::range(meta::const_if_c<IsConst, sample_view> *),
-                    tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
-                    tag::size(detail::size_tracker<meta::const_if_c<IsConst, Rng>>)>
             {
-                friend class cursor<!IsConst>;
-                using base_t = tagged_compressed_tuple<
-                    tag::range(meta::const_if_c<IsConst, sample_view> *),
-                    tag::current(iterator_t<meta::const_if_c<IsConst, Rng>>),
-                    tag::size(detail::size_tracker<meta::const_if_c<IsConst, Rng>>)>;
-                using base_t::current;
-                using base_t::range;
-                using base_t::size;
+                friend cursor<!IsConst>;
+
+                using Base = meta::const_if_c<IsConst, Rng>;
+                meta::const_if_c<IsConst, sample_view> *parent_;
+                iterator_t<Base> current_;
+                RANGES_NO_UNIQUE_ADDRESS detail::size_tracker<Base> size_;
 
                 D pop_size()
                 {
-                    RANGES_EXPECT(range());
-                    return size().get(range()->range(), current());
+                    return size_.get(parent_->rng_, current_);
                 }
                 void advance()
                 {
-                    RANGES_EXPECT(range());
-                    if(range()->size() > 0)
+                    if(parent_->size_ > 0)
                     {
                         using Dist = std::uniform_int_distribution<D>;
-                        using Param_t = typename Dist::param_type;
                         Dist dist{};
-                        URNG& engine = range()->engine().get();
+                        URNG& engine = *parent_->engine_;
 
-                        for(; ; ++current(), size().decrement())
+                        for(; ; ++current_, size_.decrement())
                         {
-                            RANGES_ASSERT(current() != ranges::end(range()->range()));
+                            RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
                             auto n = pop_size();
                             RANGES_EXPECT(n > 0);
-                            const Param_t interval{ 0, n - 1 };
-                            if(dist(engine, interval) < range()->size())
+                            typename Dist::param_type const interval{ 0, n - 1 };
+                            if(dist(engine, interval) < parent_->size_)
                                 break;
                         }
                     }
@@ -140,36 +125,35 @@ namespace ranges
 
                 cursor() = default;
                 explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
-                  : base_t{&rng, ranges::begin(rng.range()), rng.range()}
+                  : parent_(&rng), current_(ranges::begin(rng.rng_)), size_{rng.rng_}
                 {
                     auto n = pop_size();
-                    if(rng.size() > n)
-                        rng.size() = n;
+                    if(rng.size_ > n)
+                        rng.size_ = n;
                     advance();
                 }
                 template<bool Other>
                 CPP_ctor(cursor)(cursor<Other> that)(
                     requires IsConst && (!Other))
-                  : base_t(static_cast<typename cursor<Other>::base_t &&>(
-                      static_cast<typename cursor<Other>::base_t &>(that)))
+                  : parent_(that.parent_), current_(std::move(that.current_)), size_(that.size_)
                 {}
                 range_reference_t<Rng> read() const
                 {
-                    return *current();
+                    return *current_;
                 }
                 bool equal(default_sentinel) const
                 {
-                    RANGES_EXPECT(range());
-                    return range()->size() <= 0;
+                    RANGES_EXPECT(parent_);
+                    return parent_->size_ <= 0;
                 }
                 void next()
                 {
-                    RANGES_EXPECT(range());
-                    RANGES_EXPECT(range()->size() > 0);
-                    --range()->size();
-                    RANGES_ASSERT(current() != ranges::end(range()->range()));
-                    ++current();
-                    size().decrement();
+                    RANGES_EXPECT(parent_);
+                    RANGES_EXPECT(parent_->size_ > 0);
+                    --parent_->size_;
+                    RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
+                    ++current_;
+                    size_.decrement();
                     advance();
                 }
             };
@@ -192,9 +176,14 @@ namespace ranges
             sample_view() = default;
 
             explicit sample_view(Rng rng, D sample_size, URNG& generator)
-            : base_t{std::move(rng), sample_size, generator}
+              : rng_(std::move(rng)), size_(sample_size), engine_(std::addressof(generator))
             {
                 RANGES_EXPECT(sample_size >= 0);
+            }
+
+            Rng base() const
+            {
+                return rng_;
             }
         };
 

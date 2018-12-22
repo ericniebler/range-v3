@@ -22,6 +22,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -50,45 +51,48 @@ namespace ranges
             struct adaptor_base_current_mem_fn
             {};
 
-            template<typename BaseIter, typename Adapt, typename Enable = void>
-            struct adaptor_value_type_2_
-              : compressed_pair<BaseIter, Adapt>
-            {
-                adaptor_value_type_2_() = default;
-                using compressed_pair<BaseIter, Adapt>::compressed_pair;
-            };
-
             template<typename BaseIter, typename Adapt>
-            struct adaptor_value_type_2_<
-                BaseIter,
-                Adapt,
-                meta::void_<decltype(Adapt::read(std::declval<BaseIter const &>(), adaptor_base_current_mem_fn{}))>>
-              : compressed_pair<BaseIter, Adapt>
+            constexpr int which_adaptor_value_(priority_tag<0>)
             {
-                adaptor_value_type_2_() = default;
-                using compressed_pair<BaseIter, Adapt>::compressed_pair;
-                using value_type = iter_value_t<BaseIter>;
-            };
+                return 0;
+            }
+            template<typename BaseIter, typename Adapt>
+            constexpr auto which_adaptor_value_(priority_tag<1>) ->
+                always_<
+                    int,
+                    decltype(Adapt::read(std::declval<BaseIter const &>(),
+                                         adaptor_base_current_mem_fn{}))>
+            {
+                return 1;
+            }
+            template<typename BaseIter, typename Adapt>
+            constexpr auto which_adaptor_value_(priority_tag<2>) ->
+                always_<int, typename Adapt::value_type>
+            {
+                return 2;
+            }
 
-            template<typename BaseIter, typename Adapt, typename Enable = void>
+            template<typename BaseIter, typename Adapt,
+                int = detail::which_adaptor_value_<BaseIter, Adapt>(priority_tag<2>{})>
             struct adaptor_value_type_
-              : adaptor_value_type_2_<BaseIter, Adapt>
             {
-                adaptor_value_type_() = default;
-                using adaptor_value_type_2_<BaseIter, Adapt>::adaptor_value_type_2_;
+                compressed_pair<BaseIter, Adapt> data_;
             };
-
             template<typename BaseIter, typename Adapt>
-            struct adaptor_value_type_<BaseIter, Adapt, meta::void_<typename Adapt::value_type>>
-              : compressed_pair<BaseIter, Adapt>
+            struct adaptor_value_type_<BaseIter, Adapt, 1>
             {
-                adaptor_value_type_() = default;
-                using compressed_pair<BaseIter, Adapt>::compressed_pair;
+                using value_type = iter_value_t<BaseIter>;
+                compressed_pair<BaseIter, Adapt> data_;
+            };
+            template<typename BaseIter, typename Adapt>
+            struct adaptor_value_type_<BaseIter, Adapt, 2>
+            {
 #ifdef RANGES_WORKAROUND_MSVC_688606
-                using value_type = value_type_t<Adapt>;
+                using value_type = typename readable_traits<Adapt>::value_type;
 #else // ^^^ workaround ^^^ / vvv no workaround vvv
                 using value_type = typename Adapt::value_type;
 #endif // RANGES_WORKAROUND_MSVC_688606
+                compressed_pair<BaseIter, Adapt> data_;
             };
         }
         /// \endcond
@@ -178,29 +182,22 @@ namespace ranges
         // adaptor that customizes behavior.
         template<typename BaseSent, typename Adapt>
         struct adaptor_sentinel
-          : private compressed_pair<BaseSent, Adapt>
         {
         private:
             template<typename, typename>
             friend struct adaptor_cursor;
-
-            using compressed_pair<BaseSent, Adapt>::first;
-            using compressed_pair<BaseSent, Adapt>::second;
+            RANGES_NO_UNIQUE_ADDRESS compressed_pair<BaseSent, Adapt> data_;
         public:
-            // Uninvestigated gcc ICE
-            #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 9
+            adaptor_sentinel() = default;
             adaptor_sentinel(BaseSent sent, Adapt adapt)
-              : adaptor_sentinel::compressed_pair{std::move(sent), std::move(adapt)}
+              : data_{std::move(sent), std::move(adapt)}
             {}
-            #else
-            using compressed_pair<BaseSent, Adapt>::compressed_pair;
-            #endif
 
             // All sentinels into adapted ranges have a base() member for fetching
             // the underlying sentinel.
             BaseSent base() const
             {
-                return first();
+                return data_.first();
             }
         };
 
@@ -224,12 +221,9 @@ namespace ranges
                 // the underlying iterator.
                 BaseIter base() const
                 {
-                    return this->get().first();
+                    return this->get().data_.first();
                 }
             };
-
-            using base_t::first;
-            using base_t::second;
 
             template<typename A = Adapt, typename R = decltype(
                 std::declval<A const &>().read(std::declval<BaseIter const &>()))>
@@ -242,13 +236,13 @@ namespace ranges
                     CommonReference<R &&, V &>,
                     "In your adaptor, you've specified a value type that does not "
                     "share a common reference type with the return type of read.");
-                return second().read(first());
+                return this->data_.second().read(this->data_.first());
             }
             template<typename A = Adapt,
                 typename = decltype(std::declval<A &>().next(std::declval<BaseIter &>()))>
             void next()
             {
-                second().next(first());
+                this->data_.second().next(this->data_.first());
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A const &>().equal(
@@ -257,7 +251,8 @@ namespace ranges
                     std::declval<A const &>()))>
             bool equal_(adaptor_cursor const &that, int) const
             {
-                return second().equal(first(), that.first(), that.second());
+                return this->data_.second().equal(
+                    this->data_.first(), that.data_.first(), that.data_.second());
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A const &>().equal(
@@ -265,7 +260,7 @@ namespace ranges
                     std::declval<BaseIter const &>()))>
             bool equal_(adaptor_cursor const &that, long) const
             {
-                return second().equal(first(), that.first());
+                return this->data_.second().equal(this->data_.first(), that.data_.first());
             }
             template<typename C = adaptor_cursor>
             auto equal(adaptor_cursor const &that) const ->
@@ -280,7 +275,8 @@ namespace ranges
                     std::declval<S const &>()))>
             constexpr bool equal_(adaptor_sentinel<S, A> const &that, int) const
             {
-                return that.second().empty(first(), second(), that.first());
+                return that.data_.second().empty(
+                    this->data_.first(), this->data_.second(), that.data_.first());
             }
             template<typename S, typename A, typename = decltype(
                 std::declval<A const &>().empty(
@@ -288,7 +284,7 @@ namespace ranges
                     std::declval<S const &>()))>
             constexpr bool equal_(adaptor_sentinel<S, A> const &that, long) const
             {
-                return that.second().empty(first(), that.first());
+                return that.data_.second().empty(this->data_.first(), that.data_.first());
             }
             template<typename S, typename A>
             constexpr auto equal(adaptor_sentinel<S, A> const &that) const ->
@@ -300,13 +296,13 @@ namespace ranges
                 std::declval<A &>().prev(std::declval<BaseIter &>()))>
             void prev()
             {
-                second().prev(first());
+                this->data_.second().prev(this->data_.first());
             }
             template<typename A = Adapt, typename = decltype(
                 std::declval<A &>().advance(std::declval<BaseIter &>(), 0))>
             void advance(iter_difference_t<BaseIter> n)
             {
-                second().advance(first(), n);
+                this->data_.second().advance(this->data_.first(), n);
             }
             template<typename A = Adapt, typename R = decltype(
                 std::declval<A const &>().distance_to(
@@ -315,7 +311,8 @@ namespace ranges
                     std::declval<A const &>()))>
             R distance_to_(adaptor_cursor const &that, int) const
             {
-                return second().distance_to(first(), that.first(), that.second());
+                return this->data_.second().distance_to(
+                    this->data_.first(), that.data_.first(), that.data_.second());
             }
             template<typename A = Adapt, typename R = decltype(
                 std::declval<A const &>().distance_to(
@@ -323,7 +320,7 @@ namespace ranges
                     std::declval<BaseIter const &>()))>
             R distance_to_(adaptor_cursor const &that, long) const
             {
-                return second().distance_to(first(), that.first());
+                return this->data_.second().distance_to(this->data_.first(), that.data_.first());
             }
             template<typename C = adaptor_cursor>
             auto distance_to(adaptor_cursor const &that) const ->
@@ -340,7 +337,7 @@ namespace ranges
                     std::declval<BaseIter const &>())))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
-                using R = decltype(second().read(first()));
+                using R = decltype(this->data_.second().read(this->data_.first()));
                 static_assert(
                     CommonReference<X &&, V const &>,
                     "In your adaptor, the result of your iter_move member function does "
@@ -350,7 +347,7 @@ namespace ranges
                     "In your adaptor, the result of your iter_move member function does "
                     "not share a common reference with the result of your read member "
                     "function.");
-                return second().iter_move(first());
+                return this->data_.second().iter_move(this->data_.first());
             }
             // If there is no iter_move member and the adaptor has not overridden the read
             // member function, then dispatch to the base iterator's iter_move function.
@@ -361,7 +358,7 @@ namespace ranges
             X iter_move_(long) const
                 noexcept(noexcept(X(ranges::iter_move(std::declval<BaseIter const &>()))))
             {
-                return ranges::iter_move(first());
+                return ranges::iter_move(this->data_.first());
             }
             // If the adaptor does not have an iter_move function but overrides the read
             // member function, apply std::move to the result of calling read.
@@ -378,7 +375,7 @@ namespace ranges
                     "In your adaptor, you've specified a value type that does not share a common "
                     "reference type with the result of moving the result of the read member "
                     "function. Consider defining an iter_move function in your adaptor.");
-                return static_cast<X &&>(second().read(first()));
+                return static_cast<X &&>(this->data_.second().read(this->data_.first()));
             }
             // Gives users a way to override the default iter_move function in their adaptors.
             auto move() const
@@ -389,14 +386,9 @@ namespace ranges
             }
         public:
             adaptor_cursor() = default;
-            // Uninvestigated gcc ICE
-            #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 9
             adaptor_cursor(BaseIter iter, Adapt adapt)
-              : base_t{std::move(iter), std::move(adapt)}
+              : base_t{{std::move(iter), std::move(adapt)}}
             {}
-            #else
-            using base_t::base_t;
-            #endif
         };
 
         template<typename D>
@@ -420,6 +412,7 @@ namespace ranges
             friend Derived;
             friend range_access;
             friend adaptor_base;
+            CPP_assert(ViewableRange<BaseRng>);
             using base_range_t = view::all_t<BaseRng>;
             using view_facade<Derived, Cardinality>::derived;
 

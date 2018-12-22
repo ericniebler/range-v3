@@ -23,6 +23,9 @@
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/concepts.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 namespace ranges
 {
     inline namespace v3
@@ -30,8 +33,10 @@ namespace ranges
         /// \addtogroup group-utility Utility
         /// @{
         ///
+
+        /// \cond
         template<typename T>
-        struct mutable_
+        struct RANGES_DEPRECATED("The ranges::mutable_ class template is deprecated") mutable_
         {
             mutable T value;
 
@@ -61,6 +66,7 @@ namespace ranges
                 return value;
             }
         };
+        /// \endcond
 
         template<typename T, T v>
         struct constant
@@ -312,5 +318,7 @@ namespace ranges
         /// @}
     }
 }
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

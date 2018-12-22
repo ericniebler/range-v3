@@ -17,15 +17,19 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/tagged_pair.hpp>
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 namespace ranges
 {
     inline namespace v3
     {
         template<typename... Ts>
-        using tagged_tuple =
+        using tagged_tuple RANGES_DEPRECATED("ranges::tagged_tuple is deprecated.") =
             tagged<std::tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
 
         template<typename...Tags, typename...Ts>
+        RANGES_DEPRECATED("ranges::make_tagged_tuple is deprecated.")
         constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
         make_tagged_tuple(Ts &&... ts)
         {
@@ -33,5 +37,7 @@ namespace ranges
         }
     }
 }
+
+RANGES_DIAGNOSTIC_POP
 
 #endif

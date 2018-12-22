@@ -18,11 +18,11 @@
 #include <type_traits>
 #include <utility>
 #include <meta/meta.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/tagged_pair.hpp>
 
 namespace ranges
 {
@@ -88,7 +88,7 @@ namespace ranges
             };
 
             template<typename... Ts>
-            using compressed_tuple =
+            using compressed_tuple RANGES_DEPRECATED("ranges::compressed_tuple is deprecated.") =
                 compressed_tuple_<meta::list<Ts...>, meta::make_index_sequence<sizeof...(Ts)>>;
         }
         /// \endcond
@@ -108,33 +108,53 @@ namespace ranges
         /// \sa `make_compressed_tuple_fn`
         RANGES_INLINE_VARIABLE(make_compressed_tuple_fn, make_compressed_tuple)
 
-        template<typename... Ts>
-        using tagged_compressed_tuple =
-            tagged<compressed_tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
-
-        RANGES_DEFINE_TAG_SPECIFIER(first)
-        RANGES_DEFINE_TAG_SPECIFIER(second)
-
         template<typename First, typename Second>
-        struct compressed_pair
-            : tagged_compressed_tuple<tag::first(First), tag::second(Second)>
+        struct RANGES_EMPTY_BASES compressed_pair
+          : box<First, meta::size_t<0>>
+          , box<Second, meta::size_t<1>>
         {
-            using base_t = tagged_compressed_tuple<tag::first(First), tag::second(Second)>;
             using first_type = First;
             using second_type = Second;
 
-            using base_t::first;
-            using base_t::second;
-
             compressed_pair() = default;
-            using base_t::base_t;
 
-            template<typename F, typename S,
-                meta::if_<meta::strict_and<std::is_constructible<F, First const &>,
-                                           std::is_constructible<S, Second const &>>, int> = 0>
+            CPP_template(typename U, typename V)(
+                requires Constructible<First, U> && Constructible<Second, V>)
+            constexpr compressed_pair(U &&u, V &&v)
+                noexcept(noexcept(First((U &&) u)) && noexcept(Second((V &&) v)))
+              : box<First, meta::size_t<0>>{(U &&) u}
+              , box<Second, meta::size_t<1>>{(V &&) v}
+            {}
+
+            constexpr /*c++14*/ First &first() &
+            {
+                return this->box<First, meta::size_t<0>>::get();
+            }
+            constexpr First const &first() const &
+            {
+                return this->box<First, meta::size_t<0>>::get();
+            }
+            constexpr /*c++14*/ First &&first() &&
+            {
+                return static_cast<First &&>(this->box<First, meta::size_t<0>>::get());
+            }
+
+            constexpr /*c++14*/ Second &second() &
+            {
+                return this->box<Second, meta::size_t<1>>::get();
+            }
+            constexpr Second const &second() const &
+            {
+                return this->box<Second, meta::size_t<1>>::get();
+            }
+            constexpr /*c++14*/ Second &&second() &&
+            {
+                return static_cast<Second &&>(this->box<Second, meta::size_t<1>>::get());
+            }
+
+            CPP_template(typename F, typename S)(
+                requires ConvertibleTo<First const&, F> && ConvertibleTo<Second const &, S>)
             constexpr operator std::pair<F, S> () const
-                noexcept(std::is_nothrow_constructible<F, First const&>::value &&
-                    std::is_nothrow_constructible<S, Second const&>::value)
             {
                 return std::pair<F, S>{first(), second()};
             }

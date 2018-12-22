@@ -23,10 +23,8 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INCONSISTENT_OVERRIDE
@@ -231,48 +229,44 @@ namespace ranges
             template<typename Rng, typename Ref, bool Sized = false>
             struct RANGES_EMPTY_BASES any_input_view_impl
               : any_input_view_interface<Ref, Sized>
-              , private tagged_compressed_tuple<tag::range(Rng),
-                    tag::current(iterator_t<Rng>)>
               , private any_view_sentinel_impl<Rng>
             {
                 CPP_assert(AnyCompatibleRange<Rng, Ref>);
                 CPP_assert(!Sized || (bool)SizedRange<Rng>);
 
                 explicit any_input_view_impl(Rng rng_)
-                  : tagged_t{std::move(rng_), iterator_t<Rng>{}}
+                  : rng_{std::move(rng_)}
                 {}
                 any_input_view_impl(any_input_view_impl const &) = delete;
                 any_input_view_impl &operator=(any_input_view_impl const &) = delete;
 
             private:
-                using tagged_t = tagged_compressed_tuple<tag::range(Rng),
-                    tag::current(iterator_t<Rng>)>;
-                using tagged_t::range;
-                using tagged_t::current;
                 using sentinel_box_t = any_view_sentinel_impl<Rng>;
 
                 virtual void init() override
                 {
-                    auto &rng = range();
-                    sentinel_box_t::init(rng);
-                    current() = ranges::begin(rng);
+                    sentinel_box_t::init(rng_);
+                    current_ = ranges::begin(rng_);
                 }
                 virtual bool done() override
                 {
-                    return current() == sentinel_box_t::get(range());
+                    return current_ == sentinel_box_t::get(rng_);
                 }
                 virtual Ref read() const override
                 {
-                    return *current();
+                    return *current_;
                 }
                 virtual void next() override
                 {
-                    ++current();
+                    ++current_;
                 }
                 std::size_t size() const // override-ish
                 {
-                    return static_cast<std::size_t>(ranges::size(range()));
+                    return static_cast<std::size_t>(ranges::size(rng_));
                 }
+
+                RANGES_NO_UNIQUE_ADDRESS Rng rng_;
+                RANGES_NO_UNIQUE_ADDRESS iterator_t<Rng> current_{};
             };
 
             template<typename Ref, category Cat = category::forward, typename enable = void>

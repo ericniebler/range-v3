@@ -32,6 +32,8 @@ int main()
     CHECK(r0.size() == 4u);
     CHECK(r0.begin() == vi.begin());
     CHECK(r0.end() == vi.end());
+    CHECK(ranges::get<0>(r0) == vi.begin());
+    CHECK(ranges::get<1>(r0) == vi.end());
     ++r0.begin();
     CHECK(r0.size() == 3u);
 

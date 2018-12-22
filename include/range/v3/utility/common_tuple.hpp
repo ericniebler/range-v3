@@ -21,7 +21,6 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
-#include <range/v3/utility/tagged_pair.hpp> // BUGBUG
 
 namespace ranges
 {
@@ -59,12 +58,12 @@ namespace ranges
 
         template<typename ...Ts>
         struct common_tuple
-          : _tagged_::wrap_base<std::tuple<Ts...>>
+          : _tuple_wrapper_::forward_tuple_interface<std::tuple<Ts...>>
         {
         private:
             template<typename That, std::size_t ...Is>
             common_tuple(That &&that, meta::index_sequence<Is...>)
-              : common_tuple::wrap_base{detail::adl_get<Is>(static_cast<That &&>(that))...}
+              : common_tuple::forward_tuple_interface{detail::adl_get<Is>(static_cast<That &&>(that))...}
             {}
             struct element_assign_
             {
@@ -81,13 +80,13 @@ namespace ranges
             CPP_ctor(common_tuple)()(
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
                 requires DefaultConstructible<std::tuple<Ts...>>)
-              : common_tuple::wrap_base{}
+              : common_tuple::forward_tuple_interface{}
             {}
             CPP_template(typename...Us)(
                 requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
             explicit common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
-              : common_tuple::wrap_base{static_cast<Us &&>(us)...}
+              : common_tuple::forward_tuple_interface{static_cast<Us &&>(us)...}
             {}
             template<typename...Us>
             CPP_ctor(common_tuple)(std::tuple<Us...> &that)(
