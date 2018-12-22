@@ -591,18 +591,8 @@ namespace meta
         template <typename T>
         struct id
         {
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
-            // Redirect through decltype for compilers that have not
-            // yet implemented CWG 1558:
-            // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
-            static id impl(void *);
-
-            template <typename... Ts>
-            using invoke = _t<decltype(id::impl(static_cast<list<Ts...> *>(nullptr)))>;
-#else
             template <typename...>
             using invoke = T;
-#endif
 
             using type = T;
         };
@@ -623,16 +613,8 @@ namespace meta
 
         /// An alias for `void`.
         /// \ingroup trait
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5 && !defined(META_DOXYGEN_INVOKED)
-        // Redirect through decltype for compilers that have not
-        // yet implemented CWG 1558:
-        // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
-        template <typename... Ts>
-        using void_ = invoke<id<void>, Ts...>;
-#else
         template <typename...>
         using void_ = void;
-#endif
 
         /// \cond
         namespace detail
@@ -883,21 +865,6 @@ namespace meta
             using invoke = _t<detail::defer_i_<T, C, META_VALUE_OF(Ts)...>>;
         };
 
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(META_DOXYGEN_INVOKED)
-        template <template <typename...> class C>
-        struct quote_trait
-        {
-            template <typename... Ts>
-            using invoke = _t<invoke<quote<C>, Ts...>>;
-        };
-
-        template <typename T, template <T...> class C>
-        struct quote_trait_i
-        {
-            template <typename... Ts>
-            using invoke = _t<invoke<quote_i<T, C>, Ts...>>;
-        };
-#else
         // clang-format off
         /// Turn a trait template \p C into a Callable.
         /// \code
@@ -912,8 +879,7 @@ namespace meta
         /// \ingroup composition
         template <typename T, template <T...> class C>
         using quote_trait_i = compose<quote<_t>, quote_i<T, C>>;
-// clang-format on
-#endif
+        // clang-format on
 
         /// A Callable that partially applies the Callable
         /// \p F by binding the arguments \p Ts to the \e front of \p F.

@@ -155,30 +155,6 @@ public:
     explicit test_range_algo_1(Algo algo)
       : algo_(algo)
     {}
-#if !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
-    template<typename R, typename I, typename Eval1, typename Eval2>
-    static checker<R> impl(I begin, I end, Eval1 e1, Eval2 e2)
-    {
-        using S = meta::_t<sentinel_type<I>>;
-        return checker<R>{[=](function_ref<void(R)> const & check)
-        {
-            check(e1(begin, end));
-            check(e1(begin, S{base(end)}));
-            check(e2(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end))));
-            check(e2(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)}))));
-        }};
-    }
-    template<typename I, typename...Rest>
-    auto operator()(I begin, I end, Rest &&... rest) const ->
-        checker<decltype(algo_(begin, end, rest...))>
-    {
-        using namespace std::placeholders;
-        using R = decltype(algo_(begin, end, rest...));
-        auto e1 = std::bind<R>(algo_, _1, _2, rest...);
-        auto e2 = std::bind<R>(algo_, _1, rest...);
-        return impl<R>(begin, end, e1, e2);
-    }
-#else
     template<typename I, typename...Rest>
     auto operator()(I begin, I end, Rest &&... rest) const ->
         checker<decltype(algo_(begin, end, rest...))>
@@ -193,7 +169,6 @@ public:
             check(algo_(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)})), rest...));
         }};
     }
-#endif
 };
 
 template<bool RvalueOK = false, typename Algo>
@@ -211,33 +186,6 @@ public:
     explicit test_range_algo_2(Algo algo)
       : algo_(algo)
     {}
-#if !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
-    template<typename R, typename I1, typename I2, typename Eval1, typename Eval2>
-    static checker<R> impl(I1 begin1, I1 end1, I2 begin2, I2 end2, Eval1 e1, Eval2 e2)
-    {
-        using S1 = meta::_t<sentinel_type<I1>>;
-        using S2 = meta::_t<sentinel_type<I2>>;
-        return checker<R>{[=](function_ref<void(R)> const & check)
-        {
-            check(e1(begin1, end1, begin2, end2));
-            check(e1(begin1, S1{base(end1)}, begin2, S2{base(end2)}));
-            check(e2(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, end1)),
-                     ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, end2))));
-            check(e2(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, S1{base(end1)})),
-                     ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, S2{base(end2)}))));
-        }};
-    }
-    template<typename I1, typename I2, typename...Rest>
-    auto operator()(I1 begin1, I1 end1, I2 begin2, I2 end2, Rest &&... rest) const ->
-        checker<decltype(algo_(begin1, end1, begin2, end2, rest...))>
-    {
-        using namespace std::placeholders;
-        using R = decltype(algo_(begin1, end1, begin2, end2, rest...));
-        auto e1 = std::bind<R>(algo_, _1, _2, _3, _4, rest...);
-        auto e2 = std::bind<R>(algo_, _1, _2, rest...);
-        return impl<R>(begin1, end1, begin2, end2, e1, e2);
-    }
-#else
     template<typename I1, typename I2, typename...Rest>
     auto operator()(I1 begin1, I1 end1, I2 begin2, I2 end2, Rest &&... rest) const ->
         checker<decltype(algo_(begin1, end1, begin2, end2, rest...))>
@@ -257,7 +205,6 @@ public:
                         rest...));
         }};
     }
-#endif
 };
 
 template<bool RvalueOK1 = false, bool RvalueOK2 = false, typename Algo>

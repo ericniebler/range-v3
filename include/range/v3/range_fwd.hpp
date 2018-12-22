@@ -288,19 +288,6 @@ namespace ranges
             template<typename T>
             using is_trivially_copyable =
                 meta::bool_<__is_trivially_copyable(T)>;
-        #elif defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
-            template<typename T>
-            using is_trivially_default_constructible = std::is_trivial<T>;
-            template<typename T>
-            using is_trivially_copy_constructible = std::is_trivial<T>;
-            template<typename T>
-            using is_trivially_move_constructible = std::is_trivial<T>;
-            template<typename T>
-            using is_trivially_copy_assignable = std::is_trivial<T>;
-            template<typename T>
-            using is_trivially_move_assignable = std::is_trivial<T>;
-            template<typename T>
-            using is_trivially_copyable = std::is_trivial<T>;
         #else
             template<typename T>
             using is_trivially_default_constructible =

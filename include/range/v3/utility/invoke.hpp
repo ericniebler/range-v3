@@ -27,11 +27,9 @@ RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 // constexpr invoke leads to premature function template instantiation
-// on clang-3.x and gcc-4.x
+// on clang-3.x
 #ifndef RANGES_CONSTEXPR_INVOKE
-#if !defined(__GNUC__) || \
-    ((defined(__clang__) && __clang__ >= 4) || \
-     (!defined(__clang__) && __GNUC__ >= 5))
+#if !defined(__clang__) || __clang__ >= 4
 #define RANGES_CONSTEXPR_INVOKE 1
 #else
 #define RANGES_CONSTEXPR_INVOKE 0
