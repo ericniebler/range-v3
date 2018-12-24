@@ -18,6 +18,16 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+struct my_data
+{
+    int i;
+};
+
+bool operator==(my_data left, my_data right)
+{
+    return left.i == right.i;
+}
+
 int main()
 {
     using namespace ranges;
@@ -63,6 +73,16 @@ int main()
             return i != 5;
         });
         ::check_equal(rng, {0,1,2,3,4});
+    }
+
+    {
+        auto ns = view::generate([]() {
+            static int N;
+            return my_data{++N};
+        });
+        auto rng = ns | view::take_while([](int i) { return i < 5; },
+                                         &my_data::i);
+        ::check_equal(rng, std::vector<my_data>{{1},{2},{3},{4}});
     }
 
     return test_result();
