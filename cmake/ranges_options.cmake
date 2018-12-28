@@ -7,7 +7,7 @@
 include(CMakeDependentOption)
 
 set(RANGES_CXX_STD 11 CACHE STRING "C++ standard version.")
-option(RANGE_BUILD_CALENDAR_EXAMPLE "Builds the calendar example." ON)
+option(RANGES_BUILD_CALENDAR_EXAMPLE "Builds the calendar example." ON)
 option(RANGES_ASAN "Run the tests using AddressSanitizer." OFF)
 option(RANGES_MSAN "Run the tests using MemorySanitizer." OFF)
 option(RANGES_ASSERTIONS "Enable assertions." ON)
