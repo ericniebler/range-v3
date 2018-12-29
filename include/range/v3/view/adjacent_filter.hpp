@@ -39,7 +39,7 @@ namespace ranges
                 template(typename Rng, typename Pred)
                 concept AdjacentFilter,
                     ViewableRange<Rng> && ForwardRange<Rng> &&
-                    IndirectPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
+                    IndirectBinaryPredicate<Pred, iterator_t<Rng>, iterator_t<Rng>>
             );
         }
         /// \endcond

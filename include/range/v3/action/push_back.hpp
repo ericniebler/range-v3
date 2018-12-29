@@ -87,26 +87,6 @@ namespace ranges
                     push_back(rng, static_cast<T &&>(t));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&rng, T &&t) const -> CPP_ret(void)(
-                    requires not PushBackActionConcept<Rng, T>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which action::push_back operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(Or<
-                        Range<T>,
-                        Constructible<range_value_t<Rng>, T>>,
-                        "The object to be inserted with action::push_back must either be "
-                        "convertible to the range's value type, or else it must be a range "
-                        "of elements that are convertible to the range's value type.");
-                    //push_back(rng, (T &&) t);
-                    adl_insert_detail::insert(rng, end(rng), (T &&) t);
-                    adl_insert_detail::detail::insert_impl(rng, end(rng), (T &&) t, std::true_type{});
-                }
-            #endif
             };
         }
         /// \endcond

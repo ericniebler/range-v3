@@ -38,15 +38,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C = less, typename P = identity)
-            (concept IsHeapable)(I, C, P),
-                RandomAccessIterator<I> &&
-                IndirectRelation<C, projected<I, P>>
-        );
-
         /// \cond
         namespace detail
         {
@@ -55,7 +46,8 @@ namespace ranges
                 template<typename I, typename C = less, typename P = identity>
                 auto operator()(I const begin_, iter_difference_t<I> const n_, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(I)(
-                        requires IsHeapable<I, C, P>)
+                        requires RandomAccessIterator<I> &&
+                            IndirectStrictWeakOrder<C, projected<I, P>>)
                 {
                     RANGES_EXPECT(0 <= n_);
                     iter_difference_t<I> p = 0, c = 1;
@@ -84,7 +76,8 @@ namespace ranges
                 template<typename I, typename C = less, typename P = identity>
                 auto operator()(I begin, iter_difference_t<I> n, C pred = C{}, P proj = P{}) const ->
                     CPP_ret(bool)(
-                        requires IsHeapable<I, C, P>)
+                        requires RandomAccessIterator<I> &&
+                            IndirectStrictWeakOrder<C, projected<I, P>>)
                 {
                     return is_heap_until_n(begin, n, std::move(pred), std::move(proj)) == begin + n;
                 }
@@ -101,7 +94,8 @@ namespace ranges
             template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires IsHeapable<I, C, P> && Sentinel<S, I>)
+                    requires RandomAccessIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<C, projected<I, P>>)
             {
                 return detail::is_heap_until_n(std::move(begin), distance(begin, end), std::move(pred),
                     std::move(proj));
@@ -110,7 +104,8 @@ namespace ranges
             template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires IsHeapable<iterator_t<Rng>, C, P> && Range<Rng>)
+                    requires RandomAccessRange<Rng> &&
+                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
             {
                 return detail::is_heap_until_n(begin(rng), distance(rng), std::move(pred),
                     std::move(proj));
@@ -119,15 +114,15 @@ namespace ranges
 
         /// \sa `is_heap_until_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_heap_until_fn>,
-                               is_heap_until)
+        RANGES_INLINE_VARIABLE(is_heap_until_fn, is_heap_until)
 
         struct is_heap_fn
         {
             template<typename I, typename S, typename C = less, typename P = identity>
             auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires IsHeapable<I, C, P> && Sentinel<S, I>)
+                    requires RandomAccessIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<C, projected<I, P>>)
             {
                 return detail::is_heap_n(std::move(begin), distance(begin, end), std::move(pred),
                     std::move(proj));
@@ -136,7 +131,8 @@ namespace ranges
             template<typename Rng, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires IsHeapable<iterator_t<Rng>, C, P> && Range<Rng>)
+                    requires RandomAccessRange<Rng> &&
+                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
             {
                 return detail::is_heap_n(begin(rng), distance(rng), std::move(pred), std::move(proj));
             }
@@ -144,7 +140,7 @@ namespace ranges
 
         /// \sa `is_heap_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_heap_fn>, is_heap)
+        RANGES_INLINE_VARIABLE(is_heap_fn, is_heap)
         /// @}
 
         /// \cond
@@ -266,7 +262,7 @@ namespace ranges
 
         /// \sa `push_heap_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<push_heap_fn>, push_heap)
+        RANGES_INLINE_VARIABLE(push_heap_fn, push_heap)
         /// @}
 
         /// \cond
@@ -320,7 +316,7 @@ namespace ranges
 
         /// \sa `pop_heap_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<pop_heap_fn>, pop_heap)
+        RANGES_INLINE_VARIABLE(pop_heap_fn, pop_heap)
 
         struct make_heap_fn
         {
@@ -354,7 +350,7 @@ namespace ranges
 
         /// \sa `make_heap_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<make_heap_fn>, make_heap)
+        RANGES_INLINE_VARIABLE(make_heap_fn, make_heap)
 
         struct sort_heap_fn
         {
@@ -384,7 +380,7 @@ namespace ranges
 
         /// \sa `sort_heap_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<sort_heap_fn>, sort_heap)
+        RANGES_INLINE_VARIABLE(sort_heap_fn, sort_heap)
         /// @}
     } // namespace v3
 } // namespace ranges

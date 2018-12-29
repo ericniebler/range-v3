@@ -31,16 +31,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename T)
-                concept StrideActionConcept,
-                    ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_t<Rng>> &&
-                    Permutable<iterator_t<Rng>>
-            );
-
             struct stride_fn
             {
             private:
@@ -53,7 +43,9 @@ namespace ranges
                 }
             public:
                 CPP_template(typename Rng, typename D = range_difference_t<Rng>)(
-                    requires StrideActionConcept<Rng, D>)
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        Permutable<iterator_t<Rng>>)
                 Rng operator()(Rng &&rng, range_difference_t<Rng> const step) const
                 {
                     using I = iterator_t<Rng>;
@@ -75,28 +67,6 @@ namespace ranges
                     }
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not StrideActionConcept<Rng, T>)
-                void operator()(Rng &&, T &&) const
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::stride operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    using S = sentinel_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, S>,
-                        "The object on which action::stride operates must allow element removal.");
-                    CPP_assert_msg(ConvertibleTo<T, range_difference_t<Rng>>,
-                        "The stride argument to action::stride must be convertible to the range's "
-                        "difference type.");
-                    CPP_assert_msg(Permutable<I>,
-                        "The iterator type of the range passed to action::stride must allow its "
-                        "elements to be permutaed; that is, the values must be movable and the "
-                        "iterator must be mutable.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

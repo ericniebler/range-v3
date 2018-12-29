@@ -39,12 +39,13 @@ namespace ranges
             /// \pre `Rng` is a model of the `ForwardRange` concept
             /// \pre `I` is a model of the `ForwardIterator` concept
             /// \pre `S` and `I` model the `Sentinel<S, I>` concept
-            /// \pre `R` and `projected<I, P>` model the `IndirectRelation<R, projected<I, P>>` concept
+            /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
             ///
             template<typename I, typename S, typename R = less, typename P = identity>
             auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires ForwardIterator<I> && Sentinel<S, I> && IndirectRelation<R, projected<I, P>>)
+                    requires ForwardIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<R, projected<I, P>>)
             {
                 auto i = begin;
                 if(begin != end)
@@ -62,7 +63,8 @@ namespace ranges
             template<typename Rng, typename R = less, typename P = identity>
             auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires ForwardRange<Rng> && IndirectRelation<R, projected<iterator_t<Rng>, P>>)
+                    requires ForwardRange<Rng> &&
+                        IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -70,8 +72,7 @@ namespace ranges
 
         /// \sa `is_sorted_until_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_sorted_until_fn>,
-                               is_sorted_until)
+        RANGES_INLINE_VARIABLE(is_sorted_until_fn, is_sorted_until)
         /// @}
     } // namespace v3
 } // namespace ranges

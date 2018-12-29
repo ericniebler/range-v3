@@ -58,8 +58,7 @@ namespace ranges
 
         /// \sa `copy_backward_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<copy_backward_fn>,
-                               copy_backward)
+        RANGES_INLINE_VARIABLE(copy_backward_fn, copy_backward)
         /// @}
     } // namespace v3
 } // namespace ranges

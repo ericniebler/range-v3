@@ -31,7 +31,7 @@ namespace ranges
             template(typename I, typename T, typename Op = plus, typename P = identity)
             (concept Accumulateable)(I, T, Op, P),
                 InputIterator<I> &&
-                IndirectInvocable<Op, T *, projected<I, P>> &&
+                IndirectBinaryInvocable_<Op, T *, projected<I, P>> &&
                 Assignable<T&, indirect_result_t<Op &, T *, projected<I, P>>>
         );
 
@@ -55,7 +55,7 @@ namespace ranges
             }
         };
 
-        RANGES_INLINE_VARIABLE(with_braced_init_args<accumulate_fn>, accumulate)
+        RANGES_INLINE_VARIABLE(accumulate_fn, accumulate)
     }
 }
 

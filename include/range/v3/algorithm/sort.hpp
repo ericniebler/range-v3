@@ -201,7 +201,7 @@ namespace ranges
 
         /// \sa `sort_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<sort_fn>, sort)
+        RANGES_INLINE_VARIABLE(sort_fn, sort)
         /// @}
     } // namespace v3
 } // namespace ranges

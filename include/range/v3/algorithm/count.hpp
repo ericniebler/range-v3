@@ -56,8 +56,7 @@ namespace ranges
 
         /// \sa `count_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<with_braced_init_args<count_fn>>,
-                               count)
+        RANGES_INLINE_VARIABLE(count_fn, count)
         /// @}
     } // namespace v3
 } // namespace ranges

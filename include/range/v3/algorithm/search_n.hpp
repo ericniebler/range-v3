@@ -39,15 +39,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename V, typename C = equal_to, typename P = identity)
-            (concept Searchnable)(I, V, C, P),
-                ForwardIterator<I> &&
-                IndirectRelation<C, projected<I, P>, V const *>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct search_n_fn
@@ -129,11 +120,12 @@ namespace ranges
             auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(subrange<I>)(
-                    requires Searchnable<I, V, C, P> && Sentinel<S, I>)
+                    requires ForwardIterator<I> && Sentinel<S, I> &&
+                        IndirectlyComparable<I, V const *, C, P>)
             {
                 if(count <= 0)
                     return {begin, begin};
-                if(SizedSentinel<S, I>)
+                if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
                 else
@@ -145,11 +137,11 @@ namespace ranges
             auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
                     C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng>)(
-                    requires Searchnable<iterator_t<Rng>, V, C, P> && Range<Rng>)
+                    requires ForwardRange<Rng> && IndirectlyComparable<iterator_t<Rng>, V const *, C, P>)
             {
                 if(count <= 0)
                     return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
-                if(SizedRange<Rng>)
+                if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);
                 else
@@ -159,7 +151,7 @@ namespace ranges
 
         /// \sa `search_n_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<search_n_fn>, search_n)
+        RANGES_INLINE_VARIABLE(search_n_fn, search_n)
         /// @}
     } // namespace v3
 } // namespace ranges

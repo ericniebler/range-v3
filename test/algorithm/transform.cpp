@@ -27,6 +27,8 @@
 
 using namespace std::placeholders;
 
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 template<class InIter, class OutIter>
 void
 test1()

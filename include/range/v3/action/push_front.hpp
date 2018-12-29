@@ -88,25 +88,6 @@ namespace ranges
                     push_front(rng, static_cast<T &&>(t));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&rng, T &&t) const ->
-                    CPP_ret(void)(
-                        requires not PushFrontActionConcept<Rng, T>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which action::push_front operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(Or<
-                        Range<T>,
-                        Constructible<range_value_t<Rng>, T>>,
-                        "The object to be inserted with action::push_front must either be "
-                        "convertible to the range's value type, or else it must be a range "
-                        "of elements that are convertible to the range's value type.");
-                    push_front(rng, (T &&) t);
-                }
-            #endif
             };
         }
         /// \endcond

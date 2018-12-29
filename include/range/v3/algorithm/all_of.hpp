@@ -35,7 +35,7 @@ namespace ranges
             auto operator()(I first, S last, F pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectPredicate<F, projected<I, P> >)
+                        IndirectUnaryPredicate<F, projected<I, P> >)
             {
                 for(; first != last; ++first)
                     if(!invoke(pred, invoke(proj, *first)))
@@ -47,7 +47,7 @@ namespace ranges
             auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
                 CPP_ret(bool)(
                     requires InputRange<Rng> &&
-                        IndirectPredicate<F, projected<iterator_t<Rng>, P>>)
+                        IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -55,7 +55,7 @@ namespace ranges
 
         /// \sa `all_of_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<all_of_fn>, all_of)
+        RANGES_INLINE_VARIABLE(all_of_fn, all_of)
         /// @}
 
     } // inline namespace v3

@@ -91,7 +91,7 @@ namespace ranges
 
         /// \sa `merge_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<merge_fn>, merge)
+        RANGES_INLINE_VARIABLE(merge_fn, merge)
         /// @}
     } // namespace v3
 } // namespace ranges

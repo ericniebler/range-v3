@@ -76,28 +76,6 @@ namespace ranges
                     return view::split(rng, static_cast<Sub &&>(sub))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename T)(
-                    requires not ConvertibleTo<T, range_value_t<Rng>>)
-                void operator()(Rng &&, T &&) const volatile
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::split operates must be a model of the "
-                        "ForwardRange concept.");
-                    CPP_assert_msg(ConvertibleTo<T, range_value_t<Rng>>,
-                        "The delimiter argument to action::split must be one of the following: "
-                        "(1) A single element of the range's value type, where the value type is a "
-                        "model of the Regular concept, "
-                        "(2) A ForwardRange whose value type is EqualityComparable to the input "
-                        "range's value type, "
-                        "(3) A Predicate that is callable with one argument of the range's reference "
-                        "type, or "
-                        "(4) An Invocable that accepts two arguments, the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, I> where I is the "
-                        "input range's difference_type.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

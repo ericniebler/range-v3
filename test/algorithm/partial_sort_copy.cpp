@@ -161,18 +161,5 @@ int main()
             CHECK(x->i == i);
     }
 
-    // Check initialize_list
-    {
-        U output[9];
-        U * r = ranges::partial_sort_copy(
-            {S{5}, S{3}, S{4}, S{1}, S{8}, S{2}, S{6}, S{7}, S{0}, S{9}},
-            output, std::less<int>(), &S::i, &U::i);
-        U* e = output + 9;
-        CHECK(r == e);
-        int i = 0;
-        for (U* x = output; x < e; ++x, ++i)
-            CHECK(x->i == i);
-    }
-
     return ::test_result();
 }

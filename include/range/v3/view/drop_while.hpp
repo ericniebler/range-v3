@@ -88,7 +88,7 @@ namespace ranges
                 auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
                         requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectPredicate<Pred, iterator_t<Rng>>)
+                            IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
                 }

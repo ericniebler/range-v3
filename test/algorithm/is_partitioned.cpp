@@ -124,8 +124,5 @@ int main()
     const S ia[] = {S{1}, S{3}, S{5}, S{2}, S{4}, S{6}};
     CHECK( ranges::is_partitioned(ia, is_odd(), &S::i) );
 
-    // Test initializer list
-    CHECK( ranges::is_partitioned({S{1}, S{3}, S{5}, S{2}, S{4}, S{6}}, is_odd(), &S::i) );
-
     return ::test_result();
 }

@@ -61,7 +61,7 @@ namespace ranges
 
         /// \sa `move_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<move_fn>, move)
+        RANGES_INLINE_VARIABLE(move_fn, move)
         /// @}
     } // namespace v3
 } // namespace ranges

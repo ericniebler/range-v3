@@ -39,8 +39,16 @@ namespace ranges
                 typename P = identity>
             auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(subrange<I>)(
-                    requires Sentinel<S, I> && !SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
+                    requires ForwardIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
             {
+                if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
+                {
+                    auto const len = distance(begin, end);
+                    return aux::equal_range_n(std::move(begin), len, val,
+                        std::move(pred), std::move(proj));
+                }
+
                 // Probe exponentially for either end-of-range, an iterator that
                 // is past the equal range (i.e., denotes an element greater
                 // than val), or is in the equal range (denotes an element equal
@@ -82,39 +90,25 @@ namespace ranges
                 }
             }
 
-            template<typename I, typename S, typename V, typename C = less,
-                typename P = identity>
-            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(subrange<I>)(
-                    requires SizedSentinel<S, I> && BinarySearchable<I, V, C, P>)
-            {
-                auto const len = distance(begin, end);
-                return aux::equal_range_n(std::move(begin), len, val,
-                    std::move(pred), std::move(proj));
-            }
-
             template<typename Rng, typename V, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_subrange_t<Rng>)(
-                    requires Range<Rng> && !SizedRange<Rng> &&
-                        BinarySearchable<iterator_t<Rng>, V, C, P>)
+                    requires ForwardRange<Rng> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
             {
+                if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+                {
+                    auto const len = distance(rng);
+                    return aux::equal_range_n(begin(rng), len, val, std::move(pred), std::move(proj));
+                }
+
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
-            }
-
-            template<typename Rng, typename V, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(safe_subrange_t<Rng>)(
-                    requires SizedRange<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)
-            {
-                auto const len = distance(rng);
-                return aux::equal_range_n(begin(rng), len, val, std::move(pred), std::move(proj));
             }
         };
 
         /// \sa `equal_range_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<equal_range_fn>, equal_range)
+        RANGES_INLINE_VARIABLE(equal_range_fn, equal_range)
         /// @}
     } // namespace v3
 } // namespace ranges

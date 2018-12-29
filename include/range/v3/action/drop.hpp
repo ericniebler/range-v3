@@ -32,15 +32,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename T)
-                concept DropActionConcept,
-                    ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                    ConvertibleTo<T, range_difference_t<Rng>>
-            );
-
             struct drop_fn
             {
             private:
@@ -55,28 +46,13 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                     CPP_ret(Rng)(
-                    requires DropActionConcept<Rng, range_difference_t<Rng>>)
+                        requires ForwardRange<Rng> &&
+                            ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_EXPECT(n >= 0);
                     ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T>
-                auto operator()(Rng &&, T &&) const -> CPP_ret(void)(
-                    requires not DropActionConcept<Rng, T>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::drop operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
-                        "The object on which action::drop operates must allow element removal.");
-                    CPP_assert_msg(ConvertibleTo<T, range_difference_t<Rng>>,
-                        "The count passed to action::drop must be an integral type.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

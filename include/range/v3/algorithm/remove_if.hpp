@@ -29,16 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C, typename P = identity)
-            (concept RemovableIf)(I, C, P),
-                ForwardIterator<I> &&
-                IndirectPredicate<C, projected<I, P>> &&
-                Permutable<I>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct remove_if_fn
@@ -46,7 +36,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires RemovableIf<I, C, P> && Sentinel<S, I>)
+                    requires Permutable<I> && Sentinel<S, I> &&
+                        IndirectUnaryPredicate<C, projected<I, P>>)
             {
                 begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
                 if(begin != end)
@@ -66,7 +57,8 @@ namespace ranges
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires RemovableIf<iterator_t<Rng>, C, P> && ForwardRange<Rng>)
+                    requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -74,7 +66,7 @@ namespace ranges
 
         /// \sa `remove_if_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<remove_if_fn>, remove_if)
+        RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
         /// @}
     } // namespace v3
 } // namespace ranges

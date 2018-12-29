@@ -53,11 +53,12 @@ int main()
         CHECK(ranges::equal(frng, il, float_eq));
     }
     {
+        using ILD = std::initializer_list<double>;
         auto frng = linear_distribute(1.0, 3.0, 21);
         CHECK(ranges::equal(frng,
-                            {1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
-                             2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
-                             3.0},
+                            ILD{1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
+                                3.0},
                             float_eq));
     }
     {  // empty interval
@@ -75,7 +76,7 @@ int main()
 
         auto frng = linear_distribute(0., 0., 3);
         CHECK(ranges::size(frng) == std::size_t{3});
-        CHECK(ranges::equal(frng, {0.,0.,0.}, float_eq));
+        CHECK(ranges::equal(frng, std::initializer_list<double>{0.,0.,0.}, float_eq));
     }
 
     return test_result();

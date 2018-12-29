@@ -38,20 +38,22 @@ namespace ranges
             /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre `Rng` is a model of the `Range` concept
-            template<typename I, typename S, typename V2, typename C = less, typename P = identity>
-            auto operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const ->
+            template<typename I, typename S, typename V, typename C = less, typename P = identity>
+            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires Sentinel<S, I> && BinarySearchable<I, V2, C, P>)
+                    requires ForwardIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
             {
                 begin = lower_bound(std::move(begin), end, val, std::ref(pred), std::ref(proj));
                 return begin != end && !invoke(pred, val, invoke(proj, *begin));
             }
 
             /// \overload
-            template<typename Rng, typename V2, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const ->
+            template<typename Rng, typename V, typename C = less, typename P = identity>
+            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V2, C, P>)
+                    requires ForwardRange<Rng> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to binary search an infinite range");
@@ -61,8 +63,7 @@ namespace ranges
 
         /// \sa `binary_search_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<binary_search_fn>,
-                               binary_search)
+        RANGES_INLINE_VARIABLE(binary_search_fn, binary_search)
         /// @}
     } // namespace v3
 } // namespace ranges

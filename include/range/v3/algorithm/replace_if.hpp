@@ -27,24 +27,16 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C, typename T, typename P = identity)
-            (concept ReplaceIfable)(I, C, T, P),
-                InputIterator<I> &&
-                IndirectPredicate<C, projected<I, P>> &&
-                Writable<I, T const &>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct replace_if_fn
         {
             template<typename I, typename S, typename C, typename T, typename P = identity>
-            auto operator()(I begin, S end, C pred, T const & new_value, P proj = P{}) const ->
+            auto operator()(I begin, S end, C pred, T const &new_value, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires ReplaceIfable<I, C, T, P> && Sentinel<S, I>)
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        IndirectUnaryPredicate<C, projected<I, P>> &&
+                        Writable<I, T const &>)
             {
                 for(; begin != end; ++begin)
                     if(invoke(pred, invoke(proj, *begin)))
@@ -53,9 +45,11 @@ namespace ranges
             }
 
             template<typename Rng, typename C, typename T, typename P = identity>
-            auto operator()(Rng &&rng, C pred, T const & new_value, P proj = P{}) const ->
+            auto operator()(Rng &&rng, C pred, T const &new_value, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires ReplaceIfable<iterator_t<Rng>, C, T, P> && Range<Rng>)
+                    requires InputRange<Rng> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                        Writable<iterator_t<Rng>, T const &>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
             }
@@ -63,7 +57,7 @@ namespace ranges
 
         /// \sa `replace_if_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<replace_if_fn>, replace_if)
+        RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -55,7 +55,7 @@ namespace ranges
 
         /// \sa `generate_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<generate_fn>, generate)
+        RANGES_INLINE_VARIABLE(generate_fn, generate)
         /// @}
     } // namespace v3
 } // namespace ranges

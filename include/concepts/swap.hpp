@@ -101,7 +101,7 @@ namespace concepts
                 static constexpr T const value {};
             };
             template<typename T>
-            constexpr T const static_const<T>::value;            
+            constexpr T const static_const<T>::value;
         }
         /// \endcond
 

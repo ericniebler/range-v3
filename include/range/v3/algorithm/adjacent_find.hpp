@@ -63,8 +63,7 @@ namespace ranges
 
         /// \sa `adjacent_find_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<adjacent_find_fn>,
-                               adjacent_find)
+        RANGES_INLINE_VARIABLE(adjacent_find_fn, adjacent_find)
         /// @}
 
     } // namespace v3

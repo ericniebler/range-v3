@@ -60,7 +60,7 @@ namespace ranges
 
         /// \sa `rotate_copy_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<rotate_copy_fn>, rotate_copy)
+        RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
         /// @}
     } // namespace v3
 } // namespace ranges

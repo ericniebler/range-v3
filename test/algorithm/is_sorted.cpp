@@ -383,12 +383,6 @@ int main()
     test<range_call<random_access_iterator<const int *>>>();
     test<range_call<const int *>>();
 
-    /// Initializer list test:
-    {
-        CHECK(ranges::is_sorted({0,1,2,3,4,5,6,7,8,9,10}));
-        CHECK(!ranges::is_sorted({0,1,2,3,5,4,6,7,8,9,10}));
-    }
-
     /// Projection test:
     {
         A as[] = {{0}, {1}, {2}, {3}, {4}};

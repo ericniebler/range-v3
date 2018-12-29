@@ -47,9 +47,9 @@ namespace ranges
             struct make_action_fn
             {
                 template<typename Fun>
-                action<Fun> operator()(Fun fun) const
+                constexpr action<Fun> operator()(Fun fun) const
                 {
-                    return {detail::move(fun)};
+                    return action<Fun>{detail::move(fun)};
                 }
             };
 
@@ -57,25 +57,9 @@ namespace ranges
             /// \relates make_action_fn
             RANGES_INLINE_VARIABLE(make_action_fn, make_action)
 
-            CPP_def
-            (
-                template(typename Action, typename Rng, typename...Rest)
-                (concept ActionConcept)(Action, Rng, Rest...),
-                    Range<Rng> &&
-                    Invocable<Action const&, Rng, Rest...>
-            );
-
-            CPP_def
-            (
-                template(typename Action, typename Rng)
-                concept ActionPipeConcept,
-                    Range<Rng> &&
-                    Invocable<Action &, Rng> &&
-                    !std::is_reference<Rng>::value
-            );
-
             template<typename Action>
-            struct action : pipeable<action<Action>>
+            struct action
+              : pipeable<action<Action>>
             {
             private:
                 Action action_;
@@ -85,34 +69,16 @@ namespace ranges
                 template<typename Rng, typename Act>
                 static auto pipe(Rng &&rng, Act &&act) ->
                     CPP_ret(invoke_result_t<Action &, Rng>)(
-                        requires ActionPipeConcept<Action, Rng>)
+                        requires Range<Rng> &&
+                            Invocable<Action &, Rng> &&
+                            !std::is_reference<Rng>::value)
                 {
                     return invoke(act.action_, detail::move(rng));
                 }
 
-            #ifndef RANGES_DOXYGEN_INVOKED
-                // For better error messages:
-                template<typename Rng, typename Act>
-                static auto pipe(Rng &&, Act &&) ->
-                    CPP_ret(void)(
-                        requires not ActionPipeConcept<Action, Rng>)
-                {
-                    CPP_assert_msg(Range<Rng>,
-                        "The type Rng must be a model of the Range concept.");
-                    // BUGBUG This isn't a very helpful message. This is probably the wrong place
-                    // to put this check:
-                    CPP_assert_msg(Invocable<Action&, Rng>,
-                        "This action is not callable with this range type.");
-                    static_assert(!std::is_reference<Rng>(),
-                        "You can't pipe an lvalue into an action. Try using std::move on the argument, "
-                        "and be sure to save the result somewhere or pipe the result to another action. "
-                        "Or, wrap the argument with view::ref to pass it by reference.");
-                }
-            #endif
-
             public:
                 action() = default;
-                action(Action a)
+                constexpr explicit action(Action a)
                   : action_(detail::move(a))
                 {}
 
@@ -120,7 +86,8 @@ namespace ranges
                 template<typename Rng, typename ...Rest>
                 auto operator()(Rng &rng, Rest &&... rest) const ->
                     CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
-                        requires ActionConcept<Action const, Rng &, Rest...>)
+                        requires Range<Rng> &&
+                            Invocable<Action const &, Rng &, Rest...>)
                 {
                     return invoke(action_, rng, static_cast<Rest &&>(rest)...);
                 }

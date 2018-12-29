@@ -38,7 +38,8 @@ namespace ranges
                 auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
                         P proj = P{}) const ->
                     CPP_ret(subrange<I>)(
-                        requires BinarySearchable<I, V, R, P>)
+                        requires ForwardIterator<I> &&
+                            IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
                 {
                     if(0 < dist)
                     {

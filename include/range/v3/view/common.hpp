@@ -144,7 +144,7 @@ namespace ranges
             CPP_assert(CommonRange<Rng>);
             using identity_adaptor<Rng>::identity_adaptor;
         };
- 
+
         namespace view
         {
             struct common_fn

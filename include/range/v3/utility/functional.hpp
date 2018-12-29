@@ -228,13 +228,15 @@ namespace ranges
             concept Relation,
                 Predicate<R, T, T> &&
                 Predicate<R, U, U> &&
-                CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
-                Predicate<
-                    R,
-                    common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>,
-                    common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>> &&
                 Predicate<R, T, U> &&
                 Predicate<R, U, T>
+        );
+
+        CPP_def
+        (
+            template(typename R, typename T, typename U)
+            concept StrictWeakOrder,
+                Relation<R, T, U>
         );
 
         template<typename FD>
@@ -286,12 +288,13 @@ namespace ranges
 
         struct not_fn_fn
         {
-            template<typename Pred, typename FD = detail::decay_t<Pred>>
+            template<typename Pred>
             constexpr auto operator()(Pred &&pred) const ->
-                CPP_ret(logical_negate_<FD>)(
-                    requires MoveConstructible<FD> && Constructible<FD, Pred>)
+                CPP_ret(logical_negate<Pred>)(
+                    requires MoveConstructible<detail::decay_t<Pred>> &&
+                        Constructible<detail::decay_t<Pred>, Pred>)
             {
-                return logical_negate_<FD>{(Pred &&) pred};
+                return logical_negate<Pred>{(Pred &&) pred};
             }
         };
 

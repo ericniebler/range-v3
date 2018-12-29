@@ -303,7 +303,7 @@ namespace ranges
 
         /// \sa `nth_element_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<nth_element_fn>, nth_element)
+        RANGES_INLINE_VARIABLE(nth_element_fn, nth_element)
         /// @}
     } // namespace v3
 } // namespace ranges

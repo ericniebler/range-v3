@@ -181,7 +181,7 @@ namespace ranges
 
         /// \sa `stable_sort_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<stable_sort_fn>, stable_sort)
+        RANGES_INLINE_VARIABLE(stable_sort_fn, stable_sort)
         /// @}
     } // namespace v3
 } // namespace ranges

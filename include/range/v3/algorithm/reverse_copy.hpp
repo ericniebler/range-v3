@@ -29,16 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename O)
-            concept ReverseCopyable,
-                BidirectionalIterator<I> &&
-                WeaklyIncrementable<O> &&
-                IndirectlyCopyable<I, O>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         template<typename I, typename O>
@@ -49,7 +39,9 @@ namespace ranges
             template<typename I, typename S, typename O>
             auto operator()(I begin, S end_, O out) const ->
                 CPP_ret(reverse_copy_result<I, O>)(
-                    requires Sentinel<S, I> && ReverseCopyable<I, O>)
+                    requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                        WeaklyIncrementable<O> &&
+                        IndirectlyCopyable<I, O>)
             {
                 I end = ranges::next(begin, end_), res = end;
                 for(; begin != end; ++out)
@@ -60,7 +52,8 @@ namespace ranges
             template<typename Rng, typename O>
             auto operator()(Rng &&rng, O out) const ->
                 CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)(
-                    requires Range<Rng> && ReverseCopyable<iterator_t<Rng>, O>)
+                    requires BidirectionalRange<Rng> && WeaklyIncrementable<O> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }
@@ -68,8 +61,7 @@ namespace ranges
 
         /// \sa `reverse_copy_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<reverse_copy_fn>,
-                               reverse_copy)
+        RANGES_INLINE_VARIABLE(reverse_copy_fn, reverse_copy)
         /// @}
     } // namespace v3
 } // namespace ranges

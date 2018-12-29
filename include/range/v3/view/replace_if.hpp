@@ -123,7 +123,7 @@ namespace ranges
                 auto operator()(Rng &&rng, Pred pred, Val new_value) const ->
                     CPP_ret(replace_if_view<all_t<Rng>, Pred, Val>)(
                         requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectPredicate<Pred, iterator_t<Rng>> &&
+                            IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
                             Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>> &&
                             CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>> &&
                             CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>)

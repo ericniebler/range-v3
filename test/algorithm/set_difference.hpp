@@ -327,38 +327,6 @@ int main()
         CHECK((res2.out - ic) == srr);
         CHECK(ranges::lexicographical_compare(ic, res2.out, ir, irr+srr, std::less<int>(), &U::k) == false);
     }
-
-    // Test initializer list
-    {
-        S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
-        static const int sa = sizeof(ia)/sizeof(ia[0]);
-        T ib[] = {T{2}, T{4}, T{4}, T{6}};
-        static const int sb = sizeof(ib)/sizeof(ib[0]);
-        U ic[20];
-        int ir[] = {1, 2, 3, 3, 3, 4, 4};
-        static const int sr = sizeof(ir)/sizeof(ir[0]);
-
-        ranges::set_difference_result<S *, U *> res = ranges::set_difference(
-            ia,
-            {T{2}, T{4}, T{4}, T{6}},
-            ic,
-            std::less<int>(), &S::i, &T::j);
-        CHECK((res.in1 - ia) == sa);
-        CHECK((res.out - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, res.out, ir, ir+sr, std::less<int>(), &U::k) == false);
-        ranges::fill(ic, U{0});
-
-        int irr[] = {6};
-        static const int srr = sizeof(irr)/sizeof(irr[0]);
-        ranges::set_difference_result<T *, U *> res2 = ranges::set_difference(
-            ib,
-            {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}},
-            ic,
-            std::less<int>(), &T::j, &S::i);
-        CHECK((res2.in1 - ib) == sb);
-        CHECK((res2.out - ic) == srr);
-        CHECK(ranges::lexicographical_compare(ic, res2.out, ir, irr+srr, std::less<int>(), &U::k) == false);
-    }
 #endif
 
     return ::test_result();

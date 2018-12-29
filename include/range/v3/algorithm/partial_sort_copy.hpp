@@ -29,18 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename O, typename C = less, typename PI = identity, typename PO = identity)
-            (concept PartialSortCopyConcept)(I, O, C, PI, PO),
-                InputIterator<I> &&
-                RandomAccessIterator<O> &&
-                IndirectlyCopyable<I, O> &&
-                IndirectRelation<C, projected<I, PI>, projected<O, PO>> &&
-                Sortable<O, C, PO>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct partial_sort_copy_fn
@@ -50,8 +38,10 @@ namespace ranges
             auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
                     PI in_proj = PI{}, PO out_proj = PO{}) const ->
                 CPP_ret(O)(
-                    requires Sentinel<SI, I> && Sentinel<SO, O> &&
-                        PartialSortCopyConcept<I, O, C, PI, PO>)
+                    requires InputIterator<I> && Sentinel<SI, I> &&
+                        RandomAccessIterator<O> && Sentinel<SO, O> &&
+                        IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
+                        IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
             {
                 O r = out_begin;
                 if(r != out_end)
@@ -79,8 +69,11 @@ namespace ranges
             auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                     PO out_proj = PO{}) const ->
                 CPP_ret(safe_iterator_t<OutRng>)(
-                    requires Range<InRng> && Range<OutRng> &&
-                        PartialSortCopyConcept<iterator_t<InRng>, iterator_t<OutRng>, C, PI, PO>)
+                    requires InputRange<InRng> &&
+                        RandomAccessRange<OutRng> &&
+                        IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&
+                        Sortable<iterator_t<OutRng>, C, PO> &&
+                        IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>, projected<iterator_t<OutRng>, PO>>)
             {
                 return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
                     std::move(pred), std::move(in_proj), std::move(out_proj));
@@ -89,7 +82,7 @@ namespace ranges
 
         /// \sa `partial_sort_copy_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<partial_sort_copy_fn>, partial_sort_copy)
+        RANGES_INLINE_VARIABLE(partial_sort_copy_fn, partial_sort_copy)
         /// @}
     } // namespace v3
 } // namespace ranges

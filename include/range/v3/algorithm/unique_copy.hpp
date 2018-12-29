@@ -148,7 +148,7 @@ namespace ranges
 
         /// \sa `unique_copy_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<unique_copy_fn>, unique_copy)
+        RANGES_INLINE_VARIABLE(unique_copy_fn, unique_copy)
         /// @}
     } // namespace v3
 } // namespace ranges

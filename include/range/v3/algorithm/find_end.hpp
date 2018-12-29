@@ -170,7 +170,7 @@ namespace ranges
                     while(!invoke(pred, invoke(proj, *--l1), *l2));
                     I1 m1 = l1;
                     I2 m2 = l2;
-                    do 
+                    do
                         if(m2 == begin2)
                             return {m1, ++l1};
                     // no need to check range on m1 because s guarantees we have enough source
@@ -207,7 +207,7 @@ namespace ranges
 
         /// \sa `find_end_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<find_end_fn>, find_end)
+        RANGES_INLINE_VARIABLE(find_end_fn, find_end)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -36,7 +36,8 @@ namespace ranges
             template<typename I, typename S, typename V, typename C = less, typename P = identity>
             auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires Sentinel<S, I> && BinarySearchable<I, V, C, P>)
+                    requires ForwardIterator<I> && Sentinel<S, I> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
             {
                 return partition_point(std::move(begin), std::move(end),
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));
@@ -45,7 +46,8 @@ namespace ranges
             template<typename Rng, typename V, typename C = less, typename P = identity>
             auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires Range<Rng> && BinarySearchable<iterator_t<Rng>, V, C, P>)
+                    requires ForwardRange<Rng> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
             {
                 return partition_point(rng,
                     detail::make_lower_bound_predicate(pred, val), std::move(proj));
@@ -54,7 +56,7 @@ namespace ranges
 
         /// \sa `lower_bound_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<lower_bound_fn>, lower_bound)
+        RANGES_INLINE_VARIABLE(lower_bound_fn, lower_bound)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -31,13 +31,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename C = less, typename P = identity)
-                (concept SortActionConcept)(Rng, C, P),
-                    ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>
-            );
-
             struct sort_fn
             {
             private:
@@ -49,38 +42,14 @@ namespace ranges
                     return std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
                         protect(std::move(proj)));
                 }
-
             public:
                 CPP_template(typename Rng, typename C = less, typename P = identity)(
-                    requires SortActionConcept<Rng, C, P>)
+                    requires ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
                 Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename C = less, typename P = identity)(
-                    requires not SortActionConcept<Rng, C, P>)
-                void operator()(Rng &&, C && = C{}, P && = P{}) const
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::sort operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(IndirectInvocable<P, I>,
-                        "The projection function must accept objects of the iterator's value type, "
-                        "reference type, and common reference type.");
-                    CPP_assert_msg(IndirectRelation<C, projected<I, P>>,
-                        "The comparator passed to action::sort must accept objects returned "
-                        "by the projection function, or of the range's value type if no projection "
-                        "is specified.");
-                    CPP_assert_msg(Permutable<I>,
-                        "The iterator type of the range passed to action::sort must allow its "
-                        "elements to be permuted; that is, the values must be movable and the "
-                        "iterator must be mutable.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

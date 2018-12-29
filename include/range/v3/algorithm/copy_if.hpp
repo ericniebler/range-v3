@@ -40,7 +40,7 @@ namespace ranges
             auto operator()(I begin, S end, O out, F pred, P proj = P{}) const ->
                 CPP_ret(copy_if_result<I, O>)(
                     requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                        IndirectPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
+                        IndirectUnaryPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -58,7 +58,7 @@ namespace ranges
             auto operator()(Rng &&rng, O out, F pred, P proj = P{}) const ->
                 CPP_ret(copy_if_result<safe_iterator_t<Rng>, O>)(
                     requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                        IndirectPredicate<F, projected<iterator_t<Rng>, P>> &&
+                        IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>> &&
                         IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred),
@@ -68,7 +68,7 @@ namespace ranges
 
         /// \sa `copy_if_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<copy_if_fn>, copy_if)
+        RANGES_INLINE_VARIABLE(copy_if_fn, copy_if)
         /// @}
     } // namespace v3
 } // namespace ranges

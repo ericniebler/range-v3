@@ -24,6 +24,8 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 void test()
 {
     using namespace ranges;
@@ -276,17 +278,17 @@ int main()
     ::test_pred();
     ::test_rng_pred();
 
+    using IL = std::initializer_list<int>;
     int *p = nullptr;
-    static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, p))>::value, "");
-    static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, {1, 2, 3, 4}))>::value, "");
-    static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, ranges::view::unbounded(p)))>::value, "");
+    static_assert(std::is_same<bool, decltype(ranges::equal(IL{1, 2, 3, 4}, p))>::value, "");
+    static_assert(std::is_same<bool, decltype(ranges::equal(IL{1, 2, 3, 4}, IL{1, 2, 3, 4}))>::value, "");
+    static_assert(std::is_same<bool, decltype(ranges::equal(IL{1, 2, 3, 4}, ranges::view::unbounded(p)))>::value, "");
 
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14 && RANGES_CONSTEXPR_INVOKE
-    static_assert(ranges::equal({1, 2, 3, 4}, {1, 2, 3, 4}), "");
-    static_assert(!ranges::equal({1, 2, 3, 4}, {1, 2, 3}), "");
-    static_assert(!ranges::equal({1, 2, 3, 4}, {1, 2, 4, 3}), "");
-    static_assert(ranges::equal(std::initializer_list<int>{},
-                                std::initializer_list<int>{}), "");
+    static_assert(ranges::equal(IL{1, 2, 3, 4}, IL{1, 2, 3, 4}), "");
+    static_assert(!ranges::equal(IL{1, 2, 3, 4}, IL{1, 2, 3}), "");
+    static_assert(!ranges::equal(IL{1, 2, 3, 4}, IL{1, 2, 4, 3}), "");
+    static_assert(ranges::equal(IL{}, IL{}), "");
 #endif
 
     return ::test_result();

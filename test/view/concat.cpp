@@ -75,7 +75,7 @@ int main()
     {
         const std::array<int, 3> a{{0, 1, 2}};
         const std::array<int, 2> b{{3, 4}};
-        CHECK(equal(view::concat(a, b), {0, 1, 2, 3, 4}));
+        check_equal(view::concat(a, b), {0, 1, 2, 3, 4});
 
         auto odd = [](int i) { return i % 2 != 0; };
         auto even_filter = ranges::view::remove_if(odd);
@@ -83,7 +83,7 @@ int main()
         auto f_rng0 = a | even_filter;
         auto f_rng1 = b | even_filter;
 
-        CHECK(equal(view::concat(f_rng0, f_rng1), {0, 2, 4}));
+        check_equal(view::concat(f_rng0, f_rng1), {0, 2, 4});
     }
 
     // Regression test for http://github.com/ericniebler/range-v3/issues/395.

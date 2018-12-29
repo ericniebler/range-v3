@@ -34,7 +34,7 @@ namespace ranges
             template<typename I, typename F, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires InputIterator<I> && MoveIndirectInvocable<F, projected<I, P>>)
+                    requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
             {
                 RANGES_EXPECT(0 <= n);
                 auto norig = n;
@@ -48,7 +48,7 @@ namespace ranges
             auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
                     requires InputRange<Rng> &&
-                        MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
+                        IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
             {
                 if (SizedRange<Rng>)
                     RANGES_EXPECT(n <= distance(rng));
@@ -59,7 +59,7 @@ namespace ranges
 
         /// \sa `for_each_n_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<for_each_n_fn>, for_each_n)
+        RANGES_INLINE_VARIABLE(for_each_n_fn, for_each_n)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -102,7 +102,7 @@ namespace ranges
             template<typename CRng = Rng const>
             auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
                 requires Range<CRng> &&
-                    IndirectInvocable<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
+                    IndirectBinaryInvocable_<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return {*this};
             }
@@ -110,7 +110,7 @@ namespace ranges
             auto end_adaptor() const ->
                 CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
                     requires Range<CRng> &&
-                        IndirectInvocable<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
+                        IndirectBinaryInvocable_<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
             {
                 return {*this};
             }
@@ -152,7 +152,7 @@ namespace ranges
                 auto operator()(Rng &&rng, Fun fun = {}) const ->
                     CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
                         requires InputRange<Rng> &&
-                            IndirectInvocable<Fun, iterator_t<Rng>, iterator_t<Rng>> &&
+                            IndirectBinaryInvocable_<Fun, iterator_t<Rng>, iterator_t<Rng>> &&
                             ConvertibleTo<
                                 indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>,
                                 range_value_t<Rng>>)

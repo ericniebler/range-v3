@@ -375,24 +375,19 @@ struct S
 
 int main()
 {
-    test_iter<forward_iterator<std::pair<int,int>*> >();
     test_iter<bidirectional_iterator<std::pair<int,int>*> >();
     test_iter<random_access_iterator<std::pair<int,int>*> >();
     test_iter<std::pair<int,int>*>();
-    test_iter<forward_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
     test_iter<bidirectional_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
     test_iter<random_access_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
 
-    test_range<forward_iterator<std::pair<int,int>*> >();
     test_range<bidirectional_iterator<std::pair<int,int>*> >();
     test_range<random_access_iterator<std::pair<int,int>*> >();
     test_range<std::pair<int,int>*>();
-    test_range<forward_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
     test_range<bidirectional_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
     test_range<random_access_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
 
     CHECK(move_only::count == 0);
-    test_move_only<forward_iterator<move_only*> >();
     test_move_only<bidirectional_iterator<move_only*> >();
     CHECK(move_only::count == 0);
 

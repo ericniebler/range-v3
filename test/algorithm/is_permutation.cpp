@@ -29,6 +29,8 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 int comparison_count = 0;
 
 template<typename T>
@@ -846,16 +848,6 @@ int main()
                                    forward_iterator<const T*>(ib),
                                    sentinel<const T*>(ib + sa - 1),
                                    std::equal_to<int const>(), &S::i, &T::i) == false);
-    }
-
-    // Try initializer lists:
-    {
-        const T ib[] = {{4}, {2}, {3}, {0}, {1}, {4}, {0}, {5}, {6}, {2}};
-        CHECK(ranges::is_permutation({S{0}, S{1}, S{2}, S{3}, S{0}, S{5}, S{6}, S{2}, S{4}, S{4}},
-                                      &ib[0], std::equal_to<int const>(), &S::i, &T::i) == true);
-        CHECK(ranges::is_permutation({S{0}, S{1}, S{2}, S{3}, S{0}, S{5}, S{6}, S{2}, S{4}, S{4}},
-                                     {T{4}, T{2}, T{3}, T{0}, T{1}, T{4}, T{0}, T{5}, T{6}, T{2}},
-                                     std::equal_to<int const>(), &S::i, &T::i) == true);
     }
 
     return ::test_result();

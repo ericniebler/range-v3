@@ -36,16 +36,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C, typename P = identity)
-            (concept Partitionable)(I, C, P),
-                ForwardIterator<I> &&
-                Permutable<I> &&
-                IndirectPredicate<C, projected<I, P>>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct partition_fn
@@ -100,7 +90,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires Partitionable<I, C, P> && Sentinel<S, I>)
+                    requires Permutable<I> && Sentinel<S, I> &&
+                        IndirectUnaryPredicate<C, projected<I, P>>)
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
                     std::move(proj), iterator_tag_of<I>());
@@ -109,7 +100,8 @@ namespace ranges
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires Partitionable<iterator_t<Rng>, C, P> && Range<Rng>)
+                    requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),
                     std::move(proj), iterator_tag_of<iterator_t<Rng>>());
@@ -118,7 +110,7 @@ namespace ranges
 
         /// \sa `partition_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<partition_fn>, partition)
+        RANGES_INLINE_VARIABLE(partition_fn, partition)
         /// @}
     } // namespace v3
 } // namespace ranges

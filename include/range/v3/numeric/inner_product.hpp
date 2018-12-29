@@ -115,8 +115,7 @@ namespace ranges
             }
         };
 
-        RANGES_INLINE_VARIABLE(with_braced_init_args<inner_product_fn>,
-                               inner_product)
+        RANGES_INLINE_VARIABLE(inner_product_fn, inner_product)
     }
 }
 

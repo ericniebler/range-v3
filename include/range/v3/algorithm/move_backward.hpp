@@ -59,7 +59,7 @@ namespace ranges
 
         /// \sa `move_backward_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<move_backward_fn>, move_backward)
+        RANGES_INLINE_VARIABLE(move_backward_fn, move_backward)
         /// @}
     } // namespace v3
 } // namespace ranges

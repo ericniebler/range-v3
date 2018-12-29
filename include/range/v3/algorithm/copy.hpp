@@ -61,7 +61,7 @@ namespace ranges
 
         /// \sa `copy_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<copy_fn>, copy)
+        RANGES_INLINE_VARIABLE(copy_fn, copy)
         /// @}
     } // namespace v3
 } // namespace ranges

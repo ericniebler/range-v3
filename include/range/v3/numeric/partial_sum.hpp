@@ -53,7 +53,7 @@ namespace ranges
             concept IndirectSemigroup,
                 Readable<I> &&
                 Copyable<iter_value_t<I>> &&
-                IndirectRegularInvocable<composed<coerce<iter_value_t<I>>, BOp>, iter_value_t<I>*, I>
+                IndirectRegularBinaryInvocable_<composed<coerce<iter_value_t<I>>, BOp>, iter_value_t<I>*, I>
         );
 
         CPP_def

@@ -38,7 +38,7 @@ namespace ranges
             auto operator()(I begin, S end, F fun, P proj = P{}) const ->
                 CPP_ret(for_each_result<I, F>)(
                     requires InputIterator<I> && Sentinel<S, I> &&
-                        MoveIndirectInvocable<F, projected<I, P>>)
+                        IndirectUnaryInvocable<F, projected<I, P>>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -51,7 +51,7 @@ namespace ranges
             auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
                 CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
                     requires InputRange<Rng> &&
-                        MoveIndirectInvocable<F, projected<iterator_t<Rng>, P>>)
+                        IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
             {
                 return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                     detail::move(fun)};
@@ -60,7 +60,7 @@ namespace ranges
 
         /// \sa `for_each_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<for_each_fn>, for_each)
+        RANGES_INLINE_VARIABLE(for_each_fn, for_each)
         /// @}
     } // namespace v3
 } // namespace ranges

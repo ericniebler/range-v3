@@ -26,6 +26,8 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+
 template<typename Iter, typename Sent = Iter>
 void test_iter()
 {

@@ -29,16 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename T, typename P = identity)
-            (concept Removable)(I, T, P),
-                ForwardIterator<I> &&
-                IndirectRelation<equal_to, projected<I, P>, T const *> &&
-                Permutable<I>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct remove_fn
@@ -46,7 +36,8 @@ namespace ranges
             template<typename I, typename S, typename T, typename P = identity>
             auto operator()(I begin, S end, T const &val, P proj = P{}) const ->
                 CPP_ret(I)(
-                    requires Removable<I, T, P> && Sentinel<S, I>)
+                    requires Permutable<I> && Sentinel<S, I> &&
+                        IndirectRelation<equal_to, projected<I, P>, T const *>)
             {
                 begin = find(std::move(begin), end, val, std::ref(proj));
                 if(begin != end)
@@ -66,7 +57,8 @@ namespace ranges
             template<typename Rng, typename T, typename P = identity>
             auto operator()(Rng &&rng, T const &val, P proj = P{}) const ->
                 CPP_ret(safe_iterator_t<Rng>)(
-                    requires Removable<iterator_t<Rng>, T, P> && ForwardRange<Rng>)
+                    requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                        IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T const *>)
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }
@@ -74,7 +66,7 @@ namespace ranges
 
         /// \sa `remove_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<remove_fn>, remove)
+        RANGES_INLINE_VARIABLE(remove_fn, remove)
 
         /// @}
     } // namespace v3

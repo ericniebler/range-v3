@@ -49,7 +49,7 @@ namespace ranges
 
         /// \sa `fill_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<fill_fn>, fill)
+        RANGES_INLINE_VARIABLE(fill_fn, fill)
         /// @}
     } // namespace v3
 } // namespace ranges

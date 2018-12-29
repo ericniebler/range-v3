@@ -35,7 +35,9 @@ namespace ranges
             auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred = C{}, P0 proj0 = P0{},
                     P1 proj1 = P1{}) const ->
                 CPP_ret(bool)(
-                    requires Sentinel<S0, I0> && Sentinel<S1, I1> && Comparable<I0, I1, C, P0, P1>)
+                    requires InputIterator<I0> && Sentinel<S0, I0> &&
+                        InputIterator<I1> && Sentinel<S1, I1> &&
+                        IndirectStrictWeakOrder<C, projected<I0, P0>, projected<I1, P1>>)
             {
                 for(; begin1 != end1; ++begin0, ++begin1)
                 {
@@ -53,7 +55,8 @@ namespace ranges
                     P1 proj1 = P1{}) const ->
                 CPP_ret(bool)(
                     requires InputRange<Rng0> && InputRange<Rng1> &&
-                        Comparable<iterator_t<Rng0>, iterator_t<Rng1>, C, P0, P1>)
+                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng0>, P0>,
+                                                   projected<iterator_t<Rng1>, P1>>)
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(pred),
                     std::move(proj0), std::move(proj1));
@@ -62,8 +65,7 @@ namespace ranges
 
         /// \sa `lexicographical_compare_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<lexicographical_compare_fn>,
-                               lexicographical_compare)
+        RANGES_INLINE_VARIABLE(lexicographical_compare_fn, lexicographical_compare)
         /// @}
     } // namespace v3
 } // namespace ranges

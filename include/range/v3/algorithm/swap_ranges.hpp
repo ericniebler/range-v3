@@ -76,7 +76,7 @@ namespace ranges
 
         /// \sa `swap_ranges_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<swap_ranges_fn>, swap_ranges)
+        RANGES_INLINE_VARIABLE(swap_ranges_fn, swap_ranges)
         /// @}
     } // namespace v3
 } // namespace ranges

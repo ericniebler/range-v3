@@ -39,16 +39,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I1, typename I2, typename C = equal_to, typename P1 = identity, typename P2 = identity)
-            (concept IsPermutationable)(I1, I2, C, P1, P2),
-                ForwardIterator<I1> &&
-                ForwardIterator<I2> &&
-                Comparable<I1, I2, C, P1, P2>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct is_permutation_fn
@@ -101,11 +91,15 @@ namespace ranges
             }
 
         public:
-            template<typename I1, typename S1, typename I2, typename C = equal_to, typename P1 = identity, typename P2 = identity>
+            template<typename I1, typename S1, typename I2, typename C = equal_to,
+                typename P1 = identity, typename P2 = identity>
+            RANGES_DEPRECATED("Use the variant of ranges::is_permutation that takes an upper bound "
+                "for both sequences")
             auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
-                    requires Sentinel<S1, I1> && IsPermutationable<I1, I2, C, P1, P2>)
+                    requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
+                        IndirectlyComparable<I1, I2, C, P1, P2>)
             {
                 // shorten sequences as much as possible by lopping off any equal parts
                 for(; begin1 != end1; ++begin1, ++begin2)
@@ -152,13 +146,19 @@ namespace ranges
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
-                    requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
-                        IsPermutationable<I1, I2, C, P1, P2>)
+                    requires ForwardIterator<I1> && Sentinel<S1, I1> &&
+                        ForwardIterator<I2> && Sentinel<S2, I2> &&
+                        IndirectlyComparable<I1, I2, C, P1, P2>)
             {
-                if(SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
+                if RANGES_CONSTEXPR_IF (SizedSentinel<S1, I1> && SizedSentinel<S2, I2>)
+                {
+                    RANGES_DIAGNOSTIC_PUSH
+                    RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
                     return distance(begin1, end1) == distance(begin2, end2) &&
                         (*this)(std::move(begin1), std::move(end1), std::move(begin2),
                             std::move(pred), std::move(proj1), std::move(proj2));
+                    RANGES_DIAGNOSTIC_POP
+                }
                 return is_permutation_fn::four_iter_impl(std::move(begin1), std::move(end1),
                     std::move(begin2), std::move(end2), std::move(pred), std::move(proj1),
                     std::move(proj2));
@@ -166,14 +166,19 @@ namespace ranges
 
             template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = identity,
                 typename P2 = identity>
+            RANGES_DEPRECATED("Use the variant of ranges::is_permutation that takes an upper bound "
+                "for both sequences")
             auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
-                    requires ForwardRange<Rng1> && Iterator<uncvref_t<I2Ref>> &&
-                        IsPermutationable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
+                    requires ForwardRange<Rng1> && ForwardIterator<uncvref_t<I2Ref>> &&
+                        IndirectlyComparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
             {
+                RANGES_DIAGNOSTIC_PUSH
+                RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
                 return (*this)(begin(rng1), end(rng1), (I2Ref &&) begin2, std::move(pred),
                     std::move(proj1), std::move(proj2));
+                RANGES_DIAGNOSTIC_POP
             }
 
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
@@ -182,12 +187,17 @@ namespace ranges
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
                     requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
-                        IsPermutationable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+                        IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
             {
-                if(SizedRange<Rng1> && SizedRange<Rng2>)
+                if RANGES_CONSTEXPR_IF (SizedRange<Rng1> && SizedRange<Rng2>)
+                {
+                    RANGES_DIAGNOSTIC_PUSH
+                    RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
                     return distance(rng1) == distance(rng2) &&
                         (*this)(begin(rng1), end(rng1), begin(rng2), std::move(pred),
                             std::move(proj1), std::move(proj2));
+                    RANGES_DIAGNOSTIC_POP
+                }
                 return is_permutation_fn::four_iter_impl(begin(rng1), end(rng1), begin(rng2),
                     end(rng2), std::move(pred), std::move(proj1), std::move(proj2));
             }
@@ -195,8 +205,7 @@ namespace ranges
 
         /// \sa `is_permutation_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_permutation_fn>,
-                               is_permutation)
+        RANGES_INLINE_VARIABLE(is_permutation_fn, is_permutation)
 
         struct next_permutation_fn
         {
@@ -241,8 +250,7 @@ namespace ranges
 
         /// \sa `next_permutation_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<next_permutation_fn>,
-                               next_permutation)
+        RANGES_INLINE_VARIABLE(next_permutation_fn, next_permutation)
 
         struct prev_permutation_fn
         {
@@ -287,8 +295,7 @@ namespace ranges
 
         /// \sa `prev_permutation_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<prev_permutation_fn>,
-                               prev_permutation)
+        RANGES_INLINE_VARIABLE(prev_permutation_fn, prev_permutation)
         /// @}
     } // namespace v3
 } // namespace ranges

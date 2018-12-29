@@ -33,15 +33,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept TakeWhileActionConcept,
-                    ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    IndirectPredicate<Fun, iterator_t<Rng>>
-            );
-
             struct take_while_fn
             {
             private:
@@ -54,33 +45,15 @@ namespace ranges
                 }
             public:
                 CPP_template(typename Rng, typename Fun)(
-                    requires TakeWhileActionConcept<Rng, Fun>)
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                        IndirectUnaryPredicate<Fun, iterator_t<Rng>>)
                 Rng operator()(Rng &&rng, Fun fun) const
                 {
                     ranges::action::erase(rng, find_if_not(begin(rng), end(rng), std::move(fun)),
                         end(rng));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename Fun)(
-                    requires not TakeWhileActionConcept<Rng, Fun>)
-                void operator()(Rng &&, Fun &&) const
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::take_while operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    using S = sentinel_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, S>,
-                        "The object on which action::take_while operates must allow element "
-                        "removal.");
-                    CPP_assert_msg(IndirectPredicate<Fun, I>,
-                        "The function passed to action::take_while must be callable with objects "
-                        "of the range's common reference type, and it must return something convertible to "
-                        "bool.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

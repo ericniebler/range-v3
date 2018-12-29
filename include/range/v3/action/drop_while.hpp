@@ -33,15 +33,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept DropWhileActionConcept,
-                    ForwardRange<Rng> &&
-                    IndirectPredicate<Fun, iterator_t<Rng>> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>
-            );
-
             struct drop_while_fn
             {
             private:
@@ -55,31 +46,14 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
-                    requires DropWhileActionConcept<Rng, Fun>)
+                    requires ForwardRange<Rng> &&
+                        IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
                 {
                     ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
                         std::move(fun)));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&, Fun &&) const -> CPP_ret(void)(
-                    requires not DropWhileActionConcept<Rng, Fun>)
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::drop_while operates must be a model of the "
-                        "ForwardRange concept.");
-                    CPP_assert_msg(IndirectPredicate<Fun, iterator_t<Rng>>,
-                        "The function passed to action::drop_while must be callable with objects "
-                        "of the range's common reference type, and it must return something convertible to "
-                        "bool.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
-                        "The object on which action::drop_while operates must allow element "
-                        "removal.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

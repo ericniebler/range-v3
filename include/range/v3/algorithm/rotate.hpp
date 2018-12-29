@@ -220,7 +220,7 @@ namespace ranges
 
         /// \sa `rotate_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<rotate_fn>, rotate)
+        RANGES_INLINE_VARIABLE(rotate_fn, rotate)
         /// @}
     } // namespace v3
 } // namespace ranges

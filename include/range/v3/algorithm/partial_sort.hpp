@@ -66,8 +66,7 @@ namespace ranges
 
         /// \sa `partial_sort_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<partial_sort_fn>,
-                               partial_sort)
+        RANGES_INLINE_VARIABLE(partial_sort_fn, partial_sort)
         /// @}
     } // namespace v3
 } // namespace ranges

@@ -28,17 +28,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename O, typename C, typename P = identity)
-            (concept RemoveCopyableIf)(I, O, C, P),
-                InputIterator<I> &&
-                WeaklyIncrementable<O> &&
-                IndirectPredicate<C, projected<I, P>> &&
-                IndirectlyCopyable<I, O>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         template<typename I, typename O>
@@ -49,7 +38,10 @@ namespace ranges
             template<typename I, typename S, typename O, typename C, typename P = identity>
             auto operator()(I begin, S end, O out, C pred, P proj = P{}) const ->
                 CPP_ret(remove_copy_if_result<I, O>)(
-                    requires RemoveCopyableIf<I, O, C, P> && Sentinel<S, I>)
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        WeaklyIncrementable<O> &&
+                        IndirectUnaryPredicate<C, projected<I, P>> &&
+                        IndirectlyCopyable<I, O>)
             {
                 for(; begin != end; ++begin)
                 {
@@ -66,7 +58,10 @@ namespace ranges
             template<typename Rng, typename O, typename C, typename P = identity>
             auto operator()(Rng &&rng, O out, C pred, P proj = P{}) const ->
                 CPP_ret(remove_copy_if_result<safe_iterator_t<Rng>, O>)(
-                    requires RemoveCopyableIf<iterator_t<Rng>, O, C, P> && InputRange<Rng>)
+                    requires InputRange<Rng> &&
+                        WeaklyIncrementable<O> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));
             }
@@ -74,8 +69,7 @@ namespace ranges
 
         /// \sa `remove_copy_if_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<remove_copy_if_fn>,
-                               remove_copy_if)
+        RANGES_INLINE_VARIABLE(remove_copy_if_fn, remove_copy_if)
         /// @}
     } // namespace v3
 } // namespace ranges

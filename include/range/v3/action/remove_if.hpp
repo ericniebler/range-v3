@@ -33,15 +33,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename C, typename P = identity)
-                (concept RemoveIfActionConcept)(Rng, C, P),
-                    ForwardRange<Rng> &&
-                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                    RemovableIf<iterator_t<Rng>, C, P>
-            );
-
             struct remove_if_fn
             {
             private:
@@ -55,44 +46,20 @@ namespace ranges
                 }
             public:
                 CPP_template(typename Rng, typename C, typename P = identity)(
-                    requires RemoveIfActionConcept<Rng, C, P>)
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                        Permutable<iterator_t<Rng>> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
                 Rng operator()(Rng &&rng, C pred, P proj = P{}) const
                 {
                     auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, ranges::end(rng));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename C, typename P = identity)(
-                    requires not RemoveIfActionConcept<Rng, C, P>)
-                void operator()(Rng &&, C &&, P && = P{}) const
-                {
-                    CPP_assert_msg(ForwardRange<Rng>,
-                        "The object on which action::remove_if operates must be a model of the "
-                        "ForwardRange concept.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(ErasableRange<Rng &, I, I>,
-                        "The object on which action::remove_if operates must allow element "
-                        "removal.");
-                    CPP_assert_msg(IndirectInvocable<P, I>,
-                        "The projection function must accept objects of the iterator's value type, "
-                        "reference type, and common reference type.");
-                    CPP_assert_msg(IndirectPredicate<C, projected<I, P>>,
-                        "The predicate passed to action::remove_if must accept objects returned "
-                        "by the projection function, or of the range's value type if no projection "
-                        "is specified.");
-                    CPP_assert_msg(Permutable<I>,
-                        "The iterator type of the range passed to action::remove_if must allow its "
-                        "elements to be permutaed; that is, the values must be movable and the "
-                        "iterator must be mutable.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions
             /// \sa action
-            /// \sa with_braced_init_args
             RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
         }
         /// @}

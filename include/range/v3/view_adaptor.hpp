@@ -438,7 +438,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived>
-            constexpr /*c++14*/ 
+            constexpr /*c++14*/
             auto begin_cursor()
                 noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D &>()))) ->
                 CPP_ret(decltype(view_adaptor::begin_cursor_(std::declval<D &>())))(
@@ -447,7 +447,7 @@ namespace ranges
                 return view_adaptor::begin_cursor_(derived());
             }
             template<typename D = Derived>
-            constexpr /*c++14*/ 
+            constexpr /*c++14*/
             auto begin_cursor() const
                 noexcept(noexcept(view_adaptor::begin_cursor_(std::declval<D const &>()))) ->
                 CPP_ret(decltype(view_adaptor::begin_cursor_(std::declval<D const &>())))(
@@ -467,7 +467,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived>
-            constexpr /*c++14*/ 
+            constexpr /*c++14*/
             auto end_cursor()
                 noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D &>()))) ->
                 CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D &>())))(
@@ -476,7 +476,7 @@ namespace ranges
                 return view_adaptor::end_cursor_(derived());
             }
             template<typename D = Derived>
-            constexpr /*c++14*/ 
+            constexpr /*c++14*/
             auto end_cursor() const
                 noexcept(noexcept(view_adaptor::end_cursor_(std::declval<D const &>()))) ->
                 CPP_ret(decltype(view_adaptor::end_cursor_(std::declval<D const &>())))(

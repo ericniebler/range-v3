@@ -35,15 +35,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C, typename P = identity)
-            (concept IsPartitionedable)(I, C, P),
-                InputIterator<I> &&
-                IndirectPredicate<C, projected<I, P>>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         struct is_partitioned_fn
@@ -51,7 +42,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P = identity>
             auto operator()(I begin, S end, C pred, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires IsPartitionedable<I, C, P> && Sentinel<S, I>)
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        IndirectUnaryPredicate<C, projected<I, P>>)
             {
                 for(; begin != end; ++begin)
                     if(!invoke(pred, invoke(proj, *begin)))
@@ -65,7 +57,8 @@ namespace ranges
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
                 CPP_ret(bool)(
-                    requires IsPartitionedable<iterator_t<Rng>, C, P> && Range<Rng>)
+                    requires InputRange<Rng> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
@@ -73,8 +66,7 @@ namespace ranges
 
         /// \sa `is_partitioned_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<is_partitioned_fn>,
-                               is_partitioned)
+        RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
         /// @}
     } // namespace v3
 } // namespace ranges

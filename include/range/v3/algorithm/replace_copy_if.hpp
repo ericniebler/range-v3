@@ -28,17 +28,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename O, typename C, typename T, typename P = identity)
-            (concept ReplaceCopyIfable)(I, O, C, T, P),
-                InputIterator<I> &&
-                OutputIterator<O, T const &> &&
-                IndirectlyCopyable<I, O> &&
-                IndirectPredicate<C, projected<I, P>>
-        );
-
         /// \addtogroup group-algorithms
         /// @{
         template<typename I, typename O>
@@ -49,7 +38,10 @@ namespace ranges
             template<typename I, typename S, typename O, typename C, typename T, typename P = identity>
             auto operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const ->
                 CPP_ret(replace_copy_if_result<I, O>)(
-                    requires ReplaceCopyIfable<I, O, C, T, P> && Sentinel<S, I>)
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        OutputIterator<O, T const &> &&
+                        IndirectUnaryPredicate<C, projected<I, P>> &&
+                        IndirectlyCopyable<I, O>)
             {
                 for(; begin != end; ++begin, ++out)
                 {
@@ -65,7 +57,9 @@ namespace ranges
             template<typename Rng, typename O, typename C, typename T, typename P = identity>
             auto operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const ->
                 CPP_ret(replace_copy_if_result<safe_iterator_t<Rng>, O>)(
-                    requires ReplaceCopyIfable<iterator_t<Rng>, O, C, T, P> && Range<Rng>)
+                    requires InputRange<Rng> && OutputIterator<O, T const &> &&
+                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                        IndirectlyCopyable<iterator_t<Rng>, O>)
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), new_value,
                     std::move(proj));
@@ -74,8 +68,7 @@ namespace ranges
 
         /// \sa `replace_copy_if_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<replace_copy_if_fn>,
-                               replace_copy_if)
+        RANGES_INLINE_VARIABLE(replace_copy_if_fn, replace_copy_if)
         /// @}
     } // namespace v3
 } // namespace ranges

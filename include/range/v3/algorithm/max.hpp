@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_ALGORITHM_MAX_HPP
 #define RANGES_V3_ALGORITHM_MAX_HPP
 
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -32,19 +33,28 @@ namespace ranges
         /// @{
         struct max_fn
         {
+            template<typename T, typename C = less, typename P = identity>
+            constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
+                CPP_ret(T const &)(
+                    requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
+            {
+                return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;
+            }
+
             template<typename Rng, typename C = less, typename P = identity>
             constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(iter_value_t<iterator_t<Rng>>)(
-                    requires InputRange<Rng> && Copyable<iter_value_t<iterator_t<Rng>>> &&
-                        IndirectRelation<C, projected<iterator_t<Rng>, P>>)
+                CPP_ret(range_value_t<Rng>)(
+                    requires InputRange<Rng> &&
+                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
+                        IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
             {
                 auto begin = ranges::begin(rng);
                 auto end = ranges::end(rng);
                 RANGES_EXPECT(begin != end);
-                iter_value_t<iterator_t<Rng>> result = *begin;
+                range_value_t<Rng> result = *begin;
                 while(++begin != end)
                 {
-                    auto && tmp = *begin;
+                    auto &&tmp = *begin;
                     if(invoke(pred, invoke(proj, result), invoke(proj, tmp)))
                         result = (decltype(tmp) &&) tmp;
                 }
@@ -52,17 +62,18 @@ namespace ranges
             }
 
             template<typename T, typename C = less, typename P = identity>
-            constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(T const &)(
-                    requires IndirectRelation<C, projected<const T *, P>>)
+            constexpr /*c++14*/ auto operator()(std::initializer_list<T> rng, C pred = C{},
+                    P proj = P{}) const ->
+                CPP_ret(T)(
+                    requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
             {
-                return invoke(pred, invoke(proj, b), invoke(proj, a)) ? a : b;
+                return (*this)(rng.begin(), rng.end(), std::move(pred), std::move(proj));
             }
         };
 
         /// \sa `max_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<max_fn>, max)
+        RANGES_INLINE_VARIABLE(max_fn, max)
         /// @}
     } // namespace v3
 } // namespace ranges

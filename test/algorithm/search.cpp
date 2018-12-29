@@ -194,27 +194,19 @@ int main()
 
         S const *p = ranges::search(in, pat, std::equal_to<int>{}, &S::i, &T::i).begin();
         CHECK(p == in+2);
-
-        // Test initializer_list
-        S const in2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{5}};
-        p = ranges::search(
-            in2,
-            {T{2}, T{3}},
-            std::equal_to<int>{}, &S::i, &T::i).begin();
-        CHECK(p->i == 2);
     }
 
     // Test counted ranges
     {
         int in[] = {0,1,2,3,4,5};
         auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
-        auto sub = ranges::search(rng, {2,3});
+        auto sub = ranges::search(rng, std::initializer_list<int>{2,3});
         CHECK(base(sub.begin().base()) == in+2);
         CHECK(base(sub.end().base()) == in+4);
         CHECK(sub.begin().count() == 4);
         CHECK(sub.end().count() == 2);
 
-        sub = ranges::search(rng, {5,6});
+        sub = ranges::search(rng, std::initializer_list<int>{5,6});
         CHECK(base(sub.begin().base()) == in+6);
         CHECK(base(sub.end().base()) == in+6);
         CHECK(sub.begin().count() == 0);

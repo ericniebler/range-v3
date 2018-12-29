@@ -67,7 +67,7 @@ namespace ranges
 
         /// \sa `shuffle_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<shuffle_fn>, shuffle)
+        RANGES_INLINE_VARIABLE(shuffle_fn, shuffle)
         /// @}
     } // namespace v3
 } // namespace ranges

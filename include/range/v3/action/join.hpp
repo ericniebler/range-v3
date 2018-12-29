@@ -41,21 +41,14 @@ namespace ranges
                     range_value_t<Rng>,
                     std::vector<range_value_t<range_value_t<Rng>>>>;
 
-            CPP_def
-            (
-                template(typename Rng)
-                concept JoinActionConcept,
-                    InputRange<Rng> &&
-                    InputRange<range_value_t<Rng>> &&
-                    Semiregular<join_action_value_t_<Rng>>
-            );
-
             struct join_fn
             {
             public:
                 template<typename Rng>
                 auto operator()(Rng &&rng) const -> CPP_ret(join_action_value_t_<Rng>)(
-                    requires JoinActionConcept<Rng>)
+                    requires InputRange<Rng> &&
+                        InputRange<range_value_t<Rng>> &&
+                        Semiregular<join_action_value_t_<Rng>>)
                 {
                     join_action_value_t_<Rng> ret;
                     auto end = ranges::end(rng);
@@ -63,20 +56,6 @@ namespace ranges
                         push_back(ret, *it);
                     return ret;
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng>
-                auto operator()(Rng &&) const -> CPP_ret(void)(
-                    requires not JoinActionConcept<Rng>)
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which action::join operates must be a model of the "
-                        "InputRange concept.");
-                    CPP_assert_msg(InputRange<range_value_t<Rng>>,
-                        "The Range on which action::join operates must have a value type that "
-                        "models the InputRange concept.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

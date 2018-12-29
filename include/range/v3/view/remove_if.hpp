@@ -149,7 +149,7 @@ namespace ranges
                 constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(remove_if_view<all_t<Rng>, Pred>)(
                         requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectPredicate<Pred, iterator_t<Rng>>)
+                            IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
                 {
                     return remove_if_view<all_t<Rng>, Pred>{
                         all(static_cast<Rng &&>(rng)), std::move(pred)};

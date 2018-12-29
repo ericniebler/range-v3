@@ -65,7 +65,7 @@ namespace ranges
 
         /// \sa `find_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<find_fn>, find)
+        RANGES_INLINE_VARIABLE(find_fn, find)
         /// @}
     } // namespace v3
 } // namespace ranges

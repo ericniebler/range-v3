@@ -74,7 +74,7 @@ namespace ranges
 
         /// \sa `reverse_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<reverse_fn>, reverse)
+        RANGES_INLINE_VARIABLE(reverse_fn, reverse)
         /// @}
     } // namespace v3
 } // namespace ranges

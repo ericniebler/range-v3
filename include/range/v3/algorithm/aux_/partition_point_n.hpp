@@ -23,15 +23,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename I, typename C, typename P = identity)
-            (concept PartitionPointable)(I, C, P),
-                ForwardIterator<I> &&
-                IndirectPredicate<C, projected<I, P>>
-        );
-
         namespace aux
         {
             struct partition_point_n_fn
@@ -39,7 +30,8 @@ namespace ranges
                 template<typename I, typename C, typename P = identity>
                 auto operator()(I begin, iter_difference_t<I> d, C pred, P proj = P{}) const ->
                     CPP_ret(I)(
-                        requires PartitionPointable<I, C, P>)
+                        requires ForwardIterator<I> &&
+                            IndirectUnaryPredicate<C, projected<I, P>>)
                 {
                     if(0 < d)
                     {

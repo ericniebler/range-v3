@@ -31,14 +31,6 @@ namespace ranges
         /// @{
         namespace action
         {
-            CPP_def
-            (
-                template(typename Rng, typename F, typename P = identity)
-                (concept TransformActionConcept)(Rng, F, P),
-                    InputRange<Rng> &&
-                    Transformable1<iterator_t<Rng>, iterator_t<Rng>, F, P>
-            );
-
             struct transform_fn
             {
             private:
@@ -52,36 +44,13 @@ namespace ranges
                 }
             public:
                 CPP_template(typename Rng, typename F, typename P = identity)(
-                    requires TransformActionConcept<Rng, F, P>)
+                    requires InputRange<Rng> && CopyConstructible<F> &&
+                        Writable<iterator_t<Rng>, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
                 Rng operator()(Rng &&rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
                     return static_cast<Rng &&>(rng);
                 }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
-                CPP_template(typename Rng, typename F, typename P = identity)(
-                    requires not TransformActionConcept<Rng, F, P>)
-                void operator()(Rng &&, F &&, P && = P{}) const
-                {
-                    CPP_assert_msg(InputRange<Rng>,
-                        "The object on which action::transform operates must be a model of the "
-                        "InputRange concept.");
-                    using I = iterator_t<Rng>;
-                    CPP_assert_msg(IndirectInvocable<P, I>,
-                        "The projection function must accept objects of the iterator's value type, "
-                        "reference type, and common reference type.");
-                    CPP_assert_msg(IndirectInvocable<F, projected<I, P>>,
-                        "The function argument to action::transform must be callable with "
-                        "the result of the projection argument, or with objects of the range's "
-                        "common reference type if no projection is specified.");
-                    CPP_assert_msg(Writable<iterator_t<Rng>,
-                            invoke_result_t<F&,
-                                invoke_result_t<P&, range_common_reference_t<Rng>>>>,
-                        "The result type of the function passed to action::transform must "
-                        "be writable back into the source range.");
-                }
-            #endif
             };
 
             /// \ingroup group-actions

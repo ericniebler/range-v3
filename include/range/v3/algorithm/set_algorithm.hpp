@@ -47,7 +47,9 @@ namespace ranges
             auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
-                    requires Sentinel<S1, I1> && Sentinel<S2, I2> && Comparable<I1, I2, C, P1, P2>)
+                    requires InputIterator<I1> && Sentinel<S1, I1> &&
+                        InputIterator<I2> && Sentinel<S2, I2> &&
+                        IndirectStrictWeakOrder<C, projected<I1, P1>, projected<I2, P2>>)
             {
                 for(; begin2 != end2; ++begin1)
                 {
@@ -64,8 +66,9 @@ namespace ranges
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
                 CPP_ret(bool)(
-                    requires Range<Rng1> && Range<Rng2> &&
-                        Comparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
+                    requires InputRange<Rng1> && InputRange<Rng2> &&
+                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng1>, P1>,
+                                                   projected<iterator_t<Rng2>, P2>>)
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
                     std::move(proj1), std::move(proj2));
@@ -74,7 +77,7 @@ namespace ranges
 
         /// \sa `includes_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<includes_fn>, includes)
+        RANGES_INLINE_VARIABLE(includes_fn, includes)
 
         template<typename I1, typename I2, typename O>
         using set_union_result = detail::in1_in2_out_result<I1, I2, O>;
@@ -128,7 +131,7 @@ namespace ranges
 
         /// \sa `set_union_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_union_fn>, set_union)
+        RANGES_INLINE_VARIABLE(set_union_fn, set_union)
 
         struct set_intersection_fn
         {
@@ -173,8 +176,7 @@ namespace ranges
 
         /// \sa `set_intersection_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_intersection_fn>,
-                               set_intersection)
+        RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
 
         template<typename I, typename O>
         using set_difference_result = detail::in1_out_result<I, O>;
@@ -227,8 +229,7 @@ namespace ranges
 
         /// \sa `set_difference_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_difference_fn>,
-                               set_difference)
+        RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
 
         template<typename I1, typename I2, typename O>
         using set_symmetric_difference_result = detail::in1_in2_out_result<I1, I2, O>;
@@ -289,8 +290,7 @@ namespace ranges
 
         /// \sa `set_symmetric_difference_fn`
         /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(with_braced_init_args<set_symmetric_difference_fn>,
-                               set_symmetric_difference)
+        RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
         /// @}
     } // namespace v3
 } // namespace ranges

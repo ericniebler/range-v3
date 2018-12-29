@@ -32,7 +32,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 auto operator()(Rng &&rng, Pred pred) const ->
                     CPP_ret(remove_if_view<all_t<Rng>, logical_negate<Pred>>)(
-                        requires ViewableRange<Rng> && IndirectPredicate<Pred, iterator_t<Rng>>)
+                        requires ViewableRange<Rng> && IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), not_fn(std::move(pred))};
                 }

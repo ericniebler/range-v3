@@ -628,7 +628,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #endif
 
-namespace concepts 
+namespace concepts
 {
     inline namespace v1
     {
@@ -745,7 +745,7 @@ namespace concepts
             ////////////////////////////////////////////////////////////////////////////////////////
             // Utility concepts
             ////////////////////////////////////////////////////////////////////////////////////////
-            
+
             CPP_def
             (
                 template(bool B)
