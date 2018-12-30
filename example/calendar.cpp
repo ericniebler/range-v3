@@ -59,6 +59,7 @@
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <iostream>
@@ -104,9 +105,9 @@ namespace boost
 namespace ranges
 {
     template<>
-    struct difference_type<date>
+    struct incrementable_traits<date>
     {
-        using type = date::duration_type::duration_rep::int_type;
+        using difference_type = date::duration_type::duration_rep::int_type;
     };
 }
 CPP_assert(Incrementable<date>);
@@ -283,12 +284,11 @@ struct interleave_view<Rngs>::cursor
     }
     bool equal(default_sentinel) const
     {
-        return n_ == 0 && its_.end() != mismatch(its_,
-                                                 *rngs_,
-                                                 std::not_equal_to<>(),
-                                                 identity(),
-                                                 ranges::end)
-                                            .in1();
+        if(n_ != 0)
+            return false;
+        auto ends = *rngs_ | view::transform(ranges::end);
+        return its_.end() != std::mismatch(
+            its_.begin(), its_.end(), ends.begin(), std::not_equal_to<>{}).first;
     }
     CPP_member
     auto equal(cursor const& that) const -> CPP_ret(bool)(

@@ -130,9 +130,6 @@ int main() { }
         set_target_properties(test.header.${target}
             PROPERTIES FOLDER "test/header"
         )
-        target_compile_options(test.header.${target}
-            PRIVATE ${RANGE_V3_CONCEPTS_FLAGS}
-        )
         target_include_directories(test.header.${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
         if (ARGS_LINK_LIBRARIES)
             target_link_libraries(test.header.${target} ${ARGS_LINK_LIBRARIES})

@@ -34,6 +34,12 @@ function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_test(${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
 
+function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
+  add_executable(${EXENAME} ${FIRSTSOURCE} ${ARGN})
+  target_link_libraries(${EXENAME} range-v3)
+  add_test(${TESTNAME} ${EXENAME})
+endfunction(rv3_add_test)
+
 include(CTest) # invokes enable_testing() and defines BUILD_TESTING variable, defaulting to ON
 include(TestHeaders)
 include(ranges_options)
