@@ -15,6 +15,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
@@ -38,6 +39,16 @@ struct is_even
         return (i % 2) == 0;
     }
 };
+
+struct my_data
+{
+    int i;
+};
+
+bool operator==(my_data left, my_data right)
+{
+    return left.i == right.i;
+}
 
 int main()
 {
@@ -103,6 +114,35 @@ int main()
         int const some_ints[] = {1, 2, 3};
         auto a = some_ints | ranges::view::remove_if([](int val) { return val > 0; });
         CHECK(a.empty());
+    }
+
+    {
+        // with projection
+        const std::vector<my_data> some_my_datas{{1}, {2}, {3}, {4}};
+
+        {
+            // view::remove_if without pipe
+            auto rng = ranges::view::remove_if(some_my_datas, is_even(), &my_data::i);
+            ::check_equal(rng, std::vector<my_data>{{1}, {3}});
+        }
+
+        {
+            // view::remove_if with pipe
+            auto rng = some_my_datas | ranges::view::remove_if(is_even(), &my_data::i);
+            ::check_equal(rng, std::vector<my_data>{{1}, {3}});
+        }
+
+        {
+            // view::filter without pipe
+            auto rng = ranges::view::filter(some_my_datas, is_even(), &my_data::i);
+            ::check_equal(rng, std::vector<my_data>{{2}, {4}});
+        }
+
+        {
+            // view::filter with pipe
+            auto rng = some_my_datas | ranges::view::filter(is_even(), &my_data::i);
+            ::check_equal(rng, std::vector<my_data>{{2}, {4}});
+        }
     }
 
     return test_result();

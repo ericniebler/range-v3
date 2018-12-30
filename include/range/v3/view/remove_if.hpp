@@ -134,27 +134,55 @@ namespace ranges
 
         namespace view
         {
-            struct remove_if_fn
+            /// \cond
+            template<typename Modifier>
+            struct remove_if_fn_
             {
             private:
                 friend view_access;
                 template<typename Pred>
-                static auto bind(remove_if_fn remove_if, Pred pred)
+                static auto bind(remove_if_fn_ remove_if, Pred pred)
                 {
                     return make_pipeable(std::bind(remove_if, std::placeholders::_1,
                         protect(std::move(pred))));
                 }
+                template<typename Pred, typename Proj>
+                static auto bind(remove_if_fn_ remove_if, Pred pred, Proj proj)
+                {
+                    return make_pipeable(std::bind(remove_if, std::placeholders::_1,
+                        protect(std::move(pred)), protect(std::move(proj))));
+                }
+                template<typename Pred>
+                using pred_t = detail::decay_t<invoke_result_t<Modifier, Pred>>;
             public:
                 template<typename Rng, typename Pred>
                 constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                    CPP_ret(remove_if_view<all_t<Rng>, Pred>)(
+                    CPP_ret(remove_if_view<all_t<Rng>, pred_t<Pred>>)(
                         requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+                            IndirectUnaryPredicate<pred_t<Pred>, iterator_t<Rng>>)
                 {
-                    return remove_if_view<all_t<Rng>, Pred>{
-                        all(static_cast<Rng &&>(rng)), std::move(pred)};
+                    return remove_if_view<all_t<Rng>, pred_t<Pred>>{
+                        all(static_cast<Rng &&>(rng)),
+                        Modifier{}(std::move(pred))
+                    };
+                }
+                template<typename Rng, typename Pred, typename Proj>
+                constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
+                    CPP_ret(remove_if_view<all_t<Rng>, composed<pred_t<Pred>, Proj>>)(
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            IndirectUnaryPredicate<composed<pred_t<Pred>, Proj>, iterator_t<Rng>>)
+                {
+                    return remove_if_view<all_t<Rng>, composed<pred_t<Pred>, Proj>>{
+                        all(static_cast<Rng &&>(rng)),
+                        compose(Modifier{}(std::move(pred)), std::move(proj))
+                    };
                 }
             };
+            /// \endcond
+
+            /// Given a source range, unary predicate, and optional projection,
+            /// present a view of the elements that do not satisfy the predicate.
+            using remove_if_fn = remove_if_fn_<identity>;
 
             /// \relates remove_if_fn
             /// \ingroup group-views

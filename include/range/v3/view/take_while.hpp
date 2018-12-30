@@ -131,6 +131,12 @@ namespace ranges
                     return make_pipeable(std::bind(take_while, std::placeholders::_1,
                         protect(std::move(pred))));
                 }
+                template<typename Pred, typename Proj>
+                static auto bind(take_while_fn take_while, Pred pred, Proj proj)
+                {
+                    return make_pipeable(std::bind(take_while, std::placeholders::_1,
+                        protect(std::move(pred)), protect(std::move(proj))));
+                }
             public:
                 template<typename Rng, typename Pred>
                 auto operator()(Rng &&rng, Pred pred) const ->
@@ -139,6 +145,17 @@ namespace ranges
                             IndirectUnaryPredicate<Pred &, iterator_t<Rng>>)
                 {
                     return {all(static_cast<Rng &&>(rng)), std::move(pred)};
+                }
+                template<typename Rng, typename Pred, typename Proj>
+                auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
+                    CPP_ret(take_while_view<all_t<Rng>, composed<Pred, Proj>>)(
+                        requires ViewableRange<Rng> && InputRange<Rng> &&
+                            IndirectUnaryPredicate<composed<Pred, Proj> &, iterator_t<Rng>>)
+                {
+                    return {
+                        all(static_cast<Rng &&>(rng)),
+                        compose(std::move(pred), std::move(proj))
+                    };
                 }
             };
 

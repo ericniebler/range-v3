@@ -522,14 +522,6 @@ namespace ranges
             struct empty_fn;
         }
 
-        template<typename Rng, typename Pred>
-        struct filter_view;
-
-        namespace view
-        {
-            struct filter_fn;
-        }
-
         template<typename Rng, typename Fun>
         struct group_by_view;
 
