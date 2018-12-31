@@ -20,6 +20,8 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/sliding.hpp>
+#include <range/v3/view/zip.hpp>
+#include <range/v3/view/group_by.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -98,6 +100,28 @@ namespace
 
         test_prev(rng, it, BidirectionalRange<Base>());
         CHECK(sizeof(it) == sizeof(size_compare<Base>));
+    }
+}
+
+void bug_975()
+{
+    std::vector<double> v{2.0, 2.0, 3.0, 1.0};
+    std::vector<int> i{1, 2, 1, 2};
+    std::vector<int> t{1, 1, 2, 2};
+    {
+        using namespace ranges;
+        auto vals = view::zip(v, i, t);
+        using T = std::tuple<double, int, int>;
+        auto g = vals | view::group_by(
+            [](T t1, T t2)
+            {
+                return std::get<2>(t1) == std::get<2>(t2);
+            }
+        );
+
+        auto windows = view::sliding(g, 2);
+        auto it = std::begin(windows);
+        (void)it;
     }
 }
 

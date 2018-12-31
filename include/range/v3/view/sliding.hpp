@@ -59,7 +59,7 @@ namespace ranges
             struct trailing
             {
                 trailing() = default;
-                constexpr trailing(Rng const &rng)
+                constexpr trailing(Rng &rng)
                   : it_{uncounted(ranges::begin(rng))}
                 {}
                 constexpr uncounted_t<Rng>
@@ -84,7 +84,7 @@ namespace ranges
             struct trailing<Rng, true>
             {
                 trailing() = default;
-                constexpr trailing(Rng const &) noexcept
+                constexpr trailing(Rng &) noexcept
                 {}
                 constexpr uncounted_t<Rng>
                 get(iterator_t<Rng> const &it, range_difference_type_t<Rng> n) const
