@@ -359,7 +359,7 @@ namespace ranges
                 template<typename Rng>
                 auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                     CPP_ret(sliding_view<all_t<Rng>>)(
-                        requires ForwardRange<Rng>)
+                        requires ViewableRange<Rng> && ForwardRange<Rng>)
                 {
                     return {all(static_cast<Rng &&>(rng)), n};
                 }
