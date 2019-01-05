@@ -25,6 +25,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -220,6 +221,16 @@ void test_bug_919()
     }
 }
 
+// https://github.com/ericniebler/range-v3/issues/978
+void test_bug_978()
+{
+    int data[] = {1};
+    ranges::view::cartesian_product(
+        data | ranges::view::filter([](int){ return true; }),
+        data
+    );
+}
+
 int main()
 {
     int some_ints[] = {0,1,2,3};
@@ -272,6 +283,7 @@ int main()
     test_bug_820();
     test_bug_823();
     test_bug_919();
+    test_bug_978();
 
     return test_result();
 }
