@@ -557,36 +557,20 @@ namespace ranges
             template<typename OtherCur>
             constexpr /*c++14*/
             CPP_ctor(basic_iterator)(basic_iterator<OtherCur> that)(
-                requires ConvertibleTo<OtherCur, Cur> &&
+                requires (!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur> &&
                     Constructible<mixin_t, OtherCur>)
               : base_t{std::move(that.pos())}
             {}
             // Mix in any additional constructors provided by the mixin
             using base_t::base_t;
 
-            template<typename T>
+            template<typename OtherCur>
             constexpr /*c++14*/
-            auto operator=(T &&t)
-            noexcept(noexcept(std::declval<Cur &>().write(static_cast<T &&>(t)))) ->
+            auto operator=(basic_iterator<OtherCur> that) ->
                 CPP_ret(basic_iterator &)(
-                    requires not defer::Same<uncvref_t<T>, basic_iterator> &&
-                        !detail::defer::HasCursorNext<Cur> &&
-                        detail::defer::WritableCursor<Cur, T>)
+                    requires (!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur>)
             {
-                pos().write(static_cast<T &&>(t));
-                return *this;
-            }
-
-            template<typename T>
-            constexpr /*c++14*/
-            auto operator=(T &&t) const
-            noexcept(noexcept(std::declval<Cur const &>().write(static_cast<T &&>(t)))) ->
-                CPP_ret(basic_iterator const &)(
-                    requires not defer::Same<uncvref_t<T>, basic_iterator> &&
-                        !detail::defer::HasCursorNext<Cur> &&
-                        detail::defer::WritableCursor<Cur const, T>)
-            {
-                pos().write(static_cast<T &&>(t));
+                pos() = std::move(that.pos());
                 return *this;
             }
 

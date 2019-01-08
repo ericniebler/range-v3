@@ -52,7 +52,7 @@ namespace ranges
                 auto CPP_fun(operator())(Rng &&rng, Fun fun) (const
                     requires ViewableRange<Rng> &&
                         TransformableRange<Rng, Fun> &&
-                        InputRange<invoke_result_t<Fun &, range_reference_t<Rng>>>)
+                        JoinableRange<transform_view<all_t<Rng>, Fun>>)
                 {
                     return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
                 }

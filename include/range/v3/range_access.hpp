@@ -54,14 +54,15 @@ namespace ranges
             };
 
             template<typename T>
-            static meta::id<basic_mixin<T>> mixin_base_2_(long);
+            static basic_mixin<T> mixin_base_2_(long);
             template<typename T>
-            static meta::id<typename T::mixin> mixin_base_2_(int);
+            static typename T::mixin mixin_base_2_(int);
 
             template<typename Cur>
             struct mixin_base_
-              : decltype(range_access::mixin_base_2_<Cur>(42))
-            {};
+            {
+                using type = decltype(range_access::mixin_base_2_<Cur>(42));
+            };
 
         public:
             template<typename Cur>

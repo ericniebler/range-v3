@@ -19,6 +19,8 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/single.hpp>
+#include <range/v3/view/transform.hpp>
+#include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -38,7 +40,7 @@ namespace
     };
 
     static int N = 0;
-    auto const make_input_rng = []
+    auto make_input_rng()
     {
         using ranges::view::generate_n;
         return generate_n([](){
@@ -46,13 +48,32 @@ namespace
                 return N++;
             },3);
         },3);
-    };
+    }
 
     template<typename T>
-    constexpr auto CPP_auto_fun(twice)(T t)
-    (
-        return ranges::view::concat(ranges::view::single(t), ranges::view::single(t))
-    )
+    constexpr auto twice(T t)
+    {
+        return ranges::view::concat(
+            ranges::view::single(t),
+            ranges::view::single(t));
+    }
+
+#ifdef __clang__
+RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
+RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-member-function")
+#endif
+
+    struct MoveOnlyView : ranges::view_base
+    {
+        MoveOnlyView() = default;
+        MoveOnlyView(MoveOnlyView &&) = default;
+        MoveOnlyView &operator=(MoveOnlyView &&) = default;
+        char *begin() { return nullptr; }
+        char *end() { return nullptr; }
+    };
+
+    CPP_assert(ranges::Movable<MoveOnlyView>);
+    CPP_assert(!ranges::Semiregular<MoveOnlyView>);
 
     // https://github.com/ericniebler/range-v3/issues/283
     void test_issue_283()
@@ -146,6 +167,63 @@ int main()
         auto rng = debug_input_view<int const[2]>{some_int_pairs} | view::join;
         check_equal(rng, {0,1,2,3,4,5});
     }
+
+	{
+		std::vector<std::string> vs{"this","is","his","face"};
+		join_view<ref_view<std::vector<std::string>>> jv{vs};
+		check_equal(jv, {'t','h','i','s','i','s','h','i','s','f','a','c','e'});
+		CPP_assert(BidirectionalRange<decltype(jv)>);
+		CPP_assert(BidirectionalRange<const decltype(jv)>);
+		CPP_assert(CommonRange<decltype(jv)>);
+		CPP_assert(CommonRange<const decltype(jv)>);
+	}
+
+	{
+		auto rng = view::iota(0,4)
+			| view::transform([](int i) {return view::iota(0,i);})
+			| view::join;
+		check_equal(rng, {0,0,1,0,1,2});
+		CPP_assert(InputRange<decltype(rng)>);
+		CPP_assert(!Range<const decltype(rng)>);
+		CPP_assert(!ForwardRange<decltype(rng)>);
+		CPP_assert(!CommonRange<decltype(rng)>);
+	}
+
+	{
+		auto rng = view::iota(0,4)
+			| view::transform([](int i) {return view::iota(0,i);})
+			| view::filter([](auto){ return true; })
+			| view::join;
+		check_equal(rng, {0,0,1,0,1,2});
+		CPP_assert(InputRange<decltype(rng)>);
+		CPP_assert(!Range<const decltype(rng)>);
+		CPP_assert(!ForwardRange<decltype(rng)>);
+		CPP_assert(!CommonRange<decltype(rng)>);
+	}
+
+	{
+		auto rng = view::iota(0, 4)
+            | view::transform([](int){return MoveOnlyView{};})
+			| view::join;
+        CHECK(rng.begin() == rng.end());
+		CPP_assert(InputRange<decltype(rng)>);
+		CPP_assert(!ForwardRange<decltype(rng)>);
+		CPP_assert(!Range<const decltype(rng)>);
+		CPP_assert(!CommonRange<decltype(rng)>);
+		CPP_assert(!CommonRange<const decltype(rng)>);
+	}
+
+	{
+		auto rng = view::iota(0, 4)
+            | view::transform([](int){return MoveOnlyView{};})
+			| view::join('a');
+        check_equal(rng, {'a','a','a'});
+		CPP_assert(InputRange<decltype(rng)>);
+		CPP_assert(!ForwardRange<decltype(rng)>);
+		CPP_assert(!Range<const decltype(rng)>);
+		CPP_assert(!CommonRange<decltype(rng)>);
+		CPP_assert(!CommonRange<const decltype(rng)>);
+	}
 
     return ::test_result();
 }

@@ -550,8 +550,11 @@ namespace ranges
             struct closed_iota_fn;
         }
 
-        template<typename Rng, typename ValRng = void>
+        template<typename Rng>
         struct join_view;
+
+        template<typename Rng, typename ValRng>
+        struct join_with_view;
 
         namespace view
         {

@@ -157,17 +157,19 @@ public:
     {}
     template<typename I, typename...Rest>
     auto operator()(I begin, I end, Rest &&... rest) const ->
-        checker<decltype(algo_(begin, end, rest...))>
+        ::checker<decltype(algo_(begin, end, rest...))>
     {
         using S = meta::_t<sentinel_type<I>>;
         using R = decltype(algo_(begin, end, rest...));
-        return checker<R>{[=](function_ref<void(R)> const & check)
+        Algo algo = algo_;
+        auto check_algo = [=](function_ref<void(R)> const & check)
         {
-            check(algo_(begin, end, rest...));
-            check(algo_(begin, S{base(end)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end)), rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)})), rest...));
-        }};
+            check(algo(begin, end, rest...));
+            check(algo(begin, S{base(end)}, rest...));
+            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, end)), rest...));
+            check(algo(::rvalue_if<RvalueOK>(ranges::make_subrange(begin, S{base(end)})), rest...));
+        };
+        return ::checker<R>{check_algo};
     }
 };
 
@@ -193,16 +195,17 @@ public:
         using S1 = meta::_t<sentinel_type<I1>>;
         using S2 = meta::_t<sentinel_type<I2>>;
         using R = decltype(algo_(begin1, end1, begin2, end2, rest...));
+        Algo algo = algo_;
         return checker<R>{[=](function_ref<void(R)> const & check)
         {
-            check(algo_(begin1, end1, begin2, end2, rest...));
-            check(algo_(begin1, S1{base(end1)}, begin2, S2{base(end2)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, end1)),
-                        ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, end2)),
-                        rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, S1{base(end1)})),
-                        ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, S2{base(end2)})),
-                        rest...));
+            check(algo(begin1, end1, begin2, end2, rest...));
+            check(algo(begin1, S1{base(end1)}, begin2, S2{base(end2)}, rest...));
+            check(algo(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, end1)),
+                       ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, end2)),
+                       rest...));
+            check(algo(::rvalue_if<RvalueOK1>(ranges::make_subrange(begin1, S1{base(end1)})),
+                       ::rvalue_if<RvalueOK2>(ranges::make_subrange(begin2, S2{base(end2)})),
+                       rest...));
         }};
     }
 };
