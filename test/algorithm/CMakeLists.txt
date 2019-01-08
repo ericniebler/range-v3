@@ -1,6 +1,7 @@
 set(CMAKE_FOLDER "${CMAKE_FOLDER}/algorithm")
 
 rv3_add_test(test.alg.adjacent_find alg.adjacent_find adjacent_find.cpp)
+rv3_add_test(test.alg.adjacent_remove_if alg.adjacent_remove_if adjacent_remove_if.cpp)
 rv3_add_test(test.alg.all_of alg.all_of all_of.cpp)
 rv3_add_test(test.alg.any_of alg.any_of any_of.cpp)
 rv3_add_test(test.alg.none_of alg.none_of none_of.cpp)
