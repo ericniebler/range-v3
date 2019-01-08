@@ -137,7 +137,7 @@ namespace ranges
             auto operator*() const
                 noexcept(noexcept(iter_reference_t<I>(*current_))) ->
                 CPP_ret(iter_reference_t<I2>)(
-                    requires Readable<I const>)
+                    requires Readable<I2 const>)
             {
                 RANGES_EXPECT(cnt_ > 0);
                 return *current_;
