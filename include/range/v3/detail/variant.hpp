@@ -128,6 +128,7 @@ namespace ranges
             struct indexed_datum
             {
             private:
+                template<typename, typename> friend struct indexed_datum;
                 T datum_;
             public:
                 CPP_member
@@ -141,6 +142,12 @@ namespace ranges
                 constexpr indexed_datum(Ts &&... ts)
                     noexcept(std::is_nothrow_constructible<T, Ts...>::value)
                   : datum_(static_cast<Ts &&>(ts)...)
+                {}
+                template<typename U>
+                constexpr CPP_ctor(indexed_datum)(indexed_datum<U, Index> that)(
+                    noexcept(std::is_nothrow_constructible<T, U>::value)
+                    requires (!Same<T, U>) && ConvertibleTo<U, T>)
+                  : datum_(std::move(that.datum_))
                 {}
                 constexpr /*c++14*/ indexed_element<T, Index::value> ref() noexcept
                 {
@@ -167,8 +174,14 @@ namespace ranges
             struct indexed_datum<T &, Index>
               : private reference_wrapper<T &>
             {
+                template<typename, typename> friend struct indexed_datum;
                 indexed_datum() = delete;
                 using reference_wrapper<T &>::reference_wrapper;
+                template<typename U>
+                constexpr CPP_ctor(indexed_datum)(indexed_datum<U &, Index> that)(noexcept(true)
+                    requires (!Same<T, U>) && ConvertibleTo<U &, T &>)
+                  : reference_wrapper<T &>(that.get())
+                {}
                 constexpr indexed_element<T &, Index::value> ref() const noexcept
                 {
                     return {this->get()};
@@ -178,8 +191,14 @@ namespace ranges
             struct indexed_datum<T &&, Index>
               : private reference_wrapper<T &&>
             {
+                template<typename, typename> friend struct indexed_datum;
                 indexed_datum() = delete;
                 using reference_wrapper<T &&>::reference_wrapper;
+                template<typename U>
+                constexpr CPP_ctor(indexed_datum)(indexed_datum<U &&, Index> that)(noexcept(true)
+                    requires (!Same<T, U>) && ConvertibleTo<U &&, T &&>)
+                  : reference_wrapper<T &&>(that.get())
+                {}
                 constexpr indexed_element<T &&, Index::value> ref() const noexcept
                 {
                     return {this->get()};
@@ -611,6 +630,17 @@ namespace ranges
             constexpr variant(detail::empty_variant_tag) noexcept
               : detail::variant_data<Ts...>{}, index_((std::size_t)-1)
             {}
+            template<typename... Args>
+            static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)(
+                requires sizeof...(Args) == sizeof...(Ts))
+            {
+                return And<ConvertibleTo<Args, Ts>...>;
+            }
+            template<typename... Args>
+            static constexpr bool all_convertible_to(long) noexcept
+            {
+                return false;
+            }
 
         public:
             CPP_member
@@ -637,15 +667,22 @@ namespace ranges
             constexpr CPP_ctor(variant)(RANGES_EMPLACED_INDEX_T(N), meta::nil_)(
                 noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
                 requires Constructible<datum_t<N>, meta::nil_>)
-              : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}, index_(N)
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
+              , index_(N)
             {}
             variant(variant &&that)
               : detail::variant_data<Ts...>{}
-              , index_(detail::variant_move_copy_(that.index(), data_(), detail::move(that.data_())))
+              , index_(detail::variant_move_copy_(that.index(), data_(), std::move(that.data_())))
             {}
             variant(variant const &that)
               : detail::variant_data<Ts...>{}
               , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
+            {}
+            template<typename...Args>
+            CPP_ctor(variant)(variant<Args...> that)(
+                requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
+              : detail::variant_data<Ts...>{}
+              , index_(detail::variant_move_copy_(that.index(), data_(), std::move(that.data_())))
             {}
             variant &operator=(variant &&that)
             {
@@ -655,6 +692,15 @@ namespace ranges
                 return *this;
             }
             variant &operator=(variant const &that)
+            {
+                // TODO do a simple copy assign when index()==that.index()
+                this->clear_();
+                this->assign_(that);
+                return *this;
+            }
+            template<typename...Args>
+            auto operator=(variant<Args...> that) -> CPP_ret(variant &)(
+                requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
             {
                 // TODO do a simple copy assign when index()==that.index()
                 this->clear_();
