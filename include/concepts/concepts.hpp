@@ -66,14 +66,6 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_INLINE_VAR
 #endif
 
-#ifdef __clang__
-#define CPP_PP_IS_SAME(...) __is_same(__VA_ARGS__)
-#elif defined(__GNUC__) && __GNUC__ >= 6
-#define CPP_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
-#else
-#define CPP_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
-#endif
-
 #define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
 #define CPP_PP_CHECK_N(x, n, ...) n
 #define CPP_PP_PROBE(x) x, 1,
@@ -797,10 +789,6 @@ namespace concepts
             );
 
             /// \cond
-            // Workaround bug in the Standard Library:
-            // From cannot be an incomplete class type despite that
-            // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
-            // in such a case.
             CPP_def
             (
                 template(typename A, typename B)
@@ -808,6 +796,10 @@ namespace concepts
                     not Same<detail::remove_cvref_t<A>, detail::remove_cvref_t<B>>
             );
 
+            // Workaround bug in the Standard Library:
+            // From cannot be an incomplete class type despite that
+            // is_convertible<X, Y> should be equivalent to is_convertible<X&&, Y>
+            // in such a case.
             CPP_def
             (
                 template(typename From, typename To)

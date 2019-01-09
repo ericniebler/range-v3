@@ -18,6 +18,14 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 
+#ifdef __clang__
+#define CPP_PP_IS_SAME(...) __is_same(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
+#define CPP_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#else
+#define CPP_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#endif
+
 namespace concepts
 {
     inline namespace v1
@@ -32,6 +40,33 @@ namespace concepts
         {
             template<typename From, typename To>
             using is_convertible = std::is_convertible<meta::_t<std::add_rvalue_reference<From>>, To>;
+
+            template<bool>
+            struct if_else_
+            {
+                template<typename, typename U>
+                using invoke = U;
+            };
+            template<>
+            struct if_else_<true>
+            {
+                template<typename T, typename>
+                using invoke = T;
+            };
+            template<bool B, typename T, typename U>
+            using if_else_t = meta::invoke<if_else_<B>, T, U>;
+
+            template<bool>
+            struct if_
+            {};
+            template<>
+            struct if_<true>
+            {
+                template<typename T>
+                using invoke = T;
+            };
+            template<bool B, typename T = void>
+            using if_t = meta::invoke<if_<B>, T>;
 
             template<typename From, typename To>
             struct _copy_cv_
@@ -68,7 +103,7 @@ namespace concepts
 
             template<typename T, typename U, typename R = _builtin_common_t<T &, U &>>
             using _rref_res =
-                meta::if_<std::is_reference<R>, meta::_t<std::remove_reference<R>> &&, R>;
+                if_else_t<std::is_reference<R>::value, meta::_t<std::remove_reference<R>> &&, R>;
 
             template<typename T, typename U>
             using _lref_res = _cond_res<_copy_cv<T, U> &, _copy_cv<U, T> &>;
@@ -118,9 +153,9 @@ namespace concepts
               : _builtin_common_2<T, U>
             {};
             template<typename T, typename U>
-            struct _builtin_common<T &&, U &&, meta::if_<meta::and_<
-                is_convertible<T &&, _rref_res<T, U>>,
-                is_convertible<U &&, _rref_res<T, U>>>>>
+            struct _builtin_common<T &&, U &&, if_t<
+                is_convertible<T &&, _rref_res<T, U>>::value &&
+                is_convertible<U &&, _rref_res<T, U>>::value>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -129,8 +164,8 @@ namespace concepts
               : meta::defer<_lref_res, T, U>
             {};
             template<typename T, typename U>
-            struct _builtin_common<T &, U &&, meta::if_<
-                is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+            struct _builtin_common<T &, U &&, if_t<
+                is_convertible<U &&, _builtin_common_t<T &, U const &>>::value>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -154,9 +189,9 @@ namespace concepts
               : _builtin_common_<T &&, U &&>
             {};
             template<typename T, typename U>
-            struct _builtin_common_rr<T, U, meta::if_<meta::and_<
-                is_convertible<T &&, _rref_res<T, U>>,
-                is_convertible<U &&, _rref_res<T, U>>>>>
+            struct _builtin_common_rr<T, U, if_t<
+                is_convertible<T &&, _rref_res<T, U>>::value &&
+                is_convertible<U &&, _rref_res<T, U>>::value>>
             {
                 using type = _rref_res<T, U>;
             };
@@ -173,8 +208,8 @@ namespace concepts
               : _builtin_common_<T &, T &&>
             {};
             template<typename T, typename U>
-            struct _builtin_common_lr<T, U, meta::if_<
-                is_convertible<U &&, _builtin_common_t<T &, U const &>>>>
+            struct _builtin_common_lr<T, U, if_t<
+                is_convertible<U &&, _builtin_common_t<T &, U const &>>::value>>
               : _builtin_common<T &, U const &>
             {};
             template<typename T, typename U>
@@ -207,9 +242,9 @@ namespace concepts
 
         template<typename T, typename U>
         struct common_type<T, U>
-          : meta::if_c<
-                ( std::is_same<detail::decay_t<T>, T>::value &&
-                  std::is_same<detail::decay_t<U>, U>::value ),
+          : detail::if_else_t<
+                ( CPP_PP_IS_SAME(detail::decay_t<T>, T) &&
+                  CPP_PP_IS_SAME(detail::decay_t<U>, U) ),
                 meta::defer<detail::_builtin_common_t, T, U>,
                 common_type<detail::decay_t<T>, detail::decay_t<U>>>
         {};
@@ -295,14 +330,14 @@ namespace concepts
 
             template<typename T, typename U, typename = void>
             struct _common_reference2
-              : meta::if_<
-                    meta::is_trait<_basic_common_reference<T, U>>,
+              : if_else_t<
+                    meta::is_trait<_basic_common_reference<T, U>>::value,
                     _basic_common_reference<T, U>,
                     common_type<T, U>>
             {};
 
             template<typename T, typename U>
-            struct _common_reference2<T, U, meta::if_<std::is_reference<_builtin_common_t<T, U>>>>
+            struct _common_reference2<T, U, if_t<std::is_reference<_builtin_common_t<T, U>>::value>>
               : _builtin_common<T, U>
             {};
         }
