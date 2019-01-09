@@ -49,21 +49,8 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \cond
-        namespace detail
-        {
-            template<typename T>
-            struct view_predicate_;
-        }
-        /// \endcond
-
         /// \addtogroup group-concepts
         /// @{
-
-        // Specialize this if the default is wrong.
-        template<typename T>
-        struct enable_view
-        {};
 
         ///
         /// Range concepts below
@@ -239,6 +226,90 @@ namespace ranges
                 Range<T> && !disable_sized_range<uncvref_t<T>>
         );
 
+        /// \cond
+        namespace detail
+        {
+            struct enable_view_helper_
+            {
+                bool result_;
+
+                template<typename T>
+                static constexpr auto test(T const *) -> CPP_ret(bool)(
+                    requires Range<T> && Range<T const>)
+                {
+                    return RANGES_IS_SAME(
+                        iter_reference_t<iterator_t<T>>,
+                        iter_reference_t<iterator_t<T const>>);
+                }
+                static constexpr auto test(void const *) -> bool
+                {
+                    return true;
+                }
+                template<typename T>
+                constexpr enable_view_helper_(T const *p)
+                  : result_(enable_view_helper_::test(p))
+                {}
+            };
+            inline constexpr bool enable_view_impl_(...)
+            {
+                return false;
+            }
+            inline constexpr bool enable_view_impl_(view_base const *)
+            {
+                return true;
+            }
+            inline constexpr bool enable_view_impl_(enable_view_helper_ ev)
+            {
+                return ev.result_;
+            }
+            template<typename T>
+            inline constexpr bool enable_view_impl_(std::initializer_list<T> const *)
+            {
+                return false;
+            }
+            template<typename Key, typename Compare, typename Alloc>
+            inline constexpr bool enable_view_impl_(std::set<Key, Compare, Alloc> const *)
+            {
+                return false;
+            }
+            template<typename Key, typename Compare, typename Alloc>
+            inline constexpr bool enable_view_impl_(std::multiset<Key, Compare, Alloc> const *)
+            {
+                return false;
+            }
+            template<typename Key, typename Hash, typename Pred, typename Alloc>
+            inline constexpr bool enable_view_impl_(std::unordered_set<Key, Hash, Pred, Alloc> const *)
+            {
+                return false;
+            }
+            template<typename Key, typename Hash, typename Pred, typename Alloc>
+            inline constexpr bool enable_view_impl_(std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
+            {
+                return false;
+            }
+            // BUGBUG TODO
+            // template<typename BidiIter, typename Alloc>
+            // inline constexpr bool enable_view_impl_(std::match_results<BidiIter, Alloc> const *)
+            // {
+            //     return false;
+            // }
+            template<typename T>
+            constexpr T const *nullptr_(int)
+            {
+                return nullptr;
+            }
+            template<typename T>
+            constexpr int nullptr_(long)
+            {
+                return 0;
+            }
+        }
+        /// \endcond
+
+        // Specialize this if the default is wrong.
+        template<typename T>
+        constexpr bool enable_view = detail::enable_view_impl_(detail::nullptr_<T>(0));
+
         ///
         /// View concepts below
         ///
@@ -247,8 +318,10 @@ namespace ranges
         (
             template(typename T)
             concept View,
-                Range<T> && Movable<T> && DefaultConstructible<T> &&
-                detail::view_predicate_<T>::value
+                Range<T> &&
+                // Not to spec: move-only views are OK:
+                Movable<T> && DefaultConstructible<T> &&
+                enable_view<T>
         );
 
         CPP_def
@@ -411,60 +484,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T>
-            std::is_same<iter_reference_t<iterator_t<T>>, iter_reference_t<iterator_t<T const>>>
-            view_like_(int);
-
-            template<typename T>
-            std::true_type
-            view_like_(long);
-
-            template<typename T>
-            using view_like = decltype(detail::view_like_<T>(42));
-
-            // Something is a view if it's a Range and either:
-            //  - It doesn't look like a container, or
-            //  - It's derived from view_base
-            template<typename T>
-            struct view_predicate_
-#ifdef RANGES_WORKAROUND_MSVC_699982
-              : meta::if_<
-                    meta::is_trait<enable_view<T>>,
-                    enable_view<T>,
-                    meta::or_<view_like<T>, DerivedFrom<T, view_base>>>::type
-#else
-              : meta::_t<meta::if_<
-                    meta::is_trait<enable_view<T>>,
-                    enable_view<T>,
-                    meta::bool_<view_like<T>() || (bool) DerivedFrom<T, view_base>>>>
-#endif
-            {};
-
-            template<typename T>
-            struct view_predicate_<std::initializer_list<T>>
-              : std::false_type
-            {};
-
-            template<typename Key, typename Compare, typename Alloc>
-            struct view_predicate_<std::set<Key, Compare, Alloc>>
-              : std::false_type
-            {};
-
-            template<typename Key, typename Compare, typename Alloc>
-            struct view_predicate_<std::multiset<Key, Compare, Alloc>>
-              : std::false_type
-            {};
-
-            template<typename Key, typename Hash, typename Pred, typename Alloc>
-            struct view_predicate_<std::unordered_set<Key, Hash, Pred, Alloc>>
-              : std::false_type
-            {};
-
-            template<typename Key, typename Hash, typename Pred, typename Alloc>
-            struct view_predicate_<std::unordered_multiset<Key, Hash, Pred, Alloc>>
-              : std::false_type
-            {};
-
             template<typename T>
             struct is_view_
               : meta::bool_<(bool)View<T>>
