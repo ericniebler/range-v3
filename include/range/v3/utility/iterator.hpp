@@ -1120,6 +1120,9 @@ namespace ranges
 
         RANGES_INLINE_VARIABLE(make_move_sentinel_fn, make_move_sentinel)
 
+        // Default sentinel
+        RANGES_INLINE_VARIABLE(default_sentinel_t, default_sentinel)
+
         /// \cond
         namespace detail
         {

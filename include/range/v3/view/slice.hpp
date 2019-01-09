@@ -97,7 +97,7 @@ namespace ranges
                 {
                     return make_counted_iterator(get_begin_(), count_);
                 }
-                default_sentinel end()
+                default_sentinel_t end()
                 {
                     return {};
                 }

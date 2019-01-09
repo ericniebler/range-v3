@@ -174,7 +174,7 @@ Range v3 provides a utility for easily creating your own range types, called
         friend ranges::range_access;
         char const * sz_ = "";
         char const & read() const { return *sz_; }
-        bool equal(ranges::default_sentinel) const { return *sz_ == '\0'; }
+        bool equal(ranges::default_sentinel_t) const { return *sz_ == '\0'; }
         void next() { ++sz_; }
     public:
         c_string_range() = default;

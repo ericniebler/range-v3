@@ -79,7 +79,7 @@ namespace ranges
             {
                 return view_as_cursor{derived()};
             }
-            constexpr default_sentinel end_cursor() const
+            constexpr default_sentinel_t end_cursor() const
             {
                 return {};
             }

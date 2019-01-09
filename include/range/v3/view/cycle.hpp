@@ -101,7 +101,7 @@ namespace ranges
                   : rng_(that.rng_)
                   , it_(std::move(that.it_))
                 {}
-                constexpr bool equal(default_sentinel) const
+                constexpr bool equal(default_sentinel_t) const
                 {
                     return false;
                 }

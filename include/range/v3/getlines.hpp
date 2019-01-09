@@ -53,7 +53,7 @@ namespace ranges
                 {
                     return rng_->str_;
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return !rng_->sin_;
                 }

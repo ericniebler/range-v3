@@ -218,7 +218,7 @@ namespace ranges
                 {
                     return true;
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return !view_ || view_->done();
                 }

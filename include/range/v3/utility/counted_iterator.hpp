@@ -321,13 +321,13 @@ namespace ranges
         }
 
         template<typename I>
-        bool operator==(counted_iterator<I> const &x, default_sentinel)
+        bool operator==(counted_iterator<I> const &x, default_sentinel_t)
         {
             return x.count() == 0;
         }
 
         template<typename I>
-        bool operator==(default_sentinel, counted_iterator<I> const &x)
+        bool operator==(default_sentinel_t, counted_iterator<I> const &x)
         {
             return x.count() == 0;
         }
@@ -341,13 +341,13 @@ namespace ranges
         }
 
         template<typename I>
-        bool operator!=(counted_iterator<I> const &x, default_sentinel y)
+        bool operator!=(counted_iterator<I> const &x, default_sentinel_t y)
         {
             return !(x == y);
         }
 
         template<typename I>
-        bool operator!=(default_sentinel x, counted_iterator<I> const &y)
+        bool operator!=(default_sentinel_t x, counted_iterator<I> const &y)
         {
             return !(x == y);
         }
@@ -394,14 +394,14 @@ namespace ranges
 
         template<typename I>
         iter_difference_t<I>
-        operator-(counted_iterator<I> const &x, default_sentinel)
+        operator-(counted_iterator<I> const &x, default_sentinel_t)
         {
             return -x.count();
         }
 
         template<typename I>
         iter_difference_t<I>
-        operator-(default_sentinel, counted_iterator<I> const &y)
+        operator-(default_sentinel_t, counted_iterator<I> const &y)
         {
             return y.count();
         }

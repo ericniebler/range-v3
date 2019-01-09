@@ -487,7 +487,8 @@ namespace ranges
             struct counted_fn;
         }
 
-        struct default_sentinel { };
+        struct default_sentinel_t
+        {};
 
         template<typename I>
         struct move_iterator;

@@ -52,7 +52,7 @@ namespace ranges
                 explicit cursor(generate_n_view &rng)
                   : rng_(&rng)
                 {}
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return 0 == rng_->n_;
                 }

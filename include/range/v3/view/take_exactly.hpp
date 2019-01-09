@@ -70,7 +70,7 @@ namespace ranges
                 {
                     return {ranges::begin(rng_), n_};
                 }
-                default_sentinel end() const
+                default_sentinel_t end() const
                 {
                     return {};
                 }

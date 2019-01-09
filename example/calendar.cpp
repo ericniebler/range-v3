@@ -282,7 +282,7 @@ struct interleave_view<Rngs>::cursor
         if(0 == ((++n_) %= its_.size()))
             for_each(its_, [](auto &it) { ++it; });
     }
-    bool equal(default_sentinel) const
+    bool equal(default_sentinel_t) const
     {
         if(n_ != 0)
             return false;

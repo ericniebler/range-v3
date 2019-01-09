@@ -229,7 +229,7 @@ namespace ranges
                 {
                     return inner_it_;
                 }
-                constexpr bool equal(default_sentinel) const
+                constexpr bool equal(default_sentinel_t) const
                 {
                     return outer_it_ == ranges::end(rng_->outer_);
                 }
@@ -284,7 +284,7 @@ namespace ranges
                 }
                 constexpr auto operator()(join_view &, std::false_type) const
                 {
-                    return default_sentinel{};
+                    return default_sentinel_t{};
                 }
             };
             struct cend_cursor_fn
@@ -295,7 +295,7 @@ namespace ranges
                 }
                 constexpr auto operator()(join_view const &, std::false_type) const
                 {
-                    return default_sentinel{};
+                    return default_sentinel_t{};
                 }
             };
 
@@ -428,7 +428,7 @@ namespace ranges
                         satisfy();
                     }
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return outer_it_ == ranges::end(rng_->outer_);
                 }

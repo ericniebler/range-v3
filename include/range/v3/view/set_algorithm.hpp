@@ -164,7 +164,7 @@ namespace ranges
                     // does not support comparing iterators from different ranges
                     return it1_ == that.it1_;
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return it1_ == end1_;
                 }
@@ -304,7 +304,7 @@ namespace ranges
                     // does not support comparing iterators from different ranges
                     return it1_ == that.it1_;
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return (it1_ == end1_) || (it2_ == end2_);
                 }
@@ -468,7 +468,7 @@ namespace ranges
                     // does not support comparing iterators from different ranges
                     return (it1_ == that.it1_) && (it2_ == that.it2_);
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return (it1_ == end1_) && (it2_ == end2_);
                 }
@@ -661,7 +661,7 @@ namespace ranges
                     // does not support comparing iterators from different ranges:
                     return (it1_ == that.it1_) && (it2_ == that.it2_);
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return (it1_ == end1_) && (it2_ == end2_);
                 }

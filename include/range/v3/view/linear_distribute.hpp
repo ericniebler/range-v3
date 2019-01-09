@@ -43,7 +43,7 @@ namespace ranges
                 {
                     return from_;
                 }
-                constexpr bool equal(default_sentinel) const noexcept
+                constexpr bool equal(default_sentinel_t) const noexcept
                 {
                     return n_ == 0;
                 }

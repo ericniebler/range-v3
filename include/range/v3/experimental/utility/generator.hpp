@@ -228,7 +228,7 @@ namespace ranges
                     constexpr explicit cursor(handle coro) noexcept
                       : coro_{coro}
                     {}
-                    bool equal(default_sentinel) const
+                    bool equal(default_sentinel_t) const
                     {
                         RANGES_EXPECT(coro_);
                         if (coro_.done())

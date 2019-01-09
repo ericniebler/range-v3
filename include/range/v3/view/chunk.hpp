@@ -254,7 +254,7 @@ namespace ranges
                         return rng_->remainder_ == 0;
                     }
                     constexpr /*c++14*/
-                    bool equal(default_sentinel) const noexcept
+                    bool equal(default_sentinel_t) const noexcept
                     {
                         return done();
                     }
@@ -281,7 +281,7 @@ namespace ranges
                     }
                     CPP_member
                     constexpr /*c++14*/
-                    auto distance_to(default_sentinel) const ->
+                    auto distance_to(default_sentinel_t) const ->
                         CPP_ret(range_difference_t<Rng>)(
                             requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                     {
@@ -299,7 +299,7 @@ namespace ranges
                         requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                     {
                         using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
-                        return static_cast<size_type>(distance_to(default_sentinel{}));
+                        return static_cast<size_type>(distance_to(default_sentinel_t{}));
                     }
                 };
 
@@ -325,7 +325,7 @@ namespace ranges
                     return rng_->it() == ranges::end(rng_->base_) && rng_->remainder_ != 0;
                 }
                 constexpr /*c++14*/
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return done();
                 }
@@ -338,7 +338,7 @@ namespace ranges
                 }
                 CPP_member
                 constexpr /*c++14*/
-                auto distance_to(default_sentinel) const ->
+                auto distance_to(default_sentinel_t) const ->
                     CPP_ret(range_difference_t<Rng>)(
                         requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {

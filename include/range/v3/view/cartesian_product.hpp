@@ -324,7 +324,7 @@ RANGES_DIAGNOSTIC_POP
                 {
                     next_(meta::size_t<sizeof...(Views)>{});
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return std::get<0>(its_) == ranges::end(std::get<0>(view_->views_));
                 }
@@ -378,7 +378,7 @@ RANGES_DIAGNOSTIC_POP
                 return cursor<true>{Tag{}, *this};
             }
             CPP_member
-            auto end_cursor() const -> CPP_ret(default_sentinel)(
+            auto end_cursor() const -> CPP_ret(default_sentinel_t)(
                 requires sizeof...(Views) != 0 &&
                     !CartesianProductViewCanBidi<std::true_type, Views...>)
             {

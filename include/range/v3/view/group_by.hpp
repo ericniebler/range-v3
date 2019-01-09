@@ -82,7 +82,7 @@ namespace ranges
                 {
                     cur_ = find_if_not(cur_, last_, pred{cur_, fun_});
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     return cur_ == last_;
                 }

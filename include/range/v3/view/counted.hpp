@@ -50,7 +50,7 @@ namespace ranges
             {
                 return make_counted_iterator(it_, n_);
             }
-            default_sentinel end() const
+            default_sentinel_t end() const
             {
                 return {};
             }

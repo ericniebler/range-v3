@@ -141,7 +141,7 @@ namespace ranges
                 {
                     return *current_;
                 }
-                bool equal(default_sentinel) const
+                bool equal(default_sentinel_t) const
                 {
                     RANGES_EXPECT(parent_);
                     return parent_->size_ <= 0;
