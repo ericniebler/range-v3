@@ -38,20 +38,17 @@ RANGES_END_NAMESPACE_STD
 
 namespace ranges
 {
-    inline namespace v3
-    {
-        template<typename... Ts>
-        using common_type = concepts::common_type<Ts...>;
+    template<typename... Ts>
+    using common_type = concepts::common_type<Ts...>;
 
-        template<typename... Ts>
-        using common_type_t = concepts::common_type_t<Ts...>;
+    template<typename... Ts>
+    using common_type_t = concepts::common_type_t<Ts...>;
 
-        template<typename... Ts>
-        using common_reference = concepts::common_reference<Ts...>;
+    template<typename... Ts>
+    using common_reference = concepts::common_reference<Ts...>;
 
-        template<typename... Ts>
-        using common_reference_t = concepts::common_reference_t<Ts...>;
-    }
+    template<typename... Ts>
+    using common_reference_t = concepts::common_reference_t<Ts...>;
 }
 
 namespace concepts

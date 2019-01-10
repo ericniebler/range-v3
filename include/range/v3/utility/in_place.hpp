@@ -19,12 +19,9 @@
 
 namespace ranges
 {
-    inline namespace v3
-    {
        /// \ingroup group-utility
-        struct in_place_t {};
-        RANGES_INLINE_VARIABLE(in_place_t, in_place)
-    }
+    struct in_place_t {};
+    RANGES_INLINE_VARIABLE(in_place_t, in_place)
 }
 
 #endif

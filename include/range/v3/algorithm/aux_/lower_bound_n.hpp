@@ -22,53 +22,50 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
+        // [&](auto&& i){ return invoke(pred, i, val); }
+        template<typename Pred, typename Val>
+        struct lower_bound_predicate
         {
-            // [&](auto&& i){ return invoke(pred, i, val); }
-            template<typename Pred, typename Val>
-            struct lower_bound_predicate
-            {
-                Pred& pred_;
-                Val& val_;
+            Pred& pred_;
+            Val& val_;
 
-                template<typename T>
-                bool operator()(T && t) const
-                {
-                    return invoke(pred_, static_cast<T &&>(t), val_);
-                }
-            };
-
-            template<typename Pred, typename Val>
-            lower_bound_predicate<Pred, Val>
-            make_lower_bound_predicate(Pred& pred, Val& val)
+            template<typename T>
+            bool operator()(T && t) const
             {
-                return {pred, val};
+                return invoke(pred_, static_cast<T &&>(t), val_);
             }
-        }
-        /// \endcond
+        };
 
-        namespace aux
+        template<typename Pred, typename Val>
+        lower_bound_predicate<Pred, Val>
+        make_lower_bound_predicate(Pred& pred, Val& val)
         {
-            struct lower_bound_n_fn
-            {
-                template<typename I, typename V, typename C = less, typename P = identity>
-                auto operator()(I begin, iter_difference_t<I> d, V const &val, C pred = C{},
-                        P proj = P{}) const ->
-                    CPP_ret(I)(
-                        requires ForwardIterator<I> &&
-                            IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
-                {
-                    return partition_point_n(std::move(begin), d,
-                        detail::make_lower_bound_predicate(pred, val), std::move(proj));
-                }
-            };
-
-            RANGES_INLINE_VARIABLE(lower_bound_n_fn, lower_bound_n)
+            return {pred, val};
         }
-    } // namespace v3
+    }
+    /// \endcond
+
+    namespace aux
+    {
+        struct lower_bound_n_fn
+        {
+            template<typename I, typename V, typename C = less, typename P = identity>
+            auto operator()(I begin, iter_difference_t<I> d, V const &val, C pred = C{},
+                    P proj = P{}) const ->
+                CPP_ret(I)(
+                    requires ForwardIterator<I> &&
+                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+            {
+                return partition_point_n(std::move(begin), d,
+                    detail::make_lower_bound_predicate(pred, val), std::move(proj));
+            }
+        };
+
+        RANGES_INLINE_VARIABLE(lower_bound_n_fn, lower_bound_n)
+    }
 } // namespace ranges
 
 #endif // include guard

@@ -21,30 +21,27 @@
 
 namespace ranges
 {
-    inline namespace v3
+    struct iota_fn
     {
-        struct iota_fn
+        CPP_template(typename O, typename S, typename T)(
+            requires OutputIterator<O, T const &> && Sentinel<S, O> &&
+                WeaklyIncrementable<T>)
+        O operator()(O begin, S end, T val) const
         {
-            CPP_template(typename O, typename S, typename T)(
-                requires OutputIterator<O, T const &> && Sentinel<S, O> &&
-                    WeaklyIncrementable<T>)
-            O operator()(O begin, S end, T val) const
-            {
-                for(; begin != end; ++begin, ++val)
-                    *begin = detail::as_const(val);
-                return begin;
-            }
+            for(; begin != end; ++begin, ++val)
+                *begin = detail::as_const(val);
+            return begin;
+        }
 
-            CPP_template(typename Rng, typename T)(
-                requires OutputRange<Rng, T const &> && WeaklyIncrementable<T>)
-            safe_iterator_t<Rng> operator()(Rng &&rng, T val) const
-            {
-                return (*this)(begin(rng), end(rng), detail::move(val));
-            }
-        };
+        CPP_template(typename Rng, typename T)(
+            requires OutputRange<Rng, T const &> && WeaklyIncrementable<T>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, T val) const
+        {
+            return (*this)(begin(rng), end(rng), detail::move(val));
+        }
+    };
 
-        RANGES_INLINE_VARIABLE(iota_fn, iota)
-    }
+    RANGES_INLINE_VARIABLE(iota_fn, iota)
 }
 
 #endif

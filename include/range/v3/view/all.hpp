@@ -26,85 +26,82 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    namespace view
     {
-        /// \addtogroup group-views
-        /// @{
-        namespace view
+        struct all_fn
+          : pipeable<all_fn>
         {
-            struct all_fn
-              : pipeable<all_fn>
+        private:
+            /// If it's a view already, pass it though.
+            template<typename T>
+            static auto from_range_(T &&t, std::true_type, detail::any, detail::any)
             {
-            private:
-                /// If it's a view already, pass it though.
-                template<typename T>
-                static auto from_range_(T &&t, std::true_type, detail::any, detail::any)
-                {
-                    return static_cast<T &&>(t);
-                }
+                return static_cast<T &&>(t);
+            }
 
-                /// If it is container-like, turn it into a view, being careful
-                /// to preserve the Sized-ness of the range.
-                template<typename T>
-                static auto from_range_(T &&t, std::false_type, std::true_type, detail::any)
-                {
-                    return ranges::view::ref(t);
-                }
+            /// If it is container-like, turn it into a view, being careful
+            /// to preserve the Sized-ness of the range.
+            template<typename T>
+            static auto from_range_(T &&t, std::false_type, std::true_type, detail::any)
+            {
+                return ranges::view::ref(t);
+            }
 
-                /// Not a view and not an lvalue? If it's a ForwardingRange_, then
-                /// return a subrange holding the range's begin/end.
-                template<typename T>
-                static auto from_range_(T &&t, std::false_type, std::false_type, std::true_type)
-                {
-                    return make_subrange(static_cast<T &&>(t));
-                }
+            /// Not a view and not an lvalue? If it's a ForwardingRange_, then
+            /// return a subrange holding the range's begin/end.
+            template<typename T>
+            static auto from_range_(T &&t, std::false_type, std::false_type, std::true_type)
+            {
+                return make_subrange(static_cast<T &&>(t));
+            }
 
-            public:
-                CPP_template(typename T)(
-                    requires ViewableRange<T>)
-                auto operator()(T &&t) const
-                {
-                    return all_fn::from_range_(
-                        static_cast<T &&>(t),
-                        meta::bool_<View<uncvref_t<T>>>{},
-                        std::is_lvalue_reference<T>{},
-                        meta::bool_<ForwardingRange_<T>>{});
-                }
+        public:
+            CPP_template(typename T)(
+                requires ViewableRange<T>)
+            auto operator()(T &&t) const
+            {
+                return all_fn::from_range_(
+                    static_cast<T &&>(t),
+                    meta::bool_<View<uncvref_t<T>>>{},
+                    std::is_lvalue_reference<T>{},
+                    meta::bool_<ForwardingRange_<T>>{});
+            }
 
-                template<typename T>
-                RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
-                auto operator()(std::reference_wrapper<T> ref) const ->
-                    CPP_ret(ref_view<T>)(
-                        requires Range<T &>)
-                {
-                    return ranges::view::ref(ref.get());
-                }
-            };
+            template<typename T>
+            RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
+            auto operator()(std::reference_wrapper<T> ref) const ->
+                CPP_ret(ref_view<T>)(
+                    requires Range<T &>)
+            {
+                return ranges::view::ref(ref.get());
+            }
+        };
 
-            /// \relates all_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(all_fn, all)
-
-            template<typename Rng>
-            using all_t = decltype(all(std::declval<Rng>()));
-        }
+        /// \relates all_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(all_fn, all)
 
         template<typename Rng>
-        struct identity_adaptor
-          : Rng
-        {
-            CPP_assert(View<Rng>);
-
-            identity_adaptor() = default;
-            constexpr explicit identity_adaptor(Rng const &rng)
-              : Rng(rng)
-            {}
-            constexpr explicit identity_adaptor(Rng &&rng)
-              : Rng(detail::move(rng))
-            {}
-        };
-        /// @}
+        using all_t = decltype(all(std::declval<Rng>()));
     }
+
+    template<typename Rng>
+    struct identity_adaptor
+      : Rng
+    {
+        CPP_assert(View<Rng>);
+
+        identity_adaptor() = default;
+        constexpr explicit identity_adaptor(Rng const &rng)
+          : Rng(rng)
+        {}
+        constexpr explicit identity_adaptor(Rng &&rng)
+          : Rng(detail::move(rng))
+        {}
+    };
+    /// @}
 }
 
 #endif

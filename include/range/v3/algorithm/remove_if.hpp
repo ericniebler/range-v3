@@ -27,48 +27,45 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct remove_if_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct remove_if_fn
+        template<typename I, typename S, typename C, typename P = identity>
+        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires Permutable<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C, typename P = identity>
-            auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires Permutable<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
+            begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
+            if(begin != end)
             {
-                begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
-                if(begin != end)
+                for(I i = next(begin); i != end; ++i)
                 {
-                    for(I i = next(begin); i != end; ++i)
+                    if(!(invoke(pred, invoke(proj, *i))))
                     {
-                        if(!(invoke(pred, invoke(proj, *i))))
-                        {
-                            *begin = iter_move(i);
-                            ++begin;
-                        }
+                        *begin = iter_move(i);
+                        ++begin;
                     }
                 }
-                return begin;
             }
+            return begin;
+        }
 
-            template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `remove_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
-        /// @}
-    } // namespace v3
+    /// \sa `remove_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

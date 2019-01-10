@@ -29,34 +29,31 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename O>
+    using copy_n_result = detail::in_out_result<I, O>;
+
+    struct copy_n_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I, typename O>
-        using copy_n_result = detail::in_out_result<I, O>;
-
-        struct copy_n_fn
+        template<typename I, typename O, typename P = identity>
+        auto operator()(I begin, iter_difference_t<I> n, O out) const ->
+            CPP_ret(copy_n_result<I, O>)(
+                requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
         {
-            template<typename I, typename O, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> n, O out) const ->
-                CPP_ret(copy_n_result<I, O>)(
-                    requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
-            {
-                RANGES_EXPECT(0 <= n);
-                auto norig = n;
-                auto b = uncounted(begin);
-                for(; n != 0; ++b, ++out, --n)
-                    *out = *b;
-                return {recounted(begin, b, norig), out};
-            }
-        };
+            RANGES_EXPECT(0 <= n);
+            auto norig = n;
+            auto b = uncounted(begin);
+            for(; n != 0; ++b, ++out, --n)
+                *out = *b;
+            return {recounted(begin, b, norig), out};
+        }
+    };
 
-        /// \sa `copy_n_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(copy_n_fn, copy_n)
-        /// @}
-    } // namespace v3
+    /// \sa `copy_n_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(copy_n_fn, copy_n)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

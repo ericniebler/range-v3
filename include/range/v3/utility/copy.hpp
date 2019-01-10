@@ -20,39 +20,36 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-utility
+    /// @{
+    namespace aux
     {
-        /// \addtogroup group-utility
-        /// @{
-        namespace aux
+        struct copy_fn : copy_tag
         {
-            struct copy_fn : copy_tag
-            {
-                template<typename T>
-                auto operator()(T &&t) const ->
-                    CPP_ret(detail::decay_t<T>)(
-                        requires Constructible<detail::decay_t<T>, T>)
-                {
-                    return static_cast<T &&>(t);
-                }
-            };
-
-            /// \ingroup group-utility
-            /// \sa `copy_fn`
-            RANGES_INLINE_VARIABLE(copy_fn, copy)
-
-            /// \ingroup group-utility
-            /// \sa `copy_fn`
             template<typename T>
-            auto operator|(T &&t, copy_fn) ->
+            auto operator()(T &&t) const ->
                 CPP_ret(detail::decay_t<T>)(
                     requires Constructible<detail::decay_t<T>, T>)
             {
                 return static_cast<T &&>(t);
             }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `copy_fn`
+        RANGES_INLINE_VARIABLE(copy_fn, copy)
+
+        /// \ingroup group-utility
+        /// \sa `copy_fn`
+        template<typename T>
+        auto operator|(T &&t, copy_fn) ->
+            CPP_ret(detail::decay_t<T>)(
+                requires Constructible<detail::decay_t<T>, T>)
+        {
+            return static_cast<T &&>(t);
         }
-        /// @}
     }
+    /// @}
 }
 
 #endif

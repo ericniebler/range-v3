@@ -24,43 +24,40 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct unique_fn
         {
-            struct unique_fn
+        private:
+            friend action_access;
+            template<typename C, typename P = identity>
+            static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})(
+                requires not Range<C>)
             {
-            private:
-                friend action_access;
-                template<typename C, typename P = identity>
-                static auto CPP_fun(bind)(unique_fn unique, C pred, P proj = P{})(
-                    requires not Range<C>)
-                {
-                    return std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)));
-                }
-            public:
-                CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        Sortable<iterator_t<Rng>, C, P>)
-                Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
-                {
-                    auto it = ranges::unique(rng, std::move(pred), std::move(proj));
-                    ranges::erase(rng, it, end(rng));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
+                    protect(std::move(proj)));
+            }
+        public:
+            CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                    Sortable<iterator_t<Rng>, C, P>)
+            Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            {
+                auto it = ranges::unique(rng, std::move(pred), std::move(proj));
+                ranges::erase(rng, it, end(rng));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates unique_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates unique_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<unique_fn>, unique)
     }
+    /// @}
 }
 
 #endif

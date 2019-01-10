@@ -27,42 +27,39 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct take_while_fn
         {
-            struct take_while_fn
+        private:
+            friend action_access;
+            template<typename Fun>
+            static auto CPP_fun(bind)(take_while_fn take_while, Fun fun)(
+                requires not Range<Fun>)
             {
-            private:
-                friend action_access;
-                template<typename Fun>
-                static auto CPP_fun(bind)(take_while_fn take_while, Fun fun)(
-                    requires not Range<Fun>)
-                {
-                    return std::bind(take_while, std::placeholders::_1, std::move(fun));
-                }
-            public:
-                CPP_template(typename Rng, typename Fun)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        IndirectUnaryPredicate<Fun, iterator_t<Rng>>)
-                Rng operator()(Rng &&rng, Fun fun) const
-                {
-                    ranges::action::erase(rng, find_if_not(begin(rng), end(rng), std::move(fun)),
-                        end(rng));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(take_while, std::placeholders::_1, std::move(fun));
+            }
+        public:
+            CPP_template(typename Rng, typename Fun)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>> &&
+                    IndirectUnaryPredicate<Fun, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, Fun fun) const
+            {
+                ranges::action::erase(rng, find_if_not(begin(rng), end(rng), std::move(fun)),
+                    end(rng));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates take_while_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<take_while_fn>, take_while)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates take_while_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<take_while_fn>, take_while)
     }
+    /// @}
 }
 
 #endif

@@ -21,43 +21,40 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-utility Utility
+    /// @{
+    ///
+    namespace _get_
     {
-        /// \addtogroup group-utility Utility
-        /// @{
-        ///
-        namespace _get_
-        {
-            template<std::size_t I, typename TupleLike>
-            constexpr auto CPP_auto_fun(get)(TupleLike &&t)
-            (
-                return detail::adl_get<I>(static_cast<TupleLike &&>(t))
-            )
-            template<typename T, typename TupleLike>
-            constexpr auto CPP_auto_fun(get)(TupleLike &&t)
-            (
-                return detail::adl_get<T>(static_cast<TupleLike &&>(t))
-            )
+        template<std::size_t I, typename TupleLike>
+        constexpr auto CPP_auto_fun(get)(TupleLike &&t)
+        (
+            return detail::adl_get<I>(static_cast<TupleLike &&>(t))
+        )
+        template<typename T, typename TupleLike>
+        constexpr auto CPP_auto_fun(get)(TupleLike &&t)
+        (
+            return detail::adl_get<T>(static_cast<TupleLike &&>(t))
+        )
 
-            template<typename T>
-            T & get(meta::id_t<T> &value) noexcept
-            {
-                return value;
-            }
-            template<typename T>
-            T const & get(meta::id_t<T> const &value) noexcept
-            {
-                return value;
-            }
-            template<typename T>
-            T &&get(meta::id_t<T> &&value) noexcept
-            {
-                return std::move(value);
-            }
+        template<typename T>
+        T & get(meta::id_t<T> &value) noexcept
+        {
+            return value;
         }
-        using namespace _get_;
-        /// @}
+        template<typename T>
+        T const & get(meta::id_t<T> const &value) noexcept
+        {
+            return value;
+        }
+        template<typename T>
+        T &&get(meta::id_t<T> &&value) noexcept
+        {
+            return std::move(value);
+        }
     }
+    using namespace _get_;
+    /// @}
 }
 
 #endif

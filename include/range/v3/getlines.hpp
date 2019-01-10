@@ -22,79 +22,76 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-core
+    /// @{
+    struct getlines_range
+      : view_facade<getlines_range, unknown>
     {
-        /// \addtogroup group-core
-        /// @{
-        struct getlines_range
-          : view_facade<getlines_range, unknown>
+    private:
+        friend range_access;
+        std::istream *sin_;
+        std::string str_;
+        char delim_;
+        struct cursor
         {
         private:
             friend range_access;
-            std::istream *sin_;
-            std::string str_;
-            char delim_;
-            struct cursor
-            {
-            private:
-                friend range_access;
-                using single_pass = std::true_type;
-                getlines_range *rng_ = nullptr;
-            public:
-                cursor() = default;
-                explicit cursor(getlines_range &rng)
-                  : rng_(&rng)
-                {}
-                void next()
-                {
-                    rng_->next();
-                }
-                std::string &read() const noexcept
-                {
-                    return rng_->str_;
-                }
-                bool equal(default_sentinel_t) const
-                {
-                    return !rng_->sin_;
-                }
-                bool equal(cursor that) const
-                {
-                    return !rng_->sin_ == !that.rng_->sin_;
-                }
-            };
+            using single_pass = std::true_type;
+            getlines_range *rng_ = nullptr;
+        public:
+            cursor() = default;
+            explicit cursor(getlines_range &rng)
+              : rng_(&rng)
+            {}
             void next()
             {
-                if(!std::getline(*sin_, str_, delim_))
-                    sin_ = nullptr;
+                rng_->next();
             }
-            cursor begin_cursor()
+            std::string &read() const noexcept
             {
-                return cursor{*this};
+                return rng_->str_;
             }
-        public:
-            getlines_range() = default;
-            getlines_range(std::istream &sin, char delim = '\n')
-              : sin_(&sin), str_{}, delim_(delim)
+            bool equal(default_sentinel_t) const
             {
-                this->next(); // prime the pump
+                return !rng_->sin_;
             }
-            std::string & cached() noexcept
+            bool equal(cursor that) const
             {
-                return str_;
+                return !rng_->sin_ == !that.rng_->sin_;
             }
         };
-
-        struct getlines_fn
+        void next()
         {
-            getlines_range operator()(std::istream & sin, char delim = '\n') const
-            {
-                return getlines_range{sin, delim};
-            }
-        };
+            if(!std::getline(*sin_, str_, delim_))
+                sin_ = nullptr;
+        }
+        cursor begin_cursor()
+        {
+            return cursor{*this};
+        }
+    public:
+        getlines_range() = default;
+        getlines_range(std::istream &sin, char delim = '\n')
+          : sin_(&sin), str_{}, delim_(delim)
+        {
+            this->next(); // prime the pump
+        }
+        std::string & cached() noexcept
+        {
+            return str_;
+        }
+    };
 
-        RANGES_INLINE_VARIABLE(getlines_fn, getlines)
-        /// @}
-    }
+    struct getlines_fn
+    {
+        getlines_range operator()(std::istream & sin, char delim = '\n') const
+        {
+            return getlines_range{sin, delim};
+        }
+    };
+
+    RANGES_INLINE_VARIABLE(getlines_fn, getlines)
+    /// @}
 }
 
 #endif

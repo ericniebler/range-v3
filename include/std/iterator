@@ -29,206 +29,203 @@
 
 namespace ranges
 {
-    inline namespace v3
+    template<typename I>
+    struct incrementable_traits;
+
+    template<typename I>
+    struct readable_traits;
+
+    /// \cond
+    namespace detail
     {
         template<typename I>
-        struct incrementable_traits;
+        typename incrementable_traits<I>::difference_type cpp17_difference_type_(int);
+        template<typename I>
+        void cpp17_difference_type_(long);
 
         template<typename I>
-        struct readable_traits;
+        typename I::pointer cpp17_pointer_type_(int);
+        template<typename I>
+        auto cpp17_pointer_type_(long, I *pi = nullptr) -> decltype(pi->operator->());
+        template<typename I>
+        void cpp17_pointer_type_(...);
 
-        /// \cond
-        namespace detail
+        template<typename I>
+        typename I::reference cpp17_reference_type_(int);
+        template<typename I>
+        auto cpp17_reference_type_(long, I *pi = nullptr) -> decltype(**pi);
+
+        template<typename I>
+        auto cpp17_iterator_category_4_(long)
         {
-            template<typename I>
-            typename incrementable_traits<I>::difference_type cpp17_difference_type_(int);
-            template<typename I>
-            void cpp17_difference_type_(long);
-
-            template<typename I>
-            typename I::pointer cpp17_pointer_type_(int);
-            template<typename I>
-            auto cpp17_pointer_type_(long, I *pi = nullptr) -> decltype(pi->operator->());
-            template<typename I>
-            void cpp17_pointer_type_(...);
-
-            template<typename I>
-            typename I::reference cpp17_reference_type_(int);
-            template<typename I>
-            auto cpp17_reference_type_(long, I *pi = nullptr) -> decltype(**pi);
-
-            template<typename I>
-            auto cpp17_iterator_category_4_(long)
-            {
-                return std::bidirectional_iterator_tag{};
-            }
-            // Satisfies Cpp17RandomAccessIterator?
-            template<typename I>
-            auto cpp17_iterator_category_4_(
-                int,
-                I *pi = nullptr,
-                typename incrementable_traits<I>::difference_type d = 0,
-                always_<
-                    void,
-                    int[RANGES_IS_SAME(decltype(*pi += d), I &)],
-                    int[RANGES_IS_SAME(decltype(*pi -= d), I &)],
-                    int[RANGES_IS_SAME(decltype(*pi + d), I)],
-                    int[RANGES_IS_SAME(decltype(*pi - d), I)],
-                    int[RANGES_IS_SAME(decltype(d + *pi), I)],
-                    int[RANGES_IS_SAME(decltype(*pi - *pi), decltype(d))],
-                    int[RANGES_IS_SAME(decltype((*pi)[d]), decltype(**pi))],
-                    decltype(*pi < *pi ? true : false),
-                    decltype(*pi > *pi ? true : false),
-                    decltype(*pi <= *pi ? true : false),
-                    decltype(*pi >= *pi ? true : false)
-                > * = nullptr)
-            {
-                return std::random_access_iterator_tag{};
-            }
-
-            template<typename I>
-            auto cpp17_iterator_category_3_(long)
-            {
-                return std::forward_iterator_tag{};
-            }
-            // Satisfies Cpp17BidirectionalIterator?
-            template<typename I>
-            auto cpp17_iterator_category_3_(
-                int,
-                I *pi = nullptr,
-                void (*fn)(I const &) = nullptr,
-                always_<
-                    void,
-                    decltype(fn((*pi)--)), // i-- convertible to I const &
-                    int[RANGES_IS_SAME(decltype(--*pi), I &)], // --i has type I &
-                    // *i has the same type as *i--
-                    int[RANGES_IS_SAME(decltype(**pi), decltype(*(*pi)--))]
-                > * = nullptr)
-            {
-                return cpp17_iterator_category_4_<I>(0);
-            }
-
-            template<typename I>
-            auto cpp17_iterator_category_2_(long)
-            {
-                return std::input_iterator_tag{};
-            }
-            // Satisfies Cpp17ForwardIterator?
-            template<typename I>
-            auto cpp17_iterator_category_2_(
-                int,
-                I *pi = nullptr,
-                void (*fn)(I const &) = nullptr,
-                typename readable_traits<I>::value_type *pv = nullptr,
-                typename readable_traits<I>::value_type const *pcv = nullptr,
-                always_<
-                    void,
-                    decltype(I{}), // Default constructible
-                    decltype(fn((*pi)++)), // i++ convertible to I const &
-                    // *i has the same type as *i++
-                    int[RANGES_IS_SAME(decltype(**pi), decltype(*(*pi)++))],
-                    // *i is a real reference to value_type
-                    int[RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
-                        RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
-                        RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
-                        RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)]
-                > * = nullptr)
-            {
-                return cpp17_iterator_category_3_<I>(0);
-            }
-
-            template<typename I>
-            using cpp17_readable_iterator_category_t =
-                decltype(detail::cpp17_iterator_category_2_<I>(0));
-
-            template<typename I>
-            auto cpp17_iterator_category_(long)
-            {
-                return cpp17_iterator_category_2_<I>(0);
-            }
-            // Explicitly declares its category?
-            template<typename I>
-            typename I::iterator_category cpp17_iterator_category_(int)
-            {
-                return {};
-            }
-
-            template<typename I>
-            auto std_iterator_traits_impl_2_(long)
-            {
-                return std_output_iterator_traits<
-                    decltype(detail::cpp17_difference_type_<I>(0))>{};
-            }
-            // Satisfies Cpp17InputIterator?
-            template<typename I>
-            auto std_iterator_traits_impl_2_(
-                int,
-                I *pi = nullptr,
-                typename incrementable_traits<I>::difference_type d = 0,
-                typename readable_traits<I>::value_type const *pcv = nullptr,
-                always_<
-                    void,
-                    int[decltype(d)(-1) < decltype(d)(0)], // signed difference type
-                    decltype(decltype(*pcv)(**pi)),        // sensible reference/value type
-                    decltype(decltype(*pcv)(*(*pi)++)),    // sensible post-increment result
-                    decltype(*pi == *pi ? true : false),   // equality comparable
-                    decltype(*pi != *pi ? true : false)    //     "        "
-                > * = nullptr)
-            {
-                struct traits
-                {
-                    using difference_type = typename incrementable_traits<I>::difference_type;
-                    using value_type = typename readable_traits<I>::value_type;
-                    using reference = decltype(cpp17_reference_type_<I>(0));
-                    using pointer = decltype(cpp17_pointer_type_<I>(0));
-                    using iterator_category = decltype(cpp17_iterator_category_<I>(0));
-                };
-                return traits{};
-            }
-
-            template<typename I>
-            nil_ std_iterator_traits_impl_(long)
-            {
-                return {};
-            }
-            // Satisfies Cpp17Iterator?
-            template<typename I>
-            auto std_iterator_traits_impl_(
-                int,
-                I *pi = nullptr,
-                void (*nv)(...) = nullptr,
-                always_<
-                    void,
-                    decltype(nv(**pi)),
-                    int[RANGES_IS_SAME(decltype(++*pi), I &)],
-                    decltype(nv(*(*pi)++))
-                > * = nullptr)
-            {
-                return std_iterator_traits_impl_2_<I>(0);
-            }
-
-            template<typename T>
-            constexpr bool has_iterator_typedefs_impl_(
-                int,
-                always_<
-                    void,
-                    typename T::difference_type,
-                    typename T::value_type,
-                    typename T::pointer,
-                    typename T::reference,
-                    typename T::iterator_category
-                > * = nullptr)
-            {
-                return true;
-            }
-            template<typename T>
-            constexpr bool has_iterator_typedefs_impl_(long)
-            {
-                return false;
-            }
+            return std::bidirectional_iterator_tag{};
         }
-        /// \endcond
+        // Satisfies Cpp17RandomAccessIterator?
+        template<typename I>
+        auto cpp17_iterator_category_4_(
+            int,
+            I *pi = nullptr,
+            typename incrementable_traits<I>::difference_type d = 0,
+            always_<
+                void,
+                int[RANGES_IS_SAME(decltype(*pi += d), I &)],
+                int[RANGES_IS_SAME(decltype(*pi -= d), I &)],
+                int[RANGES_IS_SAME(decltype(*pi + d), I)],
+                int[RANGES_IS_SAME(decltype(*pi - d), I)],
+                int[RANGES_IS_SAME(decltype(d + *pi), I)],
+                int[RANGES_IS_SAME(decltype(*pi - *pi), decltype(d))],
+                int[RANGES_IS_SAME(decltype((*pi)[d]), decltype(**pi))],
+                decltype(*pi < *pi ? true : false),
+                decltype(*pi > *pi ? true : false),
+                decltype(*pi <= *pi ? true : false),
+                decltype(*pi >= *pi ? true : false)
+            > * = nullptr)
+        {
+            return std::random_access_iterator_tag{};
+        }
+
+        template<typename I>
+        auto cpp17_iterator_category_3_(long)
+        {
+            return std::forward_iterator_tag{};
+        }
+        // Satisfies Cpp17BidirectionalIterator?
+        template<typename I>
+        auto cpp17_iterator_category_3_(
+            int,
+            I *pi = nullptr,
+            void (*fn)(I const &) = nullptr,
+            always_<
+                void,
+                decltype(fn((*pi)--)), // i-- convertible to I const &
+                int[RANGES_IS_SAME(decltype(--*pi), I &)], // --i has type I &
+                // *i has the same type as *i--
+                int[RANGES_IS_SAME(decltype(**pi), decltype(*(*pi)--))]
+            > * = nullptr)
+        {
+            return cpp17_iterator_category_4_<I>(0);
+        }
+
+        template<typename I>
+        auto cpp17_iterator_category_2_(long)
+        {
+            return std::input_iterator_tag{};
+        }
+        // Satisfies Cpp17ForwardIterator?
+        template<typename I>
+        auto cpp17_iterator_category_2_(
+            int,
+            I *pi = nullptr,
+            void (*fn)(I const &) = nullptr,
+            typename readable_traits<I>::value_type *pv = nullptr,
+            typename readable_traits<I>::value_type const *pcv = nullptr,
+            always_<
+                void,
+                decltype(I{}), // Default constructible
+                decltype(fn((*pi)++)), // i++ convertible to I const &
+                // *i has the same type as *i++
+                int[RANGES_IS_SAME(decltype(**pi), decltype(*(*pi)++))],
+                // *i is a real reference to value_type
+                int[RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
+                    RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
+                    RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
+                    RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)]
+            > * = nullptr)
+        {
+            return cpp17_iterator_category_3_<I>(0);
+        }
+
+        template<typename I>
+        using cpp17_readable_iterator_category_t =
+            decltype(detail::cpp17_iterator_category_2_<I>(0));
+
+        template<typename I>
+        auto cpp17_iterator_category_(long)
+        {
+            return cpp17_iterator_category_2_<I>(0);
+        }
+        // Explicitly declares its category?
+        template<typename I>
+        typename I::iterator_category cpp17_iterator_category_(int)
+        {
+            return {};
+        }
+
+        template<typename I>
+        auto std_iterator_traits_impl_2_(long)
+        {
+            return std_output_iterator_traits<
+                decltype(detail::cpp17_difference_type_<I>(0))>{};
+        }
+        // Satisfies Cpp17InputIterator?
+        template<typename I>
+        auto std_iterator_traits_impl_2_(
+            int,
+            I *pi = nullptr,
+            typename incrementable_traits<I>::difference_type d = 0,
+            typename readable_traits<I>::value_type const *pcv = nullptr,
+            always_<
+                void,
+                int[decltype(d)(-1) < decltype(d)(0)], // signed difference type
+                decltype(decltype(*pcv)(**pi)),        // sensible reference/value type
+                decltype(decltype(*pcv)(*(*pi)++)),    // sensible post-increment result
+                decltype(*pi == *pi ? true : false),   // equality comparable
+                decltype(*pi != *pi ? true : false)    //     "        "
+            > * = nullptr)
+        {
+            struct traits
+            {
+                using difference_type = typename incrementable_traits<I>::difference_type;
+                using value_type = typename readable_traits<I>::value_type;
+                using reference = decltype(cpp17_reference_type_<I>(0));
+                using pointer = decltype(cpp17_pointer_type_<I>(0));
+                using iterator_category = decltype(cpp17_iterator_category_<I>(0));
+            };
+            return traits{};
+        }
+
+        template<typename I>
+        nil_ std_iterator_traits_impl_(long)
+        {
+            return {};
+        }
+        // Satisfies Cpp17Iterator?
+        template<typename I>
+        auto std_iterator_traits_impl_(
+            int,
+            I *pi = nullptr,
+            void (*nv)(...) = nullptr,
+            always_<
+                void,
+                decltype(nv(**pi)),
+                int[RANGES_IS_SAME(decltype(++*pi), I &)],
+                decltype(nv(*(*pi)++))
+            > * = nullptr)
+        {
+            return std_iterator_traits_impl_2_<I>(0);
+        }
+
+        template<typename T>
+        constexpr bool has_iterator_typedefs_impl_(
+            int,
+            always_<
+                void,
+                typename T::difference_type,
+                typename T::value_type,
+                typename T::pointer,
+                typename T::reference,
+                typename T::iterator_category
+            > * = nullptr)
+        {
+            return true;
+        }
+        template<typename T>
+        constexpr bool has_iterator_typedefs_impl_(long)
+        {
+            return false;
+        }
     }
+    /// \endcond
 }
 
 // Hijack the primary std::iterator_traits template from each of the 3 major

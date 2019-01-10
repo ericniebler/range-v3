@@ -25,44 +25,41 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename F>
+    using for_each_result = detail::in_fun_result<I, F>;
+
+    struct for_each_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I, typename F>
-        using for_each_result = detail::in_fun_result<I, F>;
-
-        struct for_each_fn
+        template<typename I, typename S, typename F, typename P = identity>
+        auto operator()(I begin, S end, F fun, P proj = P{}) const ->
+            CPP_ret(for_each_result<I, F>)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryInvocable<F, projected<I, P>>)
         {
-            template<typename I, typename S, typename F, typename P = identity>
-            auto operator()(I begin, S end, F fun, P proj = P{}) const ->
-                CPP_ret(for_each_result<I, F>)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryInvocable<F, projected<I, P>>)
+            for(; begin != end; ++begin)
             {
-                for(; begin != end; ++begin)
-                {
-                    invoke(fun, invoke(proj, *begin));
-                }
-                return {detail::move(begin), detail::move(fun)};
+                invoke(fun, invoke(proj, *begin));
             }
+            return {detail::move(begin), detail::move(fun)};
+        }
 
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
-                CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
-            {
-                return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
-                    detail::move(fun)};
-            }
-        };
+        template<typename Rng, typename F, typename P = identity>
+        auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
+            CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        {
+            return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
+                detail::move(fun)};
+        }
+    };
 
-        /// \sa `for_each_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(for_each_fn, for_each)
-        /// @}
-    } // namespace v3
+    /// \sa `for_each_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(for_each_fn, for_each)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

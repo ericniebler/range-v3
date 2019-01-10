@@ -37,123 +37,120 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct search_n_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct search_n_fn
+    private:
+        template<typename I, typename S, typename D, typename V, typename C, typename P>
+        static subrange<I> sized_impl(I const begin_, S end, D const d_, D count,
+            V const &val, C &pred, P &proj)
         {
-        private:
-            template<typename I, typename S, typename D, typename V, typename C, typename P>
-            static subrange<I> sized_impl(I const begin_, S end, D const d_, D count,
-                V const &val, C &pred, P &proj)
+            D d = d_; // always the distance from begin to end
+            auto begin = uncounted(begin_);
+            while(true)
             {
-                D d = d_; // always the distance from begin to end
-                auto begin = uncounted(begin_);
+                // Find begin element in sequence 1 that matches val, with a mininum of loop checks
                 while(true)
                 {
-                    // Find begin element in sequence 1 that matches val, with a mininum of loop checks
-                    while(true)
+                    if(d < count)  // return the end if we've run out of room
                     {
-                        if(d < count)  // return the end if we've run out of room
-                        {
-                            auto e = ranges::next(recounted(begin_, std::move(begin), d_ - d), std::move(end));
-                            return {e, e};
-                        }
-                        if(invoke(pred, invoke(proj, *begin), val))
-                            break;
-                        ++begin;
-                        --d;
+                        auto e = ranges::next(recounted(begin_, std::move(begin), d_ - d), std::move(end));
+                        return {e, e};
                     }
-                    // *begin matches val, now match elements after here
-                    auto m = begin;
-                    D c = 0;
-                    while(true)
-                    {
-                        if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
-                            return {recounted(begin_, std::move(begin), d_ - d),
-                                    recounted(begin_, std::move(++m), d_ - d)};
-                        ++m;  // No need to check, we know we have room to match successfully
-                        if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
-                        {
-                            begin = next(std::move(m));
-                            d -= (c+1);
-                            break;
-                        }  // else there is a match, check next elements
-                    }
+                    if(invoke(pred, invoke(proj, *begin), val))
+                        break;
+                    ++begin;
+                    --d;
                 }
-            }
-
-            template<typename I, typename S, typename D, typename V, typename C, typename P>
-            static subrange<I> impl(I begin, S end, D count, V const &val, C &pred, P &proj)
-            {
+                // *begin matches val, now match elements after here
+                auto m = begin;
+                D c = 0;
                 while(true)
                 {
-                    // Find begin element in sequence 1 that matches val, with a mininum of loop checks
-                    while(true)
+                    if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
+                        return {recounted(begin_, std::move(begin), d_ - d),
+                                recounted(begin_, std::move(++m), d_ - d)};
+                    ++m;  // No need to check, we know we have room to match successfully
+                    if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
                     {
-                        if(begin == end)  // return end if no element matches val
-                            return {begin, begin};
-                        if(invoke(pred, invoke(proj, *begin), val))
-                            break;
-                        ++begin;
-                    }
-                    // *begin matches val, now match elements after here
-                    I m = begin;
-                    D c = 0;
-                    while(true)
-                    {
-                        if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
-                            return {begin, ++m};
-                        if(++m == end)  // Otherwise if source exhausted, pattern not found
-                            return {m, m};
-                        if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
-                        {
-                            begin = next(std::move(m));
-                            break;
-                        }  // else there is a match, check next elements
-                    }
+                        begin = next(std::move(m));
+                        d -= (c+1);
+                        break;
+                    }  // else there is a match, check next elements
                 }
             }
-        public:
-            template<typename I, typename S, typename V, typename C = equal_to, typename P = identity>
-            auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
-                    C pred = C{}, P proj = P{}) const ->
-                CPP_ret(subrange<I>)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectlyComparable<I, V const *, C, P>)
-            {
-                if(count <= 0)
-                    return {begin, begin};
-                if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
-                    return search_n_fn::sized_impl(std::move(begin), std::move(end),
-                        distance(begin, end), count, val, pred, proj);
-                else
-                    return search_n_fn::impl(std::move(begin), std::move(end), count, val, pred,
-                        proj);
-            }
+        }
 
-            template<typename Rng, typename V, typename C = equal_to, typename P = identity>
-            auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
-                    C pred = C{}, P proj = P{}) const ->
-                CPP_ret(safe_subrange_t<Rng>)(
-                    requires ForwardRange<Rng> && IndirectlyComparable<iterator_t<Rng>, V const *, C, P>)
+        template<typename I, typename S, typename D, typename V, typename C, typename P>
+        static subrange<I> impl(I begin, S end, D count, V const &val, C &pred, P &proj)
+        {
+            while(true)
             {
-                if(count <= 0)
-                    return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
-                if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
-                    return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
-                        pred, proj);
-                else
-                    return search_n_fn::impl(begin(rng), end(rng), count, val, pred, proj);
+                // Find begin element in sequence 1 that matches val, with a mininum of loop checks
+                while(true)
+                {
+                    if(begin == end)  // return end if no element matches val
+                        return {begin, begin};
+                    if(invoke(pred, invoke(proj, *begin), val))
+                        break;
+                    ++begin;
+                }
+                // *begin matches val, now match elements after here
+                I m = begin;
+                D c = 0;
+                while(true)
+                {
+                    if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
+                        return {begin, ++m};
+                    if(++m == end)  // Otherwise if source exhausted, pattern not found
+                        return {m, m};
+                    if(!invoke(pred, invoke(proj, *m), val))  // if there is a mismatch, restart with a new begin
+                    {
+                        begin = next(std::move(m));
+                        break;
+                    }  // else there is a match, check next elements
+                }
             }
-        };
+        }
+    public:
+        template<typename I, typename S, typename V, typename C = equal_to, typename P = identity>
+        auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
+                C pred = C{}, P proj = P{}) const ->
+            CPP_ret(subrange<I>)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectlyComparable<I, V const *, C, P>)
+        {
+            if(count <= 0)
+                return {begin, begin};
+            if RANGES_CONSTEXPR_IF(SizedSentinel<S, I>)
+                return search_n_fn::sized_impl(std::move(begin), std::move(end),
+                    distance(begin, end), count, val, pred, proj);
+            else
+                return search_n_fn::impl(std::move(begin), std::move(end), count, val, pred,
+                    proj);
+        }
 
-        /// \sa `search_n_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(search_n_fn, search_n)
-        /// @}
-    } // namespace v3
+        template<typename Rng, typename V, typename C = equal_to, typename P = identity>
+        auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
+                C pred = C{}, P proj = P{}) const ->
+            CPP_ret(safe_subrange_t<Rng>)(
+                requires ForwardRange<Rng> && IndirectlyComparable<iterator_t<Rng>, V const *, C, P>)
+        {
+            if(count <= 0)
+                return subrange<iterator_t<Rng>>{begin(rng), begin(rng)};
+            if RANGES_CONSTEXPR_IF(SizedRange<Rng>)
+                return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
+                    pred, proj);
+            else
+                return search_n_fn::impl(begin(rng), end(rng), count, val, pred, proj);
+        }
+    };
+
+    /// \sa `search_n_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(search_n_fn, search_n)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -25,41 +25,38 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct replace_if_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct replace_if_fn
+        template<typename I, typename S, typename C, typename T, typename P = identity>
+        auto operator()(I begin, S end, C pred, T const &new_value, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>> &&
+                    Writable<I, T const &>)
         {
-            template<typename I, typename S, typename C, typename T, typename P = identity>
-            auto operator()(I begin, S end, C pred, T const &new_value, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>> &&
-                        Writable<I, T const &>)
-            {
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        *begin = new_value;
-                return begin;
-            }
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    *begin = new_value;
+            return begin;
+        }
 
-            template<typename Rng, typename C, typename T, typename P = identity>
-            auto operator()(Rng &&rng, C pred, T const &new_value, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
-                        Writable<iterator_t<Rng>, T const &>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename T, typename P = identity>
+        auto operator()(Rng &&rng, C pred, T const &new_value, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                    Writable<iterator_t<Rng>, T const &>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), new_value, std::move(proj));
+        }
+    };
 
-        /// \sa `replace_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
-        /// @}
-    } // namespace v3
+    /// \sa `replace_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -28,54 +28,51 @@
 
 namespace ranges
 {
-    inline namespace v3
+    namespace aux
     {
-        namespace aux
+        struct equal_range_n_fn
         {
-            struct equal_range_n_fn
+            template<typename I, typename V, typename R = less, typename P = identity>
+            auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
+                    P proj = P{}) const ->
+                CPP_ret(subrange<I>)(
+                    requires ForwardIterator<I> &&
+                        IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
             {
-                template<typename I, typename V, typename R = less, typename P = identity>
-                auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
-                        P proj = P{}) const ->
-                    CPP_ret(subrange<I>)(
-                        requires ForwardIterator<I> &&
-                            IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
+                if(0 < dist)
                 {
-                    if(0 < dist)
+                    do
                     {
-                        do
+                        auto half = dist / 2;
+                        auto middle = next(begin, half);
+                        auto && v = *middle;
+                        auto && pv = invoke(proj, (decltype(v) &&) v);
+                        if(invoke(pred, pv, val))
                         {
-                            auto half = dist / 2;
-                            auto middle = next(begin, half);
-                            auto && v = *middle;
-                            auto && pv = invoke(proj, (decltype(v) &&) v);
-                            if(invoke(pred, pv, val))
-                            {
-                                begin = std::move(++middle);
-                                dist -= half + 1;
-                            }
-                            else if(invoke(pred, val, pv))
-                            {
-                                dist = half;
-                            }
-                            else
-                            {
-                                return {
-                                    lower_bound_n(std::move(begin), half, val,
-                                        std::ref(pred), std::ref(proj)),
-                                    upper_bound_n(next(middle), dist - (half + 1),
-                                        val, std::ref(pred), std::ref(proj))
-                                };
-                            }
-                        } while(0 != dist);
-                    }
-                    return {begin, begin};
+                            begin = std::move(++middle);
+                            dist -= half + 1;
+                        }
+                        else if(invoke(pred, val, pv))
+                        {
+                            dist = half;
+                        }
+                        else
+                        {
+                            return {
+                                lower_bound_n(std::move(begin), half, val,
+                                    std::ref(pred), std::ref(proj)),
+                                upper_bound_n(next(middle), dist - (half + 1),
+                                    val, std::ref(pred), std::ref(proj))
+                            };
+                        }
+                    } while(0 != dist);
                 }
-            };
+                return {begin, begin};
+            }
+        };
 
-            RANGES_INLINE_VARIABLE(equal_range_n_fn, equal_range_n)
-        }
-    } // namespace v3
+        RANGES_INLINE_VARIABLE(equal_range_n_fn, equal_range_n)
+    }
 } // namespace ranges
 
 #endif // include guard

@@ -29,88 +29,85 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct equal_range_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct equal_range_fn
+        template<typename I, typename S, typename V, typename C = less,
+            typename P = identity>
+        auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(subrange<I>)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
         {
-            template<typename I, typename S, typename V, typename C = less,
-                typename P = identity>
-            auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(subrange<I>)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+            if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
             {
-                if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
-                {
-                    auto const len = distance(begin, end);
-                    return aux::equal_range_n(std::move(begin), len, val,
-                        std::move(pred), std::move(proj));
-                }
-
-                // Probe exponentially for either end-of-range, an iterator that
-                // is past the equal range (i.e., denotes an element greater
-                // than val), or is in the equal range (denotes an element equal
-                // to val).
-                auto dist = iter_difference_t<I>{1};
-                while(true)
-                {
-                    auto mid = begin;
-                    auto d = advance(mid, dist, end);
-                    if(d || mid == end)
-                    {
-                        // at the end of the input range
-                        dist -= d;
-                        return aux::equal_range_n(
-                            std::move(begin), dist, val, std::ref(pred), std::ref(proj));
-                    }
-                    // if val < *mid, mid is after the target range.
-                    auto && v = *mid;
-                    auto && pv = invoke(proj, (decltype(v)&&) v);
-                    if(invoke(pred, val, pv))
-                    {
-                        return aux::equal_range_n(
-                            std::move(begin), dist, val, std::ref(pred), std::ref(proj));
-                    }
-                    else if(!invoke(pred, pv, val))
-                    {
-                        // *mid == val: the lower bound is <= mid, and the upper bound is > mid.
-                        return {
-                            aux::lower_bound_n(std::move(begin), dist, val,
-                                std::ref(pred), std::ref(proj)),
-                            upper_bound(std::move(mid), std::move(end), val,
-                                std::ref(pred), std::ref(proj))
-                        };
-                    }
-                    // *mid < val, mid is before the target range.
-                    begin = std::move(mid);
-                    ++begin;
-                    dist *= 2;
-                }
+                auto const len = distance(begin, end);
+                return aux::equal_range_n(std::move(begin), len, val,
+                    std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename V, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(safe_subrange_t<Rng>)(
-                    requires ForwardRange<Rng> &&
-                        IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+            // Probe exponentially for either end-of-range, an iterator that
+            // is past the equal range (i.e., denotes an element greater
+            // than val), or is in the equal range (denotes an element equal
+            // to val).
+            auto dist = iter_difference_t<I>{1};
+            while(true)
             {
-                if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+                auto mid = begin;
+                auto d = advance(mid, dist, end);
+                if(d || mid == end)
                 {
-                    auto const len = distance(rng);
-                    return aux::equal_range_n(begin(rng), len, val, std::move(pred), std::move(proj));
+                    // at the end of the input range
+                    dist -= d;
+                    return aux::equal_range_n(
+                        std::move(begin), dist, val, std::ref(pred), std::ref(proj));
                 }
-
-                return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
+                // if val < *mid, mid is after the target range.
+                auto && v = *mid;
+                auto && pv = invoke(proj, (decltype(v)&&) v);
+                if(invoke(pred, val, pv))
+                {
+                    return aux::equal_range_n(
+                        std::move(begin), dist, val, std::ref(pred), std::ref(proj));
+                }
+                else if(!invoke(pred, pv, val))
+                {
+                    // *mid == val: the lower bound is <= mid, and the upper bound is > mid.
+                    return {
+                        aux::lower_bound_n(std::move(begin), dist, val,
+                            std::ref(pred), std::ref(proj)),
+                        upper_bound(std::move(mid), std::move(end), val,
+                            std::ref(pred), std::ref(proj))
+                    };
+                }
+                // *mid < val, mid is before the target range.
+                begin = std::move(mid);
+                ++begin;
+                dist *= 2;
             }
-        };
+        }
 
-        /// \sa `equal_range_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(equal_range_fn, equal_range)
-        /// @}
-    } // namespace v3
+        template<typename Rng, typename V, typename C = less, typename P = identity>
+        auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(safe_subrange_t<Rng>)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+        {
+            if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+            {
+                auto const len = distance(rng);
+                return aux::equal_range_n(begin(rng), len, val, std::move(pred), std::move(proj));
+            }
+
+            return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
+        }
+    };
+
+    /// \sa `equal_range_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(equal_range_fn, equal_range)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

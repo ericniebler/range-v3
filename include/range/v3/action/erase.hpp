@@ -22,57 +22,54 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace adl_erase_detail
     {
-        /// \cond
-        namespace adl_erase_detail
+        template<typename Cont, typename I, typename S>
+        auto erase(Cont &&cont, I begin, S end) ->
+            CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))(
+            requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
+                Sentinel<S, I>)
         {
-            template<typename Cont, typename I, typename S>
-            auto erase(Cont &&cont, I begin, S end) ->
-                CPP_ret(decltype(unwrap_reference(cont).erase(begin, end)))(
-                requires LvalueContainerLike<Cont> && ForwardIterator<I> &&
+            return unwrap_reference(cont).erase(begin, end);
+        }
+
+        struct erase_fn
+        {
+            template<typename Rng, typename I, typename S>
+            auto operator()(Rng &&rng, I begin, S end) const ->
+                CPP_ret(decltype(erase((Rng &&) rng, begin, end)))(
+                requires Range<Rng> && ForwardIterator<I> &&
                     Sentinel<S, I>)
             {
-                return unwrap_reference(cont).erase(begin, end);
+                return erase(static_cast<Rng &&>(rng), begin, end);
             }
-
-            struct erase_fn
-            {
-                template<typename Rng, typename I, typename S>
-                auto operator()(Rng &&rng, I begin, S end) const ->
-                    CPP_ret(decltype(erase((Rng &&) rng, begin, end)))(
-                    requires Range<Rng> && ForwardIterator<I> &&
-                        Sentinel<S, I>)
-                {
-                    return erase(static_cast<Rng &&>(rng), begin, end);
-                }
-            };
-        }
-        /// \endcond
-
-        /// \ingroup group-actions
-        RANGES_INLINE_VARIABLE(adl_erase_detail::erase_fn, erase)
-
-        namespace action
-        {
-            using ranges::erase;
-        }
-
-        /// \addtogroup group-concepts
-        /// @{
-        /// \ingroup group-concepts
-        CPP_def
-        (
-            template(typename Rng, typename I, typename S)
-            concept ErasableRange,
-                requires (Rng &&rng, I begin, S end)
-                (
-                    ranges::erase(static_cast<Rng &&>(rng), begin, end)
-                ) &&
-                Range<Rng>
-        );
-        /// @}
+        };
     }
+    /// \endcond
+
+    /// \ingroup group-actions
+    RANGES_INLINE_VARIABLE(adl_erase_detail::erase_fn, erase)
+
+    namespace action
+    {
+        using ranges::erase;
+    }
+
+    /// \addtogroup group-concepts
+    /// @{
+    /// \ingroup group-concepts
+    CPP_def
+    (
+        template(typename Rng, typename I, typename S)
+        concept ErasableRange,
+            requires (Rng &&rng, I begin, S end)
+            (
+                ranges::erase(static_cast<Rng &&>(rng), begin, end)
+            ) &&
+            Range<Rng>
+    );
+    /// @}
 }
 
 #endif

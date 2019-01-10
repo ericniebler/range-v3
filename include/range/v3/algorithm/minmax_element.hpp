@@ -29,75 +29,72 @@
 
 namespace ranges
 {
-    inline namespace v3
-    {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I>
-        using minmax_element_result = detail::min_max_result<I, I>;
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I>
+    using minmax_element_result = detail::min_max_result<I, I>;
 
-        struct minmax_element_fn
+    struct minmax_element_fn
+    {
+        template<typename I, typename S, typename C = less, typename P = identity>
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(minmax_element_result<I>)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C = less, typename P = identity>
-            auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(minmax_element_result<I>)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectStrictWeakOrder<C, projected<I, P>>)
+            minmax_element_result<I> result{begin, begin};
+            if(begin == end || ++begin == end)
+                return result;
+            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
+                result.min = begin;
+            else
+                result.max = begin;
+            while(++begin != end)
             {
-                minmax_element_result<I> result{begin, begin};
-                if(begin == end || ++begin == end)
-                    return result;
-                if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
-                    result.min = begin;
-                else
-                    result.max = begin;
-                while(++begin != end)
+                I tmp = begin;
+                if(++begin == end)
                 {
-                    I tmp = begin;
-                    if(++begin == end)
+                    if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
+                        result.min = tmp;
+                    else if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
+                        result.max = tmp;
+                    break;
+                }
+                else
+                {
+                    if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
                     {
-                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
-                            result.min = tmp;
-                        else if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
+                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
+                            result.min = begin;
+                        if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
                             result.max = tmp;
-                        break;
                     }
                     else
                     {
-                        if(invoke(pred, invoke(proj, *begin), invoke(proj, *tmp)))
-                        {
-                            if(invoke(pred, invoke(proj, *begin), invoke(proj, *result.min)))
-                                result.min = begin;
-                            if(!invoke(pred, invoke(proj, *tmp), invoke(proj, *result.max)))
-                                result.max = tmp;
-                        }
-                        else
-                        {
-                            if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
-                                result.min = tmp;
-                            if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.max)))
-                                result.max = begin;
-                        }
+                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *result.min)))
+                            result.min = tmp;
+                        if(!invoke(pred, invoke(proj, *begin), invoke(proj, *result.max)))
+                            result.max = begin;
                     }
                 }
-                return result;
             }
+            return result;
+        }
 
-            template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
-                    requires ForwardRange<Rng> &&
-                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C = less, typename P = identity>
+        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `minmax_element_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(minmax_element_fn, minmax_element)
-        /// @}
-    } // namespace v3
+    /// \sa `minmax_element_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(minmax_element_fn, minmax_element)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

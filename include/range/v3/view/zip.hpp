@@ -31,121 +31,118 @@ RANGES_DISABLE_WARNINGS
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
+        struct indirect_zip_fn_
         {
-            struct indirect_zip_fn_
+            // tuple value
+            template<typename ...Its>
+            [[noreturn]] auto operator()(copy_tag, Its...) const ->
+                CPP_ret(std::tuple<iter_value_t<Its>...>)(
+                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
             {
-                // tuple value
-                template<typename ...Its>
-                [[noreturn]] auto operator()(copy_tag, Its...) const ->
-                    CPP_ret(std::tuple<iter_value_t<Its>...>)(
-                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                {
-                    RANGES_EXPECT(false);
-                }
+                RANGES_EXPECT(false);
+            }
 
-                // tuple reference
-                template<typename ...Its>
-                auto operator()(Its const &...its) const
-                    noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value) ->
-                    CPP_ret(common_tuple<iter_reference_t<Its>...>)(
-                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                {
-                    return common_tuple<iter_reference_t<Its>...>{*its...};
-                }
+            // tuple reference
+            template<typename ...Its>
+            auto operator()(Its const &...its) const
+                noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value) ->
+                CPP_ret(common_tuple<iter_reference_t<Its>...>)(
+                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+            {
+                return common_tuple<iter_reference_t<Its>...>{*its...};
+            }
 
-                // tuple rvalue reference
-                template<typename ...Its>
-                auto operator()(move_tag, Its const &...its) const
-                    noexcept(meta::and_c<
-                        noexcept(iter_rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
-                    CPP_ret(common_tuple<iter_rvalue_reference_t<Its>...>)(
-                        requires And<Readable<Its>...> && sizeof...(Its) != 2)
-                {
-                    return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
-                }
+            // tuple rvalue reference
+            template<typename ...Its>
+            auto operator()(move_tag, Its const &...its) const
+                noexcept(meta::and_c<
+                    noexcept(iter_rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
+                CPP_ret(common_tuple<iter_rvalue_reference_t<Its>...>)(
+                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+            {
+                return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
+            }
 
-                // pair value
-                template<typename It1, typename It2>
-                [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
-                CPP_ret(std::pair<iter_value_t<It1>, iter_value_t<It2>>)(
+            // pair value
+            template<typename It1, typename It2>
+            [[noreturn]] auto operator()(copy_tag, It1, It2) const ->
+            CPP_ret(std::pair<iter_value_t<It1>, iter_value_t<It2>>)(
+                requires Readable<It1> && Readable<It2>)
+            {
+                RANGES_EXPECT(false);
+            }
+
+            // pair reference
+            template<typename It1, typename It2>
+            auto operator()(It1 const &it1, It2 const &it2) const
+                noexcept(noexcept(iter_reference_t<It1>(*it1)) &&
+                         noexcept(iter_reference_t<It2>(*it2))) ->
+                CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)(
                     requires Readable<It1> && Readable<It2>)
-                {
-                    RANGES_EXPECT(false);
-                }
+            {
+                return {*it1, *it2};
+            }
 
-                // pair reference
-                template<typename It1, typename It2>
-                auto operator()(It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(iter_reference_t<It1>(*it1)) &&
-                             noexcept(iter_reference_t<It2>(*it2))) ->
-                    CPP_ret(common_pair<iter_reference_t<It1>, iter_reference_t<It2>>)(
-                        requires Readable<It1> && Readable<It2>)
-                {
-                    return {*it1, *it2};
-                }
+            // pair rvalue reference
+            template<typename It1, typename It2>
+            auto operator()(move_tag, It1 const &it1, It2 const &it2) const
+                noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
+                         noexcept(iter_rvalue_reference_t<It2>(iter_move(it2)))) ->
+                CPP_ret(common_pair<iter_rvalue_reference_t<It1>, iter_rvalue_reference_t<It2>>)(
+                    requires Readable<It1> && Readable<It2>)
+            {
+                return {iter_move(it1), iter_move(it2)};
+            }
+        };
+    } // namespace detail
+    /// \endcond
 
-                // pair rvalue reference
-                template<typename It1, typename It2>
-                auto operator()(move_tag, It1 const &it1, It2 const &it2) const
-                    noexcept(noexcept(iter_rvalue_reference_t<It1>(iter_move(it1))) &&
-                             noexcept(iter_rvalue_reference_t<It2>(iter_move(it2)))) ->
-                    CPP_ret(common_pair<iter_rvalue_reference_t<It1>, iter_rvalue_reference_t<It2>>)(
-                        requires Readable<It1> && Readable<It2>)
-                {
-                    return {iter_move(it1), iter_move(it2)};
-                }
-            };
-        } // namespace detail
-        /// \endcond
+    /// \addtogroup group-views
+    /// @{
+    template<typename...Rngs>
+    struct zip_view
+      : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
+    {
+        CPP_assert(sizeof...(Rngs) != 0);
 
-        /// \addtogroup group-views
-        /// @{
-        template<typename...Rngs>
-        struct zip_view
-          : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
+        zip_view() = default;
+        explicit zip_view(Rngs...rngs)
+          : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
+              detail::indirect_zip_fn_{}, std::move(rngs)...}
+        {}
+    };
+
+    namespace view
+    {
+        struct zip_fn
         {
-            CPP_assert(sizeof...(Rngs) != 0);
+            template<typename...Rngs>
+            auto operator()(Rngs &&... rngs) const ->
+                CPP_ret(zip_view<all_t<Rngs>...>)(
+                    requires And<ViewableRange<Rngs>...> &&
+                        And<InputRange<Rngs>...> && sizeof...(Rngs) != 0)
+            {
+                return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
+            }
 
-            zip_view() = default;
-            explicit zip_view(Rngs...rngs)
-              : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
-                  detail::indirect_zip_fn_{}, std::move(rngs)...}
-            {}
+            constexpr empty_view<std::tuple<>> operator()() const noexcept
+            {
+                return {};
+            }
         };
 
-        namespace view
-        {
-            struct zip_fn
-            {
-                template<typename...Rngs>
-                auto operator()(Rngs &&... rngs) const ->
-                    CPP_ret(zip_view<all_t<Rngs>...>)(
-                        requires And<ViewableRange<Rngs>...> &&
-                            And<InputRange<Rngs>...> && sizeof...(Rngs) != 0)
-                {
-                    return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
-                }
-
-                constexpr empty_view<std::tuple<>> operator()() const noexcept
-                {
-                    return {};
-                }
-            };
-
-            /// \relates zip_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(zip_fn, zip)
-        }
-        /// @}
+        /// \relates zip_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(zip_fn, zip)
     }
+    /// @}
 }
 
 RANGES_RE_ENABLE_WARNINGS
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::zip_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::zip_view)
 
 #endif

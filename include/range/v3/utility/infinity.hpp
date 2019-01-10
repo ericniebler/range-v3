@@ -19,48 +19,45 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    struct infinity
     {
-        /// \cond
-        struct infinity
-        {
-        };
+    };
 
-        constexpr bool operator==(infinity, infinity)
-        {
-            return true;
-        }
-        constexpr bool operator!=(infinity, infinity)
-        {
-            return false;
-        }
-
-        CPP_template(typename Integer)(
-            requires Integral<Integer>)
-        constexpr bool operator==(Integer, infinity)
-        {
-            return false;
-        }
-        CPP_template(typename Integer)(
-            requires Integral<Integer>)
-        constexpr bool operator==(infinity, Integer)
-        {
-            return false;
-        }
-        CPP_template(typename Integer)(
-            requires Integral<Integer>)
-        constexpr bool operator!=(Integer, infinity)
-        {
-            return true;
-        }
-        CPP_template(typename Integer)(
-            requires Integral<Integer>)
-        constexpr bool operator!=(infinity, Integer)
-        {
-            return true;
-        }
-        /// \endcond
+    constexpr bool operator==(infinity, infinity)
+    {
+        return true;
     }
+    constexpr bool operator!=(infinity, infinity)
+    {
+        return false;
+    }
+
+    CPP_template(typename Integer)(
+        requires Integral<Integer>)
+    constexpr bool operator==(Integer, infinity)
+    {
+        return false;
+    }
+    CPP_template(typename Integer)(
+        requires Integral<Integer>)
+    constexpr bool operator==(infinity, Integer)
+    {
+        return false;
+    }
+    CPP_template(typename Integer)(
+        requires Integral<Integer>)
+    constexpr bool operator!=(Integer, infinity)
+    {
+        return true;
+    }
+    CPP_template(typename Integer)(
+        requires Integral<Integer>)
+    constexpr bool operator!=(infinity, Integer)
+    {
+        return true;
+    }
+    /// \endcond
 }
 
 #endif

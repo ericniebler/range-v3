@@ -27,64 +27,61 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct partial_sort_copy_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct partial_sort_copy_fn
+        template<typename I, typename SI, typename O, typename SO, typename C = less,
+            typename PI = identity, typename PO = identity>
+        auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
+                PI in_proj = PI{}, PO out_proj = PO{}) const ->
+            CPP_ret(O)(
+                requires InputIterator<I> && Sentinel<SI, I> &&
+                    RandomAccessIterator<O> && Sentinel<SO, O> &&
+                    IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
+                    IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
         {
-            template<typename I, typename SI, typename O, typename SO, typename C = less,
-                typename PI = identity, typename PO = identity>
-            auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
-                    PI in_proj = PI{}, PO out_proj = PO{}) const ->
-                CPP_ret(O)(
-                    requires InputIterator<I> && Sentinel<SI, I> &&
-                        RandomAccessIterator<O> && Sentinel<SO, O> &&
-                        IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
-                        IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
+            O r = out_begin;
+            if(r != out_end)
             {
-                O r = out_begin;
-                if(r != out_end)
+                for(; begin != end && r != out_end; ++begin, ++r)
+                    *r = *begin;
+                make_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
+                auto len = r - out_begin;
+                for(; begin != end; ++begin)
                 {
-                    for(; begin != end && r != out_end; ++begin, ++r)
-                        *r = *begin;
-                    make_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
-                    auto len = r - out_begin;
-                    for(; begin != end; ++begin)
+                    auto &&x = *begin;
+                    if(invoke(pred, invoke(in_proj, x), invoke(out_proj, *out_begin)))
                     {
-                        auto &&x = *begin;
-                        if(invoke(pred, invoke(in_proj, x), invoke(out_proj, *out_begin)))
-                        {
-                            *out_begin = (decltype(x) &&) x;
-                            detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));
-                        }
+                        *out_begin = (decltype(x) &&) x;
+                        detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));
                     }
-                    sort_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
                 }
-                return r;
+                sort_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
             }
+            return r;
+        }
 
-            template<typename InRng, typename OutRng, typename C = less,
-                typename PI = identity, typename PO = identity>
-            auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
-                    PO out_proj = PO{}) const ->
-                CPP_ret(safe_iterator_t<OutRng>)(
-                    requires InputRange<InRng> &&
-                        RandomAccessRange<OutRng> &&
-                        IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&
-                        Sortable<iterator_t<OutRng>, C, PO> &&
-                        IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>, projected<iterator_t<OutRng>, PO>>)
-            {
-                return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
-                    std::move(pred), std::move(in_proj), std::move(out_proj));
-            }
-        };
+        template<typename InRng, typename OutRng, typename C = less,
+            typename PI = identity, typename PO = identity>
+        auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
+                PO out_proj = PO{}) const ->
+            CPP_ret(safe_iterator_t<OutRng>)(
+                requires InputRange<InRng> &&
+                    RandomAccessRange<OutRng> &&
+                    IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&
+                    Sortable<iterator_t<OutRng>, C, PO> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>, projected<iterator_t<OutRng>, PO>>)
+        {
+            return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
+                std::move(pred), std::move(in_proj), std::move(out_proj));
+        }
+    };
 
-        /// \sa `partial_sort_copy_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(partial_sort_copy_fn, partial_sort_copy)
-        /// @}
-    } // namespace v3
+    /// \sa `partial_sort_copy_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(partial_sort_copy_fn, partial_sort_copy)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

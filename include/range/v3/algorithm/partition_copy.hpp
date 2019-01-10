@@ -29,62 +29,59 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename O0, typename O1>
+    using partition_copy_result = detail::in_out1_out2_result<I, O0, O1>;
+
+    struct partition_copy_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I, typename O0, typename O1>
-        using partition_copy_result = detail::in_out1_out2_result<I, O0, O1>;
-
-        struct partition_copy_fn
+        template<typename I, typename S, typename O0, typename O1, typename C, typename P = identity>
+        auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
+            CPP_ret(partition_copy_result<I, O0, O1>)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    WeaklyIncrementable<O0> &&
+                    WeaklyIncrementable<O1> &&
+                    IndirectlyCopyable<I, O0> &&
+                    IndirectlyCopyable<I, O1> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename O0, typename O1, typename C, typename P = identity>
-            auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-                CPP_ret(partition_copy_result<I, O0, O1>)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        WeaklyIncrementable<O0> &&
-                        WeaklyIncrementable<O1> &&
-                        IndirectlyCopyable<I, O0> &&
-                        IndirectlyCopyable<I, O1> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
+            for(; begin != end; ++begin)
             {
-                for(; begin != end; ++begin)
+                auto &&x = *begin;
+                if(invoke(pred, invoke(proj, x)))
                 {
-                    auto &&x = *begin;
-                    if(invoke(pred, invoke(proj, x)))
-                    {
-                        *o0 = (decltype(x) &&) x;
-                        ++o0;
-                    }
-                    else
-                    {
-                        *o1 = (decltype(x) &&) x;
-                        ++o1;
-                    }
+                    *o0 = (decltype(x) &&) x;
+                    ++o0;
                 }
-                return {begin, o0, o1};
+                else
+                {
+                    *o1 = (decltype(x) &&) x;
+                    ++o1;
+                }
             }
+            return {begin, o0, o1};
+        }
 
-            template<typename Rng, typename O0, typename O1, typename C, typename P = identity>
-            auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-                CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)(
-                    requires InputRange<Rng> &&
-                        WeaklyIncrementable<O0> &&
-                        WeaklyIncrementable<O1> &&
-                        IndirectlyCopyable<iterator_t<Rng>, O0> &&
-                        IndirectlyCopyable<iterator_t<Rng>, O1> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),
-                    std::move(proj));
-            }
-        };
+        template<typename Rng, typename O0, typename O1, typename C, typename P = identity>
+        auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
+            CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)(
+                requires InputRange<Rng> &&
+                    WeaklyIncrementable<O0> &&
+                    WeaklyIncrementable<O1> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O0> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O1> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),
+                std::move(proj));
+        }
+    };
 
-        /// \sa `partition_copy_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(partition_copy_fn, partition_copy)
-        /// @}
-    } // namespace v3
+    /// \sa `partition_copy_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(partition_copy_fn, partition_copy)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

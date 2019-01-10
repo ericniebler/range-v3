@@ -25,60 +25,57 @@
 
 namespace ranges
 {
-    inline namespace v3
+    namespace view
     {
-        namespace view
+        /// Half-open range of indices: [from, to).
+        struct indices_fn
+          : iota_view<std::ptrdiff_t>
         {
-            /// Half-open range of indices: [from, to).
-            struct indices_fn
-              : iota_view<std::ptrdiff_t>
+            indices_fn() = default;
+
+            template<typename Val>
+            auto CPP_fun(operator())(Val from, Val to) (const
+                requires Integral<Val>)
             {
-                indices_fn() = default;
-
-                template<typename Val>
-                auto CPP_fun(operator())(Val from, Val to) (const
-                    requires Integral<Val>)
-                {
-                    return detail::take_exactly_view_<iota_view<Val>, true>
-                        {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};
-                }
-                template<typename Val, typename Self = indices_fn>
-                auto CPP_fun(operator())(Val to) (const
-                    requires Integral<Val>)
-                {
-                    return Self{}(Val(), to);
-                }
-            };
-
-            /// Inclusive range of indices: [from, to].
-            struct closed_indices_fn
-              : iota_view<std::ptrdiff_t>
+                return detail::take_exactly_view_<iota_view<Val>, true>
+                    {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};
+            }
+            template<typename Val, typename Self = indices_fn>
+            auto CPP_fun(operator())(Val to) (const
+                requires Integral<Val>)
             {
-                template<typename Val>
-                auto CPP_fun(operator())(Val from, Val to) (const
-                    requires Integral<Val>)
-                {
-                    return detail::take_exactly_view_<iota_view<Val>, true>
-                        {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
-                }
-                template<typename Val, typename Self = closed_indices_fn>
-                auto CPP_fun(operator())(Val to) (const
-                    requires Integral<Val>)
-                {
-                    return Self{}(Val(), to);
-                }
-            };
+                return Self{}(Val(), to);
+            }
+        };
 
-            /// \relates indices_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(indices_fn, indices)
+        /// Inclusive range of indices: [from, to].
+        struct closed_indices_fn
+          : iota_view<std::ptrdiff_t>
+        {
+            template<typename Val>
+            auto CPP_fun(operator())(Val from, Val to) (const
+                requires Integral<Val>)
+            {
+                return detail::take_exactly_view_<iota_view<Val>, true>
+                    {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
+            }
+            template<typename Val, typename Self = closed_indices_fn>
+            auto CPP_fun(operator())(Val to) (const
+                requires Integral<Val>)
+            {
+                return Self{}(Val(), to);
+            }
+        };
 
-            /// \relates closed_indices_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
+        /// \relates indices_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(indices_fn, indices)
 
-        }  // namespace view
-    }
+        /// \relates closed_indices_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
+
+    }  // namespace view
 }
 
 #endif  // RANGES_V3_VIEW_INDICES_HPP

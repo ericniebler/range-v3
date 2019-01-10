@@ -25,114 +25,111 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
-        {
-            template<typename Derived>
-            using begin_cursor_t =
-                detail::decay_t<decltype(range_access::begin_cursor(std::declval<Derived &>()))>;
+        template<typename Derived>
+        using begin_cursor_t =
+            detail::decay_t<decltype(range_access::begin_cursor(std::declval<Derived &>()))>;
 
-            template<typename Derived>
-            using end_cursor_t =
-                detail::decay_t<decltype(range_access::end_cursor(std::declval<Derived &>()))>;
+        template<typename Derived>
+        using end_cursor_t =
+            detail::decay_t<decltype(range_access::end_cursor(std::declval<Derived &>()))>;
 
-            template<typename Derived>
-            using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
+        template<typename Derived>
+        using facade_iterator_t = basic_iterator<begin_cursor_t<Derived>>;
 
-            template<typename Derived>
-            using facade_sentinel_t =
-                meta::if_c<
-                    Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
-                    facade_iterator_t<Derived>,
-                    end_cursor_t<Derived>>;
-        }
-        /// \endcond
-
-        /// \addtogroup group-core
-        /// @{
-
-        /// \brief A utility for constructing a view from a (derived) type that
-        /// implements begin and end cursors.
-        /// \tparam Derived A type that derives from `view_facade` and implements
-        /// begin and end cursors. This type is permitted to be incomplete.
-        /// \tparam Cardinality The cardinality of this view: `finite`, `infinite`,
-        /// or `unknown`. See `ranges::v3::cardinality`.
-        template<typename Derived, cardinality Cardinality>
-        struct view_facade
-          : view_interface<Derived, Cardinality>
-        {
-        protected:
-            friend range_access;
-            using view_interface<Derived, Cardinality>::derived;
-            struct view_as_cursor : Derived {
-                view_as_cursor() = default;
-                explicit view_as_cursor(Derived const& derived)
-                  : Derived(derived)
-                {}
-                explicit operator bool() = delete;
-                explicit operator bool() const = delete;
-            };
-            // Default implementations
-            view_as_cursor begin_cursor() const
-            {
-                return view_as_cursor{derived()};
-            }
-            constexpr default_sentinel_t end_cursor() const
-            {
-                return {};
-            }
-        public:
-            /// Let `d` be `static_cast<Derived &>(*this)`. Let `b` be
-            /// `std::as_const(d).begin_cursor()` if that expression is well-formed;
-            /// otherwise, let `b` be `d.begin_cursor()`. Let `B` be the type of
-            /// `b`.
-            /// \return `ranges::v3::basic_iterator<B>(b)`
-            template<typename D = Derived>
-            auto begin() ->
-                CPP_ret(detail::facade_iterator_t<D>)(
-                    requires Same<D, Derived>)
-            {
-                return detail::facade_iterator_t<D>{
-                    range_access::begin_cursor(derived())};
-            }
-            /// \overload
-            template<typename D = Derived>
-            auto begin() const ->
-                CPP_ret(detail::facade_iterator_t<D const>)(
-                    requires Same<D, Derived>)
-            {
-                return detail::facade_iterator_t<D const>{
-                    range_access::begin_cursor(derived())};
-            }
-            /// Let `d` be `static_cast<Derived &>(*this)`. Let `e` be
-            /// `std::as_const(d).end_cursor()` if that expression is well-formed;
-            /// otherwise, let `e` be `d.end_cursor()`. Let `E` be the type of
-            /// `e`.
-            /// \return `ranges::v3::basic_iterator<E>(e)` if `E` is the same
-            /// as `B` computed above for `begin()`; otherwise, return `e`.
-            template<typename D = Derived>
-            auto end() ->
-                CPP_ret(detail::facade_sentinel_t<D>)(
-                    requires Same<D, Derived>)
-            {
-                return static_cast<detail::facade_sentinel_t<D>>(
-                    range_access::end_cursor(derived()));
-            }
-            /// \overload
-            template<typename D = Derived>
-            auto end() const ->
-                CPP_ret(detail::facade_sentinel_t<D const>)(
-                    requires Same<D, Derived>)
-            {
-                return static_cast<detail::facade_sentinel_t<D const>>(
-                    range_access::end_cursor(derived()));
-            }
-        };
-
-        /// @}
+        template<typename Derived>
+        using facade_sentinel_t =
+            meta::if_c<
+                Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
+                facade_iterator_t<Derived>,
+                end_cursor_t<Derived>>;
     }
+    /// \endcond
+
+    /// \addtogroup group-core
+    /// @{
+
+    /// \brief A utility for constructing a view from a (derived) type that
+    /// implements begin and end cursors.
+    /// \tparam Derived A type that derives from `view_facade` and implements
+    /// begin and end cursors. This type is permitted to be incomplete.
+    /// \tparam Cardinality The cardinality of this view: `finite`, `infinite`,
+    /// or `unknown`. See `ranges::cardinality`.
+    template<typename Derived, cardinality Cardinality>
+    struct view_facade
+      : view_interface<Derived, Cardinality>
+    {
+    protected:
+        friend range_access;
+        using view_interface<Derived, Cardinality>::derived;
+        struct view_as_cursor : Derived {
+            view_as_cursor() = default;
+            explicit view_as_cursor(Derived const& derived)
+              : Derived(derived)
+            {}
+            explicit operator bool() = delete;
+            explicit operator bool() const = delete;
+        };
+        // Default implementations
+        view_as_cursor begin_cursor() const
+        {
+            return view_as_cursor{derived()};
+        }
+        constexpr default_sentinel_t end_cursor() const
+        {
+            return {};
+        }
+    public:
+        /// Let `d` be `static_cast<Derived &>(*this)`. Let `b` be
+        /// `std::as_const(d).begin_cursor()` if that expression is well-formed;
+        /// otherwise, let `b` be `d.begin_cursor()`. Let `B` be the type of
+        /// `b`.
+        /// \return `ranges::basic_iterator<B>(b)`
+        template<typename D = Derived>
+        auto begin() ->
+            CPP_ret(detail::facade_iterator_t<D>)(
+                requires Same<D, Derived>)
+        {
+            return detail::facade_iterator_t<D>{
+                range_access::begin_cursor(derived())};
+        }
+        /// \overload
+        template<typename D = Derived>
+        auto begin() const ->
+            CPP_ret(detail::facade_iterator_t<D const>)(
+                requires Same<D, Derived>)
+        {
+            return detail::facade_iterator_t<D const>{
+                range_access::begin_cursor(derived())};
+        }
+        /// Let `d` be `static_cast<Derived &>(*this)`. Let `e` be
+        /// `std::as_const(d).end_cursor()` if that expression is well-formed;
+        /// otherwise, let `e` be `d.end_cursor()`. Let `E` be the type of
+        /// `e`.
+        /// \return `ranges::basic_iterator<E>(e)` if `E` is the same
+        /// as `B` computed above for `begin()`; otherwise, return `e`.
+        template<typename D = Derived>
+        auto end() ->
+            CPP_ret(detail::facade_sentinel_t<D>)(
+                requires Same<D, Derived>)
+        {
+            return static_cast<detail::facade_sentinel_t<D>>(
+                range_access::end_cursor(derived()));
+        }
+        /// \overload
+        template<typename D = Derived>
+        auto end() const ->
+            CPP_ret(detail::facade_sentinel_t<D const>)(
+                requires Same<D, Derived>)
+        {
+            return static_cast<detail::facade_sentinel_t<D const>>(
+                range_access::end_cursor(derived()));
+        }
+    };
+
+    /// @}
 }
 
 #endif

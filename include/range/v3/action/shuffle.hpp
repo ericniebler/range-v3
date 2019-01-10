@@ -25,45 +25,42 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct shuffle_fn
         {
-            struct shuffle_fn
+        private:
+            friend action_access;
+            template<typename Gen>
+            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen &&gen)(
+                requires UniformRandomNumberGenerator<Gen>)
             {
-            private:
-                friend action_access;
-                template<typename Gen>
-                static auto CPP_fun(bind)(shuffle_fn shuffle, Gen &&gen)(
-                    requires UniformRandomNumberGenerator<Gen>)
-                {
-                    return std::bind(shuffle, std::placeholders::_1,
-                        bind_forward<Gen>(gen));
-                }
-            public:
-                CPP_template(typename Rng, typename Gen)(
-                    requires RandomAccessRange<Rng> &&
-                        Permutable<iterator_t<Rng>> &&
-                        UniformRandomNumberGenerator<Gen> &&
-                        ConvertibleTo<
-                            invoke_result_t<Gen &>,
-                            range_difference_t<Rng>>)
-                Rng operator()(Rng &&rng, Gen &&gen) const
-                {
-                    ranges::shuffle(rng, static_cast<Gen &&>(gen));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(shuffle, std::placeholders::_1,
+                    bind_forward<Gen>(gen));
+            }
+        public:
+            CPP_template(typename Rng, typename Gen)(
+                requires RandomAccessRange<Rng> &&
+                    Permutable<iterator_t<Rng>> &&
+                    UniformRandomNumberGenerator<Gen> &&
+                    ConvertibleTo<
+                        invoke_result_t<Gen &>,
+                        range_difference_t<Rng>>)
+            Rng operator()(Rng &&rng, Gen &&gen) const
+            {
+                ranges::shuffle(rng, static_cast<Gen &&>(gen));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates shuffle_fn
-            /// \sa `action`
-            RANGES_INLINE_VARIABLE(action<shuffle_fn>, shuffle)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates shuffle_fn
+        /// \sa `action`
+        RANGES_INLINE_VARIABLE(action<shuffle_fn>, shuffle)
     }
+    /// @}
 }
 
 #endif

@@ -27,93 +27,90 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I1, typename I2>
+    using mismatch_result = detail::in1_in2_result<I1, I2>;
+
+    struct mismatch_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I1, typename I2>
-        using mismatch_result = detail::in1_in2_result<I1, I2>;
-
-        struct mismatch_fn
+        template<typename I1, typename S1, typename I2, typename C = equal_to,
+            typename P1 = identity, typename P2 = identity>
+        RANGES_DEPRECATED("Use the variant of ranges::mismatch that takes an upper bound for "
+            "both sequences")
+        auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(mismatch_result<I1, I2>)(
+                requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
         {
-            template<typename I1, typename S1, typename I2, typename C = equal_to,
-                typename P1 = identity, typename P2 = identity>
-            RANGES_DEPRECATED("Use the variant of ranges::mismatch that takes an upper bound for "
-                "both sequences")
-            auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
-                    P2 proj2 = P2{}) const ->
-                CPP_ret(mismatch_result<I1, I2>)(
-                    requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
-                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
-            {
-                for(; begin1 != end1; ++begin1, ++begin2)
-                    if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                        break;
-                return {begin1, begin2};
-            }
+            for(; begin1 != end1; ++begin1, ++begin2)
+                if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                    break;
+            return {begin1, begin2};
+        }
 
-            template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
-                typename P1 = identity, typename P2 = identity>
-            auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
-                    P2 proj2 = P2{}) const ->
-                CPP_ret(mismatch_result<I1, I2>)(
-                    requires InputIterator<I1> && Sentinel<S1, I1> &&
-                        InputIterator<I2> && Sentinel<S2, I2> &&
-                        IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
-            {
-                for(; begin1 != end1 &&  begin2 != end2; ++begin1, ++begin2)
-                    if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
-                        break;
-                return {begin1, begin2};
-            }
+        template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
+            typename P1 = identity, typename P2 = identity>
+        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(mismatch_result<I1, I2>)(
+                requires InputIterator<I1> && Sentinel<S1, I1> &&
+                    InputIterator<I2> && Sentinel<S2, I2> &&
+                    IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
+        {
+            for(; begin1 != end1 &&  begin2 != end2; ++begin1, ++begin2)
+                if(!invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
+                    break;
+            return {begin1, begin2};
+        }
 
-            template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = identity,
-                typename P2 = identity>
-            RANGES_DEPRECATED("Use the variant of ranges::mismatch that takes an upper bound for "
-                "both sequences")
-            auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
-                    P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-                CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)(
-                    requires InputRange<Rng1> && InputIterator<uncvref_t<I2Ref>> &&
-                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                            projected<uncvref_t<I2Ref>, P2>>)
-            {
-                RANGES_DIAGNOSTIC_PUSH
-                RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
-                return (*this)(begin(rng1), end(rng1), static_cast<uncvref_t<I2Ref> &&>(begin2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
-                RANGES_DIAGNOSTIC_POP
-            }
+        template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = identity,
+            typename P2 = identity>
+        RANGES_DEPRECATED("Use the variant of ranges::mismatch that takes an upper bound for "
+            "both sequences")
+        auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
+                P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
+            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)(
+                requires InputRange<Rng1> && InputIterator<uncvref_t<I2Ref>> &&
+                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                        projected<uncvref_t<I2Ref>, P2>>)
+        {
+            RANGES_DIAGNOSTIC_PUSH
+            RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
+            return (*this)(begin(rng1), end(rng1), static_cast<uncvref_t<I2Ref> &&>(begin2), std::move(pred),
+                std::move(proj1), std::move(proj2));
+            RANGES_DIAGNOSTIC_POP
+        }
 
-            template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
-                typename P2 = identity>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
-                    P2 proj2 = P2{}) const ->
-                CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(
-                    requires InputRange<Rng1> && InputRange<Rng2> &&
-                        IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
-                                            projected<iterator_t<Rng2>, P2>>)
-            {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
-            }
-        };
+        template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = identity,
+            typename P2 = identity>
+        auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const ->
+            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(
+                requires InputRange<Rng1> && InputRange<Rng2> &&
+                    IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
+                                        projected<iterator_t<Rng2>, P2>>)
+        {
+            return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
+                std::move(proj1), std::move(proj2));
+        }
+    };
 
-        /// \sa `mismatch_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(mismatch_fn, mismatch)
+    /// \sa `mismatch_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(mismatch_fn, mismatch)
 
-        // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
-        // that we can properly distinguish this case:
-        //   int x[] = {1,2,3,4};
-        //   int y[] = {1,2,3,4};
-        //   mismatch(x, y);
-        // Had 'begin2' been taken by value as is customary, this call could match as either
-        // two ranges, or a range and an iterator, where the iterator is the array, decayed
-        // to a pointer. Yuk!
+    // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
+    // that we can properly distinguish this case:
+    //   int x[] = {1,2,3,4};
+    //   int y[] = {1,2,3,4};
+    //   mismatch(x, y);
+    // Had 'begin2' been taken by value as is customary, this call could match as either
+    // two ranges, or a range and an iterator, where the iterator is the array, decayed
+    // to a pointer. Yuk!
 
-        /// @}
-    } // namespace v3
+    /// @}
 } // namespace ranges
 
 #endif // include guard

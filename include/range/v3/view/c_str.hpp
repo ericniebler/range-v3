@@ -22,75 +22,72 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
+        template<typename T>
+        struct is_char_type_
+            : std::false_type
+        {};
+
+        template<>
+        struct is_char_type_<char>
+            : std::true_type
+        {};
+
+        template<>
+        struct is_char_type_<wchar_t>
+            : std::true_type
+        {};
+
+        template<>
+        struct is_char_type_<char16_t>
+            : std::true_type
+        {};
+
+        template<>
+        struct is_char_type_<char32_t>
+            : std::true_type
+        {};
+
+        template<typename T>
+        using is_char_type = is_char_type_<meta::_t<std::remove_cv<T>>>;
+    }
+    /// \endcond
+
+    /// \addtogroup group-views
+    /// @{
+    namespace view
+    {
+        /// View a `\0`-terminated C string (e.g. from a const char*) as a
+        /// range.
+        struct c_str_fn
         {
-            template<typename T>
-            struct is_char_type_
-                : std::false_type
-            {};
-
-            template<>
-            struct is_char_type_<char>
-                : std::true_type
-            {};
-
-            template<>
-            struct is_char_type_<wchar_t>
-                : std::true_type
-            {};
-
-            template<>
-            struct is_char_type_<char16_t>
-                : std::true_type
-            {};
-
-            template<>
-            struct is_char_type_<char32_t>
-                : std::true_type
-            {};
-
-            template<typename T>
-            using is_char_type = is_char_type_<meta::_t<std::remove_cv<T>>>;
-        }
-        /// \endcond
-
-        /// \addtogroup group-views
-        /// @{
-        namespace view
-        {
-            /// View a `\0`-terminated C string (e.g. from a const char*) as a
-            /// range.
-            struct c_str_fn
-            {
-                // Fixed-length
-                template<typename Char, std::size_t N>
-                auto operator()(Char (&sz)[N]) const ->
-                    CPP_ret(ranges::subrange<Char *>)(
-                        requires detail::is_char_type<Char>::value)
-                {
-                    return {&sz[0], &sz[N-1]};
-                }
-
-                // Null-terminated
-                template<typename Char>
-                auto operator()(Char *sz) const volatile ->
-                    CPP_ret(ranges::delimit_view<
-                        ranges::subrange<Char *, ranges::unreachable>,
-                        meta::_t<std::remove_cv<Char>>>)(
+            // Fixed-length
+            template<typename Char, std::size_t N>
+            auto operator()(Char (&sz)[N]) const ->
+                CPP_ret(ranges::subrange<Char *>)(
                     requires detail::is_char_type<Char>::value)
-                {
-                    using ch_t = meta::_t<std::remove_cv<Char>>;
-                    return ranges::view::delimit(sz, ch_t(0));
-                }
-            };
+            {
+                return {&sz[0], &sz[N-1]};
+            }
 
-            /// \relates c_str_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(c_str_fn, c_str)
-        }
+            // Null-terminated
+            template<typename Char>
+            auto operator()(Char *sz) const volatile ->
+                CPP_ret(ranges::delimit_view<
+                    ranges::subrange<Char *, ranges::unreachable>,
+                    meta::_t<std::remove_cv<Char>>>)(
+                requires detail::is_char_type<Char>::value)
+            {
+                using ch_t = meta::_t<std::remove_cv<Char>>;
+                return ranges::view::delimit(sz, ch_t(0));
+            }
+        };
+
+        /// \relates c_str_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(c_str_fn, c_str)
     }
 }
 

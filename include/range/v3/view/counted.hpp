@@ -26,69 +26,66 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename I>
+    struct counted_view
+      : view_interface<counted_view<I>>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename I>
-        struct counted_view
-          : view_interface<counted_view<I>>
-        {
-        private:
-            friend range_access;
-            I it_;
-            iter_difference_t<I> n_;
+    private:
+        friend range_access;
+        I it_;
+        iter_difference_t<I> n_;
 
-        public:
-            counted_view() = default;
-            counted_view(I it, iter_difference_t<I> n)
-              : it_(it), n_(n)
+    public:
+        counted_view() = default;
+        counted_view(I it, iter_difference_t<I> n)
+          : it_(it), n_(n)
+        {
+            RANGES_EXPECT(0 <= n_);
+        }
+        counted_iterator<I> begin() const
+        {
+            return make_counted_iterator(it_, n_);
+        }
+        default_sentinel_t end() const
+        {
+            return {};
+        }
+        auto size() const
+        {
+            using size_type_ = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
+            return static_cast<size_type_>(n_);
+        }
+    };
+
+    namespace view
+    {
+        struct counted_fn
+        {
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(counted_view<I>)(
+                    requires Iterator<I> && (!RandomAccessIterator<I>))
             {
-                RANGES_EXPECT(0 <= n_);
+                return {std::move(it), n};
             }
-            counted_iterator<I> begin() const
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<I>)(
+                    requires RandomAccessIterator<I>)
             {
-                return make_counted_iterator(it_, n_);
-            }
-            default_sentinel_t end() const
-            {
-                return {};
-            }
-            auto size() const
-            {
-                using size_type_ = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
-                return static_cast<size_type_>(n_);
+                return {it, it + n};
             }
         };
 
-        namespace view
-        {
-            struct counted_fn
-            {
-                template<typename I>
-                auto operator()(I it, iter_difference_t<I> n) const ->
-                    CPP_ret(counted_view<I>)(
-                        requires Iterator<I> && (!RandomAccessIterator<I>))
-                {
-                    return {std::move(it), n};
-                }
-                template<typename I>
-                auto operator()(I it, iter_difference_t<I> n) const ->
-                    CPP_ret(subrange<I>)(
-                        requires RandomAccessIterator<I>)
-                {
-                    return {it, it + n};
-                }
-            };
-
-            /// \relates counted_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(counted_fn, counted)
-        }
-        /// @}
+        /// \relates counted_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(counted_fn, counted)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::counted_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::counted_view)
 
 #endif

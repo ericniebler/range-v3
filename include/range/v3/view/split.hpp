@@ -37,259 +37,256 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng, typename Fun>
+    struct split_view
+      : view_facade<
+            split_view<Rng, Fun>,
+            is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng, typename Fun>
-        struct split_view
-          : view_facade<
-                split_view<Rng, Fun>,
-                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
+    private:
+        friend range_access;
+        Rng rng_;
+        semiregular_t<Fun> fun_;
+
+        template<bool IsConst>
+        struct cursor
         {
         private:
             friend range_access;
-            Rng rng_;
-            semiregular_t<Fun> fun_;
+            friend split_view;
+            friend struct cursor<!IsConst>;
+            bool zero_;
+            using CRng = meta::const_if_c<IsConst, Rng>;
+            iterator_t<CRng> cur_;
+            sentinel_t<CRng> last_;
+            using fun_ref_t = semiregular_ref_or_val_t<Fun, IsConst>;
+            fun_ref_t fun_;
 
-            template<bool IsConst>
-            struct cursor
+            struct search_pred
             {
-            private:
-                friend range_access;
-                friend split_view;
-                friend struct cursor<!IsConst>;
                 bool zero_;
-                using CRng = meta::const_if_c<IsConst, Rng>;
-                iterator_t<CRng> cur_;
+                iterator_t<CRng> first_;
                 sentinel_t<CRng> last_;
-                using fun_ref_t = semiregular_ref_or_val_t<Fun, IsConst>;
                 fun_ref_t fun_;
-
-                struct search_pred
+                bool operator()(iterator_t<CRng> cur) const
                 {
-                    bool zero_;
-                    iterator_t<CRng> first_;
-                    sentinel_t<CRng> last_;
-                    fun_ref_t fun_;
-                    bool operator()(iterator_t<CRng> cur) const
-                    {
-                        return (zero_ && cur == first_) || (cur != last_ && !invoke(fun_, cur, last_).first);
-                    }
-                };
-                using reference_ =
-                    indirect_view<take_while_view<iota_view<iterator_t<CRng>>, search_pred>>;
-                reference_ read() const
-                {
-                    return reference_{{view::iota(cur_), {zero_, cur_, last_, fun_}}};
+                    return (zero_ && cur == first_) || (cur != last_ && !invoke(fun_, cur, last_).first);
                 }
-                void next()
-                {
-                    RANGES_EXPECT(cur_ != last_);
-                    // If the last match consumed zero elements, bump the position.
-                    advance(cur_, (int)zero_, last_);
-                    zero_ = false;
-                    for(; cur_ != last_; ++cur_)
-                    {
-                        auto p = invoke(fun_, cur_, last_);
-                        if(p.first)
-                        {
-                            zero_ = (cur_ == p.second);
-                            cur_ = p.second;
-                            return;
-                        }
-                    }
-                }
-                bool equal(default_sentinel_t) const
-                {
-                    return cur_ == last_;
-                }
-                bool equal(cursor const &that) const
-                {
-                    return cur_ == that.cur_;
-                }
-                cursor(fun_ref_t fun, iterator_t<CRng> first, sentinel_t<CRng> last)
-                  : cur_(first), last_(last), fun_(fun)
-                {
-                    // For skipping an initial zero-length match
-                    auto p = invoke(fun, first, ranges::next(first));
-                    zero_ = p.first && first == p.second;
-                }
-            public:
-                cursor() = default;
-                template<bool Other>
-                CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst && (!Other))
-                  : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
-                {}
             };
-            cursor<false> begin_cursor()
+            using reference_ =
+                indirect_view<take_while_view<iota_view<iterator_t<CRng>>, search_pred>>;
+            reference_ read() const
             {
-                return {fun_, ranges::begin(rng_), ranges::end(rng_)};
+                return reference_{{view::iota(cur_), {zero_, cur_, last_, fun_}}};
             }
-            template<typename CRng = Rng const>
-            auto begin_cursor() const -> CPP_ret(cursor<true>)(
-                requires Range<CRng> &&
-                    Invocable<Fun const&, iterator_t<CRng>, sentinel_t<CRng>>)
+            void next()
             {
-                return {fun_, ranges::begin(rng_), ranges::end(rng_)};
+                RANGES_EXPECT(cur_ != last_);
+                // If the last match consumed zero elements, bump the position.
+                advance(cur_, (int)zero_, last_);
+                zero_ = false;
+                for(; cur_ != last_; ++cur_)
+                {
+                    auto p = invoke(fun_, cur_, last_);
+                    if(p.first)
+                    {
+                        zero_ = (cur_ == p.second);
+                        cur_ = p.second;
+                        return;
+                    }
+                }
+            }
+            bool equal(default_sentinel_t) const
+            {
+                return cur_ == last_;
+            }
+            bool equal(cursor const &that) const
+            {
+                return cur_ == that.cur_;
+            }
+            cursor(fun_ref_t fun, iterator_t<CRng> first, sentinel_t<CRng> last)
+              : cur_(first), last_(last), fun_(fun)
+            {
+                // For skipping an initial zero-length match
+                auto p = invoke(fun, first, ranges::next(first));
+                zero_ = p.first && first == p.second;
             }
         public:
-            split_view() = default;
-            split_view(Rng rng, Fun fun)
-              : rng_(std::move(rng))
-              , fun_(std::move(fun))
+            cursor() = default;
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)(
+                requires IsConst && (!Other))
+              : cursor{std::move(that.cur_), std::move(that.last_), std::move(that.fun_)}
             {}
         };
-
-        namespace view
+        cursor<false> begin_cursor()
         {
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept SplitOnFunction,
-                    ForwardRange<Rng> &&
-                    Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>> &&
-                    Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>> &&
-                    CopyConstructible<Fun> &&
-                    ConvertibleTo<
-                        invoke_result_t<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
-                        std::pair<bool, iterator_t<Rng>>>
-            );
-            CPP_def
-            (
-                template(typename Rng, typename Fun)
-                concept SplitOnPredicate,
-                    ForwardRange<Rng> &&
-                    Predicate<Fun const&, range_reference_t<Rng>> &&
-                    CopyConstructible<Fun>
-            );
-            CPP_def
-            (
-                template(typename Rng)
-                concept SplitOnElement,
-                    ForwardRange<Rng> &&
-                    Regular<range_value_t<Rng>>
-            );
-            CPP_def
-            (
-                template(typename Rng, typename Sub)
-                concept SplitOnSubRange,
-                    ForwardRange<Rng> &&
-                    ForwardRange<Sub> &&
-                    EqualityComparableWith<range_value_t<Rng>, range_value_t<Sub>>
-            );
+            return {fun_, ranges::begin(rng_), ranges::end(rng_)};
+        }
+        template<typename CRng = Rng const>
+        auto begin_cursor() const -> CPP_ret(cursor<true>)(
+            requires Range<CRng> &&
+                Invocable<Fun const&, iterator_t<CRng>, sentinel_t<CRng>>)
+        {
+            return {fun_, ranges::begin(rng_), ranges::end(rng_)};
+        }
+    public:
+        split_view() = default;
+        split_view(Rng rng, Fun fun)
+          : rng_(std::move(rng))
+          , fun_(std::move(fun))
+        {}
+    };
 
-            struct split_fn
+    namespace view
+    {
+        CPP_def
+        (
+            template(typename Rng, typename Fun)
+            concept SplitOnFunction,
+                ForwardRange<Rng> &&
+                Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>> &&
+                Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>> &&
+                CopyConstructible<Fun> &&
+                ConvertibleTo<
+                    invoke_result_t<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
+                    std::pair<bool, iterator_t<Rng>>>
+        );
+        CPP_def
+        (
+            template(typename Rng, typename Fun)
+            concept SplitOnPredicate,
+                ForwardRange<Rng> &&
+                Predicate<Fun const&, range_reference_t<Rng>> &&
+                CopyConstructible<Fun>
+        );
+        CPP_def
+        (
+            template(typename Rng)
+            concept SplitOnElement,
+                ForwardRange<Rng> &&
+                Regular<range_value_t<Rng>>
+        );
+        CPP_def
+        (
+            template(typename Rng, typename Sub)
+            concept SplitOnSubRange,
+                ForwardRange<Rng> &&
+                ForwardRange<Sub> &&
+                EqualityComparableWith<range_value_t<Rng>, range_value_t<Sub>>
+        );
+
+        struct split_fn
+        {
+        private:
+            friend view_access;
+            template<typename T>
+            static auto bind(split_fn split, T &&t)
             {
-            private:
-                friend view_access;
-                template<typename T>
-                static auto bind(split_fn split, T &&t)
-                {
-                    return make_pipeable(std::bind(split, std::placeholders::_1,
-                        bind_forward<T>(t)));
-                }
-                template<typename Rng, typename Pred>
-                struct predicate_pred
-                {
-                    semiregular_t<Pred> pred_;
+                return make_pipeable(std::bind(split, std::placeholders::_1,
+                    bind_forward<T>(t)));
+            }
+            template<typename Rng, typename Pred>
+            struct predicate_pred
+            {
+                semiregular_t<Pred> pred_;
 
-                    template<typename S>
-                    auto operator()(iterator_t<Rng> cur, S end) const ->
-                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
-                            requires Sentinel<S, iterator_t<Rng>>)
-                    {
-                        auto where = ranges::find_if_not(cur, end, std::ref(pred_));
-                        return std::pair<bool, iterator_t<Rng>>{cur != where, where};
-                    }
-                };
-                template<typename Rng>
-                struct element_pred
+                template<typename S>
+                auto operator()(iterator_t<Rng> cur, S end) const ->
+                    CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                        requires Sentinel<S, iterator_t<Rng>>)
                 {
-                    range_value_t<Rng> val_;
-
-                    template<typename S>
-                    auto operator()(iterator_t<Rng> cur, S end) const ->
-                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
-                            requires Sentinel<S, iterator_t<Rng>>)
-                    {
-                        RANGES_EXPECT(cur != end);
-                        bool const match = *cur == val_;
-                        if (match) ++cur;
-                        return std::pair<bool, iterator_t<Rng>>{match, cur};
-                    }
-                };
-                template<typename Rng, typename Sub>
-                struct subrange_pred
-                {
-                    all_t<Sub> sub_;
-                    range_difference_t<Sub> len_;
-
-                    subrange_pred() = default;
-                    subrange_pred(Sub &&sub)
-                      : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
-                    {}
-                    template<typename S>
-                    auto operator()(iterator_t<Rng> cur, S end) const ->
-                        CPP_ret(std::pair<bool, iterator_t<Rng>>)(
-                            requires Sentinel<S, iterator_t<Rng>>)
-                    {
-                        using P = std::pair<bool, iterator_t<Rng>>;
-                        RANGES_EXPECT(cur != end);
-                        if((bool) SizedSentinel<S, iterator_t<Rng>> && distance(cur, end) < len_)
-                            return P{false, cur};
-                        auto pat_cur = ranges::begin(sub_);
-                        auto pat_end = ranges::end(sub_);
-                        for(;; ++cur, ++pat_cur)
-                        {
-                            if(pat_cur == pat_end)
-                                return P{true, cur};
-                            if(cur == end || !(*cur == *pat_cur))
-                                return P{false, cur};
-                        }
-                    }
-                };
-            public:
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&rng, Fun fun) const ->
-                    CPP_ret(split_view<all_t<Rng>, Fun>)(
-                        requires ViewableRange<Rng> && SplitOnFunction<Rng, Fun>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), std::move(fun)};
-                }
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&rng, Fun fun) const ->
-                    CPP_ret(split_view<all_t<Rng>, predicate_pred<Rng, Fun>>)(
-                        requires ViewableRange<Rng> && SplitOnPredicate<Rng, Fun>)
-                {
-                    return {all(static_cast<Rng &&>(rng)),
-                            predicate_pred<Rng, Fun>{std::move(fun)}};
-                }
-                template<typename Rng>
-                auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
-                    CPP_ret(split_view<all_t<Rng>, element_pred<Rng>>)(
-                        requires ViewableRange<Rng> && SplitOnElement<Rng>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
-                }
-                template<typename Rng, typename Sub>
-                auto operator()(Rng &&rng, Sub &&sub) const ->
-                    CPP_ret(split_view<all_t<Rng>, subrange_pred<Rng, Sub>>)(
-                        requires ViewableRange<Rng> && SplitOnSubRange<Rng, Sub>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
+                    auto where = ranges::find_if_not(cur, end, std::ref(pred_));
+                    return std::pair<bool, iterator_t<Rng>>{cur != where, where};
                 }
             };
+            template<typename Rng>
+            struct element_pred
+            {
+                range_value_t<Rng> val_;
 
-            /// \relates split_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<split_fn>, split)
-        }
-        /// @}
+                template<typename S>
+                auto operator()(iterator_t<Rng> cur, S end) const ->
+                    CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                        requires Sentinel<S, iterator_t<Rng>>)
+                {
+                    RANGES_EXPECT(cur != end);
+                    bool const match = *cur == val_;
+                    if (match) ++cur;
+                    return std::pair<bool, iterator_t<Rng>>{match, cur};
+                }
+            };
+            template<typename Rng, typename Sub>
+            struct subrange_pred
+            {
+                all_t<Sub> sub_;
+                range_difference_t<Sub> len_;
+
+                subrange_pred() = default;
+                subrange_pred(Sub &&sub)
+                  : sub_(all(static_cast<Sub &&>(sub))), len_(distance(sub_))
+                {}
+                template<typename S>
+                auto operator()(iterator_t<Rng> cur, S end) const ->
+                    CPP_ret(std::pair<bool, iterator_t<Rng>>)(
+                        requires Sentinel<S, iterator_t<Rng>>)
+                {
+                    using P = std::pair<bool, iterator_t<Rng>>;
+                    RANGES_EXPECT(cur != end);
+                    if((bool) SizedSentinel<S, iterator_t<Rng>> && distance(cur, end) < len_)
+                        return P{false, cur};
+                    auto pat_cur = ranges::begin(sub_);
+                    auto pat_end = ranges::end(sub_);
+                    for(;; ++cur, ++pat_cur)
+                    {
+                        if(pat_cur == pat_end)
+                            return P{true, cur};
+                        if(cur == end || !(*cur == *pat_cur))
+                            return P{false, cur};
+                    }
+                }
+            };
+        public:
+            template<typename Rng, typename Fun>
+            auto operator()(Rng &&rng, Fun fun) const ->
+                CPP_ret(split_view<all_t<Rng>, Fun>)(
+                    requires ViewableRange<Rng> && SplitOnFunction<Rng, Fun>)
+            {
+                return {all(static_cast<Rng &&>(rng)), std::move(fun)};
+            }
+            template<typename Rng, typename Fun>
+            auto operator()(Rng &&rng, Fun fun) const ->
+                CPP_ret(split_view<all_t<Rng>, predicate_pred<Rng, Fun>>)(
+                    requires ViewableRange<Rng> && SplitOnPredicate<Rng, Fun>)
+            {
+                return {all(static_cast<Rng &&>(rng)),
+                        predicate_pred<Rng, Fun>{std::move(fun)}};
+            }
+            template<typename Rng>
+            auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
+                CPP_ret(split_view<all_t<Rng>, element_pred<Rng>>)(
+                    requires ViewableRange<Rng> && SplitOnElement<Rng>)
+            {
+                return {all(static_cast<Rng &&>(rng)), {std::move(val)}};
+            }
+            template<typename Rng, typename Sub>
+            auto operator()(Rng &&rng, Sub &&sub) const ->
+                CPP_ret(split_view<all_t<Rng>, subrange_pred<Rng, Sub>>)(
+                    requires ViewableRange<Rng> && SplitOnSubRange<Rng, Sub>)
+            {
+                return {all(static_cast<Rng &&>(rng)), {static_cast<Sub &&>(sub)}};
+            }
+        };
+
+        /// \relates split_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<split_fn>, split)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::split_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::split_view)
 
 #endif

@@ -28,43 +28,40 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        template<typename Rng>
+        using join_action_value_t_ =
+            meta::if_c<
+                (bool) ranges::Container<range_value_t<Rng>>,
+                range_value_t<Rng>,
+                std::vector<range_value_t<range_value_t<Rng>>>>;
+
+        struct join_fn
         {
+        public:
             template<typename Rng>
-            using join_action_value_t_ =
-                meta::if_c<
-                    (bool) ranges::Container<range_value_t<Rng>>,
-                    range_value_t<Rng>,
-                    std::vector<range_value_t<range_value_t<Rng>>>>;
-
-            struct join_fn
+            auto operator()(Rng &&rng) const -> CPP_ret(join_action_value_t_<Rng>)(
+                requires InputRange<Rng> &&
+                    InputRange<range_value_t<Rng>> &&
+                    Semiregular<join_action_value_t_<Rng>>)
             {
-            public:
-                template<typename Rng>
-                auto operator()(Rng &&rng) const -> CPP_ret(join_action_value_t_<Rng>)(
-                    requires InputRange<Rng> &&
-                        InputRange<range_value_t<Rng>> &&
-                        Semiregular<join_action_value_t_<Rng>>)
-                {
-                    join_action_value_t_<Rng> ret;
-                    auto end = ranges::end(rng);
-                    for(auto it = begin(rng); it != end; ++it)
-                        push_back(ret, *it);
-                    return ret;
-                }
-            };
+                join_action_value_t_<Rng> ret;
+                auto end = ranges::end(rng);
+                for(auto it = begin(rng); it != end; ++it)
+                    push_back(ret, *it);
+                return ret;
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates join_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<join_fn>, join)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates join_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<join_fn>, join)
     }
+    /// @}
 }
 
 #endif

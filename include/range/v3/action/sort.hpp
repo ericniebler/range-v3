@@ -25,40 +25,37 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct sort_fn
         {
-            struct sort_fn
+        private:
+            friend action_access;
+            template<typename C, typename P = identity>
+            static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})(
+                requires not Range<C>)
             {
-            private:
-                friend action_access;
-                template<typename C, typename P = identity>
-                static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})(
-                    requires not Range<C>)
-                {
-                    return std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)));
-                }
-            public:
-                CPP_template(typename Rng, typename C = less, typename P = identity)(
-                    requires ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
-                Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
-                {
-                    ranges::sort(rng, std::move(pred), std::move(proj));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
+                    protect(std::move(proj)));
+            }
+        public:
+            CPP_template(typename Rng, typename C = less, typename P = identity)(
+                requires ForwardRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+            Rng operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            {
+                ranges::sort(rng, std::move(pred), std::move(proj));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates sort_fn
-            /// \sa `action`
-            RANGES_INLINE_VARIABLE(action<sort_fn>, sort)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates sort_fn
+        /// \sa `action`
+        RANGES_INLINE_VARIABLE(action<sort_fn>, sort)
     }
+    /// @}
 }
 
 #endif

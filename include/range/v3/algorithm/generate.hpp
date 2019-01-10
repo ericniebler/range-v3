@@ -24,40 +24,37 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename O, typename F>
+    using generate_result = detail::out_fun_result<O, F>;
+
+    struct generate_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename O, typename F>
-        using generate_result = detail::out_fun_result<O, F>;
-
-        struct generate_fn
+        template<typename O, typename S, typename F>
+        auto operator()(O begin, S end, F fun) const ->
+            CPP_ret(generate_result<O, F>)(
+                requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
         {
-            template<typename O, typename S, typename F>
-            auto operator()(O begin, S end, F fun) const ->
-                CPP_ret(generate_result<O, F>)(
-                    requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
-            {
-                for(; begin != end; ++begin)
-                    *begin = invoke(fun);
-                return {detail::move(begin), detail::move(fun)};
-            }
+            for(; begin != end; ++begin)
+                *begin = invoke(fun);
+            return {detail::move(begin), detail::move(fun)};
+        }
 
-            template<typename Rng, typename F, typename O = iterator_t<Rng>>
-            auto operator()(Rng &&rng, F fun) const ->
-                CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
-                    requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
-            {
-                return {(*this)(begin(rng), end(rng), ref(fun)).out,
-                    detail::move(fun)};
-            }
-        };
+        template<typename Rng, typename F, typename O = iterator_t<Rng>>
+        auto operator()(Rng &&rng, F fun) const ->
+            CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
+                requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
+        {
+            return {(*this)(begin(rng), end(rng), ref(fun)).out,
+                detail::move(fun)};
+        }
+    };
 
-        /// \sa `generate_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(generate_fn, generate)
-        /// @}
-    } // namespace v3
+    /// \sa `generate_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(generate_fn, generate)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

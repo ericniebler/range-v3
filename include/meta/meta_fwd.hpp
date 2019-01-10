@@ -82,43 +82,39 @@
 
 namespace meta
 {
-    inline namespace v1
-    {
 #if META_CXX_INTEGER_SEQUENCE
-        using std::integer_sequence;
+    using std::integer_sequence;
 #else
-        template <typename T, T...>
-        struct integer_sequence;
+    template <typename T, T...>
+    struct integer_sequence;
 #endif
 
-        template <typename... Ts>
-        struct list;
+    template <typename... Ts>
+    struct list;
 
-        template <typename T>
-        struct id;
+    template <typename T>
+    struct id;
 
-        template <template <typename...> class>
-        struct quote;
+    template <template <typename...> class>
+    struct quote;
 
-        template <typename T, template <T...> class F>
-        struct quote_i;
+    template <typename T, template <T...> class F>
+    struct quote_i;
 
-        template <typename... Fs>
-        struct compose;
+    template <typename... Fs>
+    struct compose;
 
-        template <template <typename...> class C, typename... Ts>
-        struct defer;
+    template <template <typename...> class C, typename... Ts>
+    struct defer;
 
-        template <typename T, template <T...> class C, T... Is>
-        struct defer_i;
+    template <typename T, template <T...> class C, T... Is>
+    struct defer_i;
 
-        namespace extension
-        {
-            template <typename F, typename List>
-            struct apply;
-        }
-
-    } // inline namespace v1
+    namespace extension
+    {
+        template <typename F, typename List>
+        struct apply;
+    }
 } // namespace meta
 
 #endif

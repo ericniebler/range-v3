@@ -25,40 +25,37 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct min_element_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct min_element_fn
+        template<typename I, typename S, typename C = less, typename P = identity>
+        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C = less, typename P = identity>
-            auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectStrictWeakOrder<C, projected<I, P>>)
-            {
-                if(begin != end)
-                    for(auto tmp = next(begin); tmp != end; ++tmp)
-                        if(invoke(pred, invoke(proj, *tmp), invoke(proj, *begin)))
-                            begin = tmp;
-                return begin;
-            }
+            if(begin != end)
+                for(auto tmp = next(begin); tmp != end; ++tmp)
+                    if(invoke(pred, invoke(proj, *tmp), invoke(proj, *begin)))
+                        begin = tmp;
+            return begin;
+        }
 
-            template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires ForwardRange<Rng> &&
-                        IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C = less, typename P = identity>
+        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `min_element_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(min_element_fn, min_element)
-        /// @}
-    } // namespace v3
+    /// \sa `min_element_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(min_element_fn, min_element)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

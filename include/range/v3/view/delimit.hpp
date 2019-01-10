@@ -29,95 +29,92 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng, typename Val>
+    struct delimit_view
+      : view_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng, typename Val>
-        struct delimit_view
-          : view_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
+    private:
+        friend range_access;
+        Val value_;
+
+        struct sentinel_adaptor : adaptor_base
         {
-        private:
-            friend range_access;
-            Val value_;
-
-            struct sentinel_adaptor : adaptor_base
-            {
-                sentinel_adaptor() = default;
-                sentinel_adaptor(Val value)
-                  : value_(std::move(value))
-                {}
-                template<class I, class S>
-                bool empty(I const &it, S const &end) const
-                {
-                    return it == end || *it == value_;
-                }
-                Val value_;
-            };
-
-            sentinel_adaptor end_adaptor() const
-            {
-                return {value_};
-            }
-        public:
-            delimit_view() = default;
-            delimit_view(Rng rng, Val value)
-              : delimit_view::view_adaptor{std::move(rng)}
-              , value_(std::move(value))
+            sentinel_adaptor() = default;
+            sentinel_adaptor(Val value)
+              : value_(std::move(value))
             {}
+            template<class I, class S>
+            bool empty(I const &it, S const &end) const
+            {
+                return it == end || *it == value_;
+            }
+            Val value_;
         };
 
-        namespace view
+        sentinel_adaptor end_adaptor() const
         {
-            CPP_def
-            (
-                template(typename Rng, typename Val)
-                concept Delimitable,
-                    ViewableRange<Rng> &&
-                    EqualityComparableWith<Val, range_common_reference_t<Rng>>
-            );
-
-            struct delimit_impl_fn
-            {
-            private:
-                friend view_access;
-                template<typename Val>
-                static auto bind(delimit_impl_fn delimit, Val value)
-                {
-                    return make_pipeable(std::bind(delimit, std::placeholders::_1,
-                        std::move(value)));
-                }
-            public:
-                template<typename Rng, typename Val>
-                auto operator()(Rng &&rng, Val value) const ->
-                    CPP_ret(delimit_view<all_t<Rng>, Val>)(
-                        requires Delimitable<Rng, Val>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), std::move(value)};
-                }
-            };
-
-            struct delimit_fn : view<delimit_impl_fn>
-            {
-                using view<delimit_impl_fn>::operator();
-
-                template<typename I, typename Val>
-                auto operator()(I begin, Val value) const ->
-                    CPP_ret(delimit_view<subrange<I, unreachable>, Val>)(
-                        requires InputIterator<I>)
-                {
-                    return {{std::move(begin), {}}, std::move(value)};
-                }
-            };
-
-            /// \relates delimit_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(delimit_fn, delimit)
+            return {value_};
         }
-        /// @}
+    public:
+        delimit_view() = default;
+        delimit_view(Rng rng, Val value)
+          : delimit_view::view_adaptor{std::move(rng)}
+          , value_(std::move(value))
+        {}
+    };
+
+    namespace view
+    {
+        CPP_def
+        (
+            template(typename Rng, typename Val)
+            concept Delimitable,
+                ViewableRange<Rng> &&
+                EqualityComparableWith<Val, range_common_reference_t<Rng>>
+        );
+
+        struct delimit_impl_fn
+        {
+        private:
+            friend view_access;
+            template<typename Val>
+            static auto bind(delimit_impl_fn delimit, Val value)
+            {
+                return make_pipeable(std::bind(delimit, std::placeholders::_1,
+                    std::move(value)));
+            }
+        public:
+            template<typename Rng, typename Val>
+            auto operator()(Rng &&rng, Val value) const ->
+                CPP_ret(delimit_view<all_t<Rng>, Val>)(
+                    requires Delimitable<Rng, Val>)
+            {
+                return {all(static_cast<Rng &&>(rng)), std::move(value)};
+            }
+        };
+
+        struct delimit_fn : view<delimit_impl_fn>
+        {
+            using view<delimit_impl_fn>::operator();
+
+            template<typename I, typename Val>
+            auto operator()(I begin, Val value) const ->
+                CPP_ret(delimit_view<subrange<I, unreachable>, Val>)(
+                    requires InputIterator<I>)
+            {
+                return {{std::move(begin), {}}, std::move(value)};
+            }
+        };
+
+        /// \relates delimit_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(delimit_fn, delimit)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::delimit_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::delimit_view)
 
 #endif

@@ -25,40 +25,37 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct all_of_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct all_of_fn
+        template<typename I, typename S, typename F, typename P = identity>
+        auto operator()(I first, S last, F pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<F, projected<I, P> >)
         {
-            template<typename I, typename S, typename F, typename P = identity>
-            auto operator()(I first, S last, F pred, P proj = P{}) const ->
-                CPP_ret(bool)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<F, projected<I, P> >)
-            {
-                for(; first != last; ++first)
-                    if(!invoke(pred, invoke(proj, *first)))
-                        break;
-                return first == last;
-            }
+            for(; first != last; ++first)
+                if(!invoke(pred, invoke(proj, *first)))
+                    break;
+            return first == last;
+        }
 
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-                CPP_ret(bool)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename F, typename P = identity>
+        auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `all_of_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(all_of_fn, all_of)
-        /// @}
+    /// \sa `all_of_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(all_of_fn, all_of)
+    /// @}
 
-    } // inline namespace v3
 } // namespace ranges
 
 #endif // include guard

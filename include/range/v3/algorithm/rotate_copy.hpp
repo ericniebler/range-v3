@@ -27,42 +27,39 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename O>
+    using rotate_copy_result = detail::in_out_result<I, O>;
+
+    struct rotate_copy_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I, typename O>
-        using rotate_copy_result = detail::in_out_result<I, O>;
-
-        struct rotate_copy_fn
+        template<typename I, typename S, typename O, typename P = identity>
+        auto operator()(I begin, I middle, S end, O out) const ->
+            CPP_ret(rotate_copy_result<I, O>)(
+                requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
         {
-            template<typename I, typename S, typename O, typename P = identity>
-            auto operator()(I begin, I middle, S end, O out) const ->
-                CPP_ret(rotate_copy_result<I, O>)(
-                    requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
-            {
-                auto res = copy(middle, std::move(end), std::move(out));
-                return {
-                    std::move(res.in),
-                    copy(std::move(begin), middle, std::move(res.out)).out
-                };
-            }
+            auto res = copy(middle, std::move(end), std::move(out));
+            return {
+                std::move(res.in),
+                copy(std::move(begin), middle, std::move(res.out)).out
+            };
+        }
 
-            template<typename Rng, typename O, typename P = identity>
-            auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
-                CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(
-                    requires Range<Rng> && WeaklyIncrementable<O> &&
-                        IndirectlyCopyable<iterator_t<Rng>, O>)
-            {
-                return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
-            }
-        };
+        template<typename Rng, typename O, typename P = identity>
+        auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
+            CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(
+                requires Range<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        {
+            return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
+        }
+    };
 
-        /// \sa `rotate_copy_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
-        /// @}
-    } // namespace v3
+    /// \sa `rotate_copy_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
+    /// @}
 } // namespace ranges
 
 #endif // include guard
