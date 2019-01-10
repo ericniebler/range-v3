@@ -20,7 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
