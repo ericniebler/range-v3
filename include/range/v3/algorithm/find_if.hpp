@@ -25,51 +25,48 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct find_if_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct find_if_fn
+        /// \brief template function \c find_fn::operator()
+        ///
+        /// range-based version of the \c find std algorithm
+        ///
+        /// \pre `Rng` is a model of the `Range` concept
+        /// \pre `I` is a model of the `InputIterator` concept
+        /// \pre `S` is a model of the `Sentinel<I>` concept
+        /// \pre `P` is a model of the `Invocable<V>` concept, where `V` is the
+        ///      value type of I.
+        /// \pre `F` models `Predicate<X>`, where `X` is the result type
+        ///      of `Invocable<P, V>`
+        template<typename I, typename S, typename F, typename P = identity>
+        auto operator()(I begin, S end, F pred, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<F, projected<I, P>>)
         {
-            /// \brief template function \c find_fn::operator()
-            ///
-            /// range-based version of the \c find std algorithm
-            ///
-            /// \pre `Rng` is a model of the `Range` concept
-            /// \pre `I` is a model of the `InputIterator` concept
-            /// \pre `S` is a model of the `Sentinel<I>` concept
-            /// \pre `P` is a model of the `Invocable<V>` concept, where `V` is the
-            ///      value type of I.
-            /// \pre `F` models `Predicate<X>`, where `X` is the result type
-            ///      of `Invocable<P, V>`
-            template<typename I, typename S, typename F, typename P = identity>
-            auto operator()(I begin, S end, F pred, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<F, projected<I, P>>)
-            {
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        break;
-                return begin;
-            }
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    break;
+            return begin;
+        }
 
-            /// \overload
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        /// \overload
+        template<typename Rng, typename F, typename P = identity>
+        auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `find_if_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(find_if_fn, find_if)
-        /// @}
-    } // namespace v3
+    /// \sa `find_if_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(find_if_fn, find_if)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

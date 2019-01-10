@@ -26,41 +26,38 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct take_fn
         {
-            struct take_fn
+        private:
+            friend action_access;
+            template<typename Int>
+            static auto CPP_fun(bind)(take_fn take, Int n)(
+                requires Integral<Int>)
             {
-            private:
-                friend action_access;
-                template<typename Int>
-                static auto CPP_fun(bind)(take_fn take, Int n)(
-                    requires Integral<Int>)
-                {
-                    return std::bind(take, std::placeholders::_1, n);
-                }
-            public:
-                CPP_template(typename Rng)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
-                Rng operator()(Rng &&rng, range_difference_t<Rng> n) const
-                {
-                    RANGES_EXPECT(n >= 0);
-                    ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(take, std::placeholders::_1, n);
+            }
+        public:
+            CPP_template(typename Rng)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, sentinel_t<Rng>>)
+            Rng operator()(Rng &&rng, range_difference_t<Rng> n) const
+            {
+                RANGES_EXPECT(n >= 0);
+                ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates take_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<take_fn>, take)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates take_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<take_fn>, take)
     }
+    /// @}
 }
 
 #endif

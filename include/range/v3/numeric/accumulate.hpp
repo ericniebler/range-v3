@@ -24,39 +24,36 @@
 
 namespace ranges
 {
-    inline namespace v3
+    CPP_def
+    (
+        template(typename I, typename T, typename Op = plus, typename P = identity)
+        (concept Accumulateable)(I, T, Op, P),
+            InputIterator<I> &&
+            IndirectBinaryInvocable_<Op, T *, projected<I, P>> &&
+            Assignable<T&, indirect_result_t<Op &, T *, projected<I, P>>>
+    );
+
+    struct accumulate_fn
     {
-        CPP_def
-        (
-            template(typename I, typename T, typename Op = plus, typename P = identity)
-            (concept Accumulateable)(I, T, Op, P),
-                InputIterator<I> &&
-                IndirectBinaryInvocable_<Op, T *, projected<I, P>> &&
-                Assignable<T&, indirect_result_t<Op &, T *, projected<I, P>>>
-        );
-
-        struct accumulate_fn
+        CPP_template(typename I, typename S, typename T, typename Op = plus, typename P = identity)(
+            requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
+        T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
         {
-            CPP_template(typename I, typename S, typename T, typename Op = plus, typename P = identity)(
-                requires Sentinel<S, I> && Accumulateable<I, T, Op, P>)
-            T operator()(I begin, S end, T init, Op op = Op{}, P proj = P{}) const
-            {
-                for(; begin != end; ++begin)
-                    init = invoke(op, init, invoke(proj, *begin));
-                return init;
-            }
+            for(; begin != end; ++begin)
+                init = invoke(op, init, invoke(proj, *begin));
+            return init;
+        }
 
-            CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)(
-                requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
-            T operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(init), std::move(op),
-                    std::move(proj));
-            }
-        };
+        CPP_template(typename Rng, typename T, typename Op = plus, typename P = identity)(
+            requires Range<Rng> && Accumulateable<iterator_t<Rng>, T, Op, P>)
+        T operator()(Rng &&rng, T init, Op op = Op{}, P proj = P{}) const
+        {
+            return (*this)(begin(rng), end(rng), std::move(init), std::move(op),
+                std::move(proj));
+        }
+    };
 
-        RANGES_INLINE_VARIABLE(accumulate_fn, accumulate)
-    }
+    RANGES_INLINE_VARIABLE(accumulate_fn, accumulate)
 }
 
 #endif

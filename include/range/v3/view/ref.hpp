@@ -28,121 +28,118 @@ RANGES_DISABLE_WARNINGS
 
 namespace ranges
 {
-    inline namespace v3
+    template<typename Rng>
+    struct ref_view;
+
+    /// \cond
+    namespace _ref_view_
     {
+        struct adl_hook
+        {};
+
         template<typename Rng>
-        struct ref_view;
-
-        /// \cond
-        namespace _ref_view_
+        constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng)
+            noexcept(noexcept(rng.begin()))
         {
-            struct adl_hook
-            {};
-
-            template<typename Rng>
-            constexpr iterator_t<Rng> begin(ref_view<Rng> &&rng)
-                noexcept(noexcept(rng.begin()))
-            {
-                return rng.begin();
-            }
-            template<typename Rng>
-            constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng)
-                noexcept(noexcept(rng.begin()))
-            {
-                return rng.begin();
-            }
-            template<typename Rng>
-            constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng)
-                noexcept(noexcept(rng.end()))
-            {
-                return rng.end();
-            }
-            template<typename Rng>
-            constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng)
-                noexcept(noexcept(rng.end()))
-            {
-                return rng.end();
-            }
+            return rng.begin();
         }
-        /// \endcond
-
-        /// \addtogroup group-views
-        /// @{
         template<typename Rng>
-        struct ref_view
-          : view_interface<ref_view<Rng>>
-          , private _ref_view_::adl_hook
+        constexpr iterator_t<Rng> begin(ref_view<Rng> const &&rng)
+            noexcept(noexcept(rng.begin()))
         {
-        private:
-            CPP_assert(Range<Rng>);
-            static_assert(std::is_object<Rng>::value, "");
-            Rng *rng_ = nullptr; // exposition only
-        public:
-            constexpr ref_view() noexcept = default;
-            constexpr ref_view(Rng &rng) noexcept
-              : rng_(std::addressof(rng))
-            {}
-            constexpr Rng &base() const noexcept
+            return rng.begin();
+        }
+        template<typename Rng>
+        constexpr sentinel_t<Rng> end(ref_view<Rng> &&rng)
+            noexcept(noexcept(rng.end()))
+        {
+            return rng.end();
+        }
+        template<typename Rng>
+        constexpr sentinel_t<Rng> end(ref_view<Rng> const &&rng)
+            noexcept(noexcept(rng.end()))
+        {
+            return rng.end();
+        }
+    }
+    /// \endcond
+
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng>
+    struct ref_view
+      : view_interface<ref_view<Rng>>
+      , private _ref_view_::adl_hook
+    {
+    private:
+        CPP_assert(Range<Rng>);
+        static_assert(std::is_object<Rng>::value, "");
+        Rng *rng_ = nullptr; // exposition only
+    public:
+        constexpr ref_view() noexcept = default;
+        constexpr ref_view(Rng &rng) noexcept
+          : rng_(std::addressof(rng))
+        {}
+        constexpr Rng &base() const noexcept
+        {
+            return *rng_;
+        }
+        constexpr iterator_t<Rng> begin() const
+            noexcept(noexcept(ranges::begin(*rng_)))
+        {
+            return ranges::begin(*rng_);
+        }
+        constexpr sentinel_t<Rng> end() const
+            noexcept(noexcept(ranges::end(*rng_)))
+        {
+            return ranges::end(*rng_);
+        }
+        constexpr auto empty() const
+            noexcept(noexcept(ranges::empty(*rng_))) ->
+            CPP_ret(bool)(
+                requires detail::CanEmpty<Rng>)
+        {
+            return ranges::empty(*rng_);
+        }
+        CPP_member
+        constexpr auto CPP_fun(size)() (const
+            noexcept(noexcept(ranges::size(*rng_)))
+            requires SizedRange<Rng>)
+        {
+            return ranges::size(*rng_);
+        }
+        CPP_member
+        constexpr auto CPP_fun(data)() (const
+            noexcept(noexcept(ranges::data(*rng_)))
+            requires ContiguousRange<Rng>)
+        {
+            return ranges::data(*rng_);
+        }
+    };
+
+    namespace view
+    {
+        struct ref_fn
+        {
+            template<typename Rng>
+            constexpr auto operator()(Rng &rng) const noexcept ->
+                CPP_ret(ref_view<Rng>)(
+                    requires Range<Rng>)
             {
-                return *rng_;
+                return ref_view<Rng>(rng);
             }
-            constexpr iterator_t<Rng> begin() const
-                noexcept(noexcept(ranges::begin(*rng_)))
-            {
-                return ranges::begin(*rng_);
-            }
-            constexpr sentinel_t<Rng> end() const
-                noexcept(noexcept(ranges::end(*rng_)))
-            {
-                return ranges::end(*rng_);
-            }
-            constexpr auto empty() const
-                noexcept(noexcept(ranges::empty(*rng_))) ->
-                CPP_ret(bool)(
-                    requires detail::CanEmpty<Rng>)
-            {
-                return ranges::empty(*rng_);
-            }
-            CPP_member
-            constexpr auto CPP_fun(size)() (const
-                noexcept(noexcept(ranges::size(*rng_)))
-                requires SizedRange<Rng>)
-            {
-                return ranges::size(*rng_);
-            }
-            CPP_member
-            constexpr auto CPP_fun(data)() (const
-                noexcept(noexcept(ranges::data(*rng_)))
-                requires ContiguousRange<Rng>)
-            {
-                return ranges::data(*rng_);
-            }
+            template<typename Rng>
+            void operator()(Rng const &&rng) const = delete;
         };
 
-        namespace view
-        {
-            struct ref_fn
-            {
-                template<typename Rng>
-                constexpr auto operator()(Rng &rng) const noexcept ->
-                    CPP_ret(ref_view<Rng>)(
-                        requires Range<Rng>)
-                {
-                    return ref_view<Rng>(rng);
-                }
-                template<typename Rng>
-                void operator()(Rng const &&rng) const = delete;
-            };
-
-            /// \relates const_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
-        }
+        /// \relates const_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
     }
 }
 
 RANGES_RE_ENABLE_WARNINGS
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::ref_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::ref_view)
 
 #endif

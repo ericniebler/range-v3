@@ -17,37 +17,34 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    template<typename Rng>
+    using bounded_view
+        RANGES_DEPRECATED("The name bounded_view is deprecated. "
+                          "Please use common_view instead.") =
+            common_view<Rng>;
+    /// \endcond
+
+    namespace view
     {
         /// \cond
-        template<typename Rng>
-        using bounded_view
-            RANGES_DEPRECATED("The name bounded_view is deprecated. "
-                              "Please use common_view instead.") =
-                common_view<Rng>;
+        inline namespace
+        {
+            RANGES_DEPRECATED("The name view::bounded is deprecated. "
+                              "Please use view::common instead.")
+            constexpr auto &bounded = common;
+        }
         /// \endcond
 
-        namespace view
-        {
-            /// \cond
-            inline namespace
-            {
-                RANGES_DEPRECATED("The name view::bounded is deprecated. "
-                                  "Please use view::common instead.")
-                constexpr auto &bounded = common;
-            }
-            /// \endcond
-
-            /// \cond
-            template<typename Rng>
-            using bounded_t
-                RANGES_DEPRECATED("The name view::bounded_t is deprecated. "
-                                  "Please use view::common_t instead.") =
-                    decltype(common(std::declval<Rng>()));
-            /// \endcond
-        }
-        /// @}
+        /// \cond
+        template<typename Rng>
+        using bounded_t
+            RANGES_DEPRECATED("The name view::bounded_t is deprecated. "
+                              "Please use view::common_t instead.") =
+                decltype(common(std::declval<Rng>()));
+        /// \endcond
     }
+    /// @}
 }
 
 #endif

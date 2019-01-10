@@ -33,42 +33,39 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct is_partitioned_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct is_partitioned_fn
+        template<typename I, typename S, typename C, typename P = identity>
+        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C, typename P = identity>
-            auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-                CPP_ret(bool)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
-            {
-                for(; begin != end; ++begin)
-                    if(!invoke(pred, invoke(proj, *begin)))
-                        break;
-                for(; begin != end; ++begin)
-                    if(invoke(pred, invoke(proj, *begin)))
-                        return false;
-                return true;
-            }
+            for(; begin != end; ++begin)
+                if(!invoke(pred, invoke(proj, *begin)))
+                    break;
+            for(; begin != end; ++begin)
+                if(invoke(pred, invoke(proj, *begin)))
+                    return false;
+            return true;
+        }
 
-            template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-                CPP_ret(bool)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(bool)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `is_partitioned_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
-        /// @}
-    } // namespace v3
+    /// \sa `is_partitioned_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

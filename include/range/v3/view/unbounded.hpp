@@ -20,52 +20,49 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename I>
+    struct unbounded_view
+      : view_interface<unbounded_view<I>, infinite>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename I>
-        struct unbounded_view
-          : view_interface<unbounded_view<I>, infinite>
+    private:
+        I it_;
+    public:
+        unbounded_view() = default;
+        constexpr explicit unbounded_view(I it)
+          : it_(detail::move(it))
+        {}
+        constexpr I begin() const
         {
-        private:
-            I it_;
-        public:
-            unbounded_view() = default;
-            constexpr explicit unbounded_view(I it)
-              : it_(detail::move(it))
-            {}
-            constexpr I begin() const
+            return it_;
+        }
+        constexpr unreachable end() const
+        {
+            return {};
+        }
+    };
+
+    namespace view
+    {
+        struct unbounded_fn
+        {
+            template<typename I>
+            constexpr auto operator()(I it) const ->
+                CPP_ret(unbounded_view<I>)(
+                    requires InputIterator<I>)
             {
-                return it_;
-            }
-            constexpr unreachable end() const
-            {
-                return {};
+                return unbounded_view<I>{detail::move(it)};
             }
         };
 
-        namespace view
-        {
-            struct unbounded_fn
-            {
-                template<typename I>
-                constexpr auto operator()(I it) const ->
-                    CPP_ret(unbounded_view<I>)(
-                        requires InputIterator<I>)
-                {
-                    return unbounded_view<I>{detail::move(it)};
-                }
-            };
-
-            /// \relates unbounded_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(unbounded_fn, unbounded)
-        }
-        /// @}
+        /// \relates unbounded_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(unbounded_fn, unbounded)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::unbounded_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::unbounded_view)
 
 #endif

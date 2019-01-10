@@ -30,96 +30,93 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng>
+    struct move_view
+      : view_adaptor<move_view<Rng>, Rng>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng>
-        struct move_view
-          : view_adaptor<move_view<Rng>, Rng>
+    private:
+        friend range_access;
+        template<bool Const>
+        struct adaptor
+          : adaptor_base
         {
-        private:
-            friend range_access;
-            template<bool Const>
-            struct adaptor
-              : adaptor_base
-            {
-                adaptor() = default;
-                template<bool Other>
-                constexpr CPP_ctor(adaptor)(adaptor<Other>)(
-                    requires Const && (!Other))
-                {}
-                using CRng = meta::const_if_c<Const, Rng>;
-                using value_type = range_value_t<Rng>;
-                range_rvalue_reference_t<CRng> read(iterator_t<CRng> const &it) const
-                {
-                    return ranges::iter_move(it);
-                }
-                range_rvalue_reference_t<CRng> iter_move(iterator_t<CRng> const &it) const
-                {
-                    return ranges::iter_move(it);
-                }
-            };
-            adaptor<simple_view<Rng>()> begin_adaptor()
-            {
-                return {};
-            }
-            adaptor<simple_view<Rng>()> end_adaptor()
-            {
-                return {};
-            }
-            CPP_member
-            auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
-                requires InputRange<Rng const>)
-            {
-                return {};
-            }
-            CPP_member
-            auto end_adaptor() const -> CPP_ret(adaptor<true>)(
-                requires InputRange<Rng const>)
-            {
-                return {};
-            }
-        public:
-            move_view() = default;
-            explicit move_view(Rng rng)
-              : move_view::view_adaptor{std::move(rng)}
+            adaptor() = default;
+            template<bool Other>
+            constexpr CPP_ctor(adaptor)(adaptor<Other>)(
+                requires Const && (!Other))
             {}
-            CPP_member
-            auto CPP_fun(size)() (const
-                requires SizedRange<Rng const>)
+            using CRng = meta::const_if_c<Const, Rng>;
+            using value_type = range_value_t<Rng>;
+            range_rvalue_reference_t<CRng> read(iterator_t<CRng> const &it) const
             {
-                return ranges::size(this->base());
+                return ranges::iter_move(it);
             }
-            CPP_member
-            auto CPP_fun(size)() (
-                requires SizedRange<Rng>)
+            range_rvalue_reference_t<CRng> iter_move(iterator_t<CRng> const &it) const
             {
-                return ranges::size(this->base());
+                return ranges::iter_move(it);
+            }
+        };
+        adaptor<simple_view<Rng>()> begin_adaptor()
+        {
+            return {};
+        }
+        adaptor<simple_view<Rng>()> end_adaptor()
+        {
+            return {};
+        }
+        CPP_member
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+            requires InputRange<Rng const>)
+        {
+            return {};
+        }
+        CPP_member
+        auto end_adaptor() const -> CPP_ret(adaptor<true>)(
+            requires InputRange<Rng const>)
+        {
+            return {};
+        }
+    public:
+        move_view() = default;
+        explicit move_view(Rng rng)
+          : move_view::view_adaptor{std::move(rng)}
+        {}
+        CPP_member
+        auto CPP_fun(size)() (const
+            requires SizedRange<Rng const>)
+        {
+            return ranges::size(this->base());
+        }
+        CPP_member
+        auto CPP_fun(size)() (
+            requires SizedRange<Rng>)
+        {
+            return ranges::size(this->base());
+        }
+    };
+
+    namespace view
+    {
+        struct move_fn
+        {
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(move_view<all_t<Rng>>)(
+                    requires ViewableRange<Rng> && InputRange<Rng>)
+            {
+                return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
         };
 
-        namespace view
-        {
-            struct move_fn
-            {
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(move_view<all_t<Rng>>)(
-                        requires ViewableRange<Rng> && InputRange<Rng>)
-                {
-                    return move_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
-                }
-            };
-
-            /// \relates move_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<move_fn>, move)
-        }
-        /// @}
+        /// \relates move_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<move_fn>, move)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::move_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::move_view)
 
 #endif

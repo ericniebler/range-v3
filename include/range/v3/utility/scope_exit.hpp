@@ -20,75 +20,72 @@
 
 namespace ranges
 {
-    inline namespace v3
+    template<typename Fun>
+    struct scope_exit
     {
-        template<typename Fun>
-        struct scope_exit
+    private:
+        using nothrow_move_t = std::is_nothrow_move_constructible<Fun>;
+        using nothrow_copy_t = std::is_nothrow_copy_constructible<Fun>;
+
+        Fun fun_;
+        bool dismissed_{false};
+
+        using ref_t = decltype(std::ref(std::declval<Fun const &>()));
+        using guard = scope_exit<ref_t>;
+
+        scope_exit(Fun const &fun, guard &&g)
+          : fun_(fun)
         {
-        private:
-            using nothrow_move_t = std::is_nothrow_move_constructible<Fun>;
-            using nothrow_copy_t = std::is_nothrow_copy_constructible<Fun>;
-
-            Fun fun_;
-            bool dismissed_{false};
-
-            using ref_t = decltype(std::ref(std::declval<Fun const &>()));
-            using guard = scope_exit<ref_t>;
-
-            scope_exit(Fun const &fun, guard &&g)
-              : fun_(fun)
-            {
-                g.dismiss();
-            }
-
-            scope_exit(Fun const &fun, std::false_type)
-              : scope_exit(fun, guard{std::ref(fun)})
-            {}
-
-            scope_exit(Fun const &fun, std::true_type) noexcept
-              : fun_(fun)
-            {}
-
-            scope_exit(Fun &&fun, std::true_type) noexcept
-              : fun_(std::move(fun))
-            {}
-        public:
-            explicit scope_exit(Fun const &fun)
-                noexcept(noexcept(scope_exit(fun, nothrow_copy_t{})))
-              : scope_exit(fun, nothrow_copy_t{})
-            {}
-
-            explicit scope_exit(Fun &&fun)
-                noexcept(noexcept(scope_exit(std::move(fun), nothrow_move_t{})))
-              : scope_exit(std::move(fun), nothrow_move_t{})
-            {}
-
-            scope_exit(scope_exit const &) = delete;
-
-            scope_exit(scope_exit &&that)
-                noexcept(std::is_nothrow_move_constructible<Fun>::value)
-              : scope_exit(std::move((that.dismiss(), that)).fun_)
-            {}
-
-            ~scope_exit()
-            {
-                if(!dismissed_)
-                    fun_();
-            }
-
-            void dismiss() noexcept
-            {
-                dismissed_ = true;
-            }
-        };
-
-        template<typename Fun,
-            typename ScopeExit = scope_exit<meta::_t<std::decay<Fun>>>>
-        ScopeExit make_scope_exit(Fun &&fun)
-            noexcept(noexcept(ScopeExit(ScopeExit((Fun &&) fun))))
-        {
-            return ScopeExit((Fun &&) fun);
+            g.dismiss();
         }
+
+        scope_exit(Fun const &fun, std::false_type)
+          : scope_exit(fun, guard{std::ref(fun)})
+        {}
+
+        scope_exit(Fun const &fun, std::true_type) noexcept
+          : fun_(fun)
+        {}
+
+        scope_exit(Fun &&fun, std::true_type) noexcept
+          : fun_(std::move(fun))
+        {}
+    public:
+        explicit scope_exit(Fun const &fun)
+            noexcept(noexcept(scope_exit(fun, nothrow_copy_t{})))
+          : scope_exit(fun, nothrow_copy_t{})
+        {}
+
+        explicit scope_exit(Fun &&fun)
+            noexcept(noexcept(scope_exit(std::move(fun), nothrow_move_t{})))
+          : scope_exit(std::move(fun), nothrow_move_t{})
+        {}
+
+        scope_exit(scope_exit const &) = delete;
+
+        scope_exit(scope_exit &&that)
+            noexcept(std::is_nothrow_move_constructible<Fun>::value)
+          : scope_exit(std::move((that.dismiss(), that)).fun_)
+        {}
+
+        ~scope_exit()
+        {
+            if(!dismissed_)
+                fun_();
+        }
+
+        void dismiss() noexcept
+        {
+            dismissed_ = true;
+        }
+    };
+
+    template<typename Fun,
+        typename ScopeExit = scope_exit<meta::_t<std::decay<Fun>>>>
+    ScopeExit make_scope_exit(Fun &&fun)
+        noexcept(noexcept(ScopeExit(ScopeExit((Fun &&) fun))))
+    {
+        return ScopeExit((Fun &&) fun);
     }
 }
 

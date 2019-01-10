@@ -21,18 +21,15 @@
 
 namespace ranges
 {
-    inline namespace v3
+    namespace view
     {
-        namespace view
-        {
-            /// Given a source range, unary predicate, and optional projection,
-            /// present a view of the elements that satisfy the predicate.
-            using filter_fn = remove_if_fn_<not_fn_fn>;
+        /// Given a source range, unary predicate, and optional projection,
+        /// present a view of the elements that satisfy the predicate.
+        using filter_fn = remove_if_fn_<not_fn_fn>;
 
-            /// \relates filter_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
-        }
+        /// \relates filter_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<filter_fn>, filter)
     }
 }
 

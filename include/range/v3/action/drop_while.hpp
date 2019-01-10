@@ -27,42 +27,39 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct drop_while_fn
         {
-            struct drop_while_fn
+        private:
+            friend action_access;
+            template<typename Fun>
+            static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)(
+                requires !Range<Fun>)
             {
-            private:
-                friend action_access;
-                template<typename Fun>
-                static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)(
-                    requires !Range<Fun>)
-                {
-                    return std::bind(drop_while, std::placeholders::_1, std::move(fun));
-                }
-            public:
-                template<typename Rng, typename Fun>
-                auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
-                    requires ForwardRange<Rng> &&
-                        IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
-                {
-                    ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
-                        std::move(fun)));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(drop_while, std::placeholders::_1, std::move(fun));
+            }
+        public:
+            template<typename Rng, typename Fun>
+            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
+                requires ForwardRange<Rng> &&
+                    IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            {
+                ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
+                    std::move(fun)));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates drop_while_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates drop_while_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<drop_while_fn>, drop_while)
     }
+    /// @}
 }
 
 #endif

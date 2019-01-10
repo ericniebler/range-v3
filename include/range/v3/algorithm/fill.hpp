@@ -22,36 +22,33 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct fill_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct fill_fn
+        template<typename O, typename S, typename V>
+        auto operator()(O begin, S end, V const & val) const ->
+            CPP_ret(O)(
+                requires OutputIterator<O, V const &> && Sentinel<S, O>)
         {
-            template<typename O, typename S, typename V>
-            auto operator()(O begin, S end, V const & val) const ->
-                CPP_ret(O)(
-                    requires OutputIterator<O, V const &> && Sentinel<S, O>)
-            {
-                for(; begin != end; ++begin)
-                    *begin = val;
-                return begin;
-            }
+            for(; begin != end; ++begin)
+                *begin = val;
+            return begin;
+        }
 
-            template<typename Rng, typename V>
-            auto operator()(Rng &&rng, V const & val) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires OutputRange<Rng, V const &>)
-            {
-                return (*this)(begin(rng), end(rng), val);
-            }
-        };
+        template<typename Rng, typename V>
+        auto operator()(Rng &&rng, V const & val) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires OutputRange<Rng, V const &>)
+        {
+            return (*this)(begin(rng), end(rng), val);
+        }
+    };
 
-        /// \sa `fill_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(fill_fn, fill)
-        /// @}
-    } // namespace v3
+    /// \sa `fill_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(fill_fn, fill)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

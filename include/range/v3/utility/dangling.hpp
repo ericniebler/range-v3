@@ -21,41 +21,38 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \ingroup group-core
+    /// A wrapper for an iterator or a sentinel into a range that may
+    /// no longer be valid.
+    struct dangling
     {
-        /// \ingroup group-core
-        /// A wrapper for an iterator or a sentinel into a range that may
-        /// no longer be valid.
-        struct dangling
-        {
-            dangling() = default;
-            /// Implicit converting constructor; ignores argument
-            template<typename T>
-            constexpr CPP_ctor(dangling)(T &&)(
-                requires NotSameAs_<T, dangling>)
-            {}
-        };
+        dangling() = default;
+        /// Implicit converting constructor; ignores argument
+        template<typename T>
+        constexpr CPP_ctor(dangling)(T &&)(
+            requires NotSameAs_<T, dangling>)
+        {}
+    };
 
-        /// \cond
-        struct _sanitize_fn
+    /// \cond
+    struct _sanitize_fn
+    {
+        template<typename T>
+        constexpr T &&operator()(T &&t) const noexcept
         {
-            template<typename T>
-            constexpr T &&operator()(T &&t) const noexcept
-            {
-                return static_cast<T &&>(t);
-            }
-        };
-
-        using sanitize_fn RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.") =
-            _sanitize_fn;
-
-        inline namespace
-        {
-            RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.")
-            constexpr auto &sanitize = static_const<_sanitize_fn>::value;
+            return static_cast<T &&>(t);
         }
-        /// \endcond
+    };
+
+    using sanitize_fn RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.") =
+        _sanitize_fn;
+
+    inline namespace
+    {
+        RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.")
+        constexpr auto &sanitize = static_const<_sanitize_fn>::value;
     }
+    /// \endcond
 }
 
 #endif

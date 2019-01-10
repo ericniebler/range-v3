@@ -22,19 +22,16 @@ RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
 
 namespace ranges
 {
-    inline namespace v3
-    {
-        template<typename... Ts>
-        using tagged_tuple RANGES_DEPRECATED("ranges::tagged_tuple is deprecated.") =
-            tagged<std::tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
+    template<typename... Ts>
+    using tagged_tuple RANGES_DEPRECATED("ranges::tagged_tuple is deprecated.") =
+        tagged<std::tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
 
-        template<typename...Tags, typename...Ts>
-        RANGES_DEPRECATED("ranges::make_tagged_tuple is deprecated.")
-        constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
-        make_tagged_tuple(Ts &&... ts)
-        {
-            return tagged_tuple<Tags(bind_element_t<Ts>)...>{static_cast<Ts &&>(ts)...};
-        }
+    template<typename...Tags, typename...Ts>
+    RANGES_DEPRECATED("ranges::make_tagged_tuple is deprecated.")
+    constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
+    make_tagged_tuple(Ts &&... ts)
+    {
+        return tagged_tuple<Tags(bind_element_t<Ts>)...>{static_cast<Ts &&>(ts)...};
     }
 }
 

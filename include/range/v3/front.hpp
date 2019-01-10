@@ -22,24 +22,21 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \ingroup group-core
+    struct front_fn
     {
-        /// \ingroup group-core
-        struct front_fn
+        /// \return `*begin(rng)`
+        CPP_template(typename Rng)(
+            requires ForwardRange<Rng>)
+        constexpr range_reference_t<Rng> operator()(Rng &&rng) const
         {
-            /// \return `*begin(rng)`
-            CPP_template(typename Rng)(
-                requires ForwardRange<Rng>)
-            constexpr range_reference_t<Rng> operator()(Rng &&rng) const
-            {
-                return *begin(rng);
-            }
-        };
+            return *begin(rng);
+        }
+    };
 
-        /// \ingroup group-core
-        /// \sa `front_fn`
-        RANGES_INLINE_VARIABLE(front_fn, front)
-    }
+    /// \ingroup group-core
+    /// \sa `front_fn`
+    RANGES_INLINE_VARIABLE(front_fn, front)
 }
 
 #endif

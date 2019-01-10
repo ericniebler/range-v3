@@ -26,42 +26,39 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct drop_fn
         {
-            struct drop_fn
+        private:
+            friend action_access;
+            template<typename Int>
+            static auto CPP_fun(bind)(drop_fn drop, Int n)(
+                requires Integral<Int>)
             {
-            private:
-                friend action_access;
-                template<typename Int>
-                static auto CPP_fun(bind)(drop_fn drop, Int n)(
-                    requires Integral<Int>)
-                {
-                    return std::bind(drop, std::placeholders::_1, n);
-                }
-            public:
-                template<typename Rng>
-                auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                    CPP_ret(Rng)(
-                        requires ForwardRange<Rng> &&
-                            ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
-                {
-                    RANGES_EXPECT(n >= 0);
-                    ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(drop, std::placeholders::_1, n);
+            }
+        public:
+            template<typename Rng>
+            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
+                CPP_ret(Rng)(
+                    requires ForwardRange<Rng> &&
+                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            {
+                RANGES_EXPECT(n >= 0);
+                ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates drop_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates drop_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<drop_fn>, drop)
     }
+    /// @}
 }
 
 #endif

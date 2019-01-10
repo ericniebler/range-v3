@@ -25,43 +25,40 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct for_each_n_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct for_each_n_fn
+        template<typename I, typename F, typename P = identity>
+        auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
         {
-            template<typename I, typename F, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> n, F fun, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires InputIterator<I> && IndirectUnaryInvocable<F, projected<I, P>>)
-            {
-                RANGES_EXPECT(0 <= n);
-                auto norig = n;
-                auto b = uncounted(begin);
-                for(; 0 < n; ++b, --n)
-                    invoke(fun, invoke(proj, *b));
-                return recounted(begin, b, norig);
-            }
+            RANGES_EXPECT(0 <= n);
+            auto norig = n;
+            auto b = uncounted(begin);
+            for(; 0 < n; ++b, --n)
+                invoke(fun, invoke(proj, *b));
+            return recounted(begin, b, norig);
+        }
 
-            template<typename Rng, typename F, typename P = identity>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires InputRange<Rng> &&
-                        IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
-            {
-                if (SizedRange<Rng>)
-                    RANGES_EXPECT(n <= distance(rng));
+        template<typename Rng, typename F, typename P = identity>
+        auto operator()(Rng &&rng, range_difference_t<Rng> n, F fun, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires InputRange<Rng> &&
+                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        {
+            if (SizedRange<Rng>)
+                RANGES_EXPECT(n <= distance(rng));
 
-                return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));
-            }
-        };
+            return (*this)(begin(rng), n, detail::move(fun), detail::move(proj));
+        }
+    };
 
-        /// \sa `for_each_n_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(for_each_n_fn, for_each_n)
-        /// @}
-    } // namespace v3
+    /// \sa `for_each_n_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(for_each_n_fn, for_each_n)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

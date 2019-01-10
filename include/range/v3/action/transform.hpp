@@ -25,41 +25,38 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct transform_fn
         {
-            struct transform_fn
+        private:
+            friend action_access;
+            template<typename F, typename P = identity>
+            static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
+                requires not Range<F>)
             {
-            private:
-                friend action_access;
-                template<typename F, typename P = identity>
-                static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
-                    requires not Range<F>)
-                {
-                    return std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
-                        protect(std::move(proj)));
-                }
-            public:
-                CPP_template(typename Rng, typename F, typename P = identity)(
-                    requires InputRange<Rng> && CopyConstructible<F> &&
-                        Writable<iterator_t<Rng>, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
-                Rng operator()(Rng &&rng, F fun, P proj = P{}) const
-                {
-                    ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
+                    protect(std::move(proj)));
+            }
+        public:
+            CPP_template(typename Rng, typename F, typename P = identity)(
+                requires InputRange<Rng> && CopyConstructible<F> &&
+                    Writable<iterator_t<Rng>, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
+            Rng operator()(Rng &&rng, F fun, P proj = P{}) const
+            {
+                ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates transform_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<transform_fn>, transform)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates transform_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<transform_fn>, transform)
     }
+    /// @}
 }
 
 #endif

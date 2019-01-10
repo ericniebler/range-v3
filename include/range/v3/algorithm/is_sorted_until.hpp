@@ -24,57 +24,54 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct is_sorted_until_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct is_sorted_until_fn
+        /// \brief template function \c is_sorted_until_fn::operator()
+        ///
+        /// range-based version of the \c is_sorted_until std algorithm
+        ///
+        /// Works on ForwardRanges
+        ///
+        /// \pre `Rng` is a model of the `ForwardRange` concept
+        /// \pre `I` is a model of the `ForwardIterator` concept
+        /// \pre `S` and `I` model the `Sentinel<S, I>` concept
+        /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
+        ///
+        template<typename I, typename S, typename R = less, typename P = identity>
+        auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectStrictWeakOrder<R, projected<I, P>>)
         {
-            /// \brief template function \c is_sorted_until_fn::operator()
-            ///
-            /// range-based version of the \c is_sorted_until std algorithm
-            ///
-            /// Works on ForwardRanges
-            ///
-            /// \pre `Rng` is a model of the `ForwardRange` concept
-            /// \pre `I` is a model of the `ForwardIterator` concept
-            /// \pre `S` and `I` model the `Sentinel<S, I>` concept
-            /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
-            ///
-            template<typename I, typename S, typename R = less, typename P = identity>
-            auto operator()(I begin, S end, R pred = R{}, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectStrictWeakOrder<R, projected<I, P>>)
+            auto i = begin;
+            if(begin != end)
             {
-                auto i = begin;
-                if(begin != end)
+                while(++i != end)
                 {
-                    while(++i != end)
-                    {
-                        if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
-                            return i;
-                        begin = i;
-                    }
+                    if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
+                        return i;
+                    begin = i;
                 }
-                return i;
             }
+            return i;
+        }
 
-            template<typename Rng, typename R = less, typename P = identity>
-            auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires ForwardRange<Rng> &&
-                        IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
-        };
+        template<typename Rng, typename R = less, typename P = identity>
+        auto operator()(Rng &&rng, R pred = R{}, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires ForwardRange<Rng> &&
+                    IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
 
-        /// \sa `is_sorted_until_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(is_sorted_until_fn, is_sorted_until)
-        /// @}
-    } // namespace v3
+    /// \sa `is_sorted_until_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(is_sorted_until_fn, is_sorted_until)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

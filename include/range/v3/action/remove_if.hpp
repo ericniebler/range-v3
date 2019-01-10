@@ -25,45 +25,42 @@
 
 namespace ranges
 {
-    inline namespace v3
+    // TODO Look at all the special cases handled by erase_if in Library Fundamentals 2
+
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        // TODO Look at all the special cases handled by erase_if in Library Fundamentals 2
-
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct remove_if_fn
         {
-            struct remove_if_fn
+        private:
+            friend action_access;
+            template<typename C, typename P = identity>
+            static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})(
+                requires not Range<C>)
             {
-            private:
-                friend action_access;
-                template<typename C, typename P = identity>
-                static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})(
-                    requires not Range<C>)
-                {
-                    return std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)));
-                }
-            public:
-                CPP_template(typename Rng, typename C, typename P = identity)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
-                        Permutable<iterator_t<Rng>> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
-                Rng operator()(Rng &&rng, C pred, P proj = P{}) const
-                {
-                    auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
-                    ranges::erase(rng, it, ranges::end(rng));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
+                return std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
+                    protect(std::move(proj)));
+            }
+        public:
+            CPP_template(typename Rng, typename C, typename P = identity)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>> &&
+                    Permutable<iterator_t<Rng>> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+            Rng operator()(Rng &&rng, C pred, P proj = P{}) const
+            {
+                auto it = ranges::remove_if(rng, std::move(pred), std::move(proj));
+                ranges::erase(rng, it, ranges::end(rng));
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<remove_if_fn>, remove_if)
     }
+    /// @}
 }
 
 #endif

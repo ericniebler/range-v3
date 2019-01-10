@@ -27,43 +27,40 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename I, typename O>
+    using reverse_copy_result = detail::in_out_result<I, O>;
+
+    struct reverse_copy_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        template<typename I, typename O>
-        using reverse_copy_result = detail::in_out_result<I, O>;
-
-        struct reverse_copy_fn
+        template<typename I, typename S, typename O>
+        auto operator()(I begin, S end_, O out) const ->
+            CPP_ret(reverse_copy_result<I, O>)(
+                requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                    WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<I, O>)
         {
-            template<typename I, typename S, typename O>
-            auto operator()(I begin, S end_, O out) const ->
-                CPP_ret(reverse_copy_result<I, O>)(
-                    requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                        WeaklyIncrementable<O> &&
-                        IndirectlyCopyable<I, O>)
-            {
-                I end = ranges::next(begin, end_), res = end;
-                for(; begin != end; ++out)
-                    *out = *--end;
-                return {res, out};
-            }
+            I end = ranges::next(begin, end_), res = end;
+            for(; begin != end; ++out)
+                *out = *--end;
+            return {res, out};
+        }
 
-            template<typename Rng, typename O>
-            auto operator()(Rng &&rng, O out) const ->
-                CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)(
-                    requires BidirectionalRange<Rng> && WeaklyIncrementable<O> &&
-                        IndirectlyCopyable<iterator_t<Rng>, O>)
-            {
-                return (*this)(begin(rng), end(rng), std::move(out));
-            }
-        };
+        template<typename Rng, typename O>
+        auto operator()(Rng &&rng, O out) const ->
+            CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)(
+                requires BidirectionalRange<Rng> && WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        {
+            return (*this)(begin(rng), end(rng), std::move(out));
+        }
+    };
 
-        /// \sa `reverse_copy_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(reverse_copy_fn, reverse_copy)
-        /// @}
-    } // namespace v3
+    /// \sa `reverse_copy_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(reverse_copy_fn, reverse_copy)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

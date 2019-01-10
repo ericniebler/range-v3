@@ -29,129 +29,126 @@
 
 namespace ranges
 {
-    inline namespace v3
+    template<typename Rng>
+    struct take_view
+      : view_adaptor<take_view<Rng>, Rng, finite>
     {
-        template<typename Rng>
-        struct take_view
-          : view_adaptor<take_view<Rng>, Rng, finite>
+    private:
+        friend range_access;
+
+        range_difference_t<Rng> n_ = 0;
+
+        template<bool IsConst>
+        using CI = counted_iterator<iterator_t<meta::const_if_c<IsConst, Rng>>>;
+        template<bool IsConst>
+        using S = sentinel_t<meta::const_if_c<IsConst, Rng>>;
+
+        template<bool IsConst>
+        struct adaptor : adaptor_base
         {
-        private:
-            friend range_access;
-
-            range_difference_t<Rng> n_ = 0;
-
-            template<bool IsConst>
-            using CI = counted_iterator<iterator_t<meta::const_if_c<IsConst, Rng>>>;
-            template<bool IsConst>
-            using S = sentinel_t<meta::const_if_c<IsConst, Rng>>;
-
-            template<bool IsConst>
-            struct adaptor : adaptor_base
+            adaptor() = default;
+            template<bool Other>
+            CPP_ctor(adaptor)(adaptor<Other>)(
+                requires IsConst && (!Other))
+            {}
+            CI<IsConst> begin(meta::const_if_c<IsConst, take_view> &rng) const
             {
-                adaptor() = default;
-                template<bool Other>
-                CPP_ctor(adaptor)(adaptor<Other>)(
-                    requires IsConst && (!Other))
-                {}
-                CI<IsConst> begin(meta::const_if_c<IsConst, take_view> &rng) const
-                {
-                    return {ranges::begin(rng.base()), rng.n_};
-                }
-            };
-
-            template<bool IsConst>
-            struct sentinel_adaptor : adaptor_base
-            {
-                sentinel_adaptor() = default;
-                template<bool Other>
-                CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)(
-                    requires IsConst && (!Other))
-                {}
-                bool empty(CI<IsConst> const &that, S<IsConst> const &sent) const
-                {
-                    return 0 == that.count() || sent == that.base();
-                }
-            };
-
-            adaptor<simple_view<Rng>()> begin_adaptor()
-            {
-                return {};
-            }
-            sentinel_adaptor<simple_view<Rng>()> end_adaptor()
-            {
-                return {};
-            }
-            template<typename BaseRng = Rng>
-            auto begin_adaptor() const ->
-                CPP_ret(adaptor<true>)(
-                    requires Range<BaseRng const>)
-            {
-                return {};
-            }
-            template<typename BaseRng = Rng>
-            auto end_adaptor() const ->
-                CPP_ret(sentinel_adaptor<true>)(
-                    requires Range<BaseRng const>)
-            {
-                return {};
-            }
-        public:
-            take_view() = default;
-            take_view(Rng rng, range_difference_t<Rng> n)
-              : take_view::view_adaptor(std::move(rng)), n_{n}
-            {
-                RANGES_EXPECT(n >= 0);
+                return {ranges::begin(rng.base()), rng.n_};
             }
         };
 
-        namespace view
+        template<bool IsConst>
+        struct sentinel_adaptor : adaptor_base
         {
-            struct take_fn
+            sentinel_adaptor() = default;
+            template<bool Other>
+            CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)(
+                requires IsConst && (!Other))
+            {}
+            bool empty(CI<IsConst> const &that, S<IsConst> const &sent) const
             {
-            private:
-                friend view_access;
+                return 0 == that.count() || sent == that.base();
+            }
+        };
 
-                template<typename Rng>
-                static auto impl_(Rng &&rng, range_difference_t<Rng> n) ->
-                    CPP_ret(take_view<all_t<Rng>>)(
-                        requires not SizedRange<Rng> && !is_infinite<Rng>::value)
-                {
-                    return {all(static_cast<Rng &&>(rng)), n};
-                }
-
-                template<typename Rng>
-                static auto CPP_fun(impl_)(Rng &&rng, range_difference_t<Rng> n)(
-                    requires SizedRange<Rng> || is_infinite<Rng>::value)
-                {
-                    return take_exactly(
-                        static_cast<Rng &&>(rng),
-                        is_infinite<Rng>::value ? n : ranges::min(n, distance(rng)));
-                }
-
-                template<typename Int>
-                static auto CPP_fun(bind)(take_fn take, Int n)(
-                    requires Integral<Int>)
-                {
-                    return make_pipeable(std::bind(take, std::placeholders::_1, n));
-                }
-
-            public:
-                template<typename Rng>
-                auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
-                    requires ViewableRange<Rng> && InputRange<Rng>)
-                {
-                    return take_fn::impl_(static_cast<Rng &&>(rng), n);
-                }
-            };
-
-            /// \relates take_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<take_fn>, take)
+        adaptor<simple_view<Rng>()> begin_adaptor()
+        {
+            return {};
         }
-        /// @}
+        sentinel_adaptor<simple_view<Rng>()> end_adaptor()
+        {
+            return {};
+        }
+        template<typename BaseRng = Rng>
+        auto begin_adaptor() const ->
+            CPP_ret(adaptor<true>)(
+                requires Range<BaseRng const>)
+        {
+            return {};
+        }
+        template<typename BaseRng = Rng>
+        auto end_adaptor() const ->
+            CPP_ret(sentinel_adaptor<true>)(
+                requires Range<BaseRng const>)
+        {
+            return {};
+        }
+    public:
+        take_view() = default;
+        take_view(Rng rng, range_difference_t<Rng> n)
+          : take_view::view_adaptor(std::move(rng)), n_{n}
+        {
+            RANGES_EXPECT(n >= 0);
+        }
+    };
+
+    namespace view
+    {
+        struct take_fn
+        {
+        private:
+            friend view_access;
+
+            template<typename Rng>
+            static auto impl_(Rng &&rng, range_difference_t<Rng> n) ->
+                CPP_ret(take_view<all_t<Rng>>)(
+                    requires not SizedRange<Rng> && !is_infinite<Rng>::value)
+            {
+                return {all(static_cast<Rng &&>(rng)), n};
+            }
+
+            template<typename Rng>
+            static auto CPP_fun(impl_)(Rng &&rng, range_difference_t<Rng> n)(
+                requires SizedRange<Rng> || is_infinite<Rng>::value)
+            {
+                return take_exactly(
+                    static_cast<Rng &&>(rng),
+                    is_infinite<Rng>::value ? n : ranges::min(n, distance(rng)));
+            }
+
+            template<typename Int>
+            static auto CPP_fun(bind)(take_fn take, Int n)(
+                requires Integral<Int>)
+            {
+                return make_pipeable(std::bind(take, std::placeholders::_1, n));
+            }
+
+        public:
+            template<typename Rng>
+            auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+                requires ViewableRange<Rng> && InputRange<Rng>)
+            {
+                return take_fn::impl_(static_cast<Rng &&>(rng), n);
+            }
+        };
+
+        /// \relates take_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<take_fn>, take)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::take_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::take_view)
 
 #endif

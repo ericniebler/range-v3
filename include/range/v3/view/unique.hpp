@@ -25,30 +25,27 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    namespace view
     {
-        /// \addtogroup group-views
-        /// @{
-        namespace view
+        struct unique_fn
         {
-            struct unique_fn
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(unique_view<all_t<Rng>>)(
+                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                        EqualityComparable<range_value_t<Rng>>)
             {
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(unique_view<all_t<Rng>>)(
-                        requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                            EqualityComparable<range_value_t<Rng>>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
-                }
-            };
+                return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
+            }
+        };
 
-            /// \relates unique_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
-        }
-        /// @}
+        /// \relates unique_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<unique_fn>, unique)
     }
+    /// @}
 }
 
 #endif

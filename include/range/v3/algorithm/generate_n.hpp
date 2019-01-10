@@ -26,34 +26,31 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    template<typename O, typename F>
+    using generate_n_result = detail::out_fun_result<O, F>;
+
+    struct generate_n_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
         template<typename O, typename F>
-        using generate_n_result = detail::out_fun_result<O, F>;
-
-        struct generate_n_fn
+        auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
+            CPP_ret(generate_n_result<O, F>)(
+                requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
         {
-            template<typename O, typename F>
-            auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
-                CPP_ret(generate_n_result<O, F>)(
-                    requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
-            {
-                RANGES_EXPECT(n >= 0);
-                auto norig = n;
-                auto b = uncounted(begin);
-                for(; 0 != n; ++b, --n)
-                    *b = invoke(fun);
-                return {recounted(begin, b, norig), detail::move(fun)};
-            }
-        };
+            RANGES_EXPECT(n >= 0);
+            auto norig = n;
+            auto b = uncounted(begin);
+            for(; 0 != n; ++b, --n)
+                *b = invoke(fun);
+            return {recounted(begin, b, norig), detail::move(fun)};
+        }
+    };
 
-        /// \sa `generate_n_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(generate_n_fn, generate_n)
-        // @}
-    } // namespace v3
+    /// \sa `generate_n_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(generate_n_fn, generate_n)
+    // @}
 } // namespace ranges
 
 #endif // include guard

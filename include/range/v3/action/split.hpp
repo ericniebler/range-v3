@@ -30,61 +30,58 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        struct split_fn
         {
-            struct split_fn
+        private:
+            template<typename Rng>
+            using split_value_t =
+                meta::if_c<
+                    (bool) ranges::Container<Rng>,
+                    uncvref_t<Rng>,
+                    std::vector<range_value_t<Rng>>>;
+        public:
+            // BUGBUG something is not right with the actions. It should be possible
+            // to move a container into a split and have elements moved into the result.
+            CPP_template(typename Rng, typename Fun)(
+                requires view::SplitOnFunction<Rng, Fun>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
-            private:
-                template<typename Rng>
-                using split_value_t =
-                    meta::if_c<
-                        (bool) ranges::Container<Rng>,
-                        uncvref_t<Rng>,
-                        std::vector<range_value_t<Rng>>>;
-            public:
-                // BUGBUG something is not right with the actions. It should be possible
-                // to move a container into a split and have elements moved into the result.
-                CPP_template(typename Rng, typename Fun)(
-                    requires view::SplitOnFunction<Rng, Fun>)
-                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
-                {
-                    return view::split(rng, std::move(fun))
-                         | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-                }
-                CPP_template(typename Rng, typename Fun)(
-                    requires view::SplitOnPredicate<Rng, Fun>)
-                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
-                {
-                    return view::split(rng, std::move(fun))
-                         | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-                }
-                CPP_template(typename Rng)(
-                    requires view::SplitOnElement<Rng>)
-                std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
-                {
-                    return view::split(rng, std::move(val))
-                         | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-                }
-                CPP_template(typename Rng, typename Sub)(
-                    requires view::SplitOnSubRange<Rng, Sub>)
-                std::vector<split_value_t<Rng>> operator()(Rng &&rng, Sub &&sub) const
-                {
-                    return view::split(rng, static_cast<Sub &&>(sub))
-                         | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-                }
-            };
+                return view::split(rng, std::move(fun))
+                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+            }
+            CPP_template(typename Rng, typename Fun)(
+                requires view::SplitOnPredicate<Rng, Fun>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
+            {
+                return view::split(rng, std::move(fun))
+                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+            }
+            CPP_template(typename Rng)(
+                requires view::SplitOnElement<Rng>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
+            {
+                return view::split(rng, std::move(val))
+                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+            }
+            CPP_template(typename Rng, typename Sub)(
+                requires view::SplitOnSubRange<Rng, Sub>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Sub &&sub) const
+            {
+                return view::split(rng, static_cast<Sub &&>(sub))
+                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+            }
+        };
 
-            /// \ingroup group-actions
-            /// \relates split_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<split_fn>, split)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates split_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<split_fn>, split)
     }
+    /// @}
 }
 
 #endif

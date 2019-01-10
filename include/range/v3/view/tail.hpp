@@ -31,102 +31,99 @@
 
 namespace ranges
 {
-    inline namespace v3
+    namespace detail
     {
-        namespace detail
+        template<typename T>
+        constexpr T prev_or_zero_(T n)
         {
-            template<typename T>
-            constexpr T prev_or_zero_(T n)
-            {
-                return n == 0 ? T(0) : T(n - 1);
-            }
+            return n == 0 ? T(0) : T(n - 1);
         }
+    }
 
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng>
-        struct tail_view
-          : view_interface<
-                tail_view<Rng>,
-                (range_cardinality<Rng>::value >= 0)
-                  ? detail::prev_or_zero_(range_cardinality<Rng>::value)
-                  : range_cardinality<Rng>::value>
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng>
+    struct tail_view
+      : view_interface<
+            tail_view<Rng>,
+            (range_cardinality<Rng>::value >= 0)
+              ? detail::prev_or_zero_(range_cardinality<Rng>::value)
+              : range_cardinality<Rng>::value>
+    {
+    private:
+        Rng rng_;
+    public:
+        tail_view() = default;
+        tail_view(Rng rng)
+          : rng_(static_cast<Rng &&>(rng))
         {
-        private:
-            Rng rng_;
-        public:
-            tail_view() = default;
-            tail_view(Rng rng)
-              : rng_(static_cast<Rng &&>(rng))
+            CPP_assert(InputRange<Rng>);
+        }
+        iterator_t<Rng> begin()
+        {
+            return next(ranges::begin(rng_), 1, ranges::end(rng_));
+        }
+        template<class CRng = Rng const>
+        auto begin() const -> CPP_ret(iterator_t<CRng>)(
+            requires Range<CRng>)
+        {
+            return next(ranges::begin(rng_), 1, ranges::end(rng_));
+        }
+        sentinel_t<Rng> end()
+        {
+            return ranges::end(rng_);
+        }
+        template<class CRng = Rng const>
+        auto end() const -> CPP_ret(sentinel_t<CRng>)(
+            requires Range<CRng>)
+        {
+            return ranges::end(rng_);
+        }
+        CPP_member
+        constexpr /*c++14*/ auto CPP_fun(size)() (
+            requires SizedRange<Rng>)
+        {
+            using size_type = range_size_t<Rng>;
+            return range_cardinality<Rng>::value >= 0
+              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+              : detail::prev_or_zero_(ranges::size(rng_));
+        }
+        CPP_member
+        constexpr auto CPP_fun(size)() (const
+            requires SizedRange<Rng const>)
+        {
+            using size_type = range_size_t<Rng>;
+            return range_cardinality<Rng>::value >= 0
+              ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
+              : detail::prev_or_zero_(ranges::size(rng_));
+        }
+        Rng base() const
+        {
+            return rng_;
+        }
+    };
+
+    namespace view
+    {
+        struct tail_fn
+        {
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
+                        all_t<Rng>, tail_view<all_t<Rng>>>)(
+                    requires ViewableRange<Rng> && InputRange<Rng>)
             {
-                CPP_assert(InputRange<Rng>);
-            }
-            iterator_t<Rng> begin()
-            {
-                return next(ranges::begin(rng_), 1, ranges::end(rng_));
-            }
-            template<class CRng = Rng const>
-            auto begin() const -> CPP_ret(iterator_t<CRng>)(
-                requires Range<CRng>)
-            {
-                return next(ranges::begin(rng_), 1, ranges::end(rng_));
-            }
-            sentinel_t<Rng> end()
-            {
-                return ranges::end(rng_);
-            }
-            template<class CRng = Rng const>
-            auto end() const -> CPP_ret(sentinel_t<CRng>)(
-                requires Range<CRng>)
-            {
-                return ranges::end(rng_);
-            }
-            CPP_member
-            constexpr /*c++14*/ auto CPP_fun(size)() (
-                requires SizedRange<Rng>)
-            {
-                using size_type = range_size_t<Rng>;
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng_));
-            }
-            CPP_member
-            constexpr auto CPP_fun(size)() (const
-                requires SizedRange<Rng const>)
-            {
-                using size_type = range_size_t<Rng>;
-                return range_cardinality<Rng>::value >= 0
-                  ? detail::prev_or_zero_((size_type)range_cardinality<Rng>::value)
-                  : detail::prev_or_zero_(ranges::size(rng_));
-            }
-            Rng base() const
-            {
-                return rng_;
+                return all(static_cast<Rng &&>(rng));
             }
         };
 
-        namespace view
-        {
-            struct tail_fn
-            {
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
-                            all_t<Rng>, tail_view<all_t<Rng>>>)(
-                        requires ViewableRange<Rng> && InputRange<Rng>)
-                {
-                    return all(static_cast<Rng &&>(rng));
-                }
-            };
-
-            /// \relates tail_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
-        }
-        /// @}
+        /// \relates tail_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<tail_fn>, tail)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::tail_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::tail_view)
 
 #endif

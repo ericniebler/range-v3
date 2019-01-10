@@ -33,16 +33,13 @@
 
 namespace ranges
 {
-    inline namespace v3
+    namespace detail
     {
-        namespace detail
+        template<typename = void>
+        [[noreturn]] void assert_failure(char const *file, int line, char const *msg)
         {
-            template<typename = void>
-            [[noreturn]] void assert_failure(char const *file, int line, char const *msg)
-            {
-                std::fprintf(stderr, "%s(%d): %s\n", file, line, msg);
-                std::abort();
-            }
+            std::fprintf(stderr, "%s(%d): %s\n", file, line, msg);
+            std::abort();
         }
     }
 }

@@ -27,48 +27,45 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct partial_sort_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct partial_sort_fn
+        template<typename I, typename S, typename C = less, typename P = identity>
+        auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
         {
-            template<typename I, typename S, typename C = less, typename P = identity>
-            auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires Sortable<I, C, P> && RandomAccessIterator<I> && Sentinel<S, I>)
+            make_heap(begin, middle, std::ref(pred), std::ref(proj));
+            auto const len = middle - begin;
+            I i = middle;
+            for(; i != end; ++i)
             {
-                make_heap(begin, middle, std::ref(pred), std::ref(proj));
-                auto const len = middle - begin;
-                I i = middle;
-                for(; i != end; ++i)
+                if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
                 {
-                    if(invoke(pred, invoke(proj, *i), invoke(proj, *begin)))
-                    {
-                        iter_swap(i, begin);
-                        detail::sift_down_n(begin, len, begin, std::ref(pred), std::ref(proj));
-                    }
+                    iter_swap(i, begin);
+                    detail::sift_down_n(begin, len, begin, std::ref(pred), std::ref(proj));
                 }
-                sort_heap(begin, middle, std::ref(pred), std::ref(proj));
-                return i;
             }
+            sort_heap(begin, middle, std::ref(pred), std::ref(proj));
+            return i;
+        }
 
-            template<typename Rng, typename C = less, typename P = identity>
-            auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{},
-                    P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
-            {
-                return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
-                    std::move(proj));
-            }
-        };
+        template<typename Rng, typename C = less, typename P = identity>
+        auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{},
+                P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires Sortable<iterator_t<Rng>, C, P> && RandomAccessRange<Rng>)
+        {
+            return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
+                std::move(proj));
+        }
+    };
 
-        /// \sa `partial_sort_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(partial_sort_fn, partial_sort)
-        /// @}
-    } // namespace v3
+    /// \sa `partial_sort_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(partial_sort_fn, partial_sort)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

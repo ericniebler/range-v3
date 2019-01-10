@@ -28,207 +28,204 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace detail
     {
-        /// \cond
-        namespace detail
+        template<typename Rng, bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>>
+        class size_tracker
         {
-            template<typename Rng, bool = (bool)SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>>
-            class size_tracker
-            {
-                range_difference_t<Rng> size_;
-            public:
-                CPP_assert(ForwardRange<Rng> || SizedRange<Rng>);
-                size_tracker() = default;
-                size_tracker(Rng &rng)
-                  : size_(ranges::distance(rng))
-                {}
-                void decrement()
-                {
-                    --size_;
-                }
-                range_difference_t<Rng> get(Rng &, iterator_t<Rng> &) const
-                {
-                    return size_;
-                }
-            };
-
-            // Impl for SizedSentinel (no need to store anything)
-            template<typename Rng>
-            class size_tracker<Rng, true>
-            {
-            public:
-                size_tracker() = default;
-                size_tracker(Rng &)
-                {}
-                void decrement()
-                {}
-                range_difference_t<Rng> get(Rng &rng, iterator_t<Rng> const &it) const
-                {
-                    return ranges::end(rng) - it;
-                }
-            };
-        }
-        /// \endcond
-
-        /// \addtogroup group-views
-        /// @{
-
-        // Take a random sampling from another view
-        template<typename Rng, typename URNG>
-        class sample_view
-          : public view_facade<sample_view<Rng, URNG>, finite>
-        {
-            friend range_access;
-            using D = range_difference_t<Rng>;
-            Rng rng_;
-            // Mutable is OK here because sample_view is an Input view.
-            mutable range_difference_t<Rng> size_;
-            URNG *engine_;
-
-            template<bool IsConst>
-            class cursor
-            {
-                friend cursor<!IsConst>;
-
-                using Base = meta::const_if_c<IsConst, Rng>;
-                meta::const_if_c<IsConst, sample_view> *parent_;
-                iterator_t<Base> current_;
-                RANGES_NO_UNIQUE_ADDRESS detail::size_tracker<Base> size_;
-
-                D pop_size()
-                {
-                    return size_.get(parent_->rng_, current_);
-                }
-                void advance()
-                {
-                    if(parent_->size_ > 0)
-                    {
-                        using Dist = std::uniform_int_distribution<D>;
-                        Dist dist{};
-                        URNG& engine = *parent_->engine_;
-
-                        for(; ; ++current_, size_.decrement())
-                        {
-                            RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
-                            auto n = pop_size();
-                            RANGES_EXPECT(n > 0);
-                            typename Dist::param_type const interval{ 0, n - 1 };
-                            if(dist(engine, interval) < parent_->size_)
-                                break;
-                        }
-                    }
-                }
-            public:
-                using value_type = range_value_t<Rng>;
-                using difference_type = D;
-
-                cursor() = default;
-                explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
-                  : parent_(&rng), current_(ranges::begin(rng.rng_)), size_{rng.rng_}
-                {
-                    auto n = pop_size();
-                    if(rng.size_ > n)
-                        rng.size_ = n;
-                    advance();
-                }
-                template<bool Other>
-                CPP_ctor(cursor)(cursor<Other> that)(
-                    requires IsConst && (!Other))
-                  : parent_(that.parent_), current_(std::move(that.current_)), size_(that.size_)
-                {}
-                range_reference_t<Rng> read() const
-                {
-                    return *current_;
-                }
-                bool equal(default_sentinel_t) const
-                {
-                    RANGES_EXPECT(parent_);
-                    return parent_->size_ <= 0;
-                }
-                void next()
-                {
-                    RANGES_EXPECT(parent_);
-                    RANGES_EXPECT(parent_->size_ > 0);
-                    --parent_->size_;
-                    RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
-                    ++current_;
-                    size_.decrement();
-                    advance();
-                }
-            };
-
-            cursor<false> begin_cursor()
-            {
-                return cursor<false>{*this};
-            }
-            template<typename CRng = Rng const>
-            auto begin_cursor() const ->
-                CPP_ret(cursor<true>)(
-                    requires SizedRange<CRng> ||
-                        SizedSentinel<sentinel_t<CRng>, iterator_t<CRng>> ||
-                        ForwardRange<CRng>)
-            {
-                return cursor<true>{*this};
-            }
-
+            range_difference_t<Rng> size_;
         public:
-            sample_view() = default;
-
-            explicit sample_view(Rng rng, D sample_size, URNG& generator)
-              : rng_(std::move(rng)), size_(sample_size), engine_(std::addressof(generator))
+            CPP_assert(ForwardRange<Rng> || SizedRange<Rng>);
+            size_tracker() = default;
+            size_tracker(Rng &rng)
+              : size_(ranges::distance(rng))
+            {}
+            void decrement()
             {
-                RANGES_EXPECT(sample_size >= 0);
+                --size_;
             }
-
-            Rng base() const
+            range_difference_t<Rng> get(Rng &, iterator_t<Rng> &) const
             {
-                return rng_;
+                return size_;
             }
         };
 
-        namespace view
+        // Impl for SizedSentinel (no need to store anything)
+        template<typename Rng>
+        class size_tracker<Rng, true>
         {
-            /// Returns a random sample of a range of length `size(range)`.
-            struct sample_fn
+        public:
+            size_tracker() = default;
+            size_tracker(Rng &)
+            {}
+            void decrement()
+            {}
+            range_difference_t<Rng> get(Rng &rng, iterator_t<Rng> const &it) const
             {
-            private:
-                friend view_access;
-                template<typename Size, typename URNG = detail::default_random_engine>
-                static auto CPP_fun(bind)(sample_fn fn, Size n,
-                    URNG &urng = detail::get_random_engine())(
-                    requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
-                {
-                    return make_pipeable(std::bind(fn, std::placeholders::_1, n,
-                        bind_forward<URNG &>(urng)));
-                }
-            public:
-                template<typename Rng, typename URNG = detail::default_random_engine>
-                auto operator()(Rng &&rng, range_difference_t<Rng> sample_size,
-                        URNG &generator = detail::get_random_engine()) const ->
-                    CPP_ret(sample_view<all_t<Rng>, URNG>)(
-                        requires ViewableRange<Rng> && InputRange<Rng> &&
-                            UniformRandomNumberGenerator<URNG> &&
-                            ConvertibleTo<invoke_result_t<URNG &>, range_difference_t<Rng>> &&
-                            (SizedRange<Rng> ||
-                             SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
-                             ForwardRange<Rng>))
-                {
-                    return sample_view<all_t<Rng>, URNG>{
-                        all(static_cast<Rng &&>(rng)),
-                        sample_size,
-                        generator};
-                }
-            };
-
-            /// \relates sample_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
-        }
-        /// @}
+                return ranges::end(rng) - it;
+            }
+        };
     }
+    /// \endcond
+
+    /// \addtogroup group-views
+    /// @{
+
+    // Take a random sampling from another view
+    template<typename Rng, typename URNG>
+    class sample_view
+      : public view_facade<sample_view<Rng, URNG>, finite>
+    {
+        friend range_access;
+        using D = range_difference_t<Rng>;
+        Rng rng_;
+        // Mutable is OK here because sample_view is an Input view.
+        mutable range_difference_t<Rng> size_;
+        URNG *engine_;
+
+        template<bool IsConst>
+        class cursor
+        {
+            friend cursor<!IsConst>;
+
+            using Base = meta::const_if_c<IsConst, Rng>;
+            meta::const_if_c<IsConst, sample_view> *parent_;
+            iterator_t<Base> current_;
+            RANGES_NO_UNIQUE_ADDRESS detail::size_tracker<Base> size_;
+
+            D pop_size()
+            {
+                return size_.get(parent_->rng_, current_);
+            }
+            void advance()
+            {
+                if(parent_->size_ > 0)
+                {
+                    using Dist = std::uniform_int_distribution<D>;
+                    Dist dist{};
+                    URNG& engine = *parent_->engine_;
+
+                    for(; ; ++current_, size_.decrement())
+                    {
+                        RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
+                        auto n = pop_size();
+                        RANGES_EXPECT(n > 0);
+                        typename Dist::param_type const interval{ 0, n - 1 };
+                        if(dist(engine, interval) < parent_->size_)
+                            break;
+                    }
+                }
+            }
+        public:
+            using value_type = range_value_t<Rng>;
+            using difference_type = D;
+
+            cursor() = default;
+            explicit cursor(meta::const_if_c<IsConst, sample_view> &rng)
+              : parent_(&rng), current_(ranges::begin(rng.rng_)), size_{rng.rng_}
+            {
+                auto n = pop_size();
+                if(rng.size_ > n)
+                    rng.size_ = n;
+                advance();
+            }
+            template<bool Other>
+            CPP_ctor(cursor)(cursor<Other> that)(
+                requires IsConst && (!Other))
+              : parent_(that.parent_), current_(std::move(that.current_)), size_(that.size_)
+            {}
+            range_reference_t<Rng> read() const
+            {
+                return *current_;
+            }
+            bool equal(default_sentinel_t) const
+            {
+                RANGES_EXPECT(parent_);
+                return parent_->size_ <= 0;
+            }
+            void next()
+            {
+                RANGES_EXPECT(parent_);
+                RANGES_EXPECT(parent_->size_ > 0);
+                --parent_->size_;
+                RANGES_ASSERT(current_ != ranges::end(parent_->rng_));
+                ++current_;
+                size_.decrement();
+                advance();
+            }
+        };
+
+        cursor<false> begin_cursor()
+        {
+            return cursor<false>{*this};
+        }
+        template<typename CRng = Rng const>
+        auto begin_cursor() const ->
+            CPP_ret(cursor<true>)(
+                requires SizedRange<CRng> ||
+                    SizedSentinel<sentinel_t<CRng>, iterator_t<CRng>> ||
+                    ForwardRange<CRng>)
+        {
+            return cursor<true>{*this};
+        }
+
+    public:
+        sample_view() = default;
+
+        explicit sample_view(Rng rng, D sample_size, URNG& generator)
+          : rng_(std::move(rng)), size_(sample_size), engine_(std::addressof(generator))
+        {
+            RANGES_EXPECT(sample_size >= 0);
+        }
+
+        Rng base() const
+        {
+            return rng_;
+        }
+    };
+
+    namespace view
+    {
+        /// Returns a random sample of a range of length `size(range)`.
+        struct sample_fn
+        {
+        private:
+            friend view_access;
+            template<typename Size, typename URNG = detail::default_random_engine>
+            static auto CPP_fun(bind)(sample_fn fn, Size n,
+                URNG &urng = detail::get_random_engine())(
+                requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
+            {
+                return make_pipeable(std::bind(fn, std::placeholders::_1, n,
+                    bind_forward<URNG &>(urng)));
+            }
+        public:
+            template<typename Rng, typename URNG = detail::default_random_engine>
+            auto operator()(Rng &&rng, range_difference_t<Rng> sample_size,
+                    URNG &generator = detail::get_random_engine()) const ->
+                CPP_ret(sample_view<all_t<Rng>, URNG>)(
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        UniformRandomNumberGenerator<URNG> &&
+                        ConvertibleTo<invoke_result_t<URNG &>, range_difference_t<Rng>> &&
+                        (SizedRange<Rng> ||
+                         SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>> ||
+                         ForwardRange<Rng>))
+            {
+                return sample_view<all_t<Rng>, URNG>{
+                    all(static_cast<Rng &&>(rng)),
+                    sample_size,
+                    generator};
+            }
+        };
+
+        /// \relates sample_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<sample_fn>, sample)
+    }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::sample_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::sample_view)
 
 #endif

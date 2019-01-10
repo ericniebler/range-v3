@@ -37,66 +37,63 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+
+    struct partition_point_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-
-        struct partition_point_fn
+        template<typename I, typename S, typename C, typename P = identity>
+        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
+            CPP_ret(I)(
+                requires ForwardIterator<I> && Sentinel<S, I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
         {
-            template<typename I, typename S, typename C, typename P = identity>
-            auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> && Sentinel<S, I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
+            if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
             {
-                if RANGES_CONSTEXPR_IF (SizedSentinel<S, I>)
-                {
-                    auto len = distance(begin, std::move(end));
-                    return aux::partition_point_n(
-                        std::move(begin), len, std::move(pred), std::move(proj));
-                }
-
-                // Probe exponentially for either end-of-range or an iterator
-                // that is past the partition point (i.e., does not satisfy pred).
-                auto len = iter_difference_t<I>{1};
-                while(true)
-                {
-                    auto mid = begin;
-                    auto d = advance(mid, len, end);
-                    if(mid == end || !invoke(pred, invoke(proj, *mid)))
-                    {
-                        len -= d;
-                        return aux::partition_point_n(
-                            std::move(begin), len, std::ref(pred), std::ref(proj));
-                    }
-                    begin = std::move(mid);
-                    len *= 2;
-                }
+                auto len = distance(begin, std::move(end));
+                return aux::partition_point_n(
+                    std::move(begin), len, std::move(pred), std::move(proj));
             }
 
-            template<typename Rng, typename C, typename P = identity>
-            auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-                CPP_ret(safe_iterator_t<Rng>)(
-                    requires ForwardRange<Rng> &&
-                        IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+            // Probe exponentially for either end-of-range or an iterator
+            // that is past the partition point (i.e., does not satisfy pred).
+            auto len = iter_difference_t<I>{1};
+            while(true)
             {
-                if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+                auto mid = begin;
+                auto d = advance(mid, len, end);
+                if(mid == end || !invoke(pred, invoke(proj, *mid)))
                 {
-                    auto len = distance(rng);
+                    len -= d;
                     return aux::partition_point_n(
-                        begin(rng), len, std::move(pred), std::move(proj));
+                        std::move(begin), len, std::ref(pred), std::ref(proj));
                 }
-                return (*this)(
-                    begin(rng), end(rng), std::move(pred), std::move(proj));
+                begin = std::move(mid);
+                len *= 2;
             }
-        };
+        }
 
-        /// \sa `partition_point_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(partition_point_fn, partition_point)
-        /// @}
-    } // namespace v3
+        template<typename Rng, typename C, typename P = identity>
+        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
+            CPP_ret(safe_iterator_t<Rng>)(
+                requires ForwardRange<Rng> &&
+                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        {
+            if RANGES_CONSTEXPR_IF (SizedRange<Rng>)
+            {
+                auto len = distance(rng);
+                return aux::partition_point_n(
+                    begin(rng), len, std::move(pred), std::move(proj));
+            }
+            return (*this)(
+                begin(rng), end(rng), std::move(pred), std::move(proj));
+        }
+    };
+
+    /// \sa `partition_point_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(partition_point_fn, partition_point)
+    /// @}
 } // namespace ranges
 
 #endif // include guard

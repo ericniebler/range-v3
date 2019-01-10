@@ -24,84 +24,81 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \cond
+    namespace adl_push_front_detail
     {
-        /// \cond
-        namespace adl_push_front_detail
+        template<typename Cont, typename T>
+        using push_front_t =
+            decltype(static_cast<void>(unwrap_reference(
+                std::declval<Cont &>()).push_front(std::declval<T>())));
+
+        template<typename Cont, typename Rng>
+        using insert_t =
+            decltype(static_cast<void>(ranges::insert(
+                std::declval<Cont &>(),
+                std::declval<iterator_t<Cont>>(),
+                std::declval<Rng>())));
+
+        template<typename Cont, typename T>
+        auto push_front(Cont &&cont, T &&t) ->
+            CPP_ret(push_front_t<Cont, T>)(
+                requires LvalueContainerLike<Cont> && !Range<T> &&
+                    Constructible<range_value_t<Cont>, T>)
         {
-            template<typename Cont, typename T>
-            using push_front_t =
-                decltype(static_cast<void>(unwrap_reference(
-                    std::declval<Cont &>()).push_front(std::declval<T>())));
-
-            template<typename Cont, typename Rng>
-            using insert_t =
-                decltype(static_cast<void>(ranges::insert(
-                    std::declval<Cont &>(),
-                    std::declval<iterator_t<Cont>>(),
-                    std::declval<Rng>())));
-
-            template<typename Cont, typename T>
-            auto push_front(Cont &&cont, T &&t) ->
-                CPP_ret(push_front_t<Cont, T>)(
-                    requires LvalueContainerLike<Cont> && !Range<T> &&
-                        Constructible<range_value_t<Cont>, T>)
-            {
-                unwrap_reference(cont).push_front(static_cast<T &&>(t));
-            }
-
-            template<typename Cont, typename Rng>
-            auto push_front(Cont &&cont, Rng &&rng) ->
-                CPP_ret(insert_t<Cont, Rng>)(
-                    requires LvalueContainerLike<Cont> && Range<Rng>)
-            {
-                ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
-            }
-
-            CPP_def
-            (
-                template(typename Rng, typename T)
-                concept PushFrontActionConcept,
-                    requires (Rng &&rng, T &&t)
-                    (
-                        push_front(rng, (T &&) t)
-                    ) &&
-                    InputRange<Rng> &&
-                        (Range<T> || Constructible<range_value_t<Rng>, T>)
-            );
-
-            struct push_front_fn
-            {
-            private:
-                friend action::action_access;
-                template<typename T>
-                static auto bind(push_front_fn push_front, T &&val)
-                {
-                    return std::bind(push_front, std::placeholders::_1, bind_forward<T>(val));
-                }
-            public:
-                template<typename Rng, typename T>
-                auto operator()(Rng &&rng, T &&t) const ->
-                    CPP_ret(Rng)(
-                        requires PushFrontActionConcept<Rng, T>)
-                {
-                    push_front(rng, static_cast<T &&>(t));
-                    return static_cast<Rng &&>(rng);
-                }
-            };
-        }
-        /// \endcond
-
-        namespace action
-        {
-            /// \ingroup group-actions
-            /// \sa with_braced_init_args
-            RANGES_INLINE_VARIABLE(with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
-                                   push_front)
+            unwrap_reference(cont).push_front(static_cast<T &&>(t));
         }
 
-        using action::push_front;
+        template<typename Cont, typename Rng>
+        auto push_front(Cont &&cont, Rng &&rng) ->
+            CPP_ret(insert_t<Cont, Rng>)(
+                requires LvalueContainerLike<Cont> && Range<Rng>)
+        {
+            ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
+        }
+
+        CPP_def
+        (
+            template(typename Rng, typename T)
+            concept PushFrontActionConcept,
+                requires (Rng &&rng, T &&t)
+                (
+                    push_front(rng, (T &&) t)
+                ) &&
+                InputRange<Rng> &&
+                    (Range<T> || Constructible<range_value_t<Rng>, T>)
+        );
+
+        struct push_front_fn
+        {
+        private:
+            friend action::action_access;
+            template<typename T>
+            static auto bind(push_front_fn push_front, T &&val)
+            {
+                return std::bind(push_front, std::placeholders::_1, bind_forward<T>(val));
+            }
+        public:
+            template<typename Rng, typename T>
+            auto operator()(Rng &&rng, T &&t) const ->
+                CPP_ret(Rng)(
+                    requires PushFrontActionConcept<Rng, T>)
+            {
+                push_front(rng, static_cast<T &&>(t));
+                return static_cast<Rng &&>(rng);
+            }
+        };
     }
+    /// \endcond
+
+    namespace action
+    {
+        /// \ingroup group-actions
+        /// \sa with_braced_init_args
+        RANGES_INLINE_VARIABLE(with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
+                               push_front)
+    }
+
+    using action::push_front;
 }
 
 #endif

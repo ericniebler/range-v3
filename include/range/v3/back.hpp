@@ -23,25 +23,22 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \ingroup group-core
+    struct back_fn
     {
-        /// \ingroup group-core
-        struct back_fn
+        /// \return `*prev(end(rng))`
+        CPP_template(typename Rng)(
+            requires CommonRange<Rng> && BidirectionalRange<Rng>)
+        constexpr /*c++14*/
+        range_reference_t<Rng> operator()(Rng &&rng) const
         {
-            /// \return `*prev(end(rng))`
-            CPP_template(typename Rng)(
-                requires CommonRange<Rng> && BidirectionalRange<Rng>)
-            constexpr /*c++14*/
-            range_reference_t<Rng> operator()(Rng &&rng) const
-            {
-                return *prev(end(rng));
-            }
-        };
+            return *prev(end(rng));
+        }
+    };
 
-        /// \ingroup group-core
-        /// \sa `back_fn`
-        RANGES_INLINE_VARIABLE(back_fn, back)
-    }
+    /// \ingroup group-core
+    /// \sa `back_fn`
+    RANGES_INLINE_VARIABLE(back_fn, back)
 }
 
 #endif

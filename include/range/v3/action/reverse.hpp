@@ -24,36 +24,33 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-actions
+    /// @{
+    namespace action
     {
-        /// \addtogroup group-actions
-        /// @{
-        namespace action
+        /// Reversed the source range in-place.
+        struct reverse_fn
         {
-            /// Reversed the source range in-place.
-            struct reverse_fn
+        private:
+            friend action_access;
+
+        public:
+            CPP_template(typename Rng)(
+                requires BidirectionalRange<Rng> &&
+                    Permutable<iterator_t<Rng>>)
+            Rng operator()(Rng &&rng) const
             {
-            private:
-                friend action_access;
+                ranges::reverse(rng);
+                return static_cast<Rng &&>(rng);
+            }
+        };
 
-            public:
-                CPP_template(typename Rng)(
-                    requires BidirectionalRange<Rng> &&
-                        Permutable<iterator_t<Rng>>)
-                Rng operator()(Rng &&rng) const
-                {
-                    ranges::reverse(rng);
-                    return static_cast<Rng &&>(rng);
-                }
-            };
-
-            /// \ingroup group-actions
-            /// \relates reverse_fn
-            /// \sa action
-            RANGES_INLINE_VARIABLE(action<reverse_fn>, reverse)
-        }
-        /// @}
+        /// \ingroup group-actions
+        /// \relates reverse_fn
+        /// \sa action
+        RANGES_INLINE_VARIABLE(action<reverse_fn>, reverse)
     }
+    /// @}
 }
 
 #endif

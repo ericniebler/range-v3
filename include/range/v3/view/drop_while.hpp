@@ -32,94 +32,91 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-views
+    /// @{
+    template<typename Rng, typename Pred>
+    struct drop_while_view
+      : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
     {
-        /// \addtogroup group-views
-        /// @{
-        template<typename Rng, typename Pred>
-        struct drop_while_view
-          : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
+    private:
+        friend range_access;
+        Rng rng_;
+        semiregular_t<Pred> pred_;
+        detail::non_propagating_cache<iterator_t<Rng>> begin_;
+
+        iterator_t<Rng> get_begin_()
+        {
+            if(!begin_)
+                begin_ = find_if_not(rng_, std::ref(pred_));
+            return *begin_;
+        }
+    public:
+        drop_while_view() = default;
+        drop_while_view(Rng rng, Pred pred)
+          : rng_(std::move(rng)), pred_(std::move(pred))
+        {}
+        iterator_t<Rng> begin()
+        {
+            return get_begin_();
+        }
+        sentinel_t<Rng> end()
+        {
+            return ranges::end(rng_);
+        }
+        Rng base() const
+        {
+            return rng_;
+        }
+    };
+
+    namespace view
+    {
+        struct drop_while_fn
         {
         private:
-            friend range_access;
-            Rng rng_;
-            semiregular_t<Pred> pred_;
-            detail::non_propagating_cache<iterator_t<Rng>> begin_;
-
-            iterator_t<Rng> get_begin_()
+            friend view_access;
+            template<typename Pred>
+            static auto bind(drop_while_fn drop_while, Pred pred)
             {
-                if(!begin_)
-                    begin_ = find_if_not(rng_, std::ref(pred_));
-                return *begin_;
+                return make_pipeable(
+                    std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))));
+            }
+            template<typename Pred, typename Proj>
+            static auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
+            {
+                return make_pipeable(
+                    std::bind(drop_while, std::placeholders::_1, protect(std::move(pred)),
+                    protect(std::move(proj))));
             }
         public:
-            drop_while_view() = default;
-            drop_while_view(Rng rng, Pred pred)
-              : rng_(std::move(rng)), pred_(std::move(pred))
-            {}
-            iterator_t<Rng> begin()
+            template<typename Rng, typename Pred>
+            auto operator()(Rng &&rng, Pred pred) const ->
+                CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
-                return get_begin_();
+                return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            sentinel_t<Rng> end()
+            template<typename Rng, typename Pred, typename Proj>
+            auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
+                CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)(
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
             {
-                return ranges::end(rng_);
-            }
-            Rng base() const
-            {
-                return rng_;
+                return {
+                    all(static_cast<Rng &&>(rng)),
+                    compose(std::move(pred), std::move(proj))
+                };
             }
         };
 
-        namespace view
-        {
-            struct drop_while_fn
-            {
-            private:
-                friend view_access;
-                template<typename Pred>
-                static auto bind(drop_while_fn drop_while, Pred pred)
-                {
-                    return make_pipeable(
-                        std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))));
-                }
-                template<typename Pred, typename Proj>
-                static auto bind(drop_while_fn drop_while, Pred pred, Proj proj)
-                {
-                    return make_pipeable(
-                        std::bind(drop_while, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj))));
-                }
-            public:
-                template<typename Rng, typename Pred>
-                auto operator()(Rng &&rng, Pred pred) const ->
-                    CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
-                        requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
-                {
-                    return {all(static_cast<Rng &&>(rng)), std::move(pred)};
-                }
-                template<typename Rng, typename Pred, typename Proj>
-                auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                    CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)(
-                        requires ViewableRange<Rng> && InputRange<Rng> &&
-                            IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
-                {
-                    return {
-                        all(static_cast<Rng &&>(rng)),
-                        compose(std::move(pred), std::move(proj))
-                    };
-                }
-            };
-
-            /// \relates drop_while_fn
-            /// \ingroup group-views
-            RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
-        }
-        /// @}
+        /// \relates drop_while_fn
+        /// \ingroup group-views
+        RANGES_INLINE_VARIABLE(view<drop_while_fn>, drop_while)
     }
+    /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::v3::drop_while_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::drop_while_view)
 
 #endif

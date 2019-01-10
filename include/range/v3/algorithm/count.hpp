@@ -25,40 +25,37 @@
 
 namespace ranges
 {
-    inline namespace v3
+    /// \addtogroup group-algorithms
+    /// @{
+    struct count_fn
     {
-        /// \addtogroup group-algorithms
-        /// @{
-        struct count_fn
+        template<typename I, typename S, typename V, typename P = identity>
+        auto operator()(I begin, S end, V const & val, P proj = P{}) const ->
+            CPP_ret(iter_difference_t<I>)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectRelation<equal_to, projected<I, P>, V const *>)
         {
-            template<typename I, typename S, typename V, typename P = identity>
-            auto operator()(I begin, S end, V const & val, P proj = P{}) const ->
-                CPP_ret(iter_difference_t<I>)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        IndirectRelation<equal_to, projected<I, P>, V const *>)
-            {
-                iter_difference_t<I> n = 0;
-                for(; begin != end; ++begin)
-                    if(invoke(proj, *begin) == val)
-                        ++n;
-                return n;
-            }
+            iter_difference_t<I> n = 0;
+            for(; begin != end; ++begin)
+                if(invoke(proj, *begin) == val)
+                    ++n;
+            return n;
+        }
 
-            template<typename Rng, typename V, typename P = identity>
-            auto operator()(Rng &&rng, V const & val, P proj = P{}) const ->
-                CPP_ret(iter_difference_t<iterator_t<Rng>>)(
-                    requires InputRange<Rng> &&
-                        IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
-            {
-                return (*this)(begin(rng), end(rng), val, std::move(proj));
-            }
-        };
+        template<typename Rng, typename V, typename P = identity>
+        auto operator()(Rng &&rng, V const & val, P proj = P{}) const ->
+            CPP_ret(iter_difference_t<iterator_t<Rng>>)(
+                requires InputRange<Rng> &&
+                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+        {
+            return (*this)(begin(rng), end(rng), val, std::move(proj));
+        }
+    };
 
-        /// \sa `count_fn`
-        /// \ingroup group-algorithms
-        RANGES_INLINE_VARIABLE(count_fn, count)
-        /// @}
-    } // namespace v3
+    /// \sa `count_fn`
+    /// \ingroup group-algorithms
+    RANGES_INLINE_VARIABLE(count_fn, count)
+    /// @}
 } // namespace ranges
 
 #endif // include guard
