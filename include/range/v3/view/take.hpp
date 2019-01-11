@@ -48,9 +48,10 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> end)
               : end_(std::move(end))
             {}
-            CPP_member
-            constexpr CPP_ctor(sentinel)(sentinel<!Const> that)(
-                requires Const && ConvertibleTo<sentinel_t<Rng>, sentinel_t<Base>>)
+            template<bool Other>
+            constexpr CPP_ctor(sentinel)(sentinel<Other> that)(
+                requires Const && (!Other) &&
+                    ConvertibleTo<sentinel_t<Rng>, sentinel_t<Base>>)
               : end_(std::move(that.end_))
             {}
             constexpr sentinel_t<Base> base() const
