@@ -388,11 +388,14 @@ namespace ranges
             View<T> && SizedRange<T>
     );
 
+    // Not to spec because of move-only Views.
     CPP_def
     (
         template(typename T)
         concept ViewableRange,
-            Range<T> && (ForwardingRange_<T> || View<detail::decay_t<T>>)
+            Range<T> &&
+            (ForwardingRange_<T> ||
+                (View<detail::decay_t<T>> && Constructible<detail::decay_t<T>, T>))
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////

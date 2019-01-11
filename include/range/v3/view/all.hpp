@@ -58,9 +58,9 @@ namespace ranges
             }
 
         public:
-            CPP_template(typename T)(
+            template<typename T>
+            auto CPP_fun(operator())(T &&t) (const
                 requires ViewableRange<T>)
-            auto operator()(T &&t) const
             {
                 return all_fn::from_range_(
                     static_cast<T &&>(t),
