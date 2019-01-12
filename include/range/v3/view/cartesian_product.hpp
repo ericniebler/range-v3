@@ -101,12 +101,10 @@ namespace ranges
     (
         template(typename IsConst, typename...Views)
         (concept CartesianProductViewCanBidi)(IsConst, Views...),
-            // BUGBUG alternation is totally broken.
-            Type<> &&
-            (CartesianProductViewCanRandom<IsConst, Views...> ||
+            CartesianProductViewCanRandom<IsConst, Views...> ||
             And<CommonRange<meta::const_if<IsConst, Views>>...,
                 BidirectionalIterator<iterator_t<
-                    meta::const_if<IsConst, Views>>>...>)
+                    meta::const_if<IsConst, Views>>>...>
     );
 
     template<typename... Views>
