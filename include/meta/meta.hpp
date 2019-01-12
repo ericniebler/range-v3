@@ -3711,9 +3711,9 @@ namespace meta
     ///////////////////////////////////////////////////////////////////////////////////////////
     // const_if
     template <bool If, typename T>
-    using const_if_c = invoke<add_const_if_c<If>, T>;
+    using const_if_c = typename add_const_if_c<If>::template invoke<T>;
     template <typename If, typename T>
-    using const_if = invoke<add_const_if<If>, T>;
+    using const_if = typename add_const_if<If>::template invoke<T>;
     /// \endcond
 
     /// \cond
