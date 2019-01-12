@@ -123,8 +123,16 @@ namespace ranges
         template<typename U>
         explicit constexpr CPP_ctor(semiregular)(U &&u)(
             noexcept(std::is_nothrow_constructible<T, U>::value)
-                requires not defer::Same<uncvref_t<U>, semiregular> &&
+                requires (not defer::Same<uncvref_t<U>, semiregular>) &&
                     defer::Constructible<T, U>)
+          : semiregular(in_place, static_cast<U &&>(u))
+        {}
+        template<typename U>
+        constexpr CPP_ctor(semiregular)(U &&u)(
+            noexcept(std::is_nothrow_constructible<T, U>::value)
+                requires (not defer::Same<uncvref_t<U>, semiregular>) &&
+                    defer::Constructible<T, U> &&
+                    defer::ConvertibleTo<U, T>)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
         CPP_template(typename... Args)(
