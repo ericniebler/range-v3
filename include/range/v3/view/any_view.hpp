@@ -612,6 +612,22 @@ namespace ranges
         requires View<Rng>)
     any_view(Rng &&) -> any_view<range_reference_t<Rng>, get_categories<Rng>()>;
 #endif
+
+    template<typename Ref>
+    using any_input_view RANGES_DEPRECATED("Use any_view<Ref, category::input> instead.")
+        = any_view<Ref, category::input>;
+
+    template<typename Ref>
+    using any_forward_view RANGES_DEPRECATED("Use any_view<Ref, category::forward> instead.")
+        = any_view<Ref, category::forward>;
+
+    template<typename Ref>
+    using any_bidirectional_view RANGES_DEPRECATED("Use any_view<Ref, category::bidirectional> instead.")
+        = any_view<Ref, category::bidirectional>;
+
+    template<typename Ref>
+    using any_random_access_view RANGES_DEPRECATED("Use any_view<Ref, category::random_access> instead.")
+        = any_view<Ref, category::random_access>;
 } // namepace ranges
 
 RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
