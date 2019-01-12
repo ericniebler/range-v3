@@ -152,6 +152,14 @@
 #define META_TYPE_CONSTRAINT(...) typename
 #endif
 
+#if (defined(__cpp_lib_type_trait_variable_templates) && \
+    __cpp_lib_type_trait_variable_templates > 0) || \
+    META_CXX_VER >= META_CXX_STD_17
+#define META_CXX_TRAIT_VARIABLE_TEMPLATES 1
+#else
+#define META_CXX_TRAIT_VARIABLE_TEMPLATES 0
+#endif
+
 namespace meta
 {
 #if META_CXX_INTEGER_SEQUENCE
@@ -196,7 +204,7 @@ namespace meta
         template <bool B>
         META_INLINE_VAR constexpr bool bool_ = B;
 
-        template <auto> struct require_constant; // not defined
+        template <class T, T> struct require_constant; // not defined
     }
 
     template <typename...>
@@ -208,8 +216,10 @@ namespace meta
         META_CONCEPT_BARRIER(__is_same(T, U));
 #elif defined(__GNUC__) && __GNUC__ >= 6
         META_CONCEPT_BARRIER(__is_same_as(T, U));
-#else
+#elif defined(META_CXX_TRAIT_VARIABLE_TEMPLATES)
         META_CONCEPT_BARRIER(std::is_same_v<T, U>);
+#else
+        META_CONCEPT_BARRIER(std::is_same<T, U>::value);
 #endif
 
     template <template <typename...> class C, typename... Ts>
@@ -248,24 +258,29 @@ namespace meta
         typename T::type::value_type;
     }
     && Same<typename T::value_type, typename T::type::value_type>
+#if META_CXX_TRAIT_VARIABLE_TEMPLATES
     && std::is_integral_v<typename T::value_type>
+#else
+    && std::is_integral<typename T::value_type>::value
+#endif
+
     && requires
     {
         // { T::value } -> Same<const typename T::value_type&>;
         T::value;
         requires Same<decltype(T::value), const typename T::value_type>;
-        typename detail::require_constant<T::value>;
+        typename detail::require_constant<decltype(T::value), T::value>;
 
         // { T::type::value } -> Same<const typename T::value_type&>;
         T::type::value;
         requires Same<decltype(T::type::value), const typename T::value_type>;
-        typename detail::require_constant<T::type::value>;
+        typename detail::require_constant<decltype(T::type::value), T::type::value>;
         requires T::value == T::type::value;
 
         // { T{}() } -> Same<typename T::value_type>;
         T{}();
         requires Same<decltype(T{}()), typename T::value_type>;
-        typename detail::require_constant<T{}()>;
+        typename detail::require_constant<decltype(T{}()), T{}()>;
         requires T{}() == T::value;
 
         { T{} } -> typename T::value_type;
