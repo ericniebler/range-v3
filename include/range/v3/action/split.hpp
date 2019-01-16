@@ -51,28 +51,28 @@ namespace ranges
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
                 return view::split(rng, std::move(fun))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             CPP_template(typename Rng, typename Fun)(
                 requires view::SplitOnPredicate<Rng, Fun>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
                 return view::split(rng, std::move(fun))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             CPP_template(typename Rng)(
                 requires view::SplitOnElement<Rng>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
             {
                 return view::split(rng, std::move(val))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             CPP_template(typename Rng, typename Sub)(
                 requires view::SplitOnSubRange<Rng, Sub>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, Sub &&sub) const
             {
                 return view::split(rng, static_cast<Sub &&>(sub))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
 

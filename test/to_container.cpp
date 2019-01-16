@@ -21,7 +21,8 @@
 #include "./test_utils.hpp"
 
 template<typename T>
-struct vector_like : std::vector<T> {
+struct vector_like : std::vector<T>
+{
     using std::vector<T>::vector;
 
     using typename std::vector<T>::size_type;
@@ -29,10 +30,11 @@ struct vector_like : std::vector<T> {
     size_type last_reservation{};
     size_type reservation_count{};
 
-    void reserve(size_type n) {
-      std::vector<T>::reserve(n);
-      last_reservation = n;
-      ++reservation_count;
+    void reserve(size_type n)
+    {
+        std::vector<T>::reserve(n);
+        last_reservation = n;
+        ++reservation_count;
     }
 };
 
@@ -41,9 +43,14 @@ int main()
     using namespace ranges;
 
     auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to_<std::list>();
+        | to<std::list>();
     CPP_assert(Same<decltype(lst0), std::list<int>>);
     ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
+
+    auto lst1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+        | to<std::list>;
+    CPP_assert(Same<decltype(lst1), std::list<int>>);
+    ::check_equal(lst1, {0,1,4,9,16,25,36,49,64,81});
 
     auto vec0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
         | to_vector | action::sort(std::greater<int>{});
@@ -51,12 +58,17 @@ int main()
     ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
 
     auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to_<std::vector<long>>() | action::sort(std::greater<long>{});
+        | to<std::vector<long>>() | action::sort(std::greater<long>{});
     CPP_assert(Same<decltype(vec1), std::vector<long>>);
     ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
 
+    auto vec2 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+        | to<std::vector<long>> | action::sort(std::greater<long>{});
+    CPP_assert(Same<decltype(vec2), std::vector<long>>);
+    ::check_equal(vec2, {81,64,49,36,25,16,9,4,1,0});
+
     const std::size_t N = 4096;
-    auto vl = view::iota(0, int{N}) | to_<vector_like<int>>();
+    auto vl = view::iota(0, int{N}) | to<vector_like<int>>();
     CPP_assert(Same<decltype(vl), vector_like<int>>);
     CHECK(vl.reservation_count == std::size_t{1});
     CHECK(vl.last_reservation == N);

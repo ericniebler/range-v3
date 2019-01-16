@@ -259,8 +259,8 @@ int main()
 
     // move
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c","x"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"b","x","y","z"});
         auto res = view::set_union(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
 
         std::vector<MoveOnlyString> expected;

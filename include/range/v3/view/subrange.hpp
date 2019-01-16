@@ -282,7 +282,7 @@ namespace ranges
             requires detail::ConvertibleToContainer<subrange const, Container>)
         constexpr operator Container () const
         {
-            return ranges::to_<Container>(*this);
+            return ranges::to<Container>(*this);
         }
 
         CPP_template(typename PairLike)(

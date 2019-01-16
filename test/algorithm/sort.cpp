@@ -317,7 +317,7 @@ int main()
             view::for_each(view::ints(1,6) | view::reverse, [](int i){
                 return ranges::yield_from(view::repeat_n(i,i));
             });
-        auto v1 = ranges::to_<std::vector<Int>>(
+        auto v1 = ranges::to<std::vector<Int>>(
             {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         auto rng = view::zip(v0, v1);
         ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});
