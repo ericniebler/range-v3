@@ -479,6 +479,12 @@ namespace ranges
     /**/
 #endif
 
+#ifndef RANGES_DOXYGEN_INVOKED
+#define RANGES_HIDDEN_DETAIL(...) __VA_ARGS__
+#else
+#define RANGES_HIDDEN_DETAIL(...)
+#endif
+
 #ifndef RANGES_CXX_DEDUCTION_GUIDES
 #if defined(__clang__) && defined(__apple_build_version__)
 // Apple's clang version doesn't do deduction guides very well.

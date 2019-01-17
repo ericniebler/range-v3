@@ -91,8 +91,8 @@ int main()
 
     {
         using namespace ranges;
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"x","y","z"});
         auto rng = view::zip(v0, v1);
         ranges::iter_swap(rng.begin(), rng.begin()+2);
         ::check_equal(v0, {"c","b","a"});

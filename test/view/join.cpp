@@ -133,13 +133,13 @@ int main()
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<SizedRangeConcept>(rng3);
     CPP_assert(!SizedSentinel<decltype(end(rng3)), decltype(begin(rng3))>);
-    CHECK(to_<std::string>(rng3) == "Thisishisface");
+    CHECK(to<std::string>(rng3) == "Thisishisface");
 
     auto rng4 = view::join(vs, ' ');
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<SizedRangeConcept>(rng4);
     CPP_assert(!SizedSentinel<decltype(end(rng4)), decltype(begin(rng4))>);
-    CHECK(to_<std::string>(rng4) == "This is his face");
+    CHECK(to<std::string>(rng4) == "This is his face");
 
     auto rng5 = view::join(twice(twice(42)));
     static_assert(range_cardinality<decltype(rng5)>::value == 4, "");

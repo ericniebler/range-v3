@@ -411,14 +411,14 @@ namespace ranges
             requires detail::ConvertibleToContainer<D, Container>)
         constexpr /*c++14*/ operator Container ()
         {
-            return ranges::to_<Container>(derived());
+            return ranges::to<Container>(derived());
         }
         /// \overload
         CPP_template(typename Container, typename D = Derived)(
             requires detail::ConvertibleToContainer<D const, Container>)
         constexpr operator Container () const
         {
-            return ranges::to_<Container>(derived());
+            return ranges::to<Container>(derived());
         }
         /// \brief Print a range to an ostream
     private:
