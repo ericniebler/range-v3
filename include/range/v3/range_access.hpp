@@ -146,7 +146,7 @@ namespace ranges
             decltype(range_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
 
         template<typename T>
-        static std::ptrdiff_t cursor_difference_2_(detail::any);
+        static std::ptrdiff_t cursor_difference_2_(detail::ignore_t);
         template<typename T>
         static sized_cursor_difference_t<T> cursor_difference_2_(long);
         template<typename T>

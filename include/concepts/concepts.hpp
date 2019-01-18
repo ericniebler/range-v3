@@ -127,7 +127,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 
 #define CPP_assert(...)                                                         \
-    static_assert((bool) (__VA_ARGS__),                                         \
+    static_assert(static_cast<bool>(__VA_ARGS__),                               \
         "Concept assertion failed : " #__VA_ARGS__)                             \
     /**/
 #define CPP_assert_msg static_assert
@@ -373,7 +373,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     bool (&CPP_true)(::concepts::detail::Nil) =                                 \
         ::concepts::detail::CPP_true,                                           \
     ::concepts::detail::enable_if_t<int,                                        \
-        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&                 \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
         CPP_true(::concepts::detail::Nil{})> = 0>                               \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
@@ -401,14 +401,14 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_CTOR_REQUIRES_0(...)                                                \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&                 \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
             CPP_true(::concepts::detail::Nil{})> = {})                          \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_REQUIRES_1(...)                                                \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        (bool)(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(                      \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(           \
                 CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__))) &&                       \
             CPP_true(::concepts::detail::Nil{})> = {})                          \
         CPP_PP_EXPAND(                                                          \
@@ -435,7 +435,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    (bool)(__VA_ARGS__) && CPP_true(::concepts::detail::Nil{})>                 \
+    static_cast<bool>(__VA_ARGS__) && CPP_true(::concepts::detail::Nil{})>      \
     /**/
 #define CPP_broken_friend_member                                                \
     template<bool (&CPP_true)(::concepts::detail::Nil) =                        \

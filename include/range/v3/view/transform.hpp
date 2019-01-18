@@ -176,7 +176,7 @@ namespace ranges
             sentinel_t<Rng2> end2_;
         public:
             sentinel() = default;
-            sentinel(detail::any, sentinel_t<Rng1> end1, sentinel_t<Rng2> end2)
+            sentinel(detail::ignore_t, sentinel_t<Rng1> end1, sentinel_t<Rng2> end2)
               : end1_(std::move(end1)), end2_(std::move(end2))
             {}
         };

@@ -36,7 +36,7 @@ namespace ranges
         private:
             /// If it's a view already, pass it though.
             template<typename T>
-            static auto from_range_(T &&t, std::true_type, detail::any, detail::any)
+            static auto from_range_(T &&t, std::true_type, detail::ignore_t, detail::ignore_t)
             {
                 return static_cast<T &&>(t);
             }
@@ -44,7 +44,7 @@ namespace ranges
             /// If it is container-like, turn it into a view, being careful
             /// to preserve the Sized-ness of the range.
             template<typename T>
-            static auto from_range_(T &&t, std::false_type, std::true_type, detail::any)
+            static auto from_range_(T &&t, std::false_type, std::true_type, detail::ignore_t)
             {
                 return ranges::view::ref(t);
             }

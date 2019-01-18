@@ -170,24 +170,18 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename T = void>
-        struct any_
+        struct ignore_t
         {
-            any_() = default;
-            any_(T &&)
-            {}
-        };
-
-        template<>
-        struct any_<void>
-        {
-            any_() = default;
+            ignore_t() = default;
             template<typename T>
-            any_(T &&)
+            constexpr ignore_t(T &&) noexcept
             {}
+            template<typename T>
+            constexpr ignore_t const &operator=(T &&) const noexcept
+            {
+                return *this;
+            }
         };
-
-        using any = any_<>;
 
         struct value_init
         {
@@ -199,20 +193,6 @@ namespace ranges
         };
 
         struct make_compressed_pair_fn;
-
-        template<typename T>
-        constexpr T &&forward(meta::_t<std::remove_reference<T>> & t) noexcept
-        {
-            return static_cast<T &&>(t);
-        }
-
-        template<typename T>
-        constexpr T &&forward(meta::_t<std::remove_reference<T>> && t) noexcept
-        {
-            // This is to catch way sketchy stuff like: forward<int const &>(42)
-            static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
-            return static_cast<T &&>(t);
-        }
 
         template<typename T>
         constexpr meta::_t<std::remove_reference<T>> &&
@@ -249,7 +229,7 @@ namespace ranges
 
         template<typename T, typename R = meta::_t<std::remove_reference<T>>>
         using as_cref_t =
-            meta::_t<std::add_lvalue_reference<meta::_t<std::add_const<R>>>>;
+            meta::_t<std::add_lvalue_reference<R const>>;
 
         struct get_first;
         struct get_second;
@@ -633,13 +613,13 @@ namespace ranges
         struct slice_fn;
     }
 
-    template<typename Rng, typename Fun>
-    struct split_view;
+    // template<typename Rng, typename Fun>
+    // struct split_view;
 
-    namespace view
-    {
-        struct split_fn;
-    }
+    // namespace view
+    // {
+    //     struct split_fn;
+    // }
 
     template<typename Rng>
     struct single_view;

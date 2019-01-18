@@ -88,7 +88,7 @@ namespace ranges
         {
             return p;
         }
-        template<typename J, typename = detail::arrow_type_<J const>>
+        template<typename J, typename = detail::iter_arrow_t<J const>>
         static J operator_arrow_(J const &j, int) noexcept(noexcept(J(j)))
         {
             return j;
@@ -185,7 +185,7 @@ namespace ranges
         template<typename I_ = I>
         friend constexpr /*c++14*/
         auto iter_move(common_iterator const &i)
-            noexcept(detail::has_nothrow_iter_move<I>::value) ->
+            noexcept(detail::has_nothrow_iter_move_v<I>) ->
             CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                 requires InputIterator<I_>)
         {
@@ -211,7 +211,7 @@ namespace ranges
         template<typename I, typename S>
         constexpr /*c++14*/
         auto iter_move(common_iterator<I, S> const &i)
-            noexcept(detail::has_nothrow_iter_move<I>::value) ->
+            noexcept(detail::has_nothrow_iter_move_v<I>) ->
             CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
                 requires InputIterator<I>)
         {
@@ -308,7 +308,7 @@ namespace ranges
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;
             using reference = iter_reference_t<I>;
-            using pointer = meta::_t<detail::pointer_type_<I>>;
+            using pointer = detail::iter_pointer_t<I>;
             using iterator_concept =
                 if_then_t<
                     (bool) ForwardIterator<I>,

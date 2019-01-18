@@ -80,7 +80,7 @@ namespace ranges
             {
                 return (inner_ = view::all(static_cast<Inner &&>(inner)));
             }
-            constexpr view::all_t<Inner> &get_inner_(any) noexcept
+            constexpr view::all_t<Inner> &get_inner_(ignore_t) noexcept
             {
                 return inner_;
             }

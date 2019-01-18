@@ -106,7 +106,7 @@ namespace ranges
         {
             return ranges::begin(take.base_) + static_cast<range_difference_t<Rng>>(take.size());
         }
-        static auto end_random_access_(detail::any, std::false_type)
+        static auto end_random_access_(detail::ignore_t, std::false_type)
         {
             return default_sentinel;
         }
@@ -117,7 +117,7 @@ namespace ranges
                 take,
                 meta::bool_<RandomAccessRange<decltype((take.base_))>>{});
         }
-        static auto end_sized_(detail::any, std::false_type, std::true_type) // infinite
+        static auto end_sized_(detail::ignore_t, std::false_type, std::true_type) // infinite
         {
             return default_sentinel;
         }

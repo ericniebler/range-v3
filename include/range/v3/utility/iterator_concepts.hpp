@@ -576,8 +576,8 @@ namespace ranges
 
     CPP_def
     (
-        template(typename I1, typename I2)
-        concept IndirectlySwappable,
+        template(typename I1, typename I2 = I1)
+        (concept IndirectlySwappable)(I1, I2),
             requires (I1 && i1, I2 && i2)
             (
                 ranges::iter_swap((I1 &&) i1, (I2 &&) i2),
