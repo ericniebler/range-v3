@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_VIEW_SPLIT_WITH_HPP
-#define RANGES_V3_VIEW_SPLIT_WITH_HPP
+#ifndef RANGES_V3_VIEW_SPLIT_WHEN_HPP
+#define RANGES_V3_VIEW_SPLIT_WHEN_HPP
 
 #include <utility>
 #include <type_traits>
@@ -37,9 +37,9 @@ namespace ranges
     /// @{
 
     template<typename Rng, typename Fun>
-    struct split_with_view
+    struct split_when_view
       : view_facade<
-            split_with_view<Rng, Fun>,
+            split_when_view<Rng, Fun>,
             is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
     {
     private:
@@ -52,7 +52,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            friend split_with_view;
+            friend split_when_view;
             friend struct cursor<!IsConst>;
             bool zero_;
             using CRng = meta::const_if_c<IsConst, Rng>;
@@ -130,8 +130,8 @@ namespace ranges
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
     public:
-        split_with_view() = default;
-        split_with_view(Rng rng, Fun fun)
+        split_when_view() = default;
+        split_when_view(Rng rng, Fun fun)
           : rng_(std::move(rng))
           , fun_(std::move(fun))
         {}
@@ -139,14 +139,14 @@ namespace ranges
 
     namespace view
     {
-        struct split_with_fn
+        struct split_when_fn
         {
         private:
             friend view_access;
             template<typename T>
-            static auto bind(split_with_fn split_with, T &&t)
+            static auto bind(split_when_fn split_when, T &&t)
             {
-                return make_pipeable(std::bind(split_with, std::placeholders::_1,
+                return make_pipeable(std::bind(split_when, std::placeholders::_1,
                     bind_forward<T>(t)));
             }
             template<typename Pred>
@@ -166,7 +166,7 @@ namespace ranges
         public:
             template<typename Rng, typename Fun>
             auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(split_with_view<all_t<Rng>, Fun>)(
+                CPP_ret(split_when_view<all_t<Rng>, Fun>)(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>> &&
                         Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>> &&
@@ -179,7 +179,7 @@ namespace ranges
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(split_with_view<all_t<Rng>, predicate_pred<Fun>>)(
+                CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         Predicate<Fun const&, range_reference_t<Rng>> &&
                         CopyConstructible<Fun>)
@@ -189,13 +189,13 @@ namespace ranges
             }
         };
 
-        /// \relates split_with_fn
+        /// \relates split_when_fn
         /// \ingroup group-views
-        RANGES_INLINE_VARIABLE(view<split_with_fn>, split_with)
+        RANGES_INLINE_VARIABLE(view<split_when_fn>, split_when)
     }
     /// @}
 }
 
-RANGES_SATISFY_BOOST_RANGE(::ranges::split_with_view)
+RANGES_SATISFY_BOOST_RANGE(::ranges::split_when_view)
 
 #endif
