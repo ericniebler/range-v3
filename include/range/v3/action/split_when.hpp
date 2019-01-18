@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_ACTION_SPLIT_WITH_HPP
-#define RANGES_V3_ACTION_SPLIT_WITH_HPP
+#ifndef RANGES_V3_ACTION_SPLIT_WHEN_HPP
+#define RANGES_V3_ACTION_SPLIT_WHEN_HPP
 
 #include <vector>
 #include <functional>
@@ -25,7 +25,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/split_with.hpp>
+#include <range/v3/view/split_when.hpp>
 #include <range/v3/view/transform.hpp>
 
 namespace ranges
@@ -34,7 +34,7 @@ namespace ranges
     /// @{
     namespace action
     {
-        struct split_with_fn
+        struct split_when_fn
         {
         private:
             template<typename Rng>
@@ -56,7 +56,7 @@ namespace ranges
                         std::pair<bool, iterator_t<Rng>>>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
-                return view::split_with(rng, std::move(fun))
+                return view::split_when(rng, std::move(fun))
                      | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
             CPP_template(typename Rng, typename Fun)(
@@ -65,7 +65,7 @@ namespace ranges
                     CopyConstructible<Fun>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
-                return view::split_with(rng, std::move(fun))
+                return view::split_when(rng, std::move(fun))
                      | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
@@ -73,7 +73,7 @@ namespace ranges
         /// \ingroup group-actions
         /// \relates split_fn
         /// \sa action
-        RANGES_INLINE_VARIABLE(action<split_with_fn>, split_with)
+        RANGES_INLINE_VARIABLE(action<split_when_fn>, split_when)
     }
     /// @}
 }

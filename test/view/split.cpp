@@ -18,7 +18,7 @@
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/split.hpp>
-#include <range/v3/view/split_with.hpp>
+#include <range/v3/view/split_when.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -328,7 +328,7 @@ int main()
 
     {
         std::string str("Now is the time for all ggood men to come to the aid of their country.");
-        auto rng = view::split_with(str, starts_with_g{});
+        auto rng = view::split_when(str, starts_with_g{});
         CHECK(distance(rng) == 3);
         if(distance(rng) == 3)
         {
@@ -341,7 +341,7 @@ int main()
     {
         std::string str("Now is the time for all ggood men to come to the aid of their country.");
         forward_iterator<std::string::iterator> i {str.begin()};
-        auto rng = view::counted(i, str.size()) | view::split_with(starts_with_g{});
+        auto rng = view::counted(i, str.size()) | view::split_when(starts_with_g{});
         CHECK(distance(rng) == 3);
         if(distance(rng) == 3)
         {
@@ -376,7 +376,7 @@ int main()
 
     {
         std::string str("now  is \t the\ttime");
-        auto rng = view::split_with(str, (int(*)(int))&std::isspace);
+        auto rng = view::split_when(str, (int(*)(int))&std::isspace);
         CHECK(distance(rng) == 4);
         if(distance(rng) == 4)
         {
