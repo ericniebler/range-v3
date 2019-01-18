@@ -67,7 +67,7 @@ namespace ranges
     private:
         template<typename MemberFunctionPtr, typename First, typename... Rest>
         static constexpr auto CPP_auto_fun(invoke_member_fn)(
-            std::true_type, detail::any, MemberFunctionPtr fn, First &&first, Rest &&... rest)
+            std::true_type, detail::ignore_t, MemberFunctionPtr fn, First &&first, Rest &&... rest)
         (
             return (static_cast<First &&>(first).*fn)(static_cast<Rest &&>(rest)...)
         )
@@ -86,7 +86,7 @@ namespace ranges
 
         template<typename MemberDataPtr, typename First>
         static constexpr auto CPP_auto_fun(invoke_member_data)(
-            std::true_type, detail::any, MemberDataPtr ptr, First &&first)
+            std::true_type, detail::ignore_t, MemberDataPtr ptr, First &&first)
         (
             return static_cast<First &&>(first).*ptr
         )

@@ -173,7 +173,7 @@ namespace ranges
             std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends_;
         public:
             sentinel() = default;
-            sentinel(detail::any, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
+            sentinel(detail::ignore_t, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
               : ends_(std::move(ends))
             {}
             template<bool Other>

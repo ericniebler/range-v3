@@ -1218,7 +1218,7 @@ namespace ranges
             }
             template<typename II = I const>
             constexpr /*c++14*/
-            auto move() const noexcept(has_nothrow_iter_move<II>::value) ->
+            auto move() const noexcept(has_nothrow_iter_move_v<II>) ->
                 CPP_ret(iter_rvalue_reference_t<II>)(
                     requires Same<I const, II> && Readable<II>)
             {

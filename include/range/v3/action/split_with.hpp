@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_ACTION_SPLIT_HPP
-#define RANGES_V3_ACTION_SPLIT_HPP
+#ifndef RANGES_V3_ACTION_SPLIT_WITH_HPP
+#define RANGES_V3_ACTION_SPLIT_WITH_HPP
 
 #include <vector>
 #include <functional>
@@ -25,7 +25,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/split.hpp>
+#include <range/v3/view/split_with.hpp>
 #include <range/v3/view/transform.hpp>
 
 namespace ranges
@@ -34,7 +34,7 @@ namespace ranges
     /// @{
     namespace action
     {
-        struct split_fn
+        struct split_with_fn
         {
         private:
             template<typename Rng>
@@ -46,22 +46,26 @@ namespace ranges
         public:
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            CPP_template(typename Rng)(
-                requires InputRange<Rng> &&
-                    IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
-            std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
+            CPP_template(typename Rng, typename Fun)(
+                requires ForwardRange<Rng> &&
+                    Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>> &&
+                    Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>> &&
+                    CopyConstructible<Fun> &&
+                    ConvertibleTo<
+                        invoke_result_t<Fun&, iterator_t<Rng>, sentinel_t<Rng>>,
+                        std::pair<bool, iterator_t<Rng>>>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
-                return view::split(rng, std::move(val))
+                return view::split_with(rng, std::move(fun))
                      | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
-            CPP_template(typename Rng, typename Pattern)(
-                requires InputRange<Rng> &&
-                    ViewableRange<Pattern> && ForwardRange<Pattern> &&
-                    IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                    (ForwardRange<Rng> || detail::tiny_range<Pattern>))
-            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Pattern &&pattern) const
+            CPP_template(typename Rng, typename Fun)(
+                requires ForwardRange<Rng> &&
+                    Predicate<Fun const&, range_reference_t<Rng>> &&
+                    CopyConstructible<Fun>)
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
             {
-                return view::split(rng, static_cast<Pattern &&>(pattern))
+                return view::split_with(rng, std::move(fun))
                      | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
@@ -69,7 +73,7 @@ namespace ranges
         /// \ingroup group-actions
         /// \relates split_fn
         /// \sa action
-        RANGES_INLINE_VARIABLE(action<split_fn>, split)
+        RANGES_INLINE_VARIABLE(action<split_with_fn>, split_with)
     }
     /// @}
 }

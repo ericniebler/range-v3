@@ -18,6 +18,7 @@
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/concat.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/filter.hpp>

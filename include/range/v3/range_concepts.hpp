@@ -218,10 +218,11 @@ namespace ranges
         concept SizedRange,
             requires (T &t)
             (
-                ranges::size(t),
-                concepts::requires_<Integral<decltype(ranges::size(t))>>
+                ranges::size(t)
             ) &&
-            Range<T> && !disable_sized_range<uncvref_t<T>>
+            Range<T> &&
+            Integral<range_size_t<T>> &&
+            !disable_sized_range<uncvref_t<T>>
     );
 
     /// \cond
@@ -322,6 +323,8 @@ namespace ranges
             enable_view<T>
     );
 
+    /// \cond
+    // Non-standard, avoid using
     CPP_def
     (
         template(typename T, typename V)
@@ -340,7 +343,7 @@ namespace ranges
     (
         template(typename T)
         concept ForwardView,
-            View<T> && ForwardRange<T>
+            View<T> && Copyable<T> && ForwardRange<T>
     );
 
     CPP_def
@@ -363,6 +366,7 @@ namespace ranges
         concept ContiguousView,
             RandomAccessView<T> && ContiguousRange<T>
     );
+    /// \endcond
 
     // Additional concepts for checking additional orthogonal properties
     CPP_def

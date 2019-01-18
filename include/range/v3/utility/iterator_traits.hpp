@@ -67,9 +67,8 @@ namespace ranges
         using iter_rvalue_reference_t = R;
 
         template<typename I>
-        struct has_nothrow_iter_move
-          : meta::bool_<noexcept(iter_rvalue_reference_t<I>(ranges::iter_move(std::declval<I &>())))>
-        {};
+        constexpr bool has_nothrow_iter_move_v =
+            noexcept(iter_rvalue_reference_t<I>(ranges::iter_move(std::declval<I &>())));
     } // namespace detail
     /// \endcond
 
@@ -81,7 +80,8 @@ namespace ranges
     using iter_rvalue_reference_t = detail::iter_rvalue_reference_t<I>;
 
     template<typename I>
-    using iter_common_reference_t = common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
+    using iter_common_reference_t =
+        common_reference_t<iter_reference_t<I>, iter_value_t<I> &>;
     /// @}
 
     /// \cond
@@ -89,28 +89,25 @@ namespace ranges
     using size_type_t
         RANGES_DEPRECATED("size_type_t is deprecated.") =
             meta::_t<std::make_unsigned<iter_difference_t<I>>>;
-    /// \endcond
 
-    /// \cond
     template<typename I>
     using rvalue_reference_t
-        RANGES_DEPRECATED("iter_rvalue_reference_t is deprecated; use iter_rvalue_reference_t instead") =
-            detail::iter_rvalue_reference_t<I>;
+        RANGES_DEPRECATED("rvalue_reference_t is deprecated; "
+                          "use iter_rvalue_reference_t instead") =
+            iter_rvalue_reference_t<I>;
     /// \endcond
 
     /// \cond
     namespace detail
     {
         template<typename I>
-        using arrow_type_ = decltype(std::declval<I &>().operator->());
+        using iter_arrow_t = decltype(std::declval<I &>().operator->());
 
         template<typename I>
-        struct pointer_type_
-          : meta::if_<
-                meta::is_trait<meta::defer<arrow_type_, I>>,
-                meta::defer<arrow_type_, I>,
-                std::add_pointer<iter_reference_t<I>>>
-        {};
+        using iter_pointer_t = meta::_t<if_then_t<
+            meta::is_trait<meta::defer<iter_arrow_t, I>>::value,
+            meta::defer<iter_arrow_t, I>,
+            std::add_pointer<iter_reference_t<I>>>>;
     }
     /// \endcond
 }

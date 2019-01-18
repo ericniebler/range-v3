@@ -62,7 +62,7 @@ namespace ranges
             CPP_assert(RandomAccessRange<Rng>);
             return next(ranges::begin(rng_), n_, ranges::end(rng_));
         }
-        iterator_t<Rng> get_begin_(std::false_type, detail::any)
+        iterator_t<Rng> get_begin_(std::false_type, detail::ignore_t)
         {
             CPP_assert(!RandomAccessRange<Rng>);
             using cache_t = detail::non_propagating_cache<

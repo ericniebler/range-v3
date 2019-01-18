@@ -111,7 +111,7 @@ namespace ranges
         adaptor_base &operator=(adaptor_base &&) = default;
         adaptor_base &operator=(adaptor_base const &) = default;
 
-        adaptor_base(detail::any, detail::any = {}, detail::any = {})
+        adaptor_base(detail::ignore_t, detail::ignore_t = {}, detail::ignore_t = {})
         {}
         template<typename Rng>
         static constexpr auto CPP_auto_fun(begin)(Rng &rng)
@@ -363,7 +363,7 @@ namespace ranges
         template<typename A = Adapt,
             typename R = decltype(std::declval<A const &>().read(std::declval<BaseIter const &>())),
             typename X = aux::move_t<R>>
-        X iter_move_(detail::any) const
+        X iter_move_(detail::ignore_t) const
             noexcept(noexcept(X(static_cast<X &&>(
                 std::declval<A const &>().read(std::declval<BaseIter const &>())))))
         {
