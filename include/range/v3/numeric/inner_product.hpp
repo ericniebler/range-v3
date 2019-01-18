@@ -81,7 +81,7 @@ namespace ranges
         T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
             BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
-            return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable{},
+            return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable,
                 std::move(init), std::move(bop1), std::move(bop2), std::move(proj1), std::move(proj2));
         }
 

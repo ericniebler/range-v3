@@ -24,7 +24,7 @@ ranges::subrange<char const*> c_str(char const (&sz)[N])
     return {&sz[0], &sz[N-1]};
 }
 
-ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable>, char>
+ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable_sentinel_t>, char>
 c_str_(char const *sz)
 {
     return ranges::view::delimit(sz, '\0');

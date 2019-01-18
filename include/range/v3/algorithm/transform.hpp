@@ -105,7 +105,7 @@ namespace ranges
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
                     Writable<O, indirect_result_t<F&, projected<I0, P0>, projected<I1, P1>>>)
         {
-            return (*this)(std::move(begin0), std::move(end0), std::move(begin1), unreachable{},
+            return (*this)(std::move(begin0), std::move(end0), std::move(begin1), unreachable,
                 std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
         }
 
@@ -121,7 +121,7 @@ namespace ranges
                     Writable<O, indirect_result_t<F&, projected<iterator_t<Rng0>, P0>,
                                                       projected<uncvref_t<I1Ref>, P1>>>)
         {
-            return (*this)(begin(rng0), end(rng0), static_cast<I1Ref &&>(begin1), unreachable{},
+            return (*this)(begin(rng0), end(rng0), static_cast<I1Ref &&>(begin1), unreachable,
                 std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
         }
     };
