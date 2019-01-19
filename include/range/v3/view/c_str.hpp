@@ -76,7 +76,7 @@ namespace ranges
             template<typename Char>
             auto operator()(Char *sz) const volatile ->
                 CPP_ret(ranges::delimit_view<
-                    ranges::subrange<Char *, ranges::unreachable>,
+                    ranges::subrange<Char *, ranges::unreachable_sentinel_t>,
                     meta::_t<std::remove_cv<Char>>>)(
                 requires detail::is_char_type<Char>::value)
             {

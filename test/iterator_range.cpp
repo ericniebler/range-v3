@@ -41,11 +41,11 @@ int main()
     CHECK(p0.first == vi.begin()+1);
     CHECK(p0.second == vi.end());
 
-    iterator_range<std::vector<int>::iterator, unreachable> r1 { r0.begin(), {} };
+    iterator_range<std::vector<int>::iterator, unreachable_sentinel_t> r1 { r0.begin(), {} };
     ::models<ViewConcept>(aux::copy(r1));
     ::models_not<SizedViewConcept>(aux::copy(r1));
     CHECK(r1.begin() == vi.begin()+1);
-    r1.end() = unreachable{};
+    r1.end() = unreachable;
 
     ++r0.begin();
     CHECK(r0.begin() == vi.begin()+2);
@@ -56,10 +56,10 @@ int main()
     CHECK(r0.front() == 3);
     CHECK(r0.back() == 3);
 
-    std::pair<std::vector<int>::iterator, unreachable> p1 = r1;
+    std::pair<std::vector<int>::iterator, unreachable_sentinel_t> p1 = r1;
     CHECK(p1.first == vi.begin()+1);
 
-    iterator_range<std::vector<int>::iterator, unreachable> r2 { p1 };
+    iterator_range<std::vector<int>::iterator, unreachable_sentinel_t> r2 { p1 };
     CHECK(r1.begin() == vi.begin()+1);
 
     std::list<int> li{1,2,3,4};

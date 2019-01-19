@@ -85,7 +85,7 @@ namespace ranges
         operator()(I begin, S end, O result, BOp bop = BOp{}, P proj = P{}) const
         {
             return (*this)(std::move(begin), std::move(end), std::move(result),
-                           unreachable{}, std::move(bop), std::move(proj));
+                           unreachable, std::move(bop), std::move(proj));
         }
 
         CPP_template(typename Rng, typename ORef, typename BOp = minus, typename P = identity,

@@ -37,7 +37,7 @@ namespace ranges
         {
             return it_;
         }
-        constexpr unreachable end() const
+        constexpr unreachable_sentinel_t end() const
         {
             return {};
         }

@@ -49,33 +49,33 @@ namespace {
         // I is a pointer type
         {
             int i = 42;
-            auto ci = ranges::common_iterator<int*, ranges::unreachable>{&i};
+            auto ci = ranges::common_iterator<int*, ranges::unreachable_sentinel_t>{&i};
             CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &i);
         }
         // the expression i.operator->() is well-formed
         {
             using I = ranges::basic_iterator<silly_arrow_cursor>;
-            auto ci = ranges::common_iterator<I, ranges::unreachable>{};
+            auto ci = ranges::common_iterator<I, ranges::unreachable_sentinel_t>{};
             CPP_assert(ranges::Same<I, decltype(ci.operator->())>);
             CHECK(ci.operator->().operator->() == 42);
         }
         // the expression *i is a glvalue [lvalue case]
         {
-            auto ci = ranges::common_iterator<lvalue_iterator, ranges::unreachable>{};
+            auto ci = ranges::common_iterator<lvalue_iterator, ranges::unreachable_sentinel_t>{};
             CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // the expression *i is a glvalue [xvalue case]
         {
-            auto ci = ranges::common_iterator<xvalue_iterator, ranges::unreachable>{};
+            auto ci = ranges::common_iterator<xvalue_iterator, ranges::unreachable_sentinel_t>{};
             CPP_assert(ranges::Same<int*, decltype(ci.operator->())>);
             CHECK(ci.operator->() == &forty_two);
         }
         // Otherwise, returns a proxy object
         {
             using I = ranges::basic_iterator<proxy_cursor>;
-            auto ci = ranges::common_iterator<I, ranges::unreachable>{};
+            auto ci = ranges::common_iterator<I, ranges::unreachable_sentinel_t>{};
             using A = decltype(ci.operator->());
             CPP_assert(std::is_class<A>::value);
             CPP_assert(!std::is_same<I, A>::value);

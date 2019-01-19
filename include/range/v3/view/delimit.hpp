@@ -101,7 +101,7 @@ namespace ranges
 
             template<typename I, typename Val>
             auto operator()(I begin, Val value) const ->
-                CPP_ret(delimit_view<subrange<I, unreachable>, Val>)(
+                CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)(
                     requires InputIterator<I>)
             {
                 return {{std::move(begin), {}}, std::move(value)};

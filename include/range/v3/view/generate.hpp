@@ -67,7 +67,7 @@ namespace ranges
         {
             return cursor{*this};
         }
-        unreachable end_cursor() const
+        unreachable_sentinel_t end_cursor() const
         {
             return {};
         }
