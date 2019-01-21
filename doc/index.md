@@ -46,8 +46,8 @@ file and the CREDITS file for the licensing and acknowledgements.
 --------------------------------------------
 The code is known to work on the following compilers:
 
-- clang 3.6.2
-- GCC 4.9.1
+- clang 3.6.2 and later
+- GCC 4.9.1 and later
 
 \section tutorial-quick-start Quick Start
 
