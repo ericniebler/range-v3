@@ -4,6 +4,7 @@ set(CMAKE_FOLDER "test")
 
 add_subdirectory(action)
 add_subdirectory(algorithm)
+add_subdirectory(iterator)
 add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)

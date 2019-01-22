@@ -22,8 +22,9 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 

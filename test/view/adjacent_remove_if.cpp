@@ -18,7 +18,8 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/algorithm/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"

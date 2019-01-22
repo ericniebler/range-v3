@@ -17,7 +17,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

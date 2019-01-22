@@ -15,18 +15,21 @@
 #define RANGES_V3_VIEW_TAKE_EXACTLY_HPP
 
 #include <type_traits>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/range_access.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/counted_iterator.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/counted_iterator.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/subrange.hpp>
+#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {

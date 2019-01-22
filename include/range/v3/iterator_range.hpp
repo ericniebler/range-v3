@@ -21,8 +21,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/tagspec.hpp>
 

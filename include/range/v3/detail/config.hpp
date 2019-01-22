@@ -416,6 +416,19 @@ namespace ranges
 #define RANGES_DEPRECATED(MSG)
 #endif
 
+#if !defined(RANGES_DEPRECATED_HEADER) && !defined(RANGES_DISABLE_DEPRECATED_WARNINGS)
+#ifdef __GNUC__
+#define RANGES_DEPRECATED_HEADER(MSG) RANGES_PRAGMA(GCC warning MSG)
+#elif defined(_MSC_VER)
+#define RANGES_STRINGIZE_(MSG) #MSG
+#define RANGES_STRINGIZE(MSG) RANGES_STRINGIZE_(MSG)
+#define RANGES_DEPRECATED_HEADER(MSG) __pragma(message(__FILE__ "(" RANGES_STRINGIZE(__LINE__) ") : Warning: " MSG))
+#endif
+#endif
+#ifndef RANGES_DEPRECATED_HEADER
+#define RANGES_DEPRECATED_HEADER(MSG)
+#endif
+
 #ifndef RANGES_CXX_COROUTINES
 #ifdef __cpp_coroutines
 #define RANGES_CXX_COROUTINES __cpp_coroutines

@@ -19,7 +19,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
@@ -44,7 +44,7 @@ namespace ranges
                     do
                     {
                         auto half = dist / 2;
-                        auto middle = next(begin, half);
+                        auto middle = ranges::next(begin, half);
                         auto && v = *middle;
                         auto && pv = invoke(proj, (decltype(v) &&) v);
                         if(invoke(pred, pv, val))
@@ -61,7 +61,7 @@ namespace ranges
                             return {
                                 lower_bound_n(std::move(begin), half, val,
                                     std::ref(pred), std::ref(proj)),
-                                upper_bound_n(next(middle), dist - (half + 1),
+                                upper_bound_n(ranges::next(middle), dist - (half + 1),
                                     val, std::ref(pred), std::ref(proj))
                             };
                         }

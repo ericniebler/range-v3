@@ -13,7 +13,7 @@
 #define RANGES_TEST_DEBUG_VIEW_HPP
 
 #include <cstddef>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/swap.hpp>
 
 template<typename T, bool Sized = true>

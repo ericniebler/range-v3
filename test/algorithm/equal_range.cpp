@@ -27,7 +27,8 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/take.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/equal_range.hpp>
 #include "../simple_test.hpp"

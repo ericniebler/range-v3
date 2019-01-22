@@ -25,7 +25,7 @@
 #include <range/v3/view_interface.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/reverse_iterator.hpp>
 
 namespace ranges
 {

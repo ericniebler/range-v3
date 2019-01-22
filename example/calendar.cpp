@@ -68,6 +68,7 @@
 #include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/core.hpp>
+#include <range/v3/iterator/stream_iterators.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/group_by.hpp>

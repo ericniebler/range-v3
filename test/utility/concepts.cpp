@@ -14,12 +14,12 @@
 #include <sstream>
 #include <vector>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/istream_range.hpp>
-#include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
 #include "../simple_test.hpp"
 
 struct moveonly

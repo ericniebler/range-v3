@@ -17,7 +17,8 @@
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>

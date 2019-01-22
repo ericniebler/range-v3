@@ -16,7 +16,10 @@
 #include <string>
 #include <vector>
 #include <meta/meta.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/iterator/stream_iterators.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"

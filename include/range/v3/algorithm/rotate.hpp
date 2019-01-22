@@ -29,8 +29,8 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/move.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/move_backward.hpp>

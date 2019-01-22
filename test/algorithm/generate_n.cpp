@@ -21,6 +21,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/generate_n.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"

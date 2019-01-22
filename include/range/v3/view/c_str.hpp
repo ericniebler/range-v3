@@ -17,7 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/delimit.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

@@ -22,7 +22,8 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
 
 namespace ranges
 {

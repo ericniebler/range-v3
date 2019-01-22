@@ -19,7 +19,7 @@ struct MyRange
   : ranges::view_facade<MyRange>
 {
 private:
-    friend struct ranges::range_access;
+    friend ranges::range_access;
     std::vector<int> ints_;
     struct cursor
     {

@@ -21,9 +21,9 @@
 #include <range/v3/size.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>

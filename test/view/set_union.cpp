@@ -17,7 +17,8 @@
 #include <range/v3/algorithm/set_algorithm.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/common_type.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
