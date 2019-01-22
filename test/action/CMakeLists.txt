@@ -1,5 +1,6 @@
 set(CMAKE_FOLDER "${CMAKE_FOLDER}/action")
 
+rv3_add_test(test.act.adjacent_remove_if act.adjacent_remove_if adjacent_remove_if.cpp)
 rv3_add_test(test.act.concepts act.concepts cont_concepts.cpp)
 rv3_add_test(test.act.drop act.drop drop.cpp)
 rv3_add_test(test.act.drop_while act.drop_while drop_while.cpp)
