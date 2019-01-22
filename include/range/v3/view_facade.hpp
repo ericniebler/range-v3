@@ -20,8 +20,9 @@
 #include <range/v3/range_access.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/basic_iterator.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/basic_iterator.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {

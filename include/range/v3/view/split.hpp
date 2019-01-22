@@ -27,6 +27,7 @@
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/single.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {

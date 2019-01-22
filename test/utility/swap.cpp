@@ -20,7 +20,7 @@
 #include <complex>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator.hpp> // for iter_swap, which uses indirect_swap
+#include <range/v3/utility/swap.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/to_container.hpp>
 #include "../simple_test.hpp"

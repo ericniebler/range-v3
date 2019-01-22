@@ -19,6 +19,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"

@@ -25,7 +25,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/get.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 
 namespace ranges
 {

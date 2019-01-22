@@ -22,8 +22,8 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/transform.hpp>

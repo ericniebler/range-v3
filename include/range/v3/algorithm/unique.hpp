@@ -23,6 +23,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/iterator/operations.hpp>
 
 namespace ranges
 {

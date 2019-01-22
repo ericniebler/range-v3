@@ -24,7 +24,7 @@
 #include <range/v3/algorithm/aux_/equal_range_n.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

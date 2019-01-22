@@ -388,7 +388,7 @@ namespace ranges
     using is_infinite = meta::bool_<range_cardinality<Rng>::value == infinite>;
 
     template<typename S, typename I>
-    struct disable_sized_sentinel;
+    /*inline*/ constexpr bool disable_sized_sentinel = false;
 
     template<typename Cur>
     struct basic_mixin;
@@ -482,8 +482,7 @@ namespace ranges
         struct counted_fn;
     }
 
-    struct default_sentinel_t
-    {};
+    struct default_sentinel_t;
 
     template<typename I>
     struct move_iterator;

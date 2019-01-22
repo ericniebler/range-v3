@@ -13,52 +13,9 @@
 #ifndef RANGES_V3_UTILITY_UNREACHABLE_HPP
 #define RANGES_V3_UTILITY_UNREACHABLE_HPP
 
-#include <meta/meta.hpp>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/iterator/unreachable_sentinel.hpp> instead.")
 
-namespace ranges
-{
-    /// \addtogroup group-utility
-    /// @{
-    struct unreachable_sentinel_t
-    {
-        template<typename I>
-        friend constexpr
-        auto operator==(I const &, unreachable_sentinel_t) noexcept ->
-            CPP_broken_friend_ret(bool)(
-                requires WeaklyIncrementable<I>)
-        {
-            return false;
-        }
-        template<typename I>
-        friend constexpr
-        auto operator==(unreachable_sentinel_t, I const &) noexcept ->
-            CPP_broken_friend_ret(bool)(
-                requires WeaklyIncrementable<I>)
-        {
-            return false;
-        }
-        template<typename I>
-        friend constexpr
-        auto operator!=(I const &, unreachable_sentinel_t) noexcept ->
-            CPP_broken_friend_ret(bool)(
-                requires WeaklyIncrementable<I>)
-        {
-            return true;
-        }
-        template<typename I>
-        friend constexpr
-        auto operator!=(unreachable_sentinel_t, I const &) noexcept ->
-            CPP_broken_friend_ret(bool)(
-                requires WeaklyIncrementable<I>)
-        {
-            return true;
-        }
-    };
-
-    RANGES_INLINE_VARIABLE(unreachable_sentinel_t, unreachable)
-    /// @}
-}
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 
 #endif

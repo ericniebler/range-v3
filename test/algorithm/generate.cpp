@@ -21,6 +21,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/generate.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/view/counted.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"

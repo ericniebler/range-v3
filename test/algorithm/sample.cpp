@@ -28,6 +28,7 @@
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/sample.hpp>
 #include <range/v3/numeric/iota.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"

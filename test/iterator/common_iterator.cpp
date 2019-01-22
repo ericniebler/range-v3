@@ -12,8 +12,8 @@
 //
 #include <algorithm>
 #include <numeric>
-#include <range/v3/utility/common_iterator.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 

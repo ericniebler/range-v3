@@ -21,8 +21,8 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/data.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range_traits.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS

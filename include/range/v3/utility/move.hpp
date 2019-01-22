@@ -20,7 +20,7 @@
 #include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/associated_types.hpp>
+#include <range/v3/iterator/associated_types.hpp>
 
 namespace ranges
 {

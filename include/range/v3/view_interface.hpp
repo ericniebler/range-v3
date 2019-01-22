@@ -21,9 +21,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/to_container.hpp>
-#include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 
 namespace ranges
 {

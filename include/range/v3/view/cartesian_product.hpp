@@ -29,6 +29,8 @@
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/operations.hpp>
 
 namespace ranges
 {

@@ -297,7 +297,7 @@ Here is an example of Range v3 compatible RandomAccess proxy iterator.
 The iterator returns a key/value pair, like the `zip` view.
 
 ~~~~~~~{.cpp}
-    #include <range/v3/utility/basic_iterator.hpp>
+    #include <range/v3/iterator/basic_iterator.hpp>
     #include <range/v3/utility/common_tuple.hpp>
 
     using KeyIter   = typename std::vector<Key>::iterator;

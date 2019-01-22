@@ -20,7 +20,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/algorithm/result_types.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
