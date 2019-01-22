@@ -3286,7 +3286,7 @@ namespace meta
                 bind_back<quote_trait<subst1_>, back<As>, drop_c<Ts, size<As>{} - 2>>>>,
             list<back<As>>>;
 
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
         template <List As, List Ts>
         requires (_v<size<Ts>> + 2 >= _v<size<As>>)
         using substitutions = substitutions_<As, Ts>;
@@ -3328,7 +3328,7 @@ namespace meta
             struct impl;
             template <typename T, META_TYPE_CONSTRAINT(List) Args>
             using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             template <typename, List>
 #else
             template <typename, typename, typename = void>
@@ -3337,7 +3337,7 @@ namespace meta
             {
             };
             template <template <typename...> class C, typename... Ts, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid<C, _t<impl<Ts, Args>>...> struct subst_<defer<C, Ts...>, Args>
 #else
             struct subst_<defer<C, Ts...>, Args, void_<C<_t<impl<Ts, Args>>...>>>
@@ -3346,7 +3346,7 @@ namespace meta
                 using type = C<_t<impl<Ts, Args>>...>;
             };
             template <typename T, template <T...> class C, T... Is, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid_I<T, C, Is...> struct subst_<defer_i<T, C, Is...>, Args>
 #else
             struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
@@ -3439,7 +3439,7 @@ namespace meta
             template <template <typename...> class C, META_TYPE_CONSTRAINT(List) Args,
                         META_TYPE_CONSTRAINT(List) Ts>
             using try_subst_ = apply<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             template <typename, List>
 #else
             template <typename, typename, typename = void>
@@ -3448,7 +3448,7 @@ namespace meta
             {
             };
             template <template <typename...> class C, typename... Ts, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires True<try_subst_<C, Args, list<Ts...>>> struct subst_<defer<C, Ts...>, Args>
 #else
             struct subst_<defer<C, Ts...>, Args, void_<try_subst_<C, Args, list<Ts...>>>>
@@ -3457,7 +3457,7 @@ namespace meta
                 using type = list<try_subst_<C, Args, list<Ts...>>>;
             };
             template <typename T, template <T...> class C, T... Is, typename Args>
-#ifdef META_CONCEPT
+#if 0//def META_CONCEPT
             requires Valid_I<T, C, Is...> struct subst_<defer_i<T, C, Is...>, Args>
 #else
             struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
