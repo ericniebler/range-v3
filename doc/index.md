@@ -52,10 +52,59 @@ The code is known to work on the following compilers:
 \section tutorial-quick-start Quick Start
 
 --------------------------------------------
-Range v3 is a generic library that augments the existing standard library with
-facilities for working with *ranges*. A range can be loosely thought of a pair
-of iterators, although they need not be implemented that way. Bundling begin/end
-iterators into a single object brings several benefits.
+
+## What This Library Provides
+
+Range v3 is a generic library that augments the existing standard library with facilities for working with *ranges*. This means that you do not have to fiddle with `begin` and `end` iterators directly, but pass something around, that represents both in one object. 
+
+For every STL algorithm this library provides a version that accepts a *range* instead of a pair of iterators. 
+
+All transforming and filtering algorithms are composable. This means applying an algorithm to a range yields a **lazily** evaluated representation (a so-called **view**) of the result, which can either be evaluated to obtain the results of the applied transformation or can be passed to another algorithm.  
+
+This avoids temporary results while allowing a declarative and easy-to-understand programming style. Generally this is possible without sacrificing performance.  
+
+Range v3 also provides in-place modifying algorithms e.g. for sorting. These are called **action**s.  
+
+Range v3 is a contribution to making C++ easier to write and reason about. With Range v3 one can write code this way: 
+
+~~~~~~~{.cpp}
+    std::vector<PolarCoordinate> coordinates;
+    
+    auto outsideOfReasonableRange =
+        (PolarCoordinate pc) { return pc.distance > 3.0; };
+
+    auto is_inf_or_nan =
+        [](PolarCoordinate pc) { 
+          return std::isinf(pc.distance) 
+            || std::isnan(pc.distance); 
+            };
+
+    auto filteredAndInCartesianCoordinates = coordinates
+        | remove_if(outsideOfReasonableRange)
+        | remove_if(is_inf_or_nan)
+        | transform(polarToCartesian)
+        | reverse;
+~~~~~~~
+
+
+
+
+## What is a Range?
+
+It may come as a surprise, but giving a short, comprehensive definition of a *range* is much harder than one might expect. 
+
+First of all a range is something you can iterate over (*range* used to be spelled *iterable*). One possibility to describe an iterable is given in the [`IEnumerator`  interface](https://docs.microsoft.com/de-de/dotnet/api/system.collections.ienumerator) definition of the `C#` programming language which has a `bool MoveNext()` method and a `Current` property. Due to consistency with the STL and for efficiency reasons the C++ representation differs. Everything that can be passed to `begin` and `end` can be considered to be a range. 
+ 
+So a range can be loosely thought of a pair of iterators, although they need not be implemented that way.
+
+A range might be a half open interval. Which means a range might have an infinite number of elements, like e.g. all positive integers starting from 42. It can be shown that in this case the iterators which represent `begin` and `end` of the interval must be of different types. See [this blogpost](http://ericniebler.com/2015/02/03/iterators-plus-plus-part-1/) and follow-ups for the details.  
+
+## Theoretical Background
+
+C++ range and C# IEnumerable together with their corresponding algorithms share the same theoretical foundation from functional programming, especially the [concept of a monad](https://bartoszmilewski.com/2014/10/17/c-ranges-are-pure-monadic-goodness/). 
+
+All of C#'s [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) operations (which in fact are database queries on containers and other, similar objects)  have  counterparts in C++ ranges. E.g. `GroupBy` is called `group_by` in C++ and `SelectMany`is denoted `join`.  
+
 
 ## Why Use Ranges?
 
