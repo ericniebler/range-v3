@@ -328,9 +328,8 @@ namespace ranges
         char (&is_function_impl_(priority_tag<3>))[4];
 
         template<typename T>
-        struct is_function
-          : meta::bool_<sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1>
-        {};
+        /*inline*/ constexpr bool is_function_v =
+            sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1;
 
         template<typename T>
         struct remove_rvalue_reference
@@ -439,9 +438,6 @@ namespace ranges
 
     template<typename T>
     struct reference_wrapper;
-
-    template<typename>
-    struct is_reference_wrapper;
 
     // Views
     //

@@ -394,10 +394,6 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<iter_transform_fn>, iter_transform)
 
-        template<typename U>
-        void non_void(U &&)
-        {}
-
         // Don't forget to update view::for_each whenever this set
         // of concepts changes
         CPP_def

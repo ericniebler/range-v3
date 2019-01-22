@@ -665,7 +665,7 @@ namespace ranges
     {
         template<typename T>
         auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)(
-            requires not is_reference_wrapper_t<T>::value)
+            requires (!detail::is_reference_wrapper_v<detail::decay_t<T>>))
         {
             return {t};
         }

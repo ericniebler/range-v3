@@ -15,11 +15,9 @@
 #define RANGES_V3_UTILITY_INVOKE_HPP
 
 #include <functional>
-#include <memory>
 #include <type_traits>
-#include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/detail/config.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -41,94 +39,89 @@ namespace ranges
 {
     /// \addtogroup group-utility
     /// @{
-    template<typename T>
-    struct is_reference_wrapper
-      : meta::if_<
-            std::is_same<uncvref_t<T>, T>,
-            std::false_type,
-            is_reference_wrapper<uncvref_t<T>>>
-    {};
+
+
+    /// \cond
+    namespace detail
+    {
+        template<typename U>
+        U &can_reference_(U &&);
+
+        CPP_def
+        (
+            template(typename T)
+            concept Dereferenceable_,
+                requires (T &&t)
+                (
+                    detail::can_reference_(*static_cast<T &&>(t))
+                )
+        );
+
+        template<class T>
+        /*inline*/ constexpr bool is_reference_wrapper_v =
+            meta::is<T, reference_wrapper>::value ||
+            meta::is<T, std::reference_wrapper>::value;
+    }
+    /// \endcond
+
+    template<class T>
+    /*inline*/ constexpr bool is_reference_wrapper_v =
+        detail::is_reference_wrapper_v<detail::decay_t<T>>;
 
     template<typename T>
-    struct is_reference_wrapper<reference_wrapper<T>>
-      : std::true_type
-    {};
+    using is_reference_wrapper = meta::bool_<is_reference_wrapper_v<T>>;
 
     template<typename T>
-    struct is_reference_wrapper<std::reference_wrapper<T>>
-      : std::true_type
-    {};
-
-    template<typename T>
-    using is_reference_wrapper_t = meta::_t<is_reference_wrapper<T>>;
+    using is_reference_wrapper_t RANGES_DEPRECATED("is_reference_wrapper_t is deprecated.") =
+        meta::_t<is_reference_wrapper<T>>;
 
     struct invoke_fn
     {
     private:
-        template<typename MemberFunctionPtr, typename First, typename... Rest>
-        static constexpr auto CPP_auto_fun(invoke_member_fn)(
-            std::true_type, detail::ignore_t, MemberFunctionPtr fn, First &&first, Rest &&... rest)
+        template<class, class T1>
+        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, long)(
+            noexcept(noexcept(*static_cast<T1&&>(t1)))
+                requires detail::Dereferenceable_<T1>)
+        {
+            return *static_cast<T1&&>(t1);
+        }
+
+        template<class T, class T1>
+        constexpr static auto coerce(T1&& t1, int) noexcept ->
+            CPP_ret(T1 &&)(
+                requires DerivedFrom<detail::decay_t<T1>, T>)
+        {
+            return static_cast<T1&&>(t1);
+        }
+
+        template<class, class T1>
+        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, int)(
+            noexcept(true)
+            requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
+        {
+            return static_cast<T1&&>(t1).get();
+        }
+    public:
+        template<class F, class T, class T1, class... Args>
+        constexpr auto CPP_auto_fun(operator())(F T::*f, T1&& t1, Args&&... args)(const)
         (
-            return (static_cast<First &&>(first).*fn)(static_cast<Rest &&>(rest)...)
-        )
-        template<typename MemberFunctionPtr, typename First, typename... Rest>
-        static constexpr auto CPP_auto_fun(invoke_member_fn)(
-            std::false_type, std::true_type, MemberFunctionPtr fn, First &&first, Rest &&... rest)
-        (
-            return (static_cast<First &&>(first).get().*fn)(static_cast<Rest &&>(rest)...)
-        )
-        template<typename MemberFunctionPtr, typename First, typename... Rest>
-        static constexpr auto CPP_auto_fun(invoke_member_fn)(
-            std::false_type, std::false_type, MemberFunctionPtr fn, First &&first, Rest &&... rest)
-        (
-            return ((*static_cast<First &&>(first)).*fn)(static_cast<Rest &&>(rest)...)
+            return (invoke_fn::coerce<T>(static_cast<T1&&>(t1), 0).*f)(static_cast<Args&&>(args)...)
         )
 
-        template<typename MemberDataPtr, typename First>
-        static constexpr auto CPP_auto_fun(invoke_member_data)(
-            std::true_type, detail::ignore_t, MemberDataPtr ptr, First &&first)
+        template<class D, class T, class T1>
+        constexpr auto CPP_auto_fun(operator())(D T::*f, T1&& t1)(const)
         (
-            return static_cast<First &&>(first).*ptr
+            return invoke_fn::coerce<T>(static_cast<T1&&>(t1), 0).*f
         )
-        template<typename MemberDataPtr, typename First>
-        static constexpr auto CPP_auto_fun(invoke_member_data)(
-            std::false_type, std::true_type, MemberDataPtr ptr, First &&first)
-        (
-            return static_cast<First &&>(first).get().*ptr
-        )
-        template<typename MemberDataPtr, typename First>
-        static constexpr auto CPP_auto_fun(invoke_member_data)(
-            std::false_type, std::false_type, MemberDataPtr ptr, First &&first)
-        (
-            return (*static_cast<First &&>(first)).*ptr
-        )
-    public:
-        template<typename F, typename Obj, typename First, typename... Rest,
-            meta::if_c<detail::is_function<F>::value, int> = 0>
-        constexpr auto CPP_auto_fun(operator())(F Obj::*ptr, First &&first, Rest &&... rest) (const)
-        (
-            return invoke_fn::invoke_member_fn(
-                std::is_base_of<Obj, detail::decay_t<First>>{},
-                is_reference_wrapper_t<detail::decay_t<First>>{},
-                ptr, static_cast<First &&>(first), static_cast<Rest &&>(rest)...)
-        )
-        template<typename Data, typename Obj, typename First,
-            meta::if_c<!detail::is_function<Data>::value, int> = 0>
-        constexpr auto CPP_auto_fun(operator())(Data Obj::*ptr, First &&first) (const)
-        (
-            return invoke_fn::invoke_member_data(
-                std::is_base_of<Obj, detail::decay_t<First>>{},
-                is_reference_wrapper_t<detail::decay_t<First>>{},
-                ptr, static_cast<First &&>(first))
-        )
-        template<typename F, typename... Args,
-            meta::if_c<!std::is_member_pointer<uncvref_t<F>>::value, int> = 0>
+
+        template<class F, class... Args>
         CPP_PP_IIF(RANGES_CONSTEXPR_INVOKE)(CPP_PP_EXPAND, CPP_PP_EAT)(constexpr)
-        auto CPP_auto_fun(operator())(F &&fn, Args &&... args) (const)
+        auto CPP_auto_fun(operator())(F&& f, Args&&... args)(const)
         (
-            return static_cast<F &&>(fn)(static_cast<Args &&>(args)...)
+            return static_cast<F&&>(f)(static_cast<Args&&>(args)...)
         )
     };
+
     RANGES_INLINE_VARIABLE(invoke_fn, invoke)
 
     /// \cond
