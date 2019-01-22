@@ -170,20 +170,19 @@ int main()
         CHECK(ia[5].i == 2);
     }
 
-#if 0 // Should this even be included?
     {
         // Check rvalue range
-        S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
+        S ia[] = {S{0}, S{1}, S{1}, S{2}, S{3}, S{5}, S{8}, S{13}, S{21}};
         constexpr auto sa = ranges::size(ia);
         using namespace std::placeholders;
-        auto r = ranges::adjacent_remove_if(ranges::view::all(ia), std::bind(std::equal_to<int>(), _1, 2), &S::i);
+        auto r = ranges::adjacent_remove_if(ranges::view::all(ia), [](int x, int y) noexcept { return (x + y) % 2 == 0; }, &S::i);
         CHECK(r.get_unsafe() == ia + sa-3);
         CHECK(ia[0].i == 0);
         CHECK(ia[1].i == 1);
-        CHECK(ia[2].i == 3);
-        CHECK(ia[3].i == 4);
-        CHECK(ia[4].i == 3);
-        CHECK(ia[5].i == 4);
+        CHECK(ia[2].i == 2);
+        CHECK(ia[3].i == 5);
+        CHECK(ia[4].i == 8);
+        CHECK(ia[5].i == 21);
 
         // Some tests for sanitizing an algorithm result
         static_assert(std::is_same<decltype(r), ranges::dangling<S *>>::value, "");
@@ -194,6 +193,6 @@ int main()
         auto r4 = ranges::sanitize(std::move(r));
         static_assert(std::is_same<decltype(r4), ranges::dangling<>>::value, "");
     }
-#endif // 0
+
     return ::test_result();
 }

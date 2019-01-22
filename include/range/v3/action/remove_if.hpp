@@ -90,7 +90,7 @@ namespace ranges
                         "is specified.");
                     CONCEPT_ASSERT_MSG(Permutable<I>(),
                         "The iterator type of the range passed to action::remove_if must allow its "
-                        "elements to be permutaed; that is, the values must be movable and the "
+                        "elements to be permuted; that is, the values must be movable and the "
                         "iterator must be mutable.");
                 }
             #endif

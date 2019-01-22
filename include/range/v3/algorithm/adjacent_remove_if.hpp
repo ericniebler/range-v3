@@ -40,17 +40,26 @@ namespace ranges
             /// \pre `R` is a model of the `ForwardRange` concept.
             /// \pre `Pred` is a model of the `BinaryPredicate` concept.
             template<typename I, typename S, typename Pred, typename Proj = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() &&
-                    IndirectRelation<Pred, projected<I, Proj>>() &&
-                    Permutable<I>())>
+                CONCEPT_REQUIRES_(Permutable<I>() && Sentinel<S, I>() &&
+                    IndirectRelation<Pred, projected<I, Proj>>())>
             I
             operator()(I first, S last, Pred pred = {}, Proj proj = {}) const
             {
-                auto end = next(first, last);
-                while (first != end) {
-                    first = adjacent_find(first, end, std::ref(pred), std::ref(proj));
-                    if (first != end) {
-                        end = move(next(first), end, first).out();
+                first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
+                if (first != last)
+                {
+                    auto i = next(first);
+                    if (i != last)
+                    {
+                        for (auto j = next(i); j != last; ++i, (void)++j)
+                        {
+                            if (!invoke(pred, invoke(proj, *i), invoke(proj, *j)))
+                            {
+                                *first = iter_move(i);
+                                ++first;
+                            }
+                        }
+                        *first++ = iter_move(i);
                     }
                 }
                 return first;
@@ -58,7 +67,7 @@ namespace ranges
 
             /// \overload
             template<typename R, typename Pred, typename Proj = ident,
-                typename I = iterator_t<uncvref_t<R>>,
+                typename I = iterator_t<R>,
                 CONCEPT_REQUIRES_(ForwardRange<R>() &&
                     IndirectRelation<Pred, projected<I, Proj>>() &&
                     Permutable<I>())>
