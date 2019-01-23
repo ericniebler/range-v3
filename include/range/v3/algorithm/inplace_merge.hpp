@@ -185,7 +185,7 @@ namespace ranges
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
             {
                 merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
-                    static_cast<iter_value_t<I>*>(0), 0, std::move(pred), std::move(proj));
+                    static_cast<iter_value_t<I> *>(nullptr), 0, std::move(pred), std::move(proj));
             }
         };
 

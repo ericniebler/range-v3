@@ -158,6 +158,7 @@ namespace ranges
     {};
 #endif // RANGES_WORKAROUND_MSVC_701385
 
+    /// \cond
     template<typename Sig>
     struct RANGES_DEPRECATED("ranges::result_of is deprecated. "
                              "Please use ranges::invoke_result") result_of
@@ -168,6 +169,7 @@ namespace ranges
                              "Please use ranges::invoke_result") result_of<Fun(Args...)>
       : meta::defer<invoke_result_t, Fun, Args...>
     {};
+    /// \endcond
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP

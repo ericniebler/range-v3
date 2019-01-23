@@ -51,6 +51,7 @@ namespace ranges
         sliding_view_detail::cache = sliding_view_detail::caching<Rng>::value>
     struct sliding_view;
 
+    /// \cond
     namespace sliding_view_detail
     {
         template<typename Rng>
@@ -148,7 +149,8 @@ namespace ranges
             using cache_t = detail::non_propagating_cache<
                 iterator_t<Rng>, sv_base<Rng>>;
         };
-    }
+    } // namespace sliding_view_detail
+    /// \endcond
 
     /// \addtogroup group-views
     /// @{
