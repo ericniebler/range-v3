@@ -69,6 +69,7 @@ file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
 # This header is not meant to be included directly:
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
 # These headers are deprecated:
+list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/algorithm/tagspec.hpp)
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/associated_types.hpp)
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/basic_iterator.hpp)
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/common_iterator.hpp)
