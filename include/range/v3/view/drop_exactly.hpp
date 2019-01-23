@@ -22,7 +22,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -30,7 +29,6 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/subrange.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -160,6 +158,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_exactly_view)
 
 #endif

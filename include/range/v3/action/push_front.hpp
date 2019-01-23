@@ -17,9 +17,9 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/action/insert.hpp>
 #include <range/v3/action/action.hpp>
+#include <range/v3/detail/with_braced_init_args.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -94,8 +94,9 @@ namespace ranges
     {
         /// \ingroup group-actions
         /// \sa with_braced_init_args
-        RANGES_INLINE_VARIABLE(with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
-                               push_front)
+        RANGES_INLINE_VARIABLE(
+            detail::with_braced_init_args<action<adl_push_front_detail::push_front_fn>>,
+            push_front)
     }
 
     using action::push_front;

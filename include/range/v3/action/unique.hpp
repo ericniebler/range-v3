@@ -19,6 +19,8 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unique.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 

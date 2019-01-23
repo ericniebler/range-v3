@@ -22,11 +22,13 @@
 #include <stdexcept>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <range/v3/functional/compose.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/get.hpp>
 
 namespace ranges

@@ -26,7 +26,6 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -133,6 +132,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::indirect_view)
 
 #endif

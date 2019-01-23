@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/functional/pipeable.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers

@@ -23,12 +23,11 @@
 #include <range/v3/range_access.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -524,6 +523,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
 

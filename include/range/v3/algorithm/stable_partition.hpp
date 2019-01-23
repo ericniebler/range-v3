@@ -21,25 +21,26 @@
 #ifndef RANGES_V3_ALGORITHM_STABLE_PARTITION_HPP
 #define RANGES_V3_ALGORITHM_STABLE_PARTITION_HPP
 
-#include <memory>
 #include <functional>
+#include <memory>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/memory.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/move_iterators.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include <range/v3/algorithm/partition_copy.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {

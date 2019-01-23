@@ -19,7 +19,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 
 namespace ranges
 {

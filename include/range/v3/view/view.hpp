@@ -20,7 +20,8 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/pipeable.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -33,6 +34,15 @@ namespace ranges
             template<typename Rng>
             void operator()(Rng &&) const
             {}
+        };
+
+        struct dereference_fn
+        {
+            template<typename I>
+            constexpr auto CPP_auto_fun(operator())(I &&i) (const)
+            (
+                return *(I &&) i
+            )
         };
     }
     /// \endcond

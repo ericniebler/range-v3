@@ -14,10 +14,13 @@
 #ifndef RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
 #define RANGE_V3_VIEW_EXCLUSIVE_SCAN_HPP
 
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges

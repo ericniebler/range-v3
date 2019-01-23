@@ -19,7 +19,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/ref.hpp>
 #include <range/v3/view/subrange.hpp>

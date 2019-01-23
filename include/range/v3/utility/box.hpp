@@ -21,7 +21,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/get.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS

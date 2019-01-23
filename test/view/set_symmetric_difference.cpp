@@ -20,7 +20,7 @@
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/iterator/move_iterators.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/identity.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>

@@ -26,14 +26,14 @@
 #include <range/v3/view_adaptor.hpp>
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/algorithm/min.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/indirect.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -452,6 +452,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_transform_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::transform_view)
 

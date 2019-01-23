@@ -43,16 +43,17 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/memory.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/traits.hpp>
-#include <range/v3/iterator/move_iterators.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

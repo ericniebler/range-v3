@@ -24,7 +24,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/memory.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -617,6 +616,7 @@ namespace ranges
 #endif
 } // namepace ranges
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::any_view)
 
 RANGES_DIAGNOSTIC_POP

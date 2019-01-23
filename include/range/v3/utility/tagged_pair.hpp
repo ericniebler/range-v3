@@ -18,7 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/detail/adl_get.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 
 RANGES_DIAGNOSTIC_PUSH
@@ -170,7 +170,7 @@ namespace ranges
 #endif
 
     template<typename F, typename S>
-    using tagged_pair  RANGES_DEPRECATED("ranges::tagged_pair is deprecated.") =
+    using tagged_pair RANGES_DEPRECATED("ranges::tagged_pair is deprecated.") =
         tagged<std::pair<detail::tag_elem<F>, detail::tag_elem<S>>,
                detail::tag_spec<F>, detail::tag_spec<S>>;
 

@@ -19,7 +19,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 
 RANGES_DIAGNOSTIC_PUSH

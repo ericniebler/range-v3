@@ -24,7 +24,6 @@
 #include <range/v3/empty.hpp>
 #include <range/v3/range_for.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/view_facade.hpp>
@@ -32,7 +31,6 @@
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -561,6 +559,7 @@ namespace ranges
 
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_with_view)
 

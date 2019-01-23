@@ -22,7 +22,6 @@
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/iterator/common_iterator.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013,2014.
@@ -11,10 +10,11 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_UTILITY_NULLVAL_HPP
-#define RANGES_V3_UTILITY_NULLVAL_HPP
+#ifndef RANGES_V3_UTILITY_NULLPTR_V_HPP
+#define RANGES_V3_UTILITY_NULLPTR_V_HPP
 
 #include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated and will be removed from a future version of range-v3.")
 
 namespace ranges
 {

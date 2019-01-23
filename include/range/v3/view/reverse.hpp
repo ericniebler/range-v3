@@ -22,7 +22,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -144,6 +143,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::reverse_view)
 
 #endif

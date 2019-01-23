@@ -17,13 +17,14 @@
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/experimental/utility/generator.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/experimental/utility/generator.hpp>
 #include "../../simple_test.hpp"
 #include "../../test_utils.hpp"
 

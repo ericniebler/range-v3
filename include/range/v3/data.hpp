@@ -18,7 +18,7 @@
 #include <type_traits>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

@@ -13,13 +13,13 @@
 #include <vector>
 #include <sstream>
 #include <range/v3/core.hpp>
-#include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
 #include <range/v3/algorithm/move.hpp>
-#include <range/v3/utility/common_type.hpp>
+#include <range/v3/functional/identity.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/insert_iterators.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/common_type.hpp>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
@@ -30,7 +30,6 @@
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 

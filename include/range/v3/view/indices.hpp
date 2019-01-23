@@ -16,7 +16,6 @@
 #define RANGES_V3_VIEW_INDICES_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
