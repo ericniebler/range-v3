@@ -21,8 +21,12 @@ message("[range-v3]: C++ std=${RANGES_CXX_STD}")
 if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   ranges_append_flag(RANGES_HAS_CXXSTDCOLON "-std:c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "-std:c++${RANGES_CXX_STD}")
-  # Enable MSVC strict mode
+  # Enable strict mode
   ranges_append_flag(RANGES_HAS_PERMISSIVEMINUS "-permissive-")
+  if (RANGES_CXX_COMPILER_CLANGCL)
+    ranges_append_flag(RANGES_HAS_FNO_MS_COMPATIBIILITY "-fno-ms-compatibility")
+    ranges_append_flag(RANGES_HAS_FNO_DELAYED_TEMPLATE_PARSING "-fno-delayed-template-parsing")
+  endif()
   # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_W3 -W3)
   ranges_append_flag(RANGES_HAS_WX -WX)

@@ -592,6 +592,8 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
   <DD>Appends elements before the head of the source.</DD>
 <DT>\link ranges::v3::action::remove_if_fn `action::remove_if`\endlink</DT>
   <DD>Removes all elements from the source that satisfy the predicate.</DD>
+<DT>\link ranges::v3::action::remove_if_fn `action::unstable_remove_if`\endlink</DT>
+  <DD>Much faster (each remove has constant time complexity), unordered version of `remove_if`. Requires bidirectional container.</DD>
 <DT>\link ranges::v3::action::shuffle_fn `action::shuffle`\endlink</DT>
   <DD>Shuffles the source range.</DD>
 <DT>\link ranges::v3::action::slice_fn `action::slice`\endlink</DT>
