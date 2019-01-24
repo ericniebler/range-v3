@@ -46,22 +46,21 @@ namespace ranges
             operator()(I first, S last, Pred pred = {}, Proj proj = {}) const
             {
                 first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
-                if (first != last)
+                if (first == last)
+                    return first;
+
+                auto i = first;
+                for (auto j = ++i; ++j != last; ++i)
                 {
-                    auto i = next(first);
-                    if (i != last)
+                    if (!invoke(pred, invoke(proj, *i), invoke(proj, *j)))
                     {
-                        for (auto j = next(i); j != last; ++i, (void)++j)
-                        {
-                            if (!invoke(pred, invoke(proj, *i), invoke(proj, *j)))
-                            {
-                                *first = iter_move(i);
-                                ++first;
-                            }
-                        }
-                        *first++ = iter_move(i);
+                        *first = iter_move(i);
+                        ++first;
                     }
                 }
+
+                *first = iter_move(i);
+                ++first;
                 return first;
             }
 
