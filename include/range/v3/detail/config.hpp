@@ -222,21 +222,21 @@ namespace ranges
 #if _MSC_VER < 1920
 #define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
 #define RANGES_WORKAROUND_MSVC_401490 // conversion of constant expressions with representable values is NOT narrowing
-#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
 #define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
-#endif
+#endif // _MSC_VER < 1920
 
 #define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
-#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
+#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define this operator"
 #define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference for pointer-to-array i
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control during specialization matching
-#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error
-#define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
+#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_711347 // (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 
-// Relocate the following into the <1920 section after VS2019 Preview 2 release:
-#define RANGES_WORKAROUND_MSVC_711347
-// MSVC doesn't define __cpp_coroutines even with /await
+// 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
 #define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
 #endif
