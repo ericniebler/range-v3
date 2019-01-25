@@ -135,5 +135,8 @@ int main()
     S v = ranges::max(s, std::less<int>{}, &S::i);
     CHECK(v.i == 40);
 
+    // Works with initializer_lists? (Regression test for #1004)
+    CHECK(ranges::max({4,3,1,2,6,5}) == 6);
+
     return test_result();
 }

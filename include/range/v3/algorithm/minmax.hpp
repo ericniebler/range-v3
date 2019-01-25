@@ -97,12 +97,12 @@ namespace ranges
         }
 
         template<typename T, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(std::initializer_list<T> rng, C pred = C{},
+        constexpr /*c++14*/ auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
                 P proj = P{}) const ->
             CPP_ret(minmax_result<T>)(
                 requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
-            return (*this)(rng.begin(), rng.end(), std::move(pred), std::move(proj));
+            return (*this)(rng, std::move(pred), std::move(proj));
         }
     };
 
