@@ -12,8 +12,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/utility/copy.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 struct MyRange
   : ranges::view_facade<MyRange>

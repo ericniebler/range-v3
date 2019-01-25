@@ -17,10 +17,9 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/iterator/traits.hpp>
@@ -46,7 +45,6 @@ namespace ranges
             !RandomAccessRange<Rng>>
     {
     private:
-        friend range_access;
         using difference_type_ = range_difference_t<Rng>;
         Rng rng_;
         difference_type_ n_;

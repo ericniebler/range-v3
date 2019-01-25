@@ -16,10 +16,9 @@
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -48,7 +47,6 @@ namespace ranges
           : view_interface<take_exactly_view_<Rng, IsRandomAccessCommon>>
         {
         private:
-            friend range_access;
             Rng rng_;
             range_difference_t<Rng> n_;
 

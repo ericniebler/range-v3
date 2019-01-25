@@ -17,10 +17,9 @@
 #include <utility>
 #include <functional>
 #include <meta/meta.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -39,7 +38,6 @@ namespace ranges
       : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
     {
     private:
-        friend range_access;
         Rng rng_;
         semiregular_t<Pred> pred_;
         detail::non_propagating_cache<iterator_t<Rng>> begin_;

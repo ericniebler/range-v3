@@ -37,9 +37,10 @@
 #define RANGES_V3_ALGORITHM_SORT_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/move_backward.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>

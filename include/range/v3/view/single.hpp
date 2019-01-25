@@ -17,10 +17,10 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/optional.hpp>

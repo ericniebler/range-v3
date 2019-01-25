@@ -13,7 +13,7 @@
 #include <sstream>
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/istream_range.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/view/iota.hpp>

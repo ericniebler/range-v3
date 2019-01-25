@@ -16,10 +16,9 @@
 
 #include <utility>
 #include <meta/meta.hpp>
-#include <range/v3/begin_end.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/view_adaptor.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>

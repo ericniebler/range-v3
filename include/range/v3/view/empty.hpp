@@ -15,7 +15,7 @@
 #define RANGES_V3_VIEW_EMPTY_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/view/interface.hpp>
 
 namespace ranges
 {

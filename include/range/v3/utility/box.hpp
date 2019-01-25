@@ -278,8 +278,10 @@ namespace ranges
     template<typename Element, typename Tag>
     Element box<Element, Tag, detail::box_compress::coalesce>::value;
 
+    /// \cond
     namespace _get_
     {
+    /// \endcond
         // Get by tag type
         template<typename Tag, typename Element, detail::box_compress BC>
         constexpr /*c++14*/ Element & get(box<Element, Tag, BC> & b) noexcept
@@ -312,7 +314,9 @@ namespace ranges
         {
             return detail::move(b).get();
         }
+    /// \cond
     }
+    /// \endcond
     /// @}
 }
 

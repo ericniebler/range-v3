@@ -25,9 +25,10 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>

@@ -112,13 +112,7 @@ namespace ranges
         struct view;
     }
 
-    /// \cond
-    namespace adl_advance_detail
-    {
-        struct advance_fn;
-    }
-    /// \endcond
-    using adl_advance_detail::advance_fn;
+    struct advance_fn;
 
     struct advance_to_fn;
 
@@ -420,12 +414,7 @@ namespace ranges
     struct view_interface;
 
     template<typename T>
-    struct istream_range;
-
-    #if !RANGES_CXX_VARIABLE_TEMPLATES
-    template<typename T>
-    istream_range<T> istream(std::istream & sin);
-    #endif
+    struct istream_view;
 
     template<typename I, typename S = I>
     struct RANGES_EMPTY_BASES iterator_range;

@@ -19,11 +19,10 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/functional/indirect.hpp>

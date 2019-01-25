@@ -423,10 +423,12 @@ namespace ranges
 #define RANGES_STRINGIZE(MSG) RANGES_STRINGIZE_(MSG)
 #define RANGES_DEPRECATED_HEADER(MSG) __pragma(message(__FILE__ "(" RANGES_STRINGIZE(__LINE__) ") : Warning: " MSG))
 #endif
+#else
+#define RANGES_DEPRECATED_HEADER(MSG) /**/
 #endif
-#ifndef RANGES_DEPRECATED_HEADER
-#define RANGES_DEPRECATED_HEADER(MSG)
-#endif
+// #ifndef RANGES_DEPRECATED_HEADER
+// #define RANGES_DEPRECATED_HEADER(MSG)
+// #endif
 
 #ifndef RANGES_CXX_COROUTINES
 #ifdef __cpp_coroutines

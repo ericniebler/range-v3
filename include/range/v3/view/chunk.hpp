@@ -19,12 +19,11 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/view/adaptor.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp> // for non_propagating_cache
 #include <range/v3/utility/static_const.hpp>

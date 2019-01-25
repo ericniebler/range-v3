@@ -11,7 +11,7 @@
 #define RANGES_TEST_ITERATORS_HPP
 
 #include <iterator>
-#include <range/v3/utility/dangling.hpp>
+#include <range/v3/range/dangling.hpp>
 
 template<class It, bool Sized = false>
 class sentinel;

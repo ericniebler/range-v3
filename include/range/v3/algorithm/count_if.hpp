@@ -15,13 +15,13 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

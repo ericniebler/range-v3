@@ -17,7 +17,7 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/iota.hpp>

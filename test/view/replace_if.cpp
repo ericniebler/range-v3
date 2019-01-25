@@ -10,7 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 // HACKHACKHACK silence false positive:
-//   error: ‘<anonymous>.ranges::istream_range<int>::cursor::rng_’ may be used uninitialized in this function
+//   error: ‘<anonymous>.ranges::istream_view<int>::cursor::rng_’ may be used uninitialized in this function
 // triggered on line 39.
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 7
 #include <range/v3/detail/config.hpp>
@@ -21,7 +21,7 @@ RANGES_DIAGNOSTIC_IGNORE("-Wmaybe-uninitialized")
 #include <sstream>
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/istream_range.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/view/iota.hpp>

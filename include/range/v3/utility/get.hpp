@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_UTILITY_GET_HPP
 #define RANGES_V3_UTILITY_GET_HPP
 
-#include <utility>
 #include <concepts/concepts.hpp>
 #include <meta/meta.hpp>
 #include <range/v3/detail/adl_get.hpp>
@@ -24,8 +23,11 @@ namespace ranges
     /// \addtogroup group-utility Utility
     /// @{
     ///
+
+    /// \cond
     namespace _get_
     {
+    /// \endcond
         template<std::size_t I, typename TupleLike>
         constexpr auto CPP_auto_fun(get)(TupleLike &&t)
         (
@@ -50,10 +52,13 @@ namespace ranges
         template<typename T>
         T &&get(meta::id_t<T> &&value) noexcept
         {
-            return std::move(value);
+            return static_cast<T &&>(value);
         }
+    /// \cond
     }
     using namespace _get_;
+    /// \endcond
+
     /// @}
 }
 

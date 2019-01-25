@@ -68,21 +68,6 @@ file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
 # This header is not meant to be included directly:
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
-# These headers are deprecated:
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/algorithm/tagspec.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/associated_types.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/basic_iterator.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/common_iterator.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/concepts.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/counted_iterator.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/functional.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/infinity.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/invoke.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/iterator_concepts.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/iterator_traits.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/iterator.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/nullptr_v.hpp)
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS range/v3/utility/unreachable.hpp)
 
 # Add header files as sources to fix MSVS 2017 not finding source during debugging
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE

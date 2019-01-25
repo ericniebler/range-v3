@@ -23,11 +23,10 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>

@@ -16,11 +16,10 @@
 
 #include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/data.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/view/view.hpp>
 
 RANGES_DISABLE_WARNINGS

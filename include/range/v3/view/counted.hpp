@@ -15,8 +15,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/counted_iterator.hpp>

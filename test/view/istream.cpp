@@ -9,11 +9,11 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <range/v3/istream_range.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/view/subrange.hpp>
 #include <sstream>
-#include "simple_test.hpp"
-#include "test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 struct moveonly
 {

@@ -17,8 +17,8 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take_while.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 template<typename I, typename S>
 void test_iterators(I begin, S end, ranges::iter_difference_t<I> n)

@@ -15,10 +15,9 @@
 #define RANGES_V3_VIEW_SAMPLE_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/distance.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
 #include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>

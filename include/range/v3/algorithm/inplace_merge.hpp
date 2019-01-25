@@ -26,10 +26,10 @@
 #include <functional>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/move.hpp>

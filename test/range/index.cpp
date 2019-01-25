@@ -15,7 +15,7 @@
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/core.hpp>
-#include "./simple_test.hpp"
+#include "../simple_test.hpp"
 
 int main()
 {

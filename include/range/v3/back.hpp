@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
@@ -14,31 +13,9 @@
 #ifndef RANGES_V3_BACK_HPP
 #define RANGES_V3_BACK_HPP
 
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/iterator/operations.hpp>
-#include <range/v3/utility/static_const.hpp>
+#include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/range/operations.hpp> instead.")
 
-namespace ranges
-{
-    /// \ingroup group-core
-    struct back_fn
-    {
-        /// \return `*prev(end(rng))`
-        CPP_template(typename Rng)(
-            requires CommonRange<Rng> && BidirectionalRange<Rng>)
-        constexpr /*c++14*/
-        range_reference_t<Rng> operator()(Rng &&rng) const
-        {
-            return *prev(end(rng));
-        }
-    };
-
-    /// \ingroup group-core
-    /// \sa `back_fn`
-    RANGES_INLINE_VARIABLE(back_fn, back)
-}
+#include <range/v3/range/operations.hpp>
 
 #endif
