@@ -14,9 +14,9 @@
 #ifndef RANGES_V3_ACTION_ADJACENT_REMOVE_IF_HPP
 #define RANGES_V3_ACTION_ADJACENT_REMOVE_IF_HPP
 #include <range/v3/algorithm/adjacent_remove_if.hpp>
+#include <range/v3/functional/identity.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/utility/static_const.hpp>

@@ -16,11 +16,13 @@
 
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/algorithm/move.hpp>
-#include <range/v3/begin_end.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -44,22 +46,23 @@ namespace ranges
                 IndirectRelation<Pred, projected<I, Proj>>)
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
-            if (first != last)
+            if (first == last)
             {
-                auto i = next(first);
-                if (i != last)
+                return first;
+            }
+
+            auto i = first;
+            for (auto j = ++i; ++j != last; ++i)
+            {
+                if (!invoke(pred, invoke(proj, *i), invoke(proj, *j)))
                 {
-                    for (auto j = next(i); j != last; ++i, (void)++j)
-                    {
-                        if (!invoke(pred, invoke(proj, *i), invoke(proj, *j)))
-                        {
-                            *first = iter_move(i);
-                            ++first;
-                        }
-                    }
-                    *first++ = iter_move(i);
+                    *first = iter_move(i);
+                    ++first;
                 }
             }
+
+            *first = iter_move(i);
+            ++first;
             return first;
         }
 
@@ -76,8 +79,7 @@ namespace ranges
 
     /// \sa `adjacent_remove_if_fn`
     /// \ingroup group-algorithms
-    RANGES_INLINE_VARIABLE(with_braced_init_args<adjacent_remove_if_fn>,
-                                    adjacent_remove_if)
+    RANGES_INLINE_VARIABLE(adjacent_remove_if_fn, adjacent_remove_if)
     /// @}
 } // namespace ranges
 
