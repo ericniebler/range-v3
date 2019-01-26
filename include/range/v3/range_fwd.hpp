@@ -47,9 +47,6 @@ RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 namespace ranges
 {
     /// \cond
-    inline namespace CPOs
-    {}
-
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
 #if defined(__GNUC__) && !defined(__clang__)

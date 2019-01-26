@@ -49,14 +49,16 @@ namespace ranges
     namespace detail
     {
         template<typename>
-        struct nullopt_holder {
+        struct nullopt_holder
+        {
             static constexpr nullopt_t nullopt{nullopt_t::tag{}};
         };
         template<typename T>
         constexpr nullopt_t nullopt_holder<T>::nullopt;
     }
     /// \endcond
-    inline namespace {
+    inline namespace
+    {
         constexpr auto &nullopt = detail::nullopt_holder<void>::nullopt;
     }
 #endif
