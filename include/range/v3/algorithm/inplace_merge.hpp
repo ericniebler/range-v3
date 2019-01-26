@@ -26,26 +26,28 @@
 #include <functional>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/memory.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/min.hpp>
+#include <range/v3/algorithm/move.hpp>
+#include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/rotate.hpp>
+#include <range/v3/algorithm/upper_bound.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/move_iterators.hpp>
 #include <range/v3/iterator/reverse_iterator.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
-#include <range/v3/algorithm/lower_bound.hpp>
-#include <range/v3/algorithm/min.hpp>
-#include <range/v3/algorithm/upper_bound.hpp>
-#include <range/v3/algorithm/move.hpp>
-#include <range/v3/algorithm/merge.hpp>
-#include <range/v3/algorithm/rotate.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {
@@ -183,7 +185,7 @@ namespace ranges
                     requires BidirectionalIterator<I> && Sortable<I, C, P>)
             {
                 merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
-                    _nullptr_v<iter_value_t<I>>(), 0, std::move(pred), std::move(proj));
+                    static_cast<iter_value_t<I> *>(nullptr), 0, std::move(pred), std::move(proj));
             }
         };
 

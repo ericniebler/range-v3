@@ -14,7 +14,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <range/v3/span.hpp>
+#include <range/v3/view/span.hpp>
 
 #include <array>
 #include <iostream>
@@ -24,7 +24,7 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include "simple_test.hpp"
+#include "../simple_test.hpp"
 
 using ranges::span;
 using ranges::dynamic_extent;

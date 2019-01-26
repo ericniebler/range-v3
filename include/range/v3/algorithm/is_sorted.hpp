@@ -16,8 +16,12 @@
 #ifndef RANGES_V3_ALGORITHM_IS_SORTED_HPP
 #define RANGES_V3_ALGORITHM_IS_SORTED_HPP
 
+#include <utility>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/algorithm/is_sorted_until.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

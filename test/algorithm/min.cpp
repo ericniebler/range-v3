@@ -134,5 +134,8 @@ int main()
     S v = ranges::min(s, std::less<int>{}, &S::i);
     CHECK(v.i == -4);
 
+    // Works with initializer_lists? (Regression test for #1004)
+    CHECK(ranges::min({4,3,1,2,6,5}) == 1);
+
     return test_result();
 }

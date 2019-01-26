@@ -17,12 +17,14 @@
 #include <iterator>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <concepts/concepts.hpp>
+#include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/iterator/traits.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
 
 #ifdef _GLIBCXX_DEBUG
 #include <debug/safe_iterator.h>

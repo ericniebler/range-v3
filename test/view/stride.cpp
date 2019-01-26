@@ -13,7 +13,7 @@
 #include <vector>
 #include <sstream>
 #include <range/v3/core.hpp>
-#include <range/v3/istream_range.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/stride.hpp>

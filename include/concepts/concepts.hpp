@@ -360,6 +360,8 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_template(...)                                                       \
     template<__VA_ARGS__> CPP_PP_EXPAND                                         \
     /**/
+#define CPP_template_def CPP_template                                           \
+    /**/
 #define CPP_member
 #define CPP_ctor(TYPE) TYPE CPP_CTOR_IMPL_1_
 #define CPP_CTOR_IMPL_1_(...)                                                   \
@@ -370,11 +372,19 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
     /**/
 #define CPP_TEMPLATE_AUX_(...) ,                                                \
-    bool (&CPP_true)(::concepts::detail::Nil) =                                 \
-        ::concepts::detail::CPP_true,                                           \
+    bool CPP_true_ = true,                                                      \
     ::concepts::detail::enable_if_t<int,                                        \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-        CPP_true(::concepts::detail::Nil{})> = 0>                               \
+        CPP_true_> = 0>                                                         \
+    /**/
+#define CPP_template_def(...)                                                   \
+    template<__VA_ARGS__ CPP_TEMPLATE_DEF_AUX_                                  \
+    /**/
+#define CPP_TEMPLATE_DEF_AUX_(...) ,                                            \
+    bool CPP_true_,                                                             \
+    ::concepts::detail::enable_if_t<int,                                        \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
+        CPP_true_>>                                                             \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
 #define CPP_member                                                              \
@@ -1080,14 +1090,14 @@ namespace concepts
 
     template<typename Concept, typename... Args>
     struct is_satisfied_by
-        : meta::bool_<static_cast<bool>(typename Concept::template Eval<Args...>{})>
+      : meta::bool_<static_cast<bool>(typename Concept::template Eval<Args...>{})>
     {};
 
     // For automatically generating tags corresponding to concept
     // subsumption relationships, for use with tag dispatching.
     template<typename Concept, typename Base = meta::nil_>
     struct tag
-        : Base
+      : Base
     {};
 
     template<typename Concepts, typename... Ts>

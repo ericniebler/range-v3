@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -14,86 +13,9 @@
 #ifndef RANGES_V3_GETLINES_HPP
 #define RANGES_V3_GETLINES_HPP
 
-#include <string>
-#include <istream>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/utility/static_const.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/view/getlines.hpp> instead.")
 
-namespace ranges
-{
-    /// \addtogroup group-core
-    /// @{
-    struct getlines_range
-      : view_facade<getlines_range, unknown>
-    {
-    private:
-        friend range_access;
-        std::istream *sin_;
-        std::string str_;
-        char delim_;
-        struct cursor
-        {
-        private:
-            friend range_access;
-            using single_pass = std::true_type;
-            getlines_range *rng_ = nullptr;
-        public:
-            cursor() = default;
-            explicit cursor(getlines_range &rng)
-              : rng_(&rng)
-            {}
-            void next()
-            {
-                rng_->next();
-            }
-            std::string &read() const noexcept
-            {
-                return rng_->str_;
-            }
-            bool equal(default_sentinel_t) const
-            {
-                return !rng_->sin_;
-            }
-            bool equal(cursor that) const
-            {
-                return !rng_->sin_ == !that.rng_->sin_;
-            }
-        };
-        void next()
-        {
-            if(!std::getline(*sin_, str_, delim_))
-                sin_ = nullptr;
-        }
-        cursor begin_cursor()
-        {
-            return cursor{*this};
-        }
-    public:
-        getlines_range() = default;
-        getlines_range(std::istream &sin, char delim = '\n')
-          : sin_(&sin), str_{}, delim_(delim)
-        {
-            this->next(); // prime the pump
-        }
-        std::string & cached() noexcept
-        {
-            return str_;
-        }
-    };
-
-    struct getlines_fn
-    {
-        getlines_range operator()(std::istream & sin, char delim = '\n') const
-        {
-            return getlines_range{sin, delim};
-        }
-    };
-
-    RANGES_INLINE_VARIABLE(getlines_fn, getlines)
-    /// @}
-}
+#include <range/v3/view/getlines.hpp>
 
 #endif

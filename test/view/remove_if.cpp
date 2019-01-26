@@ -14,6 +14,7 @@
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/counted.hpp>

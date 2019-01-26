@@ -15,10 +15,8 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/basic_iterator.hpp>
-#include <range/v3/iterator/operations.hpp>
 
 namespace ranges
 {
@@ -63,7 +61,9 @@ namespace ranges
             constexpr /*c++14*/
             I arrow() const
             {
-                return ranges::prev(it_);
+                auto tmp = it_;
+                --tmp;
+                return tmp;
             }
             constexpr /*c++14*/
             I base() const
@@ -105,10 +105,13 @@ namespace ranges
                 return it_ - that.base();
             }
             constexpr /*c++14*/
-            auto CPP_auto_fun(move)() (const)
-            (
-                return iter_move(ranges::prev(it_))
-            )
+            iter_rvalue_reference_t<I> move() const
+                noexcept(noexcept((void)I(I(it_)), (void)--const_cast<I &>(it_), iter_move(it_)))
+            {
+                auto tmp = it_;
+                --tmp;
+                return iter_move(tmp);
+            }
         public:
             reverse_cursor() = default;
             template<typename U>

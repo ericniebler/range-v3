@@ -19,20 +19,19 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/utility/variant.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/compose.hpp>
 #include <range/v3/iterator/operations.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -267,7 +266,7 @@ namespace ranges
             {
                 // Kind of a dumb implementation. Surely there's a better way.
                 return ranges::get<0>(unique_variant(its_.visit(
-                    compose(convert_to<reference>{}, dereference_fn{}))));
+                    compose(convert_to<reference>{}, detail::dereference_fn{}))));
             }
             void next()
             {
@@ -396,6 +395,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::concat_view)
 
 #endif

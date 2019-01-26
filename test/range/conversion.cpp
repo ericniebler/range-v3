@@ -12,13 +12,13 @@
 #include <list>
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/action/sort.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 template<typename T>
 struct vector_like : std::vector<T>
