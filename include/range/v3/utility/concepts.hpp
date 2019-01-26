@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -13,6 +12,9 @@
 
 #ifndef RANGES_V3_UTILITY_CONCEPTS_HPP
 #define RANGES_V3_UTILITY_CONCEPTS_HPP
+
+#include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <concepts/concepts.hpp> instead.")
 
 #include <range/v3/range_fwd.hpp>
 #include <concepts/concepts.hpp>

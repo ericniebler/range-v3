@@ -11,7 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <memory>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/view/filter.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"

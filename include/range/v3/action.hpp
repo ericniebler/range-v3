@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_ACTION_HPP
 #define RANGES_V3_ACTION_HPP
 
+#include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/action/drop.hpp>
 #include <range/v3/action/drop_while.hpp>

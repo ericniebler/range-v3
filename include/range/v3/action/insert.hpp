@@ -18,11 +18,10 @@
 #include <initializer_list>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/iterator/common_iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

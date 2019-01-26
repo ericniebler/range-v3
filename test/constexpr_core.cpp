@@ -13,12 +13,9 @@
 
 #if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
 
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
-#include <range/v3/back.hpp>
-#include <range/v3/front.hpp>
-#include <range/v3/at.hpp>
-#include <range/v3/size.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/operations.hpp>
+#include <range/v3/range/primitives.hpp>
 #include "array.hpp"
 #include "test_iterators.hpp"
 

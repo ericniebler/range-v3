@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
@@ -15,132 +14,10 @@
 #ifndef RANGES_V3_DISTANCE_HPP
 #define RANGES_V3_DISTANCE_HPP
 
-#include <utility>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/detail/config.hpp>
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please #include <range/v3/iterator/operations.hpp> instead.")
+
 #include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/traits.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/utility/static_const.hpp>
 
-namespace ranges
-{
-    /// \addtogroup group-core
-    /// @{
-    struct enumerate_fn : iter_enumerate_fn
-    {
-    private:
-        template<typename Rng, typename D, typename I = iterator_t<Rng>>
-        std::pair<D, I> impl_r(Rng &rng, D d, range_tag, range_tag) const
-        {
-            return iter_enumerate(begin(rng), end(rng), d);
-        }
-        template<typename Rng, typename D, typename I = iterator_t<Rng>>
-        std::pair<D, I> impl_r(Rng &rng, D d, common_range_tag, sized_range_tag) const
-        {
-            return {static_cast<D>(size(rng)) + d, end(rng)};
-        }
-    public:
-        using iter_enumerate_fn::operator();
-
-        CPP_template(typename Rng, typename D = range_difference_t<Rng>,
-            typename I = iterator_t<Rng>)(
-            requires Integral<D> && Range<Rng>)
-        std::pair<D, I> operator()(Rng &&rng, D d = 0) const
-        {
-            // Better not be trying to compute the distance of an infinite range:
-            RANGES_EXPECT(!is_infinite<Rng>::value);
-            auto result = this->impl_r(rng, d, common_range_tag_of<Rng>(),
-                sized_range_tag_of<Rng>());
-            RANGES_EXPECT(result.first >= d);
-            return result;
-        }
-    };
-
-    /// \ingroup group-core
-    /// \sa `enumerate_fn`
-    RANGES_INLINE_VARIABLE(enumerate_fn, enumerate)
-
-    struct distance_fn : iter_distance_fn
-    {
-    private:
-        template<typename Rng, typename D>
-        D impl_r(Rng &rng, D d, range_tag) const
-        {
-            return enumerate(rng, d).first;
-        }
-        template<typename Rng, typename D>
-        constexpr /*c++14*/
-        D impl_r(Rng &rng, D d, sized_range_tag) const
-        {
-            return static_cast<D>(size(rng)) + d;
-        }
-    public:
-        using iter_distance_fn::operator();
-
-        CPP_template(typename Rng, typename D = range_difference_t<Rng>)(
-            requires Integral<D> && Range<Rng>)
-        constexpr /*c++14*/
-        D operator()(Rng &&rng, D d = 0) const
-        {
-            // Better not be trying to compute the distance of an infinite range:
-            RANGES_EXPECT(!is_infinite<Rng>::value);
-            auto result = this->impl_r(rng, d, sized_range_tag_of<Rng>());
-            RANGES_EXPECT(result >= d);
-            return result;
-        }
-    };
-
-    /// \ingroup group-core
-    /// \sa `distance_fn`
-    RANGES_INLINE_VARIABLE(distance_fn, distance)
-
-    // The interface of distance_compare is taken from Util.listLengthCmp in the GHC API.
-    struct distance_compare_fn : iter_distance_compare_fn
-    {
-    private:
-        CPP_template(typename Rng)(
-            requires not is_infinite<Rng>::value)
-        int impl_r(Rng &rng, range_difference_t<Rng> n, range_tag) const
-        {
-            return iter_distance_compare(begin(rng), end(rng), n);
-        }
-        CPP_template(typename Rng)(
-            requires is_infinite<Rng>::value)
-        int impl_r(Rng &, range_difference_t<Rng>, range_tag) const
-        {
-            // Infinite ranges are always compared to be larger than a finite number.
-            return 1;
-        }
-        template<typename Rng>
-        int impl_r(Rng &rng, range_difference_t<Rng> n, sized_range_tag) const
-        {
-            auto dist = distance(rng); // O(1) since rng is a SizedRange
-            if(dist > n)
-                return  1;
-            else if(dist < n)
-                return -1;
-            else
-                return  0;
-        }
-    public:
-        using iter_distance_compare_fn::operator();
-
-        CPP_template(typename Rng)(
-            requires Range<Rng>)
-        int operator()(Rng &&rng, range_difference_t<Rng> n) const
-        {
-            return this->impl_r(rng, n, sized_range_tag_of<Rng>());
-        }
-    };
-
-    /// \ingroup group-core
-    /// \sa `distance_compare_fn`
-    RANGES_INLINE_VARIABLE(distance_compare_fn, distance_compare)
-    /// @}
-}
 
 #endif

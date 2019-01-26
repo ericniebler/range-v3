@@ -16,21 +16,20 @@
 #define RANGES_V3_VIEW_CARTESIAN_PRODUCT_HPP
 
 #include <cstdint>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/empty.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
-#include <range/v3/iterator/operations.hpp>
+#include <range/v3/view/view.hpp> // for dereference_fn
 
 namespace ranges
 {
@@ -318,7 +317,7 @@ RANGES_DIAGNOSTIC_POP
             {}
             common_tuple<range_reference_t<Views>...> read() const
             {
-                return tuple_transform(its_, ranges::dereference);
+                return tuple_transform(its_, detail::dereference_fn{});
             }
             void next()
             {

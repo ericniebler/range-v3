@@ -16,17 +16,13 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/iterator/concepts.hpp>
-#include <range/v3/iterator/basic_iterator.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {
-    template<typename I, typename = meta::if_c<Iterator<I>>>
-    struct counted_iterator;
-
     /// \cond
     namespace _counted_iterator_
     {
@@ -66,11 +62,13 @@ namespace ranges
     }
     /// \endcond
 
-    template<typename I, typename /*= meta::if_<Iterator<I>>*/>
+    CPP_template_def(typename I)(
+        requires Iterator<I>)
     struct counted_iterator
       : _counted_iterator_::contiguous_iterator_concept_base<(bool) ContiguousIterator<I>>
     {
     private:
+        friend advance_fn;
         CPP_assert(Iterator<I>);
         friend _counted_iterator_::access;
 
@@ -268,12 +266,6 @@ namespace ranges
                 x.current_,
                 _counted_iterator_::access::current(y));
         }
-        friend void advance(counted_iterator &i, iter_difference_t<I> n)
-        {
-            RANGES_EXPECT(i.cnt_ >= n);
-            ranges::advance(i.current_, n);
-            i.cnt_ -= n;
-        }
 #endif
     };
 
@@ -299,14 +291,6 @@ namespace ranges
             return ranges::iter_swap(
                 _counted_iterator_::access::current(x),
                 _counted_iterator_::access::current(y));
-        }
-        template<typename I>
-        void advance(counted_iterator<I> &i, iter_difference_t<I> n)
-        {
-            auto &count = _counted_iterator_::access::count(i);
-            RANGES_EXPECT(count >= n);
-            ranges::advance(_counted_iterator_::access::current(i), n);
-            count -= n;
         }
     }
 #endif
@@ -428,6 +412,17 @@ namespace ranges
             readable_traits<I>,
             meta::nil_>
     {};
+
+    template<typename I>
+    inline constexpr /*c++14*/
+    auto advance_fn::operator()(counted_iterator<I> &i, iter_difference_t<I> n) const ->
+        CPP_ret(void)(
+            requires Iterator<I>)
+    {
+        RANGES_EXPECT(n <= i.cnt_);
+        advance(i.current_, n);
+        i.cnt_ -= n;
+    }
 }
 
 /// \cond

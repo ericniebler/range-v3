@@ -11,9 +11,9 @@
 
 #include <sstream>
 #include <range/v3/core.hpp>
-#include <range/v3/range_traits.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include <range/v3/range/traits.hpp>
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 using namespace ranges;
 

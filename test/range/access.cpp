@@ -10,16 +10,14 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <range/v3/begin_end.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/data.hpp>
-#include <range/v3/empty.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/subrange.hpp>
 #include <range/v3/view/ref.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/find.hpp>
 #include <vector>
-#include "simple_test.hpp"
+#include "../simple_test.hpp"
 
 #if defined(__clang__)
 RANGES_DIAGNOSTIC_IGNORE("-Wunused-const-variable")

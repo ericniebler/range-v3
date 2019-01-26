@@ -27,8 +27,8 @@
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/zip.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 int main()
 {

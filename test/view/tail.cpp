@@ -40,14 +40,14 @@ int main()
 
     {
         std::stringstream sin{"1 2 3 4"};
-        istream_range<int> is(sin);
+        istream_view<int> is(sin);
         auto rng = view::tail(is);
         check_equal(rng, {2,3,4});
     }
 
     {
         std::stringstream sin{""};
-        istream_range<int> is(sin);
+        istream_view<int> is(sin);
         auto rng = view::tail(is);
         CHECK(rng.begin() == rng.end());
     }

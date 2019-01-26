@@ -17,8 +17,7 @@
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
 

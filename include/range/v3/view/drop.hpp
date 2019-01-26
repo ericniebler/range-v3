@@ -17,13 +17,11 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/interface.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -31,7 +29,6 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/subrange.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -48,7 +45,6 @@ namespace ranges
             !RandomAccessRange<Rng>>
     {
     private:
-        friend range_access;
         using difference_type_ = range_difference_t<Rng>;
         Rng rng_;
         difference_type_ n_;
@@ -164,6 +160,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::drop_view)
 
 #endif

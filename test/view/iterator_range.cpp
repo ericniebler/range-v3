@@ -16,8 +16,8 @@
 #include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/view/all.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 struct empty
 {};

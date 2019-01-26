@@ -19,15 +19,15 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_access.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/semiregular.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/adaptor.hpp>
+#include <range/v3/functional/compose.hpp>
+#include <range/v3/functional/indirect.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 
 namespace ranges
 {
@@ -169,6 +169,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_take_while_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::take_while_view)
 

@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -18,6 +17,7 @@
 
 namespace ranges
 {
+    /// \cond
     namespace detail
     {
             // Extensions: the dangling story actually works, and result structs
@@ -158,6 +158,7 @@ namespace ranges
             RANGES_ALGO_RESULT_AUX_3(in_out1_out2_result, I, in, O1, out1, O2, out2)
         };
     }
+    /// \endcond
 }
 
 #endif

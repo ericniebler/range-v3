@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 #include <cmath>
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/iota.hpp>

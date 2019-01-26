@@ -14,7 +14,7 @@
 #include <functional>
 #include <iostream>
 #include <utility>
-#include <range/v3/size.hpp>
+#include <range/v3/range/primitives.hpp>
 #include "../simple_test.hpp"
 
 // BUGBUGBUG

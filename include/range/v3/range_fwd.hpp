@@ -47,9 +47,6 @@ RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 namespace ranges
 {
     /// \cond
-    inline namespace CPOs
-    {}
-
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
 #if defined(__GNUC__) && !defined(__clang__)
@@ -115,13 +112,7 @@ namespace ranges
         struct view;
     }
 
-    /// \cond
-    namespace adl_advance_detail
-    {
-        struct advance_fn;
-    }
-    /// \endcond
-    using adl_advance_detail::advance_fn;
+    struct advance_fn;
 
     struct advance_to_fn;
 
@@ -423,12 +414,7 @@ namespace ranges
     struct view_interface;
 
     template<typename T>
-    struct istream_range;
-
-    #if !RANGES_CXX_VARIABLE_TEMPLATES
-    template<typename T>
-    istream_range<T> istream(std::istream & sin);
-    #endif
+    struct istream_view;
 
     template<typename I, typename S = I>
     struct RANGES_EMPTY_BASES iterator_range;

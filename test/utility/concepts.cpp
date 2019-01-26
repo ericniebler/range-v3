@@ -13,12 +13,12 @@
 
 #include <sstream>
 #include <vector>
-#include <range/v3/utility/concepts.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/istream_range.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/iterator/common_iterator.hpp>
 #include "../simple_test.hpp"
 
@@ -210,15 +210,15 @@ static_assert(!ranges::BidirectionalIterator<int>, "");
 static_assert(ranges::RandomAccessIterator<int*>, "");
 static_assert(!ranges::RandomAccessIterator<int>, "");
 
-static_assert(ranges::View<ranges::istream_range<int>>, "");
-static_assert(ranges::InputIterator<ranges::iterator_t<ranges::istream_range<int>>>, "");
+static_assert(ranges::View<ranges::istream_view<int>>, "");
+static_assert(ranges::InputIterator<ranges::iterator_t<ranges::istream_view<int>>>, "");
 static_assert(!ranges::View<int>, "");
 
 static_assert(ranges::CommonRange<std::vector<int> >, "");
 static_assert(!ranges::CommonView<std::vector<int>>, "");
 static_assert(!ranges::CommonView<std::vector<int> &>, "");
 static_assert(ranges::RandomAccessIterator<ranges::iterator_t<std::vector<int> const &>>, "");
-static_assert(!ranges::CommonView<ranges::istream_range<int>>, "");
+static_assert(!ranges::CommonView<ranges::istream_view<int>>, "");
 
 static_assert(ranges::Predicate<std::less<int>, int, int>, "");
 static_assert(!ranges::Predicate<std::less<int>, char*, int>, "");
@@ -258,13 +258,13 @@ static_assert(
 
 static_assert(
     std::is_same<
-        ranges::common_view_tag_of<ranges::istream_range<int>>,
+        ranges::common_view_tag_of<ranges::istream_view<int>>,
         ranges::view_tag
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_view_tag_of<ranges::istream_range<int>>,
+        ranges::sized_view_tag_of<ranges::istream_view<int>>,
         ranges::view_tag
     >::value, "");
 

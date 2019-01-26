@@ -15,8 +15,8 @@
 #include <range/v3/core.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/view/delimit.hpp>
-#include "./simple_test.hpp"
-#include "./test_utils.hpp"
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
 
 template<typename BidiRange>
 struct my_reverse_view
@@ -83,7 +83,7 @@ public:
 struct my_delimited_range
   : ranges::view_adaptor<
         my_delimited_range,
-        ranges::delimit_view<ranges::istream_range<int>, int>>
+        ranges::delimit_view<ranges::istream_view<int>, int>>
 {
     using view_adaptor::view_adaptor;
 };

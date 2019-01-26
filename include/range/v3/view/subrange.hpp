@@ -20,12 +20,13 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <concepts/concepts.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/utility/get.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/iterator/unreachable_sentinel.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/utility/get.hpp>
+#include <range/v3/view/interface.hpp>
 
 namespace ranges
 {
