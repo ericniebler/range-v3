@@ -18,6 +18,7 @@
 RANGES_DISABLE_WARNINGS
 
 #include <range/v3/algorithm/adjacent_find.hpp>
+#include <range/v3/algorithm/adjacent_remove_if.hpp>
 #include <range/v3/algorithm/all_of.hpp>
 #include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/algorithm/binary_search.hpp>
