@@ -50,7 +50,7 @@ namespace ranges
                             make_reverse_iterator(std::move(last)),
                             make_reverse_iterator(first),
                             pred, proj).base();
-                    if (first == last) return last;
+                    if (first == last) return first;
                     *first = iter_move(--last);
 
                     // discussion here: https://github.com/ericniebler/range-v3/issues/988
