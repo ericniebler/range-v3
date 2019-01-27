@@ -45,13 +45,11 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename C, typename P = ident,
-                            typename I = iterator_t<Rng>>
+                            typename I = iterator_t<Rng>, typename S = sentinel_t<Rng>>
                     auto requires_() -> decltype(
                     concepts::valid_expr(
-                            concepts::model_of<concepts::BidirectionalRange, Rng>(),
-                            concepts::model_of<concepts::BoundedRange, Rng>(),
-                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
-                            concepts::is_true(UnstableRemovableIf<I, C, P>())
+                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
+                            concepts::is_true(UnstableRemovableIf<I, S, C, P>())
                     ));
                 };
 
@@ -64,7 +62,7 @@ namespace ranges
                 {
                     auto it = ranges::unstable_remove_if(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
                     ranges::erase(rng, it, ranges::end(rng));
-                    return static_cast<Rng &&>(rng);
+                    return static_cast<Rng&&>(rng);
                 }
             };
 

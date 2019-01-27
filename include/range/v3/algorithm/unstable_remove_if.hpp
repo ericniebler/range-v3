@@ -28,19 +28,20 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident>
+        template<typename I, typename S, typename C, typename P = ident>
         using UnstableRemovableIf = meta::strict_and<
-                BidirectionalIterator<I>,
+                ForwardIterator<I>, BidirectionalIterator<S>,
                 IndirectPredicate<C, projected<I, P>>,
-                Permutable<I>>;
+                IndirectPredicate<C, projected<S, P>>,
+                Permutable<I>, Permutable<S>>;
 
         /// \addtogroup group-algorithms
         /// @{
         struct unstable_remove_if_fn
         {
-            template <typename I, typename C, typename P = ident,
-                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, C, P>())>
-            I operator()(I first, I last, C pred, P proj = {}) const
+            template <typename I, typename S, typename C, typename P = ident,
+                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, S, C, P>())>
+            I operator()(I first, S last, C pred, P proj = {}) const
             {
                 while(true)
                 {
@@ -58,10 +59,8 @@ namespace ranges
             }
 
             template<typename Rng, typename C, typename P = ident,
-                    typename I = iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, C, P>() &&
-                                      BidirectionalRange<Rng>() &&
-                                      BoundedRange<Rng>())>
+                    typename I = iterator_t<Rng>, typename S = sentinel_t<Rng>,
+                    CONCEPT_REQUIRES_(UnstableRemovableIf<I, S, C, P>())>
             safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
