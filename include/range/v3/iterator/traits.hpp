@@ -20,7 +20,7 @@
 #include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/move.hpp> // for iter_move
-#include <range/v3/utility/common_type.hpp> // for iter_move
+#include <range/v3/utility/common_type.hpp>
 #include <range/v3/iterator/associated_types.hpp>
 
 namespace ranges
