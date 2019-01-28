@@ -13,6 +13,7 @@
 #define RANGES_TEST_DEBUG_VIEW_HPP
 
 #include <cstddef>
+#include <memory>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/swap.hpp>
 
@@ -22,51 +23,50 @@ struct debug_input_view
     static_assert(std::is_object<T>::value, "");
 
     using index_t = std::ptrdiff_t;
-    using version_t = unsigned long;
+    using version_t = long;
 
-    mutable T *data_ = nullptr;
-    mutable T *last_ = nullptr;
-    mutable version_t version_ = 0;
-    mutable bool valid_ = false;
-    bool begin_called_ = false;
+    struct data
+    {
+        T *data_ = nullptr;
+        T *last_ = nullptr;
+        version_t version_ = 0;
+        bool valid_ = false;
+        bool begin_called_ = false;
+    };
+    std::shared_ptr<data> data_{};
 
     debug_input_view() = default;
-    constexpr debug_input_view(T* data, index_t size) noexcept
-      : data_{data}
-      , last_{(RANGES_ENSURE(data || !size), data + size)}
-      , valid_{true}
-    {}
+    debug_input_view(T* p, index_t size)
+      : data_(std::make_shared<data>())
+    {
+        RANGES_ENSURE(p || !size);
+        data_->data_ = p;
+        data_->last_ = p + size;
+        data_->valid_ = true;
+    }
     template<index_t N>
-    constexpr debug_input_view(T (&data)[N]) noexcept
+    debug_input_view(T (&data)[N])
       : debug_input_view{data, N}
     {}
-    constexpr /*c++14*/
-    debug_input_view(debug_input_view const &that) noexcept
-      : data_{ranges::exchange(that.data_, nullptr)}
-      , last_{ranges::exchange(that.last_, nullptr)}
-      , valid_{ranges::exchange(that.valid_, false)}
+    debug_input_view(std::shared_ptr<data> data)
+      : data_{std::move(data)}
     {
-        ++that.version_;
-        if (that.begin_called_)
-        {
-            data_ = last_ = nullptr;
-            valid_ = false;
-        }
+        if(!data_)
+            return;
+        if(data_->begin_called_)
+            data_->valid_ = false;
+        else
+            ++data_->version_;
     }
-    constexpr /*c++14*/
-    debug_input_view &operator=(debug_input_view const &that) noexcept
+    debug_input_view(debug_input_view &&that)
+      : debug_input_view{std::move(that.data_)}
+    {}
+    debug_input_view(debug_input_view const &that)
+      : debug_input_view{that.data_}
+    {}
+    debug_input_view &operator=(debug_input_view that)
     {
-        ++that.version_;
-        data_ = ranges::exchange(that.data_, nullptr);
-        last_ = ranges::exchange(that.last_, nullptr);
-        valid_ = ranges::exchange(that.valid_, false);
-        begin_called_ = false;
-        if (that.begin_called_)
-        {
-            data_ = last_ = nullptr;
-            valid_ = false;
-        }
-        ++version_;
+        data_.swap(that.data_);
         return *this;
     }
 
@@ -92,97 +92,89 @@ struct debug_input_view
 
         iterator() = default;
         explicit constexpr iterator(debug_input_view &view) noexcept
-          : view_{&view}, version_{view.version_}
+          : view_{&view}, version_{view.data_? view.data_->version_ : -1}
         {}
 
-        constexpr /*c++14*/ void check_current() const noexcept
+        void check_current() const noexcept
         {
-            RANGES_ENSURE(view_), RANGES_ENSURE(view_->version_ == version_);
+            RANGES_ENSURE(view_),
+            RANGES_ENSURE(view_->data_),
+            RANGES_ENSURE(view_->data_->version_ == version_);
         }
 
-        constexpr /*c++14*/ void check_dereferenceable() const noexcept
+        void check_dereferenceable() const noexcept
         {
-            check_current(), RANGES_ENSURE(view_->data_ < view_->last_);
+            check_current(), RANGES_ENSURE(view_->data_->data_ < view_->data_->last_);
         }
 
-        constexpr /*c++14*/
         reference operator*() const noexcept
         {
             check_dereferenceable();
-            return *view_->data_;
+            return *view_->data_->data_;
         }
-        constexpr /*c++14*/
         iterator &operator++() noexcept
         {
             check_dereferenceable();
-            ++view_->data_;
-            version_ = ++view_->version_;
+            ++view_->data_->data_;
+            version_ = ++view_->data_->version_;
             return *this;
         }
-        constexpr /*c++14*/
         void operator++(int) noexcept
         {
             ++*this;
         }
 
-        constexpr /*c++14*/
         friend bool operator==(iterator const &i, sentinel const &s)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             i.check_current();
-            return i.view_->data_ == i.view_->last_;
+            return i.view_->data_->data_ == i.view_->data_->last_;
         }
-        constexpr /*c++14*/
         friend bool operator==(sentinel const &s, iterator const &i)
         {
             return i == s;
         }
-        constexpr /*c++14*/
         friend bool operator!=(iterator const &i, sentinel const &s)
         {
             return !(i == s);
         }
-        constexpr /*c++14*/
         friend bool operator!=(sentinel const &s, iterator const &i)
         {
             return !(i == s);
         }
         CPP_member
-        constexpr /*c++14*/
         friend auto operator-(sentinel const& s, iterator const& i) ->
             CPP_ret(difference_type)(requires Sized)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             i.check_current();
-            return i.view_->last_ - i.view_->data_;
+            return i.view_->data_->last_ - i.view_->data_->data_;
         }
         CPP_member
-        constexpr /*c++14*/
         friend auto operator-(iterator const& i, sentinel const& s) ->
             CPP_ret(difference_type)(requires Sized)
         {
             return -(s - i);
         }
     };
-    constexpr /*c++14*/ iterator begin() noexcept
+    iterator begin() noexcept
     {
-        RANGES_ENSURE(valid_);
-        RANGES_ENSURE(!begin_called_);
-        begin_called_ = true;
+        RANGES_ENSURE(data_->valid_);
+        RANGES_ENSURE(!data_->begin_called_);
+        data_->begin_called_ = true;
         return iterator{*this};
     }
-    constexpr /*c++14*/ sentinel end() noexcept
+    sentinel end() noexcept
     {
-        RANGES_ENSURE(valid_);
+        RANGES_ENSURE(data_->valid_);
         return sentinel{*this};
     }
     CPP_member
-    constexpr /*c++14*/
     auto size() const noexcept -> CPP_ret(std::size_t)(requires Sized)
     {
-        RANGES_ENSURE(valid_);
-        RANGES_ENSURE(!begin_called_);
-        return static_cast<std::size_t>(last_ - data_);
+        RANGES_ENSURE(data_->valid_);
+        RANGES_ENSURE(!data_->begin_called_);
+        return static_cast<std::size_t>(data_->last_ - data_->data_);
     }
 };
 

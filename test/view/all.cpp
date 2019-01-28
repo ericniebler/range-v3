@@ -43,12 +43,12 @@ int main()
     {
         auto v = view::all(debug_input_view<int const>{rgi});
         CHECK(v.size() == size(rgi));
-        CHECK(v.data_ == rgi);
+        CHECK(v.data_->data_ == rgi);
         auto v2 = view::all(view::all(view::all(std::move(v))));
         CPP_assert(Same<decltype(v), decltype(v2)>);
-        CHECK(!v.valid_);
+        CHECK(!v.data_);
         CHECK(v2.size() == size(rgi));
-        CHECK(v2.data_ == rgi);
+        CHECK(v2.data_->data_ == rgi);
     }
 
     return test_result();
