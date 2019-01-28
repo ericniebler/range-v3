@@ -24,10 +24,10 @@ struct debug_input_view
     using index_t = std::ptrdiff_t;
     using version_t = unsigned long;
 
-    T *data_ = nullptr;
-    T *last_ = nullptr;
-    version_t version_ = 0;
-    bool valid_ = false;
+    mutable T *data_ = nullptr;
+    mutable T *last_ = nullptr;
+    mutable version_t version_ = 0;
+    mutable bool valid_ = false;
     bool begin_called_ = false;
 
     debug_input_view() = default;
@@ -41,7 +41,7 @@ struct debug_input_view
       : debug_input_view{data, N}
     {}
     constexpr /*c++14*/
-    debug_input_view(debug_input_view &&that) noexcept
+    debug_input_view(debug_input_view const &that) noexcept
       : data_{ranges::exchange(that.data_, nullptr)}
       , last_{ranges::exchange(that.last_, nullptr)}
       , valid_{ranges::exchange(that.valid_, false)}
@@ -54,7 +54,7 @@ struct debug_input_view
         }
     }
     constexpr /*c++14*/
-    debug_input_view &operator=(debug_input_view &&that) noexcept
+    debug_input_view &operator=(debug_input_view const &that) noexcept
     {
         ++that.version_;
         data_ = ranges::exchange(that.data_, nullptr);

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Casey Carter 2017
@@ -14,15 +15,17 @@
 
 #include <range/v3/detail/config.hpp>
 #if RANGES_CXX_COROUTINES >= RANGES_CXX_COROUTINES_TS1
+#include <atomic>
 #include <cstddef>
 #include <exception>
 #include <utility>
 #include <experimental/coroutine>
 #include <meta/meta.hpp>
+#include <concepts/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/view/facade.hpp>
 #include <range/v3/utility/box.hpp>
-#include <concepts/concepts.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/iterator/default_sentinel.hpp>
@@ -41,7 +44,14 @@ namespace ranges
         enum struct generator_size : generator_size_t { invalid = ~generator_size_t(0) };
 
         template<typename Promise = void>
-        struct coroutine_owner;
+        struct RANGES_EMPTY_BASES coroutine_owner;
+
+        class enable_coroutine_owner
+        {
+            template<class>
+            friend struct coroutine_owner;
+            std::atomic<unsigned int> refcount_ {1};
+        };
     } // namespace experimental
 
     /// \cond
@@ -63,7 +73,7 @@ namespace ranges
             void swap(experimental::coroutine_owner<Promise> &x,
                       experimental::coroutine_owner<Promise> &y) noexcept
             {
-                ranges::swap(x.base(), y.base());
+                x.swap(y);
             }
         } // namespace coroutine_owner_
     } // namespace detail
@@ -73,41 +83,71 @@ namespace ranges
     {
         // An owning coroutine_handle
         template<typename Promise>
-        struct coroutine_owner
-          : std::experimental::coroutine_handle<Promise>
+        struct RANGES_EMPTY_BASES coroutine_owner
+          : private std::experimental::coroutine_handle<Promise>
           , private detail::coroutine_owner_::adl_hook
         {
+            CPP_assert(DerivedFrom<Promise, enable_coroutine_owner>);
             using base_t = std::experimental::coroutine_handle<Promise>;
 
             using base_t::operator bool;
             using base_t::done;
             using base_t::promise;
 
-            constexpr coroutine_owner() noexcept = default;
+            coroutine_owner() = default;
             explicit constexpr coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
             constexpr /*c++14*/ coroutine_owner(coroutine_owner &&that) noexcept
               : base_t(ranges::exchange(that.base(), {}))
+              , copied_(that.copied_.load(std::memory_order_relaxed))
             {}
-
-            ~coroutine_owner() { if (*this) base().destroy(); }
-
-            coroutine_owner &operator=(coroutine_owner &&that) noexcept
+            constexpr /*c++14*/ coroutine_owner(coroutine_owner const &that) noexcept
+              : base_t(that.handle())
+              , copied_(that.handle() != nullptr)
             {
-                coroutine_owner{ranges::exchange(base(), ranges::exchange(that.base(), {}))};
+                if(*this)
+                {
+                    that.copied_.store(true, std::memory_order_relaxed);
+                    base().promise().refcount_.fetch_add(1, std::memory_order_relaxed);
+                }
+            }
+            ~coroutine_owner()
+            {
+                if(base() && (!copied_.load(std::memory_order_relaxed) ||
+                                    1 == base().promise().refcount_.fetch_sub(1, std::memory_order_acq_rel)))
+                    base().destroy();
+            }
+            coroutine_owner &operator=(coroutine_owner that) noexcept
+            {
+                swap(that);
                 return *this;
             }
-
-            void resume() { detail::resume(base()); }
-            void operator()() { detail::resume(base()); }
-
-            base_t &base() noexcept { return *this; }
-            base_t const &base() const noexcept { return *this; }
-
-            base_t release() noexcept
+            void resume()
             {
-                return ranges::exchange(base(), {});
+                detail::resume(handle());
+            }
+            void operator()()
+            {
+                detail::resume(handle());
+            }
+            void swap(coroutine_owner &that) noexcept
+            {
+                bool tmp = copied_.load(std::memory_order_relaxed);
+                copied_.store(that.copied_.load(std::memory_order_relaxed), std::memory_order_relaxed);
+                that.copied_.store(tmp, std::memory_order_relaxed);
+                std::swap(base(), that.base());
+            }
+            base_t handle() const noexcept
+            {
+                return *this;
+            }
+        private:
+            std::atomic<bool> copied_ {false};
+
+            base_t &base() noexcept
+            {
+                return *this;
             }
         };
     } // namespace experimental
@@ -117,11 +157,12 @@ namespace ranges
     {
         template<typename Reference>
         struct generator_promise
+          : experimental::enable_coroutine_owner
         {
             std::exception_ptr except_ = nullptr;
 
-            CPP_assert(Or<std::is_reference<Reference>::value,
-                CopyConstructible<Reference>>);
+            CPP_assert(std::is_reference<Reference>::value ||
+                CopyConstructible<Reference>);
 
             generator_promise *get_return_object() noexcept
             {
@@ -201,6 +242,9 @@ namespace ranges
     namespace experimental
     {
         template<typename Reference, typename Value = uncvref_t<Reference>>
+        struct sized_generator;
+
+        template<typename Reference, typename Value = uncvref_t<Reference>>
         struct generator
           : view_facade<generator<Reference, Value>>
         {
@@ -213,11 +257,11 @@ namespace ranges
                 RANGES_EXPECT(coro_);
             }
 
-        protected:
-            coroutine_owner<promise_type> coro_;
         private:
             friend range_access;
+            friend struct sized_generator<Reference, Value>;
             using handle = std::experimental::coroutine_handle<promise_type>;
+            coroutine_owner<promise_type> coro_;
 
             struct cursor
             {
@@ -253,12 +297,12 @@ namespace ranges
 
             cursor begin_cursor()
             {
-                detail::resume(coro_);
-                return cursor{coro_};
+                detail::resume(coro_.handle());
+                return cursor{coro_.handle()};
             }
         };
 
-        template<typename Reference, typename Value = uncvref_t<Reference>>
+        template<typename Reference, typename Value /* = uncvref_t<Reference>*/>
         struct sized_generator
           : generator<Reference, Value>
         {

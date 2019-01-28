@@ -260,13 +260,6 @@ namespace ranges
     using semiregular_t =
         meta::if_c<(bool) Semiregular<T>, T, semiregular<T>>;
 
-    template<typename T>
-    using movesemiregular_t =
-        meta::if_c<
-            bool (Movable<T> && DefaultConstructible<T>),
-            T,
-            semiregular<T>>;
-
     template<typename T, bool IsConst = false>
     using semiregular_ref_or_val_t =
         meta::if_c<

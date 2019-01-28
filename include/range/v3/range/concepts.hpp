@@ -320,8 +320,7 @@ namespace ranges
         template(typename T)
         concept View,
             Range<T> &&
-            // Not to spec: move-only views are OK:
-            Movable<T> && DefaultConstructible<T> &&
+            Semiregular<T> &&
             enable_view<T>
     );
 
@@ -345,7 +344,7 @@ namespace ranges
     (
         template(typename T)
         concept ForwardView,
-            View<T> && Copyable<T> && ForwardRange<T>
+            View<T> && ForwardRange<T>
     );
 
     CPP_def
@@ -400,8 +399,7 @@ namespace ranges
         template(typename T)
         concept ViewableRange,
             Range<T> &&
-            (ForwardingRange_<T> ||
-                (View<detail::decay_t<T>> && Constructible<detail::decay_t<T>, T>))
+            (ForwardingRange_<T> || View<detail::decay_t<T>>)
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////
