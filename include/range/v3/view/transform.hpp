@@ -81,7 +81,7 @@ namespace ranges
                   : fun_(std::move(fun))
                 {}
                 template<bool Other,
-                    CONCEPT_REQUIRES_(IsConst && !Other)>
+                    CONCEPT_REQUIRES_(IsConst && (!Other))>
                 adaptor(adaptor<Other> that)
                   : fun_(std::move(that.fun_))
                 {}
@@ -126,12 +126,12 @@ namespace ranges
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
         };
 
@@ -166,41 +166,62 @@ namespace ranges
                 range_cardinality<Rng1>::value,
                 range_cardinality<Rng2>::value);
 
+            template<bool>
             struct cursor;
 
+            template<bool Const>
             struct sentinel
             {
             private:
-                friend struct cursor;
-                sentinel_t<Rng1> end1_;
-                sentinel_t<Rng2> end2_;
+                friend struct cursor<Const>;
+                sentinel_t<meta::const_if_c<Const, Rng1>> end1_;
+                sentinel_t<meta::const_if_c<Const, Rng2>> end2_;
             public:
                 sentinel() = default;
-                sentinel(detail::any, sentinel_t<Rng1> end1, sentinel_t<Rng2> end2)
-                  : end1_(std::move(end1)), end2_(std::move(end2))
+                sentinel(meta::const_if_c<Const, iter_transform2_view> &parent, decltype(end))
+                  : end1_(end(parent.rng1_)), end2_(end(parent.rng2_))
+                {}
+                template<bool Other, CONCEPT_REQUIRES_(Const && (!Other))>
+                sentinel(sentinel<Other> that)
+                  : end1_(std::move(that.end1_))
+                  , end2_(std::move(that.end2_))
                 {}
             };
 
+            template<bool Const>
             struct cursor
             {
             private:
-                using fun_ref_ = semiregular_ref_or_val_t<Fun, true>;
+                using fun_ref_ = semiregular_ref_or_val_t<Fun, Const>;
+                using R1 = meta::const_if_c<Const, Rng1>;
+                using R2 = meta::const_if_c<Const, Rng2>;
                 fun_ref_ fun_;
-                iterator_t<Rng1> it1_;
-                iterator_t<Rng2> it2_;
+                iterator_t<R1> it1_;
+                iterator_t<R2> it2_;
 
             public:
                 using difference_type = difference_type_;
                 using single_pass = meta::or_c<
-                    (bool) SinglePass<iterator_t<Rng1>>(),
-                    (bool) SinglePass<iterator_t<Rng2>>()>;
+                    (bool) SinglePass<iterator_t<R1>>(),
+                    (bool) SinglePass<iterator_t<R2>>()>;
                 using value_type =
-                    detail::decay_t<invoke_result_t<Fun &, copy_tag, iterator_t<Rng1>,
-                        iterator_t<Rng2>>>;
+                    detail::decay_t<
+                        invoke_result_t<
+                            meta::const_if_c<Const, Fun> &,
+                            copy_tag,
+                            iterator_t<R1>,
+                            iterator_t<R2>>>;
 
                 cursor() = default;
-                cursor(fun_ref_ fun, iterator_t<Rng1> it1, iterator_t<Rng2> it2)
-                  : fun_(std::move(fun)), it1_(std::move(it1)), it2_(std::move(it2))
+                template<typename BeginEndFn>
+                cursor(meta::const_if_c<Const, iter_transform2_view> &parent, BeginEndFn begin_end)
+                  : fun_(parent.fun_), it1_(begin_end(parent.rng1_)), it2_(begin_end(parent.rng2_))
+                {}
+                template<bool Other, CONCEPT_REQUIRES_(Const && (!Other))>
+                cursor(cursor<Other> that)
+                  : fun_(std::move(that.fun_))
+                  , it1_(std::move(that.end1_))
+                  , it2_(std::move(that.end2_))
                 {}
                 auto read() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -219,28 +240,28 @@ namespace ranges
                     // one reaches the end.
                     return it1_ == that.it1_ || it2_ == that.it2_;
                 }
-                bool equal(sentinel const &s) const
+                bool equal(sentinel<Const> const &s) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // transformed ranges to be of different lengths, stopping when the first
                     // one reaches the end.
                     return it1_ == s.end1_ || it2_ == s.end2_;
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng1>() && BidirectionalRange<Rng2>())
+                CONCEPT_REQUIRES(BidirectionalRange<R1>() && BidirectionalRange<R2>())
                 void prev()
                 {
                     --it1_;
                     --it2_;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng1>() && RandomAccessRange<Rng2>())
+                CONCEPT_REQUIRES(RandomAccessRange<R1>() && RandomAccessRange<R2>())
                 void advance(difference_type n)
                 {
                     ranges::advance(it1_, n);
                     ranges::advance(it2_, n);
                 }
                 CONCEPT_REQUIRES(
-                    SizedSentinel<iterator_t<Rng1>, iterator_t<Rng1>>() &&
-                    SizedSentinel<iterator_t<Rng2>, iterator_t<Rng2>>())
+                    SizedSentinel<iterator_t<R1>, iterator_t<R2>>() &&
+                    SizedSentinel<iterator_t<R1>, iterator_t<R2>>())
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -255,31 +276,38 @@ namespace ranges
                 )
             };
 
+            template<bool Const>
             using end_cursor_t =
                 meta::if_c<
-                    BoundedRange<Rng1>() && BoundedRange<Rng2>() &&
-                        !SinglePass<iterator_t<Rng1>>() &&
-                        !SinglePass<iterator_t<Rng2>>(),
-                    cursor,
-                    sentinel>;
+                    BoundedRange<meta::const_if_c<Const, Rng1>>() &&
+                    BoundedRange<meta::const_if_c<Const, Rng2>>() &&
+                    !SinglePass<iterator_t<meta::const_if_c<Const, Rng1>>>() &&
+                    !SinglePass<iterator_t<meta::const_if_c<Const, Rng2>>>(),
+                    cursor<Const>,
+                    sentinel<Const>>;
 
-            cursor begin_cursor()
+            cursor<simple_view<Rng1>() && simple_view<Rng2>()>
+            begin_cursor()
             {
-                return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
+                return {*this, ranges::begin};
             }
-            end_cursor_t end_cursor()
+            end_cursor_t<simple_view<Rng1>() && simple_view<Rng2>()> end_cursor()
             {
-                return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
+                return {*this, ranges::end};
             }
-            CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
-            cursor begin_cursor() const
+            template<typename CRng1 = Rng1 const, typename CRng2 = Rng2 const,
+                CONCEPT_REQUIRES_(Range<CRng1>() && Range<CRng2>() &&
+                    IndirectInvocable<Fun const &, iterator_t<CRng1>, iterator_t<CRng2>>())>
+            cursor<true> begin_cursor() const
             {
-                return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
+                return {*this, ranges::begin};
             }
-            CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
-            end_cursor_t end_cursor() const
+            template<bool Const = true, typename CRng1 = Rng1 const, typename CRng2 = Rng2 const,
+                CONCEPT_REQUIRES_(Range<CRng1>() && Range<CRng2>() &&
+                    IndirectInvocable<Fun const &, iterator_t<CRng1>, iterator_t<CRng2>>())>
+            end_cursor_t<Const> end_cursor() const
             {
-                return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
+                return {*this, ranges::end};
             }
             template<class Self>
             static constexpr size_type_ size_(Self& self)
