@@ -45,7 +45,7 @@ namespace ranges
                 Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
                 facade_iterator_t<Derived>,
                 end_cursor_t<Derived>>;
-    }
+    } // namespace detail
     /// \endcond
 
     /// \addtogroup group-core
