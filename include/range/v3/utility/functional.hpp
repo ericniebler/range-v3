@@ -352,9 +352,6 @@ namespace ranges
 #endif // GCC
         };
 
-        template<typename Pred>
-        using logical_negate = logical_negate_<detail::decay_t<Pred>>;
-
         struct not_fn_fn
         {
             template<typename Pred, typename FD = detail::decay_t<Pred>,
