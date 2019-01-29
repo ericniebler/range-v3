@@ -92,6 +92,7 @@ namespace ranges
         {
             return ranges::end(*rng_);
         }
+        CPP_member
         constexpr auto empty() const
             noexcept(noexcept(ranges::empty(*rng_))) ->
             CPP_ret(bool)(
