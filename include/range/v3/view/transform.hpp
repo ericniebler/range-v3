@@ -260,8 +260,8 @@ namespace ranges
                     ranges::advance(it2_, n);
                 }
                 CONCEPT_REQUIRES(
-                    SizedSentinel<iterator_t<R1>, iterator_t<R2>>() &&
-                    SizedSentinel<iterator_t<R1>, iterator_t<R2>>())
+                    SizedSentinel<iterator_t<R1>, iterator_t<R1>>() &&
+                    SizedSentinel<iterator_t<R2>, iterator_t<R2>>())
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
