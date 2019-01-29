@@ -120,13 +120,33 @@ namespace ranges
             if (that.engaged_)
                 this->construct_from(that.data_);
         }
+#if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
         template<typename U>
-        explicit constexpr CPP_ctor(semiregular)(U &&u)(
+        explicit(!ConvertibleTo<U, T>)
+        constexpr CPP_ctor(semiregular)(U &&u)(
             noexcept(std::is_nothrow_constructible<T, U>::value)
-                requires not defer::Same<uncvref_t<U>, semiregular> &&
+                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
                     defer::Constructible<T, U>)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
+#else
+        template<typename U>
+        explicit constexpr CPP_ctor(semiregular)(U &&u)(
+            noexcept(std::is_nothrow_constructible<T, U>::value)
+                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
+                    defer::Constructible<T, U> &&
+                    (!defer::ConvertibleTo<U, T>))
+          : semiregular(in_place, static_cast<U &&>(u))
+        {}
+        template<typename U>
+        constexpr CPP_ctor(semiregular)(U &&u)(
+            noexcept(std::is_nothrow_constructible<T, U>::value)
+                requires (!defer::Same<uncvref_t<U>, semiregular>) &&
+                    defer::Constructible<T, U> &&
+                    defer::ConvertibleTo<U, T>)
+          : semiregular(in_place, static_cast<U &&>(u))
+        {}
+#endif
         CPP_template(typename... Args)(
             requires Constructible<T, Args...>)
         constexpr semiregular(in_place_t, Args &&...args)
