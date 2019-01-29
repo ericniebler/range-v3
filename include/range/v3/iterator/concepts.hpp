@@ -40,19 +40,22 @@ namespace ranges
             if_then_t<is_std_iterator_traits_specialized_<I>, std::iterator_traits<I>, I>;
 
 #if defined(_GLIBCXX_DEBUG)
-        template<typename T, typename Seq>
+        template<typename I, typename T, typename Seq>
         auto iter_concept_(__gnu_debug::_Safe_iterator<T *, Seq>, priority_tag<3>) ->
-            ranges::contiguous_iterator_tag;
+            CPP_ret(ranges::contiguous_iterator_tag)(
+                requires Same<I, __gnu_debug::_Safe_iterator<T *, Seq>>);
 #endif
 #if defined(__GLIBCXX__)
-        template<typename T, typename Seq>
+        template<typename I, typename T, typename Seq>
         auto iter_concept_(__gnu_cxx::__normal_iterator<T *, Seq>, priority_tag<3>) ->
-            ranges::contiguous_iterator_tag;
+            CPP_ret(ranges::contiguous_iterator_tag)(
+                requires Same<I, __gnu_cxx::__normal_iterator<T *, Seq>>);
 #endif
 #if defined(_LIBCPP_VERSION)
-        template<typename T>
+        template<typename I, typename T>
         auto iter_concept_(std::__wrap_iter<T *>, priority_tag<3>) ->
-            ranges::contiguous_iterator_tag;
+            CPP_ret(ranges::contiguous_iterator_tag)(
+                requires Same<I, std::__wrap_iter<T *>>);
 #endif
 #if defined(_MSVC_STL_VERSION)
         template<typename I>
@@ -86,8 +89,10 @@ namespace ranges
             CPP_ret(ranges::contiguous_iterator_tag)(
                 requires Same<I, class I::_String_view_iterator>);
 #endif
-        template<typename T>
-        auto iter_concept_(T *, priority_tag<3>) -> ranges::contiguous_iterator_tag;
+        template<typename I, typename T>
+        auto iter_concept_(T *, priority_tag<3>) ->
+            CPP_ret(ranges::contiguous_iterator_tag)(
+                requires Same<I, T *>);
         template<typename I>
         auto iter_concept_(I, priority_tag<2>) -> typename iter_traits_t<I>::iterator_concept;
         template<typename I>
@@ -99,7 +104,7 @@ namespace ranges
                 ranges::random_access_iterator_tag>;
 
         template<typename I>
-        using iter_concept_t = decltype(iter_concept_(std::declval<I>(), priority_tag<3>{}));
+        using iter_concept_t = decltype(iter_concept_<I>(std::declval<I>(), priority_tag<3>{}));
     }
     /// \endcond
 
