@@ -17,16 +17,15 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
+#include <range/v3/functional/invoke.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {

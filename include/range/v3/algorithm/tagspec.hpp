@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -16,8 +15,11 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/tagged_pair.hpp>
 
+RANGES_DEPRECATED_HEADER("This file is deprecated. Please discontinue using the tag types defined here and define your own.")
+
 namespace ranges
 {
+    /// \cond
     RANGES_DEFINE_TAG_SPECIFIER(in)
     RANGES_DEFINE_TAG_SPECIFIER(in1)
     RANGES_DEFINE_TAG_SPECIFIER(in2)
@@ -37,6 +39,7 @@ namespace ranges
 
     RANGES_DEFINE_TAG_SPECIFIER(first)
     RANGES_DEFINE_TAG_SPECIFIER(second)
+    /// \endcond
 }
 
 #endif

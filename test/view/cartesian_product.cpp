@@ -13,11 +13,10 @@
 //
 
 #include <iostream>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/range_for.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/span.hpp>
+#include <range/v3/view/span.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>

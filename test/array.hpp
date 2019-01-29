@@ -26,7 +26,7 @@
 
 #include <stdexcept>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/algorithm/fill_n.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
 #include <range/v3/algorithm/equal.hpp>

@@ -17,20 +17,18 @@
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/empty.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/range_for.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/variant.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/single.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {
@@ -80,7 +78,7 @@ namespace ranges
             {
                 return (inner_ = view::all(static_cast<Inner &&>(inner)));
             }
-            constexpr view::all_t<Inner> &get_inner_(any) noexcept
+            constexpr view::all_t<Inner> &get_inner_(ignore_t) noexcept
             {
                 return inner_;
             }
@@ -559,6 +557,7 @@ namespace ranges
 
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::join_with_view)
 

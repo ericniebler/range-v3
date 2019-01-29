@@ -15,7 +15,7 @@
 #define RANGES_V3_RANGE_FOR_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
+#include <range/v3/range/access.hpp>
 
 #if RANGES_CXX_RANGE_BASED_FOR < RANGES_CXX_RANGE_BASED_FOR_17
 /// A range-based for macro, basically a hack until the built-in range-for can handle Ranges

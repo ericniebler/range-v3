@@ -59,9 +59,10 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/generate.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <concepts/concepts.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
+#include <range/v3/iterator/concepts.hpp>
 
 #if RANGES_CXX_THREAD >= RANGES_CXX_THREAD_11
 #include <thread>

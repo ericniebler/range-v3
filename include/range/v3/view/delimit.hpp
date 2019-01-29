@@ -15,13 +15,11 @@
 #define RANGES_V3_VIEW_DELIMIT_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/utility/unreachable.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/adaptor.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
@@ -101,7 +99,7 @@ namespace ranges
 
             template<typename I, typename Val>
             auto operator()(I begin, Val value) const ->
-                CPP_ret(delimit_view<subrange<I, unreachable>, Val>)(
+                CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)(
                     requires InputIterator<I>)
             {
                 return {{std::move(begin), {}}, std::move(value)};
@@ -115,6 +113,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::delimit_view)
 
 #endif

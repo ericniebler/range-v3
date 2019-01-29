@@ -15,14 +15,13 @@
 #define RANGES_V3_UTILITY_VARIANT_HPP
 
 #include <range/v3/detail/variant.hpp>
-// BUGBUG Layering violation!!!
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/copy.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
 
 namespace ranges
 {

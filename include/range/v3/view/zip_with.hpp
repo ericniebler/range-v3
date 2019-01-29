@@ -20,14 +20,14 @@
 #include <functional>
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/functional/indirect.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
@@ -173,7 +173,7 @@ namespace ranges
             std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends_;
         public:
             sentinel() = default;
-            sentinel(detail::any, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
+            sentinel(detail::ignore_t, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
               : ends_(std::move(ends))
             {}
             template<bool Other>
@@ -425,6 +425,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::iter_zip_with_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::zip_with_view)
 

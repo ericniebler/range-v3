@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014-present
@@ -16,8 +15,8 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <meta/meta.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 
 #ifndef RANGES_DOXYGEN_INVOKED
 namespace boost

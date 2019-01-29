@@ -19,14 +19,14 @@
 #include <limits>
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_facade.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/facade.hpp>
+#include <concepts/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/delimit.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {
@@ -522,6 +522,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::closed_iota_view)
 RANGES_SATISFY_BOOST_RANGE(::ranges::iota_view)
 

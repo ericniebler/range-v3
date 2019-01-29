@@ -15,12 +15,12 @@
 #define RANGES_V3_VIEW_REPEAT_N_HPP
 
 #include <utility>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_facade.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/iterator/default_sentinel.hpp>
 
 namespace ranges
 {
@@ -118,6 +118,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::repeat_n_view)
 
 #endif

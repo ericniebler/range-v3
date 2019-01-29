@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-present
@@ -416,6 +415,21 @@ namespace ranges
 #define RANGES_DEPRECATED(MSG)
 #endif
 
+#if !defined(RANGES_DEPRECATED_HEADER) && !defined(RANGES_DISABLE_DEPRECATED_WARNINGS)
+#ifdef __GNUC__
+#define RANGES_DEPRECATED_HEADER(MSG) RANGES_PRAGMA(GCC warning MSG)
+#elif defined(_MSC_VER)
+#define RANGES_STRINGIZE_(MSG) #MSG
+#define RANGES_STRINGIZE(MSG) RANGES_STRINGIZE_(MSG)
+#define RANGES_DEPRECATED_HEADER(MSG) __pragma(message(__FILE__ "(" RANGES_STRINGIZE(__LINE__) ") : Warning: " MSG))
+#endif
+#else
+#define RANGES_DEPRECATED_HEADER(MSG) /**/
+#endif
+// #ifndef RANGES_DEPRECATED_HEADER
+// #define RANGES_DEPRECATED_HEADER(MSG)
+// #endif
+
 #ifndef RANGES_CXX_COROUTINES
 #ifdef __cpp_coroutines
 #define RANGES_CXX_COROUTINES __cpp_coroutines
@@ -455,28 +469,43 @@ namespace ranges
 #endif  // __cpp_inline_variables
 #endif  // RANGES_CXX_INLINE_VARIABLES
 
-#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 && !defined(RANGES_DOXYGEN_INVOKED)
-#define RANGES_INLINE_VARIABLE(type, name)                          \
-    inline namespace                                                \
-    {                                                               \
-        constexpr auto &name = ::ranges::static_const<type>::value; \
+#if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 &&             \
+    !defined(RANGES_DOXYGEN_INVOKED)
+#define RANGES_INLINE_VARIABLE(type, name)                                      \
+    inline namespace                                                            \
+    {                                                                           \
+        constexpr auto &name = ::ranges::static_const<type>::value;             \
     }
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
-#define RANGES_INLINE_VARIABLE(type, name) \
-    inline constexpr type name{};
+#define RANGES_INLINE_VARIABLE(type, name)                                      \
+    inline constexpr type name{};                                               \
+    /**/
+#endif // RANGES_CXX_INLINE_VARIABLES
+
+#if defined(RANGES_DOXYGEN_INVOKED)
+#define RANGES_DEFINE_CPO(type, name)                                           \
+    inline constexpr type name{};                                               \
+    /**/
+#elif RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_DEFINE_CPO(type, name)                                           \
+    inline namespace                                                            \
+    {                                                                           \
+        constexpr auto &name = ::ranges::static_const<type>::value;             \
+    }                                                                           \
+    /**/
+#else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_DEFINE_CPO(type, name)                                           \
+    inline namespace _                                                          \
+    {                                                                           \
+        inline constexpr type name{};                                           \
+    }                                                                           \
+    /**/
 #endif // RANGES_CXX_INLINE_VARIABLES
 
 #ifndef RANGES_DOXYGEN_INVOKED
-#define RANGES_DEFINE_CPO(TYPE, NAME) \
-    inline namespace CPOs \
-    { \
-        RANGES_INLINE_VARIABLE(TYPE, NAME) \
-    } \
-    /**/
+#define RANGES_HIDDEN_DETAIL(...) __VA_ARGS__
 #else
-#define RANGES_DEFINE_CPO(TYPE, NAME) \
-    RANGES_INLINE_VARIABLE(TYPE, NAME) \
-    /**/
+#define RANGES_HIDDEN_DETAIL(...)
 #endif
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES

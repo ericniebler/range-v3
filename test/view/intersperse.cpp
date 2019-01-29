@@ -14,7 +14,7 @@
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/reverse.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -24,7 +24,7 @@ ranges::subrange<char const*> c_str(char const (&sz)[N])
     return {&sz[0], &sz[N-1]};
 }
 
-ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable>, char>
+ranges::delimit_view<ranges::subrange<char const *, ranges::unreachable_sentinel_t>, char>
 c_str_(char const *sz)
 {
     return ranges::view::delimit(sz, '\0');

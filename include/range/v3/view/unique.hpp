@@ -17,7 +17,6 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/view.hpp>

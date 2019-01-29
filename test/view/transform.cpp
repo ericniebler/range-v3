@@ -14,12 +14,14 @@
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
+#include <range/v3/algorithm/move.hpp>
+#include <range/v3/functional/overload.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
-#include <range/v3/algorithm/move.hpp>
-#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -90,8 +92,8 @@ int main()
 
     // Test iter_transform by transforming a zip view to select one element.
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
         ::models<RandomAccessRangeConcept>(rng);
@@ -119,8 +121,8 @@ int main()
 
     // two range transform
     {
-        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
-        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+        auto v0 = to<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to<std::vector<std::string>>({"x","y","z"});
 
         auto rng = view::transform(v0, v1, [](std::string& s0, std::string& s1){return std::tie(s0, s1);});
         using R = decltype(rng);
@@ -134,8 +136,8 @@ int main()
 
     // two range indirect transform
     {
-        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
-        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+        auto v0 = to<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to<std::vector<std::string>>({"x","y","z"});
         using I = std::vector<std::string>::iterator;
 
         auto fun = overload(
@@ -162,8 +164,8 @@ int main()
 
     // two move-only input view transform
     {
-        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
-        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+        auto v0 = to<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to<std::vector<std::string>>({"x","y","z"});
 
         auto r0 = debug_input_view<std::string>{v0.data(), distance(v0)};
         auto r1 = debug_input_view<std::string>{v1.data(), distance(v1)};

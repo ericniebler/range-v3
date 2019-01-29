@@ -17,11 +17,11 @@
 #include <range/v3/detail/config.hpp>
 RANGES_DISABLE_WARNINGS
 
-#include <range/v3/view/adjacent_remove_if.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/any_view.hpp>
-#include <range/v3/view/bounded.hpp>
 #include <range/v3/view/c_str.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
@@ -36,15 +36,19 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/enumerate.hpp>
+#include <range/v3/view/exclusive_scan.hpp>
+#include <range/v3/view/facade.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
+#include <range/v3/view/getlines.hpp>
 #include <range/v3/view/group_by.hpp>
 #include <range/v3/view/indices.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/istream.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/linear_distribute.hpp>
 #include <range/v3/view/map.hpp>
@@ -62,8 +66,11 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/slice.hpp>
 #include <range/v3/view/sliding.hpp>
+#include <range/v3/view/span.hpp>
 #include <range/v3/view/split.hpp>
+#include <range/v3/view/split_when.hpp>
 #include <range/v3/view/stride.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/tail.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -72,6 +79,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/unbounded.hpp>
 #include <range/v3/view/unique.hpp>
+#include <range/v3/view/view.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
 

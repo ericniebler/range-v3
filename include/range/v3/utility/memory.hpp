@@ -27,8 +27,8 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/polymorphic_cast.hpp>
 
 namespace ranges

@@ -46,19 +46,31 @@
 
 #if CONCEPTS_CXX_INLINE_VARIABLES < 201606L
 #define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
-    inline namespace function_objects                                           \
+    inline namespace                                                            \
     {                                                                           \
-        inline namespace                                                        \
-        {                                                                       \
-            constexpr auto &name = ::concepts::detail::static_const<type>::value;\
-        }                                                                       \
-    }
+        constexpr auto &name = ::concepts::detail::static_const<type>::value;   \
+    }                                                                           \
+    /**/
 #else  // CONCEPTS_CXX_INLINE_VARIABLES >= 201606L
 #define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
-    inline namespace function_objects                                           \
+    inline constexpr type name{};                                               \
+    /**/
+#endif // CONCEPTS_CXX_INLINE_VARIABLES
+
+#if CONCEPTS_CXX_INLINE_VARIABLES < 201606L
+#define CONCEPTS_DEFINE_CPO(type, name)                                         \
+    inline namespace                                                            \
+    {                                                                           \
+        constexpr auto &name = ::concepts::detail::static_const<type>::value;   \
+    }                                                                           \
+    /**/
+#else  // CONCEPTS_CXX_INLINE_VARIABLES >= 201606L
+#define CONCEPTS_DEFINE_CPO(type, name)                                         \
+    inline namespace _                                                          \
     {                                                                           \
         inline constexpr type name{};                                           \
-    }
+    }                                                                           \
+    /**/
 #endif // CONCEPTS_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -305,12 +317,9 @@ namespace concepts
         : is_nothrow_swappable_with<T &, T &>
     {};
 
-    inline namespace CPOs
-    {
-        /// \ingroup group-utility
-        /// \relates adl_swap_detail::swap_fn
-        CONCEPTS_INLINE_VARIABLE(adl_swap_detail::swap_fn, swap)
-    }
+    /// \ingroup group-utility
+    /// \relates adl_swap_detail::swap_fn
+    CONCEPTS_DEFINE_CPO(adl_swap_detail::swap_fn, swap)
 }
 
 #endif

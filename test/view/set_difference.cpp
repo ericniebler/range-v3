@@ -16,8 +16,11 @@
 #include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
 #include <range/v3/algorithm/move.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/iterator/move_iterators.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/utility/copy.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
@@ -28,7 +31,6 @@
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -217,8 +219,8 @@ int main()
 
     // move
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"b","x","y","z"});
         auto res = view::set_difference(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
 
         std::vector<MoveOnlyString> expected;
@@ -228,8 +230,8 @@ int main()
         ::check_equal(v1, {"b","x","y","z"});
         ::check_equal(v0, {"","b","","","x",""});
 
-        auto v0_greedy = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
-        auto v1_greedy = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto v0_greedy = to<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
+        auto v1_greedy = to<std::vector<MoveOnlyString>>({"b","x","y","z"});
         std::vector<MoveOnlyString> expected_greedy;
         set_difference(v0_greedy, v1_greedy,
                        move_into(back_inserter(expected_greedy)),

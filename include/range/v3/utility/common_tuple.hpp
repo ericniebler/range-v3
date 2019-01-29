@@ -18,9 +18,11 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/detail/adl_get.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <concepts/concepts.hpp>
+#include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/functional/bind.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
 
 namespace ranges
 {

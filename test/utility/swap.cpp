@@ -19,10 +19,10 @@
 #include <vector>
 #include <complex>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator.hpp> // for iter_swap, which uses indirect_swap
+#include <concepts/concepts.hpp>
+#include <range/v3/utility/swap.hpp>
 #include <range/v3/view/zip.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -91,8 +91,8 @@ int main()
 
     {
         using namespace ranges;
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"x","y","z"});
         auto rng = view::zip(v0, v1);
         ranges::iter_swap(rng.begin(), rng.begin()+2);
         ::check_equal(v0, {"c","b","a"});

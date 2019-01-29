@@ -19,7 +19,8 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/unique.hpp>
 #include <range/v3/utility/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 

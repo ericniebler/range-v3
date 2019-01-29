@@ -16,14 +16,12 @@
 
 #include <utility>
 #include <type_traits>
-#include <range/v3/detail/satisfy_boost_range.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/view/adaptor.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
@@ -117,6 +115,7 @@ namespace ranges
     /// @}
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::move_view)
 
 #endif

@@ -15,7 +15,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/algorithm/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"

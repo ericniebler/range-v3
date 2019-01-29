@@ -66,7 +66,7 @@ endif()
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
                   RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include"
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
-# This header is not meant to be included directly.
+# This header is not meant to be included directly:
 list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
 
 # Add header files as sources to fix MSVS 2017 not finding source during debugging

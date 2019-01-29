@@ -15,14 +15,17 @@
 #define RANGES_V3_NUMERIC_INNER_PRODUCT_HPP
 
 #include <meta/meta.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/functional/arithmetic.hpp>
+#include <range/v3/functional/concepts.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 
 namespace ranges
 {
@@ -81,7 +84,7 @@ namespace ranges
         T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1 = BOp1{},
             BOp2 bop2 = BOp2{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
         {
-            return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable{},
+            return (*this)(std::move(begin1), std::move(end1), std::move(begin2), unreachable,
                 std::move(init), std::move(bop1), std::move(bop2), std::move(proj1), std::move(proj2));
         }
 

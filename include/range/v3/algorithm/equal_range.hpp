@@ -15,17 +15,18 @@
 #define RANGES_V3_ALGORITHM_EQUAL_RANGE_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/view/subrange.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/aux_/equal_range_n.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/subrange.hpp>
 
 namespace ranges
 {

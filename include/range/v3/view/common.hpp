@@ -14,16 +14,14 @@
 #define RANGES_V3_VIEW_COMMON_HPP
 
 #include <type_traits>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/detail/satisfy_boost_range.hpp>
-#include <range/v3/utility/common_iterator.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/view/interface.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
@@ -161,8 +159,37 @@ namespace ranges
         RANGES_INLINE_VARIABLE(view<common_fn>, common)
     }
     /// @}
+
+    /// \cond
+    template<typename Rng>
+    using bounded_view
+        RANGES_DEPRECATED("The name bounded_view is deprecated. "
+                          "Please use common_view instead.") =
+            common_view<Rng>;
+    /// \endcond
+
+    namespace view
+    {
+        /// \cond
+        inline namespace
+        {
+            RANGES_DEPRECATED("The name view::bounded is deprecated. "
+                              "Please use view::common instead.")
+            constexpr auto &bounded = common;
+        }
+        /// \endcond
+
+        /// \cond
+        template<typename Rng>
+        using bounded_t
+            RANGES_DEPRECATED("The name view::bounded_t is deprecated. "
+                              "Please use view::common_t instead.") =
+                decltype(common(std::declval<Rng>()));
+        /// \endcond
+    }
 }
 
+#include <range/v3/detail/satisfy_boost_range.hpp>
 RANGES_SATISFY_BOOST_RANGE(::ranges::common_view)
 
 #endif

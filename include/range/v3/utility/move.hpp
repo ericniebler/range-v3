@@ -20,7 +20,7 @@
 #include <concepts/concepts.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/associated_types.hpp>
+#include <range/v3/iterator/associated_types.hpp>
 
 namespace ranges
 {
@@ -32,23 +32,23 @@ namespace ranges
         {
             template<typename T,
                 typename U = meta::_t<std::remove_reference<T>>>
-            U &&operator()(T &&t) const noexcept
+            constexpr U &&operator()(T &&t) const noexcept
             {
                 return static_cast<U &&>(t);
+            }
+
+            /// \ingroup group-utility
+            /// \sa `move_fn`
+            template<typename T>
+            friend constexpr decltype(auto) operator|(T &&t, move_fn move) noexcept
+            {
+                return move(t);
             }
         };
 
         /// \ingroup group-utility
         /// \sa `move_fn`
         RANGES_INLINE_VARIABLE(move_fn, move)
-
-        /// \ingroup group-utility
-        /// \sa `move_fn`
-        template<typename T>
-        meta::_t<std::remove_reference<T>> && operator|(T &&t, move_fn move) noexcept
-        {
-            return move(t);
-        }
 
         /// \ingroup group-utility
         /// \sa `move_fn`

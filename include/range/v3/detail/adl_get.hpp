@@ -1,4 +1,3 @@
-/// \file
 // Range v3 library
 //
 //  Copyright Casey Carter 2018

@@ -20,15 +20,16 @@
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/view_adaptor.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/view/adaptor.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/iterator/operations.hpp>
 
 namespace ranges
 {
@@ -49,6 +50,7 @@ namespace ranges
         sliding_view_detail::cache = sliding_view_detail::caching<Rng>::value>
     struct sliding_view;
 
+    /// \cond
     namespace sliding_view_detail
     {
         template<typename Rng>
@@ -146,7 +148,8 @@ namespace ranges
             using cache_t = detail::non_propagating_cache<
                 iterator_t<Rng>, sv_base<Rng>>;
         };
-    }
+    } // namespace sliding_view_detail
+    /// \endcond
 
     /// \addtogroup group-views
     /// @{

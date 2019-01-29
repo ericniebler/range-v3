@@ -47,9 +47,6 @@ RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 namespace ranges
 {
     /// \cond
-    inline namespace CPOs
-    {}
-
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
 #if defined(__GNUC__) && !defined(__clang__)
@@ -115,13 +112,7 @@ namespace ranges
         struct view;
     }
 
-    /// \cond
-    namespace adl_advance_detail
-    {
-        struct advance_fn;
-    }
-    /// \endcond
-    using adl_advance_detail::advance_fn;
+    struct advance_fn;
 
     struct advance_to_fn;
 
@@ -170,24 +161,18 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename T = void>
-        struct any_
+        struct ignore_t
         {
-            any_() = default;
-            any_(T &&)
-            {}
-        };
-
-        template<>
-        struct any_<void>
-        {
-            any_() = default;
+            ignore_t() = default;
             template<typename T>
-            any_(T &&)
+            constexpr ignore_t(T &&) noexcept
             {}
+            template<typename T>
+            constexpr ignore_t const &operator=(T &&) const noexcept
+            {
+                return *this;
+            }
         };
-
-        using any = any_<>;
 
         struct value_init
         {
@@ -199,20 +184,6 @@ namespace ranges
         };
 
         struct make_compressed_pair_fn;
-
-        template<typename T>
-        constexpr T &&forward(meta::_t<std::remove_reference<T>> & t) noexcept
-        {
-            return static_cast<T &&>(t);
-        }
-
-        template<typename T>
-        constexpr T &&forward(meta::_t<std::remove_reference<T>> && t) noexcept
-        {
-            // This is to catch way sketchy stuff like: forward<int const &>(42)
-            static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
-            return static_cast<T &&>(t);
-        }
 
         template<typename T>
         constexpr meta::_t<std::remove_reference<T>> &&
@@ -249,7 +220,7 @@ namespace ranges
 
         template<typename T, typename R = meta::_t<std::remove_reference<T>>>
         using as_cref_t =
-            meta::_t<std::add_lvalue_reference<meta::_t<std::add_const<R>>>>;
+            meta::_t<std::add_lvalue_reference<R const>>;
 
         struct get_first;
         struct get_second;
@@ -348,9 +319,8 @@ namespace ranges
         char (&is_function_impl_(priority_tag<3>))[4];
 
         template<typename T>
-        struct is_function
-          : meta::bool_<sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1>
-        {};
+        /*inline*/ constexpr bool is_function_v =
+            sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1;
 
         template<typename T>
         struct remove_rvalue_reference
@@ -408,7 +378,7 @@ namespace ranges
     using is_infinite = meta::bool_<range_cardinality<Rng>::value == infinite>;
 
     template<typename S, typename I>
-    struct disable_sized_sentinel;
+    /*inline*/ constexpr bool disable_sized_sentinel = false;
 
     template<typename Cur>
     struct basic_mixin;
@@ -444,12 +414,7 @@ namespace ranges
     struct view_interface;
 
     template<typename T>
-    struct istream_range;
-
-    #if !RANGES_CXX_VARIABLE_TEMPLATES
-    template<typename T>
-    istream_range<T> istream(std::istream & sin);
-    #endif
+    struct istream_view;
 
     template<typename I, typename S = I>
     struct RANGES_EMPTY_BASES iterator_range;
@@ -459,9 +424,6 @@ namespace ranges
 
     template<typename T>
     struct reference_wrapper;
-
-    template<typename>
-    struct is_reference_wrapper;
 
     // Views
     //
@@ -502,8 +464,7 @@ namespace ranges
         struct counted_fn;
     }
 
-    struct default_sentinel_t
-    {};
+    struct default_sentinel_t;
 
     template<typename I>
     struct move_iterator;
@@ -633,13 +594,13 @@ namespace ranges
         struct slice_fn;
     }
 
-    template<typename Rng, typename Fun>
-    struct split_view;
+    // template<typename Rng, typename Fun>
+    // struct split_view;
 
-    namespace view
-    {
-        struct split_fn;
-    }
+    // namespace view
+    // {
+    //     struct split_fn;
+    // }
 
     template<typename Rng>
     struct single_view;

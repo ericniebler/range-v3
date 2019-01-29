@@ -18,12 +18,11 @@
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/to_container.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/transform.hpp>
@@ -46,33 +45,23 @@ namespace ranges
         public:
             // BUGBUG something is not right with the actions. It should be possible
             // to move a container into a split and have elements moved into the result.
-            CPP_template(typename Rng, typename Fun)(
-                requires view::SplitOnFunction<Rng, Fun>)
-            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
-            {
-                return view::split(rng, std::move(fun))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-            }
-            CPP_template(typename Rng, typename Fun)(
-                requires view::SplitOnPredicate<Rng, Fun>)
-            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Fun fun) const
-            {
-                return view::split(rng, std::move(fun))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
-            }
             CPP_template(typename Rng)(
-                requires view::SplitOnElement<Rng>)
+                requires InputRange<Rng> &&
+                    IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             std::vector<split_value_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
             {
                 return view::split(rng, std::move(val))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
-            CPP_template(typename Rng, typename Sub)(
-                requires view::SplitOnSubRange<Rng, Sub>)
-            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Sub &&sub) const
+            CPP_template(typename Rng, typename Pattern)(
+                requires InputRange<Rng> &&
+                    ViewableRange<Pattern> && ForwardRange<Pattern> &&
+                    IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
+                    (ForwardRange<Rng> || detail::tiny_range<Pattern>))
+            std::vector<split_value_t<Rng>> operator()(Rng &&rng, Pattern &&pattern) const
             {
-                return view::split(rng, static_cast<Sub &&>(sub))
-                     | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                return view::split(rng, static_cast<Pattern &&>(pattern))
+                     | view::transform(to<split_value_t<Rng>>()) | to_vector;
             }
         };
 

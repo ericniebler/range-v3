@@ -164,5 +164,8 @@ int main()
     CHECK(res.max.value == 40);
     CHECK(res.max.index == 7);
 
+    // Works with initializer_lists? (Regression test for #1004)
+    CHECK(ranges::minmax({4,3,1,2,6,5}) == ranges::minmax_result<int>{1,6});
+
     return test_result();
 }

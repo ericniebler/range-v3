@@ -18,13 +18,13 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/distance.hpp>
-#include <range/v3/view_interface.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/view/interface.hpp>
+#include <concepts/concepts.hpp>
+#include <range/v3/iterator/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/algorithm/tagspec.hpp>
+
+RANGES_DEPRECATED_HEADER("This header is deprecated. Please switch to subrange in <range/v3/view/subrange.hpp>.")
 
 namespace ranges
 {

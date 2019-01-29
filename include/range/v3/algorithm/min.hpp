@@ -16,13 +16,14 @@
 
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/functional/comparisons.hpp>
+#include <range/v3/functional/identity.hpp>
+#include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -60,12 +61,12 @@ namespace ranges
         }
 
         template<typename T, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(std::initializer_list<T> rng, C pred = C{},
+        constexpr /*c++14*/ auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
                 P proj = P{}) const ->
             CPP_ret(T)(
                 requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
-            return (*this)(rng.begin(), rng.end(), std::move(pred), std::move(proj));
+            return (*this)(rng, std::move(pred), std::move(proj));
         }
     };
 

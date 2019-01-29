@@ -17,7 +17,8 @@
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/copy.hpp>
-#include <range/v3/utility/iterator.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>
@@ -121,8 +122,8 @@ int main()
 
     // Move from a zip view
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
-        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+        auto v0 = to<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to<std::vector<MoveOnlyString>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
         ::models<RandomAccessRangeConcept>(rng);
@@ -155,7 +156,7 @@ int main()
     }
 
     {
-        auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto const v = to<std::vector<MoveOnlyString>>({"a","b","c"});
         auto rng = view::zip(v, v);
         using Rng = decltype(rng);
         using I = iterator_t<Rng>;

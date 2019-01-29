@@ -209,7 +209,7 @@ Release Notes:
     * `Movable`
     * `Assignable`
   - The `View` concept is no longer satisfied by reference types.
-  - The syntax for defining a concept has changed slightly. See [utility/iterator_concepts.hpp](https://github.com/ericniebler/range-v3/blob/master/include/range/v3/utility/iterator_concepts.hpp) for examples.
+  - The syntax for defining a concept has changed slightly. See [iterator/concepts.hpp](https://github.com/ericniebler/range-v3/blob/master/include/range/v3/iterator/concepts.hpp) for examples.
 * **0.1.1**
   Small tweak to `Writable` concept to fix #537.
 * **0.1.0**
