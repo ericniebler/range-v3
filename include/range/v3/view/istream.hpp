@@ -32,7 +32,7 @@ namespace ranges
     private:
         friend range_access;
         std::istream *sin_;
-        movesemiregular_t<Val> obj_;
+        semiregular_t<Val> obj_;
         struct cursor
         {
         private:
@@ -96,7 +96,7 @@ namespace ranges
         template<typename Val>
         inline auto istream(std::istream &sin) ->
             CPP_ret(istream_view<Val>)(
-                requires DefaultConstructible<Val>)
+                requires CopyConstructible<Val> && DefaultConstructible<Val>)
         {
             return istream_view<Val>{sin};
         }

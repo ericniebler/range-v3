@@ -156,13 +156,11 @@ int main()
         ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
     }
 
-    // move-only input view transform
     {
         auto rng = debug_input_view<int const>{rgi} | view::transform(is_odd{});
         ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
     }
 
-    // two move-only input view transform
     {
         auto v0 = to<std::vector<std::string>>({"a","b","c"});
         auto v1 = to<std::vector<std::string>>({"x","y","z"});

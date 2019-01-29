@@ -59,7 +59,6 @@ int main()
     CPP_assert(!View<decltype(mutable_only) const>);
 
     {
-        // Check with move-only subview
         auto rng = debug_input_view<const int>{rgi} | view::drop_while([](int i){ return i < 4; });
         using R = decltype(rng);
         CPP_assert(InputView<R>);

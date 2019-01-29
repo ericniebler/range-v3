@@ -62,19 +62,8 @@ namespace
 #ifdef __clang__
 RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
 RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-member-function")
+RANGES_DIAGNOSTIC_IGNORE("-Wunused-member-function")
 #endif
-
-    struct MoveOnlyView : ranges::view_base
-    {
-        MoveOnlyView() = default;
-        MoveOnlyView(MoveOnlyView &&) = default;
-        MoveOnlyView &operator=(MoveOnlyView &&) = default;
-        char *begin() { return nullptr; }
-        char *end() { return nullptr; }
-    };
-
-    CPP_assert(ranges::Movable<MoveOnlyView>);
-    CPP_assert(!ranges::Semiregular<MoveOnlyView>);
 
     // https://github.com/ericniebler/range-v3/issues/283
     void test_issue_283()
@@ -200,30 +189,6 @@ int main()
 		CPP_assert(!Range<const decltype(rng)>);
 		CPP_assert(!ForwardRange<decltype(rng)>);
 		CPP_assert(!CommonRange<decltype(rng)>);
-	}
-
-	{
-		auto rng = view::iota(0, 4)
-            | view::transform([](int){return MoveOnlyView{};})
-			| view::join;
-        CHECK(rng.begin() == rng.end());
-		CPP_assert(InputRange<decltype(rng)>);
-		CPP_assert(!ForwardRange<decltype(rng)>);
-		CPP_assert(!Range<const decltype(rng)>);
-		CPP_assert(!CommonRange<decltype(rng)>);
-		CPP_assert(!CommonRange<const decltype(rng)>);
-	}
-
-	{
-		auto rng = view::iota(0, 4)
-            | view::transform([](int){return MoveOnlyView{};})
-			| view::join('a');
-        check_equal(rng, {'a','a','a'});
-		CPP_assert(InputRange<decltype(rng)>);
-		CPP_assert(!ForwardRange<decltype(rng)>);
-		CPP_assert(!Range<const decltype(rng)>);
-		CPP_assert(!CommonRange<decltype(rng)>);
-		CPP_assert(!CommonRange<const decltype(rng)>);
 	}
 
     return ::test_result();

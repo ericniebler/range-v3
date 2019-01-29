@@ -49,7 +49,8 @@ namespace ranges
     /// \cond
 // GCC either fails to accept an attribute on a namespace, or else
 // it ignores the deprecation attribute. Frustrating.
-#if defined(__GNUC__) && !defined(__clang__)
+#if (RANGES_CXX_VER < RANGES_CXX_STD_17 || \
+    defined(__GNUC__) && !defined(__clang__))
     inline namespace v3
     {
         using namespace ranges;

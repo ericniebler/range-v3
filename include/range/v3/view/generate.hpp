@@ -39,7 +39,7 @@ namespace ranges
     private:
         friend range_access;
         using result_t = invoke_result_t<G &>;
-        movesemiregular_t<G> gen_;
+        semiregular_t<G> gen_;
         detail::non_propagating_cache<result_t> val_;
         struct cursor
         {
@@ -83,23 +83,16 @@ namespace ranges
 
     namespace view
     {
-        CPP_def
-        (
-            template(typename G)
-            concept GenerateViewConcept,
-                Invocable<G&> &&
-                MoveConstructible<G> &&
-                std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
-                Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>> &&
-                Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>
-        );
-
         struct generate_fn
         {
             template<typename G>
             auto operator()(G g) const ->
                 CPP_ret(generate_view<G>)(
-                    requires GenerateViewConcept<G>)
+                    requires Invocable<G &> &&
+                        CopyConstructible<G> &&
+                        std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&
+                        Constructible<detail::decay_t<invoke_result_t<G &>>, invoke_result_t<G &>> &&
+                        Assignable<detail::decay_t<invoke_result_t<G &>>&, invoke_result_t<G &>>)
             {
                 return generate_view<G>{std::move(g)};
             }
