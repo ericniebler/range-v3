@@ -30,7 +30,7 @@ struct debug_input_view
     {
         T *const first_;
         index_t const n_;
-        std::atomic<index_t> offset_ = -1;
+        std::atomic<index_t> offset_ {-1};
 
         data(T *p, index_t n)
           : first_(p), n_(n)
