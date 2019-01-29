@@ -52,7 +52,7 @@ namespace ranges
                 template<typename Rng, typename C = equal_to,
                          CONCEPT_REQUIRES_(Concept<Rng, C>())>
                 auto operator()(Rng && rng, C pred = {}) const ->
-                adjacent_filter_view<all_t<Rng>, decltype(not_fn(pred))>
+                adjacent_filter_view<all_t<Rng>, logical_negate<C>>
                 {
                     return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
                 }
