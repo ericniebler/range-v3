@@ -126,12 +126,12 @@ namespace ranges
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr range_size_type_t<Rng> size() const
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
             CONCEPT_REQUIRES(SizedRange<Rng>())
             RANGES_CXX14_CONSTEXPR range_size_type_t<Rng> size()
             {
-                return ranges::size(this->base());
+                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
             }
         };
 
