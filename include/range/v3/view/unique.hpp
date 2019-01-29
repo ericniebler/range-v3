@@ -33,27 +33,42 @@ namespace ranges
         {
             struct unique_fn
             {
-                template<typename Rng>
+            private:
+                friend view_access;
+                template<typename C,
+                         CONCEPT_REQUIRES_(!Range<C>())>
+                static auto bind(unique_fn unique, C pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(unique, std::placeholders::_1, protect(std::move(pred)))
+                )
+
+            public:
+                template<typename Rng, typename C = equal_to>
                 using Concept = meta::and_<
                     ForwardRange<Rng>,
-                    EqualityComparable<range_value_type_t<Rng>>>;
+                    IndirectRelation<C, iterator_t<Rng>>>;
 
-                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
-                unique_view<all_t<Rng>> operator()(Rng && rng) const
+                template<typename Rng, typename C = equal_to,
+                         CONCEPT_REQUIRES_(Concept<Rng, C>())>
+                auto operator()(Rng && rng, C pred = {}) const ->
+                adjacent_filter_view<all_t<Rng>, logical_negate<C>>
                 {
-                    return {all(static_cast<Rng&&>(rng)), not_equal_to{}};
+                    return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(!Concept<Rng>())>
-                void operator()(Rng &&) const
+                template<typename Rng, typename C = equal_to,
+                         CONCEPT_REQUIRES_(!Concept<Rng, C>())>
+                void operator()(Rng &&, C = {}) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::unique operates must be a model the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<range_value_type_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectRelation<C, iterator_t<Rng>>(),
                         "The value type of the range passed to view::unique must be "
-                        "EqualityComparable.");
+                        "EqualityComparable or provide a function that can be callable with two arguments "
+                        "of the range's common reference type, and the return type must be "
+                        "convertible to bool.");
                 }
             #endif
             };
