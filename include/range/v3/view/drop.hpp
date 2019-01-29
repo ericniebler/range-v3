@@ -49,10 +49,12 @@ namespace ranges
         Rng rng_;
         difference_type_ n_;
 
-        template<typename CRng = Rng const>
-        iterator_t<CRng> get_begin_(std::true_type, std::true_type) const
+        template<bool Const = true>
+        auto get_begin_(std::true_type, std::true_type) const ->
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
-            CPP_assert(RandomAccessRange<CRng>);
+            CPP_assert(RandomAccessRange<meta::const_if_c<Const, Rng>>);
             return next(ranges::begin(rng_), n_, ranges::end(rng_));
         }
         iterator_t<Rng> get_begin_(std::true_type, std::false_type)
@@ -85,15 +87,17 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<typename CRng = Rng const>
-        auto begin() const -> CPP_ret(iterator_t<CRng>)(
-            requires RandomAccessRange<CRng>)
+        template<bool Const = true>
+        auto begin() const ->
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return this->get_begin_(std::true_type{}, std::true_type{});
         }
-        template<typename CRng = Rng const>
-        auto end() const -> CPP_ret(sentinel_t<CRng>)(
-            requires RandomAccessRange<CRng>)
+        template<bool Const = true>
+        auto end() const ->
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }

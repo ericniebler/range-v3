@@ -42,27 +42,31 @@ namespace ranges
     private:
         friend range_access;
         semiregular_t<Fun> fun_;
-        using single_pass = meta::bool_<SinglePass<iterator_t<Rng>>>;
-        using use_sentinel_t = meta::bool_<!CommonRange<Rng> || single_pass{}>;
+        template<bool Const>
+        using single_pass =
+            meta::bool_<SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>>;
+        template<bool Const>
+        using use_sentinel_t =
+            meta::bool_<!CommonRange<meta::const_if_c<Const, Rng>> || single_pass<Const>::value>;
 
-        template<bool IsConst>
+        template<bool Const>
         struct adaptor : adaptor_base
         {
         private:
-            friend struct adaptor<!IsConst>;
-            using CRng = meta::const_if_c<IsConst, Rng>;
-            using partial_sum_view_t = meta::const_if_c<IsConst, partial_sum_view>;
+            friend struct adaptor<!Const>;
+            using CRng = meta::const_if_c<Const, Rng>;
+            using partial_sum_view_t = meta::const_if_c<Const, partial_sum_view>;
             semiregular_t<range_value_t<Rng>> sum_;
             partial_sum_view_t *rng_;
         public:
-            using single_pass = partial_sum_view::single_pass;
+            using single_pass = partial_sum_view::single_pass<Const>;
             adaptor() = default;
             adaptor(partial_sum_view_t &rng)
               : rng_(&rng)
             {}
             template<bool Other>
             constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
-                requires IsConst && (!Other))
+                requires Const && (!Other))
               : sum_(std::move(that.sum_))
               , rng_(that.rng_)
             {}
@@ -93,22 +97,29 @@ namespace ranges
         {
             return {*this};
         }
-        meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
+        meta::if_<use_sentinel_t<false>, adaptor_base, adaptor<false>> end_adaptor()
         {
             return {*this};
         }
-        template<typename CRng = Rng const>
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
-            requires Range<CRng> &&
-                IndirectBinaryInvocable_<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
+        template<bool Const = true>
+        auto begin_adaptor() const ->
+            CPP_ret(adaptor<Const>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                    IndirectBinaryInvocable_<
+                        Fun const &,
+                        iterator_t<meta::const_if_c<Const, Rng>>,
+                        iterator_t<meta::const_if_c<Const, Rng>>>)
         {
             return {*this};
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto end_adaptor() const ->
-            CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
-                requires Range<CRng> &&
-                    IndirectBinaryInvocable_<Fun const &, iterator_t<CRng>, iterator_t<CRng>>)
+            CPP_ret(meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                    IndirectBinaryInvocable_<
+                        Fun const &,
+                        iterator_t<meta::const_if_c<Const, Rng>>,
+                        iterator_t<meta::const_if_c<Const, Rng>>>)
         {
             return {*this};
         }

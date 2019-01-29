@@ -106,14 +106,14 @@ namespace ranges
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto begin_cursor() const ->
-            CPP_ret(cursor<true>)(
-                requires Range<CRng> &&
+            CPP_ret(cursor<Const>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
                     Invocable<
                         Fun const&,
-                        range_common_reference_t<CRng>,
-                        range_common_reference_t<CRng>>)
+                        range_common_reference_t<meta::const_if_c<Const, Rng>>,
+                        range_common_reference_t<meta::const_if_c<Const, Rng>>>)
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }

@@ -300,10 +300,13 @@ namespace ranges
             return {*this, ranges::begin};
         }
 
-        template<typename CRng = Rng const>
-        constexpr auto begin_cursor() const -> CPP_ret(cursor<true>)(
-            requires InputRange<CRng> &&
-                std::is_reference<range_reference_t<CRng>>::value)
+        template<bool Const = true>
+        constexpr auto begin_cursor() const ->
+            CPP_ret(cursor<Const>)(
+                requires Const &&
+                    InputRange<meta::const_if_c<Const, Rng>> &&
+                    std::is_reference<
+                        range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         {
             return {*this, ranges::begin};
         }
@@ -317,11 +320,13 @@ namespace ranges
             return end_cursor_fn{}(*this, cond{});
         }
 
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         constexpr auto CPP_fun(end_cursor)() (const
-            requires InputRange<CRng> &&
-                std::is_reference<range_reference_t<CRng>>::value)
+            requires Const && InputRange<meta::const_if_c<Const, Rng>> &&
+                std::is_reference<
+                    range_reference_t<meta::const_if_c<Const, Rng>>>::value)
         {
+            using CRng = meta::const_if_c<Const, Rng>;
             using cond = meta::bool_<
                 std::is_reference<range_reference_t<CRng>>::value &&
                 ForwardRange<CRng> && ForwardRange<range_reference_t<CRng>> &&
