@@ -70,17 +70,17 @@ namespace ranges
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
-        template<typename R = Rng const>
+        template<bool Const = true>
         auto end_(std::false_type) const ->
-            CPP_ret(sentinel_t<R>)(
-                requires Range<R &>)
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
-        template<typename R = Rng const>
+        template<bool Const = true>
         auto end_(std::true_type) const ->
-            CPP_ret(iterator_t<R>)(
-                requires Range<R &>)
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
         }
@@ -110,20 +110,21 @@ namespace ranges
             return ranges::size(rng_);
         }
 
-        template<typename R = Rng const>
+        template<bool Const = true>
         auto begin() const ->
-            CPP_ret(detail::common_view_iterator_t<R>)(
-                requires Range<R &>)
+            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Range<meta::const_if_c<Const, Rng>>)
         {
-            return detail::common_view_iterator_t<R>{ranges::begin(rng_)};
+            return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
+                ranges::begin(rng_)};
         }
-        template<typename R = Rng const>
+        template<bool Const = true>
         auto end() const ->
-            CPP_ret(detail::common_view_iterator_t<R>)(
-                requires Range<R &>)
+            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Range<meta::const_if_c<Const, Rng>>)
         {
-            return detail::common_view_iterator_t<R>{
-                end_(meta::bool_<detail::RA_and_Sized<R>>{})};
+            return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
+                end_(meta::bool_<detail::RA_and_Sized<meta::const_if_c<Const, Rng>>>{})};
         }
         CPP_member
         auto CPP_fun(size)() (const

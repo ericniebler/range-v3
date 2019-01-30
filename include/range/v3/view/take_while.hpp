@@ -71,9 +71,11 @@ namespace ranges
         {
             return {pred_};
         }
-        template<typename CRng = Rng const>
-        auto end_adaptor() const -> CPP_ret(sentinel_adaptor<true>)(
-            requires Range<CRng> && Invocable<Pred const&, iterator_t<CRng>>)
+        template<bool Const = true>
+        auto end_adaptor() const ->
+            CPP_ret(sentinel_adaptor<Const>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                    Invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>)
         {
             return {pred_};
         }

@@ -61,9 +61,10 @@ namespace ranges
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
-        template<class CRng = Rng const>
-        auto begin() const -> CPP_ret(iterator_t<CRng>)(
-            requires Range<CRng>)
+        template<bool Const = true>
+        auto begin() const ->
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
         }
@@ -71,9 +72,10 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<class CRng = Rng const>
-        auto end() const -> CPP_ret(sentinel_t<CRng>)(
-            requires Range<CRng>)
+        template<bool Const = true>
+        auto end() const ->
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }

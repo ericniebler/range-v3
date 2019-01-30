@@ -177,19 +177,21 @@ namespace ranges
         {
             return {};
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         constexpr auto end_adaptor() const ->
-            CPP_ret(cursor_adaptor<true>)(
-                requires Range<CRng> &&
-                    (CommonRange<CRng> && !SinglePass<iterator_t<CRng>>))
+            CPP_ret(cursor_adaptor<Const>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                    CommonRange<meta::const_if_c<Const, Rng>> &&
+                    (!SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
         {
             return cursor_adaptor<true>{val_};
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(sentinel_adaptor<true>)(
-                requires Range<CRng> &&
-                    (!CommonRange<CRng> || SinglePass<iterator_t<CRng>>))
+            CPP_ret(sentinel_adaptor<Const>)(
+                requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                    (!CommonRange<meta::const_if_c<Const, Rng>> ||
+                    SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
         {
             return {};
         }

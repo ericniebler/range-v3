@@ -160,12 +160,14 @@ namespace ranges
         {
             return cursor<false>{*this};
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto begin_cursor() const ->
-            CPP_ret(cursor<true>)(
-                requires SizedRange<CRng> ||
-                    SizedSentinel<sentinel_t<CRng>, iterator_t<CRng>> ||
-                    ForwardRange<CRng>)
+            CPP_ret(cursor<Const>)(
+                requires Const && SizedRange<meta::const_if_c<Const, Rng>> ||
+                    SizedSentinel<
+                        sentinel_t<meta::const_if_c<Const, Rng>>,
+                        iterator_t<meta::const_if_c<Const, Rng>>> ||
+                    ForwardRange<meta::const_if_c<Const, Rng>>)
         {
             return cursor<true>{*this};
         }

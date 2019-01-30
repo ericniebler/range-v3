@@ -47,10 +47,11 @@ namespace ranges
         difference_type_ n_;
 
         // RandomAccessRange == true
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto get_begin_(std::true_type) const ->
-            CPP_ret(iterator_t<CRng>)(
-                requires RandomAccessRange<CRng>)
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const &&
+                    RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), n_);
         }
@@ -83,17 +84,17 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto begin() const ->
-            CPP_ret(iterator_t<CRng>)(
-                requires RandomAccessRange<CRng>)
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return this->get_begin_(std::true_type{});
         }
-        template<typename CRng = Rng const>
+        template<bool Const = true>
         auto end() const ->
-            CPP_ret(sentinel_t<CRng>)(
-                requires RandomAccessRange<CRng>)
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
