@@ -17,10 +17,11 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/functional/not_fn.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -30,13 +31,23 @@ namespace ranges
     {
         struct unique_fn
         {
-            template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(unique_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        EqualityComparable<range_value_t<Rng>>)
+        private:
+            friend view_access;
+            template<typename C>
+            static auto CPP_fun(bind)(unique_fn unique, C pred)(
+                requires (!Range<C>))
             {
-                return {all(static_cast<Rng &&>(rng)), not_equal_to{}};
+                return std::bind(unique, std::placeholders::_1, protect(std::move(pred)));
+            }
+
+        public:
+            template<typename Rng, typename C = equal_to>
+            auto operator()(Rng && rng, C pred = {}) const ->
+                CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)(
+                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                        IndirectRelation<C, iterator_t<Rng>>)
+            {
+                return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
             }
         };
 
