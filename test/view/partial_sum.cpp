@@ -25,7 +25,7 @@ int main()
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    auto && rng = rgi | view::partial_sum;
+    auto rng = rgi | view::partial_sum;
     has_type<int &>(*begin(rgi));
     has_type<int>(*begin(rng));
     models<SizedViewConcept>(aux::copy(rng));

@@ -14,126 +14,147 @@
 #ifndef RANGES_V3_VIEW_PARTIAL_SUM_HPP
 #define RANGES_V3_VIEW_PARTIAL_SUM_HPP
 
-#include <utility>
-#include <iterator>
 #include <functional>
+#include <iterator>
 #include <type_traits>
+#include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range/primitives.hpp>
-#include <range/v3/range/access.hpp>
-#include <range/v3/range/traits.hpp>
-#include <range/v3/view/adaptor.hpp>
 #include <range/v3/functional/arithmetic.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/range/traits.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/facade.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
+    /// \cond
+    namespace detail
+    {
+        CPP_def
+        (
+            template(typename Rng, typename Fun)
+            concept PartialSumViewable,
+                InputRange<Rng> &&
+                Constructible<range_value_t<Rng>, range_reference_t<Rng>> &&
+                Assignable<range_value_t<Rng> &, range_reference_t<Rng>> &&
+                IndirectBinaryInvocable_<Fun &, iterator_t<Rng>, iterator_t<Rng>> &&
+                Assignable<
+                    range_value_t<Rng> &,
+                    indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>>
+        );
+    }
+    /// \endcond
+
     /// \addtogroup group-views
     /// @{
     template<typename Rng, typename Fun>
     struct partial_sum_view
-      : view_adaptor<partial_sum_view<Rng, Fun>, Rng>
+      : view_facade<partial_sum_view<Rng, Fun>, range_cardinality<Rng>::value>
     {
     private:
         friend range_access;
-        semiregular_t<Fun> fun_;
-        template<bool Const>
-        using single_pass =
-            meta::bool_<SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>>;
-        template<bool Const>
-        using use_sentinel_t =
-            meta::bool_<!CommonRange<meta::const_if_c<Const, Rng>> || single_pass<Const>::value>;
+        CPP_assert(View<Rng>);
+        CPP_assert(detail::PartialSumViewable<Rng, Fun>);
 
-        template<bool Const>
-        struct adaptor : adaptor_base
+        RANGES_NO_UNIQUE_ADDRESS Rng base_{};
+        RANGES_NO_UNIQUE_ADDRESS semiregular_t<Fun> fun_;
+
+        template<bool IsConst>
+        struct cursor
         {
         private:
-            friend struct adaptor<!Const>;
-            using CRng = meta::const_if_c<Const, Rng>;
-            using partial_sum_view_t = meta::const_if_c<Const, partial_sum_view>;
-            semiregular_t<range_value_t<Rng>> sum_;
-            partial_sum_view_t *rng_;
+            friend cursor<true>;
+
+            using Parent = meta::const_if_c<IsConst, partial_sum_view>;
+            using Base = meta::const_if_c<IsConst, Rng>;
+
+            Parent* parent_ = nullptr;
+            RANGES_NO_UNIQUE_ADDRESS iterator_t<Base> current_{};
+            RANGES_NO_UNIQUE_ADDRESS semiregular_t<range_value_t<Rng>> sum_;
+
         public:
-            using single_pass = partial_sum_view::single_pass<Const>;
-            adaptor() = default;
-            adaptor(partial_sum_view_t &rng)
-              : rng_(&rng)
-            {}
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
-                requires Const && (!Other))
-              : sum_(std::move(that.sum_))
-              , rng_(that.rng_)
-            {}
-            iterator_t<CRng> begin(partial_sum_view_t &)
+            using single_pass = meta::bool_<SinglePass<iterator_t<Base>>>;
+
+            cursor() = default;
+            constexpr /*c++14*/ explicit cursor(Parent &rng)
+              : parent_{std::addressof(rng)}
+              , current_(ranges::begin(rng.base_))
             {
-                auto &base = rng_->base();
-                auto it = ranges::begin(base);
-                if (it != ranges::end(base))
-                    sum_ = *it;
-                return it;
+                if (current_ != ranges::end(rng.base_))
+                    sum_ = *current_;
             }
-            range_value_t<Rng> read(iterator_t<CRng>) const
+            template<bool Other>
+            constexpr CPP_ctor(cursor)(cursor<Other> const &that)(
+                requires IsConst && (!Other) &&
+                    ConvertibleTo<iterator_t<Rng> const &, iterator_t<Base>>)
+              : parent_{that.parent_}
+              , current_(that.current_)
+              , sum_(that.sum_)
+            {}
+            constexpr range_value_t<Rng> read() const
             {
+                RANGES_EXPECT(current_ != ranges::end(parent_->base_));
                 return sum_;
             }
-            void next(iterator_t<CRng> &it)
+            constexpr /*c++14*/ void next()
             {
-                if (++it != ranges::end(rng_->base()))
+                auto last = ranges::end(parent_->base_);
+                RANGES_EXPECT(current_ != last);
+                if (++current_ != last)
                 {
-                    auto &current = static_cast<range_value_t<Rng> &>(sum_);
-                    sum_ = invoke(rng_->fun_, current, *it);
+                    auto &sum = static_cast<range_value_t<Rng> &>(sum_);
+                    using F = meta::const_if_c<IsConst, Fun>;
+                    auto &f = static_cast<F &>(parent_->fun_);
+                    sum = invoke(f, sum, *current_);
                 }
             }
-            void prev() = delete;
+            constexpr bool equal(default_sentinel_t) const
+            {
+                return current_ == ranges::end(parent_->base_);
+            }
+            CPP_member
+            constexpr /*c++14*/ bool CPP_fun(equal)(cursor const &that) (const
+                requires EqualityComparable<iterator_t<Base>>)
+            {
+                RANGES_EXPECT(parent_ == that.parent_);
+                return current_ == that.current_;
+            }
         };
 
-        adaptor<false> begin_adaptor()
+        constexpr /*c++14*/ cursor<false> begin_cursor()
         {
-            return {*this};
+            return cursor<false>{*this};
         }
-        meta::if_<use_sentinel_t<false>, adaptor_base, adaptor<false>> end_adaptor()
+        template<typename CRng = Rng const>
+        constexpr auto begin_cursor() const ->
+            CPP_ret(cursor<true>)(
+                requires detail::PartialSumViewable<CRng, Fun const>)
         {
-            return {*this};
-        }
-        template<bool Const = true>
-        auto begin_adaptor() const ->
-            CPP_ret(adaptor<Const>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    IndirectBinaryInvocable_<
-                        Fun const &,
-                        iterator_t<meta::const_if_c<Const, Rng>>,
-                        iterator_t<meta::const_if_c<Const, Rng>>>)
-        {
-            return {*this};
-        }
-        template<bool Const = true>
-        auto end_adaptor() const ->
-            CPP_ret(meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    IndirectBinaryInvocable_<
-                        Fun const &,
-                        iterator_t<meta::const_if_c<Const, Rng>>,
-                        iterator_t<meta::const_if_c<Const, Rng>>>)
-        {
-            return {*this};
+            return cursor<true>{*this};
         }
     public:
         partial_sum_view() = default;
-        partial_sum_view(Rng rng, Fun fun)
-          : partial_sum_view::view_adaptor{std::move(rng)}
+        constexpr /*c++14*/ partial_sum_view(Rng rng, Fun fun)
+            noexcept(std::is_nothrow_move_constructible<Rng>::value &&
+                std::is_nothrow_move_constructible<Fun>::value)
+          : base_(std::move(rng))
           , fun_(std::move(fun))
         {}
         CPP_member
-        auto CPP_fun(size)() (const
-            requires SizedRange<Rng>)
+        constexpr /*c++14*/ auto CPP_fun(size)() (requires SizedRange<Rng>)
         {
-            return ranges::size(this->base());
+            return ranges::size(base_);
+        }
+        CPP_member
+        constexpr auto CPP_fun(size)() (const requires SizedRange<Rng const>)
+        {
+            return ranges::size(base_);
         }
     };
 
@@ -158,13 +179,9 @@ namespace ranges
             }
         public:
             template<typename Rng, typename Fun = plus>
-            auto operator()(Rng &&rng, Fun fun = {}) const ->
+            constexpr auto operator()(Rng &&rng, Fun fun = {}) const ->
                 CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
-                    requires InputRange<Rng> &&
-                        IndirectBinaryInvocable_<Fun, iterator_t<Rng>, iterator_t<Rng>> &&
-                        ConvertibleTo<
-                            indirect_result_t<Fun &, iterator_t<Rng>, iterator_t<Rng>>,
-                            range_value_t<Rng>>)
+                    requires detail::PartialSumViewable<all_t<Rng>, Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
