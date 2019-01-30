@@ -21,6 +21,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/span.hpp>
 #include <range/v3/view/zip.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -32,6 +33,18 @@ struct is_odd
         return (i % 2) == 1;
     }
 };
+
+// https://github.com/ericniebler/range-v3/issues/996
+void bug_996()
+{
+    std::vector<int> buff(12, -1);
+    ::ranges::span<int> sp(buff.data(), 12);
+
+    auto x = ::ranges::view::transform(sp, [](int a) { return a > 3 ? a : 42; });
+    auto y = ::ranges::view::transform(x, sp, [](int a, int b) { return a + b; });
+    auto rng = ::ranges::view::transform(y, [](int a) { return a + 1; });
+    (void)rng;
+}
 
 int main()
 {
