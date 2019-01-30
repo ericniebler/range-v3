@@ -393,6 +393,11 @@ int main()
         CPP_assert(ForwardRange<decltype(rng)>);
     }
 
+    {   // Regression test for #986
+        std::string s;
+        s | ranges::view::split_when([](char) { return true; });
+    }
+
     moar_tests();
 
     return test_result();
