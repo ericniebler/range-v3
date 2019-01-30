@@ -361,6 +361,10 @@ namespace ranges
     struct equal_to;
     struct less;
     struct identity;
+    template<typename Pred>
+    struct logical_negate_;
+    template<typename Pred>
+    using logical_negate = logical_negate_<detail::decay_t<Pred>>;
 
     enum cardinality : std::ptrdiff_t
     {
@@ -700,7 +704,7 @@ namespace ranges
     }
 
     template<typename Rng>
-    using unique_view = adjacent_filter_view<Rng, not_equal_to>;
+        using unique_view = adjacent_filter_view<Rng, logical_negate<equal_to>>;
 
     namespace view
     {
