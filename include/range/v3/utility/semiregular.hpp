@@ -116,6 +116,7 @@ namespace ranges
                 this->construct_from(detail::move(that.data_));
         }
         semiregular(semiregular const &that)
+            noexcept(std::is_nothrow_copy_constructible<T>::value)
         {
             if (that.engaged_)
                 this->construct_from(that.data_);
