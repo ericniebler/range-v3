@@ -31,15 +31,14 @@ namespace ranges
     struct at_fn
     {
         /// \return `begin(rng)[n]`
-        template<typename Rng, typename Int>
-        constexpr /*c++14*/ auto operator()(Rng &&rng, Int n) const ->
+        template<typename Rng>
+        constexpr /*c++14*/ auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
             CPP_ret(range_reference_t<Rng>)(
-                requires RandomAccessRange<Rng> && SizedRange<Rng> && Integral<Int>)
+                requires RandomAccessRange<Rng> && SizedRange<Rng>)
         {
-            using D = range_difference_t<Rng>;
             // Workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371 in GCC 5
-            check_throw(rng, static_cast<D>(n));
-            return ranges::begin(rng)[static_cast<D>(n)];
+            check_throw(rng, n);
+            return ranges::begin(rng)[n];
         }
 
     private:

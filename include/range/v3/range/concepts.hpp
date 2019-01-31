@@ -223,7 +223,7 @@ namespace ranges
                 ranges::size(t)
             ) &&
             Range<T> &&
-            Integral<range_size_t<T>> &&
+            detail::IntegerLike_<range_size_t<T>> &&
             !disable_sized_range<uncvref_t<T>>
     );
 

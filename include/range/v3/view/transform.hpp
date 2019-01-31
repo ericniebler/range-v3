@@ -200,8 +200,8 @@ namespace ranges
         semiregular_t<Fun> fun_;
         Rng1 rng1_;
         Rng2 rng2_;
-        using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
-        using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
+        using difference_type_ =
+            common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
 
         static constexpr cardinality my_cardinality = detail::transform2_cardinality(
             range_cardinality<Rng1>::value,
@@ -370,12 +370,18 @@ namespace ranges
             return {*this, ranges::end};
         }
         template<typename Self>
-        static constexpr size_type_ size_(Self& self)
+        static constexpr auto size_(Self& self)
         {
+            using size_type = common_type_t<range_size_t<Rng1>, range_size_t<Rng2>>;
             return ranges::min(
-                static_cast<size_type_>(ranges::size(self.rng1_)),
-                static_cast<size_type_>(ranges::size(self.rng2_)));
+                static_cast<size_type>(ranges::size(self.rng1_)),
+                static_cast<size_type>(ranges::size(self.rng2_)));
         }
+
+        template<bool B>
+        using R1 = meta::invoke<detail::dependent_<B>, Rng1>;
+        template<bool B>
+        using R2 = meta::invoke<detail::dependent_<B>, Rng2>;
     public:
         iter_transform2_view() = default;
         iter_transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
@@ -385,21 +391,23 @@ namespace ranges
         {}
         CPP_template(int = 42)(
             requires my_cardinality >= 0)
-        static constexpr size_type_ size()
+        static constexpr std::size_t size()
         {
-            return static_cast<size_type_>(my_cardinality);
+            return static_cast<std::size_t>(my_cardinality);
         }
-        CPP_member
-        constexpr auto size() const -> CPP_ret(size_type_)(
+        CPP_template(bool True = true)(
             requires my_cardinality < 0 &&
-                SizedRange<Rng1 const> && SizedRange<Rng2 const>)
+                SizedRange<Rng1 const> && SizedRange<Rng2 const> &&
+                Common<range_size_t<R1<True>>, range_size_t<R2<True>>>)
+        constexpr auto size() const
         {
             return size_(*this);
         }
-        CPP_member
-        constexpr /*c++14*/ auto size() -> CPP_ret(size_type_)(
+        CPP_template(bool True = true)(
             requires my_cardinality < 0 &&
-                SizedRange<Rng1> && SizedRange<Rng2>)
+                SizedRange<Rng1> && SizedRange<Rng2> &&
+                Common<range_size_t<R1<True>>, range_size_t<R2<True>>>)
+        constexpr /*c++14*/ auto size()
         {
             return size_(*this);
         }
@@ -445,6 +453,7 @@ namespace ranges
                     requires ViewableRange<Rng1> && InputRange<Rng1> &&
                         ViewableRange<Rng2> && InputRange<Rng2> &&
                         CopyConstructible<Fun> &&
+                        Common<range_difference_t<Rng1>, range_difference_t<Rng1>> &&
                         detail::IterTransform2Readable<Fun, Rng1, Rng2>)
             {
                 return {all(static_cast<Rng1 &&>(rng1)),

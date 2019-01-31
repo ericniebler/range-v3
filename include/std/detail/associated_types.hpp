@@ -14,6 +14,8 @@
 #ifndef RANGES_V3_STD_DETAIL_ASSOCIATED_TYPES_HPP
 #define RANGES_V3_STD_DETAIL_ASSOCIATED_TYPES_HPP
 
+#include <climits>
+#include <cstdint>
 #include <range/v3/detail/config.hpp>
 
 namespace ranges
@@ -122,12 +124,12 @@ namespace ranges
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
 #endif // RANGES_WORKAROUND_MSVC_785522
         {
-            using difference_type = typename std::make_signed<difference_result_t<T>>::type;
+            using difference_type = std::make_signed_t<difference_result_t<T>>;
         };
 
         template<typename T, typename = void>
         struct incrementable_traits_1_
-          : detail::incrementable_traits_2_<T>
+          : incrementable_traits_2_<T>
         {};
 
         template<typename T>

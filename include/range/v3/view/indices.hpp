@@ -28,41 +28,42 @@ namespace ranges
     {
         /// Half-open range of indices: [from, to).
         struct indices_fn
-          : iota_view<std::ptrdiff_t>
+          : iota_view<std::size_t>
         {
             indices_fn() = default;
 
             template<typename Val>
-            auto CPP_fun(operator())(Val from, Val to) (const
-                requires Integral<Val>)
+            auto operator()(Val to) const ->
+                CPP_ret(iota_view<Val, Val>)(
+                    requires Integral<Val>)
             {
-                return detail::take_exactly_view_<iota_view<Val>, true>
-                    {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};
+                return {Val(), to};
             }
-            template<typename Val, typename Self = indices_fn>
-            auto CPP_fun(operator())(Val to) (const
-                requires Integral<Val>)
+            template<typename Val>
+            auto operator()(Val from, Val to) const ->
+                CPP_ret(iota_view<Val, Val>)(
+                    requires Integral<Val>)
             {
-                return Self{}(Val(), to);
+                return {from, to};
             }
         };
 
         /// Inclusive range of indices: [from, to].
         struct closed_indices_fn
-          : iota_view<std::ptrdiff_t>
         {
             template<typename Val>
-            auto CPP_fun(operator())(Val from, Val to) (const
-                requires Integral<Val>)
+            auto operator()(Val to) const ->
+                CPP_ret(closed_iota_view<Val>)(
+                    requires Integral<Val>)
             {
-                return detail::take_exactly_view_<iota_view<Val>, true>
-                    {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
+                return {Val(), to};
             }
-            template<typename Val, typename Self = closed_indices_fn>
-            auto CPP_fun(operator())(Val to) (const
-                requires Integral<Val>)
+            template<typename Val>
+            auto operator()(Val from, Val to) const ->
+                CPP_ret(closed_iota_view<Val>)(
+                    requires Integral<Val>)
             {
-                return Self{}(Val(), to);
+                return {from, to};
             }
         };
 
@@ -73,7 +74,6 @@ namespace ranges
         /// \relates closed_indices_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(closed_indices_fn, closed_indices)
-
     }  // namespace view
 }
 

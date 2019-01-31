@@ -16,11 +16,12 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/action/concepts.hpp>
+#include <range/v3/functional/pipeable.hpp>
+#include <range/v3/iterator/common_iterator.hpp>
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/range/traits.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/action/concepts.hpp>
-#include <range/v3/functional/pipeable.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -50,7 +51,7 @@ namespace ranges
             concept ConvertibleToContainerImpl,
                 Range<Cont> && (!View<Cont>) && MoveConstructible<Cont> &&
                 ConvertibleTo<range_value_t<Rng>, range_value_t<Cont>> &&
-                Constructible<Cont, range_common_iterator_t<Rng>, range_common_iterator_t<Rng>>
+                Constructible<Cont, range_cpp17_iterator_t<Rng>, range_cpp17_iterator_t<Rng>>
         );
 
         CPP_def
@@ -65,7 +66,7 @@ namespace ranges
         (
             template(typename C, typename R)
             concept ToContainerReserve,
-                ReserveAndAssignable<C, range_common_iterator_t<R>> &&
+                ReserveAndAssignable<C, range_cpp17_iterator_t<R>> &&
                 SizedRange<R>
         );
 
@@ -80,7 +81,7 @@ namespace ranges
                 static auto impl(Rng &&rng) -> CPP_ret(Cont)(
                     requires (!ToContainerReserve<Cont, Rng>))
                 {
-                    using I = range_common_iterator_t<Rng>;
+                    using I = range_cpp17_iterator_t<Rng>;
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
@@ -91,12 +92,10 @@ namespace ranges
                     Cont c;
                     auto const size = ranges::size(rng);
                     using size_type = decltype(c.max_size());
-                    using C = common_type_t<
-                        meta::_t<std::make_unsigned<decltype(size)>>,
-                        meta::_t<std::make_unsigned<size_type>>>;
+                    using C = common_type_t<range_size_t<Rng>, size_type>;
                     RANGES_EXPECT(static_cast<C>(size) <= static_cast<C>(c.max_size()));
                     c.reserve(static_cast<size_type>(size));
-                    using I = range_common_iterator_t<Rng>;
+                    using I = range_cpp17_iterator_t<Rng>;
                     c.assign(I{ranges::begin(rng)}, I{ranges::end(rng)});
                     return c;
                 }
@@ -140,8 +139,8 @@ namespace ranges
             // Attempt to use a deduction guide first...
             template<typename Rng>
             static auto from_rng_(int) ->
-                decltype(ContT(range_common_iterator_t<Rng>{},
-                               range_common_iterator_t<Rng>{}));
+                decltype(ContT(range_cpp17_iterator_t<Rng>{},
+                               range_cpp17_iterator_t<Rng>{}));
             // No deduction guide. Fallback to instantiating with the
             // iterator's value type.
             template<typename Rng>

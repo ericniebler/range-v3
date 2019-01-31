@@ -47,26 +47,26 @@ namespace ranges
         auto insert(Cont &&cont, I i, S j) -> CPP_ret(
             insert_result_t<
                 Cont&,
-                common_iterator_t<I, S>,
-                common_iterator_t<I, S>>)(
+                detail::cpp17_iterator_t<I, S>,
+                detail::cpp17_iterator_t<I, S>>)(
             requires LvalueContainerLike<Cont> && Sentinel<S, I> && !Range<S>)
         {
             return unwrap_reference(cont).insert(
-                common_iterator_t<I, S>{i},
-                common_iterator_t<I, S>{j});
+                detail::cpp17_iterator_t<I, S>{i},
+                detail::cpp17_iterator_t<I, S>{j});
         }
 
         template<typename Cont, typename Rng>
         auto insert(Cont &&cont, Rng &&rng) -> CPP_ret(
             insert_result_t<
                 Cont&,
-                range_common_iterator_t<Rng>,
-                range_common_iterator_t<Rng>>)(
+                detail::range_cpp17_iterator_t<Rng>,
+                detail::range_cpp17_iterator_t<Rng>>)(
             requires LvalueContainerLike<Cont> && Range<Rng>)
         {
             return unwrap_reference(cont).insert(
-                range_common_iterator_t<Rng>{ranges::begin(rng)},
-                range_common_iterator_t<Rng>{ranges::end(rng)});
+                detail::range_cpp17_iterator_t<Rng>{ranges::begin(rng)},
+                detail::range_cpp17_iterator_t<Rng>{ranges::end(rng)});
         }
 
         template<typename Cont, typename I, typename T>
@@ -90,6 +90,9 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            using ranges::detail::cpp17_iterator_t;
+            using ranges::detail::range_cpp17_iterator_t;
+
             template<typename Cont, typename P>
             auto insert_reserve_helper(
                 Cont &cont, P const p, range_size_t<Cont> const delta) ->
@@ -116,10 +119,11 @@ namespace ranges
             template<typename Cont, typename P, typename I, typename S>
             auto insert_impl(Cont &&cont, P p, I i, S j, std::false_type) ->
                 CPP_ret(decltype(unwrap_reference(cont).
-                    insert(p, common_iterator_t<I, S>{i}, common_iterator_t<I, S>{j})))(
+                    insert(p, cpp17_iterator_t<I, S>{i},
+                              cpp17_iterator_t<I, S>{j})))(
                 requires Sentinel<S, I> && !Range<S>)
             {
-                using C = common_iterator_t<I, S>;
+                using C = cpp17_iterator_t<I, S>;
                 return unwrap_reference(cont).insert(p, C{i}, C{j});
             }
 
@@ -127,11 +131,11 @@ namespace ranges
             auto insert_impl(Cont &&cont_, P p, I i, S j, std::true_type) ->
                 CPP_ret(decltype(unwrap_reference(cont_).insert(
                     ranges::begin(unwrap_reference(cont_)),
-                    common_iterator_t<I, S>{i},
-                    common_iterator_t<I, S>{j})))(
+                    cpp17_iterator_t<I, S>{i},
+                    cpp17_iterator_t<I, S>{j})))(
                 requires SizedSentinel<S, I> && RandomAccessReservable<Cont> && !Range<S>)
             {
-                using C = common_iterator_t<I, S>;
+                using C = cpp17_iterator_t<I, S>;
                 auto &&cont = unwrap_reference(cont_);
                 auto const delta = static_cast<range_size_t<Cont>>(j - i);
                 auto pos = insert_reserve_helper(cont, std::move(p), delta);
@@ -142,11 +146,11 @@ namespace ranges
             auto insert_impl(Cont &&cont, I p, Rng &&rng, std::false_type) ->
                 CPP_ret(decltype(unwrap_reference(cont).insert(
                     p,
-                    range_common_iterator_t<Rng>{ranges::begin(rng)},
-                    range_common_iterator_t<Rng>{ranges::end(rng)})))(
+                    range_cpp17_iterator_t<Rng>{ranges::begin(rng)},
+                    range_cpp17_iterator_t<Rng>{ranges::end(rng)})))(
                 requires Range<Rng>)
             {
-                using C = range_common_iterator_t<Rng>;
+                using C = range_cpp17_iterator_t<Rng>;
                 return unwrap_reference(cont).insert(
                     p, C{ranges::begin(rng)}, C{ranges::end(rng)});
             }
@@ -155,11 +159,11 @@ namespace ranges
             auto insert_impl(Cont &&cont_, I p, Rng &&rng, std::true_type) ->
                 CPP_ret(decltype(unwrap_reference(cont_).insert(
                     begin(unwrap_reference(cont_)),
-                    range_common_iterator_t<Rng>{ranges::begin(rng)},
-                    range_common_iterator_t<Rng>{ranges::end(rng)})))(
+                    range_cpp17_iterator_t<Rng>{ranges::begin(rng)},
+                    range_cpp17_iterator_t<Rng>{ranges::end(rng)})))(
                 requires RandomAccessReservable<Cont> && SizedRange<Rng>)
             {
-                using C = range_common_iterator_t<Rng>;
+                using C = range_cpp17_iterator_t<Rng>;
                 auto &&cont = unwrap_reference(cont_);
                 auto const delta = static_cast<range_size_t<Cont>>(ranges::size(rng));
                 auto pos = insert_reserve_helper(cont, std::move(p), delta);

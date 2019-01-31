@@ -30,7 +30,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -99,15 +99,14 @@ namespace ranges
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
-            constexpr bool equal(default_sentinel_t) const
-            {
-                return false;
-            }
             auto CPP_auto_fun(read)() (const)
             (
                 return *it_
             )
-            bool equal(cursor const &pos) const
+            CPP_member
+            auto equal(cursor const &pos) const ->
+                CPP_ret(bool)(
+                    requires EqualityComparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -135,9 +134,9 @@ namespace ranges
                 }
                 --it_;
             }
-            CPP_member
-            auto advance(std::intmax_t n) -> CPP_ret(void)(
-                requires RandomAccessRange<CRng>)
+            template<typename Diff>
+            auto advance(Diff n) -> CPP_ret(void)(
+                requires RandomAccessRange<CRng> && detail::IntegerLike_<Diff>)
             {
                 auto const begin = ranges::begin(rng_->rng_);
                 auto const end = this->get_end_(
@@ -151,9 +150,8 @@ namespace ranges
                 it_ = begin + static_cast<D>(off < 0 ? off + dist : off);
             }
             CPP_member
-            auto distance_to(cursor const &that) const ->
-                CPP_ret(std::intmax_t)(
-                    requires SizedSentinel<iterator, iterator>)
+            auto CPP_fun(distance_to)(cursor const &that) (const
+                requires SizedSentinel<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
                 auto const begin = ranges::begin(rng_->rng_);
@@ -166,7 +164,7 @@ namespace ranges
 
         CPP_member
         auto begin_cursor() -> CPP_ret(cursor<false>)(
-                requires (!simple_view<Rng>() || !CommonRange<Rng const>))
+            requires (!simple_view<Rng>() || !CommonRange<Rng const>))
         {
             return {*this};
         }
@@ -175,6 +173,10 @@ namespace ranges
             requires CommonRange<Rng const>)
         {
             return {*this};
+        }
+        unreachable_sentinel_t end_cursor() const
+        {
+            return unreachable;
         }
 
     public:

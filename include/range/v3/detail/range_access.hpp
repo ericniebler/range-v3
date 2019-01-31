@@ -20,6 +20,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <concepts/concepts.hpp>
+#include <range/v3/iterator/concepts.hpp>
 
 namespace ranges
 {
@@ -284,7 +285,7 @@ namespace ranges
                 requires (S &s, C &c)
                 (
                     range_access::distance_to(c, s),
-                    concepts::requires_<SignedIntegral<decltype(
+                    concepts::requires_<SignedIntegerLike_<decltype(
                         range_access::distance_to(c, s))>>
                 ) &&
                 CursorSentinel<S, C>

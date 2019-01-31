@@ -101,8 +101,7 @@ namespace ranges
             }
             auto size() const
             {
-                using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
-                return static_cast<size_type>(count_);
+                return static_cast<detail::iter_size_t<iterator_t<Rng>>>(count_);
             }
             Rng base() const
             {
@@ -152,8 +151,7 @@ namespace ranges
             }
             auto size() const
             {
-                using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
-                return static_cast<size_type>(count_);
+                return static_cast<detail::iter_size_t<iterator_t<Rng>>>(count_);
             }
             Rng base() const
             {
@@ -200,33 +198,33 @@ namespace ranges
             // Overloads for the pipe syntax: rng | view::slice(from,to)
             template<typename Int>
             static auto CPP_fun(bind)(slice_fn slice, Int from, Int to)(
-                requires Integral<Int>)
+                requires detail::IntegerLike_<Int>)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
             template<typename Int>
             static auto CPP_fun(bind)(slice_fn slice, Int from, detail::from_end_<Int> to)(
-                requires Integral<Int>)
+                requires detail::IntegerLike_<Int>)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
             template<typename Int>
             static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
                 detail::from_end_<Int> to)(
-                requires Integral<Int>)
+                requires detail::IntegerLike_<Int>)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
             template<typename Int>
             static auto CPP_fun(bind)(slice_fn, Int from, end_fn)(
-                requires Integral<Int>)
+                requires detail::IntegerLike_<Int>)
             {
                 return make_pipeable(std::bind(ranges::view::drop_exactly,
                     std::placeholders::_1, from));
             }
             template<typename Int>
             static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from, end_fn to)(
-                requires Integral<Int>)
+                requires detail::IntegerLike_<Int>)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }

@@ -185,7 +185,7 @@ namespace ranges
       : view_interface<sized_iterator_range<I, S>, finite>
       , _iterator_range_::adl_hook_
     {
-        using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
+        using size_type = detail::iter_size_t<I>;
         using iterator = I;
         using sentinel = S;
     #ifndef RANGES_DOXYGEN_INVOKED
@@ -290,7 +290,8 @@ namespace ranges
         /// \return `{begin, end, size}`
         CPP_template(typename I, typename S)(
             requires Sentinel<S, I>)
-        constexpr sized_iterator_range<I, S> operator()(I begin, S end, meta::_t<std::make_unsigned<iter_difference_t<I>>> size) const
+        constexpr auto operator()(I begin, S end, detail::iter_size_t<I> size) const ->
+            sized_iterator_range<I, S>
         {
             CPP_assert(Sentinel<S, I>);
             return {detail::move(begin), detail::move(end), size};

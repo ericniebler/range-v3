@@ -120,6 +120,13 @@ namespace ranges
     namespace detail
     {
         template<typename I>
+        using iter_size_t =
+            meta::_t<if_then_t<
+                std::is_integral<iter_difference_t<I>>::value,
+                std::make_unsigned<iter_difference_t<I>>,
+                meta::id<iter_difference_t<I>>>>;
+
+        template<typename I>
         using iter_arrow_t =
             decltype(std::declval<I &>().operator->());
 
@@ -139,13 +146,9 @@ namespace ranges
           : meta::defer<iter_value_t, T>
         {};
 
-        template<typename, typename = void>
-        struct size_type_
-        {};
-
         template<typename T>
-        struct size_type_<T, always_<void, iter_difference_t<T>>>
-          : std::make_unsigned<iter_difference_t<T>>
+        struct size_type_
+          : meta::defer<iter_size_t, T>
         {};
     } // namespace detail
 
@@ -182,7 +185,7 @@ namespace ranges
     template<typename I>
     using size_type_t
         RANGES_DEPRECATED("size_type_t is deprecated.") =
-            meta::_t<std::make_unsigned<iter_difference_t<I>>>;
+            detail::iter_size_t<I>;
     /// \endcond
 
     namespace cpp20

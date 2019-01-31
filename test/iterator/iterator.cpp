@@ -349,6 +349,12 @@ void deep_integration_test()
     using std::iterator_traits;
     using ranges::iter_value_t;
     using ranges::iter_difference_t;
+    static_assert(is_same<iter_difference_t<std::int_least16_t>, int>::value, "");
+    static_assert(is_same<iter_difference_t<std::uint_least16_t>, int>::value, "");
+    static_assert(is_same<iter_difference_t<std::int_least32_t>, std::int_least32_t>::value, "");
+    static_assert(is_same<iter_difference_t<std::uint_least32_t>, meta::_t<std::make_signed<std::uint_least32_t>>>::value, "");
+    static_assert(is_same<iter_difference_t<std::uint_least64_t>, meta::_t<std::make_signed<std::uint_least64_t>>>::value, "");
+
     static_assert(is_same<iter_value_t<const int*>, int>::value, "");
     static_assert(is_same<iter_difference_t<const int*>, ptrdiff_t>::value, "");
     static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");

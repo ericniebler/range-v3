@@ -413,6 +413,17 @@ namespace ranges
     template<typename I, typename S>
     struct common_iterator;
 
+    /// \cond
+    namespace detail
+    {
+        template<typename I>
+        struct cpp17_iterator_cursor;
+
+        template<typename I>
+        using cpp17_iterator = basic_iterator<cpp17_iterator_cursor<I>>;
+    }
+    /// \endcond
+
     template<typename First, typename Second>
     struct compressed_pair;
 
@@ -527,10 +538,12 @@ namespace ranges
         struct indirect_fn;
     }
 
-    template<typename From, typename To = void>
+    struct unreachable_sentinel_t;
+
+    template<typename From, typename To = unreachable_sentinel_t>
     struct iota_view;
 
-    template<typename From, typename To = void>
+    template<typename From, typename To = From>
     struct closed_iota_view;
 
     namespace view

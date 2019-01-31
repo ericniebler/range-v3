@@ -18,6 +18,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <concepts/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -105,6 +106,8 @@ namespace ranges
 
         template<typename I>
         using iter_concept_t = decltype(iter_concept_<I>(std::declval<I>(), priority_tag<3>{}));
+
+        using ::concepts::detail::WeaklyEqualityComparableWith_;
     }
     /// \endcond
 
@@ -130,18 +133,43 @@ namespace ranges
             )
     );
 
+    /// \cond
+    namespace detail
+    {
+        template<typename D>
+        RANGES_INLINE_VAR constexpr bool _is_integer_like_ = std::is_integral<D>::value;
+
+        CPP_def
+        (
+            template(typename D)
+            concept IntegerLike_,
+                _is_integer_like_<D>
+                // TODO additional syntactic and semantic requirements
+        );
+
+        CPP_def
+        (
+            template(typename D)
+            concept SignedIntegerLike_,
+                IntegerLike_<D> &&
+                Type<std::integral_constant<bool, (D(-1) < D(0))>> &&
+                std::integral_constant<bool, (D(-1) < D(0))>::value
+        );
+    }
+    /// \endcond
+
     CPP_def
     (
         template(typename I)
         concept WeaklyIncrementable,
             requires (I i)
             (
-                Type<iter_difference_t<I>>,
                 ++i,
                 i++,
                 concepts::requires_<Same<I&, decltype(++i)>>
             ) &&
-            Integral<iter_difference_t<I>> &&
+            Type<iter_difference_t<I>> &&
+            detail::SignedIntegerLike_<iter_difference_t<I>> &&
             Semiregular<I>
     );
 
@@ -172,7 +200,7 @@ namespace ranges
         template(typename S, typename I)
         concept Sentinel,
             Semiregular<S> && Iterator<I> &&
-            WeaklyEqualityComparableWith<S, I>
+            detail::WeaklyEqualityComparableWith_<S, I>
     );
 
     CPP_def

@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_ITERATOR_COMMON_ITERATOR_HPP
 #define RANGES_V3_ITERATOR_COMMON_ITERATOR_HPP
 
+#include <cstdint>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -334,6 +335,83 @@ namespace ranges
             using pointer = void;
             using iterator_category = std::output_iterator_tag;
         };
+
+        // An iterator adaptor that demotes a user-defined difference_type to
+        // std::intmax_t, for use when constructing containers from such
+        // iterators.
+        template<typename I>
+        struct cpp17_iterator_cursor
+        {
+        private:
+            friend range_access;
+            I it_;
+            struct mixin
+              : basic_mixin<cpp17_iterator_cursor>
+            {
+                mixin() = default;
+                using basic_mixin<cpp17_iterator_cursor>::basic_mixin;
+                explicit mixin(I it)
+                  : mixin{cpp17_iterator_cursor{std::move(it)}}
+                {}
+                I base() const
+                {
+                    return this->get().it_;
+                }
+            };
+        public:
+            using single_pass = meta::bool_<!ForwardIterator<I>>;
+            using difference_type = std::ptrdiff_t;
+            using value_type = iter_value_t<I>;
+
+            cpp17_iterator_cursor() = default;
+            constexpr explicit cpp17_iterator_cursor(I i)
+              : it_(static_cast<I &&>(i))
+            {}
+
+            I arrow() const
+            {
+                return it_;
+            }
+            decltype(auto) read()
+            {
+                return *it_;
+            }
+            decltype(auto) read() const
+            {
+                return *it_;
+            }
+            void next()
+            {
+                ++it_;
+            }
+            bool equal(cpp17_iterator_cursor const &that) const
+            {
+                return it_ == that.it_;
+            }
+            CPP_member
+            auto prev() ->
+                CPP_ret(void)(
+                    requires BidirectionalIterator<I>)
+            {
+                --it_;
+            }
+            CPP_member
+            auto advance(std::ptrdiff_t n) ->
+                CPP_ret(void)(
+                    requires RandomAccessIterator<I>)
+            {
+                it_ += static_cast<iter_difference_t<I>>(n);
+            }
+            CPP_member
+            auto distance_to(cpp17_iterator_cursor const &that) ->
+                CPP_ret(std::ptrdiff_t)(
+                    requires RandomAccessIterator<I>)
+            {
+                auto d = that.it_ - it_;
+                RANGES_EXPECT(d <= PTRDIFF_MAX);
+                return static_cast<std::ptrdiff_t>(d);
+            }
+        };
     }
     /// \endcond
 
@@ -345,6 +423,9 @@ namespace ranges
 }
 
 /// \cond
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+
 namespace std
 {
     template<typename I, typename S>
@@ -352,6 +433,8 @@ namespace std
       : ::ranges::detail::common_iterator_std_traits<I>
     {};
 }
+
+RANGES_DIAGNOSTIC_POP
 /// \endcond
 
 #endif

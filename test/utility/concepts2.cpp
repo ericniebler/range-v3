@@ -228,7 +228,7 @@ static_assert(concepts::Common<int, IntComparable>, "");
 static_assert(concepts::CommonReference<int &, IntComparable &>, "");
 static_assert(concepts::StrictTotallyOrderedWith<int, IntComparable>, "");
 static_assert(concepts::StrictTotallyOrderedWith<IntComparable, int>, "");
-static_assert(concepts::WeaklyEqualityComparableWith<int, int>, "");
+static_assert(concepts::detail::WeaklyEqualityComparableWith_<int, int>, "");
 static_assert(concepts::EqualityComparable<int>, "");
 static_assert(concepts::EqualityComparableWith<int, int>, "");
 static_assert(concepts::EqualityComparableWith<int, IntComparable>, "");

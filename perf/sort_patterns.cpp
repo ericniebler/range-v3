@@ -61,7 +61,7 @@ namespace
   };
 
   struct ascending_integer_sequence {
-    auto operator()(std::size_t) { return ranges::view::ints(1); }
+    auto operator()(std::size_t) { return ranges::view::iota(1); }
     static std::string name() { return "ascending_integer_sequence"; }
   };
 

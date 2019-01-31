@@ -53,8 +53,7 @@ namespace ranges
         }
         auto size() const
         {
-            using size_type_ = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
-            return static_cast<size_type_>(n_);
+            return static_cast<detail::iter_size_t<I>>(n_);
         }
     };
 

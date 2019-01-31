@@ -44,6 +44,30 @@ namespace ranges
             using I = iterator_t<meta::const_if_c<Const, Rng>>;
             return (bool) SizedSentinel<I, I>;
         }
+
+        template<typename T>
+        struct zero
+        {
+            zero() = default;
+            constexpr explicit zero(T const &) noexcept
+            {}
+            constexpr /*c++14*/ zero &operator=(T const &) noexcept
+            {
+                return *this;
+            }
+            constexpr zero const &operator=(T const &) const noexcept
+            {
+                return *this;
+            }
+            constexpr operator T() const
+            {
+                return T(0);
+            }
+            constexpr T exchange(T const &) const
+            {
+                return T(0);
+            }
+        };
     }
     /// \endcond
 
@@ -66,7 +90,7 @@ namespace ranges
                 BidirectionalRange<meta::const_if_c<Const, Rng>> ||
                     detail::can_sized_sentinel_<Rng, Const>(),
                 range_difference_t<Rng>,
-                constant<range_difference_t<Rng>, 0>>;
+                detail::zero<range_difference_t<Rng>>>;
 
         range_difference_t<Rng> n_ = 0;
 
@@ -297,7 +321,7 @@ namespace ranges
                 auto CPP_fun(size)() (
                     requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
-                    using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+                    using size_type = detail::iter_size_t<iterator_t<Rng>>;
                     return static_cast<size_type>(distance_to(default_sentinel_t{}));
                 }
             };

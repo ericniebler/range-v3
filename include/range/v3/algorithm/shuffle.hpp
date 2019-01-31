@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_ALGORITHM_SHUFFLE_HPP
 #define RANGES_V3_ALGORITHM_SHUFFLE_HPP
 
+#include <cstdint>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range/access.hpp>
@@ -43,11 +44,14 @@ namespace ranges
             auto mid = begin;
             if(mid == end)
                 return mid;
-            std::uniform_int_distribution<iter_difference_t<I>> uid{};
+            using D1 = iter_difference_t<I>;
+            using D2 = detail::if_then_t<std::is_integral<D1>::value, D1, std::ptrdiff_t>;
+            std::uniform_int_distribution<D2> uid{};
             using param_t = typename decltype(uid)::param_type;
             while(++mid != end)
             {
-                if(auto const i = uid(gen, param_t{0, mid - begin}))
+                RANGES_ENSURE(mid - begin <= PTRDIFF_MAX);
+                if(auto const i = uid(gen, param_t{0, D2(mid - begin)}))
                     ranges::iter_swap(mid - i, mid);
             }
             return mid;

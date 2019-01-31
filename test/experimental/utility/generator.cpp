@@ -64,7 +64,7 @@ private:
     static generator_for<V> impl(V v)
     {
         if /* constexpr */ (ranges::SizedRange<V>)
-            co_await static_cast<ranges::experimental::generator_size>(ranges::distance(v));
+            co_await static_cast<ranges::experimental::generator_size>((std::size_t)ranges::distance(v));
         auto first = ranges::begin(v);
         auto const last = ranges::end(v);
         for (; first != last; ++first)
@@ -106,14 +106,14 @@ auto f(int const n)
 
 ranges::experimental::sized_generator<int> g(int const n)
 {
-    co_await static_cast<ranges::experimental::generator_size>(n > 0 ? n : 0);
+    co_await static_cast<ranges::experimental::generator_size>((std::size_t) (n > 0 ? n : 0));
     for (int i = 0; i < n; ++i)
         co_yield i;
 }
 
 ranges::experimental::sized_generator<int &> h(int const n)
 {
-    co_await static_cast<ranges::experimental::generator_size>(n > 0 ? n : 0);
+    co_await static_cast<ranges::experimental::generator_size>((std::size_t) (n > 0 ? n : 0));
     for (int i = 0; i < n; ++i)
         co_yield i;
 }
@@ -128,8 +128,8 @@ ranges::experimental::generator<T> iota_generator(T t)
 
 CPP_template(class T, class S)(
     requires ranges::WeaklyIncrementable<T> &&
-        ranges::WeaklyEqualityComparableWith<T, S> &&
-        !ranges::SizedIncrementableSentinel<S, T>)
+        ranges::detail::WeaklyEqualityComparableWith_<T, S> &&
+        (!ranges::SizedSentinel<S, T>) && !(ranges::Integral<T> && ranges::Integral<S>))
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
@@ -137,10 +137,10 @@ ranges::experimental::generator<T> iota_generator(T t, S const s)
 }
 
 CPP_template(class T, class S)(
-    requires ranges::SizedIncrementableSentinel<S, T>)
+    requires ranges::SizedSentinel<S, T> || (ranges::Integral<T> && ranges::Integral<S>))
 ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 {
-    co_await static_cast<ranges::experimental::generator_size>(s - t);
+    co_await static_cast<ranges::experimental::generator_size>((std::size_t) (s - t));
     for (; t != s; ++t)
         co_yield t;
 }
@@ -167,7 +167,7 @@ meta::invoke<
 transform(V view, F f)
 {
     if /* constexpr */ (ranges::SizedRange<V>)
-        co_await static_cast<ranges::experimental::generator_size>(ranges::distance(view));
+        co_await static_cast<ranges::experimental::generator_size>((std::size_t) ranges::distance(view));
     RANGES_FOR(auto &&i, view)
         co_yield ranges::invoke(f, i);
 }

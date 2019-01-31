@@ -79,11 +79,11 @@ namespace ranges
 
             template<typename R>
             static constexpr /*c++14*/ auto impl_(R &&r, ...) ->
-                CPP_ret(meta::_t<std::make_unsigned<iter_difference_t<_begin_::_t<R>>>>)(
+                CPP_ret(detail::iter_size_t<_begin_::_t<R>>)(
                     requires ForwardIterator<_begin_::_t<R>> &&
                         SizedSentinel<_end_::_t<R>, _begin_::_t<R>>)
             {
-                using size_type = meta::_t<std::make_unsigned<iter_difference_t<_begin_::_t<R>>>>;
+                using size_type = detail::iter_size_t<_begin_::_t<R>>;
                 return static_cast<size_type>(ranges::end((R &&) r) - ranges::begin((R &&) r));
             }
 
@@ -131,7 +131,9 @@ namespace ranges
     ///     and does not include a declaration of `ranges::size`, and
     ///     `disable_sized_range<std::remove_cvref_t<T>>` is false.
     ///   * Otherwise, `static_cast<U>(ranges::end(E) - ranges::begin(E))` where `U` is
-    ///     `std::make_unsigned_t<iter_difference_t<iterator_t<T>>>`, except that `E` is
+    ///     `std::make_unsigned_t<iter_difference_t<iterator_t<T>>>` if
+    ///     `iter_difference_t<iterator_t<T>>` satisfies `Integral` and
+    ///     `iter_difference_t<iterator_t<T>>` otherwise; except that `E` is
     ///     evaluated once, if it is a valid expression and the types `I` and `S` of
     ///     `ranges::begin(E)` and `ranges::end(E)` model `SizedSentinel<S, I>` and
     ///     `ForwardIterator<I>`.
