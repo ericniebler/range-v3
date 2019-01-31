@@ -712,7 +712,7 @@ namespace ranges
             CPP_ret(basic_iterator &)(
                 requires detail::RandomAccessCursor<Cur>)
         {
-            range_access::advance(pos(), -n);
+            range_access::advance(pos(), (difference_type)-n);
             return *this;
         }
         CPP_member

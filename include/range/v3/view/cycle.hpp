@@ -30,7 +30,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/get.hpp>
 #include <range/v3/iterator/operations.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -98,15 +98,14 @@ namespace ranges
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}
-            constexpr bool equal(default_sentinel_t) const
-            {
-                return false;
-            }
             auto CPP_auto_fun(read)() (const)
             (
                 return *it_
             )
-            bool equal(cursor const &pos) const
+            CPP_member
+            auto equal(cursor const &pos) const ->
+                CPP_ret(bool)(
+                    requires EqualityComparable<iterator>)
             {
                 RANGES_EXPECT(rng_ == pos.rng_);
                 return n_ == pos.n_ && it_ == pos.it_;
@@ -174,6 +173,10 @@ namespace ranges
             requires CommonRange<Rng const>)
         {
             return {*this};
+        }
+        unreachable_sentinel_t end_cursor() const
+        {
+            return unreachable;
         }
 
     public:

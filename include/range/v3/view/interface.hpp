@@ -35,10 +35,11 @@ namespace ranges
         {
             From from;
             To to;
-            CPP_template(typename F, typename T)(
+            template<typename F, typename T>
+            constexpr CPP_ctor(slice_bounds)(F from, T to)(
                 requires ConvertibleTo<F, From> && ConvertibleTo<T, To>)
-            constexpr slice_bounds(F from, T to)
-              : from(from), to(to)
+              : from(static_cast<From>(from))
+              , to(static_cast<To>(to))
             {}
         };
 

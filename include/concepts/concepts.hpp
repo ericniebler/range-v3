@@ -720,6 +720,19 @@ namespace concepts
         template<typename T>
         using remove_cvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
+        CPP_def
+        (
+            template(typename T, typename U)
+            concept WeaklyEqualityComparableWith_,
+                requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
+                (
+                    (t == u) ? 1 : 0,
+                    (t != u) ? 1 : 0,
+                    (u == t) ? 1 : 0,
+                    (u != t) ? 1 : 0
+                )
+        );
     } // namespace detail
 
     template<typename T>
@@ -930,24 +943,12 @@ namespace concepts
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Comparison concepts
         ////////////////////////////////////////////////////////////////////////////////////////////
-        CPP_def
-        (
-            template(typename T, typename U)
-            concept WeaklyEqualityComparableWith,
-                requires (detail::as_cref_t<T> t, detail::as_cref_t<U> u)
-                (
-                    (t == u) ? 1 : 0,
-                    (t != u) ? 1 : 0,
-                    (u == t) ? 1 : 0,
-                    (u != t) ? 1 : 0
-                )
-        );
 
         CPP_def
         (
             template(typename T)
             concept EqualityComparable,
-                WeaklyEqualityComparableWith<T, T>
+                detail::WeaklyEqualityComparableWith_<T, T>
         );
 
         CPP_def
@@ -956,7 +957,7 @@ namespace concepts
             concept EqualityComparableWith,
                 EqualityComparable<T> &&
                 EqualityComparable<U> &&
-                WeaklyEqualityComparableWith<T, U> &&
+                detail::WeaklyEqualityComparableWith_<T, U> &&
                 CommonReference<detail::as_cref_t<T>, detail::as_cref_t<U>> &&
                 EqualityComparable<
                     common_reference_t<detail::as_cref_t<T>, detail::as_cref_t<U>>>

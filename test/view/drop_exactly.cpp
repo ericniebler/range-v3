@@ -79,7 +79,7 @@ int main()
 
     {
         // drop_exactly should work with random-access mutable-only Views.
-        auto odds = view::ints(0) |
+        auto odds = view::iota(0) |
             view::chunk(2) |
             view::transform(view::drop_exactly(1)) |
             view::join;

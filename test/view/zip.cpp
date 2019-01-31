@@ -221,7 +221,7 @@ int main()
     {
         std::vector<int> vec{0,1,2};
         auto rng = vec | view::for_each([](int i) { return ranges::yield(i); });
-        ranges::distance(view::zip(view::ints(0), rng) | view::common);
+        ranges::distance(view::zip(view::iota(0), rng) | view::common);
     }
 
     {

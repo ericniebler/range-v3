@@ -20,7 +20,7 @@
 #include <range/v3/view/facade.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/iterator/default_sentinel.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 
 namespace ranges
 {
@@ -56,10 +56,6 @@ namespace ranges
             {
                 return *value_;
             }
-            constexpr bool equal(default_sentinel_t) const
-            {
-                return false;
-            }
             bool equal(cursor const &that) const
             {
                 return n_ == that.n_;
@@ -84,6 +80,10 @@ namespace ranges
         cursor begin_cursor() const
         {
             return cursor{value_};
+        }
+        unreachable_sentinel_t end_cursor() const
+        {
+            return unreachable;
         }
     public:
         repeat_view() = default;

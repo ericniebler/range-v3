@@ -59,7 +59,7 @@ int main()
     ::check_equal(rng3, {0, 1, 2, 3, 4, 5});
 
     auto rng4 = view::iota(10) | view::take_exactly(10);
-    ::models_not<BoundedViewConcept>(aux::copy(rng4));
+    ::models<BoundedViewConcept>(aux::copy(rng4));
     ::models<SizedViewConcept>(aux::copy(rng4));
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
     ::check_equal(rng4, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});

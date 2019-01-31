@@ -20,9 +20,9 @@ int
 main()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto triples = view::for_each(view::ints(1), [](int z) {
-        return view::for_each(view::ints(1, z + 1), [=](int x) {
-            return view::for_each(view::ints(x, z + 1), [=](int y) {
+    auto triples = view::for_each(view::iota(1), [](int z) {
+        return view::for_each(view::iota(1, z + 1), [=](int x) {
+            return view::for_each(view::iota(x, z + 1), [=](int y) {
                 return yield_if(x * x + y * y == z * z,
                                 std::make_tuple(x, y, z));
             });
@@ -30,9 +30,9 @@ main()
     });
 
     //// This alternate syntax also works:
-    // auto triples = ints(1)      >>= [] (int z) { return
-    //                ints(1, z+1) >>= [=](int x) { return
-    //                ints(x, z+1) >>= [=](int y) { return
+    // auto triples = iota(1)      >>= [] (int z) { return
+    //                iota(1, z+1) >>= [=](int x) { return
+    //                iota(x, z+1) >>= [=](int y) { return
     //    yield_if(x*x + y*y == z*z,
     //        std::make_tuple(x, y, z)); };}; };
 
@@ -77,9 +77,9 @@ void
 benchmark()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto triples = view::for_each(view::ints(1), [](int z) {
-        return view::for_each(view::ints(1, z + 1), [=](int x) {
-            return view::for_each(view::ints(x, z + 1), [=](int y) {
+    auto triples = view::for_each(view::iota(1), [](int z) {
+        return view::for_each(view::iota(1, z + 1), [=](int x) {
+            return view::for_each(view::iota(x, z + 1), [=](int y) {
                 return yield_if(x * x + y * y == z * z,
                                 std::make_tuple(x, y, z));
             });

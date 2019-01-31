@@ -18,6 +18,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <concepts/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/functional/concepts.hpp>
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
@@ -105,6 +106,8 @@ namespace ranges
 
         template<typename I>
         using iter_concept_t = decltype(iter_concept_<I>(std::declval<I>(), priority_tag<3>{}));
+
+        using ::concepts::detail::WeaklyEqualityComparableWith_;
     }
     /// \endcond
 
@@ -172,7 +175,7 @@ namespace ranges
         template(typename S, typename I)
         concept Sentinel,
             Semiregular<S> && Iterator<I> &&
-            WeaklyEqualityComparableWith<S, I>
+            detail::WeaklyEqualityComparableWith_<S, I>
     );
 
     CPP_def

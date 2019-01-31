@@ -238,7 +238,7 @@ static_assert(ranges::Common<int, IntComparable>, "");
 static_assert(ranges::CommonReference<int &, IntComparable &>, "");
 static_assert(ranges::StrictTotallyOrderedWith<int, IntComparable>, "");
 static_assert(ranges::StrictTotallyOrderedWith<IntComparable, int>, "");
-static_assert(ranges::WeaklyEqualityComparableWith<int, int>, "");
+static_assert(ranges::detail::WeaklyEqualityComparableWith_<int, int>, "");
 static_assert(ranges::EqualityComparable<int>, "");
 static_assert(ranges::EqualityComparableWith<int, int>, "");
 static_assert(ranges::EqualityComparableWith<int, IntComparable>, "");

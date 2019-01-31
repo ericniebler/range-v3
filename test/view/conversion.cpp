@@ -39,7 +39,7 @@ int main()
     std::vector<int> v = view::ints | view::take(10);
     ::check_equal(v, {0,1,2,3,4,5,6,7,8,9});
 
-    v = view::ints(10) | view::take(10) | view::reverse;
+    v = view::iota(10) | view::take(10) | view::reverse;
     ::check_equal(v, {19,18,17,16,15,14,13,12,11,10});
 
     // 1-d list
@@ -47,7 +47,7 @@ int main()
     std::list<int> l = view::ints | view::take(10);
     ::check_equal(l, {0,1,2,3,4,5,6,7,8,9});
 
-    l = view::ints(10) | view::take(10) | view::reverse;
+    l = view::iota(10) | view::take(10) | view::reverse;
     ::check_equal(l, {19,18,17,16,15,14,13,12,11,10});
 
     // 2-d vector
