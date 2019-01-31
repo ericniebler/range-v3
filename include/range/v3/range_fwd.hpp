@@ -520,10 +520,12 @@ namespace ranges
         struct indirect_fn;
     }
 
-    template<typename From, typename To = void>
+    struct unreachable_sentinel_t;
+
+    template<typename From, typename To = unreachable_sentinel_t>
     struct iota_view;
 
-    template<typename From, typename To = void>
+    template<typename From, typename To = From>
     struct closed_iota_view;
 
     namespace view

@@ -64,9 +64,11 @@ namespace ranges
     protected:
         friend range_access;
         using view_interface<Derived, Cardinality>::derived;
-        struct view_as_cursor : Derived {
+        struct view_as_cursor
+          : Derived
+        {
             view_as_cursor() = default;
-            explicit view_as_cursor(Derived const& derived)
+            explicit view_as_cursor(Derived const &derived)
               : Derived(derived)
             {}
             explicit operator bool() = delete;

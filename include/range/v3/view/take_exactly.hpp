@@ -143,6 +143,13 @@ namespace ranges
         private:
             friend view_access;
 
+            template<typename Int>
+            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
+                requires Integral<Int>)
+            {
+                return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
+            }
+
             template<typename Rng>
             static take_exactly_view<all_t<Rng>>
             impl_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
@@ -156,13 +163,6 @@ namespace ranges
                     requires ForwardingRange_<Rng>)
             {
                 return {begin(rng), next(begin(rng), n)};
-            }
-
-            template<typename Int>
-            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
-                requires Integral<Int>)
-            {
-                return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
             }
 
         public:

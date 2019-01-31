@@ -128,8 +128,8 @@ ranges::experimental::generator<T> iota_generator(T t)
 
 CPP_template(class T, class S)(
     requires ranges::WeaklyIncrementable<T> &&
-        ranges::WeaklyEqualityComparableWith<T, S> &&
-        !ranges::SizedIncrementableSentinel<S, T>)
+        ranges::detail::WeaklyEqualityComparableWith_<T, S> &&
+        (!ranges::SizedSentinel<S, T>) && !(ranges::Integral<T> && ranges::Integral<S>))
 ranges::experimental::generator<T> iota_generator(T t, S const s)
 {
     for (; t != s; ++t)
@@ -137,7 +137,7 @@ ranges::experimental::generator<T> iota_generator(T t, S const s)
 }
 
 CPP_template(class T, class S)(
-    requires ranges::SizedIncrementableSentinel<S, T>)
+    requires ranges::SizedSentinel<S, T> || (ranges::Integral<T> && ranges::Integral<S>))
 ranges::experimental::sized_generator<T> iota_generator(T t, S const s)
 {
     co_await static_cast<ranges::experimental::generator_size>(s - t);

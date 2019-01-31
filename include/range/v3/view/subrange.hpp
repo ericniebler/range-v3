@@ -206,7 +206,11 @@ namespace ranges
     struct subrange
       : view_interface<
             subrange<I, S, K>,
-            Same<S, unreachable_sentinel_t> ? infinite : K == subrange_kind::sized ? finite : unknown>
+            Same<S, unreachable_sentinel_t>
+              ? infinite
+              : K == subrange_kind::sized
+                  ? finite
+                  : unknown>
       , private _subrange_::adl_hook
     {
         CPP_assert(Iterator<I>);

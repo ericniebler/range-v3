@@ -88,8 +88,6 @@ namespace
     using size_compare =
         size_compare_<Rng, RandomAccessRange<Rng> || (BidirectionalRange<Rng> && CommonRange<Rng>)>;
 
-    template<class> struct undef;
-
     template<typename Base>
     void test_finite()
     {
