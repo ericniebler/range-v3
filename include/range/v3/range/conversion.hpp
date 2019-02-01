@@ -146,7 +146,7 @@ namespace ranges
     /// \cond
     namespace _to_
     {
-    /// \endond
+    /// \endcond
 
         /// \brief For initializing a container of the specified type with the elements of an Range
         template<template<typename...> class ContT>

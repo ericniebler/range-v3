@@ -365,7 +365,7 @@ namespace ranges
         CPP_member
         constexpr auto get_size_() const ->
             CPP_ret(size_type)(
-                requires K == subrange_kind::sized && not detail::store_size_<K, S, I>())
+                requires SizedSentinel<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }

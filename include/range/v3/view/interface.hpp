@@ -161,16 +161,16 @@ namespace ranges
         }
         /// If the size of the range is known at compile-time and finite,
         /// return it.
-        template<bool True = true>
+        template<bool True = true, int = 42>
         static constexpr auto size() noexcept ->
             CPP_ret(std::size_t)(
                 requires True && Cardinality >= 0)
         {
             return static_cast<std::size_t>(Cardinality);
         }
-        /// If `Sentinel<sentinel_t<Derived>, iterator_t<Derived>>` is satisfied,
-        /// and if `Derived` is a `ForwardRange`, then return `end - begin` cast
-        /// to an unsigned integer.
+        /// If `SizedSentinel<sentinel_t<Derived>, iterator_t<Derived>>` is
+        /// satisfied, and if `Derived` is a `ForwardRange`, then return
+        /// `end - begin` cast to an unsigned integer.
         template<bool True = true>
         constexpr /*c++14*/ auto size() ->
             CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(

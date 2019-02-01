@@ -79,7 +79,7 @@ namespace ranges
     template<typename Rng>
     using range_category_t
         RANGES_DEPRECATED("range_category_t is deprecated. Use the range concepts instead.") =
-            iterator_category_t<iterator_t<Rng>>;
+            meta::_t<detail::iterator_category<iterator_t<Rng>>>;
 
     template<typename Rng>
     using range_size_type_t

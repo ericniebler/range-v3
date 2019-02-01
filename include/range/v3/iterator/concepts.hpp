@@ -69,13 +69,11 @@ namespace ranges
         template<typename I>
         auto iter_concept_(I, priority_tag<3>) ->
             CPP_ret(ranges::contiguous_iterator_tag)(
-                requires Same<I, class I::_Vector_iterator> &&
-                    !Same<bool, typename I::value_type>);
+                requires Same<I, class I::_Vector_iterator>);
         template<typename I>
         auto iter_concept_(I, priority_tag<3>) ->
             CPP_ret(ranges::contiguous_iterator_tag)(
-                requires Same<I, class I::_Vector_const_iterator> &&
-                    !Same<bool, typename I::value_type>);
+                requires Same<I, class I::_Vector_const_iterator>);
         template<typename I>
         auto iter_concept_(I, priority_tag<3>) ->
             CPP_ret(ranges::contiguous_iterator_tag)(

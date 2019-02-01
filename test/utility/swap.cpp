@@ -18,7 +18,6 @@
 #include <memory>
 #include <vector>
 #include <complex>
-#include <range/v3/utility/swap.hpp>
 #include <concepts/concepts.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/view/zip.hpp>
