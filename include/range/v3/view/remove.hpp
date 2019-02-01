@@ -20,6 +20,7 @@
 #include <range/v3/utility/invoke.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -29,7 +30,8 @@ namespace ranges
         /// @{
         namespace view
         {
-            struct remove_fn {
+            struct remove_fn
+            {
             private:
                 friend view_access;
 
@@ -51,11 +53,13 @@ namespace ranges
                 )
 
                 template<class Value>
-                struct Pred {
+                struct Pred
+                {
                     Value value;
 
                     template<class Any>
-                    bool operator()(const Any& any) const {
+                    bool operator()(const Any& any) const
+                    {
                         return any == value;
                     }
                 };
@@ -63,6 +67,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Value, typename Proj>
                 using Constraint = meta::and_<
+                        MoveConstructible<Value>,
                         EqualityComparable< Value, typename projected<iterator_t<Rng>, Proj>::reference >,
                         remove_if_fn::Constraint<Rng, Pred<Value>, Proj>>;
 
@@ -73,7 +78,7 @@ namespace ranges
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     remove_if(all(static_cast<Rng &&>(rng))
-                            , Pred<Value>{std::forward<Value>(value)}
+                            , Pred<detail::decay_t<Value>>{static_cast<Value&&>(value)}
                             , std::move(proj))
                 )
             };

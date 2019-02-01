@@ -21,7 +21,8 @@
 
 using namespace ranges;
 
-void test_straight(){
+void test_straight()
+{
     std::vector<int> list = {1,2,3,4,5};
     auto out = list | view::remove(2);
 
@@ -36,7 +37,8 @@ bool operator==(Int left, Int right)
 {
     return left.i == right.i;
 }
-void test_proj(){
+void test_proj()
+{
     using List = std::vector<Int>;
     const List list{ Int{1}, Int{2}, Int{3}, Int{4}, Int{5} };
     auto out = list | view::remove(2, &Int::i);
