@@ -36,21 +36,19 @@ namespace ranges
 
     struct minmax_fn
     {
-        template<typename T, typename C = less, typename P = identity>
-        constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<T const &>)(
-                requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
+        CPP_template(typename T, typename C = less, typename P = identity)(
+            requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
+        constexpr minmax_result<T const &> operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const
         {
             using R = minmax_result<T const &>;
             return invoke(pred, invoke(proj, b), invoke(proj, a)) ? R{b, a} : R{a, b};
         }
 
-        template<typename Rng, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<range_value_t<Rng>>)(
-                requires InputRange<Rng> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
-                    IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
+        CPP_template(typename Rng, typename C = less, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
+                IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
+        constexpr /*c++14*/ minmax_result<range_value_t<Rng>> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
         {
             using R = minmax_result<range_value_t<Rng>>;
             auto begin = ranges::begin(rng);
@@ -98,11 +96,10 @@ namespace ranges
             return result;
         }
 
-        template<typename T, typename C = less, typename P = identity>
-        constexpr /*c++14*/ auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
-                P proj = P{}) const ->
-            CPP_ret(minmax_result<T>)(
-                requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
+        CPP_template(typename T, typename C = less, typename P = identity)(
+            requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
+        constexpr /*c++14*/ minmax_result<T> operator()(std::initializer_list<T> const &&rng, C pred = C{},
+                P proj = P{}) const
         {
             return (*this)(rng, std::move(pred), std::move(proj));
         }

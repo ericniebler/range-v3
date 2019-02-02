@@ -388,19 +388,19 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
     /**/
 #define CPP_TEMPLATE_AUX_(...) ,                                                \
-    bool CPP_true_ = true,                                                      \
+    bool CPP_PP_CAT(CPP_true_, __LINE__) = true,                                \
     ::concepts::detail::enable_if_t<int,                                        \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-        CPP_true_> = 0>                                                         \
+        CPP_PP_CAT(CPP_true_, __LINE__)> = 0>                                   \
     /**/
 #define CPP_template_def(...)                                                   \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_AUX_                                  \
     /**/
 #define CPP_TEMPLATE_DEF_AUX_(...) ,                                            \
-    bool CPP_true_,                                                             \
+    bool CPP_PP_CAT(CPP_true_, __LINE__),                                       \
     ::concepts::detail::enable_if_t<int,                                        \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-        CPP_true_>>                                                             \
+        CPP_PP_CAT(CPP_true_, __LINE__)>>                                       \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
 #define CPP_member                                                              \

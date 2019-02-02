@@ -78,9 +78,9 @@ namespace ranges
             }
         };
 
-        template<typename T, typename... Args>
-        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
-            requires not std::is_array<T>::value)
+        CPP_template(typename T, typename... Args)(
+        requires not std::is_array<T>::value)
+        std::unique_ptr<T> make_unique(Args &&... args)
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
         }
@@ -191,10 +191,9 @@ namespace ranges
         }
     };
 
-    template<typename I>
-    auto iter_ref(I &i) ->
-        CPP_ret(iterator_wrapper<I>)(
-            requires Iterator<I>)
+    CPP_template(typename I)(
+        requires Iterator<I>)
+    iterator_wrapper<I> iter_ref(I &i)
     {
         return i;
     }

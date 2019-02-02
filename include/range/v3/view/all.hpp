@@ -68,11 +68,10 @@ namespace ranges
                     meta::bool_<ForwardingRange_<T>>{});
             }
 
-            template<typename T>
-            RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
-            auto operator()(std::reference_wrapper<T> ref) const ->
-                CPP_ret(ref_view<T>)(
-                    requires Range<T &>)
+            CPP_template(typename T)(
+                requires Range<T &>)
+            RANGES_EMPTY_ATTR RANGES_DEPRECATED("Passing a reference_wrapper to view::all is deprecated.")
+            ref_view<T> operator()(std::reference_wrapper<T> ref) const
             {
                 return ranges::view::ref(ref.get());
             }

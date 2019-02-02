@@ -34,12 +34,11 @@ namespace ranges
 
     struct reverse_copy_fn
     {
-        template<typename I, typename S, typename O>
-        auto operator()(I begin, S end_, O out) const ->
-            CPP_ret(reverse_copy_result<I, O>)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O)(
+            requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                WeaklyIncrementable<O> &&
+                IndirectlyCopyable<I, O>)
+        reverse_copy_result<I, O> operator()(I begin, S end_, O out) const
         {
             I end = ranges::next(begin, end_), res = end;
             for(; begin != end; ++out)
@@ -47,11 +46,10 @@ namespace ranges
             return {res, out};
         }
 
-        template<typename Rng, typename O>
-        auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(reverse_copy_result<safe_iterator_t<Rng>, O>)(
-                requires BidirectionalRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O)(
+            requires BidirectionalRange<Rng> && WeaklyIncrementable<O> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        reverse_copy_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

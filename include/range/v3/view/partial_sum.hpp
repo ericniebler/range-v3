@@ -131,10 +131,9 @@ namespace ranges
         {
             return cursor<false>{*this};
         }
-        template<typename CRng = Rng const>
-        constexpr auto begin_cursor() const ->
-            CPP_ret(cursor<true>)(
-                requires detail::PartialSumViewable<CRng, Fun const>)
+        CPP_template(typename CRng = Rng const)(
+            requires detail::PartialSumViewable<CRng, Fun const>)
+        constexpr cursor<true> begin_cursor() const
         {
             return cursor<true>{*this};
         }
@@ -178,10 +177,9 @@ namespace ranges
                     Fun{}));
             }
         public:
-            template<typename Rng, typename Fun = plus>
-            constexpr auto operator()(Rng &&rng, Fun fun = {}) const ->
-                CPP_ret(partial_sum_view<all_t<Rng>, Fun>)(
-                    requires detail::PartialSumViewable<all_t<Rng>, Fun>)
+            CPP_template(typename Rng, typename Fun = plus)(
+                requires detail::PartialSumViewable<all_t<Rng>, Fun>)
+            constexpr partial_sum_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

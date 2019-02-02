@@ -57,20 +57,18 @@ namespace ranges
                 RANGES_EXPECT(false);
             }
 
-            template<typename I>
-            auto operator()(I const &i) ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
-                    requires not Invocable<Pred const&, iter_reference_t<I>>)
+            CPP_template(typename I)(
+                requires not Invocable<Pred const&, iter_reference_t<I>>)
+            common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> operator()(I const &i)
             {
                 auto &&x = *i;
                 if(invoke(first(), (decltype(x) &&) x))
                     return unwrap_reference(second());
                 return (decltype(x) &&) x;
             }
-            template<typename I>
-            auto operator()(I const &i) const ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
-                    requires Invocable<Pred const&, iter_reference_t<I>>)
+            CPP_template(typename I)(
+                requires Invocable<Pred const&, iter_reference_t<I>>)
+            common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>> operator()(I const &i) const
             {
                 auto &&x = *i;
                 if(invoke(first(), (decltype(x) &&) x))
@@ -78,20 +76,18 @@ namespace ranges
                 return (decltype(x) &&) x;
             }
 
-            template<typename I>
-            auto operator()(move_tag, I const &i) ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>>)(
-                    requires not Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+            CPP_template(typename I)(
+                requires not Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+            common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>> operator()(move_tag, I const &i)
             {
                 auto &&x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&) x))
                     return unwrap_reference(second());
                 return (decltype(x) &&) x;
             }
-            template<typename I>
-            auto operator()(move_tag, I const &i) const ->
-                CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>>)(
-                    requires Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+            CPP_template(typename I)(
+                requires Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+            common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>> operator()(move_tag, I const &i) const
             {
                 auto &&x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&) x))

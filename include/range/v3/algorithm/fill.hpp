@@ -27,20 +27,18 @@ namespace ranges
     /// @{
     struct fill_fn
     {
-        template<typename O, typename S, typename V>
-        auto operator()(O begin, S end, V const & val) const ->
-            CPP_ret(O)(
-                requires OutputIterator<O, V const &> && Sentinel<S, O>)
+        CPP_template(typename O, typename S, typename V)(
+            requires OutputIterator<O, V const &> && Sentinel<S, O>)
+        O operator()(O begin, S end, V const & val) const
         {
             for(; begin != end; ++begin)
                 *begin = val;
             return begin;
         }
 
-        template<typename Rng, typename V>
-        auto operator()(Rng &&rng, V const & val) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires OutputRange<Rng, V const &>)
+        CPP_template(typename Rng, typename V)(
+            requires OutputRange<Rng, V const &>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
         {
             return (*this)(begin(rng), end(rng), val);
         }

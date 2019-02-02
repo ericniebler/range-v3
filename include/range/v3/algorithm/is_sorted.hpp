@@ -41,21 +41,19 @@ namespace ranges
         /// \pre `S` and `I` model the `Sentinel<S, I>` concept
         /// \pre `R` and `projected<I, P>` model the `IndirectStrictWeakOrder<R, projected<I, P>>` concept
         ///
-        template<typename I, typename S, typename R = less, typename P = identity>
-        auto operator()(I begin, S end, R rel = R{}, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<R, projected<I, P>>)
+        CPP_template(typename I, typename S, typename R = less, typename P = identity)(
+            requires ForwardIterator<I> && Sentinel<S, I> &&
+                IndirectStrictWeakOrder<R, projected<I, P>>)
+        bool operator()(I begin, S end, R rel = R{}, P proj = P{}) const
         {
             return is_sorted_until(std::move(begin), end, std::move(rel),
                                    std::move(proj)) == end;
         }
 
-        template<typename Rng, typename R = less, typename P = identity>
-        auto operator()(Rng &&rng, R rel = R{}, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename R = less, typename P = identity)(
+            requires ForwardRange<Rng> &&
+                IndirectStrictWeakOrder<R, projected<iterator_t<Rng>, P>>)
+        bool operator()(Rng &&rng, R rel = R{}, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
         }

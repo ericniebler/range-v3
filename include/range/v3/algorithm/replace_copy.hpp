@@ -35,15 +35,15 @@ namespace ranges
 
     struct replace_copy_fn
     {
-        template<typename I, typename S, typename O, typename T1, typename T2,
-            typename P = identity>
-        auto operator()(I begin, S end, O out, T1 const &old_value, T2 const &new_value,
-                P proj = {}) const ->
-            CPP_ret(replace_copy_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    OutputIterator<O, T2 const &> &&
-                    IndirectlyCopyable<I, O> &&
-                    IndirectRelation<equal_to, projected<I, P>, T1 const *>)
+        CPP_template(typename I, typename S, typename O, typename T1, typename T2,
+                typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                OutputIterator<O, T2 const &> &&
+                IndirectlyCopyable<I, O> &&
+                IndirectRelation<equal_to, projected<I, P>, T1 const *>)
+        replace_copy_result<I, O>
+        operator()(I begin, S end, O out, T1 const &old_value, T2 const &new_value,
+                P proj = {}) const
         {
             for(; begin != end; ++begin, ++out)
             {
@@ -56,14 +56,14 @@ namespace ranges
             return {begin, out};
         }
 
-        template<typename Rng, typename O, typename T1, typename T2, typename P = identity>
-        auto operator()(Rng &&rng, O out, T1 const &old_value, T2 const &new_value,
-                P proj = {}) const ->
-            CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> &&
-                    OutputIterator<O, T2 const &> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O> &&
-                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
+        CPP_template(typename Rng, typename O, typename T1, typename T2, typename P = identity)(
+            requires InputRange<Rng> &&
+                OutputIterator<O, T2 const &> &&
+                IndirectlyCopyable<iterator_t<Rng>, O> &&
+                IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
+        replace_copy_result<safe_iterator_t<Rng>, O>
+        operator()(Rng &&rng, O out, T1 const &old_value, T2 const &new_value,
+                P proj = {}) const
         {
             return (*this)(begin(rng), end(rng), std::move(out), old_value, new_value,
                 std::move(proj));

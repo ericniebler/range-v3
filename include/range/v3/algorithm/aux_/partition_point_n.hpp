@@ -26,11 +26,10 @@ namespace ranges
     {
         struct partition_point_n_fn
         {
-            template<typename I, typename C, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> d, C pred, P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> &&
-                        IndirectUnaryPredicate<C, projected<I, P>>)
+            CPP_template(typename I, typename C, typename P = identity)(
+                requires ForwardIterator<I> &&
+                    IndirectUnaryPredicate<C, projected<I, P>>)
+            I operator()(I begin, iter_difference_t<I> d, C pred, P proj = P{}) const
             {
                 if(0 < d)
                 {

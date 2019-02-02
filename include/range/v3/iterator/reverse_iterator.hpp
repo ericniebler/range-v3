@@ -70,11 +70,9 @@ namespace ranges
             {
                 return it_;
             }
-            template<typename J>
-            constexpr /*c++14*/
-            auto equal(reverse_cursor<J> const& that) const ->
-                CPP_ret(bool)(
-                    requires Sentinel<J, I>)
+            CPP_template(typename J)(
+                requires Sentinel<J, I>)
+            constexpr /*c++14*/ bool equal(reverse_cursor<J> const& that) const
             {
                 return it_ == that.it_;
             }
@@ -96,11 +94,10 @@ namespace ranges
             {
                 it_ -= n;
             }
-            template<typename J>
-            constexpr /*c++14*/
-            auto distance_to(reverse_cursor<J> const &that) const ->
-                CPP_ret(iter_difference_t<I>)(
-                    requires SizedSentinel<J, I>)
+            CPP_template(typename J)(
+                requires SizedSentinel<J, I>)
+            constexpr /*c++14*/ iter_difference_t<I>
+            distance_to(reverse_cursor<J> const &that) const
             {
                 return it_ - that.base();
             }
@@ -126,10 +123,9 @@ namespace ranges
 
     struct make_reverse_iterator_fn
     {
-        template<typename I>
-        constexpr /*c++14*/
-        auto operator()(I i) const -> CPP_ret(reverse_iterator<I>)(
+        CPP_template(typename I)(
             requires BidirectionalIterator<I>)
+        constexpr /*c++14*/ reverse_iterator<I> operator()(I i) const
         {
             return reverse_iterator<I>(i);
         }

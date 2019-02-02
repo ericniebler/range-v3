@@ -96,10 +96,9 @@ namespace ranges
     {
         struct repeat_fn
         {
-            template<typename Val>
-            auto operator()(Val value) const ->
-                CPP_ret(repeat_view<Val>)(
-                    requires CopyConstructible<Val>)
+            CPP_template(typename Val)(
+                requires CopyConstructible<Val>)
+            repeat_view<Val> operator()(Val value) const
             {
                 return repeat_view<Val>{std::move(value)};
             }

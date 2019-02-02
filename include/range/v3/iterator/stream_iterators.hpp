@@ -36,10 +36,9 @@ namespace ranges
         ostream_iterator(ostream_type &s, Char const *d = nullptr) noexcept
           : sout_(&s), delim_(d)
         {}
-        template<typename U>
-        auto operator=(U &&value) ->
-            CPP_ret(ostream_iterator &)(
-                requires ConvertibleTo<U, detail::if_then_t<std::is_void<T>::value, U, T> const &>)
+        CPP_template(typename U)(
+            requires ConvertibleTo<U, detail::if_then_t<std::is_void<T>::value, U, T> const &>)
+        ostream_iterator & operator=(U &&value)
         {
             RANGES_EXPECT(sout_);
             *sout_ << value;
@@ -111,10 +110,10 @@ namespace ranges
 
     struct make_ostream_joiner_fn
     {
-        template <typename Delim, typename Char, typename Traits>
-        auto operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const ->
-            CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)(
-                requires Semiregular<detail::decay_t<Delim>>)
+        CPP_template(typename Delim, typename Char, typename Traits)(
+            requires Semiregular<detail::decay_t<Delim>>)
+        ostream_joiner<detail::decay_t<Delim>, Char, Traits>
+        operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const
         {
             return {s, std::forward<Delim>(d)};
         }

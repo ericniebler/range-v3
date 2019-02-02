@@ -84,12 +84,11 @@ namespace ranges
             }
 
         public:
-            template<typename I, typename C = less, typename P = identity>
-            auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+            CPP_template(typename I, typename C = less, typename P = identity)(
+                requires BidirectionalIterator<I> && Sortable<I, C, P>)
+            void operator()(I begin, I middle, I end, iter_difference_t<I> len1,
                 iter_difference_t<I> len2, iter_value_t<I> *buf,
-                std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(void)(
-                    requires BidirectionalIterator<I> && Sortable<I, C, P>)
+                std::ptrdiff_t buf_size, C pred = C{}, P proj = P{}) const
             {
                 using D = iter_difference_t<I>;
                 while(true)
@@ -178,11 +177,10 @@ namespace ranges
 
         struct inplace_merge_no_buffer_fn
         {
-            template<typename I, typename C = less, typename P = identity>
-            auto operator()(I begin, I middle, I end, iter_difference_t<I> len1,
-                iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(void)(
-                    requires BidirectionalIterator<I> && Sortable<I, C, P>)
+            CPP_template(typename I, typename C = less, typename P = identity)(
+                requires BidirectionalIterator<I> && Sortable<I, C, P>)
+            void operator()(I begin, I middle, I end, iter_difference_t<I> len1,
+                iter_difference_t<I> len2, C pred = C{}, P proj = P{}) const
             {
                 merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
                     static_cast<iter_value_t<I> *>(nullptr), 0, std::move(pred), std::move(proj));
@@ -199,10 +197,9 @@ namespace ranges
     struct inplace_merge_fn
     {
         // TODO reimplement to only need forward iterators
-        template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires BidirectionalIterator<I> && Sortable<I, C, P>)
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)(
+            requires BidirectionalIterator<I> && Sortable<I, C, P>)
+        I operator()(I begin, I middle, S end, C pred = C{}, P proj = P{}) const
         {
             using value_type = iter_value_t<I>;
             auto len1 = distance(begin, middle);
@@ -221,10 +218,9 @@ namespace ranges
             return len2_and_end.second;
         }
 
-        template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+        CPP_template(typename Rng, typename C = less, typename P = identity)(
+            requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, iterator_t<Rng> middle, C pred = C{}, P proj = P{}) const
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
                 std::move(proj));

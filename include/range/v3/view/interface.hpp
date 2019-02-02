@@ -123,24 +123,22 @@ namespace ranges
             return Cardinality == 0;
         }
         /// \overload
-        template<bool True = true>
-        constexpr /*c++14*/ auto empty()
+        CPP_template(bool True = true)(
+            requires True && (!detail::has_fixed_size_(Cardinality)) &&
+                ForwardRange<D<True>>)
+        constexpr /*c++14*/ bool empty()
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> &>()) ==
-                ranges::end(std::declval<D<True> &>())))) ->
-            CPP_ret(bool)(
-                requires True && (!detail::has_fixed_size_(Cardinality)) &&
-                    ForwardRange<D<True>>)
+                ranges::end(std::declval<D<True> &>()))))
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
         /// \overload
-        template<bool True = true>
-        constexpr auto empty() const
+        CPP_template(bool True = true)(
+            requires True && not detail::has_fixed_size_(Cardinality) &&
+                ForwardRange<D<True> const>)
+        constexpr bool empty() const
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> const &>()) ==
-                ranges::end(std::declval<D<True> const &>())))) ->
-            CPP_ret(bool)(
-                requires True && not detail::has_fixed_size_(Cardinality) &&
-                    ForwardRange<D<True> const>)
+                ranges::end(std::declval<D<True> const &>()))))
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
         }
@@ -161,97 +159,84 @@ namespace ranges
         }
         /// If the size of the range is known at compile-time and finite,
         /// return it.
-        template<bool True = true, int = 42>
-        static constexpr auto size() noexcept ->
-            CPP_ret(std::size_t)(
-                requires True && Cardinality >= 0)
+        CPP_template(bool True = true, int = 42)(
+            requires True && Cardinality >= 0)
+        static constexpr std::size_t size() noexcept
         {
             return static_cast<std::size_t>(Cardinality);
         }
-        /// If `SizedSentinel<sentinel_t<Derived>, iterator_t<Derived>>` is
-        /// satisfied, and if `Derived` is a `ForwardRange`, then return
-        /// `end - begin` cast to an unsigned integer.
-        template<bool True = true>
-        constexpr /*c++14*/ auto size() ->
-            CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(
-                requires True && Cardinality < 0 &&
-                    SizedSentinel<sentinel_t<D<True>>, iterator_t<D<True>>> &&
-                    ForwardRange<D<True>>)
+        /// If `Sentinel<sentinel_t<Derived>, iterator_t<Derived>>` is satisfied,
+        /// and if `Derived` is a `ForwardRange`, then return `end - begin` cast
+        /// to an unsigned integer.
+        CPP_template(bool True = true)(
+            requires True && Cardinality < 0 &&
+                SizedSentinel<sentinel_t<D<True>>, iterator_t<D<True>>> &&
+                ForwardRange<D<True>>)
+        constexpr /*c++14*/ meta::_t<std::make_unsigned<range_difference_t<D<True>>>> size()
         {
             using size_type = meta::_t<std::make_unsigned<range_difference_t<D<True>>>>;
             return static_cast<size_type>(derived().end() - derived().begin());
         }
         /// \overload
-        template<bool True = true>
-        constexpr auto size() const ->
-            CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(
-                requires True && (Cardinality < 0) &&
-                    SizedSentinel<sentinel_t<D<True> const>, iterator_t<D<True> const>> &&
-                    ForwardRange<D<True> const>)
+        CPP_template(bool True = true)(
+            requires True && (Cardinality < 0) &&
+                SizedSentinel<sentinel_t<D<True> const>, iterator_t<D<True> const>> &&
+                ForwardRange<D<True> const>)
+        constexpr meta::_t<std::make_unsigned<range_difference_t<D<True>>>> size() const
         {
             using size_type = meta::_t<std::make_unsigned<range_difference_t<D<True>>>>;
             return static_cast<size_type>(derived().end() - derived().begin());
         }
         /// Access the first element in a range:
-        template<bool True = true>
-        constexpr /*c++14*/ auto front() ->
-            CPP_ret(range_reference_t<D<True>>)(
-                requires True && ForwardRange<D<True>>)
+        CPP_template(bool True = true)(
+            requires True && ForwardRange<D<True>>)
+        constexpr /*c++14*/ range_reference_t<D<True>> front()
         {
             return *derived().begin();
         }
         /// \overload
-        template<bool True = true>
-        constexpr /*c++14*/ auto front() const ->
-            CPP_ret(range_reference_t<D<True> const>)(
-                requires True && ForwardRange<D<True> const>)
+        CPP_template(bool True = true)(
+            requires True && ForwardRange<D<True> const>)
+        constexpr /*c++14*/ range_reference_t<D<True> const> front() const
         {
             return *derived().begin();
         }
         /// Access the last element in a range:
-        template<bool True = true>
-        constexpr /*c++14*/ auto back() ->
-            CPP_ret(range_reference_t<D<True>>)(
-                requires True &&
-                    CommonRange<D<True>> &&
-                    BidirectionalRange<D<True>>)
+        CPP_template(bool True = true)(
+            requires True &&
+                CommonRange<D<True>> &&
+                BidirectionalRange<D<True>>)
+        constexpr /*c++14*/ range_reference_t<D<True>> back()
         {
             return *prev(derived().end());
         }
         /// \overload
-        template<bool True = true>
-        constexpr /*c++14*/ auto back() const ->
-            CPP_ret(range_reference_t<D<True> const>)(
-                requires True &&
-                    CommonRange<D<True> const> &&
-                    BidirectionalRange<D<True> const>)
+        CPP_template(bool True = true)(
+            requires True &&
+                CommonRange<D<True> const> &&
+                BidirectionalRange<D<True> const>)
+        constexpr /*c++14*/ range_reference_t<D<True> const> back() const
         {
             return *prev(derived().end());
         }
         /// Simple indexing:
-        template<bool True = true>
-        constexpr /*c++14*/
-        auto operator[](range_difference_t<D<True>> n) ->
-            CPP_ret(range_reference_t<D<True>>)(
-                requires True && RandomAccessRange<D<True>>)
+        CPP_template(bool True = true)(
+            requires True && RandomAccessRange<D<True>>)
+        constexpr /*c++14*/ range_reference_t<D<True>> operator[](range_difference_t<D<True>> n)
         {
             return derived().begin()[n];
         }
         /// \overload
-        template<bool True = true>
-        constexpr /*c++14*/
-        auto operator[](range_difference_t<D<True>> n) const ->
-            CPP_ret(range_reference_t<D<True> const>)(
-                requires True && RandomAccessRange<D<True> const>)
+        CPP_template(bool True = true)(
+            requires True && RandomAccessRange<D<True> const>)
+        constexpr /*c++14*/ range_reference_t<D<True> const> operator[](range_difference_t<D<True>> n) const
         {
             return derived().begin()[n];
         }
         /// Returns a reference to the element at specified location pos, with bounds checking.
-        template<bool True = true>
-        constexpr /*c++14*/
-        auto at(range_difference_t<D<True>> n) ->
-            CPP_ret(range_reference_t<D<True>>)(
-                requires True && RandomAccessRange<D<True>> && SizedRange<D<True>>)
+        CPP_template(bool True = true)(
+            requires True && RandomAccessRange<D<True>> && SizedRange<D<True>>)
+        constexpr /*c++14*/ range_reference_t<D<True>> at(range_difference_t<D<True>> n)
         {
             using size_type = range_size_t<Derived>;
             if (n < 0 || size_type(n) >= ranges::size(derived()))
@@ -261,13 +246,11 @@ namespace ranges
             return derived().begin()[n];
         }
         /// \overload
-        template<bool True = true>
-        constexpr /*c++14*/
-        auto at(range_difference_t<D<True>> n) const ->
-            CPP_ret(range_reference_t<D<True> const>)(
-                requires True &&
-                    RandomAccessRange<D<True> const> &&
-                    SizedRange<D<True> const>)
+        CPP_template(bool True = true)(
+            requires True &&
+                RandomAccessRange<D<True> const> &&
+                SizedRange<D<True> const>)
+        constexpr /*c++14*/ range_reference_t<D<True> const> at(range_difference_t<D<True>> n) const
         {
             using size_type = range_size_t<Derived const>;
             if (n < 0 || size_type(n) >= ranges::size(derived()))
@@ -440,10 +423,9 @@ namespace ranges
         }
         /// \brief Print a range to an ostream
     private:
-        template<typename Stream, typename Rng>
-        static auto print_(Stream &sout, Rng &rng) ->
-            CPP_ret(Stream &)(
-                requires Same<Derived, meta::_t<std::remove_cv<Rng>>>)
+        CPP_template(typename Stream, typename Rng)(
+            requires Same<Derived, meta::_t<std::remove_cv<Rng>>>)
+        static Stream & print_(Stream &sout, Rng &rng)
         {
             sout << '[';
             auto it = ranges::begin(rng);

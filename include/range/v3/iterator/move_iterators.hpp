@@ -45,10 +45,9 @@ namespace ranges
             requires ConvertibleTo<O, I>)
           : current_(i.base())
         {}
-        template<typename O>
-        auto operator=(move_iterator<O> const & i) ->
-            CPP_ret(move_iterator &)(
-                requires ConvertibleTo<O, I>)
+        CPP_template(typename O)(
+            requires ConvertibleTo<O, I>)
+        move_iterator & operator=(move_iterator<O> const & i)
         {
             current_ = i.base();
             return *this;
@@ -194,10 +193,9 @@ namespace ranges
 
     struct make_move_iterator_fn
     {
-        template<typename I>
-        constexpr auto operator()(I it) const ->
-            CPP_ret(move_iterator<I>)(
-                requires InputIterator<I>)
+        CPP_template(typename I)(
+            requires InputIterator<I>)
+        constexpr move_iterator<I> operator()(I it) const
         {
             return move_iterator<I>{detail::move(it)};
         }
@@ -222,10 +220,9 @@ namespace ranges
             requires ConvertibleTo<OS, S>)
           : sent_(that.base())
         {}
-        template<typename OS>
-        auto operator=(move_sentinel<OS> const &that) ->
-            CPP_ret(move_sentinel &)(
-                requires ConvertibleTo<OS, S>)
+        CPP_template(typename OS)(
+            requires ConvertibleTo<OS, S>)
+        move_sentinel & operator=(move_sentinel<OS> const &that)
         {
             sent_ = that.base();
             return *this;
@@ -267,18 +264,16 @@ namespace ranges
 
     struct make_move_sentinel_fn
     {
-        template<typename I>
-        constexpr auto operator()(I i) const ->
-            CPP_ret(move_iterator<I>)(
-                requires InputIterator<I>)
+        CPP_template(typename I)(
+            requires InputIterator<I>)
+        constexpr move_iterator<I> operator()(I i) const
         {
             return move_iterator<I>{detail::move(i)};
         }
 
-        template<typename S>
-        constexpr auto operator()(S s) const ->
-            CPP_ret(move_sentinel<S>)(
-                requires Semiregular<S> && !InputIterator<S>)
+        CPP_template(typename S)(
+            requires Semiregular<S> && !InputIterator<S>)
+        constexpr move_sentinel<S> operator()(S s) const
         {
             return move_sentinel<S>{detail::move(s)};
         }
@@ -332,17 +327,15 @@ namespace ranges
             {
                 ++it_;
             }
-            template<typename T>
-            auto write(T &&t) noexcept(noexcept(*it_ = std::move(t))) ->
-                CPP_ret(void)(
-                    requires Writable<I, aux::move_t<T>>)
+            CPP_template(typename T)(
+                requires Writable<I, aux::move_t<T>>)
+            void write(T &&t) noexcept(noexcept(*it_ = std::move(t))) 
             {
                 *it_ = std::move(t);
             }
-            template<typename T>
-            auto write(T &&t) const noexcept(noexcept(*it_ = std::move(t))) ->
-                CPP_ret(void)(
-                    requires Writable<I, aux::move_t<T>>)
+            CPP_template(typename T)(
+                requires Writable<I, aux::move_t<T>>)
+            void write(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
             {
                 *it_ = std::move(t);
             }

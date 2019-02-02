@@ -199,11 +199,10 @@ namespace ranges
                     swap_(meta::bool_<can_swap_trivially>{}, that);
                 }
             protected:
-                template<typename... Args>
-                auto construct_from(Args &&... args)
-                    noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
-                    CPP_ret(T &)(
-                        requires Constructible<T, Args...>)
+                CPP_template(typename... Args)(
+                    requires Constructible<T, Args...>)
+                T & construct_from(Args &&... args)
+                    noexcept(std::is_nothrow_constructible<T, Args...>::value)
                 {
                     RANGES_EXPECT(!engaged_);
                     auto const address = static_cast<void *>(std::addressof(data_));
@@ -300,11 +299,9 @@ namespace ranges
                         ranges::swap(ptr_, that.ptr_);
                 }
             protected:
-                template<typename U>
-                constexpr /*c++14*/
-                auto construct_from(U &&ref) noexcept ->
-                    CPP_ret(T &)(
-                        requires ConvertibleTo<U &, T &>)
+                CPP_template(typename U)(
+                    requires ConvertibleTo<U &, T &>)
+                constexpr /*c++14*/ T & construct_from(U &&ref) noexcept
                 {
                     RANGES_EXPECT(!ptr_);
                     ptr_ = std::addressof(ref);
@@ -585,16 +582,14 @@ namespace ranges
         optional &operator=(optional const &) = default;
         optional &operator=(optional &&) = default;
 
-        template<typename U = T>
-        constexpr /*c++14*/
-        auto operator=(U &&u)
+        CPP_template(typename U = T)(
+            requires not defer::Same<optional, detail::decay_t<U>> &&
+                !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
+                defer::Constructible<T, U> &&
+                defer::Assignable<T &, U>)
+        constexpr /*c++14*/ optional & operator=(U &&u)
             noexcept(std::is_nothrow_constructible<T, U>::value &&
-                std::is_nothrow_assignable<T &, U>::value) ->
-            CPP_ret(optional &)(
-                requires not defer::Same<optional, detail::decay_t<U>> &&
-                    !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
-                    defer::Constructible<T, U> &&
-                    defer::Assignable<T &, U>)
+                std::is_nothrow_assignable<T &, U>::value)
         {
             if (has_value())
                 **this = static_cast<U &&>(u);
@@ -603,45 +598,39 @@ namespace ranges
             return *this;
         }
 
-        template<typename U>
-        constexpr /*c++14*/
-        auto operator=(optional<U> const &that) ->
-            CPP_ret(optional &)(
-                requires OptionalShouldConvertAssign<U, T> &&
-                    Constructible<T, const U &> &&
-                    Assignable<T &, const U &>)
+        CPP_template(typename U)(
+            requires OptionalShouldConvertAssign<U, T> &&
+                Constructible<T, const U &> &&
+                Assignable<T &, const U &>)
+        constexpr /*c++14*/ optional & operator=(optional<U> const &that)
         {
             base_t::assign_from(that);
             return *this;
         }
 
-        template<typename U>
-        constexpr /*c++14*/
-        auto operator=(optional<U> &&that) ->
-            CPP_ret(optional &)(
-                requires OptionalShouldConvertAssign<U, T> &&
-                    Constructible<T, U> &&
-                    Assignable<T &, U>)
+        CPP_template(typename U)(
+            requires OptionalShouldConvertAssign<U, T> &&
+                Constructible<T, U> &&
+                Assignable<T &, U>)
+        constexpr /*c++14*/ optional & operator=(optional<U> &&that)
         {
             base_t::assign_from(std::move(that));
             return *this;
         }
 
-        template<typename... Args>
-        auto emplace(Args &&... args)
-            noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
-            CPP_ret(T &)(
-                requires Constructible<T, Args...>)
+        CPP_template(typename... Args)(
+            requires Constructible<T, Args...>)
+        T & emplace(Args &&... args)
+            noexcept(std::is_nothrow_constructible<T, Args...>::value)
         {
             reset();
             return base_t::construct_from(static_cast<Args &&>(args)...);
         }
-        template<typename E, typename... Args>
-        auto emplace(std::initializer_list<E> il, Args &&... args)
+        CPP_template(typename E, typename... Args)(
+            requires Constructible<T, std::initializer_list<E> &, Args &&...>)
+        T & emplace(std::initializer_list<E> il, Args &&... args)
             noexcept(std::is_nothrow_constructible<
-                T, std::initializer_list<E> &, Args...>::value) ->
-            CPP_ret(T &)(
-                requires Constructible<T, std::initializer_list<E> &, Args &&...>)
+                T, std::initializer_list<E> &, Args...>::value)
         {
             reset();
             return base_t::construct_from(il, static_cast<Args &&>(args)...);
@@ -678,17 +667,15 @@ namespace ranges
                 detail::move(**this);
         }
 
-        template<typename U>
-        constexpr auto value_or(U &&u) const & ->
-            CPP_ret(T)(
-                requires CopyConstructible<T> && ConvertibleTo<U, T>)
+        CPP_template(typename U)(
+            requires CopyConstructible<T> && ConvertibleTo<U, T>)
+        constexpr T value_or(U &&u) const &
         {
             return has_value() ? **this : static_cast<T>((U &&)u);
         }
-        template<typename U>
-        constexpr auto value_or(U &&u) && ->
-            CPP_ret(T)(
-                requires MoveConstructible<T> && ConvertibleTo<U, T>)
+        CPP_template(typename U)(
+            requires MoveConstructible<T> && ConvertibleTo<U, T>)
+        constexpr T value_or(U &&u) &&
         {
             return has_value() ? detail::move(**this) : static_cast<T>((U &&)u);
         }

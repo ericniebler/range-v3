@@ -33,11 +33,10 @@ namespace ranges
     /// @{
     struct remove_if_fn
     {
-        template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        CPP_template(typename I, typename S, typename C, typename P = identity)(
+            requires Permutable<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
+        I operator()(I begin, S end, C pred, P proj = P{}) const
         {
             begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
             if(begin != end)
@@ -54,11 +53,10 @@ namespace ranges
             return begin;
         }
 
-        template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename C, typename P = identity)(
+            requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

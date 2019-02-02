@@ -357,10 +357,9 @@ namespace ranges
                 return make_pipeable(std::bind(sliding, std::placeholders::_1, n));
             }
         public:
-            template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(sliding_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && ForwardRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && ForwardRange<Rng>)
+            sliding_view<all_t<Rng>> operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

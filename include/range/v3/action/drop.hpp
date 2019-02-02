@@ -40,11 +40,10 @@ namespace ranges
                 return std::bind(drop, std::placeholders::_1, n);
             }
         public:
-            template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(Rng)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            CPP_template(typename Rng)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 RANGES_EXPECT(n >= 0);
                 ranges::action::erase(rng, begin(rng), ranges::next(begin(rng), n, end(rng)));

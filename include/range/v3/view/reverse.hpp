@@ -127,10 +127,9 @@ namespace ranges
     {
         struct reverse_fn
         {
-            template<typename Rng>
-            constexpr /*c++14*/ auto operator()(Rng &&rng) const ->
-                CPP_ret(reverse_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && BidirectionalRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && BidirectionalRange<Rng>)
+            constexpr /*c++14*/ reverse_view<all_t<Rng>> operator()(Rng &&rng) const
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

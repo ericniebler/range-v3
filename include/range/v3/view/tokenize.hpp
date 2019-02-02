@@ -64,9 +64,9 @@ namespace ranges
             meta::const_if_c<simple_view<Rng>(), Rng> &rng = rng_;
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
-        template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<Const>)(
+        CPP_template(bool Const = true)(
             requires Range<Rng const>)
+        iterator_t<Const> begin() const
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
         }
@@ -74,9 +74,9 @@ namespace ranges
         {
             return {};
         }
-        template<bool Const = true>
-        auto end() const -> CPP_ret(iterator_t<Const>)(
+        CPP_template(bool Const = true)(
             requires Range<Rng const>)
+        iterator_t<Const> end() const
         {
             return {};
         }

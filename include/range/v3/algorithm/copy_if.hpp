@@ -36,11 +36,10 @@ namespace ranges
 
     struct copy_if_fn
     {
-        template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I begin, S end, O out, F pred, P proj = P{}) const ->
-            CPP_ret(copy_if_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
-                    IndirectUnaryPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O, typename F, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
+                IndirectUnaryPredicate<F, projected<I, P>> && IndirectlyCopyable<I, O>)
+        copy_if_result<I, O> operator()(I begin, S end, O out, F pred, P proj = P{}) const
         {
             for(; begin != end; ++begin)
             {
@@ -54,12 +53,11 @@ namespace ranges
             return {begin, out};
         }
 
-        template<typename Rng, typename O, typename F, typename P = identity>
-        auto operator()(Rng &&rng, O out, F pred, P proj = P{}) const ->
-            CPP_ret(copy_if_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O, typename F, typename P = identity)(
+            requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        copy_if_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out, F pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(out), std::move(pred),
                 std::move(proj));

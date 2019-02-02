@@ -59,12 +59,11 @@ namespace ranges
             /// range-based version of the `upper_bound` std algorithm
             ///
             /// \pre `Rng` is a model of the `Range` concept
-            template<typename I, typename V, typename C = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> d, V const &val, C pred = C{},
-                    P proj = P{}) const ->
-                CPP_ret(I)(
-                    requires ForwardIterator<I> &&
-                        IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+            CPP_template(typename I, typename V, typename C = less, typename P = identity)(
+                requires ForwardIterator<I> &&
+                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+            I operator()(I begin, iter_difference_t<I> d, V const &val, C pred = C{},
+                    P proj = P{}) const
             {
                 return partition_point_n(std::move(begin), d,
                     detail::make_upper_bound_predicate(pred, val), std::move(proj));

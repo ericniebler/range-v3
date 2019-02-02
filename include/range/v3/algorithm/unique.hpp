@@ -44,10 +44,9 @@ namespace ranges
         /// \pre `S` is a model of the `Sentinel` concept
         /// \pre `C` is a model of the `Relation` concept
         ///
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Sortable<I, C, P> && Sentinel<S, I>)
+        CPP_template(typename I, typename S, typename C = equal_to, typename P = identity)(
+            requires Sortable<I, C, P> && Sentinel<S, I>)
+        I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
         {
             begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
 
@@ -61,10 +60,9 @@ namespace ranges
             return begin;
         }
 
-        template<typename Rng, typename C = equal_to, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)
+        CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
+            requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

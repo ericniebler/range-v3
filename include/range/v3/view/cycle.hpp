@@ -201,10 +201,9 @@ namespace ranges
         struct cycle_fn
         {
             /// \pre <tt>!empty(rng)</tt>
-            template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(cycled_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && ForwardRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && ForwardRange<Rng>)
+            cycled_view<all_t<Rng>> operator()(Rng &&rng) const
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

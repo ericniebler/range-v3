@@ -154,22 +154,20 @@ namespace ranges
             template<typename Pred>
             using pred_t = detail::decay_t<invoke_result_t<Modifier, Pred>>;
         public:
-            template<typename Rng, typename Pred>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(remove_if_view<all_t<Rng>, pred_t<Pred>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<pred_t<Pred>, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Pred)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectUnaryPredicate<pred_t<Pred>, iterator_t<Rng>>)
+            constexpr /*c++14*/ remove_if_view<all_t<Rng>, pred_t<Pred>> operator()(Rng &&rng, Pred pred) const
             {
                 return remove_if_view<all_t<Rng>, pred_t<Pred>>{
                     all(static_cast<Rng &&>(rng)),
                     Modifier{}(std::move(pred))
                 };
             }
-            template<typename Rng, typename Pred, typename Proj>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(remove_if_view<all_t<Rng>, composed<pred_t<Pred>, Proj>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<composed<pred_t<Pred>, Proj>, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Pred, typename Proj)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectUnaryPredicate<composed<pred_t<Pred>, Proj>, iterator_t<Rng>>)
+            constexpr /*c++14*/ remove_if_view<all_t<Rng>, composed<pred_t<Pred>, Proj>> operator()(Rng &&rng, Pred pred, Proj proj) const
             {
                 return remove_if_view<all_t<Rng>, composed<pred_t<Pred>, Proj>>{
                     all(static_cast<Rng &&>(rng)),

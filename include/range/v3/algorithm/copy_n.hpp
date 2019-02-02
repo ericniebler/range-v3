@@ -36,10 +36,9 @@ namespace ranges
 
     struct copy_n_fn
     {
-        template<typename I, typename O, typename P = identity>
-        auto operator()(I begin, iter_difference_t<I> n, O out) const ->
-            CPP_ret(copy_n_result<I, O>)(
-                requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename O, typename P = identity)(
+            requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        copy_n_result<I, O> operator()(I begin, iter_difference_t<I> n, O out) const
         {
             RANGES_EXPECT(0 <= n);
             auto norig = n;

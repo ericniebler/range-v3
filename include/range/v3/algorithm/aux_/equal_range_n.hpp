@@ -33,12 +33,11 @@ namespace ranges
     {
         struct equal_range_n_fn
         {
-            template<typename I, typename V, typename R = less, typename P = identity>
-            auto operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
-                    P proj = P{}) const ->
-                CPP_ret(subrange<I>)(
-                    requires ForwardIterator<I> &&
-                        IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
+            CPP_template(typename I, typename V, typename R = less, typename P = identity)(
+                requires ForwardIterator<I> &&
+                    IndirectStrictWeakOrder<R, V const *, projected<I, P>>)
+            subrange<I> operator()(I begin, iter_difference_t<I> dist, V const & val, R pred = R{},
+                    P proj = P{}) const
             {
                 if(0 < dist)
                 {

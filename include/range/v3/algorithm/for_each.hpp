@@ -35,11 +35,10 @@ namespace ranges
 
     struct for_each_fn
     {
-        template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F fun, P proj = P{}) const ->
-            CPP_ret(for_each_result<I, F>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryInvocable<F, projected<I, P>>)
+        CPP_template(typename I, typename S, typename F, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryInvocable<F, projected<I, P>>)
+        for_each_result<I, F> operator()(I begin, S end, F fun, P proj = P{}) const
         {
             for(; begin != end; ++begin)
             {
@@ -48,11 +47,10 @@ namespace ranges
             return {detail::move(begin), detail::move(fun)};
         }
 
-        template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F fun, P proj = P{}) const ->
-            CPP_ret(for_each_result<safe_iterator_t<Rng>, F>)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename F, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectUnaryInvocable<F, projected<iterator_t<Rng>, P>>)
+        for_each_result<safe_iterator_t<Rng>, F> operator()(Rng &&rng, F fun, P proj = P{}) const
         {
             return {(*this)(begin(rng), end(rng), ref(fun), detail::move(proj)).in,
                 detail::move(fun)};

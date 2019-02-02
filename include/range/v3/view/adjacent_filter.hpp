@@ -146,10 +146,9 @@ namespace ranges
                     protect(std::move(pred))));
             }
         public:
-            template<typename Rng, typename Pred>
-            constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)(
-                    requires detail::AdjacentFilter<Rng, Pred>)
+            CPP_template(typename Rng, typename Pred)(
+                requires detail::AdjacentFilter<Rng, Pred>)
+            constexpr /*c++14*/ adjacent_filter_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }

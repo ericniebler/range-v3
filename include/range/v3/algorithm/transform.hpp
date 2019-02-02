@@ -42,53 +42,49 @@ namespace ranges
     struct transform_fn
     {
         // Single-range variant
-        template<typename I, typename S, typename O, typename F, typename P = identity>
-        auto operator()(I begin, S end, O out, F fun, P proj = P{}) const ->
-            CPP_ret(unary_transform_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> && CopyConstructible<F> &&
-                    Writable<O, indirect_result_t<F&, projected<I, P>>>)
+        CPP_template(typename I, typename S, typename O, typename F, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                WeaklyIncrementable<O> && CopyConstructible<F> &&
+                Writable<O, indirect_result_t<F&, projected<I, P>>>)
+        unary_transform_result<I, O> operator()(I begin, S end, O out, F fun, P proj = P{}) const
         {
             for(; begin != end; ++begin, ++out)
                 *out = invoke(fun, invoke(proj, *begin));
             return {begin, out};
         }
 
-        template<typename Rng, typename O, typename F, typename P = identity>
-        auto operator()(Rng &&rng, O out, F fun, P proj = P{}) const ->
-            CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> && CopyConstructible<F> &&
-                    Writable<O, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
+        CPP_template(typename Rng, typename O, typename F, typename P = identity)(
+            requires InputRange<Rng> && WeaklyIncrementable<O> && CopyConstructible<F> &&
+                Writable<O, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
+        unary_transform_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out, F fun, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(out), std::move(fun),
                 std::move(proj));
         }
 
         // Double-range variant, 4-iterator version
-        template<typename I0, typename S0, typename I1, typename S1, typename O, typename F,
-            typename P0 = identity, typename P1 = identity>
-        auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
-            P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<I0, I1, O>)(
-                requires InputIterator<I0> && Sentinel<S0, I0> &&
-                    InputIterator<I1> && Sentinel<S1, I1> &&
-                    WeaklyIncrementable<O> && CopyConstructible<F> &&
-                    Writable<O, indirect_result_t<F&, projected<I0, P0>, projected<I1, P1>>>)
+        CPP_template(typename I0, typename S0, typename I1, typename S1, typename O, typename F,
+                typename P0 = identity, typename P1 = identity)(
+            requires InputIterator<I0> && Sentinel<S0, I0> &&
+                InputIterator<I1> && Sentinel<S1, I1> &&
+                WeaklyIncrementable<O> && CopyConstructible<F> &&
+                Writable<O, indirect_result_t<F&, projected<I0, P0>, projected<I1, P1>>>)
+        binary_transform_result<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out,
+            F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) const
         {
             for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                 *out = invoke(fun, invoke(proj0, *begin0), invoke(proj1, *begin1));
             return {begin0, begin1, out};
         }
 
-        template<typename Rng0, typename Rng1, typename O, typename F,
-            typename P0 = identity, typename P1 = identity>
-        auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
-            P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)(
-                requires InputRange<Rng0> && InputRange<Rng1> &&
-                    WeaklyIncrementable<O> && CopyConstructible<F> &&
-                    Writable<O, indirect_result_t<F&, projected<iterator_t<Rng0>, P0>,
-                                                      projected<iterator_t<Rng1>, P1>>>)
+        CPP_template(typename Rng0, typename Rng1, typename O, typename F,
+                typename P0 = identity, typename P1 = identity)(
+            requires InputRange<Rng0> && InputRange<Rng1> &&
+                WeaklyIncrementable<O> && CopyConstructible<F> &&
+                Writable<O, indirect_result_t<F&, projected<iterator_t<Rng0>, P0>,
+                                                  projected<iterator_t<Rng1>, P1>>>)
+        binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>
+        operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) const
         {
             return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                 std::move(fun), std::move(proj0), std::move(proj1));

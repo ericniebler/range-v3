@@ -37,22 +37,20 @@ namespace ranges
     {
         using aux::copy_fn::operator();
 
-        template<typename I, typename S, typename O>
-        constexpr /*c++14*/ auto operator()(I begin, S end, O out) const ->
-            CPP_ret(copy_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        constexpr /*c++14*/ copy_result<I, O> operator()(I begin, S end, O out) const
         {
             for(; begin != end; ++begin, ++out)
                 *out = *begin;
             return {begin, out};
         }
 
-        template<typename Rng, typename O>
-        constexpr /*c++14*/ auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(copy_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O)(
+            requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        constexpr /*c++14*/ copy_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

@@ -561,22 +561,20 @@ namespace ranges
                     bind_forward<T>(t)));
             }
         public:
-            template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
-                CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
+            constexpr split_view<all_t<Rng>, single_view<range_value_t<Rng>>> operator()(Rng &&rng, range_value_t<Rng> val) const
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(val))};
             }
 
-            template<typename Rng, typename Pattern>
-            constexpr auto operator()(Rng &&rng, Pattern &&pattern) const ->
-                CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        ViewableRange<Pattern> && ForwardRange<Pattern> &&
-                        IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
-                        (ForwardRange<Rng> || detail::tiny_range<Pattern>))
+            CPP_template(typename Rng, typename Pattern)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    ViewableRange<Pattern> && ForwardRange<Pattern> &&
+                    IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
+                    (ForwardRange<Rng> || detail::tiny_range<Pattern>))
+            constexpr split_view<all_t<Rng>, all_t<Pattern>> operator()(Rng &&rng, Pattern &&pattern) const
             {
                 return {all((Rng &&) rng), all((Pattern &&) pattern)};
             }

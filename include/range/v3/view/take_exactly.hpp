@@ -61,10 +61,9 @@ namespace ranges
             {
                 return {ranges::begin(rng_), n_};
             }
-            template<typename BaseRng = Rng>
-            auto begin() const ->
-                CPP_ret(counted_iterator<iterator_t<BaseRng const>>)(
-                    requires Range<BaseRng const>)
+            CPP_template(typename BaseRng = Rng)(
+                requires Range<BaseRng const>)
+            counted_iterator<iterator_t<BaseRng const>> begin() const
             {
                 return {ranges::begin(rng_), n_};
             }
@@ -149,11 +148,10 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template<typename Rng>
-            static auto impl_(Rng &&rng, range_difference_t<Rng> n,
-                    random_access_range_tag) ->
-                CPP_ret(subrange<iterator_t<Rng>>)(
-                    requires ForwardingRange_<Rng>)
+            CPP_template(typename Rng)(
+                requires ForwardingRange_<Rng>)
+            static subrange<iterator_t<Rng>> impl_(Rng &&rng, range_difference_t<Rng> n,
+                    random_access_range_tag)
             {
                 return {begin(rng), next(begin(rng), n)};
             }

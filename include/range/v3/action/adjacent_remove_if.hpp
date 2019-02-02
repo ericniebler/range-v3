@@ -43,13 +43,12 @@ namespace ranges
                     protect(std::move(pred)), protect(std::move(proj)));
             }
         public:
-            template<typename Rng, typename Pred, typename Proj = identity>
-            auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const ->
-                CPP_ret(Rng)(
-                    requires ForwardRange<Rng> &&
-                        ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
-                        IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
-                        Permutable<iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Pred, typename Proj = identity)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
+                    IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
+                    Permutable<iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, Pred pred, Proj proj = {}) const
             {
                 auto i = adjacent_remove_if(rng, std::move(pred), std::move(proj));
                 erase(rng, std::move(i), end(rng));

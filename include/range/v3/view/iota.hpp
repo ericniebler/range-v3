@@ -148,19 +148,17 @@ namespace ranges
             return to - from
         )
 
-        template<typename Val>
-        auto iota_minus_(Val const &v0, Val const &v1) ->
-            CPP_ret(iota_difference_t<Val>)(
-                requires SignedIntegral<Val>)
+        CPP_template(typename Val)(
+            requires SignedIntegral<Val>)
+        iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
         {
             using D = iota_difference_t<Val>;
             return (D) v0 - (D) v1;
         }
 
-        template<typename Val>
-        auto iota_minus_(Val const &v0, Val const &v1) ->
-            CPP_ret(iota_difference_t<Val>)(
-                requires UnsignedIntegral<Val>)
+        CPP_template(typename Val)(
+            requires UnsignedIntegral<Val>)
+        iota_difference_t<Val> iota_minus_(Val const &v0, Val const &v1)
         {
             using D = iota_difference_t<Val>;
             return v0 < v1
@@ -168,10 +166,9 @@ namespace ranges
                 :  static_cast<D>(v0 - v1);
         }
 
-        template<typename Val>
-        constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
-                requires SignedIntegral<Val>)
+        CPP_template(typename Val)(
+            requires SignedIntegral<Val>)
+        constexpr /*c++14*/ iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept
         {
             using D = iota_difference_t<Val>;
             RANGES_EXPECT(from <= to);
@@ -181,10 +178,9 @@ namespace ranges
             return static_cast<D>(to) - static_cast<D>(from);
         }
 
-        template<typename Val>
-        constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
-                requires UnsignedIntegral<Val>)
+        CPP_template(typename Val)(
+            requires UnsignedIntegral<Val>)
+        constexpr /*c++14*/ iota_difference_t<Val> ints_open_distance_(Val from, Val to) noexcept
         {
             using D = iota_difference_t<Val>;
             using UD = meta::_t<std::make_unsigned<D>>;
@@ -210,10 +206,9 @@ namespace ranges
             return static_cast<D>(Val(to - from));
         }
 
-        template<typename Val>
-        constexpr /*c++14*/ auto ints_closed_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
-                requires Integral<Val>)
+        CPP_template(typename Val)(
+            requires Integral<Val>)
+        constexpr /*c++14*/ iota_difference_t<Val> ints_closed_distance_(Val from, Val to) noexcept
         {
             using D = iota_difference_t<Val>;
             auto dist = ints_open_distance_(from, to);
@@ -437,10 +432,9 @@ namespace ranges
                 return {std::move(from), std::move(to)};
             }
         public:
-            template<typename From>
-            auto operator()(From value) const ->
-                CPP_ret(iota_view<From>)(
-                    requires WeaklyIncrementable<From>)
+            CPP_template(typename From)(
+                requires WeaklyIncrementable<From>)
+            iota_view<From> operator()(From value) const
             {
                 return iota_view<From>{std::move(value)};
             }
@@ -499,10 +493,9 @@ namespace ranges
         {
             ints_fn() = default;
 
-            template<typename Val>
-            auto operator()(Val value) const ->
-                CPP_ret(iota_view<Val>)(
-                    requires Integral<Val>)
+            CPP_template(typename Val)(
+                requires Integral<Val>)
+            iota_view<Val> operator()(Val value) const
             {
                 return iota_view<Val>{value};
             }

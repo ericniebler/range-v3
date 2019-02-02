@@ -34,11 +34,10 @@ namespace ranges
 
     struct copy_backward_fn
     {
-        template<typename I, typename S, typename O>
-        auto operator()(I begin, S end_, O out) const ->
-            CPP_ret(copy_backward_result<I, O>)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                    BidirectionalIterator<O> && IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O)(
+            requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                BidirectionalIterator<O> && IndirectlyCopyable<I, O>)
+        copy_backward_result<I, O> operator()(I begin, S end_, O out) const
         {
             I i = ranges::next(begin, end_), end = i;
             while(begin != i)
@@ -46,11 +45,10 @@ namespace ranges
             return {end, out};
         }
 
-        template<typename Rng, typename O>
-        auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(copy_backward_result<safe_iterator_t<Rng>, O>)(
-                requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O)(
+            requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        copy_backward_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
         {
             return (*this)(begin(rng), end(rng), std::move(out));
         }

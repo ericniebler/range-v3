@@ -30,11 +30,10 @@ namespace ranges
     /// @{
     struct count_if_fn
     {
-        template<typename I, typename S, typename R, typename P = identity>
-        auto operator()(I begin, S end, R pred, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<I>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<R, projected<I, P>>)
+        CPP_template(typename I, typename S, typename R, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<R, projected<I, P>>)
+        iter_difference_t<I> operator()(I begin, S end, R pred, P proj = P{}) const
         {
             iter_difference_t<I> n = 0;
             for(; begin != end; ++begin)
@@ -43,11 +42,10 @@ namespace ranges
             return n;
         }
 
-        template<typename Rng, typename R, typename P = identity>
-        auto operator()(Rng &&rng, R pred, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<iterator_t<Rng>>)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryPredicate<R, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename R, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectUnaryPredicate<R, projected<iterator_t<Rng>, P>>)
+        iter_difference_t<iterator_t<Rng>> operator()(Rng &&rng, R pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

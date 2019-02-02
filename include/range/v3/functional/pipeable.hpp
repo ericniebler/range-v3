@@ -104,11 +104,9 @@ namespace ranges
         }
 
         // Compose two pipes
-        template<typename Pipe0, typename Pipe1>
-        friend auto operator|(Pipe0 pipe0, Pipe1 pipe1) ->
-            CPP_ret(decltype(make_pipeable(
-                std::declval<detail::composed_pipe<Pipe0, Pipe1>>())))(
+        CPP_template(typename Pipe0, typename Pipe1)(
             requires is_pipeable_v<Pipe0> && is_pipeable_v<Pipe1>)
+        friend auto operator|(Pipe0 pipe0, Pipe1 pipe1)
         {
             return make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1});
         }

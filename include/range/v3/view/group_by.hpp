@@ -106,14 +106,13 @@ namespace ranges
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
-        template<bool Const = true>
-        auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    Invocable<
-                        Fun const&,
-                        range_common_reference_t<meta::const_if_c<Const, Rng>>,
-                        range_common_reference_t<meta::const_if_c<Const, Rng>>>)
+        CPP_template(bool Const = true)(
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                Invocable<
+                    Fun const&,
+                    range_common_reference_t<meta::const_if_c<Const, Rng>>,
+                    range_common_reference_t<meta::const_if_c<Const, Rng>>>)
+        cursor<Const> begin_cursor() const
         {
             return {fun_, ranges::begin(rng_), ranges::end(rng_)};
         }
@@ -138,11 +137,10 @@ namespace ranges
                     std::move(fun)));
             }
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(group_by_view<all_t<Rng>, Fun>)(
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        IndirectRelation<Fun, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Fun)(
+                requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                    IndirectRelation<Fun, iterator_t<Rng>>)
+            group_by_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }

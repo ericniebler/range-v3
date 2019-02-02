@@ -134,18 +134,16 @@ namespace ranges
                 return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                     is_infinite<Rng>{}) + count_;
             }
-            template<typename BaseRng = Rng>
-            auto begin() const ->
-                CPP_ret(iterator_t<BaseRng const>)(
-                    requires Range<BaseRng const>)
+            CPP_template(typename BaseRng = Rng)(
+                requires Range<BaseRng const>)
+            iterator_t<BaseRng const> begin() const
             {
                 return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                     is_infinite<Rng>{});
             }
-            template<typename BaseRng = Rng>
-            auto end() const ->
-                CPP_ret(iterator_t<BaseRng const>)(
-                    requires Range<BaseRng const>)
+            CPP_template(typename BaseRng = Rng)(
+                requires Range<BaseRng const>)
+            iterator_t<BaseRng const> end() const
             {
                 return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
                     is_infinite<Rng>{}) + count_;
@@ -186,12 +184,11 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), from, count};
             }
-            template<typename Rng>
-            static auto impl_(Rng &&rng, range_difference_t<Rng> from,
+            CPP_template(typename Rng)(
+                requires ForwardingRange_<Rng>)
+            static subrange<iterator_t<Rng>> impl_(Rng &&rng, range_difference_t<Rng> from,
                     range_difference_t<Rng> count, random_access_range_tag,
-                    common_range_tag = {}) ->
-                CPP_ret(subrange<iterator_t<Rng>>)(
-                    requires ForwardingRange_<Rng>)
+                    common_range_tag = {})
             {
                 auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});
                 return {it, it + count};

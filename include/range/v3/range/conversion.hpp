@@ -76,17 +76,17 @@ namespace ranges
               : pipeable<fn<ToContainer>>
             {
             private:
-                template<typename Cont, typename Rng>
-                static auto impl(Rng &&rng) -> CPP_ret(Cont)(
-                    requires (!ToContainerReserve<Cont, Rng>))
+                CPP_template(typename Cont, typename Rng)(
+                requires (!ToContainerReserve<Cont, Rng>))
+                static Cont impl(Rng &&rng)
                 {
                     using I = range_common_iterator_t<Rng>;
                     return Cont(I{ranges::begin(rng)}, I{ranges::end(rng)});
                 }
 
-                template<typename Cont, typename Rng>
-                static auto impl(Rng &&rng) -> CPP_ret(Cont)(
-                    requires ToContainerReserve<Cont, Rng>)
+                CPP_template(typename Cont, typename Rng)(
+                requires ToContainerReserve<Cont, Rng>)
+                static Cont impl(Rng &&rng)
                 {
                     Cont c;
                     auto const size = ranges::size(rng);
@@ -105,11 +105,10 @@ namespace ranges
                 using container_t = meta::invoke<ToContainer, range_value_t<Rng>>;
 
             public:
-                template<typename Rng>
-                auto operator()(Rng &&rng) const ->
-                    CPP_ret(container_t<Rng>)(
-                        requires InputRange<Rng> &&
-                            ConvertibleToContainer<Rng, container_t<Rng>>)
+                CPP_template(typename Rng)(
+                    requires InputRange<Rng> &&
+                        ConvertibleToContainer<Rng, container_t<Rng>>)
+                container_t<Rng> operator()(Rng &&rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
@@ -157,11 +156,10 @@ namespace ranges
         }
 
         /// \overload
-        template<template<typename...> class ContT, typename Rng>
-        auto to(Rng &&rng) ->
-            CPP_ret(ContT<range_value_t<Rng>>)(
-                requires Range<Rng> &&
-                    detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
+        CPP_template(template<typename...> class ContT, typename Rng)(
+            requires Range<Rng> &&
+                detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
+        ContT<range_value_t<Rng>> to(Rng &&rng)
         {
             return detail::to_container_fn<meta::quote<ContT>>{}(static_cast<Rng &&>(rng));
         }
@@ -175,27 +173,24 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Cont, typename Rng>
-        auto to(Rng &&rng) ->
-            CPP_ret(Cont)(
-                requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
+        CPP_template(typename Cont, typename Rng)(
+            requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
+        Cont to(Rng &&rng)
         {
             return detail::to_container_fn<meta::id<Cont>>{}(static_cast<Rng &&>(rng));
         }
 
         /// \cond
         // Slightly odd initializer_list overloads, undocumented for now.
-        template<template<typename...> class ContT, typename T>
-        auto to(std::initializer_list<T> il) ->
-            CPP_ret(ContT<T>)(
-                requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
+        CPP_template(template<typename...> class ContT, typename T)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
+        ContT<T> to(std::initializer_list<T> il)
         {
             return detail::to_container_fn<meta::quote<ContT>>{}(il);
         }
-        template<typename Cont, typename T>
-        auto to(std::initializer_list<T> il) ->
-            CPP_ret(Cont)(
-                requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
+        CPP_template(typename Cont, typename T)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
+        Cont to(std::initializer_list<T> il)
         {
             return detail::to_container_fn<meta::id<Cont>>{}(il);
         }
@@ -219,20 +214,18 @@ namespace ranges
         {
             return {};
         }
-        template<template<typename...> class ContT, typename Rng>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(Rng &&rng) ->
-            CPP_ret(ContT<range_value_t<Rng>>)(
-                requires Range<Rng> &&
-                    detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
+        CPP_template(template<typename...> class ContT, typename Rng)(
+            requires Range<Rng> &&
+                detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
+        RANGES_EMPTY_ATTR RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        ContT<range_value_t<Rng>> to_(Rng &&rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<ContT>();
         }
-        template<template<typename...> class ContT, typename T>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(std::initializer_list<T> il) ->
-            CPP_ret(ContT<T>)(
-                requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
+        CPP_template(template<typename...> class ContT, typename T)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
+        RANGES_EMPTY_ATTR RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        ContT<T> to_(std::initializer_list<T> il)
         {
             return il | ranges::to_<ContT>();
         }
@@ -243,19 +236,17 @@ namespace ranges
         {
             return {};
         }
-        template<typename Cont, typename Rng>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(Rng &&rng) ->
-            CPP_ret(Cont)(
-                requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
+        CPP_template(typename Cont, typename Rng)(
+            requires Range<Rng> && detail::ConvertibleToContainer<Rng, Cont>)
+        RANGES_EMPTY_ATTR RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        Cont to_(Rng &&rng)
         {
             return static_cast<Rng &&>(rng) | ranges::to_<Cont>();
         }
-        template<typename Cont, typename T>
-        RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
-        auto to_(std::initializer_list<T> list) ->
-            CPP_ret(Cont)(
-                requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
+        CPP_template(typename Cont, typename T)(
+            requires detail::ConvertibleToContainer<std::initializer_list<T>, Cont>)
+        RANGES_EMPTY_ATTR RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
+        Cont to_(std::initializer_list<T> list)
         {
             return list | ranges::to_<Cont>();
         }

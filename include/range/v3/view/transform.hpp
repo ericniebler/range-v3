@@ -137,10 +137,10 @@ namespace ranges
         {
             return {fun_};
         }
-        template<bool Const = true>
-        auto begin_adaptor() const -> CPP_ret(adaptor<Const>)(
+        CPP_template(bool Const = true)(
             requires Const && Range<meta::const_if_c<Const, Rng>> &&
                 detail::IterTransform1Readable<Fun const, meta::const_if_c<Const, Rng>>)
+        adaptor<Const> begin_adaptor() const
         {
             return {fun_};
         }
@@ -148,11 +148,10 @@ namespace ranges
         {
             return {fun_};
         }
-        template<bool Const = true>
-        auto end_adaptor() const ->
-            CPP_ret(meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    detail::IterTransform1Readable<Fun const, meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)(
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                detail::IterTransform1Readable<Fun const, meta::const_if_c<Const, Rng>>)
+        meta::if_<use_sentinel_t<Const>, adaptor_base, adaptor<Const>> end_adaptor() const
         {
             return {fun_};
         }
@@ -343,29 +342,27 @@ namespace ranges
         {
             return {*this, ranges::end};
         }
-        template<bool Const = true>
-        auto begin_cursor() const ->
-            CPP_ret(cursor<true>)(
-                requires Const &&
-                    Range<meta::const_if_c<Const, Rng1>> &&
-                    Range<meta::const_if_c<Const, Rng2>> &&
-                    detail::IterTransform2Readable<
-                        Fun const,
-                        meta::const_if_c<Const, Rng1>,
-                        meta::const_if_c<Const, Rng2>>)
+        CPP_template(bool Const = true)(
+            requires Const &&
+                Range<meta::const_if_c<Const, Rng1>> &&
+                Range<meta::const_if_c<Const, Rng2>> &&
+                detail::IterTransform2Readable<
+                    Fun const,
+                    meta::const_if_c<Const, Rng1>,
+                    meta::const_if_c<Const, Rng2>>)
+        cursor<true> begin_cursor() const
         {
             return {*this, ranges::begin};
         }
-        template<bool Const = true>
-        auto end_cursor() const ->
-            CPP_ret(end_cursor_t<Const>)(
-                requires Const &&
-                    Range<meta::const_if_c<Const, Rng1>> &&
-                    Range<meta::const_if_c<Const, Rng2>> &&
-                    detail::IterTransform2Readable<
-                        Fun const,
-                        meta::const_if_c<Const, Rng1>,
-                        meta::const_if_c<Const, Rng2>>)
+        CPP_template(bool Const = true)(
+            requires Const &&
+                Range<meta::const_if_c<Const, Rng1>> &&
+                Range<meta::const_if_c<Const, Rng2>> &&
+                detail::IterTransform2Readable<
+                    Fun const,
+                    meta::const_if_c<Const, Rng1>,
+                    meta::const_if_c<Const, Rng2>>)
+        end_cursor_t<Const> end_cursor() const
         {
             return {*this, ranges::end};
         }
@@ -429,23 +426,21 @@ namespace ranges
                     protect(std::move(fun))));
             }
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(iter_transform_view<all_t<Rng>, Fun>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        CopyConstructible<Fun> &&
-                        detail::IterTransform1Readable<Fun, Rng>)
+            CPP_template(typename Rng, typename Fun)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    CopyConstructible<Fun> &&
+                    detail::IterTransform1Readable<Fun, Rng>)
+            iter_transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
-            template<typename Rng1, typename Rng2, typename Fun>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const ->
-                CPP_ret(iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)(
-                    requires ViewableRange<Rng1> && InputRange<Rng1> &&
-                        ViewableRange<Rng2> && InputRange<Rng2> &&
-                        CopyConstructible<Fun> &&
-                        detail::IterTransform2Readable<Fun, Rng1, Rng2>)
+            CPP_template(typename Rng1, typename Rng2, typename Fun)(
+                requires ViewableRange<Rng1> && InputRange<Rng1> &&
+                    ViewableRange<Rng2> && InputRange<Rng2> &&
+                    CopyConstructible<Fun> &&
+                    detail::IterTransform2Readable<Fun, Rng1, Rng2>)
+            iter_transform2_view<all_t<Rng1>, all_t<Rng2>, Fun> operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)),
                         all(static_cast<Rng2 &&>(rng2)),
@@ -491,18 +486,16 @@ namespace ranges
                     protect(std::move(fun))));
             }
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(transform_view<all_t<Rng>, Fun>)(
-                    requires TransformableRange<Rng, Fun>)
+            CPP_template(typename Rng, typename Fun)(
+                requires TransformableRange<Rng, Fun>)
+            transform_view<all_t<Rng>, Fun> operator()(Rng &&rng, Fun fun) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(fun)};
             }
 
-            template<typename Rng1, typename Rng2, typename Fun>
-            auto operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const ->
-                CPP_ret(transform2_view<all_t<Rng1>, all_t<Rng2>, Fun>)(
-                    requires TransformableRanges<Rng1, Rng2, Fun>)
+            CPP_template(typename Rng1, typename Rng2, typename Fun)(
+                requires TransformableRanges<Rng1, Rng2, Fun>)
+            transform2_view<all_t<Rng1>, all_t<Rng2>, Fun> operator()(Rng1 &&rng1, Rng2 &&rng2, Fun fun) const
             {
                 return {all(static_cast<Rng1 &&>(rng1)), all(static_cast<Rng2 &&>(rng2)),
                     std::move(fun)};

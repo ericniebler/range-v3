@@ -40,11 +40,11 @@ namespace ranges
                 return std::bind(drop_while, std::placeholders::_1, std::move(fun));
             }
         public:
-            template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
+            CPP_template(typename Rng, typename Fun)(
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
                     ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, Fun fun) const
             {
                 ranges::action::erase(rng, begin(rng), find_if_not(begin(rng), end(rng),
                     std::move(fun)));

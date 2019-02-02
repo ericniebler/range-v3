@@ -72,10 +72,9 @@ namespace ranges
 
         struct _advance_
         {
-            template<typename I>
-            auto operator()(I & i, iter_difference_t<I> n) const ->
-                CPP_ret(void)(
-                    requires Iterator<I>)
+            CPP_template(typename I)(
+                requires Iterator<I>)
+            void operator()(I & i, iter_difference_t<I> n) const
             {
                 advance(i, n);
             }
@@ -305,17 +304,17 @@ namespace ranges
         {
             return {fun_, tuple_transform(rngs_, end)};
         }
-        template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)(
-            requires Const && And<Range<Rngs const>...> &&
-                view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+        CPP_template(bool Const = true)(
+        requires Const && And<Range<Rngs const>...> &&
+            view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+        cursor<Const> begin_cursor() const
         {
             return {fun_, tuple_transform(rngs_, begin)};
         }
-        template<bool Const = true>
-        auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)(
-            requires Const && And<Range<Rngs const>...> &&
-                view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+        CPP_template(bool Const = true)(
+        requires Const && And<Range<Rngs const>...> &&
+            view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
+        end_cursor_t<Const> end_cursor() const
         {
             return {fun_, tuple_transform(rngs_, end)};
         }
@@ -366,12 +365,11 @@ namespace ranges
     {
         struct iter_zip_with_fn
         {
-            template<typename...Rngs, typename Fun>
-            auto operator()(Fun fun, Rngs &&... rngs) const ->
-                CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
-                    requires And<ViewableRange<Rngs>...> &&
-                        IterZipWithViewConcept<Fun, Rngs...> &&
-                        sizeof...(Rngs) != 0)
+            CPP_template(typename...Rngs, typename Fun)(
+                requires And<ViewableRange<Rngs>...> &&
+                    IterZipWithViewConcept<Fun, Rngs...> &&
+                    sizeof...(Rngs) != 0)
+            iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun),
@@ -379,10 +377,9 @@ namespace ranges
                 };
             }
 
-            template<typename Fun>
-            constexpr auto operator()(Fun) const noexcept ->
-                CPP_ret(empty_view<std::tuple<>>)(
-                    requires IterZipWithViewConcept<Fun>)
+            CPP_template(typename Fun)(
+                requires IterZipWithViewConcept<Fun>)
+            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
             {
                 return {};
             }
@@ -394,14 +391,13 @@ namespace ranges
 
         struct zip_with_fn
         {
-            template<typename...Rngs, typename Fun>
-            auto operator()(Fun fun, Rngs &&... rngs) const ->
-                CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)(
-                    requires And<ViewableRange<Rngs>...> &&
-                        And<InputRange<Rngs>...> &&
-                        CopyConstructible<Fun> &&
-                        Invocable<Fun&, range_reference_t<Rngs> &&...> &&
-                        sizeof...(Rngs) != 0)
+            CPP_template(typename...Rngs, typename Fun)(
+                requires And<ViewableRange<Rngs>...> &&
+                    And<InputRange<Rngs>...> &&
+                    CopyConstructible<Fun> &&
+                    Invocable<Fun&, range_reference_t<Rngs> &&...> &&
+                    sizeof...(Rngs) != 0)
+            zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun),
@@ -409,10 +405,9 @@ namespace ranges
                 };
             }
 
-            template<typename Fun>
-            constexpr auto operator()(Fun) const noexcept ->
-                CPP_ret(empty_view<std::tuple<>>)(
-                    requires CopyConstructible<Fun> && Invocable<Fun&>)
+            CPP_template(typename Fun)(
+                requires CopyConstructible<Fun> && Invocable<Fun&>)
+            constexpr empty_view<std::tuple<>> operator()(Fun) const noexcept
             {
                 return {};
             }

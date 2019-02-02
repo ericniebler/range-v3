@@ -34,20 +34,18 @@ namespace ranges
 
     struct generate_fn
     {
-        template<typename O, typename S, typename F>
-        auto operator()(O begin, S end, F fun) const ->
-            CPP_ret(generate_result<O, F>)(
-                requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
+        CPP_template(typename O, typename S, typename F)(
+            requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
+        generate_result<O, F> operator()(O begin, S end, F fun) const
         {
             for(; begin != end; ++begin)
                 *begin = invoke(fun);
             return {detail::move(begin), detail::move(fun)};
         }
 
-        template<typename Rng, typename F, typename O = iterator_t<Rng>>
-        auto operator()(Rng &&rng, F fun) const ->
-            CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
-                requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
+        CPP_template(typename Rng, typename F)(
+            requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
+        generate_result<safe_iterator_t<Rng>, F> operator()(Rng &&rng, F fun) const
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out,
                 detail::move(fun)};

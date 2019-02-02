@@ -49,10 +49,9 @@ namespace ranges
         Rng rng_;
         difference_type_ n_;
 
-        template<bool Const = true>
-        auto get_begin_(std::true_type, std::true_type) const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)(
+            requires Const && Range<meta::const_if_c<Const, Rng>>)
+        iterator_t<meta::const_if_c<Const, Rng>> get_begin_(std::true_type, std::true_type) const
         {
             CPP_assert(RandomAccessRange<meta::const_if_c<Const, Rng>>);
             return next(ranges::begin(rng_), n_, ranges::end(rng_));
@@ -87,17 +86,15 @@ namespace ranges
         {
             return ranges::end(rng_);
         }
-        template<bool Const = true>
-        auto begin() const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
-                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)(
+            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+        iterator_t<meta::const_if_c<Const, Rng>> begin() const
         {
             return this->get_begin_(std::true_type{}, std::true_type{});
         }
-        template<bool Const = true>
-        auto end() const ->
-            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
-                requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+        CPP_template(bool Const = true)(
+            requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
+        sentinel_t<meta::const_if_c<Const, Rng>> end() const
         {
             return ranges::end(rng_);
         }
@@ -141,10 +138,9 @@ namespace ranges
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }
-            template<typename Rng>
-            static auto impl_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag) ->
-                CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)(
-                    requires ForwardingRange_<Rng> && SizedRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ForwardingRange_<Rng> && SizedRange<Rng>)
+            static subrange<iterator_t<Rng>, sentinel_t<Rng>> impl_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag)
             {
                 return {begin(rng) + ranges::min(n, distance(rng)), end(rng)};
             }

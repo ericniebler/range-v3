@@ -105,34 +105,30 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename T>
-        auto is_lvalue_container_like(T &) noexcept ->
-            CPP_ret(std::true_type)(
-                requires Container<T>)
+        CPP_template(typename T)(
+            requires Container<T>)
+        std::true_type is_lvalue_container_like(T &) noexcept
         {
             return {};
         }
 
-        template<typename T>
-        auto is_lvalue_container_like(reference_wrapper<T>) noexcept ->
-          CPP_ret(meta::not_<std::is_rvalue_reference<T>>)(
-              requires Container<T>)
+        CPP_template(typename T)(
+          requires Container<T>)
+        meta::not_<std::is_rvalue_reference<T>> is_lvalue_container_like(reference_wrapper<T>) noexcept
         {
             return {};
         }
 
-        template<typename T>
-        auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept ->
-            CPP_ret(std::true_type)(
-                requires Container<T>)
+        CPP_template(typename T)(
+            requires Container<T>)
+        std::true_type is_lvalue_container_like(std::reference_wrapper<T>) noexcept
         {
             return {};
         }
 
-        template<typename T>
-        auto is_lvalue_container_like(ref_view<T>) noexcept ->
-            CPP_ret(std::true_type)(
-                requires Container<T>)
+        CPP_template(typename T)(
+            requires Container<T>)
+        std::true_type is_lvalue_container_like(ref_view<T>) noexcept
         {
             return {};
         }

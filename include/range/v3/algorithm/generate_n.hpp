@@ -34,10 +34,9 @@ namespace ranges
 
     struct generate_n_fn
     {
-        template<typename O, typename F>
-        auto operator()(O begin, iter_difference_t<O> n, F fun) const ->
-            CPP_ret(generate_n_result<O, F>)(
-                requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
+        CPP_template(typename O, typename F)(
+            requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>>)
+        generate_n_result<O, F> operator()(O begin, iter_difference_t<O> n, F fun) const
         {
             RANGES_EXPECT(n >= 0);
             auto norig = n;

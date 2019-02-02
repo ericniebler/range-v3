@@ -42,11 +42,10 @@ namespace ranges
         ///      value type of I.
         /// \pre `F` models `Predicate<X>`, where `X` is the result type
         ///      of `Invocable<P, V>`
-        template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I begin, S end, F pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<F, projected<I, P>>)
+        CPP_template(typename I, typename S, typename F, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<F, projected<I, P>>)
+        I operator()(I begin, S end, F pred, P proj = P{}) const
         {
             for(; begin != end; ++begin)
                 if(!invoke(pred, invoke(proj, *begin)))
@@ -55,10 +54,9 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires InputRange<Rng> && IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename F, typename P = identity)(
+            requires InputRange<Rng> && IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, F pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

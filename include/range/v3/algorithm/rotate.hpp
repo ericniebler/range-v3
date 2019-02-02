@@ -190,10 +190,9 @@ namespace ranges
         }
 
     public:
-        template<typename I, typename S>
-        auto operator()(I begin, I middle, S end) const ->
-            CPP_ret(subrange<I>)(
-                requires Permutable<I> && Sentinel<S, I>)
+        CPP_template(typename I, typename S)(
+            requires Permutable<I> && Sentinel<S, I>)
+        subrange<I> operator()(I begin, I middle, S end) const
         {
             if(begin == middle)
             {
@@ -207,10 +206,9 @@ namespace ranges
             return rotate_fn::rotate_(begin, middle, end, iterator_tag_of<I>{});
         }
 
-        template<typename Rng, typename I = iterator_t<Rng>>
-        auto operator()(Rng &&rng, I middle) const ->
-            CPP_ret(safe_subrange_t<Rng>)(
-                requires Range<Rng> && Permutable<I>)
+        CPP_template(typename Rng)(
+            requires Range<Rng> && Permutable<iterator_t<Rng>>)
+        safe_subrange_t<Rng> operator()(Rng &&rng, iterator_t<Rng> middle) const
         {
             return (*this)(begin(rng), std::move(middle), end(rng));
         }

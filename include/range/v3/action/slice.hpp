@@ -70,10 +70,10 @@ namespace ranges
                 return std::bind(slice, std::placeholders::_1, from, to);
             }
         public:
-            template<typename Rng, typename I = iterator_t<Rng>>
-            auto operator()(Rng &&rng, diff_t<Rng> from, diff_t<Rng> to) const ->
-                CPP_ret(Rng)(
-                    requires ForwardRange<Rng> && ErasableRange<Rng &, I, I>)
+            CPP_template(typename Rng)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, diff_t<Rng> from, diff_t<Rng> to) const
             {
                 RANGES_EXPECT(0 <= from && 0 <= to && from <= to);
                 RANGES_EXPECT(!SizedRange<Rng> || to <= distance(rng));
@@ -82,10 +82,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
-            auto operator()(Rng &&rng, diff_t<Rng> from, detail::from_end_<diff_t<Rng>> to) const ->
-                CPP_ret(Rng)(
-                    requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
+            CPP_template(typename Rng)(
+                requires BidirectionalRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, diff_t<Rng> from, detail::from_end_<diff_t<Rng>> to) const
             {
                 RANGES_EXPECT(0 <= from && to.dist_ <= 0);
                 RANGES_EXPECT(!SizedRange<Rng> || from - to.dist_ <= distance(rng));
@@ -98,10 +98,11 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
-            auto operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from, detail::from_end_<diff_t<Rng>> to) const ->
-                CPP_ret(Rng)(
-                    requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
+            CPP_template(typename Rng)(
+                requires BidirectionalRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from,
+                    detail::from_end_<diff_t<Rng>> to) const
             {
                 RANGES_EXPECT(from.dist_ <= 0 && to.dist_ <= 0 && from.dist_ <= to.dist_);
                 RANGES_EXPECT(!SizedRange<Rng> || 0 <= distance(rng) + from.dist_);
@@ -112,10 +113,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
-            auto operator()(Rng &&rng, diff_t<Rng> from, end_fn const &) const ->
-                CPP_ret(Rng)(
-                    requires ForwardRange<Rng> && ErasableRange<Rng &, I, I>)
+            CPP_template(typename Rng)(
+                requires ForwardRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, diff_t<Rng> from, end_fn const &) const
             {
                 RANGES_EXPECT(0 <= from);
                 RANGES_EXPECT(!SizedRange<Rng> || from <= distance(rng));
@@ -123,10 +124,10 @@ namespace ranges
                 return static_cast<Rng &&>(rng);
             }
 
-            template<typename Rng, typename I = iterator_t<Rng>>
-            auto operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from, end_fn const &) const ->
-                CPP_ret(Rng)(
-                    requires BidirectionalRange<Rng> && ErasableRange<Rng &, I, I>)
+            CPP_template(typename Rng)(
+                requires BidirectionalRange<Rng> &&
+                    ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
+            Rng operator()(Rng &&rng, detail::from_end_<diff_t<Rng>> from, end_fn const &) const
             {
                 RANGES_EXPECT(from.dist_ <= 0);
                 RANGES_EXPECT(!SizedRange<Rng> || 0 <= distance(rng) + from.dist_);

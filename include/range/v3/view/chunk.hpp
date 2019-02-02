@@ -412,10 +412,9 @@ namespace ranges
                 return make_pipeable(std::bind(chunk, std::placeholders::_1, n));
             }
         public:
-            template<typename Rng>
-            auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(chunk_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng>)
+            chunk_view<all_t<Rng>> operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return {all(static_cast<Rng &&>(rng)), n};
             }

@@ -280,6 +280,11 @@ namespace ranges
 #endif
 #endif
 
+#if !defined(__clang__) && defined(__cpp_concepts)
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68061
+#define RANGES_WORKAROUND_GNU_68061 __attribute__(())
+#endif
+
 #else
 #define RANGES_DIAGNOSTIC_PUSH
 #define RANGES_DIAGNOSTIC_POP
@@ -413,6 +418,12 @@ namespace ranges
 #endif
 #ifndef RANGES_DEPRECATED
 #define RANGES_DEPRECATED(MSG)
+#endif
+
+#ifdef RANGES_WORKAROUND_GNU_68061
+#define RANGES_EMPTY_ATTR __attribute__(())
+#else
+#define RANGES_EMPTY_ATTR
 #endif
 
 #if !defined(RANGES_DEPRECATED_HEADER) && !defined(RANGES_DISABLE_DEPRECATED_WARNINGS)

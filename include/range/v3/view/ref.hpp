@@ -120,10 +120,9 @@ namespace ranges
     {
         struct ref_fn
         {
-            template<typename Rng>
-            constexpr auto operator()(Rng &rng) const noexcept ->
-                CPP_ret(ref_view<Rng>)(
-                    requires Range<Rng>)
+            CPP_template(typename Rng)(
+                requires Range<Rng>)
+            constexpr ref_view<Rng> operator()(Rng &rng) const noexcept
             {
                 return ref_view<Rng>(rng);
             }

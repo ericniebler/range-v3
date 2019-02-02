@@ -88,21 +88,19 @@ namespace ranges
             }
         }
     public:
-        template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        CPP_template(typename I, typename S, typename C, typename P = identity)(
+            requires Permutable<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
+        I operator()(I begin, S end, C pred, P proj = P{}) const
         {
             return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
                 std::move(proj), iterator_tag_of<I>());
         }
 
-        template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename C, typename P = identity)(
+            requires ForwardRange<Rng> && Permutable<iterator_t<Rng>> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
         {
             return partition_fn::impl(begin(rng), end(rng), std::move(pred),
                 std::move(proj), iterator_tag_of<iterator_t<Rng>>());

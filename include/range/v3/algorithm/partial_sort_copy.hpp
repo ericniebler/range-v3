@@ -33,15 +33,14 @@ namespace ranges
     /// @{
     struct partial_sort_copy_fn
     {
-        template<typename I, typename SI, typename O, typename SO, typename C = less,
-            typename PI = identity, typename PO = identity>
-        auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
-                PI in_proj = PI{}, PO out_proj = PO{}) const ->
-            CPP_ret(O)(
-                requires InputIterator<I> && Sentinel<SI, I> &&
-                    RandomAccessIterator<O> && Sentinel<SO, O> &&
-                    IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
-                    IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
+        CPP_template(typename I, typename SI, typename O, typename SO, typename C = less,
+            typename PI = identity, typename PO = identity)(
+            requires InputIterator<I> && Sentinel<SI, I> &&
+                RandomAccessIterator<O> && Sentinel<SO, O> &&
+                IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
+                IndirectStrictWeakOrder<C, projected<I, PI>, projected<O, PO>>)
+        O operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
+                PI in_proj = PI{}, PO out_proj = PO{}) const
         {
             O r = out_begin;
             if(r != out_end)
@@ -64,16 +63,15 @@ namespace ranges
             return r;
         }
 
-        template<typename InRng, typename OutRng, typename C = less,
-            typename PI = identity, typename PO = identity>
-        auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
-                PO out_proj = PO{}) const ->
-            CPP_ret(safe_iterator_t<OutRng>)(
+        CPP_template(typename InRng, typename OutRng, typename C = less,
+            typename PI = identity, typename PO = identity)(
                 requires InputRange<InRng> &&
                     RandomAccessRange<OutRng> &&
                     IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&
                     Sortable<iterator_t<OutRng>, C, PO> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<InRng>, PI>, projected<iterator_t<OutRng>, PO>>)
+        safe_iterator_t<OutRng> operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{},
+                PI in_proj = PI{}, PO out_proj = PO{}) const
         {
             return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),
                 std::move(pred), std::move(in_proj), std::move(out_proj));

@@ -51,10 +51,9 @@ namespace ranges
 
         struct cartesian_size_fn
         {
-            template<typename Rng>
-            auto operator()(std::intmax_t s, Rng &&rng) const ->
-                CPP_ret(std::intmax_t)(
-                    requires SizedRange<Rng>)
+            CPP_template(typename Rng)(
+                requires SizedRange<Rng>)
+            std::intmax_t operator()(std::intmax_t s, Rng &&rng) const
             {
                 return s * static_cast<std::intmax_t>(ranges::size(rng));
             }
@@ -417,11 +416,10 @@ RANGES_DIAGNOSTIC_POP
     {
         struct cartesian_product_fn
         {
-            template<typename... Rngs>
-            constexpr auto operator()(Rngs &&... rngs) const ->
-                CPP_ret(cartesian_product_view<all_t<Rngs>...>)(
-                    requires (sizeof...(Rngs) != 0) &&
-                        concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
+            CPP_template(typename... Rngs)(
+                requires (sizeof...(Rngs) != 0) &&
+                    concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
+            constexpr cartesian_product_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
             {
                 return cartesian_product_view<all_t<Rngs>...>{
                     all(static_cast<Rngs &&>(rngs))...};

@@ -84,10 +84,9 @@ namespace ranges
                     std::move(value)));
             }
         public:
-            template<typename Rng, typename Val>
-            auto operator()(Rng &&rng, Val value) const ->
-                CPP_ret(delimit_view<all_t<Rng>, Val>)(
-                    requires Delimitable<Rng, Val>)
+            CPP_template(typename Rng, typename Val)(
+                requires Delimitable<Rng, Val>)
+            delimit_view<all_t<Rng>, Val> operator()(Rng &&rng, Val value) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }
@@ -97,10 +96,9 @@ namespace ranges
         {
             using view<delimit_impl_fn>::operator();
 
-            template<typename I, typename Val>
-            auto operator()(I begin, Val value) const ->
-                CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)(
-                    requires InputIterator<I>)
+            CPP_template(typename I, typename Val)(
+                requires InputIterator<I>)
+            delimit_view<subrange<I, unreachable_sentinel_t>, Val> operator()(I begin, Val value) const
             {
                 return {{std::move(begin), {}}, std::move(value)};
             }

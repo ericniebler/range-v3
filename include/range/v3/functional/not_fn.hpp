@@ -71,11 +71,10 @@ namespace ranges
 
     struct not_fn_fn
     {
-        template<typename Pred>
-        constexpr auto operator()(Pred &&pred) const ->
-            CPP_ret(logical_negate<Pred>)(
-                requires MoveConstructible<detail::decay_t<Pred>> &&
-                    Constructible<detail::decay_t<Pred>, Pred>)
+        CPP_template(typename Pred)(
+            requires MoveConstructible<detail::decay_t<Pred>> &&
+                Constructible<detail::decay_t<Pred>, Pred>)
+        constexpr logical_negate<Pred> operator()(Pred &&pred) const
         {
             return logical_negate<Pred>{(Pred &&) pred};
         }

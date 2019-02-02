@@ -300,13 +300,12 @@ namespace ranges
             return {*this, ranges::begin};
         }
 
-        template<bool Const = true>
-        constexpr auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
-                requires Const &&
-                    InputRange<meta::const_if_c<Const, Rng>> &&
-                    std::is_reference<
-                        range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+        CPP_template(bool Const = true)(
+            requires Const &&
+                InputRange<meta::const_if_c<Const, Rng>> &&
+                std::is_reference<
+                    range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+        constexpr cursor<Const> begin_cursor() const
         {
             return {*this, ranges::begin};
         }
@@ -520,24 +519,21 @@ namespace ranges
            template<typename Rng>
            using inner_value_t = range_value_t<range_reference_t<Rng>>;
         public:
-            template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(join_view<all_t<Rng>>)(
-                    requires JoinableRange<Rng>)
+            CPP_template(typename Rng)(
+                requires JoinableRange<Rng>)
+            join_view<all_t<Rng>> operator()(Rng &&rng) const
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }
-            template<typename Rng>
-            auto operator()(Rng &&rng, inner_value_t<Rng> v) const ->
-                CPP_ret(join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>>)(
-                    requires JoinableWithRange<Rng, single_view<inner_value_t<Rng>>>)
+            CPP_template(typename Rng)(
+                requires JoinableWithRange<Rng, single_view<inner_value_t<Rng>>>)
+            join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>> operator()(Rng &&rng, inner_value_t<Rng> v) const
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
-            template<typename Rng, typename ValRng>
-            auto operator()(Rng &&rng, ValRng &&val) const ->
-                CPP_ret(join_with_view<all_t<Rng>, all_t<ValRng>>)(
-                    requires JoinableWithRange<Rng, ValRng>)
+            CPP_template(typename Rng, typename ValRng)(
+                requires JoinableWithRange<Rng, ValRng>)
+            join_with_view<all_t<Rng>, all_t<ValRng>> operator()(Rng &&rng, ValRng &&val) const
             {
                 return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};
             }

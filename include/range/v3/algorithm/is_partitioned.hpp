@@ -38,11 +38,10 @@ namespace ranges
     /// @{
     struct is_partitioned_fn
     {
-        template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>>)
+        CPP_template(typename I, typename S, typename C, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>>)
+        bool operator()(I begin, S end, C pred, P proj = P{}) const
         {
             for(; begin != end; ++begin)
                 if(!invoke(pred, invoke(proj, *begin)))
@@ -53,11 +52,10 @@ namespace ranges
             return true;
         }
 
-        template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename C, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
+        bool operator()(Rng &&rng, C pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

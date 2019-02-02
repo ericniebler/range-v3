@@ -41,11 +41,10 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `ForwardRange` concept.
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
-        template<typename I, typename S, typename Pred, typename Proj = identity>
-        auto operator()(I first, S last, Pred pred = {}, Proj proj = {}) const ->
-            CPP_ret(I)(
-                requires Permutable<I> && Sentinel<S, I> &&
-                    IndirectRelation<Pred, projected<I, Proj>>)
+        CPP_template(typename I, typename S, typename Pred, typename Proj = identity)(
+            requires Permutable<I> && Sentinel<S, I> &&
+                IndirectRelation<Pred, projected<I, Proj>>)
+        I operator()(I first, S last, Pred pred = {}, Proj proj = {}) const
         {
             first = adjacent_find(std::move(first), last, std::ref(pred), std::ref(proj));
             if(first == last)
@@ -67,12 +66,11 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename Pred, typename Proj = identity>
-        auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
-                    Permutable<iterator_t<Rng>>)
+        CPP_template(typename Rng, typename Pred, typename Proj = identity)(
+            requires ForwardRange<Rng> &&
+                IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
+                Permutable<iterator_t<Rng>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, Pred pred, Proj proj = {}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

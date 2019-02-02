@@ -260,23 +260,21 @@ namespace ranges
         }
 
     public:
-        template<typename I, typename S, typename C, typename P = identity>
-        auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires BidirectionalIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<C, projected<I, P>> && Permutable<I>)
+        CPP_template(typename I, typename S, typename C, typename P = identity)(
+            requires BidirectionalIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<C, projected<I, P>> && Permutable<I>)
+        I operator()(I begin, S end, C pred, P proj = P{}) const
         {
             return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
                 std::ref(proj), iterator_tag_of<I>());
         }
 
         // BUGBUG Can this be optimized if Rng has O1 size?
-        template<typename Rng, typename C, typename P = identity>
-        auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires BidirectionalRange<Rng> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
-                    Permutable<iterator_t<Rng>>)
+        CPP_template(typename Rng, typename C, typename P = identity)(
+            requires BidirectionalRange<Rng> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                Permutable<iterator_t<Rng>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

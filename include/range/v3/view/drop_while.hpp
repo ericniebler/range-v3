@@ -87,19 +87,17 @@ namespace ranges
                     protect(std::move(proj))));
             }
         public:
-            template<typename Rng, typename Pred>
-            auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Pred)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
+            drop_while_view<all_t<Rng>, Pred> operator()(Rng &&rng, Pred pred) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
-            template<typename Rng, typename Pred, typename Proj>
-            auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename Pred, typename Proj)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
+            drop_while_view<all_t<Rng>, composed<Pred, Proj>> operator()(Rng &&rng, Pred pred, Proj proj) const
             {
                 return {
                     all(static_cast<Rng &&>(rng)),

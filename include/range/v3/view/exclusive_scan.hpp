@@ -173,10 +173,9 @@ namespace ranges
                     std::move(init), protect(std::move(fun))));
             }
         public:
-            template<typename Rng, typename T, typename Fun = plus>
-            auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const ->
-                CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)(
-                    requires ExclusiveScanConstraint<Rng, T, Fun>)
+            CPP_template(typename Rng, typename T, typename Fun = plus)(
+                requires ExclusiveScanConstraint<Rng, T, Fun>)
+            exclusive_scan_view<all_t<Rng>, T, Fun> operator()(Rng &&rng, T init, Fun fun = Fun{}) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};
             }

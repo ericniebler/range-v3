@@ -35,13 +35,13 @@ namespace ranges
 
     struct replace_copy_if_fn
     {
-        template<typename I, typename S, typename O, typename C, typename T, typename P = identity>
-        auto operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const ->
-            CPP_ret(replace_copy_if_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    OutputIterator<O, T const &> &&
-                    IndirectUnaryPredicate<C, projected<I, P>> &&
-                    IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O, typename C, typename T,
+                typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                OutputIterator<O, T const &> &&
+                IndirectUnaryPredicate<C, projected<I, P>> &&
+                IndirectlyCopyable<I, O>)
+        replace_copy_if_result<I, O> operator()(I begin, S end, O out, C pred, T const & new_value, P proj = {}) const
         {
             for(; begin != end; ++begin, ++out)
             {
@@ -54,12 +54,11 @@ namespace ranges
             return {begin, out};
         }
 
-        template<typename Rng, typename O, typename C, typename T, typename P = identity>
-        auto operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const ->
-            CPP_ret(replace_copy_if_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && OutputIterator<O, T const &> &&
-                    IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O, typename C, typename T, typename P = identity)(
+            requires InputRange<Rng> && OutputIterator<O, T const &> &&
+                IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        replace_copy_if_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const
         {
             return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), new_value,
                 std::move(proj));

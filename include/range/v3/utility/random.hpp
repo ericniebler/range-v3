@@ -121,11 +121,10 @@ namespace ranges
     {
         namespace randutils
         {
-            template<typename T>
+            CPP_template(typename T)(
+                requires Integral<T>)
             RANGES_INTENDED_MODULAR_ARITHMETIC
-            constexpr /*c++14*/ auto crushto32(T value) ->
-                CPP_ret(std::uint32_t)(
-                    requires Integral<T>)
+            constexpr /*c++14*/ std::uint32_t crushto32(T value)
             {
                 if(sizeof(T) <= 4)
                     return static_cast<std::uint32_t>(value);
@@ -228,10 +227,9 @@ namespace ranges
                 return seeds;
             }
 
-            template<typename I>
-            constexpr auto fast_exp(I x, I power, I result = I{1}) ->
-                CPP_ret(I)(
-                    requires UnsignedIntegral<I>)
+            CPP_template(typename I)(
+                requires UnsignedIntegral<I>)
+            constexpr I fast_exp(I x, I power, I result = I{1})
             {
                 return power == I{0} ? result
                     : randutils::fast_exp(x * x, power >> 1, result * (power & I{1} ? x : 1));
@@ -324,11 +322,10 @@ namespace ranges
 
                 std::array<IntRep, count> mixer_;
 
-                template<typename I, typename S>
-                auto mix_entropy(I begin, S end) ->
-                    CPP_ret(void)(
-                        requires InputIterator<I> && Sentinel<S, I> &&
-                            ConvertibleTo<iter_reference_t<I>, IntRep>)
+                CPP_template(typename I, typename S)(
+                    requires InputIterator<I> && Sentinel<S, I> &&
+                        ConvertibleTo<iter_reference_t<I>, IntRep>)
+                void mix_entropy(I begin, S end)
                 {
                     auto hash_const = INIT_A;
                     auto hash = [&](IntRep value) RANGES_INTENDED_MODULAR_ARITHMETIC
@@ -382,11 +379,10 @@ namespace ranges
                 }
 
                 // generating functions
-                template<typename I, typename S>
+                CPP_template(typename I, typename S)(
+                    requires RandomAccessIterator<I> && Sentinel<S, I>)
                 RANGES_INTENDED_MODULAR_ARITHMETIC
-                auto generate(I dest_begin, S dest_end) const ->
-                    CPP_ret(void)(
-                        requires RandomAccessIterator<I> && Sentinel<S, I>)
+                void generate(I dest_begin, S dest_end) const
                 {
                     auto src_begin = mixer_.begin();
                     auto src_end   = mixer_.end();
@@ -410,12 +406,11 @@ namespace ranges
                     return count;
                 }
 
-                template<typename O>
-                RANGES_INTENDED_MODULAR_ARITHMETIC
-                auto param(O dest) const ->
-                    CPP_ret(void)(
-                        requires WeaklyIncrementable<O> &&
+                CPP_template(typename O)(
+                    requires WeaklyIncrementable<O> &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
+                RANGES_INTENDED_MODULAR_ARITHMETIC
+                void param(O dest) const
                 {
                     const IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
                     const IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
@@ -456,11 +451,10 @@ namespace ranges
                     ranges::copy(mixer_copy, dest);
                 }
 
-                template<typename I, typename S>
-                auto seed(I begin, S end) ->
-                    CPP_ret(void)(
-                    requires InputIterator<I> && Sentinel<S, I> &&
-                        ConvertibleTo<iter_reference_t<I>, IntRep>)
+                CPP_template(typename I, typename S)(
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    ConvertibleTo<iter_reference_t<I>, IntRep>)
+                void seed(I begin, S end)
                 {
                     mix_entropy(begin, end);
                     // For very small sizes, we do some additional mixing.  For normal

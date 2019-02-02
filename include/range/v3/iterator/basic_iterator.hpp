@@ -222,119 +222,101 @@ namespace ranges
                 this->write_(that.read_());
                 return *this;
             }
-            template<typename OtherCur>
-            constexpr /*c++14*/
-            auto operator=(basic_proxy_reference<OtherCur> && that) ->
-                CPP_ret(basic_proxy_reference_ &)(
-                    requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            CPP_template(typename OtherCur)(
+                requires ReadableCursor<OtherCur> &&
+                    WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            constexpr /*c++14*/ basic_proxy_reference_ &
+            operator=(basic_proxy_reference<OtherCur> && that)
             {
                 return *this = that;
             }
-            template<typename OtherCur>
-            constexpr /*c++14*/
-            auto operator=(basic_proxy_reference<OtherCur> const &that) ->
-                CPP_ret(basic_proxy_reference_ &)(
-                    requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            CPP_template(typename OtherCur)(
+                requires ReadableCursor<OtherCur> &&
+                    WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            constexpr /*c++14*/ basic_proxy_reference_ &
+            operator=(basic_proxy_reference<OtherCur> const &that)
             {
                 this->write_(that.read_());
                 return *this;
             }
-            template<typename OtherCur>
-            constexpr /*c++14*/
-            auto operator=(basic_proxy_reference<OtherCur> && that) const ->
-                CPP_ret(basic_proxy_reference_ const &)(
-                    requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            CPP_template(typename OtherCur)(
+                requires ReadableCursor<OtherCur> &&
+                    WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            constexpr /*c++14*/ basic_proxy_reference_ const &
+            operator=(basic_proxy_reference<OtherCur> && that) const
             {
                 return *this = that;
             }
-            template<typename OtherCur>
-            constexpr /*c++14*/
-            auto operator=(basic_proxy_reference<OtherCur> const &that) const ->
-                CPP_ret(basic_proxy_reference_ const &)(
-                    requires ReadableCursor<OtherCur> &&
-                        WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            CPP_template(typename OtherCur)(
+                requires ReadableCursor<OtherCur> &&
+                    WritableCursor<Cur, cursor_reference_t<OtherCur>>)
+            constexpr /*c++14*/ basic_proxy_reference_ const &
+            operator=(basic_proxy_reference<OtherCur> const &that) const
             {
                 this->write_(that.read_());
                 return *this;
             }
-            template<typename T>
-            constexpr /*c++14*/
-            auto operator=(T &&t) ->
-                CPP_ret(basic_proxy_reference_ &)(
-                    requires WritableCursor<Cur, T>)
+            CPP_template(typename T)(
+                requires WritableCursor<Cur, T>)
+            constexpr /*c++14*/ basic_proxy_reference_ & operator=(T &&t)
             {
                 this->write_((T &&) t);
                 return *this;
             }
-            template<typename T>
-            constexpr /*c++14*/
-            auto operator=(T &&t) const ->
-                CPP_ret(basic_proxy_reference_ const &)(
-                    requires WritableCursor<Cur, T>)
+            CPP_template(typename T)(
+                requires WritableCursor<Cur, T>)
+            constexpr /*c++14*/ basic_proxy_reference_ const & operator=(T &&t) const
             {
                 this->write_((T &&) t);
                 return *this;
             }
         };
 
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator==(basic_proxy_reference_<Cur, Readable> const &x,
-            cursor_value_t<Cur> const &y) -> CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator==(basic_proxy_reference_<Cur, Readable> const &x,
+            cursor_value_t<Cur> const &y)
         {
             return x.read_() == y;
         }
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator!=(basic_proxy_reference_<Cur, Readable> const &x,
-            cursor_value_t<Cur> const &y) -> CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator!=(basic_proxy_reference_<Cur, Readable> const &x,
+            cursor_value_t<Cur> const &y)
         {
             return !(x == y);
         }
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator==(cursor_value_t<Cur> const &x,
-            basic_proxy_reference_<Cur, Readable> const &y) ->
-            CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator==(cursor_value_t<Cur> const &x,
+            basic_proxy_reference_<Cur, Readable> const &y)
         {
             return x == y.read_();
         }
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator!=(cursor_value_t<Cur> const &x,
-            basic_proxy_reference_<Cur, Readable> const &y) ->
-            CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator!=(cursor_value_t<Cur> const &x,
+            basic_proxy_reference_<Cur, Readable> const &y)
         {
             return !(x == y);
         }
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator==(basic_proxy_reference_<Cur, Readable> const &x,
-            basic_proxy_reference_<Cur, Readable> const &y) ->
-            CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator==(basic_proxy_reference_<Cur, Readable> const &x,
+            basic_proxy_reference_<Cur, Readable> const &y)
         {
             return x.read_() == y.read_();
         }
-        template<typename Cur, bool Readable>
-        constexpr /*c++14*/
-        auto operator!=(basic_proxy_reference_<Cur, Readable> const &x,
-            basic_proxy_reference_<Cur, Readable> const &y) ->
-            CPP_ret(bool)(
-                requires ReadableCursor<Cur> &&
-                    EqualityComparable<cursor_value_t<Cur>>)
+        CPP_template(typename Cur, bool Readable)(
+            requires ReadableCursor<Cur> &&
+                EqualityComparable<cursor_value_t<Cur>>)
+        constexpr /*c++14*/ bool operator!=(basic_proxy_reference_<Cur, Readable> const &x,
+            basic_proxy_reference_<Cur, Readable> const &y)
         {
             return !(x == y);
         }
@@ -561,11 +543,9 @@ namespace ranges
         // Mix in any additional constructors provided by the mixin
         using base_t::base_t;
 
-        template<typename OtherCur>
-        constexpr /*c++14*/
-        auto operator=(basic_iterator<OtherCur> that) ->
-            CPP_ret(basic_iterator &)(
-                requires (!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur>)
+        CPP_template(typename OtherCur)(
+            requires (!Same<OtherCur, Cur>) && ConvertibleTo<OtherCur, Cur>)
+        constexpr /*c++14*/ basic_iterator & operator=(basic_iterator<OtherCur> that)
         {
             pos() = std::move(that.pos());
             return *this;
@@ -655,12 +635,11 @@ namespace ranges
         }
         // Attempt to satisfy the C++17 iterator requirements by returning a
         // proxy from postfix increment:
-        template<typename A = assoc_types_, typename V = typename A::value_type>
-        constexpr /*c++14*/
-        auto post_increment_(std::true_type, int) ->
-            CPP_ret(detail::postfix_increment_proxy<V>)(
-                requires Constructible<V, typename A::reference> &&
-                    MoveConstructible<V>)
+        CPP_template(typename A = assoc_types_, typename V = typename A::value_type)(
+            requires Constructible<V, typename A::reference> &&
+                MoveConstructible<V>)
+        constexpr /*c++14*/ detail::postfix_increment_proxy<V>
+        post_increment_(std::true_type, int)
         {
             detail::postfix_increment_proxy<V> p{**this};
             ++*this;
@@ -738,145 +717,122 @@ namespace ranges
 #endif
     };
 
-    template<typename Cur, typename Cur2>
-    constexpr auto operator==(basic_iterator<Cur> const &left,
-        basic_iterator<Cur2> const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<Cur2, Cur>)
+    CPP_template(typename Cur, typename Cur2)(
+        requires detail::CursorSentinel<Cur2, Cur>)
+    constexpr bool operator==(basic_iterator<Cur> const &left,
+        basic_iterator<Cur2> const &right)
     {
         return range_access::equal(range_access::pos(left), range_access::pos(right));
     }
-    template<typename Cur, typename Cur2>
-    constexpr auto operator!=(basic_iterator<Cur> const &left,
-        basic_iterator<Cur2> const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<Cur2, Cur>)
+    CPP_template(typename Cur, typename Cur2)(
+        requires detail::CursorSentinel<Cur2, Cur>)
+    constexpr bool operator!=(basic_iterator<Cur> const &left,
+        basic_iterator<Cur2> const &right)
     {
         return !(left == right);
     }
-    template<typename Cur, typename S>
-    constexpr auto operator==(basic_iterator<Cur> const &left,
-        S const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<S, Cur>)
+    CPP_template(typename Cur, typename S)(
+        requires detail::CursorSentinel<S, Cur>)
+    constexpr bool operator==(basic_iterator<Cur> const &left,
+        S const &right)
     {
         return range_access::equal(range_access::pos(left), right);
     }
-    template<typename Cur, typename S>
-    constexpr auto operator!=(basic_iterator<Cur> const &left,
-        S const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<S, Cur>)
+    CPP_template(typename Cur, typename S)(
+        requires detail::CursorSentinel<S, Cur>)
+    constexpr bool operator!=(basic_iterator<Cur> const &left,
+        S const &right)
     {
         return !(left == right);
     }
-    template<typename S, typename Cur>
-    constexpr auto operator==(S const &left,
-        basic_iterator<Cur> const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<S, Cur>)
+    CPP_template(typename S, typename Cur)(
+        requires detail::CursorSentinel<S, Cur>)
+    constexpr bool operator==(S const &left,
+        basic_iterator<Cur> const &right)
     {
         return right == left;
     }
-    template<typename S, typename Cur>
-    constexpr auto operator!=(S const &left,
-        basic_iterator<Cur> const &right) ->
-            CPP_ret(bool)(
-                requires detail::CursorSentinel<S, Cur>)
+    CPP_template(typename S, typename Cur)(
+        requires detail::CursorSentinel<S, Cur>)
+    constexpr bool operator!=(S const &left,
+        basic_iterator<Cur> const &right)
     {
         return right != left;
     }
 
-    template<typename Cur>
-    constexpr /*c++14*/
-    auto operator+(basic_iterator<Cur> left,
-        typename basic_iterator<Cur>::difference_type n) ->
-        CPP_ret(basic_iterator<Cur>)(
-            requires detail::RandomAccessCursor<Cur>)
+    CPP_template(typename Cur)(
+        requires detail::RandomAccessCursor<Cur>)
+    constexpr /*c++14*/ basic_iterator<Cur> operator+(basic_iterator<Cur> left,
+        typename basic_iterator<Cur>::difference_type n)
     {
         left += n;
         return left;
     }
-    template<typename Cur>
-    constexpr /*c++14*/
-    auto operator+(
+    CPP_template(typename Cur)(
+        requires detail::RandomAccessCursor<Cur>)
+    constexpr /*c++14*/ basic_iterator<Cur> operator+(
         typename basic_iterator<Cur>::difference_type n,
-        basic_iterator<Cur> right) ->
-        CPP_ret(basic_iterator<Cur>)(
-            requires detail::RandomAccessCursor<Cur>)
+        basic_iterator<Cur> right)
     {
         right += n;
         return right;
     }
-    template<typename Cur>
-    constexpr /*c++14*/
-    auto operator-(basic_iterator<Cur> left,
-        typename basic_iterator<Cur>::difference_type n) ->
-        CPP_ret(basic_iterator<Cur>)(
-            requires detail::RandomAccessCursor<Cur>)
+    CPP_template(typename Cur)(
+        requires detail::RandomAccessCursor<Cur>)
+    constexpr /*c++14*/ basic_iterator<Cur> operator-(basic_iterator<Cur> left,
+        typename basic_iterator<Cur>::difference_type n)
     {
         left -= n;
         return left;
     }
-    template<typename Cur2, typename Cur>
-    constexpr /*c++14*/
-    auto operator-(basic_iterator<Cur2> const &left,
-        basic_iterator<Cur> const &right) ->
-        CPP_ret(typename basic_iterator<Cur>::difference_type)(
-            requires detail::SizedCursorSentinel<Cur2, Cur>)
+    CPP_template(typename Cur2, typename Cur)(
+        requires detail::SizedCursorSentinel<Cur2, Cur>)
+    constexpr /*c++14*/ typename basic_iterator<Cur>::difference_type
+    operator-(basic_iterator<Cur2> const &left,
+        basic_iterator<Cur> const &right)
     {
         return range_access::distance_to(range_access::pos(right), range_access::pos(left));
     }
-    template<typename S, typename Cur>
-    constexpr /*c++14*/
-    auto operator-(S const &left, basic_iterator<Cur> const &right) ->
-        CPP_ret(typename basic_iterator<Cur>::difference_type)(
-            requires detail::SizedCursorSentinel<S, Cur>)
+    CPP_template(typename S, typename Cur)(
+        requires detail::SizedCursorSentinel<S, Cur>)
+    constexpr /*c++14*/ typename basic_iterator<Cur>::difference_type
+    operator-(S const &left, basic_iterator<Cur> const &right)
     {
         return range_access::distance_to(range_access::pos(right), left);
     }
-    template<typename Cur, typename S>
-    constexpr /*c++14*/
-    auto operator-(basic_iterator<Cur> const &left, S const &right) ->
-        CPP_ret(typename basic_iterator<Cur>::difference_type)(
-            requires detail::SizedCursorSentinel<S, Cur>)
+    CPP_template(typename Cur, typename S)(
+        requires detail::SizedCursorSentinel<S, Cur>)
+    constexpr /*c++14*/ typename basic_iterator<Cur>::difference_type
+    operator-(basic_iterator<Cur> const &left, S const &right)
     {
         return -(right - left);
     }
     // Asymmetric comparisons
-    template<typename Left, typename Right>
-    constexpr /*c++14*/
-    auto operator<(basic_iterator<Left> const &left,
-        basic_iterator<Right> const &right) ->
-        CPP_ret(bool)(
-            requires detail::SizedCursorSentinel<Right, Left>)
+    CPP_template(typename Left, typename Right)(
+        requires detail::SizedCursorSentinel<Right, Left>)
+    constexpr /*c++14*/ bool operator<(basic_iterator<Left> const &left,
+        basic_iterator<Right> const &right)
     {
         return 0 < (right - left);
     }
-    template<typename Left, typename Right>
-    constexpr /*c++14*/
-    auto operator<=(basic_iterator<Left> const &left,
-        basic_iterator<Right> const &right) ->
-        CPP_ret(bool)(
-            requires detail::SizedCursorSentinel<Right, Left>)
+    CPP_template(typename Left, typename Right)(
+        requires detail::SizedCursorSentinel<Right, Left>)
+    constexpr /*c++14*/ bool operator<=(basic_iterator<Left> const &left,
+        basic_iterator<Right> const &right)
     {
         return 0 <= (right - left);
     }
-    template<typename Left, typename Right>
-    constexpr /*c++14*/
-    auto operator>(basic_iterator<Left> const &left,
-        basic_iterator<Right> const &right) ->
-        CPP_ret(bool)(
-            requires detail::SizedCursorSentinel<Right, Left>)
+    CPP_template(typename Left, typename Right)(
+        requires detail::SizedCursorSentinel<Right, Left>)
+    constexpr /*c++14*/ bool operator>(basic_iterator<Left> const &left,
+        basic_iterator<Right> const &right)
     {
         return (right - left) < 0;
     }
-    template<typename Left, typename Right>
-    constexpr /*c++14*/
-    auto operator>=(basic_iterator<Left> const &left,
-        basic_iterator<Right> const &right) ->
-        CPP_ret(bool)(
-            requires detail::SizedCursorSentinel<Right, Left>)
+    CPP_template(typename Left, typename Right)(
+        requires detail::SizedCursorSentinel<Right, Left>)
+    constexpr /*c++14*/ bool operator>=(basic_iterator<Left> const &left,
+        basic_iterator<Right> const &right)
     {
         return (right - left) <= 0;
     }

@@ -35,13 +35,12 @@ namespace ranges
 
     struct remove_copy_fn
     {
-        template<typename I, typename S, typename O, typename T, typename P = identity>
-        auto operator()(I begin, S end, O out, T const &val, P proj = P{}) const ->
-            CPP_ret(remove_copy_result<I, O>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    WeaklyIncrementable<O> &&
-                    IndirectRelation<equal_to, projected<I, P>, T const *> &&
-                    IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O, typename T, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                WeaklyIncrementable<O> &&
+                IndirectRelation<equal_to, projected<I, P>, T const *> &&
+                IndirectlyCopyable<I, O>)
+        remove_copy_result<I, O> operator()(I begin, S end, O out, T const &val, P proj = P{}) const
         {
             for(; begin != end; ++begin)
             {
@@ -55,12 +54,12 @@ namespace ranges
             return {begin, out};
         }
 
-        template<typename Rng, typename O, typename T, typename P = identity>
-        auto operator()(Rng &&rng, O out, T const &val, P proj = P{}) const ->
-            CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)(
-                requires InputRange<Rng> && WeaklyIncrementable<O> &&
-                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O, typename T, typename P = identity)(
+            requires InputRange<Rng> && WeaklyIncrementable<O> &&
+                IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        remove_copy_result<safe_iterator_t<Rng>, O>
+        operator()(Rng &&rng, O out, T const &val, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(out), val, std::move(proj));
         }

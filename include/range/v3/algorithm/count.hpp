@@ -30,11 +30,10 @@ namespace ranges
     /// @{
     struct count_fn
     {
-        template<typename I, typename S, typename V, typename P = identity>
-        auto operator()(I begin, S end, V const & val, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<I>)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<equal_to, projected<I, P>, V const *>)
+        CPP_template(typename I, typename S, typename V, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectRelation<equal_to, projected<I, P>, V const *>)
+        iter_difference_t<I> operator()(I begin, S end, V const & val, P proj = P{}) const
         {
             iter_difference_t<I> n = 0;
             for(; begin != end; ++begin)
@@ -43,11 +42,10 @@ namespace ranges
             return n;
         }
 
-        template<typename Rng, typename V, typename P = identity>
-        auto operator()(Rng &&rng, V const & val, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<iterator_t<Rng>>)(
-                requires InputRange<Rng> &&
-                    IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+        CPP_template(typename Rng, typename V, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
+        iter_difference_t<iterator_t<Rng>> operator()(Rng &&rng, V const & val, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), val, std::move(proj));
         }

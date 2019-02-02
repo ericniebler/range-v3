@@ -36,11 +36,10 @@ namespace ranges
         ///
         /// \pre `Rng` is a model of the `Range` concept
         /// \pre `C` is a model of the `BinaryPredicate` concept
-        template<typename I, typename S, typename C = equal_to, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectRelation<C, projected<I, P>>)
+        CPP_template(typename I, typename S, typename C = equal_to, typename P = identity)(
+            requires ForwardIterator<I> && Sentinel<S, I> &&
+                IndirectRelation<C, projected<I, P>>)
+        I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
         {
             if(begin == end)
                 return begin;
@@ -52,11 +51,10 @@ namespace ranges
         }
 
         /// \overload
-        template<typename Rng, typename C = equal_to, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectRelation<C, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename C = equal_to, typename P = identity)(
+            requires ForwardRange<Rng> &&
+                IndirectRelation<C, projected<iterator_t<Rng>, P>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

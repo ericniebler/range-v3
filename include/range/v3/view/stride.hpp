@@ -206,11 +206,10 @@ namespace ranges
                 }
                 ranges::advance(it, delta);
             }
-            template<typename Other>
-            constexpr /*c++14*/ auto distance_to(iterator_t<CRng> const &here,
-                    Other const &there) const ->
-                CPP_ret(range_difference_t<Rng>)(
-                    requires SizedSentinel<Other, iterator_t<CRng>>)
+            CPP_template(typename Other)(
+                requires SizedSentinel<Other, iterator_t<CRng>>)
+            constexpr /*c++14*/ range_difference_t<Rng> distance_to(iterator_t<CRng> const &here,
+                    Other const &there) const
             {
                 range_difference_t<Rng> delta = there - here;
                 if(delta < 0)
@@ -332,10 +331,9 @@ namespace ranges
                 return make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)));
             }
         public:
-            template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_difference_t<Rng> step) const ->
-                CPP_ret(stride_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng>)
+            constexpr stride_view<all_t<Rng>> operator()(Rng &&rng, range_difference_t<Rng> step) const
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};
             }

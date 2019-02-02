@@ -66,12 +66,11 @@ namespace ranges
             friend pipeable_access;
 
             // Piping requires things are passed by value.
-            template<typename Rng, typename Act>
-            static auto pipe(Rng &&rng, Act &&act) ->
-                CPP_ret(invoke_result_t<Action &, Rng>)(
-                    requires Range<Rng> &&
-                        Invocable<Action &, Rng> &&
-                        !std::is_reference<Rng>::value)
+            CPP_template(typename Rng, typename Act)(
+                requires Range<Rng> &&
+                    Invocable<Action &, Rng> &&
+                    !std::is_reference<Rng>::value)
+            static invoke_result_t<Action &, Rng> pipe(Rng &&rng, Act &&act)
             {
                 return invoke(act.action_, detail::move(rng));
             }
@@ -83,11 +82,10 @@ namespace ranges
             {}
 
             // Calling directly requires things are passed by reference.
-            template<typename Rng, typename ...Rest>
-            auto operator()(Rng &rng, Rest &&... rest) const ->
-                CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
-                    requires Range<Rng> &&
-                        Invocable<Action const &, Rng &, Rest...>)
+            CPP_template(typename Rng, typename ...Rest)(
+                requires Range<Rng> &&
+                    Invocable<Action const &, Rng &, Rest...>)
+            invoke_result_t<Action const &, Rng &, Rest...> operator()(Rng &rng, Rest &&... rest) const
             {
                 return invoke(action_, rng, static_cast<Rest &&>(rest)...);
             }
@@ -104,13 +102,12 @@ namespace ranges
             )
         };
 
-        template<typename Rng, typename Action>
-        auto operator|=(Rng &rng, Action &&action) ->
-            CPP_ret(Rng &)(
-                requires is_pipeable<Action>::value && Range<Rng &> &&
+        CPP_template(typename Rng, typename Action)(
+            requires is_pipeable<Action>::value && Range<Rng &> &&
                 Invocable<bitwise_or, ref_view<Rng>, Action &> &&
                 Same<ref_view<Rng>,
                     invoke_result_t<bitwise_or, ref_view<Rng>, Action &>>)
+        Rng &operator|=(Rng &rng, Action &&action)
         {
             view::ref(rng) | action;
             return rng;

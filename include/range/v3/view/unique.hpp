@@ -41,11 +41,10 @@ namespace ranges
             }
 
         public:
-            template<typename Rng, typename C = equal_to>
-            auto operator()(Rng && rng, C pred = {}) const ->
-                CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)(
-                    requires ViewableRange<Rng> && ForwardRange<Rng> &&
-                        IndirectRelation<C, iterator_t<Rng>>)
+            CPP_template(typename Rng, typename C = equal_to)(
+                requires ViewableRange<Rng> && ForwardRange<Rng> &&
+                    IndirectRelation<C, iterator_t<Rng>>)
+            adjacent_filter_view<all_t<Rng>, logical_negate<C>> operator()(Rng && rng, C pred = {}) const
             {
                 return {all(static_cast<Rng &&>(rng)), not_fn(pred)};
             }

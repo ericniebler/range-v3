@@ -121,10 +121,10 @@ namespace ranges
         std::unique_ptr<interface> ptr_;
     public:
         any() noexcept = default;
-        template<typename TRef, typename T = detail::decay_t<TRef>>
+        template<typename TRef>
         CPP_ctor(any)(TRef &&t)(
-            requires Copyable<T> && !Same<T, any>)
-          : ptr_(new impl<T>(static_cast<TRef &&>(t)))
+            requires Copyable<detail::decay_t<TRef>> && (!Same<detail::decay_t<TRef>, any>))
+          : ptr_(new impl<detail::decay_t<TRef>>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
         any(any const &that)
@@ -136,9 +136,9 @@ namespace ranges
             ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
             return *this;
         }
-        template<typename TRef, typename T = detail::decay_t<TRef>>
-        auto operator=(TRef &&t) -> CPP_ret(any &)(
-            requires Copyable<T> && !Same<T, any>)
+        CPP_template(typename TRef)(
+            requires Copyable<detail::decay_t<TRef>> && (!Same<detail::decay_t<TRef>, any>))
+        any & operator=(TRef &&t)
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
             return *this;

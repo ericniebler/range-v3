@@ -102,10 +102,9 @@ namespace ranges
     {
         struct repeat_n_fn
         {
-            template<typename Val>
-            auto operator()(Val value, std::ptrdiff_t n) const ->
-                CPP_ret(repeat_n_view<Val>)(
-                    requires CopyConstructible<Val>)
+            CPP_template(typename Val)(
+                requires CopyConstructible<Val>)
+            repeat_n_view<Val> operator()(Val value, std::ptrdiff_t n) const
             {
                 return repeat_n_view<Val>{std::move(value), n};
             }

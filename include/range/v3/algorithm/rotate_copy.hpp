@@ -35,10 +35,9 @@ namespace ranges
 
     struct rotate_copy_fn
     {
-        template<typename I, typename S, typename O, typename P = identity>
-        auto operator()(I begin, I middle, S end, O out) const ->
-            CPP_ret(rotate_copy_result<I, O>)(
-                requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        CPP_template(typename I, typename S, typename O, typename P = identity)(
+            requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
+        rotate_copy_result<I, O> operator()(I begin, I middle, S end, O out) const
         {
             auto res = copy(middle, std::move(end), std::move(out));
             return {
@@ -47,11 +46,10 @@ namespace ranges
             };
         }
 
-        template<typename Rng, typename O, typename P = identity>
-        auto operator()(Rng &&rng, iterator_t<Rng> middle, O out) const ->
-            CPP_ret(rotate_copy_result<safe_iterator_t<Rng>, O>)(
-                requires Range<Rng> && WeaklyIncrementable<O> &&
-                    IndirectlyCopyable<iterator_t<Rng>, O>)
+        CPP_template(typename Rng, typename O, typename P = identity)(
+            requires Range<Rng> && WeaklyIncrementable<O> &&
+                IndirectlyCopyable<iterator_t<Rng>, O>)
+        rotate_copy_result<safe_iterator_t<Rng>, O> operator()(Rng &&rng, iterator_t<Rng> middle, O out) const
         {
             return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));
         }

@@ -46,10 +46,9 @@ namespace ranges
     {
         // stable, 2-3 compares, 0-2 swaps
 
-        template<typename I, typename C, typename P>
-        auto sort3(I x, I y, I z, C &pred, P &proj) ->
-            CPP_ret(unsigned)(
-                requires ForwardIterator<I> && IndirectRelation<C, projected<I, P>>)
+        CPP_template(typename I, typename C, typename P)(
+            requires ForwardIterator<I> && IndirectRelation<C, projected<I, P>>)
+        unsigned sort3(I x, I y, I z, C &pred, P &proj)
         {
             unsigned r = 0;
             if(!invoke(pred, invoke(proj, *y), invoke(proj, *x)))     // if x <= y
@@ -82,10 +81,9 @@ namespace ranges
             return r;
         }                                                             // x <= y && y <= z
 
-        template<typename I, typename C, typename P>
-        auto selection_sort(I begin, I end, C &pred, P &proj) ->
-            CPP_ret(void)(
-                requires BidirectionalIterator<I> && IndirectRelation<C, projected<I, P>>)
+        CPP_template(typename I, typename C, typename P)(
+            requires BidirectionalIterator<I> && IndirectRelation<C, projected<I, P>>)
+        void selection_sort(I begin, I end, C &pred, P &proj)
         {
             RANGES_EXPECT(begin != end);
             for(I lm1 = ranges::prev(end); begin != lm1; ++begin)
@@ -102,10 +100,9 @@ namespace ranges
     /// @{
     struct nth_element_fn
     {
-        template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires RandomAccessIterator<I> && Sortable<I, C, P>)
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)(
+            requires RandomAccessIterator<I> && Sortable<I, C, P>)
+        I operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const
         {
             I end = ranges::next(nth, end_), end_orig = end;
             // C is known to be a reference type
@@ -292,10 +289,9 @@ namespace ranges
             return end_orig;
         }
 
-        template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+        CPP_template(typename Rng, typename C = less, typename P = identity)(
+            requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) const
         {
             return (*this)(begin(rng), std::move(nth), end(rng), std::move(pred),
                 std::move(proj));

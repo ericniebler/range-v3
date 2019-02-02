@@ -120,9 +120,9 @@ namespace ranges
     struct ref_fn
       : pipeable<ref_fn>
     {
-        template<typename T>
-        auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)(
-            requires (!is_reference_wrapper_v<T>))
+        CPP_template(typename T)(
+        requires (!is_reference_wrapper_v<T>))
+        reference_wrapper<T> operator()(T &t) const
         {
             return {t};
         }

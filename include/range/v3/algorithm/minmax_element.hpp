@@ -38,11 +38,10 @@ namespace ranges
 
     struct minmax_element_fn
     {
-        template<typename I, typename S, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_element_result<I>)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<C, projected<I, P>>)
+        CPP_template(typename I, typename S, typename C = less, typename P = identity)(
+            requires ForwardIterator<I> && Sentinel<S, I> &&
+                IndirectStrictWeakOrder<C, projected<I, P>>)
+        minmax_element_result<I> operator()(I begin, S end, C pred = C{}, P proj = P{}) const
         {
             minmax_element_result<I> result{begin, begin};
             if(begin == end || ++begin == end)
@@ -83,11 +82,10 @@ namespace ranges
             return result;
         }
 
-        template<typename Rng, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_element_result<safe_iterator_t<Rng>>)(
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename C = less, typename P = identity)(
+            requires ForwardRange<Rng> &&
+                IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
+        minmax_element_result<safe_iterator_t<Rng>> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

@@ -46,10 +46,9 @@ namespace ranges
     {
         struct unbounded_fn
         {
-            template<typename I>
-            constexpr auto operator()(I it) const ->
-                CPP_ret(unbounded_view<I>)(
-                    requires InputIterator<I>)
+            CPP_template(typename I)(
+                requires InputIterator<I>)
+            constexpr unbounded_view<I> operator()(I it) const
             {
                 return unbounded_view<I>{detail::move(it)};
             }

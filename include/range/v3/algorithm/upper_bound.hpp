@@ -31,22 +31,20 @@ namespace ranges
     /// @{
     struct upper_bound_fn
     {
-        template<typename I, typename S, typename V, typename C = less, typename P = identity>
-        auto operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
-                requires ForwardIterator<I> && Sentinel<S, I> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+        CPP_template(typename I, typename S, typename V, typename C = less, typename P = identity)(
+            requires ForwardIterator<I> && Sentinel<S, I> &&
+                IndirectStrictWeakOrder<C, V const *, projected<I, P>>)
+        I operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
         {
             return partition_point(std::move(begin), std::move(end),
                 detail::make_upper_bound_predicate(pred, val), std::move(proj));
         }
 
         /// \overload
-        template<typename Rng, typename V, typename C = less, typename P = identity>
-        auto operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
-                requires ForwardRange<Rng> &&
-                    IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename V, typename C = less, typename P = identity)(
+            requires ForwardRange<Rng> &&
+                IndirectStrictWeakOrder<C, V const *, projected<iterator_t<Rng>, P>>)
+        safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, C pred = C{}, P proj = P{}) const
         {
             return partition_point(rng,
                 detail::make_upper_bound_predicate(pred, val), std::move(proj));

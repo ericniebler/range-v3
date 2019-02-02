@@ -30,11 +30,10 @@ namespace ranges
     /// @{
     struct all_of_fn
     {
-        template<typename I, typename S, typename F, typename P = identity>
-        auto operator()(I first, S last, F pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputIterator<I> && Sentinel<S, I> &&
-                    IndirectUnaryPredicate<F, projected<I, P> >)
+        CPP_template(typename I, typename S, typename F, typename P = identity)(
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<F, projected<I, P> >)
+        bool operator()(I first, S last, F pred, P proj = P{}) const
         {
             for(; first != last; ++first)
                 if(!invoke(pred, invoke(proj, *first)))
@@ -42,11 +41,10 @@ namespace ranges
             return first == last;
         }
 
-        template<typename Rng, typename F, typename P = identity>
-        auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-            CPP_ret(bool)(
-                requires InputRange<Rng> &&
-                    IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        CPP_template(typename Rng, typename F, typename P = identity)(
+            requires InputRange<Rng> &&
+                IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
+        bool operator()(Rng &&rng, F pred, P proj = P{}) const
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
         }

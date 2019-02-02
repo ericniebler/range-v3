@@ -32,42 +32,38 @@ namespace ranges
 
     struct swap_ranges_fn
     {
-        template<typename I1, typename S1, typename I2>
-        auto operator()(I1 begin1, S1 end1, I2 begin2) const ->
-            CPP_ret(swap_ranges_result<I1, I2>)(
-                requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
-                    IndirectlySwappable<I1, I2>)
+        CPP_template(typename I1, typename S1, typename I2)(
+            requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                IndirectlySwappable<I1, I2>)
+        swap_ranges_result<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2) const
         {
             for(; begin1 != end1; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);
             return {begin1, begin2};
         }
 
-        template<typename I1, typename S1, typename I2, typename S2>
-        auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const ->
-            CPP_ret(swap_ranges_result<I1, I2>)(
-                requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
-                    Sentinel<S2, I2> && IndirectlySwappable<I1, I2>)
+        CPP_template(typename I1, typename S1, typename I2, typename S2)(
+            requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
+                Sentinel<S2, I2> && IndirectlySwappable<I1, I2>)
+        swap_ranges_result<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
         {
             for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                 ranges::iter_swap(begin1, begin2);
             return {begin1, begin2};
         }
 
-        template<typename Rng1, typename I2_>
-        auto operator()(Rng1 &&rng1, I2_ &&begin2) const ->
-            CPP_ret(swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>>)(
-                requires InputRange<Rng1> && InputIterator<uncvref_t<I2_>> &&
-                    IndirectlySwappable<iterator_t<Rng1>, uncvref_t<I2_>>)
+        CPP_template(typename Rng1, typename I2_)(
+            requires InputRange<Rng1> && InputIterator<uncvref_t<I2_>> &&
+                IndirectlySwappable<iterator_t<Rng1>, uncvref_t<I2_>>)
+        swap_ranges_result<iterator_t<Rng1>, uncvref_t<I2_>> operator()(Rng1 &&rng1, I2_ &&begin2) const
         {
             return (*this)(begin(rng1), end(rng1), (I2_ &&)begin2);
         }
 
-        template<typename Rng1, typename Rng2>
-        auto operator()(Rng1 &&rng1, Rng2 &&rng2) const ->
-            CPP_ret(swap_ranges_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(
-                requires InputRange<Rng1> && InputRange<Rng2> &&
-                    IndirectlySwappable<iterator_t<Rng1>, iterator_t<Rng2>>)
+        CPP_template(typename Rng1, typename Rng2)(
+            requires InputRange<Rng1> && InputRange<Rng2> &&
+                IndirectlySwappable<iterator_t<Rng1>, iterator_t<Rng2>>)
+        swap_ranges_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>> operator()(Rng1 &&rng1, Rng2 &&rng2) const
         {
             return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));
         }

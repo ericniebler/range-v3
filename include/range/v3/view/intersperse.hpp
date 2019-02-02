@@ -177,21 +177,19 @@ namespace ranges
         {
             return {};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const ->
-            CPP_ret(cursor_adaptor<Const>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    CommonRange<meta::const_if_c<Const, Rng>> &&
-                    (!SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
+        CPP_template(bool Const = true)(
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                CommonRange<meta::const_if_c<Const, Rng>> &&
+                (!SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
+        constexpr cursor_adaptor<Const> end_adaptor() const
         {
             return cursor_adaptor<true>{val_};
         }
-        template<bool Const = true>
-        constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(sentinel_adaptor<Const>)(
-                requires Const && Range<meta::const_if_c<Const, Rng>> &&
-                    (!CommonRange<meta::const_if_c<Const, Rng>> ||
-                    SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
+        CPP_template(bool Const = true)(
+            requires Const && Range<meta::const_if_c<Const, Rng>> &&
+                (!CommonRange<meta::const_if_c<Const, Rng>> ||
+                SinglePass<iterator_t<meta::const_if_c<Const, Rng>>>))
+        constexpr sentinel_adaptor<Const> end_adaptor() const noexcept
         {
             return {};
         }
@@ -213,12 +211,11 @@ namespace ranges
                     std::move(t)));
             }
         public:
-            template<typename Rng>
-            constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
-                CPP_ret(intersperse_view<all_t<Rng>>)(
-                    requires ViewableRange<Rng> && InputRange<Rng> &&
-                        ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
-                        Semiregular<range_value_t<Rng>>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng> &&
+                    ConvertibleTo<range_reference_t<Rng>, range_value_t<Rng>> &&
+                    Semiregular<range_value_t<Rng>>)
+            constexpr intersperse_view<all_t<Rng>> operator()(Rng &&rng, range_value_t<Rng> val) const
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(val)};
             }

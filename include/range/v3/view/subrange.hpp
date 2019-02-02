@@ -133,10 +133,9 @@ namespace ranges
                 ConvertibleTo<sentinel_t<R>, S>
         );
 
-        template<typename S, typename I>
-        constexpr auto is_sized_sentinel_() noexcept
-            -> CPP_ret(bool)(
-                requires Sentinel<S, I>)
+        CPP_template(typename S, typename I)(
+            requires Sentinel<S, I>)
+        constexpr bool is_sized_sentinel_() noexcept
         {
             return (bool) SizedSentinel<S, I>;
         }
@@ -185,17 +184,15 @@ namespace ranges
             return r.end();
         }
 
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const &r) ->
-            CPP_ret(I)(
-                requires N == 0)
+        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)(
+            requires N == 0)
+        constexpr I get(subrange<I, S, K> const &r)
         {
             return r.begin();
         }
-        template<std::size_t N, typename I, typename S, subrange_kind K>
-        constexpr auto get(subrange<I, S, K> const &r) ->
-            CPP_ret(S)(
-                requires N == 1)
+        CPP_template(std::size_t N, typename I, typename S, subrange_kind K)(
+            requires N == 1)
+        constexpr S get(subrange<I, S, K> const &r)
         {
             return r.end();
         }
@@ -416,26 +413,25 @@ namespace ranges
         {
             return {i, s};
         }
-        template<typename I, typename S>
-        constexpr auto operator()(I i, S s, iter_difference_t<I> n) const ->
-            CPP_ret(subrange<I, S, subrange_kind::sized>)(
-                requires Iterator<I> && Sentinel<S, I>)
+        CPP_template(typename I, typename S)(
+            requires Iterator<I> && Sentinel<S, I>)
+        constexpr subrange<I, S, subrange_kind::sized> operator()(I i, S s, iter_difference_t<I> n) const
         {
             return {i, s, n};
         }
-        template<typename R>
-        constexpr auto operator()(R &&r) const ->
-            CPP_ret(subrange<iterator_t<R>, sentinel_t<R>,
-                ((bool) SizedRange<R> || (bool) SizedSentinel<sentinel_t<R>, iterator_t<R>>)
-                    ? subrange_kind::sized : subrange_kind::unsized>)(
-                requires ForwardingRange_<R>)
+        CPP_template(typename R)(
+            requires ForwardingRange_<R>)
+        constexpr
+        subrange<iterator_t<R>, sentinel_t<R>,
+            ((bool) SizedRange<R> || (bool) SizedSentinel<sentinel_t<R>, iterator_t<R>>)
+                ? subrange_kind::sized : subrange_kind::unsized>
+        operator()(R &&r) const
         {
             return {(R &&) r};
         }
-        template<typename R>
-        constexpr auto operator()(R &&r, iter_difference_t<iterator_t<R>> n) const ->
-            CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)(
-                requires ForwardingRange_<R>)
+        CPP_template(typename R)(
+            requires ForwardingRange_<R>)
+        constexpr subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized> operator()(R &&r, iter_difference_t<iterator_t<R>> n) const
         {
             return {(R &&) r, n};
         }
