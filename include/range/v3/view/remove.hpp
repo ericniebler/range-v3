@@ -39,47 +39,54 @@ namespace ranges
                 static auto bind(remove_fn remove, Value value, Proj proj)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    make_pipeable(std::bind(remove, std::placeholders::_1,
-                                  std::move(value),
-                                  protect(std::move(proj))))
+                    make_pipeable(
+                        std::bind(remove,
+                            std::placeholders::_1,
+                            std::move(value),
+                            protect(std::move(proj))
+                        )
+                    )
                 )
 
                 template<typename Value>
                 static auto bind(remove_fn remove, Value value)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    make_pipeable(std::bind(remove, std::placeholders::_1,
-                                  std::move(value)))
+                    make_pipeable(
+                        std::bind(remove,
+                            std::placeholders::_1, std::move(value)
+                        )
+                    )
                 )
 
                 template<class Value>
-                struct Pred
+                struct pred
                 {
                     Value value;
 
-                    template<class Any>
-                    bool operator()(const Any& any) const
+                    template<typename T,
+                        CONCEPT_REQUIRES_(EqualityComparable<T, const Value&>())>
+                    bool operator()(T&& other_value) const
                     {
-                        return any == value;
+                        return static_cast<T&&>(other_value) == value;
                     }
                 };
 
             public:
                 template<typename Rng, typename Value, typename Proj>
                 using Constraint = meta::and_<
-                        MoveConstructible<Value>,
-                        EqualityComparable< Value, typename projected<iterator_t<Rng>, Proj>::reference >,
-                        remove_if_fn::Constraint<Rng, Pred<Value>, Proj>>;
+                    MoveConstructible<Value>,
+                    remove_if_fn::Constraint<Rng, pred<Value>, Proj>>;
 
                 template<typename Rng, typename Value, typename Proj = ident,
-                        CONCEPT_REQUIRES_(Constraint<Rng, Value, Proj>())>
+                    CONCEPT_REQUIRES_(Constraint<Rng, Value, Proj>())>
                 RANGES_CXX14_CONSTEXPR
                 auto operator()(Rng&& rng, Value&& value, Proj proj = Proj{}) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    remove_if(all(static_cast<Rng &&>(rng))
-                            , Pred<detail::decay_t<Value>>{static_cast<Value&&>(value)}
-                            , std::move(proj))
+                    remove_if(all(static_cast<Rng &&>(rng)),
+                        pred<detail::decay_t<Value>>{static_cast<Value&&>(value)},
+                        std::move(proj))
                 )
             };
 

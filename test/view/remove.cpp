@@ -30,7 +30,8 @@ void test_straight()
 }
 
 
-struct Int{
+struct Int
+{
     int i;
 };
 bool operator==(Int left, Int right)
