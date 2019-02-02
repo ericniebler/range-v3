@@ -46,6 +46,7 @@
 #if defined(_MSC_VER) && !defined(__clang__)
 #define CPP_WORKAROUND_MSVC_779763 // FATAL_UNREACHABLE calling constexpr function via template parameter
 #define CPP_WORKAROUND_MSVC_780775 // Incorrect substitution in function template return type
+#define CPP_WORKAROUND_MSVC_784772 // Failure to invoke *explicit* bool conversion in a constant expression
 #endif
 
 #if !defined(CPP_CXX_CONCEPTS)
@@ -136,6 +137,12 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         "Concept assertion failed : " #__VA_ARGS__)                             \
     /**/
 #define CPP_assert_msg static_assert
+
+#ifdef CPP_WORKAROUND_MSVC_784772
+#define CPP_EXPLICIT /**/
+#else
+#define CPP_EXPLICIT explicit
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_def
@@ -229,7 +236,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
             using Concept = CPP_PP_CAT(NAME, Concept);                          \
-            explicit constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -292,7 +299,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         struct Eval {                                                           \
             CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                     \
             static constexpr bool impl(long) noexcept { return false; }         \
-            explicit constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
                 return Eval::impl(0);                                           \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -682,7 +689,7 @@ namespace concepts
         template<typename T>
         struct Not
         {
-            explicit constexpr operator bool() const noexcept
+            CPP_EXPLICIT constexpr operator bool() const noexcept
             {
                 return !(bool) T{};
             }
@@ -707,7 +714,7 @@ namespace concepts
             {
                 return (bool) U{};
             }
-            explicit constexpr operator bool() const noexcept
+            CPP_EXPLICIT constexpr operator bool() const noexcept
             {
                 return And::impl(bool_<(bool) T{}>{});
             }
