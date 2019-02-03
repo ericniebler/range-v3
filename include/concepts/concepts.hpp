@@ -146,7 +146,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////
 // CPP_def
-//   For defining concepts with a syntax symilar to C++20. For example:
+//   For defining concepts with a syntax similar to C++20. For example:
 //
 //     CPP_def(
 //         // The Assignable concept from the C++20
