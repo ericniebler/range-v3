@@ -383,9 +383,9 @@ namespace ranges
           , rng1_(std::move(rng1))
           , rng2_(std::move(rng2))
         {}
-        CPP_member
-        static constexpr auto size() -> CPP_ret(size_type_)(
+        CPP_template(int = 42)(
             requires my_cardinality >= 0)
+        static constexpr size_type_ size()
         {
             return static_cast<size_type_>(my_cardinality);
         }
