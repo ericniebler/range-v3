@@ -236,7 +236,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
             using Concept = CPP_PP_CAT(NAME, Concept);                          \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -299,7 +299,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         struct Eval {                                                           \
             CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                     \
             static constexpr bool impl(long) noexcept { return false; }         \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return Eval::impl(0);                                           \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
