@@ -206,7 +206,7 @@ namespace ranges
             {}
             template<bool Other>
             CPP_ctor(cursor)(cursor<Other> that)(
-                requires Const && (!Other))
+                requires (!Other && Const))
               : fun_(std::move(that.fun_)), its_(std::move(that.its_))
             {}
             auto CPP_auto_fun(read)() (const)
