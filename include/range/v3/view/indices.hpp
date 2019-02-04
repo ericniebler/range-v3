@@ -32,16 +32,16 @@ namespace ranges
         {
             indices_fn() = default;
 
-            template<typename Val>
-            auto CPP_fun(operator())(Val from, Val to) (const
+            CPP_template(typename Val)(
                 requires Integral<Val>)
+            auto operator()(Val from, Val to) const
             {
                 return detail::take_exactly_view_<iota_view<Val>, true>
                     {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};
             }
-            template<typename Val, typename Self = indices_fn>
-            auto CPP_fun(operator())(Val to) (const
+            CPP_template(typename Val, typename Self = indices_fn)(
                 requires Integral<Val>)
+            auto operator()(Val to) const
             {
                 return Self{}(Val(), to);
             }
@@ -51,16 +51,16 @@ namespace ranges
         struct closed_indices_fn
           : iota_view<std::ptrdiff_t>
         {
-            template<typename Val>
-            auto CPP_fun(operator())(Val from, Val to) (const
+            CPP_template(typename Val)(
                 requires Integral<Val>)
+            auto operator()(Val from, Val to) const
             {
                 return detail::take_exactly_view_<iota_view<Val>, true>
                     {iota_view<Val>{from}, detail::ints_closed_distance_(from, to)};
             }
-            template<typename Val, typename Self = closed_indices_fn>
-            auto CPP_fun(operator())(Val to) (const
+            CPP_template(typename Val, typename Self = closed_indices_fn)(
                 requires Integral<Val>)
+            auto operator()(Val to) const
             {
                 return Self{}(Val(), to);
             }

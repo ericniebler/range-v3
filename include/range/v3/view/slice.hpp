@@ -195,46 +195,44 @@ namespace ranges
             }
 
             // Overloads for the pipe syntax: rng | view::slice(from,to)
-            template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, Int from, Int to)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(slice_fn slice, Int from, Int to)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
-            template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, Int from, detail::from_end_<Int> to)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(slice_fn slice, Int from, detail::from_end_<Int> to)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
-            template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from,
-                detail::from_end_<Int> to)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(slice_fn slice, detail::from_end_<Int> from,
+                detail::from_end_<Int> to)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
-            template<typename Int>
-            static auto CPP_fun(bind)(slice_fn, Int from, end_fn)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(slice_fn, Int from, end_fn)
             {
                 return make_pipeable(std::bind(ranges::view::drop_exactly,
                     std::placeholders::_1, from));
             }
-            template<typename Int>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<Int> from, end_fn to)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
             {
                 return make_pipeable(std::bind(slice, std::placeholders::_1, from, to));
             }
         public:
             // slice(rng, 2, 4)
-            template<typename Rng>
-            auto CPP_fun(operator())(
-                Rng &&rng,
-                range_difference_t<Rng> from,
-                range_difference_t<Rng> to) (const
-                    requires ViewableRange<Rng> && InputRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng>)
+            auto operator()(Rng &&rng, range_difference_t<Rng> from,
+                    range_difference_t<Rng> to) const
             {
                 RANGES_EXPECT(0 <= from && from <= to);
                 return slice_fn::impl_(static_cast<Rng &&>(rng), from, to - from,
@@ -243,12 +241,10 @@ namespace ranges
             // slice(rng, 4, end-2)
             //  TODO Support Forward, non-Sized ranges by returning a range that
             //       doesn't know it's size?
-            template<typename Rng>
-            auto CPP_fun(operator())(
-                Rng &&rng,
-                range_difference_t<Rng> from,
-                detail::from_end_of_t<Rng> to) (const
-                    requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> && InputRange<Rng> && SizedRange<Rng>)
+            auto operator()(Rng &&rng, range_difference_t<Rng> from,
+                    detail::from_end_of_t<Rng> to) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Can't index from the end of an infinite range!");
@@ -258,13 +254,11 @@ namespace ranges
                     distance(rng) + to.dist_ - from, range_tag_of<Rng>{});
             }
             // slice(rng, end-4, end-2)
-            template<typename Rng>
-            auto CPP_fun(operator())(
-                Rng &&rng,
-                detail::from_end_of_t<Rng> from,
-                detail::from_end_of_t<Rng> to) (const
-                    requires ViewableRange<Rng> &&
-                        (ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>)))
+            CPP_template(typename Rng)(
+                requires ViewableRange<Rng> &&
+                    (ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>)))
+            auto operator()(Rng &&rng, detail::from_end_of_t<Rng> from,
+                    detail::from_end_of_t<Rng> to) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Can't index from the end of an infinite range!");
@@ -274,18 +268,18 @@ namespace ranges
                     common_range_tag_of<Rng>{});
             }
             // slice(rng, 4, end)
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> from, end_fn) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng> && InputRange<Rng>)
+            auto operator()(Rng &&rng, range_difference_t<Rng> from, end_fn) const
             {
                 RANGES_EXPECT(0 <= from);
                 return ranges::view::drop_exactly(static_cast<Rng &&>(rng), from);
             }
             // slice(rng, end-4, end)
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, detail::from_end_of_t<Rng> from, end_fn) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng> &&
                     (ForwardRange<Rng> || (InputRange<Rng> && SizedRange<Rng>)))
+            auto operator()(Rng &&rng, detail::from_end_of_t<Rng> from, end_fn) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Can't index from the end of an infinite range!");

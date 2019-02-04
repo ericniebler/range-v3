@@ -116,9 +116,9 @@ namespace ranges
         common_iterator(S s)
           : data_(emplaced_index<1>, std::move(s))
         {}
-        template<typename I2, typename S2>
-        CPP_ctor(common_iterator)(common_iterator<I2, S2> const &that)(
+        CPP_template(typename I2, typename S2)(
             requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)
+        common_iterator(common_iterator<I2, S2> const &that)
           : data_(detail::variant_core_access::make_empty<I, S>())
         {
             detail::cidata(that).visit_i(emplace_fn{&data_});

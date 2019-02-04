@@ -39,33 +39,33 @@ namespace ranges
             using diff_t = range_difference_t<D>;
 
             // Overloads for the pipe syntax: rng | action::slice(from, to)
-            template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, D to)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(slice_fn slice, D from, D to)
             {
                 return std::bind(slice, std::placeholders::_1, from, to);
             }
-            template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, detail::from_end_<D> to)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(slice_fn slice, D from, detail::from_end_<D> to)
             {
                 return std::bind(slice, std::placeholders::_1, from, to);
             }
-            template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from, detail::from_end_<D> to)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(slice_fn slice, detail::from_end_<D> from, detail::from_end_<D> to)
             {
                 return std::bind(slice, std::placeholders::_1, from, to);
             }
-            template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, D from, end_fn const &to)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(slice_fn slice, D from, end_fn const &to)
             {
                 return std::bind(slice, std::placeholders::_1, from, to);
             }
-            template<typename D>
-            static auto CPP_fun(bind)(slice_fn slice, detail::from_end_<D> from, end_fn const &to)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(slice_fn slice, detail::from_end_<D> from, end_fn const &to)
             {
                 return std::bind(slice, std::placeholders::_1, from, to);
             }

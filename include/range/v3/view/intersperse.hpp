@@ -74,9 +74,9 @@ namespace ranges
             explicit constexpr cursor_adaptor(range_value_t<Rng> const &val)
               : val_{val}
             {}
-            template<bool Other>
-            CPP_ctor(cursor_adaptor)(cursor_adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            cursor_adaptor(cursor_adaptor<Other> that)
               : toggle_(that.toggle_)
               , val_(std::move(that.val_))
             {}
@@ -141,9 +141,9 @@ namespace ranges
             using CRng = meta::const_if_c<Const, Rng>;
         public:
             sentinel_adaptor() = default;
-            template<bool Other>
-            CPP_ctor(sentinel_adaptor)(sentinel_adaptor<Other>)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            sentinel_adaptor(sentinel_adaptor<Other>)
             {}
             static constexpr bool empty(iterator_t<CRng> const &it,
                 cursor_adaptor<Const> const &, sentinel_t<CRng> const &sent)
@@ -203,9 +203,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename T>
-            static auto CPP_fun(bind)(intersperse_fn intersperse, T t)(
-                requires Copyable<T>)
+            CPP_template(typename T)(
+            requires Copyable<T>)
+            static auto bind(intersperse_fn intersperse, T t)
             {
                 return make_pipeable(std::bind(intersperse, std::placeholders::_1,
                     std::move(t)));

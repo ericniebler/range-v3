@@ -156,17 +156,17 @@ namespace ranges
                 return {begin(rng), next(begin(rng), n)};
             }
 
-            template<typename Int>
-            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(take_exactly_fn take_exactly, Int n)
             {
                 return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
             }
 
         public:
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng> && InputRange<Rng>)
+            auto operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return take_exactly_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
             }

@@ -347,10 +347,10 @@ namespace ranges
               , parent_(&parent)
             {}
 
-            template<bool Other>
-            constexpr CPP_ctor(split_outer_iterator)(
-                split_outer_iterator<split_view<V, Pattern>, Other> i)(
+            CPP_template(bool Other)(
                 requires Const && (!Other) && ConvertibleTo<iterator_t<V>, iterator_t<Base>>)
+            constexpr split_outer_iterator(
+                split_outer_iterator<split_view<V, Pattern>, Other> i)
               : Current{std::move(i.curr_)}
               , parent_(i.parent_)
             {}

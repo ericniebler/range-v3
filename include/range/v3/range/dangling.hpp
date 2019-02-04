@@ -29,9 +29,9 @@ namespace ranges
     {
         dangling() = default;
         /// Implicit converting constructor; ignores argument
-        template<typename T>
-        constexpr CPP_ctor(dangling)(T &&)(
+        CPP_template(typename T)(
             requires NotSameAs_<T, dangling>)
+        constexpr dangling(T &&)
         {}
     };
 

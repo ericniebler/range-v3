@@ -34,10 +34,10 @@ namespace ranges
             noexcept(std::is_nothrow_default_constructible<FD>::value)
             requires DefaultConstructible<FD>)
         {}
-        template<typename T>
-        explicit constexpr CPP_ctor(logical_negate_)(T &&pred)(
+        CPP_template(typename T)(
             requires (!defer::Same<detail::decay_t<T>, logical_negate_>) &&
                 defer::Constructible<FD, T>)
+        explicit constexpr logical_negate_(T &&pred)
           : pred_(static_cast<T &&>(pred))
         {}
 

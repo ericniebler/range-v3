@@ -141,10 +141,10 @@ namespace ranges
                 noexcept(std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
             {}
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U, Index> that)(
-                noexcept(std::is_nothrow_constructible<T, U>::value)
+            CPP_template(typename U)(
                 requires (!Same<T, U>) && ConvertibleTo<U, T>)
+            constexpr indexed_datum(indexed_datum<U, Index> that)
+                noexcept(std::is_nothrow_constructible<T, U>::value)
               : datum_(std::move(that.datum_))
             {}
             constexpr /*c++14*/ indexed_element<T, Index::value> ref() noexcept
@@ -175,9 +175,9 @@ namespace ranges
             template<typename, typename> friend struct indexed_datum;
             indexed_datum() = delete;
             using reference_wrapper<T &>::reference_wrapper;
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U &, Index> that)(noexcept(true)
+            CPP_template(typename U)(
                 requires (!Same<T, U>) && ConvertibleTo<U &, T &>)
+            constexpr indexed_datum(indexed_datum<U &, Index> that) noexcept
               : reference_wrapper<T &>(that.get())
             {}
             constexpr indexed_element<T &, Index::value> ref() const noexcept
@@ -192,9 +192,9 @@ namespace ranges
             template<typename, typename> friend struct indexed_datum;
             indexed_datum() = delete;
             using reference_wrapper<T &&>::reference_wrapper;
-            template<typename U>
-            constexpr CPP_ctor(indexed_datum)(indexed_datum<U &&, Index> that)(noexcept(true)
+            CPP_template(typename U)(
                 requires (!Same<T, U>) && ConvertibleTo<U &&, T &&>)
+            constexpr indexed_datum(indexed_datum<U &&, Index> that) noexcept
               : reference_wrapper<T &&>(that.get())
             {}
             constexpr indexed_element<T &&, Index::value> ref() const noexcept
@@ -661,10 +661,10 @@ namespace ranges
           : detail::variant_data<Ts...>{meta::size_t<N>{}, il, static_cast<Args &&>(args)...}
           , index_(N)
         {}
-        template<std::size_t N>
-        constexpr CPP_ctor(variant)(RANGES_EMPLACED_INDEX_T(N), meta::nil_)(
-            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
+        CPP_template(std::size_t N)(
             requires Constructible<datum_t<N>, meta::nil_>)
+        constexpr variant(RANGES_EMPLACED_INDEX_T(N), meta::nil_)
+            noexcept(std::is_nothrow_constructible<datum_t<N>, meta::nil_>::value)
           : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}
           , index_(N)
         {}
@@ -676,9 +676,9 @@ namespace ranges
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
         {}
-        template<typename...Args>
-        CPP_ctor(variant)(variant<Args...> that)(
+        CPP_template(typename...Args)(
             requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
+        variant(variant<Args...> that)
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), std::move(that.data_())))
         {}

@@ -33,9 +33,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename Gen>
-            static auto CPP_fun(bind)(shuffle_fn shuffle, Gen &&gen)(
-                requires UniformRandomNumberGenerator<Gen>)
+            CPP_template(typename Gen)(
+            requires UniformRandomNumberGenerator<Gen>)
+            static auto bind(shuffle_fn shuffle, Gen &&gen)
             {
                 return std::bind(shuffle, std::placeholders::_1,
                     bind_forward<Gen>(gen));

@@ -300,9 +300,9 @@ namespace ranges
             adaptor(range_difference_t<Rng> n)
               : n_(n)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            adaptor(adaptor<Other> that)
               : n_(that.n_)
             {}
             iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> &v) const
@@ -350,9 +350,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Int>
-            static auto CPP_fun(bind)(sliding_fn sliding, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(sliding_fn sliding, Int n)
             {
                 return make_pipeable(std::bind(sliding, std::placeholders::_1, n));
             }

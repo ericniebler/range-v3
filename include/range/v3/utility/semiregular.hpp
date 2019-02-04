@@ -122,29 +122,29 @@ namespace ranges
                 this->construct_from(that.data_);
         }
 #if defined(__cpp_conditional_explicit) && 0 < __cpp_conditional_explicit
-        template<typename U>
-        explicit(!ConvertibleTo<U, T>)
-        constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
+        CPP_template(typename U)(
                 requires (!defer::Same<uncvref_t<U>, semiregular>) &&
                     defer::Constructible<T, U>)
+        explicit(!ConvertibleTo<U, T>)
+        constexpr semiregular(U &&u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
 #else
-        template<typename U>
-        explicit constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
+        CPP_template(typename U)(
                 requires (!defer::Same<uncvref_t<U>, semiregular>) &&
                     defer::Constructible<T, U> &&
                     (!defer::ConvertibleTo<U, T>))
+        explicit constexpr semiregular(U &&u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
-        template<typename U>
-        constexpr CPP_ctor(semiregular)(U &&u)(
-            noexcept(std::is_nothrow_constructible<T, U>::value)
+        CPP_template(typename U)(
                 requires (!defer::Same<uncvref_t<U>, semiregular>) &&
                     defer::Constructible<T, U> &&
                     defer::ConvertibleTo<U, T>)
+        constexpr semiregular(U &&u)
+            noexcept(std::is_nothrow_constructible<T, U>::value)
           : semiregular(in_place, static_cast<U &&>(u))
         {}
 #endif
@@ -247,10 +247,9 @@ namespace ranges
       , private detail::semiregular_get
     {
         semiregular() = default;
-        template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &arg)(
-            noexcept(true)
+        CPP_template(typename Arg)(
             requires Constructible<ranges::reference_wrapper<T &>, Arg &>)
+        semiregular(in_place_t, Arg &arg) noexcept
           : ranges::reference_wrapper<T &>(arg)
         {}
         using ranges::reference_wrapper<T &>::reference_wrapper;
@@ -265,10 +264,9 @@ namespace ranges
       , private detail::semiregular_get
     {
         semiregular() = default;
-        template<typename Arg>
-        CPP_ctor(semiregular)(in_place_t, Arg &&arg)(
-            noexcept(true)
+        CPP_template(typename Arg)(
             requires Constructible<ranges::reference_wrapper<T &&>, Arg>)
+        semiregular(in_place_t, Arg &&arg) noexcept
           : ranges::reference_wrapper<T &&>(static_cast<Arg &&>(arg))
         {}
         using ranges::reference_wrapper<T &&>::reference_wrapper;

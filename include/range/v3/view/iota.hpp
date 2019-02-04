@@ -438,9 +438,9 @@ namespace ranges
             {
                 return iota_view<From>{std::move(value)};
             }
-            template<typename From, typename To>
-            auto CPP_fun(operator())(From from, To to) (const
+            CPP_template(typename From, typename To)(
                 requires WeaklyIncrementable<From> && WeaklyEqualityComparableWith<From, To>)
+            auto operator()(From from, To to) const
             {
                 return iota_fn::impl_(
                     std::move(from),
@@ -468,10 +468,10 @@ namespace ranges
                 return {std::move(from), std::move(to)};
             }
         public:
-            template<typename From, typename To>
-            auto CPP_fun(operator())(From from, To to) (const
+            CPP_template(typename From, typename To)(
                 requires WeaklyIncrementable<From> &&
                     WeaklyEqualityComparableWith<From, To>)
+            auto operator()(From from, To to) const
             {
                 return closed_iota_fn::impl_(
                     std::move(from),
@@ -499,9 +499,9 @@ namespace ranges
             {
                 return iota_view<Val>{value};
             }
-            template<typename Val>
-            auto CPP_fun(operator())(Val from, Val to) (const
+            CPP_template(typename Val)(
                 requires Integral<Val>)
+            auto operator()(Val from, Val to) const
             {
                 return detail::take_exactly_view_<iota_view<Val>, true>
                     {iota_view<Val>{from}, detail::ints_open_distance_(from, to)};

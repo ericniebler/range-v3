@@ -34,9 +34,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(sort_fn sort, C pred, P proj = P{})(
-                requires not Range<C>)
+            CPP_template(typename C, typename P = identity)(
+            requires not Range<C>)
+            static auto bind(sort_fn sort, C pred, P proj = P{})
             {
                 return std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
                     protect(std::move(proj)));

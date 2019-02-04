@@ -99,9 +99,9 @@ namespace ranges
             RANGES_EXPECT(n >= 0);
         }
 
-        template<typename I2>
-        CPP_ctor(counted_iterator)(counted_iterator<I2> const &i)(
+        CPP_template(typename I2)(
             requires ConvertibleTo<I2, I>)
+        counted_iterator(counted_iterator<I2> const &i)
           : current_(_counted_iterator_::access::current(i)), cnt_(i.count())
         {}
 

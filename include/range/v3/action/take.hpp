@@ -33,9 +33,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename Int>
-            static auto CPP_fun(bind)(take_fn take, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(take_fn take, Int n)
             {
                 return std::bind(take, std::placeholders::_1, n);
             }

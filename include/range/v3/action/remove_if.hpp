@@ -35,9 +35,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename C, typename P = identity>
-            static auto CPP_fun(bind)(remove_if_fn remove_if, C pred, P proj = P{})(
-                requires not Range<C>)
+            CPP_template(typename C, typename P = identity)(
+            requires not Range<C>)
+            static auto bind(remove_if_fn remove_if, C pred, P proj = P{})
             {
                 return std::bind(remove_if, std::placeholders::_1, protect(std::move(pred)),
                     protect(std::move(proj)));

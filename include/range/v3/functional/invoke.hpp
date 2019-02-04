@@ -77,10 +77,9 @@ namespace ranges
     struct invoke_fn
     {
     private:
-        template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, long)(
-            noexcept(noexcept(*static_cast<T1&&>(t1)))
-                requires detail::Dereferenceable_<T1>)
+        CPP_template(class, class T1)(
+            requires detail::Dereferenceable_<T1>)
+        constexpr static decltype(auto) coerce(T1&& t1, long)
         {
             return *static_cast<T1&&>(t1);
         }
@@ -92,10 +91,9 @@ namespace ranges
             return static_cast<T1&&>(t1);
         }
 
-        template<class, class T1>
-        constexpr static decltype(auto) CPP_fun(coerce)(T1&& t1, int)(
-            noexcept(true)
+        CPP_template(class T, class T1)(
             requires detail::is_reference_wrapper_v<detail::decay_t<T1>>)
+        constexpr static decltype(auto) coerce(T1&& t1, int) noexcept(true)
         {
             return static_cast<T1&&>(t1).get();
         }

@@ -210,11 +210,11 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            constexpr CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && !Other &&
                     ConvertibleTo<iterator_t<Rng>, iterator_t<COuter>> &&
                     ConvertibleTo<iterator_t<range_reference_t<Rng>>, iterator_t<CInner>>)
+            constexpr cursor(cursor<Other> that)
               : rng_(that.rng_)
               , outer_it_(std::move(that.outer_it_))
               , inner_it_(std::move(that.inner_it_))
@@ -319,11 +319,11 @@ namespace ranges
             return end_cursor_fn{}(*this, cond{});
         }
 
-        template<bool Const = true>
-        constexpr auto CPP_fun(end_cursor)() (const
+        CPP_template(bool Const = true)(
             requires Const && InputRange<meta::const_if_c<Const, Rng>> &&
                 std::is_reference<
                     range_reference_t<meta::const_if_c<Const, Rng>>>::value)
+        constexpr auto end_cursor() const
         {
             using CRng = meta::const_if_c<Const, Rng>;
             using cond = meta::bool_<
@@ -510,9 +510,9 @@ namespace ranges
         {
         private:
            friend view_access;
-           template<typename T>
-           static auto CPP_fun(bind)(join_fn join, T &&t)(
-               requires (!JoinableRange<T>))
+           CPP_template(typename T)(
+           requires (!JoinableRange<T>))
+           static auto bind(join_fn join, T &&t)
            {
                return make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)));
            }

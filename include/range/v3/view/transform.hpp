@@ -117,9 +117,9 @@ namespace ranges
             adaptor(fun_ref_ fun)
               : fun_(std::move(fun))
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            adaptor(adaptor<Other> that)
               : fun_(std::move(that.fun_))
             {}
 
@@ -221,9 +221,9 @@ namespace ranges
             sentinel(meta::const_if_c<Const, iter_transform2_view> &parent, decltype(end))
               : end1_(end(parent.rng1_)), end2_(end(parent.rng2_))
             {}
-            template<bool Other>
-            CPP_ctor(sentinel)(sentinel<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            sentinel(sentinel<Other> that)
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -258,9 +258,9 @@ namespace ranges
             cursor(meta::const_if_c<Const, iter_transform2_view> &parent, BeginEndFn begin_end)
               : fun_(parent.fun_), it1_(begin_end(parent.rng1_)), it2_(begin_end(parent.rng2_))
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))

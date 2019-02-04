@@ -155,9 +155,11 @@ public:
 
     constexpr /*c++14*/ input_iterator() : it_() {}
     constexpr /*c++14*/ explicit input_iterator(It it) : it_(it) {}
-    template<class U, bool USized>
-    constexpr /*c++14*/ CPP_ctor(input_iterator)(const input_iterator<U, USized>& u)(
-        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
+    CPP_template(class U, bool USized)(
+        requires (std::is_convertible<U, It>::value))
+    constexpr /*c++14*/ input_iterator(const input_iterator<U, USized>& u)
+      : it_(u.it_)
+    {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -212,9 +214,11 @@ public:
 
     constexpr /*c++14*/ forward_iterator() : it_() {}
     constexpr /*c++14*/ explicit forward_iterator(It it) : it_(it) {}
-    template<class U, bool USized>
-    constexpr /*c++14*/ CPP_ctor(forward_iterator)(const forward_iterator<U, USized>& u)(
-        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
+    CPP_template(class U, bool USized)(
+        requires (std::is_convertible<U, It>::value))
+    constexpr /*c++14*/ forward_iterator(const forward_iterator<U, USized>& u)
+      : it_(u.it_)
+    {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -264,9 +268,11 @@ public:
 
     constexpr /*c++14*/ bidirectional_iterator() : it_() {}
     constexpr /*c++14*/ explicit bidirectional_iterator(It it) : it_(it) {}
-    template<class U, bool USized>
-    constexpr /*c++14*/ CPP_ctor(bidirectional_iterator)(const bidirectional_iterator<U, USized>& u)(
-        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
+    CPP_template(class U, bool USized)(
+        requires (std::is_convertible<U, It>::value))
+    constexpr /*c++14*/ bidirectional_iterator(const bidirectional_iterator<U, USized>& u)
+      : it_(u.it_)
+    {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}
@@ -313,9 +319,11 @@ public:
 
     constexpr /*c++14*/ random_access_iterator() : it_() {}
     constexpr /*c++14*/ explicit random_access_iterator(It it) : it_(it) {}
-    template<class U>
-    constexpr /*c++14*/ CPP_ctor(random_access_iterator)(const random_access_iterator<U>& u)(
-        requires (std::is_convertible<U, It>::value)) :it_(u.it_) {}
+    CPP_template(class U)(
+        requires (std::is_convertible<U, It>::value))
+    constexpr /*c++14*/ random_access_iterator(const random_access_iterator<U>& u)
+      : it_(u.it_)
+    {}
 
     constexpr /*c++14*/ reference operator*() const {return *it_;}
     constexpr /*c++14*/ pointer operator->() const {return it_;}

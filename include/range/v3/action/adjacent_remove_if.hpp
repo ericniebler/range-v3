@@ -34,10 +34,10 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename Pred, typename Proj = identity>
-            static auto CPP_fun(bind)(adjacent_remove_if_fn adjacent_remove_if, Pred pred,
-                Proj proj = {})(
-                    requires (!Range<Pred>))
+            CPP_template(typename Pred, typename Proj = identity)(
+                requires (!Range<Pred>))
+            static auto bind(adjacent_remove_if_fn adjacent_remove_if, Pred pred,
+                Proj proj = {})
             {
                 return std::bind(adjacent_remove_if, std::placeholders::_1,
                     protect(std::move(pred)), protect(std::move(proj)));

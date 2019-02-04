@@ -130,9 +130,9 @@ namespace ranges
                     rng.size_ = n;
                 advance();
             }
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            cursor(cursor<Other> that)
               : parent_(that.parent_), current_(std::move(that.current_)), size_(that.size_)
             {}
             range_reference_t<Rng> read() const
@@ -194,10 +194,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Size, typename URNG = detail::default_random_engine>
-            static auto CPP_fun(bind)(sample_fn fn, Size n,
-                URNG &urng = detail::get_random_engine())(
+            CPP_template(typename Size, typename URNG = detail::default_random_engine)(
                 requires Integral<Size> && UniformRandomNumberGenerator<URNG>)
+            static auto bind(sample_fn fn, Size n, URNG &urng = detail::get_random_engine())
             {
                 return make_pipeable(std::bind(fn, std::placeholders::_1, n,
                     bind_forward<URNG &>(urng)));

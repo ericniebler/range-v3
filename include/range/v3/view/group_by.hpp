@@ -94,9 +94,9 @@ namespace ranges
             {}
         public:
             cursor() = default;
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            cursor(cursor<Other> that)
               : cur_(std::move(that.cur_))
               , last_(std::move(last_))
               , fun_(std::move(that.fun_))

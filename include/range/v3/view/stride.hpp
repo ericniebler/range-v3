@@ -177,9 +177,9 @@ namespace ranges
             constexpr adaptor(stride_view_t &rng) noexcept
               : rng_(&rng)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr /*c++14*/ void next(iterator_t<CRng> &it)
@@ -323,10 +323,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Difference>
-            constexpr /*c++14*/
-            static auto CPP_fun(bind)(stride_fn stride, Difference step)(
+            CPP_template(typename Difference)(
                 requires Integral<Difference>)
+            constexpr /*c++14*/ static auto bind(stride_fn stride, Difference step)
             {
                 return make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)));
             }

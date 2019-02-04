@@ -29,9 +29,9 @@ namespace ranges
         /// its corresponding index.
         struct enumerate_fn
         {
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng>)
+            auto operator()(Rng &&rng) const
             {
                 return zip(iota(range_difference_type_t<Rng>{}),
                         all(static_cast<Rng &&>(rng)));

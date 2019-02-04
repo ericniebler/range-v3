@@ -33,9 +33,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename D>
-            static auto CPP_fun(bind)(stride_fn stride, D step)(
-                requires Integral<D>)
+            CPP_template(typename D)(
+            requires Integral<D>)
+            static auto bind(stride_fn stride, D step)
             {
                 return std::bind(stride, std::placeholders::_1, step);
             }

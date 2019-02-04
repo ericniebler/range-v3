@@ -83,10 +83,10 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Val1, typename Val2>
-            static auto CPP_fun(bind)(replace_fn replace, Val1 old_value, Val2 new_value)(
-                requires Same<detail::decay_t<unwrap_reference_t<Val1>>,
+            CPP_template(typename Val1, typename Val2)(
+            requires Same<detail::decay_t<unwrap_reference_t<Val1>>,
                               detail::decay_t<unwrap_reference_t<Val2>>>)
+            static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
             {
                 return make_pipeable(std::bind(replace, std::placeholders::_1,
                     std::move(old_value), std::move(new_value)));

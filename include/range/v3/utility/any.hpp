@@ -121,9 +121,9 @@ namespace ranges
         std::unique_ptr<interface> ptr_;
     public:
         any() noexcept = default;
-        template<typename TRef>
-        CPP_ctor(any)(TRef &&t)(
+        CPP_template(typename TRef)(
             requires Copyable<detail::decay_t<TRef>> && (!Same<detail::decay_t<TRef>, any>))
+        any(TRef &&t)
           : ptr_(new impl<detail::decay_t<TRef>>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;

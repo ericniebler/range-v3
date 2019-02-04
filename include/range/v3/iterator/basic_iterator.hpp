@@ -177,11 +177,10 @@ namespace ranges
         // public:
             basic_proxy_reference_() = default;
             basic_proxy_reference_(basic_proxy_reference_ const &) = default;
-            template<typename OtherCur>
-            constexpr /*c++14*/
-            CPP_ctor(basic_proxy_reference_)(basic_proxy_reference<OtherCur> const &that)(
-                noexcept(true)
+            CPP_template(typename OtherCur)(
                 requires ConvertibleTo<OtherCur *, Cur *>)
+            constexpr /*c++14*/
+            basic_proxy_reference_(basic_proxy_reference<OtherCur> const &that) noexcept
               : cur_(that.cur_)
             {}
             constexpr /*c++14*/

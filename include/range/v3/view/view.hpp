@@ -109,9 +109,9 @@ namespace ranges
             friend pipeable_access;
 
             // Piping requires range arguments or lvalue containers.
-            template<typename Rng, typename Vw>
-            static auto CPP_fun(pipe)(Rng &&rng, Vw &&v)(
-                requires ViewableRange<Rng> && Invocable<View &, Rng>)
+            CPP_template(typename Rng, typename Vw)(
+            requires ViewableRange<Rng> && Invocable<View &, Rng>)
+            static auto pipe(Rng &&rng, Vw &&v)
             {
                 return v.view_(static_cast<Rng &&>(rng));
             }

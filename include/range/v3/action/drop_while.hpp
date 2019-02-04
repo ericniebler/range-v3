@@ -33,9 +33,9 @@ namespace ranges
         {
         private:
             friend action_access;
-            template<typename Fun>
-            static auto CPP_fun(bind)(drop_while_fn drop_while, Fun fun)(
-                requires !Range<Fun>)
+            CPP_template(typename Fun)(
+            requires !Range<Fun>)
+            static auto bind(drop_while_fn drop_while, Fun fun)
             {
                 return std::bind(drop_while, std::placeholders::_1, std::move(fun));
             }

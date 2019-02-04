@@ -45,9 +45,9 @@ namespace ranges
             using CRng = meta::const_if_c<IsConst, Rng>;
 
             adaptor() = default;
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other>) (noexcept(true)
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            constexpr adaptor(adaptor<Other>) noexcept
             {}
 
             constexpr auto CPP_auto_fun(read)(iterator_t<CRng> const &it) (const)
@@ -112,13 +112,13 @@ namespace ranges
     {
         struct indirect_fn
         {
-            template<typename Rng>
-            constexpr auto CPP_fun(operator())(Rng &&rng) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng> && InputRange<Rng> &&
                     // We shouldn't need to strip references to test if something
                     // is readable. https://github.com/ericniebler/stl2/issues/594
                     //Readable<range_reference_t<Rng>>)
                     (bool) Readable<range_value_t<Rng>>) // Cast to bool needed for GCC (???)
+            constexpr auto operator()(Rng &&rng) const
             {
                 return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

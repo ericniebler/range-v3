@@ -119,9 +119,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Int>
-            static auto CPP_fun(bind)(drop_exactly_fn drop_exactly, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(drop_exactly_fn drop_exactly, Int n)
             {
                 return make_pipeable(std::bind(drop_exactly, std::placeholders::_1, n));
             }
@@ -138,9 +138,9 @@ namespace ranges
                 return {begin(rng) + n, end(rng)};
             }
         public:
-            template<typename Rng>
-            auto CPP_fun(operator())(Rng &&rng, range_difference_t<Rng> n) (const
+            CPP_template(typename Rng)(
                 requires ViewableRange<Rng> && InputRange<Rng>)
+            auto operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return drop_exactly_fn::impl_(static_cast<Rng &&>(rng), n, range_tag_of<Rng>{});
             }

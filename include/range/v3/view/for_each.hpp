@@ -45,11 +45,11 @@ namespace ranges
                     protect(std::move(fun))));
             }
         public:
-            template<typename Rng, typename Fun>
-            auto CPP_fun(operator())(Rng &&rng, Fun fun) (const
+            CPP_template(typename Rng, typename Fun)(
                 requires ViewableRange<Rng> &&
                     TransformableRange<Rng, Fun> &&
                     JoinableRange<transform_view<all_t<Rng>, Fun>>)
+            auto operator()(Rng &&rng, Fun fun) const
             {
                 return join(transform(static_cast<Rng &&>(rng), std::move(fun)));
             }

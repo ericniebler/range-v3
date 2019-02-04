@@ -88,40 +88,40 @@ namespace ranges
             noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
           : common_tuple::forward_tuple_interface{static_cast<Us &&>(us)...}
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(std::tuple<Us...> &that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us &...>>)
+        common_tuple(std::tuple<Us...> &that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(std::tuple<Us...> const &that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us const &...>>)
+        common_tuple(std::tuple<Us...> const &that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(std::tuple<Us...> &&that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
+        common_tuple(std::tuple<Us...> &&that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
           : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(common_tuple<Us...> &that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us &...>>)
+        common_tuple(common_tuple<Us...> &that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(common_tuple<Us...> const &that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us const &...>>)
+        common_tuple(common_tuple<Us...> const &that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
           : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
         {}
-        template<typename...Us>
-        CPP_ctor(common_tuple)(common_tuple<Us...> &&that)(
-            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
+        CPP_template(typename...Us)(
             requires Constructible<detail::args<Ts...>, detail::args<Us...>>)
+        common_tuple(common_tuple<Us...> &&that)
+            noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us>::value...>::value)
           : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
         {}
 
@@ -274,32 +274,32 @@ namespace ranges
             requires DefaultConstructible<F> && DefaultConstructible<S>)
           : std::pair<F, S>{}
         {}
-        template<typename F2, typename S2>
-        CPP_ctor(common_pair)(F2 &&f2, S2 &&s2)(
+        CPP_template(typename F2, typename S2)(
+            requires Constructible<F, F2> && Constructible<S, S2>)
+        common_pair(F2 &&f2, S2 &&s2)
             noexcept(std::is_nothrow_constructible<F, F2>::value &&
                 std::is_nothrow_constructible<S, S2>::value)
-            requires Constructible<F, F2> && Constructible<S, S2>)
           : std::pair<F, S>{static_cast<F2 &&>(f2), static_cast<S2 &&>(s2)}
         {}
-        template<typename F2, typename S2>
-        CPP_ctor(common_pair)(std::pair<F2, S2> &that)(
+        CPP_template(typename F2, typename S2)(
+            requires Constructible<F, F2 &> && Constructible<S, S2 &>)
+        common_pair(std::pair<F2, S2> &that)
             noexcept(std::is_nothrow_constructible<F, F2 &>::value &&
                 std::is_nothrow_constructible<S, S2 &>::value)
-            requires Constructible<F, F2 &> && Constructible<S, S2 &>)
           : std::pair<F, S>{that.first, that.second}
         {}
-        template<typename F2, typename S2>
-        CPP_ctor(common_pair)(std::pair<F2, S2> const &that)(
+        CPP_template(typename F2, typename S2)(
+            requires Constructible<F, F2 const &> && Constructible<S, S2 const &>)
+        common_pair(std::pair<F2, S2> const &that)
             noexcept(std::is_nothrow_constructible<F, F2 const &>::value &&
                 std::is_nothrow_constructible<S, S2 const &>::value)
-            requires Constructible<F, F2 const &> && Constructible<S, S2 const &>)
           : std::pair<F, S>{that.first, that.second}
         {}
-        template<typename F2, typename S2>
-        CPP_ctor(common_pair)(std::pair<F2, S2> &&that)(
+        CPP_template(typename F2, typename S2)(
+            requires Constructible<F, F2> && Constructible<S, S2>)
+        common_pair(std::pair<F2, S2> &&that)
             noexcept(std::is_nothrow_constructible<F, F2>::value &&
                 std::is_nothrow_constructible<S, S2>::value)
-            requires Constructible<F, F2> && Constructible<S, S2>)
           : std::pair<F, S>{std::forward<F2>(that.first), std::forward<S2>(that.second)}
         {}
 

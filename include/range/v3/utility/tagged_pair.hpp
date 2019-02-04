@@ -75,16 +75,16 @@ namespace ranges
         tagged() = default;
         using base_t::base_t;
 #if !defined(__clang__) || __clang_major__ > 3
-        template<typename Other>
-        constexpr CPP_ctor(tagged)(tagged<Other, Tags...> &&that)(
-            noexcept(std::is_nothrow_constructible<Base, Other>::value)
+        CPP_template(typename Other)(
             requires (can_convert<Other>::value))
+        constexpr tagged(tagged<Other, Tags...> &&that)
+            noexcept(std::is_nothrow_constructible<Base, Other>::value)
           : base_t(static_cast<Other &&>(that))
         {}
-        template<typename Other>
-        constexpr CPP_ctor(tagged)(tagged<Other, Tags...> const &that)(
-            noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
+        CPP_template(typename Other)(
             requires (can_convert<Other>::value))
+        constexpr tagged(tagged<Other, Tags...> const &that)
+            noexcept(std::is_nothrow_constructible<Base, Other const &>::value)
           : base_t(static_cast<Other const &>(that))
         {}
 #else

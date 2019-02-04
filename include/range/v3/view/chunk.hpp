@@ -102,9 +102,9 @@ namespace ranges
               , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
               , end_(ranges::end(cv.base()))
             {}
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
               , n_(that.n_)
               , end_(that.end_)
@@ -405,9 +405,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Int>
-            static auto CPP_fun(bind)(chunk_fn chunk, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(chunk_fn chunk, Int n)
             {
                 return make_pipeable(std::bind(chunk, std::placeholders::_1, n));
             }

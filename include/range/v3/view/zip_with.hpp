@@ -175,9 +175,9 @@ namespace ranges
             sentinel(detail::ignore_t, std::tuple<sentinel_t<meta::const_if_c<Const, Rngs>>...> ends)
               : ends_(std::move(ends))
             {}
-            template<bool Other>
-            CPP_ctor(sentinel)(sentinel<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            sentinel(sentinel<Other> that)
               : ends_(std::move(that.ends_))
             {}
         };
@@ -203,9 +203,9 @@ namespace ranges
             cursor(fun_ref_ fun, std::tuple<iterator_t<meta::const_if_c<Const, Rngs>>...> its)
               : fun_(std::move(fun)), its_(std::move(its))
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            cursor(cursor<Other> that)
               : fun_(std::move(that.fun_)), its_(std::move(that.its_))
             {}
             auto CPP_auto_fun(read)() (const)

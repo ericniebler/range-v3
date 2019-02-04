@@ -99,10 +99,10 @@ namespace ranges
                 return array;
             }
 
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R &&r) (const
-                noexcept(noexcept(impl<R>{}((R &&) r)))
+            CPP_template(typename R)(
                 requires (HasMemberBegin<R> || HasNonMemberBegin<R>))
+            constexpr  auto operator()(R &&r) const
+                noexcept(noexcept(impl<R>{}((R &&) r)))
             {
                 return impl<R>{}((R &&) r);
             }
@@ -226,10 +226,10 @@ namespace ranges
                 return array + N;
             }
 
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R &&r) (const
-                noexcept(noexcept(impl<R>{}((R &&) r)))
+            CPP_template(typename R)(
                 requires (HasMemberEnd<R> || HasNonMemberEnd<R>))
+            constexpr  auto operator()(R &&r) const
+                noexcept(noexcept(impl<R>{}((R &&) r)))
             {
                 return impl<R>{}((R &&) r);
             }
@@ -402,10 +402,10 @@ namespace ranges
             using impl = impl_<HasMemberRBegin<R> ? 0 : HasNonMemberRBegin<R> ? 1 : 2>;
 
         public:
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R &&r) (const
-                noexcept(noexcept(impl<R>{}((R &&) r)))
+            CPP_template(typename R)(
                 requires (HasMemberRBegin<R> || HasNonMemberRBegin<R> || CanReverseEnd<R>))
+            constexpr  auto operator()(R &&r) const
+                noexcept(noexcept(impl<R>{}((R &&) r)))
             {
                 return impl<R>{}((R &&) r);
             }
@@ -532,10 +532,10 @@ namespace ranges
             using impl = impl_<HasMemberREnd<R> ? 0 : HasNonMemberREnd<R> ? 1 : 2>;
 
         public:
-            template<typename R>
-            constexpr auto CPP_fun(operator())(R &&r) (const
-                noexcept(noexcept(impl<R>{}((R &&) r)))
+            CPP_template(typename R)(
                 requires (HasMemberREnd<R> || HasNonMemberREnd<R> || CanReverseBegin<R>))
+            constexpr  auto operator()(R &&r) const
+                noexcept(noexcept(impl<R>{}((R &&) r)))
             {
                 return impl<R>{}((R &&) r);
             }

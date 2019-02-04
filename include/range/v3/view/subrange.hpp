@@ -217,17 +217,17 @@ namespace ranges
 
         subrange() = default;
 
-        template <typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s)(
+        CPP_template(typename I2)(
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
                 (!detail::store_size_<K, S, I>()))
+        constexpr subrange(I2&& i, S s)
           : data_{static_cast<I2&&>(i), std::move(s)}
         {}
 
-        template <typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s, size_type n)(
+        CPP_template(typename I2)(
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
                 detail::store_size_<K, S, I>())
+        constexpr subrange(I2&& i, S s, size_type n)
           : data_{static_cast<I2&&>(i), std::move(s), n}
         {
             if RANGES_CONSTEXPR_IF ((bool) RandomAccessIterator<I>)
@@ -237,36 +237,36 @@ namespace ranges
                 RANGES_EXPECT(ranges::next(first_(), (D) n) == last_());
             }
         }
-        template <typename I2>
-        constexpr CPP_ctor(subrange)(I2&& i, S s, size_type n)(
+        CPP_template(typename I2)(
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
                 SizedSentinel<S, I>)
+        constexpr subrange(I2&& i, S s, size_type n)
           : data_{static_cast<I2&&>(i), std::move(s)}
         {
             RANGES_EXPECT(static_cast<size_type>(last_() - first_()) == n);
         }
 
-        template<typename R>
-        constexpr CPP_ctor(subrange)(R&& r) (
+        CPP_template(typename R)(
             requires defer::NotSameAs_<R, subrange> &&
                 detail::defer::RangeConvertibleTo_<R, I, S> &&
                 defer::True<!detail::store_size_<K, S, I>()>)
+        constexpr subrange(R&& r)
           : subrange{ranges::begin(r), ranges::end(r)}
         {}
 
-        template<typename R>
-        constexpr /*c++14*/ CPP_ctor(subrange)(R&& r) (
+        CPP_template(typename R)(
             requires defer::NotSameAs_<R, subrange> &&
                 detail::defer::RangeConvertibleTo_<R, I, S> &&
                 defer::True<detail::store_size_<K, S, I>()> &&
                 defer::SizedRange<R>)
+        constexpr /*c++14*/ subrange(R&& r)
           : subrange{ranges::begin(r), ranges::end(r), ranges::size(r)}
         {}
 
-        template<typename R>
-        constexpr /*c++14*/ CPP_ctor(subrange)(R&& r, size_type n) (
+        CPP_template(typename R)(
             requires detail::RangeConvertibleTo_<R, I, S> &&
                 True<K == subrange_kind::sized>)
+        constexpr /*c++14*/ subrange(R&& r, size_type n)
           : subrange{ranges::begin(r), ranges::end(r), n}
         {
             if RANGES_CONSTEXPR_IF ((bool) SizedRange<R>)

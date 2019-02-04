@@ -33,9 +33,9 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename C>
-            static auto CPP_fun(bind)(unique_fn unique, C pred)(
-                requires (!Range<C>))
+            CPP_template(typename C)(
+            requires (!Range<C>))
+            static auto bind(unique_fn unique, C pred)
             {
                 return std::bind(unique, std::placeholders::_1, protect(std::move(pred)));
             }

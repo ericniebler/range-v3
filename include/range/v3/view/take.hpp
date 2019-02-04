@@ -47,10 +47,10 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> end)
               : end_(std::move(end))
             {}
-            template<bool Other>
-            constexpr CPP_ctor(sentinel)(sentinel<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other) &&
                     ConvertibleTo<sentinel_t<Rng>, sentinel_t<Base>>)
+            constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
             constexpr sentinel_t<Base> base() const
@@ -256,9 +256,9 @@ namespace ranges
         private:
             friend view_access;
 
-            template<typename Int>
-            static auto CPP_fun(bind)(take_fn take, Int n)(
-                requires Integral<Int>)
+            CPP_template(typename Int)(
+            requires Integral<Int>)
+            static auto bind(take_fn take, Int n)
             {
                 return make_pipeable(std::bind(take, std::placeholders::_1, n));
             }
