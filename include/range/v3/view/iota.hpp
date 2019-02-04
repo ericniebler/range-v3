@@ -110,7 +110,7 @@ namespace ranges
         template<typename Val, typename Iota = incrementable_tag_of<Val>,
             bool IsIntegral = std::is_integral<Val>::value>
         struct iota_difference_
-          : ranges::difference_type<Val>
+          : ranges::difference_type_<Val>
         {};
 
         template<typename Val>
