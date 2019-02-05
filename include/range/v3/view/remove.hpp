@@ -81,11 +81,11 @@ namespace ranges
                 template<typename Rng, typename Value, typename Proj = ident,
                     CONCEPT_REQUIRES_(Constraint<Rng, Value, Proj>())>
                 RANGES_CXX14_CONSTEXPR
-                auto operator()(Rng&& rng, Value&& value, Proj proj = Proj{}) const
+                auto operator()(Rng&& rng, Value value, Proj proj = Proj{}) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    remove_if(all(static_cast<Rng &&>(rng)),
-                        pred<detail::decay_t<Value>>{static_cast<Value&&>(value)},
+                    remove_if(all(static_cast<Rng&&>(rng)),
+                        pred<Value>{std::move(value)},
                         std::move(proj))
                 )
             };
