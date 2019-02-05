@@ -115,7 +115,11 @@ namespace ranges
         template<typename T>
         struct incrementable_traits_2_<
             T,
+#ifdef RANGES_WORKAROUND_MSVC_785522
+            std::enable_if_t<std::is_integral_v<difference_result_t<T>>>>
+#else // ^^^ workaround / no workaround vvv
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
+#endif // RANGES_WORKAROUND_MSVC_785522
         {
             using difference_type = typename std::make_signed<difference_result_t<T>>::type;
         };
