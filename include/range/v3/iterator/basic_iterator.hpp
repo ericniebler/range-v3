@@ -621,8 +621,8 @@ namespace ranges
         constexpr auto operator->() const
         noexcept(noexcept(*std::declval<basic_iterator const &>())) ->
             CPP_ret(meta::_t<std::add_pointer<const_reference_t>>)(
-                requires not detail::HasCursorArrow<Cur> &&
-                    detail::ReadableCursor<Cur> &&
+                requires not detail::HasCursorArrow<C> &&
+                    detail::ReadableCursor<C> &&
                     std::is_lvalue_reference<const_reference_t>::value &&
                     Same<typename detail::iterator_associated_types_base<C>::value_type,
                         uncvref_t<const_reference_t>>)

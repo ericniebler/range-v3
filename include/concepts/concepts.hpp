@@ -236,7 +236,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
         struct Eval {                                                           \
             using Concept = CPP_PP_CAT(NAME, Concept);                          \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return (bool) _eager_::NAME<CPP_PP_EXPAND ARGS>;                \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -299,7 +299,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
         struct Eval {                                                           \
             CPP_PP_DECL_DEF_IMPL_HACK(ARGS)                                     \
             static constexpr bool impl(long) noexcept { return false; }         \
-            CPP_EXPLICIT constexpr operator bool() const noexcept {                 \
+            CPP_EXPLICIT constexpr operator bool() const noexcept {             \
                 return Eval::impl(0);                                           \
             }                                                                   \
             constexpr auto operator!() const noexcept {                         \
@@ -395,19 +395,19 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
     /**/
 #define CPP_TEMPLATE_AUX_(...) ,                                                \
-    bool CPP_true_ = true,                                                      \
+    bool CPP_false_ = false,                                                    \
     ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-        CPP_true_> = 0>                                                         \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
+        CPP_false_> = 0>                                                        \
     /**/
 #define CPP_template_def(...)                                                   \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_AUX_                                  \
     /**/
 #define CPP_TEMPLATE_DEF_AUX_(...) ,                                            \
-    bool CPP_true_,                                                             \
+    bool CPP_false_,                                                            \
     ::concepts::detail::enable_if_t<int,                                        \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-        CPP_true_>>                                                             \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
+        CPP_false_>>                                                            \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
 #define CPP_member                                                              \
@@ -434,16 +434,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_CTOR_REQUIRES_0(...)                                                \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) &&      \
-            CPP_true(::concepts::detail::xNil{})> = {})                         \
+        CPP_false(::concepts::detail::xNil{}) ||                                \
+        static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__))> = {})  \
     /**/
 // Yes noexcept-clause:
 #define CPP_CTOR_REQUIRES_1(...)                                                \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
+        CPP_false(::concepts::detail::xNil{}) ||                                \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, CPP_PP_CAT(           \
-                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__))) &&                       \
-            CPP_true(::concepts::detail::xNil{})> = {})                         \
+                CPP_CTOR_EAT_NOEXCEPT_, __VA_ARGS__)))> = {})                   \
         CPP_PP_EXPAND(                                                          \
             CPP_PP_CAT(CPP_CTOR_SHOW_NOEXCEPT_, __VA_ARGS__)))                  \
     /**/
@@ -468,17 +468,17 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     /**/
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
-    static_cast<bool>(__VA_ARGS__) && CPP_true(::concepts::detail::xNil{})>     \
+    static_cast<bool>(__VA_ARGS__) || CPP_false(::concepts::detail::xNil{})>    \
     /**/
 #ifdef CPP_WORKAROUND_MSVC_779763
 #define CPP_broken_friend_member                                                \
-    template<::concepts::detail::CPP_true_t const &CPP_true =                   \
-        ::concepts::detail::CPP_true_>                                          \
+    template<::concepts::detail::CPP_false_t const &CPP_false =                 \
+        ::concepts::detail::CPP_false_>                                         \
     /**/
 #else // ^^^ workaround / no workaround vvv
 #define CPP_broken_friend_member                                                \
-    template<bool (&CPP_true)(::concepts::detail::xNil) =                       \
-        ::concepts::detail::CPP_true>                                           \
+    template<bool (&CPP_false)(::concepts::detail::xNil) =                      \
+        ::concepts::detail::CPP_false>                                          \
     /**/
 #endif // CPP_WORKAROUND_MSVC_779763
 #endif
@@ -539,16 +539,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_0(...)                               \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__))  && \
-            CPP_true(::concepts::detail::xNil{})> = {}) const                   \
+        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) || \
+        CPP_false(::concepts::detail::xNil{})> = {}) const                      \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_CONST_NOEXCEPT_1(...)                               \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
         static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(    \
-            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) &&                       \
-            CPP_true(::concepts::detail::xNil{})> = {}) const CPP_PP_EXPAND(    \
+            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) ||                       \
+            CPP_false(::concepts::detail::xNil{})> = {}) const CPP_PP_EXPAND(   \
             CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))              \
     /**/
 
@@ -576,16 +576,16 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_0(...)                            \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
-        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) && \
-            CPP_true(::concepts::detail::xNil{})> = {})                         \
+        static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, __VA_ARGS__)) || \
+        CPP_false(::concepts::detail::xNil{})> = {})                            \
     /**/
 
 #define CPP_FUN_IMPL_SELECT_NONCONST_NOEXCEPT_1(...)                            \
     ::concepts::detail::enable_if_t<                                            \
         ::concepts::detail::Nil,                                                \
         static_cast<bool>(CPP_PP_CAT(CPP_FUN_IMPL_EAT_REQUIRES_, CPP_PP_CAT(    \
-            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) &&                       \
-            CPP_true(::concepts::detail::xNil{})> = {})                         \
+            CPP_FUN_IMPL_EAT_NOEXCEPT_, __VA_ARGS__))) ||                       \
+            CPP_false(::concepts::detail::xNil{})> = {})                        \
         CPP_PP_EXPAND(CPP_PP_CAT(CPP_FUN_IMPL_SHOW_NOEXCEPT_, __VA_ARGS__)))    \
     /**/
 
@@ -745,31 +745,31 @@ namespace concepts
 #ifdef CPP_WORKAROUND_MSVC_779763
         enum class xNil {};
 
-        struct CPP_true_t
+        struct CPP_false_t
         {
             constexpr bool operator()(Nil) const noexcept
             {
-                return true;
+                return false;
             }
             constexpr bool operator()(xNil) const noexcept
             {
-                return true;
+                return false;
             }
         };
 
-        CPP_INLINE_VAR constexpr CPP_true_t CPP_true_{};
+        CPP_INLINE_VAR constexpr CPP_false_t CPP_false_{};
 
-        inline constexpr bool CPP_true(xNil)
+        inline constexpr bool CPP_false(xNil)
         {
-            return true;
+            return false;
         }
 #else
         using xNil = Nil;
 #endif
 
-        inline constexpr bool CPP_true(Nil)
+        inline constexpr bool CPP_false(Nil)
         {
-            return true;
+            return false;
         }
 
         template<typename T>

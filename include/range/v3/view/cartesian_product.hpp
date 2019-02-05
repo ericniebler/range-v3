@@ -388,12 +388,9 @@ RANGES_DIAGNOSTIC_POP
             requires sizeof...(Views) != 0)
           : views_{detail::move(views)...}
         {}
-        CPP_member
-#ifndef RANGES_WORKAROUND_MSVC_DC338193
-        static
-#endif // RANGES_WORKAROUND_MSVC_DC338193
-        constexpr auto size() noexcept -> CPP_ret(std::intmax_t)(
+        CPP_template(int = 42)(
             requires my_cardinality >= 0)
+        static constexpr std::intmax_t size() noexcept
         {
             return std::intmax_t{my_cardinality};
         }
