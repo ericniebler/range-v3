@@ -71,8 +71,15 @@ namespace ranges
                     return invoke(fun_, *first_, ref);
                 }
             };
+#ifdef RANGES_WORKAROUND_MSVC_787074
+            template<bool Const = IsConst>
+            auto read() const ->
+                take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
+                                         sentinel_t<meta::const_if_c<Const, Rng>>>, pred>
+#else // ^^^ workaround / no workaround vvv
             auto read() const ->
                 take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
+#endif // RANGES_WORKAROUND_MSVC_787074
             {
                 return {{cur_, last_}, {cur_, fun_}};
             }

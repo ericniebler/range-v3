@@ -233,11 +233,12 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control during specialization matching
 #define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error (Fix not yet live)
-#define RANGES_WORKAROUND_MSVC_711347 // (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as alias template argument (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
+#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
