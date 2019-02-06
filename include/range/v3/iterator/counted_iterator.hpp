@@ -75,12 +75,12 @@ namespace ranges
         I current_{};
         iter_difference_t<I> cnt_{0};
 
-        void post_increment_(std::true_type)
+        constexpr /*c++14*/ void post_increment_(std::true_type)
         {
             CPP_assert(std::is_void<decltype(current_++)>());
             ++current_;
         }
-        auto post_increment_(std::false_type) -> decltype(current_++)
+        constexpr /*c++14*/ auto post_increment_(std::false_type) -> decltype(current_++)
         {
             CPP_assert(!std::is_void<decltype(current_++)>());
             auto&& tmp = current_++;
@@ -93,20 +93,20 @@ namespace ranges
 
         counted_iterator() = default;
 
-        counted_iterator(I x, iter_difference_t<I> n)
+        constexpr /*c++14*/ counted_iterator(I x, iter_difference_t<I> n)
           : current_(std::move(x)), cnt_(n)
         {
             RANGES_EXPECT(n >= 0);
         }
 
         template<typename I2>
-        CPP_ctor(counted_iterator)(counted_iterator<I2> const &i)(
+        constexpr CPP_ctor(counted_iterator)(counted_iterator<I2> const &i)(
             requires ConvertibleTo<I2, I>)
           : current_(_counted_iterator_::access::current(i)), cnt_(i.count())
         {}
 
         template<typename I2>
-        auto operator=(counted_iterator<I2> const &i) ->
+        constexpr /*c++14*/ auto operator=(counted_iterator<I2> const &i) ->
             CPP_ret(counted_iterator &)(
                 requires ConvertibleTo<I2, I>)
         {
@@ -114,24 +114,24 @@ namespace ranges
             cnt_ = i.count();
         }
 
-        I base() const
+        constexpr I base() const
         {
             return current_;
         }
 
-        iter_difference_t<I> count() const
+        constexpr iter_difference_t<I> count() const
         {
             return cnt_;
         }
 
-        iter_reference_t<I> operator*()
+        constexpr /*c++14*/ iter_reference_t<I> operator*()
             noexcept(noexcept(iter_reference_t<I>(*current_)))
         {
             RANGES_EXPECT(cnt_ > 0);
             return *current_;
         }
         template<typename I2 = I>
-        auto operator*() const
+        constexpr /*c++14*/ auto operator*() const
             noexcept(noexcept(iter_reference_t<I>(*current_))) ->
             CPP_ret(iter_reference_t<I2>)(
                 requires Readable<I2 const>)
@@ -140,7 +140,7 @@ namespace ranges
             return *current_;
         }
 
-        counted_iterator& operator++()
+        constexpr /*c++14*/ counted_iterator& operator++()
         {
             RANGES_EXPECT(cnt_ > 0);
             ++current_;
@@ -150,12 +150,12 @@ namespace ranges
 
 #ifdef RANGES_WORKAROUND_MSVC_677925
         template<typename I2 = I>
-        auto operator++(int) ->
+        constexpr /*c++14*/ auto operator++(int) ->
             CPP_ret(decltype(std::declval<I2 &>()++))(
                 requires not ForwardIterator<I2>)
 #else // ^^^ workaround ^^^ / vvv no workaround vvv
         CPP_member
-        auto operator++(int) ->
+        constexpr /*c++14*/ auto operator++(int) ->
             CPP_ret(decltype(std::declval<I &>()++))(
                 requires not ForwardIterator<I>)
 #endif // RANGES_WORKAROUND_MSVC_677925
@@ -165,7 +165,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator++(int) ->
+        constexpr /*c++14*/ auto operator++(int) ->
             CPP_ret(counted_iterator)(
                 requires ForwardIterator<I>)
         {
@@ -175,7 +175,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator--() ->
+        constexpr /*c++14*/ auto operator--() ->
             CPP_ret(counted_iterator &)(
                 requires BidirectionalIterator<I>)
         {
@@ -185,7 +185,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator--(int) ->
+        constexpr /*c++14*/ auto operator--(int) ->
             CPP_ret(counted_iterator)(
                 requires BidirectionalIterator<I>)
         {
@@ -195,7 +195,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator+=(difference_type n) ->
+        constexpr /*c++14*/ auto operator+=(difference_type n) ->
             CPP_ret(counted_iterator &)(
                 requires RandomAccessIterator<I>)
         {
@@ -206,7 +206,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator+(difference_type n) const ->
+        constexpr /*c++14*/ auto operator+(difference_type n) const ->
             CPP_ret(counted_iterator)(
                 requires RandomAccessIterator<I>)
         {
@@ -216,7 +216,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator-=(difference_type n) ->
+        constexpr /*c++14*/ auto operator-=(difference_type n) ->
             CPP_ret(counted_iterator &)(
                 requires RandomAccessIterator<I>)
         {
@@ -227,7 +227,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator-(difference_type n) const ->
+        constexpr /*c++14*/ auto operator-(difference_type n) const ->
             CPP_ret(counted_iterator)(
                 requires RandomAccessIterator<I>)
         {
@@ -237,7 +237,7 @@ namespace ranges
         }
 
         CPP_member
-        auto operator[](difference_type n) const ->
+        constexpr /*c++14*/ auto operator[](difference_type n) const ->
             CPP_ret(iter_reference_t<I>)(
                 requires RandomAccessIterator<I>)
         {
@@ -256,8 +256,9 @@ namespace ranges
             return ranges::iter_move(i.current_);
         }
         template<typename I2, typename S2>
-        friend auto iter_swap(counted_iterator const &x,
-                              counted_iterator<I2> const &y)
+        friend constexpr /*c++14*/
+        auto iter_swap(counted_iterator const &x,
+                       counted_iterator<I2> const &y)
             noexcept(is_nothrow_indirectly_swappable<I, I2>::value) ->
             CPP_broken_friend_ret(void)(
                 requires IndirectlySwappable<I2, I>)
@@ -282,6 +283,7 @@ namespace ranges
             return ranges::iter_move(_counted_iterator_::access::current(i));
         }
         template<typename I1, typename I2>
+        constexpr /*c++14*/
         auto iter_swap(counted_iterator<I1> const &x,
                        counted_iterator<I2> const &y)
             noexcept(is_nothrow_indirectly_swappable<I1, I2>::value) ->
@@ -296,7 +298,7 @@ namespace ranges
 #endif
 
     template<typename I1, typename I2>
-    auto operator==(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
+    constexpr auto operator==(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
     {
@@ -304,18 +306,19 @@ namespace ranges
     }
 
     template<typename I>
-    bool operator==(counted_iterator<I> const &x, default_sentinel_t)
+    constexpr bool operator==(counted_iterator<I> const &x, default_sentinel_t)
     {
         return x.count() == 0;
     }
 
     template<typename I>
-    bool operator==(default_sentinel_t, counted_iterator<I> const &x)
+    constexpr bool operator==(default_sentinel_t, counted_iterator<I> const &x)
     {
         return x.count() == 0;
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator!=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
@@ -324,18 +327,19 @@ namespace ranges
     }
 
     template<typename I>
-    bool operator!=(counted_iterator<I> const &x, default_sentinel_t y)
+    constexpr bool operator!=(counted_iterator<I> const &x, default_sentinel_t y)
     {
         return !(x == y);
     }
 
     template<typename I>
-    bool operator!=(default_sentinel_t x, counted_iterator<I> const &y)
+    constexpr bool operator!=(default_sentinel_t x, counted_iterator<I> const &y)
     {
         return !(x == y);
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator<(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
@@ -344,6 +348,7 @@ namespace ranges
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator<=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
@@ -352,6 +357,7 @@ namespace ranges
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator>(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
@@ -360,6 +366,7 @@ namespace ranges
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator>=(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(bool)(
             requires Common<I1, I2>)
@@ -368,6 +375,7 @@ namespace ranges
     }
 
     template<typename I1, typename I2>
+    constexpr
     auto operator-(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
         CPP_ret(iter_difference_t<I2>)(
             requires Common<I1, I2>)
@@ -376,20 +384,21 @@ namespace ranges
     }
 
     template<typename I>
-    iter_difference_t<I>
+    constexpr iter_difference_t<I>
     operator-(counted_iterator<I> const &x, default_sentinel_t)
     {
         return -x.count();
     }
 
     template<typename I>
-    iter_difference_t<I>
+    constexpr iter_difference_t<I>
     operator-(default_sentinel_t, counted_iterator<I> const &y)
     {
         return y.count();
     }
 
     template<typename I>
+    constexpr
     auto operator+(iter_difference_t<I> n, counted_iterator<I> const &x) ->
         CPP_ret(counted_iterator<I>)(
             requires RandomAccessIterator<I>)
@@ -398,6 +407,7 @@ namespace ranges
     }
 
     template<typename I>
+    constexpr /*c++14*/
     auto make_counted_iterator(I i, iter_difference_t<I> n) ->
         CPP_ret(counted_iterator<I>)(
             requires Iterator<I>)
@@ -414,7 +424,7 @@ namespace ranges
     {};
 
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     auto advance_fn::operator()(counted_iterator<I> &i, iter_difference_t<I> n) const ->
         CPP_ret(void)(
             requires Iterator<I>)
