@@ -237,6 +237,7 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
+#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
