@@ -140,9 +140,9 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            CPP_ctor(set_difference_cursor)(set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            set_difference_cursor(set_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
               , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
@@ -279,9 +279,9 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            CPP_ctor(set_intersection_cursor)(set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            set_intersection_cursor(set_intersection_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
               , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
@@ -437,9 +437,9 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            CPP_ctor(set_union_cursor)(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            set_union_cursor(set_union_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
               , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
@@ -617,10 +617,10 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            CPP_ctor(set_symmetric_difference_cursor)(
-                set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)(
-                    requires IsConst && (!Other))
+            CPP_template(bool Other)(
+                requires IsConst && (!Other))
+            set_symmetric_difference_cursor(
+                set_symmetric_difference_cursor<Other, Rng1, Rng2, C, P1, P2> that)
               : pred_(std::move(that.pred_)), proj1_(std::move(that.proj1_))
               , proj2_(std::move(that.proj2_)), it1_(std::move(that.it1_))
               , end1_(std::move(that.end1_)), it2_(std::move(that.it2_))
