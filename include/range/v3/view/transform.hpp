@@ -166,13 +166,13 @@ namespace ranges
         constexpr /*c++14*/ auto CPP_fun(size)() (
             requires SizedRange<Rng>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
         CPP_member
         constexpr auto CPP_fun(size)() (const
             requires SizedRange<Rng const>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
     };
 
