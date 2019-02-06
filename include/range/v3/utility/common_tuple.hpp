@@ -34,17 +34,44 @@ namespace ranges
         {
             return std::tuple<Us...>{adl_get<Is>(static_cast<Tup &&>(tup))...};
         }
+
+#ifdef RANGES_WORKAROUND_MSVC_786312
+        template<std::size_t, typename ...> struct args_;
+
+        template<typename, typename>
+        inline constexpr bool argstructible = false;
+        template<std::size_t N, typename ...Ts, typename ...Us>
+        inline constexpr bool argstructible<args_<N, Ts...>, args_<N, Us...>> =
+            (std::is_constructible_v<Ts, Us> && ...);
+
+        template<typename, typename>
+        inline constexpr bool argsignable = false;
+        template<std::size_t N, typename ...Ts, typename ...Us>
+        inline constexpr bool argsignable<args_<N, Ts...>, args_<N, Us...>> =
+            (std::is_assignable_v<Ts &, Us> && ...);
+#endif // RANGES_WORKAROUND_MSVC_786312
+
         template<std::size_t N, typename ...Ts>
         struct args_
         {
             template<typename ...Us>
             args_(
                 args_<N, Us...>,
-                meta::if_c<meta::and_c<std::is_constructible<Ts, Us>::value...>::value> * = nullptr)
+                meta::if_c<
+#ifdef RANGES_WORKAROUND_MSVC_786312
+                    argstructible<args_, args_<N, Us...>>
+#else // ^^^ workaround / no workaround vvv
+                    meta::and_c<std::is_constructible<Ts, Us>::value...>::value
+#endif // RANGES_WORKAROUND_MSVC_786312
+                > * = nullptr)
             {}
             template<typename ...Us>
             meta::if_c<
+#ifdef RANGES_WORKAROUND_MSVC_786312
+                argsignable<args_, args_<N, Us...>>,
+#else // ^^^ workaround / no workaround vvv
                 meta::and_c<std::is_assignable<Ts &, Us>::value...>::value,
+#endif // RANGES_WORKAROUND_MSVC_786312
                 args_ &>
             operator=(args_<N, Us...>)
             {

@@ -235,6 +235,8 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_711347 // (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
+#define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
+#define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
