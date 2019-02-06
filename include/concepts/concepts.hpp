@@ -783,7 +783,7 @@ namespace concepts
         return true;
     }
 
-#ifdef __clang__
+#if defined(__clang__) || defined(_MSC_VER)
     template<bool B>
     ::concepts::detail::enable_if_t<void, B> requires_()
     {}
