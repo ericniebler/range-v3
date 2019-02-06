@@ -506,6 +506,8 @@ namespace ranges
     /// \cond
     namespace detail
     {
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
         template<typename I, typename Proj>
         struct projected_
         {
@@ -513,6 +515,7 @@ namespace ranges
             using value_type = uncvref_t<reference>;
             reference operator*() const;
         };
+RANGES_DIAGNOSTIC_POP
 
         template<typename Proj>
         struct select_projected_

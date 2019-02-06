@@ -79,12 +79,13 @@ namespace ranges
           : meta::id_t<decltype(adl_move_detail::try_adl_iter_move_<T>(42))>
         {};
 
-        // TODO: investigate the breakage when these are made constexpr.
-        // (Results in ODR-use of projected_readable::operator*)
         struct iter_move_fn
         {
             template<typename I,
                 typename = meta::if_c<is_adl_indirectly_movable_<I &>::value>>
+#ifndef RANGES_WORKAROUND_CLANG_23135
+            constexpr
+#endif // RANGES_WORKAROUND_CLANG_23135
             auto CPP_auto_fun(operator())(I &&i) (const)
             (
                 return iter_move(i)
@@ -93,6 +94,9 @@ namespace ranges
             template<typename I,
                 typename = meta::if_c<!is_adl_indirectly_movable_<I &>::value>,
                 typename R = iter_reference_t<I>>
+#ifndef RANGES_WORKAROUND_CLANG_23135
+            constexpr
+#endif // RANGES_WORKAROUND_CLANG_23135
             auto CPP_auto_fun(operator())(I &&i) (const)
             (
                 return static_cast<aux::move_t<R>>(aux::move(*i))

@@ -277,6 +277,9 @@ namespace ranges
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
 #define RANGES_WORKAROUND_CLANG_37556
+#if __clang_major__ < 4
+#define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on clang-3.x
+#endif
 #else // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
