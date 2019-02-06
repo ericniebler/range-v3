@@ -89,10 +89,10 @@ namespace ranges
                 if (current_ != ranges::end(rng.base_))
                     sum_ = *current_;
             }
-            template<bool Other>
-            constexpr CPP_ctor(cursor)(cursor<Other> const &that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other) &&
                     ConvertibleTo<iterator_t<Rng> const &, iterator_t<Base>>)
+            constexpr cursor(cursor<Other> const &that)
               : parent_{that.parent_}
               , current_(that.current_)
               , sum_(that.sum_)

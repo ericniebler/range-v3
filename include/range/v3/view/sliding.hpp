@@ -300,9 +300,9 @@ namespace ranges
             adaptor(range_difference_t<Rng> n)
               : n_(n)
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            adaptor(adaptor<Other> that)
               : n_(that.n_)
             {}
             iterator_t<CRng> end(meta::const_if_c<Const, sliding_view> &v) const

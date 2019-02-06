@@ -67,9 +67,9 @@ namespace ranges
             constexpr adaptor(Parent &rng) noexcept
               : rng_(&rng)
             {}
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            constexpr adaptor(adaptor<Other> that)
               : rng_(that.rng_)
             {}
             constexpr /*c++14*/ void next(iterator_t<CRng> &it) const
