@@ -214,7 +214,7 @@ namespace ranges
 
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
         detail::input_iterator_tag)
     {
@@ -223,7 +223,7 @@ namespace ranges
             ++i;
     }
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
         detail::bidirectional_iterator_tag)
     {
@@ -235,21 +235,21 @@ namespace ranges
                 --i;
     }
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
         detail::random_access_iterator_tag)
     {
         i += n;
     }
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_impl_(I &i, S s, sentinel_tag)
     {
         while(i != s)
             ++i;
     }
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_impl_(I &i, S s, sized_sentinel_tag)
     {
         iter_difference_t<I> d = s - i;
@@ -258,7 +258,7 @@ namespace ranges
     }
     // Advance to a certain position:
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_(I &i, S s, std::true_type)
     {
         i = static_cast<S &&>(s);
@@ -270,7 +270,7 @@ namespace ranges
         advance_fn::to_impl_(i, static_cast<S &&>(s), sentinel_tag_of<S, I>());
     }
     template<typename I, typename D, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, S bound, sentinel_tag,
         detail::input_iterator_tag)
     {
@@ -280,7 +280,7 @@ namespace ranges
         return n;
     }
     template<typename I, typename D>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, I bound, sentinel_tag,
         detail::bidirectional_iterator_tag)
     {
@@ -293,7 +293,7 @@ namespace ranges
         return n;
     }
     template<typename I, typename D, typename S, typename Concept>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, S bound, sized_sentinel_tag,
         Concept)
     {

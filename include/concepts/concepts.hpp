@@ -680,7 +680,7 @@ namespace concepts
     namespace detail
     {
         template<typename>
-        inline constexpr bool requires_()
+        constexpr bool requires_()
         {
             return true;
         }
@@ -759,7 +759,7 @@ namespace concepts
 
         CPP_INLINE_VAR constexpr CPP_false_t CPP_false_{};
 
-        inline constexpr bool CPP_false(xNil)
+        constexpr bool CPP_false(xNil)
         {
             return false;
         }
@@ -767,7 +767,7 @@ namespace concepts
         using xNil = Nil;
 #endif
 
-        inline constexpr bool CPP_false(Nil)
+        constexpr bool CPP_false(Nil)
         {
             return false;
         }
@@ -783,7 +783,7 @@ namespace concepts
         return true;
     }
 
-#ifdef __clang__
+#if defined(__clang__) || defined(_MSC_VER)
     template<bool B>
     ::concepts::detail::enable_if_t<void, B> requires_()
     {}
