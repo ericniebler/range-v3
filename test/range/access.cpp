@@ -127,14 +127,14 @@ namespace begin_testing
         CPP_assert(CanCBegin<int const(&)[2]>);
         CPP_assert(ranges::Same<decltype(ranges::cbegin(std::declval<int const(&)[2]>())), int const *>);
 
-#ifndef _MSC_VER // VSO#573728 "rvalues of array types bind to lvalue references"
+#ifndef RANGES_WORKAROUND_MSVC_573728
         // Ill-formed: array rvalue
         CPP_assert(!CanBegin<int(&&)[2]>);
         CPP_assert(!CanBegin<int const(&&)[2]>);
 
         CPP_assert(!CanCBegin<int(&&)[2]>);
         CPP_assert(!CanCBegin<int const(&&)[2]>);
-#endif // _MSC_VER
+#endif // RANGES_WORKAROUND_MSVC_573728
 
         // Valid: only member begin
         CPP_assert(CanBegin<A&>);
