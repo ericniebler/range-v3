@@ -251,46 +251,46 @@ namespace ranges
               : result_(enable_view_helper_::test(p))
             {}
         };
-        inline constexpr bool enable_view_impl_(...)
+        constexpr bool enable_view_impl_(...)
         {
             return false;
         }
-        inline constexpr bool enable_view_impl_(view_base const *)
+        constexpr bool enable_view_impl_(view_base const *)
         {
             return true;
         }
-        inline constexpr bool enable_view_impl_(enable_view_helper_ ev)
+        constexpr bool enable_view_impl_(enable_view_helper_ ev)
         {
             return ev.result_;
         }
         template<typename T>
-        inline constexpr bool enable_view_impl_(std::initializer_list<T> const *)
+        constexpr bool enable_view_impl_(std::initializer_list<T> const *)
         {
             return false;
         }
         template<typename Key, typename Compare, typename Alloc>
-        inline constexpr bool enable_view_impl_(std::set<Key, Compare, Alloc> const *)
+        constexpr bool enable_view_impl_(std::set<Key, Compare, Alloc> const *)
         {
             return false;
         }
         template<typename Key, typename Compare, typename Alloc>
-        inline constexpr bool enable_view_impl_(std::multiset<Key, Compare, Alloc> const *)
+        constexpr bool enable_view_impl_(std::multiset<Key, Compare, Alloc> const *)
         {
             return false;
         }
         template<typename Key, typename Hash, typename Pred, typename Alloc>
-        inline constexpr bool enable_view_impl_(std::unordered_set<Key, Hash, Pred, Alloc> const *)
+        constexpr bool enable_view_impl_(std::unordered_set<Key, Hash, Pred, Alloc> const *)
         {
             return false;
         }
         template<typename Key, typename Hash, typename Pred, typename Alloc>
-        inline constexpr bool enable_view_impl_(std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
+        constexpr bool enable_view_impl_(std::unordered_multiset<Key, Hash, Pred, Alloc> const *)
         {
             return false;
         }
         // BUGBUG TODO
         // template<typename BidiIter, typename Alloc>
-        // inline constexpr bool enable_view_impl_(std::match_results<BidiIter, Alloc> const *)
+        // constexpr bool enable_view_impl_(std::match_results<BidiIter, Alloc> const *)
         // {
         //     return false;
         // }
