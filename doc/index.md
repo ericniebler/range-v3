@@ -59,11 +59,13 @@ Range v3 is a generic library that augments the existing standard library with f
 
 For every STL algorithm this library provides a version that accepts a *range* instead of a pair of iterators. 
 
-All transforming and filtering algorithms are composable. This means applying an algorithm to a range yields a **lazily** evaluated representation (a so-called **view**) of the result, which can either be evaluated to obtain the results of the applied transformation or can be passed to another algorithm.  
+All transforming and filtering functions are composable. Applying them to a range yields a so-called **lazy** representation of the result, which can either be evaluated to obtain the results or can be passed to another function.  
 
 This avoids temporary results while allowing a declarative and easy-to-understand programming style. Generally this is possible without sacrificing performance.  
 
-Range v3 also provides in-place modifying algorithms e.g. for sorting. These are called **action**s.  
+> TODO: distinguish and explain the difference of algorithms, views, and actions
+
+Range v3 also provides in-place modifying funnctions e.g. for sorting. These are called **action**s.  
 
 Range v3 is a contribution to making C++ easier to write and reason about. With Range v3 one can write code this way: 
 
