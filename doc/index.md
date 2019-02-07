@@ -92,9 +92,7 @@ Please note that due to the lazy evaluation of views there are no temporary cont
 
 ## What is a Range?
 
-Before we take the deep dive into further examples it may be useful to further clarify the wordings.  
-
-It may come as a surprise, but giving a short, comprehensive definition of a *range* is much harder than one might expect. 
+Before we take the deep dive into further examples it may be useful to further clarify the wordings. It may come as a surprise, but giving a short, comprehensive definition of a *range* is much harder than one might expect. 
 
 First of all a range is something you can iterate over (*range* used to be spelled *iterable*, but was renamed during its evolution). A range might be a half open interval. Which means a range might have an infinite number of elements, like e.g. all positive integers starting from 42. A range can be loosely thought of a pair of iterators, although they need not be implemented that way.
  
