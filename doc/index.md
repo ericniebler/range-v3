@@ -59,13 +59,13 @@ Range v3 is a generic library that augments the existing standard library with f
 
 For every STL algorithm this library provides a version that accepts a *range* instead of a pair of iterators. 
 
-All transforming and filtering functions are composable. Applying them to a range yields a so-called **lazy** representation of the result, which can either be evaluated to obtain the results or can be passed to another function.  
+Pushing this further the library distinguishes eager, mutating in-place algorithms e.g for sorting (called **actions**) and lazy, non-mutating algorithms e.g. for filtering (called **views**)
 
-This avoids temporary results while allowing a declarative and easy-to-understand programming style. Generally this is possible without sacrificing performance.  
+> @EricNiebler: What separates the [algorithms](https://github.com/ericniebler/range-v3/tree/master/include/range/v3/algorithm) from the views and actions? Only found [a distinction of views and actions](http://ericniebler.com/2014/11/23/container-algorithms/). Some of them are dimension-reducing ... 
 
-> TODO: distinguish and explain the difference of algorithms, views, and actions
+All functions are composable. E.g. applying a lazy, non-mutating view to a range does not lead to an evaluation, but yields an object representing the result, which can either be evaluated later to obtain the results or be passed to another view, action or algorithm.  
 
-Range v3 also provides in-place modifying funnctions e.g. for sorting. These are called **action**s.  
+This avoids temporaries while allowing a declarative and easy-to-understand programming style. Generally this is possible without sacrificing performance.  
 
 Range v3 is a contribution to making C++ easier to write and reason about. With Range v3 one can write code this way: 
 
@@ -82,30 +82,38 @@ Range v3 is a contribution to making C++ easier to write and reason about. With 
             };
 
     auto filteredAndInCartesianCoordinates = coordinates
-        | remove_if(outsideOfReasonableRange)
-        | remove_if(is_inf_or_nan)
-        | transform(polarToCartesian)
-        | reverse;
+        | ranges::view::remove_if(outsideOfReasonableRange)
+        | ranges::view::remove_if(is_inf_or_nan)
+        | ranges::view::transform(polarToCartesian)
+        | ranges::view::reverse;
 ~~~~~~~
 
-
-
+Please note that due to the lazy evaluation of views there are no temporary container objects generated in this example.   
 
 ## What is a Range?
 
+Before we take the deep dive into further examples it may be useful to further clarify the wordings.  
+
 It may come as a surprise, but giving a short, comprehensive definition of a *range* is much harder than one might expect. 
 
-First of all a range is something you can iterate over (*range* used to be spelled *iterable*). One possibility to describe an iterable is given in the [`IEnumerator`  interface](https://docs.microsoft.com/de-de/dotnet/api/system.collections.ienumerator) definition of the `C#` programming language which has a `bool MoveNext()` method and a `Current` property. Due to consistency with the STL and for efficiency reasons the C++ representation differs. Everything that can be passed to `begin` and `end` can be considered to be a range. 
+First of all a range is something you can iterate over (*range* used to be spelled *iterable*, but was renamed during its evolution). A range might be a half open interval. Which means a range might have an infinite number of elements, like e.g. all positive integers starting from 42. A range can be loosely thought of a pair of iterators, although they need not be implemented that way.
  
-So a range can be loosely thought of a pair of iterators, although they need not be implemented that way.
+From a user's perspective a range is anything one can call `std::begin` and `std::end` on to retrieve an iterator and a so-called sentinel which represents the end of the range or infinity for half open intervals. A range can be a value or a reference, a container or a view, or even a built-in C array.
 
-A range might be a half open interval. Which means a range might have an infinite number of elements, like e.g. all positive integers starting from 42. It can be shown that in this case the iterators which represent `begin` and `end` of the interval must be of different types. See [this blogpost](http://ericniebler.com/2015/02/03/iterators-plus-plus-part-1/) and follow-ups for the details.  
 
-## Theoretical Background
+## Theoretical Background and Comparison to Approaches in other Languages 
 
+> WIP - WIP - WIP - WIP - WIP - WIP - WIP - WIP - WIP - WIP - WIP 
+
+> THIS SECTION IS INCOMPLETE AND A GRAVEYARD FOR PARAGRAPHS WHICH NEED REWORK. 
+
+One possibility to describe an iterable is given in the [`IEnumerator`  interface](https://docs.microsoft.com/de-de/dotnet/api/system.collections.ienumerator) definition of the `C#` programming language which has a `bool MoveNext()` method and a `Current` property. Due to consistency with the STL and for efficiency reasons the C++ representation differs. Everything that can be passed to `begin` and `end` can be considered to be a range. 
+ 
 C++ range and C# IEnumerable together with their corresponding algorithms share the same theoretical foundation from functional programming, especially the [concept of a monad](https://bartoszmilewski.com/2014/10/17/c-ranges-are-pure-monadic-goodness/). 
 
 All of C#'s [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) operations (which in fact are database queries on containers and other, similar objects)  have  counterparts in C++ ranges. E.g. `GroupBy` is called `group_by` in C++ and `SelectMany`is denoted `join`.  
+
+It can be shown that for half open intervals the iterators which represent `begin` and `end` of the interval must be of different types. See [this blogpost](http://ericniebler.com/2015/02/03/iterators-plus-plus-part-1/) and follow-ups for the details.  
 
 
 ## Why Use Ranges?
