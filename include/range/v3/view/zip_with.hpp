@@ -99,7 +99,7 @@ namespace ranges
                 constexpr auto operator()(T const &t, U const &u) const ->
                     decltype(true ? t : u)
                 {
-                    return t < u ? t : u;
+                    return u < t ? u : t;
                 }
             };
             RANGES_INLINE_VARIABLE(_min_, min_)
@@ -110,7 +110,7 @@ namespace ranges
                 constexpr auto operator()(T const &t, U const &u) const ->
                     decltype(true ? u : t)
                 {
-                    return t < u ? u : t;
+                    return u < t ? t : u;
                 }
             };
             RANGES_INLINE_VARIABLE(_max_, max_)
@@ -331,7 +331,7 @@ namespace ranges
                 return range_cardinality<iter_zip_with_view>::value >= 0 ?
                     (size_type_)range_cardinality<iter_zip_with_view>::value :
                     tuple_foldl(
-                        tuple_transform(rngs_, ranges::size),
+                        tuple_transform(rngs_, compose(convert_to<size_type_>{}, ranges::size)),
                         (std::numeric_limits<size_type_>::max)(),
                         detail::min_);
             }
