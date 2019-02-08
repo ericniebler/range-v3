@@ -84,8 +84,11 @@ namespace ranges
             {
                 RANGES_EXPECT(cur_ != last_);
                 // If the last match consumed zero elements, bump the position.
-                advance(cur_, (int)zero_, last_);
-                zero_ = false;
+                if(zero_)
+                {
+                    zero_ = false;
+                    ++cur_;
+                }
                 for(; cur_ != last_; ++cur_)
                 {
                     auto p = invoke(fun_, cur_, last_);
@@ -109,7 +112,7 @@ namespace ranges
               : cur_(first), last_(last), fun_(fun)
             {
                 // For skipping an initial zero-length match
-                auto p = invoke(fun, first, ranges::next(first));
+                auto p = invoke(fun, first, last);
                 zero_ = p.first && first == p.second;
             }
         public:
