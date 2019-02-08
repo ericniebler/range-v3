@@ -400,5 +400,18 @@ int main()
 
     moar_tests();
 
+    {   // Regression test for #1041
+        auto is_escape = [](auto first, auto last) {
+            return std::make_pair(next(first) != last, first);
+        };
+
+        auto escapes = view::split_when(view::c_str(R"(\t)"), is_escape);
+        CPP_assert(ForwardRange<decltype(escapes)>);
+
+        auto const first = begin(escapes);
+        CHECK(first != end(escapes));
+        CHECK(first != next(first));
+    }
+
     return test_result();
 }
