@@ -90,6 +90,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/transform.hpp>
 #include <range/v3/algorithm/unique.hpp>
 #include <range/v3/algorithm/unique_copy.hpp>
+#include <range/v3/algorithm/unstable_remove_if.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 
 // BUGBUG
