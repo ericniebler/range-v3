@@ -21,6 +21,7 @@
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
