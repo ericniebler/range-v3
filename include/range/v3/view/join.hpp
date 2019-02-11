@@ -186,7 +186,7 @@ namespace ranges
                 return accumulate(view::transform(outer_, ranges::size), size_type{0}) +
                         (range_cardinality<Rng>::value == 0 ?
                             0 :
-                            ranges::size(val_) * (range_cardinality<Rng>::value - 1));;
+                            ranges::size(val_) * (range_cardinality<Rng>::value - 1));
             }
         private:
             friend range_access;
