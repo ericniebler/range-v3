@@ -74,29 +74,39 @@ namespace ranges
             friend range_access;
             CONCEPT_ASSERT(sizeof...(Views) != 0);
             CONCEPT_ASSERT(meta::strict_and<ForwardView<Views>...>::value);
-            using CanConst = meta::strict_and<
-                Range<Views const>...>;
+            using CanConst = meta::and_<Range<Views const>...>;
             template<bool IsConst>
-            using CanSize = meta::strict_and<
+            using CanSize = meta::and_<
                 SizedRange<meta::if_c<IsConst, Views const, Views>>...>;
             template<bool IsConst>
-            using CanDistance = meta::strict_and<
-                CanSize<IsConst>,
+            using CanDistance2_ = meta::and_<
                 SizedSentinel<
                     iterator_t<meta::if_c<IsConst, Views const, Views>>,
                     iterator_t<meta::if_c<IsConst, Views const, Views>>>...>;
             template<bool IsConst>
-            using CanRandom = meta::strict_and<
-                CanDistance<IsConst>,
+            using CanDistance = meta::and_<
+                CanSize<IsConst>,
+                CanDistance2_<IsConst && CanSize<IsConst>::value>>;
+            template<bool IsConst>
+            using CanRandom2_ = meta::and_<
                 RandomAccessIterator<iterator_t<
                     meta::if_c<IsConst, Views const, Views>>>...>;
             template<bool IsConst>
-            using CanBidi = meta::strict_or<
+            using CanRandom = meta::and_<
+                CanDistance<IsConst>,
+                CanRandom2_<IsConst && CanDistance<IsConst>::value>>;
+            template<bool IsConst>
+            using CanBidi2_ = meta::and_<
+                BidirectionalIterator<iterator_t<
+                    meta::if_c<IsConst, Views const, Views>>>...>;
+            template<bool IsConst>
+            using Bounded = meta::and_<
+                BoundedRange<meta::if_c<IsConst, Views const, Views>>...>;
+            template<bool IsConst>
+            using CanBidi = meta::or_<
                 CanRandom<IsConst>,
-                meta::strict_and<
-                    BoundedRange<meta::if_c<IsConst, Views const, Views>>...,
-                    BidirectionalIterator<iterator_t<
-                        meta::if_c<IsConst, Views const, Views>>>...>>;
+                meta::and_<Bounded<IsConst>,
+                    CanBidi2_<IsConst && Bounded<IsConst>::value>>>;
 
             static constexpr auto my_cardinality =
                 detail::cartesian_product_cardinality<Views...>::value;
@@ -240,10 +250,6 @@ RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
                     i = first + static_cast<D>(n_mod);
                 }
 RANGES_DIAGNOSTIC_POP
-                void check_at_end_(meta::size_t<0>, bool = false)
-                {
-                    CONCEPT_ASSERT(sizeof...(Views) == 0);
-                }
                 void check_at_end_(meta::size_t<1>, bool at_end = false)
                 {
                     if(at_end)
@@ -333,26 +339,23 @@ RANGES_DIAGNOSTIC_POP
             {
                 return cursor<true>{begin_tag{}, *this};
             }
-            CONCEPT_REQUIRES(sizeof...(Views) == 0 || CanBidi<false>())
+            CONCEPT_REQUIRES(CanBidi<false>())
             cursor<false> end_cursor()
             {
-                using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
-                return cursor<false>{Tag{}, *this};
+                return cursor<false>{end_tag{}, *this};
             }
-            CONCEPT_REQUIRES(sizeof...(Views) == 0 || CanBidi<true>())
+            CONCEPT_REQUIRES(CanBidi<true>())
             cursor<true> end_cursor() const
             {
-                using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
-                return cursor<true>{Tag{}, *this};
+                return cursor<true>{end_tag{}, *this};
             }
-            CONCEPT_REQUIRES(sizeof...(Views) != 0 && !CanBidi<true>())
+            CONCEPT_REQUIRES(!CanBidi<true>())
             default_sentinel end_cursor() const
             {
                 return {};
             }
         public:
             cartesian_product_view() = default;
-            CONCEPT_REQUIRES(sizeof...(Views) > 0)
             explicit constexpr cartesian_product_view(Views... views)
               : views_{detail::move(views)...}
             {}

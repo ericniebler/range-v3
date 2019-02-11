@@ -22,6 +22,7 @@
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/chunk.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -272,6 +273,12 @@ int main()
     test_bug_820();
     test_bug_823();
     test_bug_919();
+
+    {
+        static constexpr int data[] = {1};
+        ranges::view::cartesian_product(data |
+            ranges::view::filter([](int) { return true; }));
+    }
 
     return test_result();
 }
