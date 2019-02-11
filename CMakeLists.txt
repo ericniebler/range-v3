@@ -8,6 +8,13 @@
 cmake_minimum_required(VERSION 3.6)
 get_directory_property(is_subproject PARENT_DIRECTORY)
 
+# Having both `is_subproject` and `is_standalone` improves readability.
+if(NOT is_subproject)
+    set(is_standalone YES)
+else()
+    set(is_standalone NO)
+endif()
+
 project(Range-v3 CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -29,7 +36,6 @@ function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_test(${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
 
-include(CTest) # invokes enable_testing() and defines BUILD_TESTING variable, defaulting to ON
 include(TestHeaders)
 include(ranges_options)
 include(ranges_env)
@@ -40,6 +46,9 @@ if(RANGE_V3_DOCS)
 endif()
 
 if(RANGE_V3_TESTS)
+  # The CTest module invokes enable_testing() and defines the
+  # BUILD_TESTING variable, defaulting to ON.
+  include(CTest)
   add_subdirectory(test)
 endif()
 
