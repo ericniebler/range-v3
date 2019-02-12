@@ -95,7 +95,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
     template<typename BaseIt, typename Adapt>
     struct adaptor_cursor;

@@ -22,10 +22,10 @@
 
 namespace ranges
 {
-    /// \addtogroup group-concepts
+    /// \addtogroup group-range
     // Specialize this if the default is wrong.
     template<typename T>
-    /*inline*/ constexpr bool disable_sized_range = false;
+    RANGES_INLINE_VAR constexpr bool disable_sized_range = false;
 
     /// \cond
     namespace _size_
@@ -117,7 +117,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \return For a given expression `E` of type `T`, `ranges::size(E)` is equivalent to:
     ///   * `+extent_v<T>` if `T` is an array type.
     ///   * Otherwise, `+E.size()` if it is a valid expression and its type `I` models
@@ -222,7 +222,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return The result of calling `ranges::data` with a const-qualified
     ///    (lvalue or rvalue) reference to `r`.
@@ -292,9 +292,19 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \return true if and only if range contains no elements.
     RANGES_INLINE_VARIABLE(_empty_::fn, empty)
+
+    namespace cpp20
+    {
+        // Specialize this is namespace ranges::
+        using ranges::disable_sized_range;
+        using ranges::size;
+        using ranges::empty;
+        using ranges::data;
+        using ranges::cdata;
+    }
 }
 
 #endif

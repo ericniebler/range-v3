@@ -178,6 +178,13 @@ namespace ranges
     /// \sa `sample_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(sample_fn, sample)
+
+    // Not yet!
+    //  namespace cpp20
+    // {
+    //     using ranges::sample_result;
+    //     using ranges::sample;
+    // }
     /// @}
 } // namespace ranges
 

@@ -26,6 +26,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-numerics
+    /// @{
     CPP_def
     (
         template(typename I, typename T, typename Op = plus, typename P = identity)
@@ -56,6 +58,7 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(accumulate_fn, accumulate)
+    /// @}
 }
 
 #endif

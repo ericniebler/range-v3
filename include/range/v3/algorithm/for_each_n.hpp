@@ -61,6 +61,12 @@ namespace ranges
     /// \sa `for_each_n_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(for_each_n_fn, for_each_n)
+
+    // Not yet!
+    //  namespace cpp20
+    // {
+    //     using ranges::for_each_n;
+    // }
     /// @}
 } // namespace ranges
 

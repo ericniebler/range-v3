@@ -83,6 +83,11 @@ namespace ranges
     /// \sa `partial_sort_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(partial_sort_copy_fn, partial_sort_copy)
+
+    namespace cpp20
+    {
+        using ranges::partial_sort_copy;
+    }
     /// @}
 } // namespace ranges
 

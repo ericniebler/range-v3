@@ -151,6 +151,11 @@ namespace ranges
     /// \sa `search_n_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(search_n_fn, search_n)
+
+    namespace cpp20
+    {
+        using ranges::search_n;
+    }
     /// @}
 } // namespace ranges
 

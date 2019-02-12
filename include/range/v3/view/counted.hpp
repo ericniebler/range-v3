@@ -29,7 +29,7 @@ namespace ranges
     /// @{
     template<typename I>
     struct counted_view
-      : view_interface<counted_view<I>>
+      : view_interface<counted_view<I>, finite>
     {
     private:
         friend range_access;
@@ -60,6 +60,24 @@ namespace ranges
 
     namespace view
     {
+        struct cpp20_counted_fn
+        {
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<counted_iterator<I>, default_sentinel_t>)(
+                    requires Iterator<I> && (!RandomAccessIterator<I>))
+            {
+                return {make_counted_iterator(std::move(it), n), default_sentinel};
+            }
+            template<typename I>
+            auto operator()(I it, iter_difference_t<I> n) const ->
+                CPP_ret(subrange<I>)(
+                    requires RandomAccessIterator<I>)
+            {
+                return {it, it + n};
+            }
+        };
+
         struct counted_fn
         {
             template<typename I>
@@ -81,6 +99,14 @@ namespace ranges
         /// \relates counted_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(counted_fn, counted)
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            RANGES_INLINE_VARIABLE(ranges::view::cpp20_counted_fn, counted)
+        }
     }
     /// @}
 }

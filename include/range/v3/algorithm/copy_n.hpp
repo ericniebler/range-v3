@@ -53,6 +53,12 @@ namespace ranges
     /// \sa `copy_n_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(copy_n_fn, copy_n)
+
+    namespace cpp20
+    {
+        using ranges::copy_n_result;
+        using ranges::copy_n;
+    }
     /// @}
 } // namespace ranges
 

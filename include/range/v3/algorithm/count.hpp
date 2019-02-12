@@ -56,6 +56,11 @@ namespace ranges
     /// \sa `count_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(count_fn, count)
+
+    namespace cpp20
+    {
+        using ranges::count;
+    }
     /// @}
 } // namespace ranges
 

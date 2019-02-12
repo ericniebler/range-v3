@@ -24,6 +24,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
     template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
     struct ostream_iterator
     {
@@ -120,7 +122,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `make_ostream_joiner_fn`
     RANGES_INLINE_VARIABLE(make_ostream_joiner_fn, make_ostream_joiner)
 
@@ -172,6 +173,14 @@ namespace ranges
         bool failed_ = false;
     };
 
+    namespace cpp20
+    {
+        template<typename T, typename Char = char, typename Traits = std::char_traits<Char>>
+        using ostream_iterator = ranges::ostream_iterator<T, Char, Traits>;
+
+        using ranges::ostreambuf_iterator;
+    }
+    /// @}
 }
 
 /// \cond

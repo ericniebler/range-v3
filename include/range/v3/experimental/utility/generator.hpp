@@ -33,7 +33,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-view
     /// @{
     namespace experimental
     {

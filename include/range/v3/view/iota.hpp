@@ -107,10 +107,12 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename Val, typename Iota = incrementable_tag_of<Val>,
+        template<
+            typename Val,
+            typename Iota = incrementable_tag_of<Val>,
             bool IsIntegral = std::is_integral<Val>::value>
         struct iota_difference_
-          : ranges::difference_type_<Val>
+          : difference_type_<Val>
         {};
 
         template<typename Val>
@@ -121,13 +123,13 @@ namespace ranges
             static constexpr std::size_t bits = sizeof(difference_t) * CHAR_BIT;
         public:
             using type =
-                meta::if_<
-                    meta::not_<std::is_same<Val, difference_t>>,
+                if_then_t<
+                    !RANGES_IS_SAME(Val, difference_t),
                     meta::_t<std::make_signed<difference_t>>,
-                    meta::if_c<
+                    if_then_t<
                         (bits < 16),
                         std::int_fast16_t,
-                        meta::if_c<
+                        if_then_t<
                             (bits < 32),
                             std::int_fast32_t,
                             std::int_fast64_t>>>;

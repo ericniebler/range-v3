@@ -183,6 +183,11 @@ namespace ranges
     /// \sa `stable_sort_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(stable_sort_fn, stable_sort)
+
+    namespace cpp20
+    {
+        using ranges::stable_sort;
+    }
     /// @}
 } // namespace ranges
 

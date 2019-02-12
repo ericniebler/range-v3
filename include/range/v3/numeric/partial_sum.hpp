@@ -31,6 +31,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-numerics
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -133,6 +136,7 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(partial_sum_fn, partial_sum)
+    /// @}
 }
 
 #endif

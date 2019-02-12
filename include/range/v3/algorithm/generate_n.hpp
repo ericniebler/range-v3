@@ -51,6 +51,12 @@ namespace ranges
     /// \sa `generate_n_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(generate_n_fn, generate_n)
+
+    namespace cpp20
+    {
+        using ranges::generate_n_result;
+        using ranges::generate_n;
+    }
     // @}
 } // namespace ranges
 

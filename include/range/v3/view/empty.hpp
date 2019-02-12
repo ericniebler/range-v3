@@ -73,7 +73,18 @@ namespace ranges
     namespace view
     {
         template<typename T>
-        /*inline*/ constexpr empty_view<T> empty {};
+        RANGES_INLINE_VAR constexpr empty_view<T> empty {};
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::empty;
+        }
+        CPP_template(typename T)(
+            requires std::is_object<T>::value)
+        using empty_view = ranges::empty_view<T>;
     }
 }
 

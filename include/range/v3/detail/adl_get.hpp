@@ -23,7 +23,8 @@ namespace ranges
     {
         namespace _adl_get_
         {
-            template<typename> void get();
+            template<typename>
+            void get();
 
             template<std::size_t I, typename TupleLike>
             constexpr auto adl_get(TupleLike &&t) noexcept ->
@@ -78,56 +79,56 @@ namespace ranges
               : TupleLike(base)
             {}
 #endif
-        };
 
-        template<std::size_t I, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> &wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<I>(static_cast<TupleLike &>(wb))
-        )
-        template<std::size_t I, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> const &wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<I>(static_cast<TupleLike const &>(wb))
-        )
-        template<std::size_t I, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> &&wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<I>(static_cast<TupleLike &&>(wb))
-        )
-        template<std::size_t I, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> const &&wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<I>(static_cast<TupleLike const &&>(wb))
-        )
-        template<typename T, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> &wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<T>(static_cast<TupleLike &>(wb))
-        )
-        template<typename T, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> const &wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<T>(static_cast<TupleLike const &>(wb))
-        )
-        template<typename T, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> &&wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<T>(static_cast<TupleLike &&>(wb))
-        )
-        template<typename T, typename TupleLike>
-        constexpr auto get(forward_tuple_interface<TupleLike> const &&wb)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            detail::adl_get<T>(static_cast<TupleLike const &&>(wb))
-        )
+            template<std::size_t I, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<U &>(wb))
+            )
+            template<std::size_t I, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> const &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<U const &>(wb))
+            )
+            template<std::size_t I, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<U &&>(wb))
+            )
+            template<std::size_t I, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> const &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<I>(static_cast<U const &&>(wb))
+            )
+            template<typename T, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<U &>(wb))
+            )
+            template<typename T, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> const &wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<U const &>(wb))
+            )
+            template<typename T, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<U &&>(wb))
+            )
+            template<typename T, typename U = TupleLike>
+            friend constexpr auto get(forward_tuple_interface<TupleLike> const &&wb)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::adl_get<T>(static_cast<U const &&>(wb))
+            )
+        };
     }
     /// \endcond
 }

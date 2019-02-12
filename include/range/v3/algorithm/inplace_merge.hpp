@@ -234,6 +234,11 @@ namespace ranges
     /// \sa `inplace_merge_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(inplace_merge_fn, inplace_merge)
+
+    namespace cpp20
+    {
+        using ranges::inplace_merge;
+    }
     /// @}
 } // namespace ranges
 

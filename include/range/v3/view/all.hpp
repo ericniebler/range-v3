@@ -100,6 +100,17 @@ namespace ranges
           : Rng(detail::move(rng))
         {}
     };
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::all;
+        }
+        CPP_template(typename Rng)(
+            requires ViewableRange<Rng>)
+        using all_view = ranges::view::all_t<Rng>;
+    }
     /// @}
 }
 

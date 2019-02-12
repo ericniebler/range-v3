@@ -45,6 +45,11 @@ namespace ranges
     /// \sa `fill_n_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(fill_n_fn, fill_n)
+
+    namespace cpp20
+    {
+        using ranges::fill_n;
+    }
     /// @}
 } // namespace ranges
 

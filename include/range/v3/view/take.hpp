@@ -29,7 +29,7 @@ namespace ranges
 {
     template<typename Rng>
     struct take_view
-      : view_interface<take_view<Rng>>
+      : view_interface<take_view<Rng>, finite>
     {
     private:
         CPP_assert(View<Rng>);
@@ -276,6 +276,17 @@ namespace ranges
         /// \relates take_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_fn>, take)
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::take;
+        }
+        CPP_template(typename Rng)(
+            requires View<Rng>)
+        using take_view = ranges::take_view<Rng>;
     }
     /// @}
 }

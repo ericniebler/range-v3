@@ -22,6 +22,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-numerics
+    /// @{
     struct iota_fn
     {
         CPP_template(typename O, typename S, typename T)(
@@ -43,6 +45,7 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(iota_fn, iota)
+    /// @}
 }
 
 #endif

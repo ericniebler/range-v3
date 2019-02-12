@@ -82,6 +82,12 @@ namespace ranges
     /// \sa `partition_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(partition_copy_fn, partition_copy)
+
+    namespace cpp20
+    {
+        using ranges::partition_copy_result;
+        using ranges::partition_copy;
+    }
     /// @}
 } // namespace ranges
 

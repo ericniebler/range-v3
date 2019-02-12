@@ -113,14 +113,6 @@ namespace ranges
     decltype(__VA_ARGS__)                                       \
     /**/
 
-#ifdef __clang__
-#define RANGES_IS_SAME(...) __is_same(__VA_ARGS__)
-#elif defined(__GNUC__) && __GNUC__ >= 6
-#define RANGES_IS_SAME(...) __is_same_as(__VA_ARGS__)
-#else
-#define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
-#endif
-
 // Non-portable forward declarations of standard containers
 #ifdef _LIBCPP_VERSION
 #define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD
@@ -347,6 +339,14 @@ namespace ranges
 #endif
 #endif
 
+#if (defined(__cpp_lib_type_trait_variable_templates) && \
+    __cpp_lib_type_trait_variable_templates > 0) || \
+    RANGES_CXX_VER >= RANGES_CXX_STD_17
+#define RANGES_CXX_TRAIT_VARIABLE_TEMPLATES 1
+#else
+#define RANGES_CXX_TRAIT_VARIABLE_TEMPLATES 0
+#endif
+
 #ifndef RANGES_CXX_ATTRIBUTE_DEPRECATED
 #ifdef __has_cpp_attribute
 #define RANGES_CXX_ATTRIBUTE_DEPRECATED __has_cpp_attribute(deprecated)
@@ -479,12 +479,14 @@ namespace ranges
 
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 &&             \
     !defined(RANGES_DOXYGEN_INVOKED)
+#define RANGES_INLINE_VAR
 #define RANGES_INLINE_VARIABLE(type, name)                                      \
     inline namespace                                                            \
     {                                                                           \
         constexpr auto &name = ::ranges::static_const<type>::value;             \
     }
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_INLINE_VAR inline
 #define RANGES_INLINE_VARIABLE(type, name)                                      \
     inline constexpr type name{};                                               \
     /**/
@@ -559,6 +561,16 @@ namespace ranges
 #define RANGES_CXX_ALIGNED_NEW 0L
 #endif
 #endif // RANGES_CXX_ALIGNED_NEW
+
+#if defined(__clang__)
+#define RANGES_IS_SAME(...) __is_same(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
+#define RANGES_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#elif RANGES_CXX_TRAIT_VARIABLE_TEMPLATES
+#define RANGES_IS_SAME(...) std::is_same_v<__VA_ARGS__>
+#else
+#define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#endif
 
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \

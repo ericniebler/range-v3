@@ -49,7 +49,7 @@ RANGES_END_NAMESPACE_STD
 
 namespace ranges
 {
-    /// \addtogroup group-concepts
+    /// \addtogroup group-range
     /// @{
 
     ///
@@ -309,7 +309,8 @@ namespace ranges
 
     // Specialize this if the default is wrong.
     template<typename T>
-    constexpr bool enable_view = detail::enable_view_impl_(detail::nullptr_<T>(0));
+    RANGES_INLINE_VAR constexpr bool enable_view =
+        detail::enable_view_impl_(detail::nullptr_<T>(0));
 
     ///
     /// View concepts below
@@ -484,6 +485,22 @@ namespace ranges
                 RangeConcept>,
             T>;
 
+    namespace cpp20
+    {
+        using ranges::Range;
+        using ranges::SizedRange;
+        // Specialize this is namespace ranges::
+        using ranges::enable_view;
+        using ranges::View;
+        using ranges::OutputRange;
+        using ranges::InputRange;
+        using ranges::ForwardRange;
+        using ranges::BidirectionalRange;
+        using ranges::RandomAccessRange;
+        using ranges::ContiguousRange;
+        using ranges::CommonRange;
+        using ranges::ViewableRange;
+    }
     /// @}
 }
 

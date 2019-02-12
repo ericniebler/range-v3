@@ -58,7 +58,12 @@ namespace ranges
     /// \sa `min_element_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(min_element_fn, min_element)
-    /// @}
+
+    namespace cpp20
+    {
+        using ranges::min_element;
+    }
+   /// @}
 } // namespace ranges
 
 #endif // include guard

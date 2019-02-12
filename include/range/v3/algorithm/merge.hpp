@@ -25,6 +25,7 @@
 // Elements of Programming
 // by Alexander Stepanov and Paul McJones
 // Addison-Wesley Professional, 2009
+
 #ifndef RANGES_V3_ALGORITHM_MERGE_HPP
 #define RANGES_V3_ALGORITHM_MERGE_HPP
 
@@ -72,8 +73,8 @@ namespace ranges
                     ++begin0;
                 }
             }
-            auto t0 = copy(begin0, end0, out);
-            auto t1 = copy(begin1, end1, t0.out);
+            auto t0 = ranges::copy(begin0, end0, out);
+            auto t1 = ranges::copy(begin1, end1, t0.out);
             return {t0.in, t1.in, t1.out};
         }
 
@@ -93,6 +94,12 @@ namespace ranges
     /// \sa `merge_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(merge_fn, merge)
+
+    namespace cpp20
+    {
+        using ranges::merge_result;
+        using ranges::merge;
+    }
     /// @}
 } // namespace ranges
 

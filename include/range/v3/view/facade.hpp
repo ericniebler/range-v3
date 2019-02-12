@@ -48,7 +48,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
 
     /// \brief A utility for constructing a view from a (derived) type that

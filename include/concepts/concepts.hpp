@@ -66,12 +66,6 @@
 
 CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
-#if defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606
-#define CPP_INLINE_VAR inline
-#else
-#define CPP_INLINE_VAR
-#endif
-
 #define CPP_PP_CHECK(...) CPP_PP_CHECK_N(__VA_ARGS__, 0,)
 #define CPP_PP_CHECK_N(x, n, ...) n
 #define CPP_PP_PROBE(x) x, 1,
@@ -227,6 +221,12 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #define CPP_PP_DEF_IMPL_1_REQUIRES_BODY(...)                                    \
     { __VA_ARGS__; }                                                            \
     /**/
+#ifdef CPP_DOXYGEN_INVOKED
+#define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
+    CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
+    concept bool NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__)              \
+    /**/
+#else
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
     inline namespace _eager_ {                                                  \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
@@ -258,6 +258,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     }                                                                           \
     using _concepts_int_ = int                                                  \
     /**/
+#endif
 #else
 // No requires expression:
 #define CPP_PP_DEF_IMPL_0(...)                                                  \
@@ -670,11 +671,11 @@ namespace concepts
 
     template<bool...Bs>
     CPP_INLINE_VAR constexpr bool and_v =
-        CPP_PP_IS_SAME(detail::bools<Bs..., true>, detail::bools<true, Bs...>);
+        META_IS_SAME(detail::bools<Bs..., true>, detail::bools<true, Bs...>);
 
     template<bool...Bs>
     CPP_INLINE_VAR constexpr bool or_v =
-        !CPP_PP_IS_SAME(detail::bools<Bs..., false>, detail::bools<false, Bs...>);
+        !META_IS_SAME(detail::bools<Bs..., false>, detail::bools<false, Bs...>);
 #endif
 
     namespace detail
@@ -848,7 +849,7 @@ namespace concepts
         (
             template(typename A, typename B)
             concept Same,
-                CPP_PP_IS_SAME(A, B) && CPP_PP_IS_SAME(B, A)
+                META_IS_SAME(A, B) && META_IS_SAME(B, A)
         );
 
         /// \cond

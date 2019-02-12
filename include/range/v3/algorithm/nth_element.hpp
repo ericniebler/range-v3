@@ -305,6 +305,11 @@ namespace ranges
     /// \sa `nth_element_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(nth_element_fn, nth_element)
+
+    namespace cpp20
+    {
+        using ranges::nth_element;
+    }
     /// @}
 } // namespace ranges
 

@@ -43,7 +43,7 @@ namespace ranges
     {
     private:
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag)
+        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag_)
         {
             while(true)
             {
@@ -65,7 +65,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag)
+        static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag_)
         {
             I end = ranges::next(begin, end_);
             while(true)
@@ -112,6 +112,11 @@ namespace ranges
     /// \sa `partition_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(partition_fn, partition)
+
+    namespace cpp20
+    {
+        using ranges::partition;
+    }
     /// @}
 } // namespace ranges
 
