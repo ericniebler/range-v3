@@ -98,11 +98,11 @@ namespace ranges
             explicit constexpr coroutine_owner(base_t coro) noexcept
               : base_t(coro)
             {}
-            constexpr /*c++14*/ coroutine_owner(coroutine_owner &&that) noexcept
+            coroutine_owner(coroutine_owner &&that) noexcept
               : base_t(ranges::exchange(that.base(), {}))
               , copied_(that.copied_.load(std::memory_order_relaxed))
             {}
-            constexpr /*c++14*/ coroutine_owner(coroutine_owner const &that) noexcept
+            coroutine_owner(coroutine_owner const &that) noexcept
               : base_t(that.handle())
               , copied_(that.handle() != nullptr)
             {
