@@ -409,7 +409,7 @@ namespace ranges
         subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
-    // in leu of deduction guides, use make_subrange
+    // in lieu of deduction guides, use make_subrange
     struct make_subrange_fn
     {
         template<typename I, typename S>
