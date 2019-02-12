@@ -22,6 +22,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename Second, typename First>
     struct composed
     {
@@ -77,9 +79,10 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `compose_fn`
     RANGES_INLINE_VARIABLE(compose_fn, compose)
+    /// @}
 }
 
 #endif

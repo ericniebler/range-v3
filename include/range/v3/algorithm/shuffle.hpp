@@ -67,6 +67,11 @@ namespace ranges
     /// \sa `shuffle_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(shuffle_fn, shuffle)
+
+    namespace cpp20
+    {
+        using ranges::shuffle;
+    }
     /// @}
 } // namespace ranges
 

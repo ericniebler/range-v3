@@ -65,8 +65,12 @@ namespace ranges
     /// \sa `adjacent_find_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(adjacent_find_fn, adjacent_find)
-    /// @}
 
+    namespace cpp20
+    {
+        using ranges::adjacent_find;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // RANGE_ALGORITHM_ADJACENT_FIND_HPP

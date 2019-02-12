@@ -149,7 +149,9 @@ namespace ranges
     }
     /// \endcond
 
-    template<typename I, typename S = I,
+    template<
+        typename I,
+        typename S = I,
         subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
     struct subrange;
 
@@ -448,6 +450,21 @@ namespace ranges
     template<typename R>
     using safe_subrange_t =
         detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+
+    namespace cpp20
+    {
+        using ranges::subrange_kind;
+
+        CPP_template(
+            typename I,
+            typename S = I,
+            subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>()))(
+            requires Iterator<I> && Sentinel<S, I> &&
+                (K == subrange_kind::sized || !SizedSentinel<S, I>))
+        using subrange = ranges::subrange<I, S>;
+
+        using ranges::safe_subrange_t;
+    }
     /// @}
 }
 

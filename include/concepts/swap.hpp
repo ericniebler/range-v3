@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#ifndef CONCEPTS_SWAP_HPP
-#define CONCEPTS_SWAP_HPP
+#ifndef CPP_SWAP_HPP
+#define CPP_SWAP_HPP
 
 #include <tuple>
 #include <utility>
@@ -22,73 +22,75 @@
 // C++14 constexpr functions are inline in C++11
 #if (defined(__cpp_constexpr) && __cpp_constexpr >= 201304L) ||\
     (!defined(__cpp_constexpr) && __cplusplus >= 201402L)
-#define CONCEPTS_CXX14_CONSTEXPR constexpr
+#define CPP_CXX14_CONSTEXPR constexpr
 #else
-#define CONCEPTS_CXX14_CONSTEXPR inline
+#define CPP_CXX14_CONSTEXPR inline
 #endif
 
-#ifndef CONCEPTS_CXX_INLINE_VARIABLES
+#ifndef CPP_CXX_INLINE_VARIABLES
 #ifdef __cpp_inline_variables // TODO: fix this if SD-6 picks another name
-#define CONCEPTS_CXX_INLINE_VARIABLES __cpp_inline_variables
+#define CPP_CXX_INLINE_VARIABLES __cpp_inline_variables
 // TODO: remove once clang defines __cpp_inline_variables (or equivalent)
 #elif defined(__clang__) && \
     (__clang_major__ > 3 || __clang_major__ == 3 && __clang_minor__ == 9) && \
     __cplusplus > 201402L
-#define CONCEPTS_CXX_INLINE_VARIABLES 201606L
+#define CPP_CXX_INLINE_VARIABLES 201606L
 #else
-#define CONCEPTS_CXX_INLINE_VARIABLES __cplusplus
+#define CPP_CXX_INLINE_VARIABLES __cplusplus
 #endif  // __cpp_inline_variables
-#endif  // CONCEPTS_CXX_INLINE_VARIABLES
+#endif  // CPP_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#define CONCEPTS_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define CPP_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
 #endif
 
-#if CONCEPTS_CXX_INLINE_VARIABLES < 201606L
-#define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
+#if CPP_CXX_INLINE_VARIABLES < 201606L
+#define CPP_INLINE_VAR
+#define CPP_INLINE_VARIABLE(type, name)                                         \
     inline namespace                                                            \
     {                                                                           \
         constexpr auto &name = ::concepts::detail::static_const<type>::value;   \
     }                                                                           \
     /**/
-#else  // CONCEPTS_CXX_INLINE_VARIABLES >= 201606L
-#define CONCEPTS_INLINE_VARIABLE(type, name)                                    \
+#else  // CPP_CXX_INLINE_VARIABLES >= 201606L
+#define CPP_INLINE_VAR inline
+#define CPP_INLINE_VARIABLE(type, name)                                         \
     inline constexpr type name{};                                               \
     /**/
-#endif // CONCEPTS_CXX_INLINE_VARIABLES
+#endif // CPP_CXX_INLINE_VARIABLES
 
-#if CONCEPTS_CXX_INLINE_VARIABLES < 201606L
-#define CONCEPTS_DEFINE_CPO(type, name)                                         \
+#if CPP_CXX_INLINE_VARIABLES < 201606L
+#define CPP_DEFINE_CPO(type, name)                                              \
     inline namespace                                                            \
     {                                                                           \
         constexpr auto &name = ::concepts::detail::static_const<type>::value;   \
     }                                                                           \
     /**/
-#else  // CONCEPTS_CXX_INLINE_VARIABLES >= 201606L
-#define CONCEPTS_DEFINE_CPO(type, name)                                         \
+#else  // CPP_CXX_INLINE_VARIABLES >= 201606L
+#define CPP_DEFINE_CPO(type, name)                                              \
     inline namespace _                                                          \
     {                                                                           \
         inline constexpr type name{};                                           \
     }                                                                           \
     /**/
-#endif // CONCEPTS_CXX_INLINE_VARIABLES
+#endif // CPP_CXX_INLINE_VARIABLES
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 #if defined(__GNUC__) || defined(__clang__)
-#define CONCEPTS_PRAGMA(X) _Pragma(#X)
-#define CONCEPTS_DIAGNOSTIC_IGNORE_PRAGMAS \
-    CONCEPTS_PRAGMA(GCC diagnostic ignored "-Wpragmas")
-#define CONCEPTS_DIAGNOSTIC_IGNORE(X) \
-    CONCEPTS_DIAGNOSTIC_IGNORE_PRAGMAS \
-    CONCEPTS_PRAGMA(GCC diagnostic ignored "-Wunknown-pragmas") \
-    CONCEPTS_PRAGMA(GCC diagnostic ignored X)
-#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
-    CONCEPTS_DIAGNOSTIC_IGNORE("-Wunknown-warning-option") \
-    CONCEPTS_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
+#define CPP_PRAGMA(X) _Pragma(#X)
+#define CPP_DIAGNOSTIC_IGNORE_PRAGMAS \
+    CPP_PRAGMA(GCC diagnostic ignored "-Wpragmas")
+#define CPP_DIAGNOSTIC_IGNORE(X) \
+    CPP_DIAGNOSTIC_IGNORE_PRAGMAS \
+    CPP_PRAGMA(GCC diagnostic ignored "-Wunknown-pragmas") \
+    CPP_PRAGMA(GCC diagnostic ignored X)
+#define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME \
+    CPP_DIAGNOSTIC_IGNORE("-Wunknown-warning-option") \
+    CPP_DIAGNOSTIC_IGNORE("-Winit-list-lifetime")
 #else
-#define CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+#define CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
 #endif
 #endif // MSVC/Generic configuration switch
 
@@ -98,12 +100,10 @@ namespace concepts
     namespace detail
     {
         template<typename T>
-        struct is_movable_
-            : meta::and_<
-                std::is_object<T>,
-                std::is_move_constructible<T>,
-                std::is_move_assignable<T>>
-        {};
+        CPP_INLINE_VAR constexpr bool is_movable_v =
+            std::is_object<T>::value &&
+            std::is_move_constructible<T>::value &&
+            std::is_move_assignable<T>::value;
 
         template<typename T>
         struct static_const
@@ -128,7 +128,7 @@ namespace concepts
     struct is_nothrow_swappable_with;
 
     template<typename T, typename U = T>
-    CONCEPTS_CXX14_CONSTEXPR
+    CPP_CXX14_CONSTEXPR
     meta::if_c<
         std::is_move_constructible<T>::value &&
         std::is_assignable<T &, U>::value, T>
@@ -139,43 +139,44 @@ namespace concepts
     {
         T tmp((T &&) t);
         t = (U &&) u;
-        CONCEPTS_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
+        CPP_DIAGNOSTIC_IGNORE_INIT_LIST_LIFETIME
         return tmp;
     }
 
     /// \cond
     namespace adl_swap_detail
     {
+        struct nope
+        {};
+
         // Intentionally create an ambiguity with std::swap, which is
         // (possibly) unconstrained.
         template<typename T>
-        void swap(T &, T &) = delete;
+        nope swap(T &, T &) = delete;
 
         template<typename T, std::size_t N>
-        void swap(T (&)[N], T (&)[N]) = delete;
+        nope swap(T (&)[N], T (&)[N]) = delete;
 
-#ifdef CONCEPTS_WORKAROUND_MSVC_620035
-        void swap();
+#ifdef CPP_WORKAROUND_MSVC_620035
+        nope swap();
 #endif
 
-        template<typename T, typename U,
-            typename = decltype(swap(std::declval<T>(), std::declval<U>()))>
-        std::true_type try_adl_swap_(int);
+        template<typename T, typename U>
+        decltype(swap(std::declval<T>(), std::declval<U>())) try_adl_swap_(int);
 
         template<typename T, typename U>
-        std::false_type try_adl_swap_(long);
+        nope try_adl_swap_(long);
 
         template<typename T, typename U = T>
-        struct is_adl_swappable_
-            : meta::id_t<decltype(adl_swap_detail::try_adl_swap_<T, U>(42))>
-        {};
+        CPP_INLINE_VAR constexpr bool is_adl_swappable_v =
+            !META_IS_SAME(decltype(adl_swap_detail::try_adl_swap_<T, U>(42)), nope);
 
         struct swap_fn
         {
             // Dispatch to user-defined swap found via ADL:
             template<typename T, typename U>
-            CONCEPTS_CXX14_CONSTEXPR
-            meta::if_c<is_adl_swappable_<T, U>::value>
+            CPP_CXX14_CONSTEXPR
+            meta::if_c<is_adl_swappable_v<T, U>>
             operator()(T &&t, U &&u) const
             noexcept(noexcept(swap((T &&) t, (U &&) u)))
             {
@@ -185,10 +186,10 @@ namespace concepts
             // For intrinsically swappable (i.e., movable) types for which
             // a swap overload cannot be found via ADL, swap by moving.
             template<typename T>
-            CONCEPTS_CXX14_CONSTEXPR
+            CPP_CXX14_CONSTEXPR
             meta::if_c<
-                !is_adl_swappable_<T &>::value &&
-                detail::is_movable_<T>::value>
+                !is_adl_swappable_v<T &> &&
+                detail::is_movable_v<T>>
             operator()(T &a, T &b) const
             noexcept(noexcept(b = concepts::exchange(a, (T &&) b)))
             {
@@ -199,9 +200,9 @@ namespace concepts
             // for which a swap overload cannot be found via ADL, swap array
             // elements by moving.
             template<typename T, typename U, std::size_t N>
-            CONCEPTS_CXX14_CONSTEXPR
+            CPP_CXX14_CONSTEXPR
             meta::if_c<
-                !is_adl_swappable_<T (&)[N], U (&)[N]>::value &&
+                !is_adl_swappable_v<T (&)[N], U (&)[N]> &&
                 is_swappable_with<T &, U &>::value>
             operator()(T (&t)[N], U (&u)[N]) const
                 noexcept(is_nothrow_swappable_with<T &, U &>::value)
@@ -214,7 +215,7 @@ namespace concepts
             // members. This permits code like:
             //   ranges::swap(std::tie(a,b,c), std::tie(d,e,f));
             template<typename F0, typename S0, typename F1, typename S1>
-            CONCEPTS_CXX14_CONSTEXPR
+            CPP_CXX14_CONSTEXPR
             meta::if_c<is_swappable_with<F0, F1>::value && is_swappable_with<S0, S1>::value>
             operator()(std::pair<F0, S0> &&left, std::pair<F1, S1> &&right) const
                 noexcept(
@@ -228,7 +229,7 @@ namespace concepts
             }
 
             template<typename ...Ts, typename ...Us>
-            CONCEPTS_CXX14_CONSTEXPR
+            CPP_CXX14_CONSTEXPR
             meta::if_c<meta::and_c<is_swappable_with<Ts, Us>::value...>::value>
             operator()(std::tuple<Ts...> &&left, std::tuple<Us...> &&right) const
                 noexcept(meta::and_c<is_nothrow_swappable_with<Ts, Us>::value...>::value)
@@ -246,7 +247,7 @@ namespace concepts
                 return 0;
             }
             template<typename T, typename U, std::size_t ...Is>
-            CONCEPTS_CXX14_CONSTEXPR
+            CPP_CXX14_CONSTEXPR
             static void impl(T &&left, U &&right, meta::index_sequence<Is...>)
             {
                 (void) swap_fn::ignore_unused(
@@ -319,7 +320,7 @@ namespace concepts
 
     /// \ingroup group-utility
     /// \relates adl_swap_detail::swap_fn
-    CONCEPTS_DEFINE_CPO(adl_swap_detail::swap_fn, swap)
+    CPP_DEFINE_CPO(adl_swap_detail::swap_fn, swap)
 }
 
 #endif

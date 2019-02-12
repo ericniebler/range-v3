@@ -160,6 +160,16 @@
 #define META_CXX_TRAIT_VARIABLE_TEMPLATES 0
 #endif
 
+#if defined(__clang__)
+#define META_IS_SAME(...) __is_same(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
+#define META_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#elif META_CXX_TRAIT_VARIABLE_TEMPLATES
+#define META_IS_SAME(...) std::is_same_v<__VA_ARGS__>
+#else
+#define META_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#endif
+
 namespace meta
 {
 #if META_CXX_INTEGER_SEQUENCE
@@ -212,15 +222,7 @@ namespace meta
 
     template <typename T, typename U>
     META_CONCEPT Same =
-#if defined(__clang__)
-        META_CONCEPT_BARRIER(__is_same(T, U));
-#elif defined(__GNUC__) && __GNUC__ >= 6
-        META_CONCEPT_BARRIER(__is_same_as(T, U));
-#elif defined(META_CXX_TRAIT_VARIABLE_TEMPLATES)
-        META_CONCEPT_BARRIER(std::is_same_v<T, U>);
-#else
-        META_CONCEPT_BARRIER(std::is_same<T, U>::value);
-#endif
+        META_CONCEPT_BARRIER(META_IS_SAME(T, U));
 
     template <template <typename...> class C, typename... Ts>
     META_CONCEPT Valid = requires

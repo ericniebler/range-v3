@@ -58,6 +58,12 @@ namespace ranges
     /// \sa `move_backward_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(move_backward_fn, move_backward)
+
+    namespace cpp20
+    {
+        using ranges::move_backward_result;
+        using ranges::move_backward;
+    }
     /// @}
 } // namespace ranges
 

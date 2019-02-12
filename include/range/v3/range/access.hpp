@@ -150,7 +150,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return \c r, if \c r is an array. Otherwise, `r.begin()` if that expression is
     ///   well-formed and returns an Iterator. Otherwise, `begin(r)` if that expression
@@ -287,7 +287,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return \c r+size(r), if \c r is an array. Otherwise, `r.end()` if that expression is
     ///   well-formed and returns an Iterator. Otherwise, `end(r)` if that expression
@@ -309,7 +309,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return The result of calling `ranges::begin` with a const-qualified
     ///    reference to r.
@@ -330,7 +330,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return The result of calling `ranges::end` with a const-qualified
     ///    reference to r.
@@ -457,7 +457,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return `make_reverse_iterator(r+size(r))` if r is an array. Otherwise,
     ///   `r.rbegin()` if that expression is well-formed and returns an Iterator.
@@ -587,7 +587,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return `make_reverse_iterator(r))` if r is an array. Otherwise,
     ///   `r.rend()` if that expression is well-formed and returns a type that
@@ -612,7 +612,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return The result of calling `ranges::rbegin` with a const-qualified
     ///    reference to r.
@@ -633,11 +633,32 @@ namespace ranges
     }
     /// \endcond
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \param r
     /// \return The result of calling `ranges::rend` with a const-qualified
     ///    reference to r.
     RANGES_INLINE_VARIABLE(_crend_::fn, crend)
+
+    template<typename Rng>
+    using iterator_t = decltype(begin(std::declval<Rng &>()));
+
+    template<typename Rng>
+    using sentinel_t = decltype(end(std::declval<Rng &>()));
+
+    namespace cpp20
+    {
+        using ranges::begin;
+        using ranges::end;
+        using ranges::rbegin;
+        using ranges::rend;
+        using ranges::cbegin;
+        using ranges::cend;
+        using ranges::crbegin;
+        using ranges::crend;
+
+        using ranges::iterator_t;
+        using ranges::sentinel_t;
+    }
 }
 
 #endif

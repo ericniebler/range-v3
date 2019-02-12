@@ -57,6 +57,11 @@ namespace ranges
     /// \sa `lower_bound_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(lower_bound_fn, lower_bound)
+
+    namespace cpp20
+    {
+        using ranges::lower_bound;
+    }
     /// @}
 } // namespace ranges
 

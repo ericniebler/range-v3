@@ -56,6 +56,11 @@ namespace ranges
     /// \sa `any_of_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(any_of_fn, any_of)
+
+    namespace cpp20
+    {
+        using ranges::any_of;
+    }
     /// @}
 } // namespace ranges
 

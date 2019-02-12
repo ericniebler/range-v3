@@ -55,8 +55,12 @@ namespace ranges
     /// \sa `all_of_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(all_of_fn, all_of)
-    /// @}
 
+    namespace cpp20
+    {
+        using ranges::all_of;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // include guard

@@ -163,9 +163,9 @@ namespace ranges
             using iterator_concept = typename Outer::iterator_concept;
             using iterator_category =
                 if_then_t<
-                    DerivedFrom<BaseIterCategory, ranges::forward_iterator_tag>,
-                    ranges::forward_iterator_tag,
-                    ranges::input_iterator_tag>;
+                    DerivedFrom<BaseIterCategory, std::forward_iterator_tag>,
+                    std::forward_iterator_tag,
+                    std::input_iterator_tag>;
             using value_type = range_value_t<Base>;
             using difference_type = range_difference_t<Base>;
             using reference = range_reference_t<Base>; // Not to spec
@@ -307,9 +307,9 @@ namespace ranges
         public:
             using iterator_concept = if_then_t<
                 ForwardRange<Base>,
-                ranges::forward_iterator_tag,
-                ranges::input_iterator_tag>;
-            using iterator_category = ranges::input_iterator_tag;
+                std::forward_iterator_tag,
+                std::input_iterator_tag>;
+            using iterator_category = std::input_iterator_tag;
             struct value_type
             {
             private:
@@ -442,12 +442,16 @@ namespace ranges
             (ForwardRange<V> || detail::tiny_range<Pattern>)
 #endif
     struct RANGES_EMPTY_BASES split_view
-      : view_interface<split_view<V, Pattern>>
+      : view_interface<
+            split_view<V, Pattern>,
+            is_finite<V>::value ? finite : unknown>
       , private detail::split_view_base<iterator_t<V>>
     {
     private:
-        template<typename, bool> friend struct detail::split_outer_iterator;
-        template<typename, bool> friend struct detail::split_inner_iterator;
+        template<typename, bool>
+        friend struct detail::split_outer_iterator;
+        template<typename, bool>
+        friend struct detail::split_inner_iterator;
 
         V base_ = V();
         Pattern pattern_ = Pattern();
@@ -587,6 +591,20 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<split_fn>, split)
     }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::split;
+        }
+        CPP_template(typename Rng, typename Pattern)(
+            requires InputRange<Rng> && ForwardRange<Pattern> && View<Rng> && View<Pattern> &&
+                IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&
+                (ForwardRange<Rng> || ranges::detail::tiny_range<Pattern>))
+        using split_view = ranges::split_view<Rng, Pattern>;
+    }
+
     /// @}
 }
 

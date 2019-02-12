@@ -66,7 +66,7 @@ namespace ranges
     /// @{
     template<typename Rng>
     struct ref_view
-      : view_interface<ref_view<Rng>>
+      : view_interface<ref_view<Rng>, range_cardinality<Rng>::value>
       , private _ref_view_::adl_hook
     {
     private:

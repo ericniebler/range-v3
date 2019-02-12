@@ -22,12 +22,16 @@
 #include <range/v3/view/interface.hpp>
 #include <concepts/concepts.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/unreachable_sentinel.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 RANGES_DEPRECATED_HEADER("This header is deprecated. Please switch to subrange in <range/v3/view/subrange.hpp>.")
 
 namespace ranges
 {
+    /// \addtogroup group-views
+    /// @{
+
     /// \cond
     namespace _iterator_range_
     {
@@ -88,11 +92,11 @@ namespace ranges
     }
     /// \endcond
 
-    /// \addtogroup group-core
-    /// @{
     template<typename I, typename S /*= I*/>
     struct RANGES_EMPTY_BASES iterator_range
-      : view_interface<iterator_range<I, S>>
+      : view_interface<
+            iterator_range<I, S>,
+            Same<S, unreachable_sentinel_t> ? infinite : unknown>
       , compressed_pair<I, S>
       , _iterator_range_::adl_hook_
     {
@@ -178,7 +182,7 @@ namespace ranges
     //
     template<typename I, typename S /* = I */>
     struct sized_iterator_range
-      : view_interface<sized_iterator_range<I, S>>
+      : view_interface<sized_iterator_range<I, S>, finite>
       , _iterator_range_::adl_hook_
     {
         using size_type = meta::_t<std::make_unsigned<iter_difference_t<I>>>;
@@ -293,7 +297,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
     /// \sa `make_iterator_range_fn`
     RANGES_INLINE_VARIABLE(make_iterator_range_fn, make_iterator_range)
 

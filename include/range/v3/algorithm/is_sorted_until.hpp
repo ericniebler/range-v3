@@ -76,6 +76,11 @@ namespace ranges
     /// \sa `is_sorted_until_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(is_sorted_until_fn, is_sorted_until)
+
+    namespace cpp20
+    {
+        using ranges::is_sorted_until;
+    }
     /// @}
 } // namespace ranges
 

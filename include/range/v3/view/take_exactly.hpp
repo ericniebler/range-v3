@@ -44,7 +44,7 @@ namespace ranges
         template<typename Rng,
             bool IsRandomAccessCommon /*= is_random_access_common_<Rng>::value*/>
         struct take_exactly_view_
-          : view_interface<take_exactly_view_<Rng, IsRandomAccessCommon>>
+          : view_interface<take_exactly_view_<Rng, IsRandomAccessCommon>, finite>
         {
         private:
             Rng rng_;

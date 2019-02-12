@@ -23,7 +23,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
     struct range_access
     {

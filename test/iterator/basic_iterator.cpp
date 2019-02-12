@@ -60,7 +60,7 @@ namespace test_weak_input
     static_assert(
         std::is_same<
             iterator<char *>::iterator_concept,
-            ranges::input_iterator_tag>::value,
+            std::input_iterator_tag>::value,
         "");
     static_assert(
         !ranges::EqualityComparable<iterator<char *>>,
@@ -124,7 +124,7 @@ namespace test_random_access
     static_assert(
         std::is_same<
             iterator<char *>::iterator_category,
-            ranges::random_access_iterator_tag>::value,
+            std::random_access_iterator_tag>::value,
         "");
 
     void test()
@@ -363,7 +363,7 @@ namespace test_forward_sized
     static_assert(
         std::is_same<
             iterator<char *>::iterator_category,
-            ranges::forward_iterator_tag>::value,
+            std::forward_iterator_tag>::value,
         "");
 
     void test()

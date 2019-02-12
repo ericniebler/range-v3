@@ -20,6 +20,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename ...Ts>
     struct overloaded;
 
@@ -78,9 +80,10 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `overload_fn`
     RANGES_INLINE_VARIABLE(overload_fn, overload)
+    /// @}
 }
 
 #endif

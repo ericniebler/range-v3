@@ -97,7 +97,7 @@ RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 
 namespace ranges
 {
-    /// \addtogroup group-concepts
+    /// \addtogroup group-numerics
     /// @{
     CPP_def
     (

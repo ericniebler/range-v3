@@ -86,7 +86,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
     template<typename Derived, cardinality Cardinality /* = finite*/>
     struct view_interface
@@ -485,6 +485,14 @@ namespace ranges
             return view_interface::print_(sout, rng);
         }
     };
+
+    namespace cpp20
+    {
+        CPP_template(typename Derived)(
+            requires std::is_class<Derived>::value &&
+                Same<Derived, meta::_t<std::remove_cv<Derived>>>)
+        using view_interface = ranges::view_interface<Derived, ranges::unknown>;
+    }
     /// @}
 }
 

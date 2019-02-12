@@ -20,6 +20,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
     template<typename Container>
     struct back_insert_iterator
     {
@@ -65,7 +67,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `back_inserter_fn`
     RANGES_INLINE_VARIABLE(back_inserter_fn, back_inserter)
 
@@ -114,7 +115,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `front_inserter_fn`
     RANGES_INLINE_VARIABLE(front_inserter_fn, front_inserter)
 
@@ -164,9 +164,19 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `inserter_fn`
     RANGES_INLINE_VARIABLE(inserter_fn, inserter)
+
+    namespace cpp20
+    {
+        using ranges::back_insert_iterator;
+        using ranges::back_inserter;
+        using ranges::front_insert_iterator;
+        using ranges::front_inserter;
+        using ranges::insert_iterator;
+        using ranges::inserter;
+    }
+    /// @}
 } // namespace ranges
 
 /// \cond

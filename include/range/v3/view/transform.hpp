@@ -513,6 +513,19 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
     }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::transform;
+        }
+        CPP_template(typename Rng, typename F)(
+            requires InputRange<Rng> && CopyConstructible<F> && View<Rng> &&
+                std::is_object<F>::value &&
+                RegularInvocable<F &, iter_reference_t<iterator_t<Rng>>>)
+        using transform_view = ranges::transform_view<Rng, F>;
+    }
     /// @}
 }
 

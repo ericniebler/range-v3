@@ -10,21 +10,13 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#ifndef CONCEPTS_TYPE_TRAITS_HPP
-#define CONCEPTS_TYPE_TRAITS_HPP
+#ifndef CPP_TYPE_TRAITS_HPP
+#define CPP_TYPE_TRAITS_HPP
 
 #include <tuple>
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
-
-#ifdef __clang__
-#define CPP_PP_IS_SAME(...) __is_same(__VA_ARGS__)
-#elif defined(__GNUC__) && __GNUC__ >= 6
-#define CPP_PP_IS_SAME(...) __is_same_as(__VA_ARGS__)
-#else
-#define CPP_PP_IS_SAME(...) std::is_same<__VA_ARGS__>::value
-#endif
 
 namespace concepts
 {
@@ -241,8 +233,8 @@ namespace concepts
     template<typename T, typename U>
     struct common_type<T, U>
         : detail::if_else_t<
-            ( CPP_PP_IS_SAME(detail::decay_t<T>, T) &&
-                CPP_PP_IS_SAME(detail::decay_t<U>, U) ),
+            (META_IS_SAME(detail::decay_t<T>, T) &&
+                META_IS_SAME(detail::decay_t<U>, U) ),
             meta::defer<detail::_builtin_common_t, T, U>,
             common_type<detail::decay_t<T>, detail::decay_t<U>>>
     {};

@@ -115,6 +115,17 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(single_fn, single)
     }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::single;
+        }
+        CPP_template(typename T)(
+            requires std::is_object<T>::value)
+        using single_view = ranges::single_view<T>;
+    }
     /// @}
 }
 

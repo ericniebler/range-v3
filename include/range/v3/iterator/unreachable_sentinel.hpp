@@ -18,7 +18,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-iterator
     /// @{
     struct unreachable_sentinel_t
     {
@@ -57,6 +57,12 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(unreachable_sentinel_t, unreachable)
+
+    namespace cpp20
+    {
+        using ranges::unreachable_sentinel_t;
+        using ranges::unreachable;
+    }
     /// @}
 }
 

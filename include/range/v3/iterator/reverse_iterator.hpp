@@ -20,6 +20,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -136,6 +139,13 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(make_reverse_iterator_fn, make_reverse_iterator)
+
+    namespace cpp20
+    {
+        using ranges::reverse_iterator;
+        using ranges::make_reverse_iterator;
+    }
+    /// @}
 } // namespace ranges
 
 #endif // RANGES_V3_ITERATOR_REVERSE_ITERATOR_HPP

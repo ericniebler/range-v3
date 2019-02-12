@@ -23,6 +23,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
+
     /// \cond
     namespace _counted_iterator_
     {
@@ -270,6 +273,7 @@ namespace ranges
 #endif
     };
 
+    /// \cond
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _counted_iterator_
     {
@@ -296,6 +300,7 @@ namespace ranges
         }
     }
 #endif
+    /// endcond
 
     template<typename I1, typename I2>
     constexpr auto operator==(counted_iterator<I1> const &x, counted_iterator<I2> const &y) ->
@@ -433,6 +438,12 @@ namespace ranges
         advance(i.current_, n);
         i.cnt_ -= n;
     }
+
+    namespace cpp20
+    {
+        using ranges::counted_iterator;
+    }
+    /// @}
 }
 
 /// \cond

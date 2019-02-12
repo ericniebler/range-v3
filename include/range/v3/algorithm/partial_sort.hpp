@@ -67,6 +67,11 @@ namespace ranges
     /// \sa `partial_sort_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(partial_sort_fn, partial_sort)
+
+    namespace cpp20
+    {
+        using ranges::partial_sort;
+    }
     /// @}
 } // namespace ranges
 

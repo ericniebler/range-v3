@@ -948,7 +948,7 @@ namespace meta
     // clang-format off
     /// Turn a trait template \p C into an Invocable.
     /// \code
-    /// static_assert(std::is_same<invoke<quote_trait<std::add_const>, int>, int const>::value, "");
+    /// static_assert(std::is_same_v<invoke<quote_trait<std::add_const>, int>, int const>, "");
     /// \endcode
     /// \ingroup composition
     template <template <typename...> class C>
@@ -1339,16 +1339,22 @@ namespace meta
 #else
 #if defined(META_WORKAROUND_GCC_66405)
     template <bool... Bs>
-    using and_c = std::is_same<integer_sequence<bool, true, Bs...>,
-                                integer_sequence<bool, Bs..., true>>;
+    using and_c = meta::bool_<
+        META_IS_SAME(integer_sequence<bool, true, Bs...>,
+                     integer_sequence<bool, Bs..., true>)>;
 #else
     template <bool... Bs>
-    using and_c = std::is_same<integer_sequence<bool, Bs...>,
-                                integer_sequence<bool, (Bs || true)...>>;
+    struct and_c
+      : meta::bool_<
+            META_IS_SAME(integer_sequence<bool, Bs...>,
+                         integer_sequence<bool, (Bs || true)...>)>
+    {};
 #endif
 #if META_CXX_VARIABLE_TEMPLATES
     template <bool... Bs>
-    META_INLINE_VAR constexpr bool and_v = and_c<Bs...>::value;
+    META_INLINE_VAR constexpr bool and_v =
+        META_IS_SAME(integer_sequence<bool, Bs...>,
+                     integer_sequence<bool, (Bs || true)...>);
 #endif
 #endif
 
@@ -1387,11 +1393,16 @@ namespace meta
 #endif
 #else
     template <bool... Bs>
-    using or_c = not_<std::is_same<integer_sequence<bool, Bs...>,
-                                    integer_sequence<bool, (Bs && false)...>>>;
+    struct or_c
+      : meta::bool_<
+            !META_IS_SAME(integer_sequence<bool, Bs...>,
+                          integer_sequence<bool, (Bs && false)...>)>
+    {};
 #if META_CXX_VARIABLE_TEMPLATES
     template <bool... Bs>
-    META_INLINE_VAR constexpr bool or_v = or_c<Bs...>::value;
+    META_INLINE_VAR constexpr bool or_v =
+        !META_IS_SAME(integer_sequence<bool, Bs...>,
+                      integer_sequence<bool, (Bs && false)...>);
 #endif
 #endif
 
@@ -2253,9 +2264,9 @@ namespace meta
         struct find_index_<list<T...>, V>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[sizeof...(T)] = {META_IS_SAME(T, V)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, V)...};
 #endif
             using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
         };
@@ -2308,9 +2319,9 @@ namespace meta
         struct reverse_find_index_<list<T...>, V>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(T)] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[sizeof...(T)] = {META_IS_SAME(T, V)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, V)...};
 #endif
             using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
         };
@@ -2562,7 +2573,7 @@ namespace meta
         template <typename... L, typename T, typename U>
         struct replace_<list<L...>, T, U>
         {
-            using type = list<if_<std::is_same<T, L>, U, L>...>;
+            using type = list<if_c<META_IS_SAME(T, L), U, L>...>;
         };
     } // namespace detail
     /// \endcond
@@ -2646,11 +2657,11 @@ namespace meta
         template <typename... Ts, typename T>
         struct count_<list<Ts...>, T>
         {
-            using type = meta::size_t<((std::size_t)_v<std::is_same<T, Ts>> + ...)>;
+            using type = meta::size_t<((std::size_t)META_IS_SAME(T, Ts) + ...)>;
         };
 #else
         constexpr std::size_t count_i_(bool const *const begin, bool const *const end,
-                                        std::size_t n)
+                                       std::size_t n)
         {
             return begin == end ? n : detail::count_i_(begin + 1, end, n + *begin);
         }
@@ -2665,9 +2676,9 @@ namespace meta
         struct count_<list<L...>, T>
         {
 #ifdef META_WORKAROUND_LLVM_28385
-            static constexpr bool s_v[sizeof...(L)] = {std::is_same<T, L>::value...};
+            static constexpr bool s_v[sizeof...(L)] = {META_IS_SAME(T, L)...};
 #else
-            static constexpr bool s_v[] = {std::is_same<T, L>::value...};
+            static constexpr bool s_v[] = {META_IS_SAME(T, L)...};
 #endif
             using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(L), 0u)>;
         };
@@ -3225,7 +3236,7 @@ namespace meta
     /// \code
     /// using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
     /// using L1 = meta::sort<L0, lambda<_a, _b, lazy::less<lazy::sizeof_<_a>, lazy::sizeof_<_b>>>>;
-    /// static_assert(std::is_same<L1, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value, "");
+    /// static_assert(std::is_same_v<L1, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>, "");
     /// \endcode
     /// \ingroup transformation
     // clang-format on
@@ -3540,7 +3551,7 @@ namespace meta
     /// \code
     /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
     /// using P = invoke<L, int, short>;
-    /// static_assert(std::is_same<P, std::pair<short, std::pair<int, int>>>::value, "");
+    /// static_assert(std::is_same_v<P, std::pair<short, std::pair<int, int>>>, "");
     /// \endcode
     /// \ingroup trait
     template <typename... Ts>

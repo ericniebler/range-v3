@@ -19,6 +19,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -55,20 +58,20 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `make_pipeable_fn`
     RANGES_INLINE_VARIABLE(make_pipeable_fn, make_pipeable)
 
     struct pipeable_base;
 
     template<typename T>
-    /*inline*/ constexpr bool is_pipeable_v = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v = std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
-    /*inline*/ constexpr bool is_pipeable_v<T &> = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &> = std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
-    /*inline*/ constexpr bool is_pipeable_v<T &&> = std::is_base_of<pipeable_base, T>::value;
+    RANGES_INLINE_VAR constexpr bool is_pipeable_v<T &&> = std::is_base_of<pipeable_base, T>::value;
 
     template<typename T>
     using is_pipeable = meta::bool_<is_pipeable_v<T>>;
@@ -128,6 +131,7 @@ namespace ranges
             return p(static_cast<Arg &&>(arg))
         )
     };
+    /// @}
 }
 
 #endif
