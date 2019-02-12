@@ -23,6 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/rotate_copy.hpp>
 #include "../simple_test.hpp"
@@ -301,11 +302,27 @@ int main()
     test<const int*, random_access_iterator<int*> >();
     test<const int*, int*>();
 
-    // test rvalue range
+    // test rvalue ranges
     {
         int rgi[] = {0,1,2,3,4,5};
         int rgo[6] = {0};
         auto r = ranges::rotate_copy(std::move(rgi), rgi+2, rgo);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(r.in));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        CHECK(r.out == ranges::end(rgo));
+        CHECK(rgo[0] == 2);
+        CHECK(rgo[1] == 3);
+        CHECK(rgo[2] == 4);
+        CHECK(rgo[3] == 5);
+        CHECK(rgo[4] == 0);
+        CHECK(rgo[5] == 1);
+    }
+
+    {
+        std::vector<int> rgi{0,1,2,3,4,5};
+        int rgo[6] = {0};
+        auto r = ranges::rotate_copy(std::move(rgi), rgi.begin()+2, rgo);
         CHECK(::is_dangling(r.in));
         CHECK(r.out == ranges::end(rgo));
         CHECK(rgo[0] == 2);

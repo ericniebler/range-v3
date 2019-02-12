@@ -18,10 +18,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <algorithm>
 #include <memory>
 #include <random>
 #include <vector>
-#include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
 #include "../simple_test.hpp"
@@ -153,14 +153,23 @@ int main()
         for (int i = 0; i < N; ++i)
             input[i].i = i;
         std::shuffle(input, input+N, gen);
-        auto r = ranges::partial_sort_copy(input, std::move(output), std::less<int>(), &S::i, &U::i);
+        auto r0 = ranges::partial_sort_copy(input, std::move(output), std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
 #ifndef RANGES_WORKAROUND_MSVC_573728
-        CHECK(::is_dangling(r));
+        CHECK(::is_dangling(r0));
 #endif // RANGES_WORKAROUND_MSVC_573728
 
         int i = 0;
         for (U* x = output; x < e; ++x, ++i)
+            CHECK(x->i == i);
+
+        std::vector<U> vec(M);
+        auto r1 = ranges::partial_sort_copy(input, std::move(vec), std::less<int>(), &S::i, &U::i);
+        e = vec.data() + std::min(N, M);
+        CHECK(::is_dangling(r1));
+
+        i = 0;
+        for (U* x = vec.data(); x < e; ++x, ++i)
             CHECK(x->i == i);
     }
 

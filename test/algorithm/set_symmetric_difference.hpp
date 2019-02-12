@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
@@ -297,6 +298,7 @@ int main()
     }
 
     // Test rvalue ranges
+#ifndef RANGES_WORKAROUND_MSVC_573728
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
         T ib[] = {T{2}, T{4}, T{4}, T{6}};
@@ -310,8 +312,31 @@ int main()
         CHECK(res1.in2 == ranges::end(ib));
         CHECK((res1.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res1.out, ir, ir+sr, std::less<int>(), &U::k) == false);
-        ranges::fill(ic, U{0});
 
+        ranges::fill(ic, U{0});
+        auto res2 =
+            ranges::set_symmetric_difference(ranges::view::all(ib), std::move(ia), ic, std::less<int>(), &T::j, &S::i);
+        CHECK(res2.in1 == ranges::end(ib));
+        CHECK(::is_dangling(res2.in2));
+        CHECK((res2.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res2.out, ir, ir+sr, std::less<int>(), &U::k) == false);
+    }
+#endif // RANGES_WORKAROUND_MSVC_573728
+    {
+        std::vector<S> ia{S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
+        std::vector<T> ib{T{2}, T{4}, T{4}, T{6}};
+        U ic[20];
+        int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
+        static const int sr = sizeof(ir)/sizeof(ir[0]);
+
+        auto res1 =
+            ranges::set_symmetric_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        CHECK(::is_dangling(res1.in1));
+        CHECK(res1.in2 == ranges::end(ib));
+        CHECK((res1.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res1.out, ir, ir+sr, std::less<int>(), &U::k) == false);
+
+        ranges::fill(ic, U{0});
         auto res2 =
             ranges::set_symmetric_difference(ranges::view::all(ib), std::move(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK(res2.in1 == ranges::end(ib));

@@ -26,6 +26,7 @@
 // Implementation based on the code in libc++
 //   http://http://libcxx.llvm.org/
 
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/is_sorted_until.hpp>
 #include "../simple_test.hpp"
@@ -401,8 +402,13 @@ int main()
     /// Rvalue range test:
     {
         A as[] = {{0}, {1}, {2}, {3}, {4}};
+#ifndef RANGES_WORKAROUND_MSVC_573728
         CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::less<int>{}, &A::a)));
         CHECK(::is_dangling(ranges::is_sorted_until(std::move(as), std::greater<int>{}, &A::a)));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        std::vector<A> vec(ranges::begin(as), ranges::end(as));
+        CHECK(::is_dangling(ranges::is_sorted_until(std::move(vec), std::less<int>{}, &A::a)));
+        CHECK(::is_dangling(ranges::is_sorted_until(std::move(vec), std::greater<int>{}, &A::a)));
     }
 
     return ::test_result();

@@ -10,8 +10,9 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <cstring>
-#include <utility>
 #include <algorithm>
+#include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
 #include "../simple_test.hpp"
@@ -27,30 +28,47 @@ int main()
     static_assert(size(a) == 6, "");
     std::pair<int, int> out[size(a)] = {};
 
-    auto res = ranges::copy_backward(begin(a), end(a), end(out));
-    CHECK(res.in == end(a));
-    CHECK(res.out == begin(out));
-    CHECK(std::equal(a, a + size(a), out));
+    {
+        auto res = ranges::copy_backward(begin(a), end(a), end(out));
+        CHECK(res.in == end(a));
+        CHECK(res.out == begin(out));
+        CHECK(std::equal(a, a + size(a), out));
+    }
 
-    std::fill_n(out, size(out), std::make_pair(0, 0));
-    CHECK(!std::equal(a, a + size(a), out));
+    {
+        std::fill_n(out, size(out), std::make_pair(0, 0));
+        auto res = ranges::copy_backward(a, end(out));
+        CHECK(res.in == end(a));
+        CHECK(res.out == begin(out));
+        CHECK(std::equal(a, a + size(a), out));
+    }
 
-    res = ranges::copy_backward(a, end(out));
-    CHECK(res.in == end(a));
-    CHECK(res.out == begin(out));
-    CHECK(std::equal(a, a + size(a), out));
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    {
+        std::fill_n(out, size(out), std::make_pair(0, 0));
+        auto res = ranges::copy_backward(std::move(a), end(out));
+        CHECK(::is_dangling(res.in));
+        CHECK(res.out == begin(out));
+        CHECK(std::equal(a, a + size(a), out));
+    }
+#endif
 
-    std::fill_n(out, size(out), std::make_pair(0, 0));
-    auto res2 = ranges::copy_backward(std::move(a), end(out));
-    CHECK(::is_dangling(res2.in));
-    CHECK(res2.out == begin(out));
-    CHECK(std::equal(a, a + size(a), out));
+    {
+        std::fill_n(out, size(out), std::make_pair(0, 0));
+        std::vector<std::pair<int, int>> vec(begin(a), end(a));
+        auto res = ranges::copy_backward(std::move(vec), end(out));
+        CHECK(::is_dangling(res.in));
+        CHECK(res.out == begin(out));
+        CHECK(std::equal(a, a + size(a), out));
+    }
 
-    std::fill_n(out, size(out), std::make_pair(0, 0));
-    auto res3 = ranges::copy_backward(ranges::view::all(a), end(out));
-    CHECK(res3.in == end(a));
-    CHECK(res3.out == begin(out));
-    CHECK(std::equal(a, a + size(a), out));
+    {
+        std::fill_n(out, size(out), std::make_pair(0, 0));
+        auto res = ranges::copy_backward(ranges::view::all(a), end(out));
+        CHECK(res.in == end(a));
+        CHECK(res.out == begin(out));
+        CHECK(std::equal(a, a + size(a), out));
+    }
 
     return test_result();
 }

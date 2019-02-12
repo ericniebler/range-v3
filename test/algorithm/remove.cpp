@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/remove.hpp>
 #include "../simple_test.hpp"
@@ -157,16 +158,28 @@ int main()
     CHECK(ia[4].i == 3);
     CHECK(ia[5].i == 4);
 
-    // Check rvalue range
+    // Check rvalue ranges
     S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
     auto r2 = ranges::remove(std::move(ia2), 2, &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(r2));
+#endif // RANGES_WORKAROUND_MSVC_573728
     CHECK(ia2[0].i == 0);
     CHECK(ia2[1].i == 1);
     CHECK(ia2[2].i == 3);
     CHECK(ia2[3].i == 4);
     CHECK(ia2[4].i == 3);
     CHECK(ia2[5].i == 4);
+
+    std::vector<S> vec{S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
+    auto r3 = ranges::remove(std::move(vec), 2, &S::i);
+    CHECK(::is_dangling(r3));
+    CHECK(vec[0].i == 0);
+    CHECK(vec[1].i == 1);
+    CHECK(vec[2].i == 3);
+    CHECK(vec[3].i == 4);
+    CHECK(vec[4].i == 3);
+    CHECK(vec[5].i == 4);
 
     return ::test_result();
 }
