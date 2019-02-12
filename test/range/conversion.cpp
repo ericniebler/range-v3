@@ -42,36 +42,52 @@ int main()
 {
     using namespace ranges;
 
-    auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to<std::list>();
-    CPP_assert(Same<decltype(lst0), std::list<int>>);
-    ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
+    {
+        auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+            | to<std::list>();
+        CPP_assert(Same<decltype(lst0), std::list<int>>);
+        ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
+    }
 
-    auto lst1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to<std::list>;
-    CPP_assert(Same<decltype(lst1), std::list<int>>);
-    ::check_equal(lst1, {0,1,4,9,16,25,36,49,64,81});
+#ifndef RANGES_WORKAROUND_MSVC_779708 // "workaround" is a misnomer - there's no workaround.
+    {
+        auto lst1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+            | to<std::list>;
+        CPP_assert(Same<decltype(lst1), std::list<int>>);
+        ::check_equal(lst1, {0,1,4,9,16,25,36,49,64,81});
+    }
+#endif // RANGES_WORKAROUND_MSVC_779708
 
-    auto vec0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to_vector | action::sort(std::greater<int>{});
-    CPP_assert(Same<decltype(vec0), std::vector<int>>);
-    ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
+    {
+        auto vec0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+            | to_vector | action::sort(std::greater<int>{});
+        CPP_assert(Same<decltype(vec0), std::vector<int>>);
+        ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
+    }
 
-    auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to<std::vector<long>>() | action::sort(std::greater<long>{});
-    CPP_assert(Same<decltype(vec1), std::vector<long>>);
-    ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
+    {
+        auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+            | to<std::vector<long>>() | action::sort(std::greater<long>{});
+        CPP_assert(Same<decltype(vec1), std::vector<long>>);
+        ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
+    }
 
+#ifndef RANGES_WORKAROUND_MSVC_779708
+    {
     auto vec2 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
         | to<std::vector<long>> | action::sort(std::greater<long>{});
     CPP_assert(Same<decltype(vec2), std::vector<long>>);
     ::check_equal(vec2, {81,64,49,36,25,16,9,4,1,0});
+    }
+#endif // RANGES_WORKAROUND_MSVC_779708
 
-    const std::size_t N = 4096;
-    auto vl = view::iota(0, int{N}) | to<vector_like<int>>();
-    CPP_assert(Same<decltype(vl), vector_like<int>>);
-    CHECK(vl.reservation_count == std::size_t{1});
-    CHECK(vl.last_reservation == N);
+    {
+        const std::size_t N = 4096;
+        auto vl = view::iota(0, int{N}) | to<vector_like<int>>();
+        CPP_assert(Same<decltype(vl), vector_like<int>>);
+        CHECK(vl.reservation_count == std::size_t{1});
+        CHECK(vl.last_reservation == N);
+    }
 
     return ::test_result();
 }
