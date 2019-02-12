@@ -473,18 +473,18 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std
 {
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_size<::ranges::subrange<I, S, K>>
-	  : std::integral_constant<size_t, 2>
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_size<::ranges::subrange<I, S, K>>
+      : std::integral_constant<size_t, 2>
     {};
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<0, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<0, ::ranges::subrange<I, S, K>>
+    {
         using type = I;
     };
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<1, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<1, ::ranges::subrange<I, S, K>>
+    {
         using type = S;
     };
 }
