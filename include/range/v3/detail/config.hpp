@@ -232,6 +232,7 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
 #define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
+#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent default non-type template argument
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
