@@ -39,9 +39,14 @@
 
 #elif defined(_MSC_VER)
 #define META_HAS_MAKE_INTEGER_SEQ 1
-#define META_WORKAROUND_MSVC_702792 // Fixed for VS2019, possibly 16.0?
-#define META_WORKAROUND_MSVC_703656 // Fixed for VS2019 16.0
+#if _MSC_VER < 1920
+#define META_WORKAROUND_MSVC_702792 // Bogus C4018 comparing constant expressions with dependent type
+#define META_WORKAROUND_MSVC_703656 // ICE with pack expansion inside decltype in alias template
+#endif
+
+#if _MSC_VER < 1921
 #define META_WORKAROUND_MSVC_756112 // fold expression + alias templates in template argument
+#endif
 
 #elif defined(__GNUC__)
 #define META_WORKAROUND_GCC_86356 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86356

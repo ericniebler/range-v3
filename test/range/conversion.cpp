@@ -48,7 +48,11 @@ template<
 void test_zip_to_map(Rng &&rng, int)
 {
     using namespace ranges;
+#ifdef RANGES_WORKAROUND_MSVC_779708
+    auto m = static_cast<Rng &&>(rng) | to<std::map>();
+#else // ^^^ workaround / no workaround vvv
     auto m = static_cast<Rng &&>(rng) | to<std::map>;
+#endif // RANGES_WORKAROUND_MSVC_779708
     CPP_assert(Same<decltype(m), std::map<int, int>>);
 }
 #endif
@@ -69,7 +73,7 @@ int main()
         ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
     }
 
-#ifndef RANGES_WORKAROUND_MSVC_779708 // "workaround" is a misnomer - there's no workaround.
+#ifndef RANGES_WORKAROUND_MSVC_779708 // "workaround" is a misnomer; there's no workaround.
     {
         auto lst1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
             | to<std::list>;

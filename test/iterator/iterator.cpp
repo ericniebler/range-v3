@@ -270,8 +270,8 @@ namespace std
     template <>
     struct iterator_traits<::WouldBeFwd>
     {
-        using value_type = typename ::WouldBeFwd::value_type;
-        using difference_type = typename ::WouldBeFwd::difference_type;
+        using value_type = ::WouldBeFwd::value_type;
+        using difference_type = ::WouldBeFwd::difference_type;
         using reference = iter_reference_t<::WouldBeFwd>;
         using pointer = add_pointer_t<reference>;
         // Explicit opt-out of stl2's ForwardIterator concept:
@@ -302,8 +302,8 @@ namespace std
     template <>
     struct iterator_traits<::WouldBeBidi>
     {
-        using value_type = typename ::WouldBeBidi::value_type;
-        using difference_type = typename ::WouldBeBidi::difference_type;
+        using value_type = ::WouldBeBidi::value_type;
+        using difference_type = ::WouldBeBidi::difference_type;
         using reference = value_type;
         using pointer = value_type*;
         using iterator_category = std::input_iterator_tag; // STL1-style iterator category
@@ -354,46 +354,45 @@ void deep_integration_test()
     static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");
 
     static_assert(detail::is_std_iterator_traits_specialized_v<X>, "");
-    static_assert(is_same<typename iterator_traits<X>::value_type, int>::value, "");
+    static_assert(is_same<iterator_traits<X>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<X>, int>::value, "");
 
     static_assert(!detail::is_std_iterator_traits_specialized_v<Y>, "");
-    static_assert(is_same<typename iterator_traits<Y>::value_type, int>::value, "");
+    static_assert(is_same<iterator_traits<Y>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<Y>, int>::value, "");
 
     // libc++ has a broken std::iterator_traits primary template
     // https://bugs.llvm.org/show_bug.cgi?id=39619
 #ifndef _LIBCPP_VERSION
-    // iterator_traits uses specializations of ranges::value_type:
+    // iterator_traits uses specializations of ranges::readable_traits:
     static_assert(!detail::is_std_iterator_traits_specialized_v<Z>, "");
-    static_assert(is_same<typename iterator_traits<Z>::value_type, int>::value, "");
+    static_assert(is_same<iterator_traits<Z>::value_type, int>::value, "");
     static_assert(is_same<iter_value_t<Z>, int>::value, "");
-    static_assert(is_same<typename iterator_traits<Z>::iterator_category,
+    static_assert(is_same<iterator_traits<Z>::iterator_category,
                           std::bidirectional_iterator_tag>::value, "");
 #endif
 
     static_assert(ranges::InputIterator<WouldBeFwd>, "");
     static_assert(!ranges::ForwardIterator<WouldBeFwd>, "");
-    static_assert(is_same<typename iterator_traits<WouldBeFwd>::iterator_category,
+    static_assert(is_same<iterator_traits<WouldBeFwd>::iterator_category,
                            std::input_iterator_tag>::value, "");
 
     static_assert(ranges::ForwardIterator<WouldBeBidi>, "");
     static_assert(!ranges::BidirectionalIterator<WouldBeBidi>, "");
-    static_assert(is_same<typename iterator_traits<WouldBeBidi>::iterator_category,
+    static_assert(is_same<iterator_traits<WouldBeBidi>::iterator_category,
                           std::input_iterator_tag>::value, "");
 
     static_assert(ranges::Iterator<OutIter>, "");
     static_assert(!ranges::InputIterator<OutIter>, "");
-    static_assert(is_same<typename iterator_traits<OutIter>::difference_type,
+    static_assert(is_same<iterator_traits<OutIter>::difference_type,
                           std::ptrdiff_t>::value, "");
-    static_assert(is_same<typename iterator_traits<OutIter>::iterator_category,
+    static_assert(is_same<iterator_traits<OutIter>::iterator_category,
                           std::output_iterator_tag>::value, "");
 
-    static_assert(ranges::RandomAccessIterator<int volatile *>, "");
     static_assert(ranges::ContiguousIterator<int volatile *>, "");
 
     static_assert(ranges::ForwardIterator<bool_iterator>, "");
-    static_assert(is_same<typename iterator_traits<bool_iterator>::iterator_category,
+    static_assert(is_same<iterator_traits<bool_iterator>::iterator_category,
                           std::input_iterator_tag>::value, "");
     // static_assert(_Cpp98InputIterator<int volatile*>);
     // static_assert(_Cpp98InputIterator<bool_iterator>);

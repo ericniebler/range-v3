@@ -18,10 +18,10 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
-#include <utility>
-#if defined(__cpp_lib_string_view) && __cpp_lib_string_view > 0
+#if __has_include(<string_view>)
 #include <string_view>
 #endif
+#include <utility>
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/iterator/concepts.hpp>

@@ -30,7 +30,10 @@ if (RANGES_CXX_COMPILER_CLANGCL OR RANGES_CXX_COMPILER_MSVC)
   # Enable "normal" warnings and make them errors:
   ranges_append_flag(RANGES_HAS_W3 /W3)
   ranges_append_flag(RANGES_HAS_WX /WX)
+  # range-v3 needs MSVC's experimental actually-conforming preprocessor...
   ranges_append_flag(RANGES_HAS_EXPERIMENTAL_PREPROCESSOR /experimental:preprocessor)
+  # ...which warns about UB in macros in the UCRT headers =(
+  ranges_append_flag(RANGES_HAS_WD5105 /wd5105)
 else()
   ranges_append_flag(RANGES_HAS_CXXSTD "-std=c++${RANGES_CXX_STD}")
   set(RANGES_STD_FLAG "-std=c++${RANGES_CXX_STD}")

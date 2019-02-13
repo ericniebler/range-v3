@@ -125,10 +125,17 @@ namespace ranges
                 // *i has the same type as *i++
                 int[RANGES_IS_SAME(decltype(**pi), decltype(*(*pi)++))],
                 // *i is a real reference to value_type
+#ifdef RANGES_WORKAROUND_MSVC_793042
+                enable_if_t<RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
+                            RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
+                            RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
+                            RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)>
+#else // ^^^ workaround / no workaround vvv
                 int[RANGES_IS_SAME(decltype(**pi), decltype(*pv)) ||
                     RANGES_IS_SAME(decltype(**pi), decltype(*pcv)) ||
                     RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type &&) ||
                     RANGES_IS_SAME(decltype(**pi), typename readable_traits<I>::value_type const &&)]
+#endif // RANGES_WORKAROUND_MSVC_793042
             > * = nullptr)
         {
             return cpp17_iterator_category_3_<I>(0);
@@ -246,7 +253,12 @@ RANGES_BEGIN_NAMESPACE_STD
     template<typename I>
     struct _Iterator_traits_base<
         I,
+#ifdef RANGES_WORKAROUND_MSVC_792338
+        ::ranges::detail::enable_if_t<decltype(bool_constant<
+            !::ranges::detail::has_iterator_typedefs_impl_<I>(0)>{})::value>>
+#else // ^^^ workaround / no workaround vvv
         ::ranges::detail::enable_if_t<!::ranges::detail::has_iterator_typedefs_impl_<I>(0)>>
+#endif // RANGES_WORKAROUND_MSVC_792338
       : decltype(::ranges::detail::std_iterator_traits_impl_<I>(0))
     {};
 #endif
