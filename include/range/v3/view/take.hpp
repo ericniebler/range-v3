@@ -57,18 +57,30 @@ namespace ranges
             {
                 return end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(sentinel const &x, CI const &y)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(CI const &y, sentinel const &x)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(sentinel const &x, CI const &y)
             {
                 return y.count() != 0 && y.base() != x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(CI const &y, sentinel const &x)
             {
                 return y.count() != 0 && y.base() != x.end_;

@@ -227,6 +227,7 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as alias template argument (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected with C3615
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
