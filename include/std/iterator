@@ -15,7 +15,7 @@
 
 #if defined(__GNUC__)
 #include_next <iterator>
-#elif defined(_MSVC_VER)
+#elif defined(_MSC_VER)
 #include <../include/iterator> // HACKHACK
 #else
 #error "Cannot use range-v3 STL deep integration on this platform."
