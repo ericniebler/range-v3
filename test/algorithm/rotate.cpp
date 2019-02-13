@@ -23,6 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include "../simple_test.hpp"
@@ -260,7 +261,7 @@ int main()
     test<bidirectional_iterator<int *>, sentinel<int*>>();
     test<random_access_iterator<int *>, sentinel<int*>>();
 
-    // test rvalue range
+    // test rvalue ranges
     {
         int rgi[] = {0,1,2,3,4,5};
         auto r = ranges::rotate(ranges::view::all(rgi), rgi+2);
@@ -276,6 +277,19 @@ int main()
     {
         int rgi[] = {0,1,2,3,4,5};
         auto r = ranges::rotate(std::move(rgi), rgi+2);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(r));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        CHECK(rgi[0] == 2);
+        CHECK(rgi[1] == 3);
+        CHECK(rgi[2] == 4);
+        CHECK(rgi[3] == 5);
+        CHECK(rgi[4] == 0);
+        CHECK(rgi[5] == 1);
+    }
+    {
+        std::vector<int> rgi{0,1,2,3,4,5};
+        auto r = ranges::rotate(std::move(rgi), rgi.begin()+2);
         CHECK(::is_dangling(r));
         CHECK(rgi[0] == 2);
         CHECK(rgi[1] == 3);
