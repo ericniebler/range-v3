@@ -19,6 +19,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename Fn1, typename Fn2>
     struct transformed
     {
@@ -56,9 +58,10 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `on_fn`
     RANGES_INLINE_VARIABLE(on_fn, on)
+    /// @}
 }
 
 #endif

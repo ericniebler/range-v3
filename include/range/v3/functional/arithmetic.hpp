@@ -17,6 +17,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     struct plus
     {
         template<typename T, typename U>
@@ -110,6 +112,7 @@ namespace ranges
     struct coerce<T &&>
       : coerce<T>
     {};
+    /// @}
 }
 
 #endif

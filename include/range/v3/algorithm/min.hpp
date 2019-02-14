@@ -70,6 +70,11 @@ namespace ranges
     /// \sa `min_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(min_fn, min)
+
+    namespace cpp20
+    {
+        using ranges::min;
+    }
     /// @}
 } // namespace ranges
 

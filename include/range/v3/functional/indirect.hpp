@@ -17,12 +17,14 @@
 #include <utility>
 #include <concepts/concepts.hpp>
 #include <range/v3/functional/invoke.hpp>
-#include <range/v3/iterator/associated_types.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename Fn>
     struct indirected
     {
@@ -80,9 +82,10 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `indirect_fn`
     RANGES_INLINE_VARIABLE(indirect_fn, indirect)
+    /// @}
 }
 
 #endif

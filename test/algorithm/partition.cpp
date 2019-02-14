@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition.hpp>
 #include "../simple_test.hpp"
@@ -211,7 +212,12 @@ int main()
 
     // Test rvalue range
     auto r2 = ranges::partition(std::move(ia), is_odd(), &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(r2));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    std::vector<S> vec(ranges::begin(ia), ranges::end(ia));
+    auto r3 = ranges::partition(std::move(vec), is_odd(), &S::i);
+    CHECK(::is_dangling(r3));
 
     return ::test_result();
 }

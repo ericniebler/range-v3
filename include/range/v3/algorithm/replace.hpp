@@ -47,7 +47,8 @@ namespace ranges
             requires InputRange<Rng> &&
                 Writable<iterator_t<Rng>, T2 const &> &&
                 IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T1 const *>)
-        safe_iterator_t<Rng> operator()(Rng &&rng, T1 const & old_value, T2 const & new_value, P proj = {}) const
+        safe_iterator_t<Rng> operator()(Rng &&rng, T1 const & old_value, T2 const & new_value,
+            P proj = {}) const
         {
             return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
         }
@@ -56,6 +57,11 @@ namespace ranges
     /// \sa `replace_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(replace_fn, replace)
+
+    namespace cpp20
+    {
+        using ranges::replace;
+    }
     /// @}
 } // namespace ranges
 

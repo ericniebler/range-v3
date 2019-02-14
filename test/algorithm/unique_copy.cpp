@@ -26,6 +26,7 @@
 //   http://http://libcxx.llvm.org/
 
 #include <cstring>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/unique_copy.hpp>
 #include "../simple_test.hpp"
@@ -300,9 +301,20 @@ int main()
         CHECK(r.out == ib + 7);
         check_equal(ranges::make_subrange(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
     }
+#ifndef RANGES_WORKAROUND_MSVC_573728
     {
         S const ia[] = {{1,1},{2,2},{3,3},{3,4},{4,5},{5,6},{5,7},{5,8},{6,9},{7,10}};
         S ib[ranges::size(ia)];
+        auto r = ranges::unique_copy(std::move(ia), ib, ranges::equal_to(), &S::i);
+        CHECK(::is_dangling(r.in));
+        CHECK(r.out == ib + 7);
+        check_equal(ranges::make_subrange(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
+    }
+#endif // RANGES_WORKAROUND_MSVC_573728
+    {
+        std::vector<S> const ia{{1,1},{2,2},{3,3},{3,4},{4,5},{5,6},{5,7},{5,8},{6,9},{7,10}};
+        S ib[10];
+        RANGES_ENSURE(ranges::size(ia) == ranges::size(ib));
         auto r = ranges::unique_copy(std::move(ia), ib, ranges::equal_to(), &S::i);
         CHECK(::is_dangling(r.in));
         CHECK(r.out == ib + 7);

@@ -165,13 +165,13 @@ namespace ranges
         constexpr /*c++14*/ auto CPP_fun(size)() (
             requires SizedRange<Rng>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
         CPP_member
         constexpr auto CPP_fun(size)() (const
             requires SizedRange<Rng const>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
     };
 
@@ -380,9 +380,9 @@ namespace ranges
           , rng1_(std::move(rng1))
           , rng2_(std::move(rng2))
         {}
-        CPP_member
-        static constexpr auto size() -> CPP_ret(size_type_)(
+        CPP_template(int = 42)(
             requires my_cardinality >= 0)
+        static constexpr size_type_ size()
         {
             return static_cast<size_type_>(my_cardinality);
         }
@@ -505,6 +505,19 @@ namespace ranges
         /// \relates transform_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::transform;
+        }
+        CPP_template(typename Rng, typename F)(
+            requires InputRange<Rng> && CopyConstructible<F> && View<Rng> &&
+                std::is_object<F>::value &&
+                RegularInvocable<F &, iter_reference_t<iterator_t<Rng>>>)
+        using transform_view = ranges::transform_view<Rng, F>;
     }
     /// @}
 }

@@ -201,6 +201,11 @@ namespace ranges
     /// \sa `sort_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(sort_fn, sort)
+
+    namespace cpp20
+    {
+        using ranges::sort;
+    }
     /// @}
 } // namespace ranges
 

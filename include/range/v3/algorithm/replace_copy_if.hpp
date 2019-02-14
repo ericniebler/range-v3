@@ -68,6 +68,12 @@ namespace ranges
     /// \sa `replace_copy_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(replace_copy_if_fn, replace_copy_if)
+
+    namespace cpp20
+    {
+        using ranges::replace_copy_if_result;
+        using ranges::replace_copy_if;
+    }
     /// @}
 } // namespace ranges
 

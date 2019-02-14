@@ -112,6 +112,11 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(is_heap_until_fn, is_heap_until)
 
+    namespace cpp20
+    {
+        using ranges::is_heap_until;
+    }
+
     struct is_heap_fn
     {
         CPP_template(typename I, typename S, typename C = less, typename P = identity)(
@@ -135,6 +140,11 @@ namespace ranges
     /// \sa `is_heap_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(is_heap_fn, is_heap)
+
+    namespace cpp20
+    {
+        using ranges::is_heap;
+    }
     /// @}
 
     /// \cond
@@ -255,6 +265,11 @@ namespace ranges
     /// \sa `push_heap_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(push_heap_fn, push_heap)
+
+    namespace cpp20
+    {
+        using ranges::push_heap;
+    }
     /// @}
 
     /// \cond
@@ -307,6 +322,11 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(pop_heap_fn, pop_heap)
 
+    namespace cpp20
+    {
+        using ranges::pop_heap;
+    }
+
     struct make_heap_fn
     {
         CPP_template(typename I, typename S, typename C = less, typename P = identity)(
@@ -339,6 +359,11 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(make_heap_fn, make_heap)
 
+    namespace cpp20
+    {
+        using ranges::make_heap;
+    }
+
     struct sort_heap_fn
     {
         CPP_template(typename I, typename S, typename C = less, typename P = identity)(
@@ -366,6 +391,11 @@ namespace ranges
     /// \sa `sort_heap_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(sort_heap_fn, sort_heap)
+
+    namespace cpp20
+    {
+        using ranges::sort_heap;
+    }
     /// @}
 } // namespace ranges
 

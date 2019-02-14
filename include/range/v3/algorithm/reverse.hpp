@@ -32,7 +32,7 @@ namespace ranges
     {
     private:
         template<typename I>
-        static void impl(I begin, I end, detail::bidirectional_iterator_tag)
+        static void impl(I begin, I end, detail::bidirectional_iterator_tag_)
         {
             while(begin != end)
             {
@@ -44,7 +44,7 @@ namespace ranges
         }
 
         template<typename I>
-        static void impl(I begin, I end, detail::random_access_iterator_tag)
+        static void impl(I begin, I end, detail::random_access_iterator_tag_)
         {
             if(begin != end)
                 for(; begin < --end; ++begin)
@@ -72,6 +72,11 @@ namespace ranges
     /// \sa `reverse_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(reverse_fn, reverse)
+
+    namespace cpp20
+    {
+        using ranges::reverse;
+    }
     /// @}
 } // namespace ranges
 

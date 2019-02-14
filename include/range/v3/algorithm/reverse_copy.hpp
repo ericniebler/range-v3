@@ -58,6 +58,12 @@ namespace ranges
     /// \sa `reverse_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(reverse_copy_fn, reverse_copy)
+
+    namespace cpp20
+    {
+        using ranges::reverse_copy_result;
+        using ranges::reverse_copy;
+    }
     /// @}
 } // namespace ranges
 

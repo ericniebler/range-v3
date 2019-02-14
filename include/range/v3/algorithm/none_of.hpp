@@ -32,7 +32,8 @@ namespace ranges
     struct none_of_fn
     {
         CPP_template(typename I, typename S, typename F, typename P = identity)(
-            requires InputIterator<I> && Sentinel<S, I> && IndirectUnaryPredicate<F, projected<I, P>>)
+            requires InputIterator<I> && Sentinel<S, I> &&
+                IndirectUnaryPredicate<F, projected<I, P>>)
         bool operator()(I first, S last, F pred, P proj = P{}) const
         {
             for(; first != last; ++first)
@@ -53,6 +54,11 @@ namespace ranges
     /// \sa `none_of_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(none_of_fn, none_of)
+
+    namespace cpp20
+    {
+        using ranges::none_of;
+    }
     /// @}
 } // namespace ranges
 

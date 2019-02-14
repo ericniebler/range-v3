@@ -67,6 +67,12 @@ namespace ranges
     /// \sa `copy_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(copy_if_fn, copy_if)
+
+    namespace cpp20
+    {
+        using ranges::copy_if_result;
+        using ranges::copy_if;
+    }
     /// @}
 } // namespace ranges
 

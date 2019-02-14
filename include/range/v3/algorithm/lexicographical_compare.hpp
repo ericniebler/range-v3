@@ -64,6 +64,11 @@ namespace ranges
     /// \sa `lexicographical_compare_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(lexicographical_compare_fn, lexicographical_compare)
+
+    namespace cpp20
+    {
+        using ranges::lexicographical_compare;
+    }
     /// @}
 } // namespace ranges
 

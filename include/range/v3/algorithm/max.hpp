@@ -70,6 +70,11 @@ namespace ranges
     /// \sa `max_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(max_fn, max)
+
+    namespace cpp20
+    {
+        using ranges::max;
+    }
     /// @}
 } // namespace ranges
 

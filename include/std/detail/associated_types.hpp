@@ -18,8 +18,9 @@
 
 namespace ranges
 {
-    /// \addtogroup group-concepts
+    /// \addtogroup group-iterator
     /// @{
+
     ////////////////////////////////////////////////////////////////////////////////////////
     /// \cond
     namespace detail
@@ -115,7 +116,11 @@ namespace ranges
         template<typename T>
         struct incrementable_traits_2_<
             T,
+#ifdef RANGES_WORKAROUND_MSVC_785522
+            std::enable_if_t<std::is_integral_v<difference_result_t<T>>>>
+#else // ^^^ workaround / no workaround vvv
             always_<void, int[is_integral_<difference_result_t<T>>(0)]>>
+#endif // RANGES_WORKAROUND_MSVC_785522
         {
             using difference_type = typename std::make_signed<difference_result_t<T>>::type;
         };
@@ -233,6 +238,41 @@ namespace ranges
             using reference = void;
             using pointer = void;
         };
+
+        // For testing whether a particular instantiation of std::iterator_traits
+        // is user-specified or not.
+#if defined(__GLIBCXX__)
+        template<typename I>
+        char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I> *))[2];
+        template<typename I>
+        char is_std_iterator_traits_specialized_impl_(void *);
+#elif defined(_LIBCPP_VERSION)
+        template<typename I, bool B>
+        char (&is_std_iterator_traits_specialized_impl_(std::__iterator_traits<I, B> *))[2];
+        template<typename I>
+        char is_std_iterator_traits_specialized_impl_(void *);
+#elif defined(_MSVC_STL_VERSION)
+        template<typename I>
+        char (&is_std_iterator_traits_specialized_impl_(std::_Iterator_traits_base<I> *))[2];
+        template<typename I>
+        char is_std_iterator_traits_specialized_impl_(void *);
+#else
+        template<typename I>
+        char (&is_std_iterator_traits_specialized_impl_(void *))[2];
+#endif
+        template<typename, typename T>
+        char (&is_std_iterator_traits_specialized_impl_(std::iterator_traits<T *> *))[2];
+
+        template<typename I>
+        RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v =
+            1 == sizeof(is_std_iterator_traits_specialized_impl_<I>(
+                static_cast<std::iterator_traits<I> *>(nullptr)));
+
+        // The standard iterator_traits<T *> specialization(s) do not count
+        // as user-specialized. This will no longer be necessary in C++20.
+        // This helps with `T volatile*` and `void *`.
+        template<typename T>
+        RANGES_INLINE_VAR constexpr bool is_std_iterator_traits_specialized_v<T *> = false;
     }
     /// \endcond
 }

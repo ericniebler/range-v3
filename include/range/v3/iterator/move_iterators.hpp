@@ -18,11 +18,12 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/basic_iterator.hpp>
-#include <range/v3/iterator/associated_types.hpp>
 #include <range/v3/iterator/traits.hpp>
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
     template<typename I>
     struct move_iterator
     {
@@ -33,7 +34,7 @@ namespace ranges
         using iterator_type = I;
         using difference_type = iter_difference_t<I>;
         using value_type = iter_value_t<I>;
-        using iterator_category = ranges::input_iterator_tag;
+        using iterator_category = std::input_iterator_tag;
         using reference = iter_rvalue_reference_t<I>;
 
         constexpr move_iterator() = default;
@@ -318,7 +319,7 @@ namespace ranges
                 }
             };
 
-            I it_;
+            I it_ = I();
 
             explicit move_into_cursor(I it)
               : it_(std::move(it))
@@ -384,9 +385,7 @@ namespace ranges
                 return iter_move(it_);
             }
         public:
-            constexpr move_into_cursor()
-              : it_{}
-            {}
+            constexpr move_into_cursor() = default;
         };
     }
     /// \endcond
@@ -400,12 +399,17 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `move_into_fn`
     RANGES_INLINE_VARIABLE(move_into_fn, move_into)
+
+    namespace cpp20
+    {
+        using ranges::move_iterator;
+        using ranges::make_move_iterator;
+        using ranges::move_sentinel;
+    }
     /// @}
 } // namespace ranges
-
 
 /// \cond
 namespace std

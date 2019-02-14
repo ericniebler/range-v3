@@ -22,22 +22,24 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename FD>
-    struct logical_negate_
+    struct logical_negate
     {
     private:
         CPP_assert(Same<FD, detail::decay_t<FD>> && MoveConstructible<FD>);
         FD pred_;
     public:
         CPP_member
-        constexpr CPP_ctor(logical_negate_)()(
+        constexpr CPP_ctor(logical_negate)()(
             noexcept(std::is_nothrow_default_constructible<FD>::value)
             requires DefaultConstructible<FD>)
         {}
         CPP_template(typename T)(
-            requires (!defer::Same<detail::decay_t<T>, logical_negate_>) &&
+            requires (!defer::Same<detail::decay_t<T>, logical_negate>) &&
                 defer::Constructible<FD, T>)
-        explicit constexpr logical_negate_(T &&pred)
+        explicit constexpr logical_negate(T &&pred)
           : pred_(static_cast<T &&>(pred))
         {}
 
@@ -66,23 +68,26 @@ namespace ranges
         }
     };
 
-    template<typename Pred>
-    using logical_negate = logical_negate_<detail::decay_t<Pred>>;
-
     struct not_fn_fn
     {
         CPP_template(typename Pred)(
             requires MoveConstructible<detail::decay_t<Pred>> &&
                 Constructible<detail::decay_t<Pred>, Pred>)
-        constexpr logical_negate<Pred> operator()(Pred &&pred) const
+        constexpr logical_negate<detail::decay_t<Pred>> operator()(Pred &&pred) const
         {
-            return logical_negate<Pred>{(Pred &&) pred};
+            return logical_negate<detail::decay_t<Pred>>{(Pred &&) pred};
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `not_fn_fn`
     RANGES_INLINE_VARIABLE(not_fn_fn, not_fn)
+
+    namespace cpp20
+    {
+        using ranges::not_fn;
+    }
+    /// @}
 }
 
 #endif

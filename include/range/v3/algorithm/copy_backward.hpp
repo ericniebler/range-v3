@@ -57,6 +57,12 @@ namespace ranges
     /// \sa `copy_backward_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(copy_backward_fn, copy_backward)
+
+    namespace cpp20
+    {
+        using ranges::copy_backward_result;
+        using ranges::copy_backward;
+    }
     /// @}
 } // namespace ranges
 

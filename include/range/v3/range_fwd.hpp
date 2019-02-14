@@ -23,10 +23,10 @@
 #include <range/v3/version.hpp>
 #include <range/v3/utility/static_const.hpp>
 
-/// \defgroup group-utility Utility
-/// Utility classes
+/// \defgroup group-iterator Iterator
+/// Iterator functionality
 
-/// \defgroup group-core Core
+/// \defgroup group-range Range
 /// Core range functionality
 
 /// \defgroup group-algorithms Algorithms
@@ -38,8 +38,14 @@
 /// \defgroup group-actions Actions
 /// Eager, mutating, composable algorithms
 
-/// \defgroup group-concepts Concepts
-/// Concept-checking classes and utilities
+/// \defgroup group-utility Utility
+/// Utility classes
+
+/// \defgroup group-functional Functional
+/// Function and function object utilities
+
+/// \defgroup group-numerics Numerics
+/// Numeric utilities
 
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
@@ -137,23 +143,26 @@ namespace ranges
     {};
 
     /// \cond
-    template<typename T>
-    struct difference_type_;
+    namespace detail
+    {
+        template<typename T>
+        struct difference_type_;
+
+        template<typename T>
+        struct value_type_;
+    }
 
     template<typename T>
     using difference_type
         RANGES_DEPRECATED("ranges::difference_type<T>::type is deprecated. Use "
             "ranges::incrementable_traits<T>::difference_type instead.") =
-        difference_type_<T>;
-
-    template<typename T>
-    struct value_type_;
+        detail::difference_type_<T>;
 
     template<typename T>
     using value_type
         RANGES_DEPRECATED("ranges::value_type<T>::type is deprecated. Use "
             "ranges::readable_traits<T>::value_type instead.") =
-        value_type_<T>;
+        detail::value_type_<T>;
 
     template<typename T>
     struct size_type;
@@ -320,7 +329,7 @@ namespace ranges
         char (&is_function_impl_(priority_tag<3>))[4];
 
         template<typename T>
-        /*inline*/ constexpr bool is_function_v =
+        RANGES_INLINE_VAR constexpr bool is_function_v =
             sizeof(detail::is_function_impl_<T>(priority_tag<3>{})) == 1;
 
         template<typename T>
@@ -362,9 +371,7 @@ namespace ranges
     struct less;
     struct identity;
     template<typename Pred>
-    struct logical_negate_;
-    template<typename Pred>
-    using logical_negate = logical_negate_<detail::decay_t<Pred>>;
+    struct logical_negate;
 
     enum cardinality : std::ptrdiff_t
     {
@@ -383,7 +390,7 @@ namespace ranges
     using is_infinite = meta::bool_<range_cardinality<Rng>::value == infinite>;
 
     template<typename S, typename I>
-    /*inline*/ constexpr bool disable_sized_sentinel = false;
+    RANGES_INLINE_VAR constexpr bool disable_sized_sentinel = false;
 
     template<typename Cur>
     struct basic_mixin;
@@ -704,7 +711,7 @@ namespace ranges
     }
 
     template<typename Rng>
-        using unique_view = adjacent_filter_view<Rng, logical_negate<equal_to>>;
+    using unique_view = adjacent_filter_view<Rng, logical_negate<equal_to>>;
 
     namespace view
     {

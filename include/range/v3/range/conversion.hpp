@@ -134,10 +134,10 @@ namespace ranges
     }
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-range
     /// @{
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     RANGES_INLINE_VARIABLE(
         detail::to_container_fn<meta::quote<std::vector>>,
         to_vector)

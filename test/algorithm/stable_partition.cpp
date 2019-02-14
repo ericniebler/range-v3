@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/stable_partition.hpp>
 #include "../simple_test.hpp"
@@ -428,6 +429,23 @@ int main()
     }
     {  // check mixed
         S ap[] = { {{0, 1}}, {{0, 2}}, {{1, 1}}, {{1, 2}}, {{2, 1}}, {{2, 2}}, {{3, 1}}, {{3, 2}}, {{4, 1}}, {{4, 2}} };
+        auto r = ranges::stable_partition(std::move(ap), odd_first(), &S::p);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(r));
+#endif // RANGES_WORKAROUND_MSVC_573728
+        CHECK(ap[0].p == P{1, 1});
+        CHECK(ap[1].p == P{1, 2});
+        CHECK(ap[2].p == P{3, 1});
+        CHECK(ap[3].p == P{3, 2});
+        CHECK(ap[4].p == P{0, 1});
+        CHECK(ap[5].p == P{0, 2});
+        CHECK(ap[6].p == P{2, 1});
+        CHECK(ap[7].p == P{2, 2});
+        CHECK(ap[8].p == P{4, 1});
+        CHECK(ap[9].p == P{4, 2});
+    }
+    {  // check mixed
+        std::vector<S> ap{ {{0, 1}}, {{0, 2}}, {{1, 1}}, {{1, 2}}, {{2, 1}}, {{2, 2}}, {{3, 1}}, {{3, 2}}, {{4, 1}}, {{4, 2}} };
         auto r = ranges::stable_partition(std::move(ap), odd_first(), &S::p);
         CHECK(::is_dangling(r));
         CHECK(ap[0].p == P{1, 1});

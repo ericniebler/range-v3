@@ -32,10 +32,8 @@ namespace ranges
     template<typename I, typename O>
     using move_result = detail::in_out_result<I, O>;
 
-    struct move_fn : aux::move_fn
+    struct cpp20_move_fn
     {
-        using aux::move_fn::operator();
-
         CPP_template(typename I, typename S, typename O)(
             requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
                 IndirectlyMovable<I, O>)
@@ -55,9 +53,23 @@ namespace ranges
         }
     };
 
+    struct RANGES_EMPTY_BASES move_fn
+      : aux::move_fn
+      , cpp20_move_fn
+    {
+        using aux::move_fn::operator();
+        using cpp20_move_fn::operator();
+    };
+
     /// \sa `move_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(move_fn, move)
+
+    namespace cpp20
+    {
+        using ranges::move_result;
+        RANGES_INLINE_VARIABLE(cpp20_move_fn, move)
+    }
     /// @}
 } // namespace ranges
 

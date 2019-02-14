@@ -104,6 +104,12 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(mismatch_fn, mismatch)
 
+    namespace cpp20
+    {
+        using ranges::mismatch_result;
+        using ranges::mismatch;
+    }
+
     // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
     // that we can properly distinguish this case:
     //   int x[] = {1,2,3,4};

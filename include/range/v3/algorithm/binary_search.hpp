@@ -62,6 +62,11 @@ namespace ranges
     /// \sa `binary_search_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(binary_search_fn, binary_search)
+
+    namespace cpp20
+    {
+        using ranges::binary_search;
+    }
     /// @}
 } // namespace ranges
 

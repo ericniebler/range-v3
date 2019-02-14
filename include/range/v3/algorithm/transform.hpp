@@ -13,7 +13,6 @@
 #ifndef RANGES_V3_ALGORITHM_TRANSFORM_HPP
 #define RANGES_V3_ALGORITHM_TRANSFORM_HPP
 
-#include <tuple>
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -127,6 +126,13 @@ namespace ranges
     /// \sa `transform_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(transform_fn, transform)
+
+    namespace cpp20
+    {
+        using ranges::unary_transform_result;
+        using ranges::binary_transform_result;
+        using ranges::transform;
+    }
     /// @}
 } // namespace ranges
 

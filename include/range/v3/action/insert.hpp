@@ -285,7 +285,7 @@ namespace ranges
         using ranges::insert;
     }
 
-    /// \ingroup group-concepts
+    /// \ingroup group-range
     CPP_def
     (
         template(typename Rng, typename... Rest)

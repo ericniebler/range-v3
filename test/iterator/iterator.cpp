@@ -196,10 +196,10 @@ void test_845()
 // Test the deep integration with the STL
 #if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION
 
-struct _X
+struct X
 {
     int& operator*() const;
-    _X & operator++();
+    X & operator++();
     struct proxy { operator int() const; };
     proxy operator++(int);
 };
@@ -207,7 +207,7 @@ struct _X
 namespace std
 {
     template <>
-    struct iterator_traits<::_X>
+    struct iterator_traits<::X>
     {
         using value_type = int;
         using reference = int&;
@@ -217,9 +217,9 @@ namespace std
     };
 }
 
-static_assert(ranges::InputIterator<_X>, "");
+static_assert(ranges::InputIterator<X>, "");
 
-struct _Y
+struct Y
 {
     using value_type = int;
     using difference_type = std::ptrdiff_t;
@@ -231,21 +231,21 @@ struct _Y
 
 static_assert(std::is_same<std::add_pointer_t<int&>, int*>::value, "");
 
-struct _Z
+struct Z
 {
     using difference_type = std::ptrdiff_t;
     using iterator_category = std::bidirectional_iterator_tag;
     int& operator*() const noexcept;
-    _Z& operator++();
-    _Z operator++(int);
-    bool operator==(_Z) const;
-    bool operator!=(_Z) const;
+    Z& operator++();
+    Z operator++(int);
+    bool operator==(Z) const;
+    bool operator!=(Z) const;
 };
 
 namespace ranges
 {
     template <>
-    struct readable_traits<::_Z>
+    struct readable_traits<::Z>
     {
         using value_type = int;
     };
@@ -255,12 +255,12 @@ namespace ranges
 // input is "accidental".
 struct WouldBeFwd
 {
-    using value_type = struct _S{ };
+    using value_type = struct S{ };
     using difference_type = std::ptrdiff_t;
-    _S & operator*() const;
+    S & operator*() const;
     WouldBeFwd& operator++();
     WouldBeFwd operator++(int);
-    //_S* operator->() const;
+    //S* operator->() const;
     bool operator==(WouldBeFwd) const;
     bool operator!=(WouldBeFwd) const;
 };
@@ -283,16 +283,16 @@ namespace std
 // forward is "accidental".
 struct WouldBeBidi
 {
-    using value_type = struct _S{ };
+    using value_type = struct S{ };
     using difference_type = std::ptrdiff_t;
     // using iterator_category = std::input_iterator_tag;
     // using iterator_concept = std::forward_iterator_tag;
-    _S operator*() const; // by value!
+    S operator*() const; // by value!
     WouldBeBidi& operator++();
     WouldBeBidi operator++(int);
     WouldBeBidi& operator--();
     WouldBeBidi operator--(int);
-    //_S* operator->() const;
+    //S* operator->() const;
     bool operator==(WouldBeBidi) const;
     bool operator!=(WouldBeBidi) const;
 };
@@ -353,22 +353,22 @@ void deep_integration_test()
     static_assert(is_same<iter_difference_t<const int*>, ptrdiff_t>::value, "");
     static_assert(is_same<iter_difference_t<int* const>, ptrdiff_t>::value, "");
 
-    static_assert(detail::is_std_iterator_traits_specialized_<_X>, "");
-    static_assert(is_same<typename iterator_traits<_X>::value_type, int>::value, "");
-    static_assert(is_same<iter_value_t<_X>, int>::value, "");
+    static_assert(detail::is_std_iterator_traits_specialized_v<X>, "");
+    static_assert(is_same<typename iterator_traits<X>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<X>, int>::value, "");
 
-    static_assert(!detail::is_std_iterator_traits_specialized_<_Y>, "");
-    static_assert(is_same<typename iterator_traits<_Y>::value_type, int>::value, "");
-    static_assert(is_same<iter_value_t<_Y>, int>::value, "");
+    static_assert(!detail::is_std_iterator_traits_specialized_v<Y>, "");
+    static_assert(is_same<typename iterator_traits<Y>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<Y>, int>::value, "");
 
     // libc++ has a broken std::iterator_traits primary template
     // https://bugs.llvm.org/show_bug.cgi?id=39619
 #ifndef _LIBCPP_VERSION
     // iterator_traits uses specializations of ranges::value_type:
-    static_assert(!detail::is_std_iterator_traits_specialized_<_Z>, "");
-    static_assert(is_same<typename iterator_traits<_Z>::value_type, int>::value, "");
-    static_assert(is_same<iter_value_t<_Z>, int>::value, "");
-    static_assert(is_same<typename iterator_traits<_Z>::iterator_category,
+    static_assert(!detail::is_std_iterator_traits_specialized_v<Z>, "");
+    static_assert(is_same<typename iterator_traits<Z>::value_type, int>::value, "");
+    static_assert(is_same<iter_value_t<Z>, int>::value, "");
+    static_assert(is_same<typename iterator_traits<Z>::iterator_category,
                           std::bidirectional_iterator_tag>::value, "");
 #endif
 
@@ -401,15 +401,15 @@ void deep_integration_test()
     // // Test subsumption:
     // test(WouldBeFwd{});
     // test(WouldBeBidi{});
-    // test(std::__nullptr_v<int>);
+    // test(meta::detail::nullptr_v<int>);
 
     // // Test subsumption:
     // test2(OutIter{});
-    // test2(std::__nullptr_v<int>);
+    // test2(meta::detail::nullptr_v<int>);
 
     // // Test subsumption:
     // test3(WouldBeFwd{}, WouldBeFwd{});
-    // test3(std::__nullptr_v<int>, std::__nullptr_v<int>);
+    // test3(meta::detail::nullptr_v<int>, meta::detail::nullptr_v<int>);
 }
 
 #endif

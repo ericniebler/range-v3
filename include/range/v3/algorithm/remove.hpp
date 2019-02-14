@@ -66,6 +66,10 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(remove_fn, remove)
 
+    namespace cpp20
+    {
+        using ranges::remove;
+    }
     /// @}
 } // namespace ranges
 

@@ -23,7 +23,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-functional
     /// @{
 
     /// \cond
@@ -129,7 +129,7 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `ref_fn`
     RANGES_INLINE_VARIABLE(ref_fn, ref)
 
@@ -164,12 +164,13 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `unwrap_reference_fn`
     RANGES_INLINE_VARIABLE(unwrap_reference_fn, unwrap_reference)
 
     template<typename T>
     using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
+    /// @}
 }
 
 #endif

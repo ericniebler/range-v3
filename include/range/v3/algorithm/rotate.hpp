@@ -48,7 +48,7 @@ namespace ranges
         static subrange<I> rotate_left(I begin, I end)
         {
             iter_value_t<I> tmp = iter_move(begin);
-            I lm1 = move(next(begin), end, begin).out;
+            I lm1 = ranges::move(next(begin), end, begin).out;
             *lm1 = std::move(tmp);
             return {lm1, end};
         }
@@ -141,13 +141,13 @@ namespace ranges
         }
 
         template<typename I, typename S>
-        static subrange<I> rotate_(I begin, I middle, S end, detail::forward_iterator_tag)
+        static subrange<I> rotate_(I begin, I middle, S end, detail::forward_iterator_tag_)
         {
             return rotate_fn::rotate_forward(begin, middle, end);
         }
 
         template<typename I>
-        static subrange<I> rotate_(I begin, I middle, I end, detail::forward_iterator_tag)
+        static subrange<I> rotate_(I begin, I middle, I end, detail::forward_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
@@ -160,7 +160,7 @@ namespace ranges
 
         template<typename I>
         static subrange<I> rotate_(I begin, I middle, I end,
-            detail::bidirectional_iterator_tag)
+            detail::bidirectional_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
@@ -175,7 +175,7 @@ namespace ranges
 
         template<typename I>
         static subrange<I> rotate_(I begin, I middle, I end,
-            detail::random_access_iterator_tag)
+            detail::random_access_iterator_tag_)
         {
             using value_type = iter_value_t<I>;
             if(detail::is_trivially_move_assignable<value_type>::value)
@@ -217,6 +217,11 @@ namespace ranges
     /// \sa `rotate_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(rotate_fn, rotate)
+
+    namespace cpp20
+    {
+        using ranges::rotate;
+    }
     /// @}
 } // namespace ranges
 

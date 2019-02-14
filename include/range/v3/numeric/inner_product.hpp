@@ -29,6 +29,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-numerics
+    /// @{
     CPP_def
     (
         template(typename I1, typename I2, typename T, typename BOp1 = plus,
@@ -117,6 +119,7 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(inner_product_fn, inner_product)
+    /// @}
 }
 
 #endif

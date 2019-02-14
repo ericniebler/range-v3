@@ -79,6 +79,11 @@ namespace ranges
     /// \sa `adjacent_remove_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(adjacent_remove_if_fn, adjacent_remove_if)
+
+    namespace cpp20
+    {
+        using ranges::adjacent_remove_if;
+    }
     /// @}
 } // namespace ranges
 

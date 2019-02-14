@@ -108,6 +108,12 @@ namespace ranges
     /// \sa `minmax_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(minmax_fn, minmax)
+
+    namespace cpp20
+    {
+        using ranges::minmax_result;
+        using ranges::minmax;
+    }
     /// @}
 } // namespace ranges
 

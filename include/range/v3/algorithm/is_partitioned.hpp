@@ -64,6 +64,11 @@ namespace ranges
     /// \sa `is_partitioned_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(is_partitioned_fn, is_partitioned)
+
+    namespace cpp20
+    {
+        using ranges::is_partitioned;
+    }
     /// @}
 } // namespace ranges
 

@@ -56,6 +56,11 @@ namespace ranges
     /// \sa `replace_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(replace_if_fn, replace_if)
+
+    namespace cpp20
+    {
+        using ranges::replace_if;
+    }
     /// @}
 } // namespace ranges
 

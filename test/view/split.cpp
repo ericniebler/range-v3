@@ -41,11 +41,19 @@ namespace
         }
     };
 
+#ifdef RANGES_WORKAROUND_MSVC_790554
+    template<std::size_t N>
+    auto c_str(char const (&sz)[N])
+    {
+        return ranges::subrange<char const*>{&sz[0], &sz[N-1]};
+    }
+#else // ^^^ workaround / no workaround vvv
     template<std::size_t N>
     ranges::subrange<char const*> c_str(char const (&sz)[N])
     {
         return {&sz[0], &sz[N-1]};
     }
+#endif // RANGES_WORKAROUND_MSVC_790554
 }
 
 void moar_tests()
@@ -399,6 +407,19 @@ int main()
     }
 
     moar_tests();
+
+    {   // Regression test for #1041
+        auto is_escape = [](auto first, auto last) {
+            return std::make_pair(next(first) != last, first);
+        };
+
+        auto escapes = view::split_when(view::c_str(R"(\t)"), is_escape);
+        CPP_assert(ForwardRange<decltype(escapes)>);
+
+        auto const first = begin(escapes);
+        CHECK(first != end(escapes));
+        CHECK(first != next(first));
+    }
 
     return test_result();
 }

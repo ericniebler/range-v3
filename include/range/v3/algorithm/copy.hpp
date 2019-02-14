@@ -33,10 +33,8 @@ namespace ranges
     template<typename I, typename O>
     using copy_result = detail::in_out_result<I, O>;
 
-    struct copy_fn : aux::copy_fn
+    struct cpp20_copy_fn
     {
-        using aux::copy_fn::operator();
-
         CPP_template(typename I, typename S, typename O)(
             requires InputIterator<I> && Sentinel<S, I> &&
                 WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
@@ -56,9 +54,23 @@ namespace ranges
         }
     };
 
+    struct RANGES_EMPTY_BASES copy_fn
+      : aux::copy_fn
+      , cpp20_copy_fn
+    {
+        using aux::copy_fn::operator();
+        using cpp20_copy_fn::operator();
+    };
+
     /// \sa `copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(copy_fn, copy)
+
+    namespace cpp20
+    {
+        using ranges::copy_result;
+        RANGES_INLINE_VARIABLE(cpp20_copy_fn, copy)
+    }
     /// @}
 } // namespace ranges
 

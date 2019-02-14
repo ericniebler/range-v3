@@ -52,7 +52,7 @@ namespace ranges
     private:
         template<typename I, typename C, typename P, typename D, typename Pair>
         static I impl(I begin, I end, C pred, P proj, D len, Pair const p,
-            detail::forward_iterator_tag fi)
+            detail::forward_iterator_tag_ fi)
         {
             // *begin is known to be false
             // len >= 1
@@ -114,7 +114,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag fi)
+        static I impl(I begin, S end, C pred, P proj, detail::forward_iterator_tag_ fi)
         {
             using difference_type = iter_difference_t<I>;
             difference_type const alloc_limit = 3;  // might want to make this a function of
@@ -140,7 +140,7 @@ namespace ranges
 
         template<typename I, typename C, typename P, typename D, typename Pair>
         static I impl(I begin, I end, C pred, P proj, D len, Pair p,
-            detail::bidirectional_iterator_tag bi)
+            detail::bidirectional_iterator_tag_ bi)
         {
             // *begin is known to be false
             // *end is known to be true
@@ -179,7 +179,7 @@ namespace ranges
                 ++begin;
                 // All trues now at start of range, all falses in buffer
                 // Move falses back into range, but don't mess up begin which points to first false
-                move(p.first, res.out2.base().base(), begin);
+                ranges::move(p.first, res.out2.base().base(), begin);
                 // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
                 return begin;
             }
@@ -226,7 +226,7 @@ namespace ranges
         }
 
         template<typename I, typename S, typename C, typename P>
-        static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag bi)
+        static I impl(I begin, S end_, C pred, P proj, detail::bidirectional_iterator_tag_ bi)
         {
             using difference_type = iter_difference_t<I>;
             using value_type = iter_value_t<I>;
@@ -283,6 +283,11 @@ namespace ranges
     /// \sa `stable_partition_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(stable_partition_fn, stable_partition)
+
+    namespace cpp20
+    {
+        using ranges::stable_partition;
+    }
     /// @}
 } // namespace ranges
 

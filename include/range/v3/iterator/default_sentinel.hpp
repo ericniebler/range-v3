@@ -18,11 +18,20 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
     struct default_sentinel_t
     {};
 
     // Default sentinel
     RANGES_INLINE_VARIABLE(default_sentinel_t, default_sentinel)
+
+    namespace cpp20
+    {
+        using ranges::default_sentinel_t;
+        using ranges::default_sentinel;
+    }
+    /// @}
 }
 
 #endif

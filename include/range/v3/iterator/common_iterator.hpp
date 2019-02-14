@@ -25,6 +25,9 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
+
     /// \cond
     namespace detail
     {
@@ -42,13 +45,18 @@ namespace ranges
     }
 
 #if RANGES_BROKEN_CPO_LOOKUP
-    namespace _common_iterator_ { template<typename> struct adl_hook {}; }
+    namespace _common_iterator_
+    {
+        struct adl_hook
+        {};
+    }
 #endif
+    /// \endcond
 
     template<typename I, typename S>
     struct common_iterator
 #if RANGES_BROKEN_CPO_LOOKUP
-      : private _common_iterator_::adl_hook<common_iterator<I, S>>
+      : private _common_iterator_::adl_hook
 #endif
     {
     private:
@@ -202,6 +210,7 @@ namespace ranges
 #endif
     };
 
+    /// \cond
 #if RANGES_BROKEN_CPO_LOOKUP
     namespace _common_iterator_
     {
@@ -227,6 +236,7 @@ namespace ranges
         }
     }
 #endif
+    /// \endcond
 
     CPP_template(typename I1, typename I2, typename S1, typename S2)(
         requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
@@ -286,12 +296,12 @@ namespace ranges
             nil_;
         template<typename I>
         auto demote_common_iter_cat(long) ->
-            with_iterator_category<ranges::input_iterator_tag>;
+            with_iterator_category<std::input_iterator_tag>;
         CPP_template(typename I)(
             requires DerivedFrom<
-                    typename std::iterator_traits<I>::iterator_category,
-                    ranges::forward_iterator_tag>)
-        with_iterator_category<ranges::forward_iterator_tag>
+                typename std::iterator_traits<I>::iterator_category,
+                std::forward_iterator_tag>)
+        with_iterator_category<std::forward_iterator_tag>
         demote_common_iter_cat(int);
 
         template<typename I, bool = (bool) InputIterator<I>>
@@ -305,8 +315,8 @@ namespace ranges
             using iterator_concept =
                 if_then_t<
                     (bool) ForwardIterator<I>,
-                    ranges::forward_iterator_tag,
-                    ranges::input_iterator_tag>;
+                    std::forward_iterator_tag,
+                    std::input_iterator_tag>;
         };
 
         template<typename I>
@@ -320,6 +330,12 @@ namespace ranges
         };
     }
     /// \endcond
+
+    namespace cpp20
+    {
+        using ranges::common_iterator;
+    }
+    /// @}
 }
 
 /// \cond

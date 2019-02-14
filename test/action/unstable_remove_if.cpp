@@ -1,0 +1,218 @@
+// Range v3 library
+//
+//  Copyright Andrey Diduh 2019
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// Project home: https://github.com/ericniebler/range-v3
+
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <random>
+
+#include <range/v3/action/unstable_remove_if.hpp>
+#include <range/v3/action/remove_if.hpp>
+#include <range/v3/action/sort.hpp>
+
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
+
+void logic_test()
+{
+    using namespace ranges;
+
+    const auto make_vector = []() -> std::vector<int> {
+        return {1,2,3,4,5};
+    };
+
+    // empty
+    {
+        std::vector<int> vec;
+        vec |= action::unstable_remove_if([](int) { return true; });
+        CHECK(vec.empty());
+    }
+
+    // all stay
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int) { return false; });
+        check_equal(vec, {1,2,3,4,5});
+    }
+
+    // all remove
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int) { return true; });
+        CHECK(vec.empty());
+    }
+
+    // remove one in the middle
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 2; });
+        check_equal(vec, {1,5,3,4});
+    }
+
+    // remove first
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 1; });
+        check_equal(vec, {5,2,3,4});
+    }
+
+    // remove last
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 5; });
+        check_equal(vec, {1,2,3,4});
+    }
+
+    // remove group in the middle
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 2 || i == 3 || i == 4; });
+        check_equal(vec, {1,5});
+    }
+
+    // remove group in the begin
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 1 || i == 2 || i == 3; });
+        check_equal(vec, {5,4});
+    }
+
+    // remove group in the end
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i == 3 || i == 4 || i == 5; });
+        check_equal(vec, {1,2});
+    }
+
+    // remains one in the middle
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return i != 3; });
+        check_equal(vec, {3});
+    }
+    // remains group in the middle
+    {
+        std::vector<int> vec = make_vector();
+        vec |= action::unstable_remove_if([](int i) { return (i != 3) && (i != 4); });
+        check_equal(vec, {4,3});
+    }
+}
+
+class fuzzy_test_fn
+{
+    int size;
+    std::random_device rd;
+    std::mt19937 eng{rd()};
+    std::uniform_int_distribution<int> distr;
+
+public:
+    explicit fuzzy_test_fn(int size)
+      : size(size)
+      , distr{0, size}
+    {}
+
+    void operator()()
+    {
+        struct Int
+        {
+            int value;
+
+            explicit Int(int value)
+              : value(value)
+            {}
+            Int(Int const &) = default;
+            Int(Int&& other) noexcept
+              : value(0)
+            {
+                *this = std::move(other);
+            }
+
+            Int &operator=(Int const &) = default;
+            Int &operator=(Int&& other) noexcept
+            {
+                const int sentinel = -1;
+                CHECK(other.value != sentinel);
+
+                value = other.value;
+                other.value = sentinel;
+                return *this;
+            }
+
+            RANGES_DIAGNOSTIC_PUSH
+            RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
+            bool operator==(Int const &other) const
+            {
+                return value == other.value;
+            }
+            bool operator!=(Int const &other) const
+            {
+                return value != other.value;
+            }
+            bool operator<(Int const &other) const
+            {
+                return value < other.value;
+            }
+            bool operator>(Int const &other) const
+            {
+                return value > other.value;
+            }
+            bool operator<=(Int const &other) const
+            {
+                return value <= other.value;
+            }
+            bool operator>=(Int const &other) const
+            {
+                return value >= other.value;
+            }
+            RANGES_DIAGNOSTIC_POP
+        };
+
+        using namespace ranges;
+        std::vector<Int> ordered_list;
+        std::vector<Int> unordered_list;
+
+        // fill
+        for(int i=0; i < size; ++i)
+        {
+            ordered_list.emplace_back(i);
+            unordered_list.emplace_back(i);
+        }
+
+        // erase
+        const int erase_count = distr(eng);
+        for(int i=0; i < erase_count; ++i)
+        {
+            const int value = distr(eng);
+            const auto pred = [value](Int i) { return i.value == value; };
+            unordered_list |= action::unstable_remove_if(pred);
+            ordered_list |= action::remove_if(pred);
+        }
+
+        // compare
+        unordered_list |= action::sort;
+        CHECK(ordered_list == unordered_list);
+    }
+};
+
+int main()
+{
+    logic_test();
+
+    {
+        const int size = 100;
+        const int repeats = 1000;
+        fuzzy_test_fn fuzzy_test(size);
+        for(int i=0; i < repeats; ++i)
+            fuzzy_test();
+    }
+
+    return ::test_result();
+}

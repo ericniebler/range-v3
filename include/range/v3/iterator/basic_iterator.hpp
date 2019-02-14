@@ -29,7 +29,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility Utility
+    /// \addtogroup group-iterator Iterator
     /// @{
     ///
     template<typename T>
@@ -321,13 +321,13 @@ namespace ranges
         }
 
         auto iter_cat(input_cursor_tag) ->
-            ranges::input_iterator_tag;
+            std::input_iterator_tag;
         auto iter_cat(forward_cursor_tag) ->
-            ranges::forward_iterator_tag;
+            std::forward_iterator_tag;
         auto iter_cat(bidirectional_cursor_tag) ->
-            ranges::bidirectional_iterator_tag;
+            std::bidirectional_iterator_tag;
         auto iter_cat(random_access_cursor_tag) ->
-            ranges::random_access_iterator_tag;
+            std::random_access_iterator_tag;
 
         template<typename Cur>
         using cpp20_iter_cat_of_t = decltype(detail::iter_cat(cursor_tag_of<Cur>{}));
@@ -393,13 +393,13 @@ namespace ranges
         };
 
         auto cpp17_iter_cat(cpp17_input_cursor_tag) ->
-            ranges::input_iterator_tag;
+            std::input_iterator_tag;
         auto cpp17_iter_cat(cpp17_forward_cursor_tag) ->
-            ranges::forward_iterator_tag;
+            std::forward_iterator_tag;
         auto cpp17_iter_cat(cpp17_bidirectional_cursor_tag) ->
-            ranges::bidirectional_iterator_tag;
+            std::bidirectional_iterator_tag;
         auto cpp17_iter_cat(cpp17_random_access_cursor_tag) ->
-            ranges::random_access_iterator_tag;
+            std::random_access_iterator_tag;
 
         template<typename Cur>
         using cpp17_iter_cat_of_t =
@@ -600,8 +600,8 @@ namespace ranges
         constexpr auto operator->() const
         noexcept(noexcept(*std::declval<basic_iterator const &>())) ->
             CPP_ret(meta::_t<std::add_pointer<const_reference_t>>)(
-                requires not detail::HasCursorArrow<Cur> &&
-                    detail::ReadableCursor<Cur> &&
+                requires not detail::HasCursorArrow<C> &&
+                    detail::ReadableCursor<C> &&
                     std::is_lvalue_reference<const_reference_t>::value &&
                     Same<typename detail::iterator_associated_types_base<C>::value_type,
                         uncvref_t<const_reference_t>>)
@@ -654,9 +654,9 @@ namespace ranges
         constexpr /*c++14*/ auto operator++(int)
         {
             return this->post_increment_(
-                std::is_same<
+                meta::bool_<RANGES_IS_SAME(
                     detail::input_cursor_tag,
-                    detail::cursor_tag_of<Cur>>{},
+                    detail::cursor_tag_of<Cur>)>{},
                 0);
         }
 
@@ -878,7 +878,6 @@ namespace ranges
     };
 
     /// \sa `get_cursor_fn`
-    /// \ingroup group-utility
     RANGES_INLINE_VARIABLE(get_cursor_fn, get_cursor)
     /// @}
 }

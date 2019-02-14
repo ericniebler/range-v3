@@ -139,6 +139,17 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<reverse_fn>, reverse)
     }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::reverse;
+        }
+        CPP_template(typename Rng)(
+            requires View<Rng> && BidirectionalRange<Rng>)
+        using reverse_view = ranges::reverse_view<Rng>;
+    }
     /// @}
 }
 

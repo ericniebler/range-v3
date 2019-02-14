@@ -22,9 +22,8 @@
 #include <range/v3/functional/comparisons.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/iterator/access.hpp>
 #include <range/v3/iterator/traits.hpp>
-#include <range/v3/utility/move.hpp>
-#include <range/v3/utility/swap.hpp>
 
 #ifdef _GLIBCXX_DEBUG
 #include <debug/safe_iterator.h>
@@ -32,12 +31,15 @@
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
+
     /// \cond
     namespace detail
     {
         template<typename I>
         using iter_traits_t =
-            if_then_t<is_std_iterator_traits_specialized_<I>, std::iterator_traits<I>, I>;
+            if_then_t<is_std_iterator_traits_specialized_v<I>, std::iterator_traits<I>, I>;
 
 #if defined(_GLIBCXX_DEBUG)
         CPP_template(typename I, typename T, typename Seq)(
@@ -87,8 +89,8 @@ namespace ranges
         template<typename I>
         auto iter_concept_(I, priority_tag<0>) ->
             enable_if_t<
-                !is_std_iterator_traits_specialized_<I>,
-                ranges::random_access_iterator_tag>;
+                !is_std_iterator_traits_specialized_v<I>,
+                std::random_access_iterator_tag>;
 
         template<typename I>
         using iter_concept_t = decltype(iter_concept_<I>(std::declval<I>(), priority_tag<3>{}));
@@ -194,7 +196,7 @@ namespace ranges
         template(typename I)
         concept InputIterator,
             Iterator<I> && Readable<I> &&
-            DerivedFrom<detail::iter_concept_t<I>, ranges::input_iterator_tag>
+            DerivedFrom<detail::iter_concept_t<I>, std::input_iterator_tag>
     );
 
     CPP_def
@@ -203,7 +205,7 @@ namespace ranges
         concept ForwardIterator,
             InputIterator<I> && Incrementable<I> &&
             Sentinel<I, I> &&
-            DerivedFrom<detail::iter_concept_t<I>, ranges::forward_iterator_tag>
+            DerivedFrom<detail::iter_concept_t<I>, std::forward_iterator_tag>
     );
 
     CPP_def
@@ -218,7 +220,7 @@ namespace ranges
                 concepts::requires_<Same<I, decltype(i--)>>
             ) &&
             ForwardIterator<I> &&
-            DerivedFrom<detail::iter_concept_t<I>, ranges::bidirectional_iterator_tag>
+            DerivedFrom<detail::iter_concept_t<I>, std::bidirectional_iterator_tag>
     );
 
     CPP_def
@@ -242,7 +244,7 @@ namespace ranges
             BidirectionalIterator<I> &&
             StrictTotallyOrdered<I> &&
             SizedSentinel<I, I> &&
-            DerivedFrom<detail::iter_concept_t<I>, ranges::random_access_iterator_tag>
+            DerivedFrom<detail::iter_concept_t<I>, std::random_access_iterator_tag>
     );
 
     CPP_def
@@ -279,11 +281,11 @@ namespace ranges
         struct iterator_category_<I, true>
         {
         private:
-            static ranges::input_iterator_tag test(detail::input_iterator_tag);
-            static ranges::forward_iterator_tag test(detail::forward_iterator_tag);
-            static ranges::bidirectional_iterator_tag test(detail::bidirectional_iterator_tag);
-            static ranges::random_access_iterator_tag test(detail::random_access_iterator_tag);
-            static ranges::contiguous_iterator_tag test(detail::contiguous_iterator_tag);
+            static std::input_iterator_tag test(detail::input_iterator_tag_);
+            static std::forward_iterator_tag test(detail::forward_iterator_tag_);
+            static std::bidirectional_iterator_tag test(detail::bidirectional_iterator_tag_);
+            static std::random_access_iterator_tag test(detail::random_access_iterator_tag_);
+            static ranges::contiguous_iterator_tag test(detail::contiguous_iterator_tag_);
         public:
             using type = decltype(iterator_category_::test(iterator_tag_of<I>{}));
         };
@@ -294,18 +296,6 @@ namespace ranges
                 meta::_t<std::remove_const<T>>,
                 (bool) InputIterator<meta::_t<std::remove_const<T>>>>;
     }
-    /// \endcond
-
-    /// \cond
-    template<typename I>
-    using iterator_category
-        RANGES_DEPRECATED("iterator_category is deprecated. Use the iterator concepts instead") =
-            detail::iterator_category<I>;
-
-    template<typename I>
-    using iterator_category_t
-        RANGES_DEPRECATED("iterator_category_t is deprecated. Use the iterator concepts instead") =
-            meta::_t<detail::iterator_category<I>>;
     /// \endcond
 
     // Generally useful to know if an iterator is single-pass or not:
@@ -324,29 +314,6 @@ namespace ranges
             (bool) And<(bool) Readable<Is>...>,
             invoke_result_t<Fun, iter_reference_t<Is>...>>;
 
-    /// \cond
-    template<typename Fun, typename... Is>
-    using indirect_invoke_result_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
-        indirect_result_t<Fun, Is...>;
-
-    template<typename Fun, typename... Is>
-    struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_invoke_result
-      : meta::defer<indirect_result_t, Fun, Is...>
-    {};
-
-    template<typename Sig>
-    struct indirect_result_of
-    {};
-
-    template<typename Fun, typename... Is>
-    struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_result_of<Fun(Is...)>
-      : meta::defer<indirect_result_t, Fun, Is...>
-    {};
-
-    template<typename Sig>
-    using indirect_result_of_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
-        meta::_t<indirect_result_of<Sig>>;
-    /// \endcond
 
     /// \cond
     namespace detail
@@ -491,10 +458,12 @@ namespace ranges
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////
-    // Project struct, for "projecting" a Readable with a unary callable
+    // projected struct, for "projecting" a Readable with a unary callable
     /// \cond
     namespace detail
     {
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
         template<typename I, typename Proj>
         struct projected_
         {
@@ -502,6 +471,7 @@ namespace ranges
             using value_type = uncvref_t<reference>;
             reference operator*() const;
         };
+RANGES_DIAGNOSTIC_POP
 
         template<typename Proj>
         struct select_projected_
@@ -631,6 +601,73 @@ namespace ranges
             meta::list<SizedSentinelConcept, SentinelConcept>,
             S,
             I>;
+
+    // Deprecated things:
+    /// \cond
+    template<typename I>
+    using iterator_category
+        RANGES_DEPRECATED("iterator_category is deprecated. Use the iterator concepts instead") =
+            detail::iterator_category<I>;
+
+    template<typename I>
+    using iterator_category_t
+        RANGES_DEPRECATED("iterator_category_t is deprecated. Use the iterator concepts instead") =
+            meta::_t<detail::iterator_category<I>>;
+
+    template<typename Fun, typename... Is>
+    using indirect_invoke_result_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
+        indirect_result_t<Fun, Is...>;
+
+    template<typename Fun, typename... Is>
+    struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_invoke_result
+      : meta::defer<indirect_result_t, Fun, Is...>
+    {};
+
+    template<typename Sig>
+    struct indirect_result_of
+    {};
+
+    template<typename Fun, typename... Is>
+    struct RANGES_DEPRECATED("Please switch to indirect_result_t") indirect_result_of<Fun(Is...)>
+      : meta::defer<indirect_result_t, Fun, Is...>
+    {};
+
+    template<typename Sig>
+    using indirect_result_of_t RANGES_DEPRECATED("Please switch to indirect_result_t") =
+        meta::_t<indirect_result_of<Sig>>;
+    /// \endcond
+
+    namespace cpp20
+    {
+        using ranges::Readable;
+        using ranges::Writable;
+        using ranges::WeaklyIncrementable;
+        using ranges::Incrementable;
+        using ranges::Iterator;
+        using ranges::Sentinel;
+        using ranges::InputIterator;
+        using ranges::OutputIterator;
+        using ranges::ForwardIterator;
+        using ranges::BidirectionalIterator;
+        using ranges::RandomAccessIterator;
+        using ranges::ContiguousIterator;
+        using ranges::IndirectUnaryInvocable;
+        using ranges::IndirectRegularUnaryInvocable;
+        using ranges::IndirectUnaryPredicate;
+        using ranges::IndirectRelation;
+        using ranges::IndirectStrictWeakOrder;
+        using ranges::IndirectlyMovable;
+        using ranges::IndirectlyMovableStorable;
+        using ranges::IndirectlyCopyable;
+        using ranges::IndirectlyCopyableStorable;
+        using ranges::IndirectlySwappable;
+        using ranges::IndirectlyComparable;
+        using ranges::Permutable;
+        using ranges::Mergeable;
+        using ranges::Sortable;
+        using ranges::projected;
+        using ranges::indirect_result_t;
+    }
     /// @}
 }
 

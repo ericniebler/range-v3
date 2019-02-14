@@ -23,6 +23,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-functional
+    /// @{
     template<typename T,
         typename U = meta::if_<
             std::is_lvalue_reference<T>,
@@ -43,8 +45,8 @@ namespace ranges
 
     template<typename T>
     struct bind_element
-      : meta::if_<
-            std::is_same<detail::decay_t<T>, T>,
+      : meta::if_c<
+            RANGES_IS_SAME(detail::decay_t<T>, T),
             meta::id<T>,
             bind_element<detail::decay_t<T>>>
     {};
@@ -64,45 +66,40 @@ namespace ranges
     template<typename T>
     using bind_element_t = meta::_t<bind_element<T>>;
 
-    /// \cond
-    namespace detail
+    template<typename Bind>
+    struct protector
     {
-        template<typename Bind>
-        struct protect
-        {
-        private:
-            Bind bind_;
-        public:
-            protect() = default;
-            protect(Bind b)
-              : bind_(std::move(b))
-            {}
-            template<typename...Ts>
-            auto CPP_auto_fun(operator())(Ts &&...ts)
-            (
-                return bind_(static_cast<Ts &&>(ts)...)
-            )
-            /// \overload
-            template<typename...Ts>
-            auto CPP_auto_fun(operator())(Ts &&...ts) (const)
-            (
-                return bind_(static_cast<Ts &&>(ts)...)
-            )
-        };
-    }
-    /// \endcond
+    private:
+        Bind bind_;
+    public:
+        protector() = default;
+        protector(Bind b)
+            : bind_(std::move(b))
+        {}
+        template<typename...Ts>
+        auto CPP_auto_fun(operator())(Ts &&...ts)
+        (
+            return bind_(static_cast<Ts &&>(ts)...)
+        )
+        /// \overload
+        template<typename...Ts>
+        auto CPP_auto_fun(operator())(Ts &&...ts) (const)
+        (
+            return bind_(static_cast<Ts &&>(ts)...)
+        )
+    };
 
     struct protect_fn
     {
         CPP_template(typename F)(
-        requires std::is_bind_expression<uncvref_t<F>>::value)
-        detail::protect<uncvref_t<F>> operator()(F &&f) const
+            requires std::is_bind_expression<uncvref_t<F>>::value)
+        protector<uncvref_t<F>> operator()(F &&f) const
         {
             return {static_cast<F &&>(f)};
         }
         /// \overload
         CPP_template(typename F)(
-        requires (!std::is_bind_expression<uncvref_t<F>>::value))
+            requires (!std::is_bind_expression<uncvref_t<F>>::value))
         F operator()(F &&f) const
         {
             return static_cast<F &&>(f);
@@ -111,10 +108,10 @@ namespace ranges
 
     /// Protect a callable so that it can be safely used in a bind expression without
     /// accidentally becoming a "nested" bind.
-    /// \ingroup group-utility
+    /// \ingroup group-functional
     /// \sa `protect_fn`
     RANGES_INLINE_VARIABLE(protect_fn, protect)
-
+    /// @}
 }
 
 #endif

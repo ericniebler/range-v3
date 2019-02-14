@@ -66,6 +66,11 @@ namespace ranges
     /// \sa `find_first_of_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(find_first_of_fn, find_first_of)
+
+    namespace cpp20
+    {
+        using ranges::find_first_of;
+    }
     /// @}
 } // namespace ranges
 

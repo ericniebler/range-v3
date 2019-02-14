@@ -72,6 +72,12 @@ namespace ranges
     /// \sa `swap_ranges_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(swap_ranges_fn, swap_ranges)
+
+    namespace cpp20
+    {
+        using ranges::swap_ranges_result;
+        using ranges::swap_ranges;
+    }
     /// @}
 } // namespace ranges
 

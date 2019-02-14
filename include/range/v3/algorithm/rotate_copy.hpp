@@ -39,10 +39,10 @@ namespace ranges
             requires ForwardIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
         rotate_copy_result<I, O> operator()(I begin, I middle, S end, O out) const
         {
-            auto res = copy(middle, std::move(end), std::move(out));
+            auto res = ranges::copy(middle, std::move(end), std::move(out));
             return {
                 std::move(res.in),
-                copy(std::move(begin), middle, std::move(res.out)).out
+                ranges::copy(std::move(begin), middle, std::move(res.out)).out
             };
         }
 
@@ -58,6 +58,12 @@ namespace ranges
     /// \sa `rotate_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(rotate_copy_fn, rotate_copy)
+
+    namespace cpp20
+    {
+        using ranges::rotate_copy_result;
+        using ranges::rotate_copy;
+    }
     /// @}
 } // namespace ranges
 

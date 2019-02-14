@@ -73,6 +73,12 @@ namespace ranges
     /// \sa `replace_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(replace_copy_fn, replace_copy)
+
+    namespace cpp20
+    {
+        using ranges::replace_copy_result;
+        using ranges::replace_copy;
+    }
     /// @}
 } // namespace ranges
 

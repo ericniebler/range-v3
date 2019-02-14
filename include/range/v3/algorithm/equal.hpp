@@ -112,6 +112,11 @@ namespace ranges
     /// \sa `equal_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(equal_fn, equal)
+
+    namespace cpp20
+    {
+        using ranges::equal;
+    }
     /// @}
 } // namespace ranges
 
