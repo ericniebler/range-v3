@@ -118,7 +118,7 @@ namespace ranges
         template<typename I, typename S, typename V, typename C = equal_to, typename P = identity>
         auto operator()(I begin, S end, iter_difference_t<I> count, V const &val,
                 C pred = C{}, P proj = P{}) const ->
-            CPP_ret(subrange<I>)(
+            CPP_ret(subrange<I>)//(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectlyComparable<I, V const *, C, P>)
         {
@@ -135,7 +135,7 @@ namespace ranges
         template<typename Rng, typename V, typename C = equal_to, typename P = identity>
         auto operator()(Rng &&rng, iter_difference_t<iterator_t<Rng>> count, V const &val,
                 C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_subrange_t<Rng>)(
+            CPP_ret(safe_subrange_t<Rng>)//(
                 requires ForwardRange<Rng> && IndirectlyComparable<iterator_t<Rng>, V const *, C, P>)
         {
             if(count <= 0)

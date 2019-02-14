@@ -49,7 +49,7 @@ namespace ranges
         // RandomAccessRange == true
         template<bool Const = true>
         auto get_begin_(std::true_type) const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const &&
                     RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
@@ -86,14 +86,14 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return this->get_begin_(std::true_type{});
         }
         template<bool Const = true>
         auto end() const ->
-            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && RandomAccessRange<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
@@ -136,7 +136,7 @@ namespace ranges
             }
             template<typename Rng>
             static auto impl_(Rng &&rng, range_difference_t<Rng> n, random_access_range_tag) ->
-                CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)(
+                CPP_ret(subrange<iterator_t<Rng>, sentinel_t<Rng>>)//(
                     requires ForwardingRange_<Rng>)
             {
                 return {begin(rng) + n, end(rng)};

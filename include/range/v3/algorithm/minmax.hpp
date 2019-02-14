@@ -38,7 +38,7 @@ namespace ranges
     {
         template<typename T, typename C = less, typename P = identity>
         constexpr auto operator()(T const &a, T const &b, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<T const &>)(
+            CPP_ret(minmax_result<T const &>)//(
                 requires IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
             using R = minmax_result<T const &>;
@@ -47,7 +47,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         constexpr /*c++14*/ auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(minmax_result<range_value_t<Rng>>)(
+            CPP_ret(minmax_result<range_value_t<Rng>>)//(
                 requires InputRange<Rng> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>> &&
                     IndirectlyCopyableStorable<iterator_t<Rng>, range_value_t<Rng> *>)
@@ -101,7 +101,7 @@ namespace ranges
         template<typename T, typename C = less, typename P = identity>
         constexpr /*c++14*/ auto operator()(std::initializer_list<T> const &&rng, C pred = C{},
                 P proj = P{}) const ->
-            CPP_ret(minmax_result<T>)(
+            CPP_ret(minmax_result<T>)//(
                 requires Copyable<T> && IndirectStrictWeakOrder<C, projected<T const *, P>>)
         {
             return (*this)(rng, std::move(pred), std::move(proj));

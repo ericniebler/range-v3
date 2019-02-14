@@ -37,7 +37,7 @@ namespace ranges
             typename PI = identity, typename PO = identity>
         auto operator()(I begin, SI end, O out_begin, SO out_end, C pred = C{},
                 PI in_proj = PI{}, PO out_proj = PO{}) const ->
-            CPP_ret(O)(
+            CPP_ret(O)//(
                 requires InputIterator<I> && Sentinel<SI, I> &&
                     RandomAccessIterator<O> && Sentinel<SO, O> &&
                     IndirectlyCopyable<I, O> && Sortable<O, C, PO> &&
@@ -68,7 +68,7 @@ namespace ranges
             typename PI = identity, typename PO = identity>
         auto operator()(InRng &&in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const ->
-            CPP_ret(safe_iterator_t<OutRng>)(
+            CPP_ret(safe_iterator_t<OutRng>)//(
                 requires InputRange<InRng> &&
                     RandomAccessRange<OutRng> &&
                     IndirectlyCopyable<iterator_t<InRng>, iterator_t<OutRng>> &&

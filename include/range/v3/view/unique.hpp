@@ -43,7 +43,7 @@ namespace ranges
         public:
             template<typename Rng, typename C = equal_to>
             auto operator()(Rng && rng, C pred = {}) const ->
-                CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)(
+                CPP_ret(adjacent_filter_view<all_t<Rng>, logical_negate<C>>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         IndirectRelation<C, iterator_t<Rng>>)
             {

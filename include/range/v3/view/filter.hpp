@@ -61,7 +61,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(filter_view<all_t<Rng>, Pred>)(
+                CPP_ret(filter_view<all_t<Rng>, Pred>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
@@ -92,7 +92,7 @@ namespace ranges
 
             template<typename Rng, typename Pred, typename Proj>
             constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)(
+                CPP_ret(filter_view<all_t<Rng>, composed<Pred, Proj>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {

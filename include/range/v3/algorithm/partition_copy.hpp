@@ -39,7 +39,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O0, typename O1, typename C, typename P = identity>
         auto operator()(I begin, S end, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-            CPP_ret(partition_copy_result<I, O0, O1>)(
+            CPP_ret(partition_copy_result<I, O0, O1>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O0> &&
                     WeaklyIncrementable<O1> &&
@@ -66,7 +66,7 @@ namespace ranges
 
         template<typename Rng, typename O0, typename O1, typename C, typename P = identity>
         auto operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const ->
-            CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)(
+            CPP_ret(partition_copy_result<safe_iterator_t<Rng>, O0, O1>)//(
                 requires InputRange<Rng> &&
                     WeaklyIncrementable<O0> &&
                     WeaklyIncrementable<O1> &&

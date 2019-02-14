@@ -396,19 +396,19 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
     template<__VA_ARGS__ CPP_TEMPLATE_AUX_                                      \
     /**/
 #define CPP_TEMPLATE_AUX_(...) ,                                                \
-    bool CPP_false_ = false,                                                    \
+    bool CPP_PP_CAT(CPP_false_, __LINE__) = false,                              \
     ::concepts::detail::enable_if_t<int,                                        \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
-        CPP_false_> = 0>                                                        \
+        CPP_PP_CAT(CPP_false_, __LINE__)> = 0>                                  \
     /**/
 #define CPP_template_def(...)                                                   \
     template<__VA_ARGS__ CPP_TEMPLATE_DEF_AUX_                                  \
     /**/
 #define CPP_TEMPLATE_DEF_AUX_(...) ,                                            \
-    bool CPP_false_,                                                            \
+    bool CPP_PP_CAT(CPP_false_, __LINE__),                                      \
     ::concepts::detail::enable_if_t<int,                                        \
         static_cast<bool>(CPP_PP_CAT(CPP_TEMPLATE_AUX_3_, __VA_ARGS__)) ||      \
-        CPP_false_>>                                                            \
+        CPP_PP_CAT(CPP_false_, __LINE__)>>                                      \
     /**/
 #define CPP_TEMPLATE_AUX_3_requires
 #define CPP_member                                                              \
@@ -456,17 +456,17 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #ifdef CPP_DOXYGEN_INVOKED
 #define CPP_broken_friend_ret(...)                                              \
-    __VA_ARGS__ CPP_PP_EXPAND                                                   \
+    __VA_ARGS__ CPP_PP_EXPAND (                                                   \
     /**/
 #else
+
 #define CPP_broken_friend_ret(...)                                              \
-    ::concepts::detail::enable_if_t<__VA_ARGS__,                                \
-    CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_                                          \
-    /**/
-#define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_(...)                                 \
-    CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(CPP_PP_CAT(                            \
-        CPP_TEMPLATE_AUX_2_, __VA_ARGS__))                                      \
-    /**/
+    CPP_WHEN ((__VA_ARGS__),
+#define CPP_WHEN(x, ...) \
+    typename ::concepts::detail::identity<\
+        std::enable_if_t<CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(\
+            CPP_PP_CAT(CPP_TEMPLATE_AUX_2_, __VA_ARGS__))>::template invoke<\
+        CPP_PP_EXPAND x>
 #define CPP_TEMPLATE_AUX_2_requires
 #define CPP_BROKEN_FRIEND_RETURN_TYPE_AUX_3_(...)                               \
     static_cast<bool>(__VA_ARGS__) || CPP_false(::concepts::detail::xNil{})>    \
@@ -486,7 +486,7 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 
 #if CPP_CXX_CONCEPTS
 #define CPP_ret(...)                                                            \
-    __VA_ARGS__ CPP_PP_EXPAND                                                   \
+    __VA_ARGS__ CPP_PP_EXPAND (                                                 \
     /**/
 #else
 #define CPP_ret                                                                 \

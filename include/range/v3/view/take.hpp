@@ -278,7 +278,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(take_view<all_t<Rng>>)(
+                CPP_ret(take_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};

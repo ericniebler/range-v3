@@ -194,7 +194,7 @@ namespace ranges
             }
             CPP_member
             constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires BidirectionalRange<CRng>)
             {
                 RANGES_EXPECT(it != ranges::begin(rng_->base()));
@@ -209,7 +209,7 @@ namespace ranges
             template<typename Other>
             constexpr /*c++14*/ auto distance_to(iterator_t<CRng> const &here,
                     Other const &there) const ->
-                CPP_ret(range_difference_t<Rng>)(
+                CPP_ret(range_difference_t<Rng>)//(
                     requires SizedSentinel<Other, iterator_t<CRng>>)
             {
                 range_difference_t<Rng> delta = there - here;
@@ -222,7 +222,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/ auto advance(
                 iterator_t<CRng> &it, range_difference_t<Rng> n) ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires RandomAccessRange<CRng>)
             {
                 if(0 == n)
@@ -263,9 +263,11 @@ namespace ranges
         CPP_member
         constexpr auto begin_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
-            CPP_ret(adaptor<true>)(requires const_iterable)
+            CPP_ret(adaptor<true>)//(
+                requires const_iterable)
 #else // ^^^ workaround / no workaround vvv
-            CPP_ret(adaptor<true>)(requires const_iterable())
+            CPP_ret(adaptor<true>)//(
+                requires const_iterable())
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
             return adaptor<true>{*this};
@@ -284,10 +286,10 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
 #ifdef RANGES_WORKAROUND_MSVC_711347
-            CPP_ret(meta::if_c<can_bound<true>, adaptor<true>, adaptor_base>)(
+            CPP_ret(meta::if_c<can_bound<true>, adaptor<true>, adaptor_base>)//(
                 requires const_iterable)
 #else // ^^^ workaround / no workaround vvv
-            CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)(
+            CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)//(
                 requires const_iterable())
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
@@ -334,7 +336,7 @@ namespace ranges
         public:
             template<typename Rng>
             constexpr auto operator()(Rng &&rng, range_difference_t<Rng> step) const ->
-                CPP_ret(stride_view<all_t<Rng>>)(
+                CPP_ret(stride_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return stride_view<all_t<Rng>>{all(static_cast<Rng &&>(rng)), step};

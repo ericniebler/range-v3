@@ -124,7 +124,7 @@ namespace ranges
             template<typename T>
             RANGES_INTENDED_MODULAR_ARITHMETIC
             constexpr /*c++14*/ auto crushto32(T value) ->
-                CPP_ret(std::uint32_t)(
+                CPP_ret(std::uint32_t)//(
                     requires Integral<T>)
             {
                 if(sizeof(T) <= 4)
@@ -230,7 +230,7 @@ namespace ranges
 
             template<typename I>
             constexpr auto fast_exp(I x, I power, I result = I{1}) ->
-                CPP_ret(I)(
+                CPP_ret(I)//(
                     requires UnsignedIntegral<I>)
             {
                 return power == I{0} ? result
@@ -326,7 +326,7 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto mix_entropy(I begin, S end) ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                         requires InputIterator<I> && Sentinel<S, I> &&
                             ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {
@@ -385,7 +385,7 @@ namespace ranges
                 template<typename I, typename S>
                 RANGES_INTENDED_MODULAR_ARITHMETIC
                 auto generate(I dest_begin, S dest_end) const ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                         requires RandomAccessIterator<I> && Sentinel<S, I>)
                 {
                     auto src_begin = mixer_.begin();
@@ -413,7 +413,7 @@ namespace ranges
                 template<typename O>
                 RANGES_INTENDED_MODULAR_ARITHMETIC
                 auto param(O dest) const ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                         requires WeaklyIncrementable<O> &&
                             IndirectlyCopyable<decltype(mixer_.begin()), O>)
                 {
@@ -458,7 +458,7 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto seed(I begin, S end) ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                     requires InputIterator<I> && Sentinel<S, I> &&
                         ConvertibleTo<iter_reference_t<I>, IntRep>)
                 {

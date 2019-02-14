@@ -62,14 +62,14 @@ namespace ranges
 
         CPP_member
         constexpr /*c++14*/ auto begin_adaptor() noexcept ->
-            CPP_ret(adaptor<false>)(
+            CPP_ret(adaptor<false>)//(
                 requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
+            CPP_ret(adaptor<true>)//(
                 requires Range<Rng const>)
         {
             return {};
@@ -77,14 +77,14 @@ namespace ranges
 
         CPP_member
         constexpr /*c++14*/ auto end_adaptor() noexcept ->
-            CPP_ret(adaptor<false>)(
+            CPP_ret(adaptor<false>)//(
                 requires (!simple_view<Rng>()))
         {
             return {};
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
+            CPP_ret(adaptor<true>)//(
                 requires Range<Rng const>)
         {
             return {};

@@ -66,7 +66,7 @@ namespace ranges
             // Fixed-length
             template<typename Char, std::size_t N>
             auto operator()(Char (&sz)[N]) const ->
-                CPP_ret(ranges::subrange<Char *>)(
+                CPP_ret(ranges::subrange<Char *>)//(
                     requires detail::is_char_type<Char>::value)
             {
                 return {&sz[0], &sz[N-1]};
@@ -77,7 +77,7 @@ namespace ranges
             auto operator()(Char *sz) const volatile ->
                 CPP_ret(ranges::delimit_view<
                     ranges::subrange<Char *, ranges::unreachable_sentinel_t>,
-                    meta::_t<std::remove_cv<Char>>>)(
+                    meta::_t<std::remove_cv<Char>>>)//(
                 requires detail::is_char_type<Char>::value)
             {
                 using ch_t = meta::_t<std::remove_cv<Char>>;

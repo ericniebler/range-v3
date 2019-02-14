@@ -144,7 +144,7 @@ namespace ranges
         {}
         // Not to spec
         CPP_member
-        static constexpr auto size() -> CPP_ret(std::size_t)(
+        static constexpr auto size() -> CPP_ret(std::size_t)//(
             requires (detail::join_cardinality<Rng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng>());
@@ -220,7 +220,7 @@ namespace ranges
               , inner_it_(std::move(that.inner_it_))
             {}
             CPP_member
-            constexpr auto arrow() -> CPP_ret(iterator_t<CInner>)(
+            constexpr auto arrow() -> CPP_ret(iterator_t<CInner>)//(
                 requires detail::HasArrow_<iterator_t<CInner>>)
             {
                 return inner_it_;
@@ -230,7 +230,7 @@ namespace ranges
                 return outer_it_ == ranges::end(rng_->outer_);
             }
             CPP_member
-            constexpr auto equal(cursor const &that) const -> CPP_ret(bool)(
+            constexpr auto equal(cursor const &that) const -> CPP_ret(bool)//(
                 requires ref_is_glvalue::value &&
                     EqualityComparable<iterator_t<COuter>> &&
                     EqualityComparable<iterator_t<CInner>>)
@@ -247,7 +247,7 @@ namespace ranges
                 }
             }
             CPP_member
-            constexpr /*c++14*/ auto prev() -> CPP_ret(void)(
+            constexpr /*c++14*/ auto prev() -> CPP_ret(void)//(
                 requires ref_is_glvalue::value &&
                     BidirectionalRange<COuter> &&
                     BidirectionalRange<CInner> &&
@@ -302,7 +302,7 @@ namespace ranges
 
         template<bool Const = true>
         constexpr auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
+            CPP_ret(cursor<Const>)//(
                 requires Const &&
                     InputRange<meta::const_if_c<Const, Rng>> &&
                     std::is_reference<
@@ -355,7 +355,7 @@ namespace ranges
           , val_(view::all(std::move(val)))
         {}
         CPP_member
-        static constexpr auto size() -> CPP_ret(std::size_t)(
+        static constexpr auto size() -> CPP_ret(std::size_t)//(
             requires detail::join_cardinality<Rng, ValRng>() >= 0)
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
@@ -511,7 +511,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(join_view<all_t<Rng>>)(
+                CPP_ret(join_view<all_t<Rng>>)//(
                     requires JoinableRange<Rng>)
             {
                 return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -536,14 +536,14 @@ namespace ranges
 
             template<typename Rng>
             auto operator()(Rng &&rng, inner_value_t<Rng> v) const ->
-                CPP_ret(join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>>)(
+                CPP_ret(join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>>)//(
                     requires JoinableWithRange<Rng, single_view<inner_value_t<Rng>>>)
             {
                 return {all(static_cast<Rng &&>(rng)), single(std::move(v))};
             }
             template<typename Rng, typename ValRng>
             auto operator()(Rng &&rng, ValRng &&val) const ->
-                CPP_ret(join_with_view<all_t<Rng>, all_t<ValRng>>)(
+                CPP_ret(join_with_view<all_t<Rng>, all_t<ValRng>>)//(
                     requires JoinableWithRange<Rng, ValRng>)
             {
                 return {all(static_cast<Rng &&>(rng)), all(static_cast<ValRng &&>(val))};

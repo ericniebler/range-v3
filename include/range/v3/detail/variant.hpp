@@ -102,7 +102,7 @@ namespace ranges
 
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) ->
-            CPP_ret(O)(
+            CPP_ret(O)//(
                 requires not SizedSentinel<S, I>)
         {
             for(; first != last; ++first, ++out)
@@ -112,7 +112,7 @@ namespace ranges
 
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) ->
-            CPP_ret(O)(
+            CPP_ret(O)//(
                 requires SizedSentinel<S, I>)
         {
             return std::uninitialized_copy_n(first, (last - first), out);
@@ -631,7 +631,7 @@ namespace ranges
           : detail::variant_data<Ts...>{}, index_((std::size_t)-1)
         {}
         template<typename... Args>
-        static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)(
+        static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)//(
             requires sizeof...(Args) == sizeof...(Ts))
         {
             return And<ConvertibleTo<Args, Ts>...>;
@@ -699,7 +699,7 @@ namespace ranges
             return *this;
         }
         template<typename...Args>
-        auto operator=(variant<Args...> that) -> CPP_ret(variant &)(
+        auto operator=(variant<Args...> that) -> CPP_ret(variant &)//(
             requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
         {
             // TODO do a simple copy assign when index()==that.index()
@@ -712,7 +712,7 @@ namespace ranges
             return sizeof...(Ts);
         }
         template<std::size_t N, typename ...Args>
-        auto emplace(Args &&...args) -> CPP_ret(void)(
+        auto emplace(Args &&...args) -> CPP_ret(void)//(
             requires Constructible<datum_t<N>, Args...>)
         {
             this->clear_();
@@ -767,7 +767,7 @@ namespace ranges
 
     template<typename...Ts, typename...Us>
     auto operator==(variant<Ts...> const &lhs, variant<Us...> const &rhs) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires And<EqualityComparableWith<Ts, Us>...>)
     {
         return (!lhs.valid() && !rhs.valid()) ||
@@ -780,7 +780,7 @@ namespace ranges
 
     template<typename...Ts, typename...Us>
     auto operator!=(variant<Ts...> const &lhs, variant<Us...> const &rhs) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires And<EqualityComparableWith<Ts, Us>...>)
     {
         return !(lhs == rhs);

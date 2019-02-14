@@ -36,7 +36,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O>
         auto operator()(I begin, S end, O out) const ->
-            CPP_ret(move_result<I, O>)(
+            CPP_ret(move_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> && WeaklyIncrementable<O> &&
                     IndirectlyMovable<I, O>)
         {
@@ -47,7 +47,7 @@ namespace ranges
 
         template<typename Rng, typename O>
         auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(move_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(move_result<safe_iterator_t<Rng>, O>)//(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectlyMovable<iterator_t<Rng>, O>)
         {

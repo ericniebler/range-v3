@@ -69,7 +69,7 @@ namespace ranges
             }
             CPP_member
             constexpr /*c++14*/ auto prev(iterator_t<Rng> &it) const ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires BidirectionalRange<Rng>)
             {
                 rng_->satisfy_reverse(it);
@@ -86,14 +86,14 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(adaptor_base)(
+            CPP_ret(adaptor_base)//(
                 requires not CommonRange<Rng>)
         {
             return {};
         }
         CPP_member
         constexpr /*c++14*/ auto end_adaptor() ->
-            CPP_ret(adaptor)(
+            CPP_ret(adaptor)//(
                 requires CommonRange<Rng>)
         {
             if(BidirectionalRange<Rng>)
@@ -154,7 +154,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(remove_if_view<all_t<Rng>, Pred>)(
+                CPP_ret(remove_if_view<all_t<Rng>, Pred>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
@@ -165,7 +165,7 @@ namespace ranges
             }
             template<typename Rng, typename Pred, typename Proj>
             constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(remove_if_view<all_t<Rng>, composed<Pred, Proj>>)(
+                CPP_ret(remove_if_view<all_t<Rng>, composed<Pred, Proj>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, projected<iterator_t<Rng>, Proj>>)
             {

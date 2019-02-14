@@ -126,14 +126,14 @@ namespace ranges
             return {*this};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)//(
             requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
             return {*this};
         }
         CPP_member
         auto end_adaptor() const ->
-            CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)(
+            CPP_ret(meta::if_<use_sentinel_t, adaptor_base, adaptor<true>>)//(
                 requires ExclusiveScanConstraint<Rng const, T, Fun const>)
         {
             return {*this};
@@ -175,7 +175,7 @@ namespace ranges
         public:
             template<typename Rng, typename T, typename Fun = plus>
             auto operator()(Rng &&rng, T init, Fun fun = Fun{}) const ->
-                CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)(
+                CPP_ret(exclusive_scan_view<all_t<Rng>, T, Fun>)//(
                     requires ExclusiveScanConstraint<Rng, T, Fun>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(init), std::move(fun)};

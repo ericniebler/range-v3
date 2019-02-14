@@ -108,7 +108,7 @@ namespace ranges
         template<typename Other>
         constexpr /*c++14*/ auto operator=(tagged<Other, Tags...> && that)
             noexcept(noexcept(std::declval<Base &>() = static_cast<Other &&>(that))) ->
-            CPP_ret(tagged &)(
+            CPP_ret(tagged &)//(
                 requires can_convert<Other>::value)
         {
             static_cast<Base &>(*this) = static_cast<Other &&>(that);
@@ -117,7 +117,7 @@ namespace ranges
         template<typename Other>
         constexpr /*c++14*/ auto operator=(tagged<Other, Tags...> const &that)
             noexcept(noexcept(std::declval<Base &>() = static_cast<Other const &>(that))) ->
-            CPP_ret(tagged &)(
+            CPP_ret(tagged &)//(
                 requires can_convert<Other>::value)
         {
             static_cast<Base &>(*this) = static_cast<Other const &>(that);
@@ -126,7 +126,7 @@ namespace ranges
         template<typename U>
         constexpr /*c++14*/ auto operator=(U && u)
             noexcept(noexcept(std::declval<Base &>() = static_cast<U&&>(u))) ->
-            CPP_ret(tagged &)(
+            CPP_ret(tagged &)//(
                 requires not defer::Same<tagged, detail::decay_t<U>> &&
                     defer::Satisfies<Base &, std::is_assignable, U>)
         {
@@ -137,7 +137,7 @@ namespace ranges
         constexpr /*c++14*/
         auto swap(tagged &that)
             noexcept(is_nothrow_swappable<B>::value) ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires is_swappable<B>::value)
         {
             ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
@@ -147,7 +147,7 @@ namespace ranges
         friend constexpr /*c++14*/
         auto swap(tagged &x, tagged &y)
             noexcept(is_nothrow_swappable<B>::value) ->
-            CPP_broken_friend_ret(void)(
+            CPP_broken_friend_ret(void)//(
                 requires is_swappable<B>::value)
         {
             x.swap(y);
@@ -162,7 +162,7 @@ namespace ranges
         constexpr /*c++14*/
         auto swap(tagged<Base, Tags...> &x, tagged<Base, Tags...> &y)
             noexcept(is_nothrow_swappable<Base>::value) ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires is_swappable<Base>::value)
         {
             x.swap(y);

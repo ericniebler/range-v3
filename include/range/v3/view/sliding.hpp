@@ -74,7 +74,8 @@ namespace ranges
                 ++it_;
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(requires BidirectionalRange<Rng>)
+            auto prev() -> CPP_ret(void)//(
+                requires BidirectionalRange<Rng>)
             {
                 --it_;
             }
@@ -201,7 +202,7 @@ namespace ranges
                 base_t::next();
             }
             CPP_member
-            auto prev(iterator_t<Rng>& it) -> CPP_ret(void)(
+            auto prev(iterator_t<Rng>& it) -> CPP_ret(void)//(
                 requires BidirectionalRange<Rng>)
             {
                 base_t::prev();
@@ -209,7 +210,7 @@ namespace ranges
             }
             CPP_member
             auto advance(iterator_t<Rng>& it, range_difference_t<Rng> n) ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires RandomAccessRange<Rng>)
             {
                 it += n;
@@ -323,7 +324,7 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto begin_adaptor() const -> CPP_ret(adaptor<true>)(
+        auto begin_adaptor() const -> CPP_ret(adaptor<true>)//(
             requires Range<Rng const>)
         {
             return {this->n_};
@@ -333,7 +334,7 @@ namespace ranges
             return {this->n_};
         }
         CPP_member
-        auto end_adaptor() const -> CPP_ret(adaptor<true>)(
+        auto end_adaptor() const -> CPP_ret(adaptor<true>)//(
             requires Range<Rng const>)
         {
             return {this->n_};
@@ -359,7 +360,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(sliding_view<all_t<Rng>>)(
+                CPP_ret(sliding_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};

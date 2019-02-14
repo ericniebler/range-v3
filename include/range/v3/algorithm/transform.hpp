@@ -43,7 +43,7 @@ namespace ranges
         // Single-range variant
         template<typename I, typename S, typename O, typename F, typename P = identity>
         auto operator()(I begin, S end, O out, F fun, P proj = P{}) const ->
-            CPP_ret(unary_transform_result<I, O>)(
+            CPP_ret(unary_transform_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
                     Writable<O, indirect_result_t<F&, projected<I, P>>>)
@@ -55,7 +55,7 @@ namespace ranges
 
         template<typename Rng, typename O, typename F, typename P = identity>
         auto operator()(Rng &&rng, O out, F fun, P proj = P{}) const ->
-            CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(unary_transform_result<safe_iterator_t<Rng>, O>)//(
                 requires InputRange<Rng> && WeaklyIncrementable<O> && CopyConstructible<F> &&
                     Writable<O, indirect_result_t<F&, projected<iterator_t<Rng>, P>>>)
         {
@@ -68,7 +68,7 @@ namespace ranges
             typename P0 = identity, typename P1 = identity>
         auto operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun,
             P0 proj0 = P0{}, P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<I0, I1, O>)(
+            CPP_ret(binary_transform_result<I0, I1, O>)//(
                 requires InputIterator<I0> && Sentinel<S0, I0> &&
                     InputIterator<I1> && Sentinel<S1, I1> &&
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
@@ -83,7 +83,7 @@ namespace ranges
             typename P0 = identity, typename P1 = identity>
         auto operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
             P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)(
+            CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, safe_iterator_t<Rng1>, O>)//(
                 requires InputRange<Rng0> && InputRange<Rng1> &&
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
                     Writable<O, indirect_result_t<F&, projected<iterator_t<Rng0>, P0>,
@@ -100,7 +100,7 @@ namespace ranges
             "for both input ranges")
         auto operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
             P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<I0, I1, O>)(
+            CPP_ret(binary_transform_result<I0, I1, O>)//(
                 requires InputIterator<I0> && Sentinel<S0, I0> &&
                     InputIterator<I1> &&
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
@@ -116,7 +116,7 @@ namespace ranges
             "for both input ranges")
         auto operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
             P1 proj1 = P1{}) const ->
-            CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)(
+            CPP_ret(binary_transform_result<safe_iterator_t<Rng0>, uncvref_t<I1Ref>, O>)//(
                 requires InputRange<Rng0> && InputIterator<uncvref_t<I1Ref>> &&
                     WeaklyIncrementable<O> && CopyConstructible<F> &&
                     Writable<O, indirect_result_t<F&, projected<iterator_t<Rng0>, P0>,

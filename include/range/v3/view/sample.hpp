@@ -162,7 +162,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
+            CPP_ret(cursor<Const>)//(
                 requires Const && SizedRange<meta::const_if_c<Const, Rng>> ||
                     SizedSentinel<
                         sentinel_t<meta::const_if_c<Const, Rng>>,
@@ -206,7 +206,7 @@ namespace ranges
             template<typename Rng, typename URNG = detail::default_random_engine>
             auto operator()(Rng &&rng, range_difference_t<Rng> sample_size,
                     URNG &generator = detail::get_random_engine()) const ->
-                CPP_ret(sample_view<all_t<Rng>, URNG>)(
+                CPP_ret(sample_view<all_t<Rng>, URNG>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         UniformRandomNumberGenerator<URNG> &&
                         ConvertibleTo<invoke_result_t<URNG &>, range_difference_t<Rng>> &&

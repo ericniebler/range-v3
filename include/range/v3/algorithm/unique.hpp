@@ -46,7 +46,7 @@ namespace ranges
         ///
         template<typename I, typename S, typename C = equal_to, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires Sortable<I, C, P> && Sentinel<S, I>)
         {
             begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
@@ -63,7 +63,7 @@ namespace ranges
 
         template<typename Rng, typename C = equal_to, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires Sortable<iterator_t<Rng>, C, P> && Range<Rng>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

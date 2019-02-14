@@ -235,7 +235,7 @@ namespace ranges
             bool result_;
 
             template<typename T>
-            static constexpr auto test(T const *) -> CPP_ret(bool)(
+            static constexpr auto test(T const *) -> CPP_ret(bool)//(
                 requires Range<T> && Range<T const>)
             {
                 return RANGES_IS_SAME(

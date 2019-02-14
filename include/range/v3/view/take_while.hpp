@@ -73,7 +73,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto end_adaptor() const ->
-            CPP_ret(sentinel_adaptor<Const>)(
+            CPP_ret(sentinel_adaptor<Const>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>> &&
                     Invocable<Pred const &, iterator_t<meta::const_if_c<Const, Rng>>>)
         {
@@ -113,7 +113,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)(
+                CPP_ret(iter_take_while_view<all_t<Rng>, Pred>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         Predicate<Pred&, iterator_t<Rng>> &&
                         CopyConstructible<Pred>)
@@ -141,7 +141,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(take_while_view<all_t<Rng>, Pred>)(
+                CPP_ret(take_while_view<all_t<Rng>, Pred>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred &, iterator_t<Rng>>)
             {
@@ -149,7 +149,7 @@ namespace ranges
             }
             template<typename Rng, typename Pred, typename Proj>
             auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(take_while_view<all_t<Rng>, composed<Pred, Proj>>)(
+                CPP_ret(take_while_view<all_t<Rng>, composed<Pred, Proj>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj> &, iterator_t<Rng>>)
             {

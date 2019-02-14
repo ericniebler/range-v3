@@ -137,7 +137,7 @@ namespace ranges
             return *this;
         }
         template<typename TRef, typename T = detail::decay_t<TRef>>
-        auto operator=(TRef &&t) -> CPP_ret(any &)(
+        auto operator=(TRef &&t) -> CPP_ret(any &)//(
             requires Copyable<T> && !Same<T, any>)
         {
             any{static_cast<TRef &&>(t)}.swap(*this);

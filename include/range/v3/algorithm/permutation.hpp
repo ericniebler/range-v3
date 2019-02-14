@@ -97,7 +97,7 @@ namespace ranges
             "for both sequences")
         auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires ForwardIterator<I1> && Sentinel<S1, I1> && ForwardIterator<I2> &&
                     IndirectlyComparable<I1, I2, C, P1, P2>)
         {
@@ -145,7 +145,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires ForwardIterator<I1> && Sentinel<S1, I1> &&
                     ForwardIterator<I2> && Sentinel<S2, I2> &&
                     IndirectlyComparable<I1, I2, C, P1, P2>)
@@ -170,7 +170,7 @@ namespace ranges
             "for both sequences")
         auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires ForwardRange<Rng1> && ForwardIterator<uncvref_t<I2Ref>> &&
                     IndirectlyComparable<iterator_t<Rng1>, uncvref_t<I2Ref>, C, P1, P2>)
         {
@@ -185,7 +185,7 @@ namespace ranges
             typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
                     IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {
@@ -211,7 +211,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             if(begin == end_)
@@ -241,7 +241,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
@@ -256,7 +256,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end_, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires BidirectionalIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             if(begin == end_)
@@ -286,7 +286,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires BidirectionalRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

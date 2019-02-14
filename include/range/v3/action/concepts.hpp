@@ -107,7 +107,7 @@ namespace ranges
     {
         template<typename T>
         auto is_lvalue_container_like(T &) noexcept ->
-            CPP_ret(std::true_type)(
+            CPP_ret(std::true_type)//(
                 requires Container<T>)
         {
             return {};
@@ -115,7 +115,7 @@ namespace ranges
 
         template<typename T>
         auto is_lvalue_container_like(reference_wrapper<T>) noexcept ->
-          CPP_ret(meta::not_<std::is_rvalue_reference<T>>)(
+          CPP_ret(meta::not_<std::is_rvalue_reference<T>>)//(
               requires Container<T>)
         {
             return {};
@@ -123,7 +123,7 @@ namespace ranges
 
         template<typename T>
         auto is_lvalue_container_like(std::reference_wrapper<T>) noexcept ->
-            CPP_ret(std::true_type)(
+            CPP_ret(std::true_type)//(
                 requires Container<T>)
         {
             return {};
@@ -131,7 +131,7 @@ namespace ranges
 
         template<typename T>
         auto is_lvalue_container_like(ref_view<T>) noexcept ->
-            CPP_ret(std::true_type)(
+            CPP_ret(std::true_type)//(
                 requires Container<T>)
         {
             return {};

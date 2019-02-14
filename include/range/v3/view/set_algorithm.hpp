@@ -66,7 +66,7 @@ namespace ranges
                         ranges::begin(rng2_), ranges::end(rng2_)};
             }
             CPP_member
-            auto begin_cursor() const -> CPP_ret(cursor<true>)(
+            auto begin_cursor() const -> CPP_ret(cursor<true>)//(
                 requires Range<Rng1 const> && Range<Rng2 const>)
             {
                 return {pred_, proj1_, proj2_,
@@ -159,7 +159,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_difference_cursor const &that) const ->
-                CPP_ret(bool)(
+                CPP_ret(bool)//(
                     requires ForwardRange<Rng1>)
             {
                 // does not support comparing iterators from different ranges
@@ -201,7 +201,7 @@ namespace ranges
                 typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
+                CPP_ret(set_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)//(
                     requires ViewableRange<Rng1> && InputRange<Rng1> &&
                         ViewableRange<Rng2> && InputRange<Rng2> &&
                         IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
@@ -299,7 +299,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_intersection_cursor const &that) const ->
-                CPP_ret(bool)(
+                CPP_ret(bool)//(
                     requires ForwardRange<Rng1>)
             {
                 // does not support comparing iterators from different ranges
@@ -340,7 +340,7 @@ namespace ranges
                 typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
+                CPP_ret(set_intersection_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)//(
                     requires ViewableRange<Rng1> && InputRange<Rng1> &&
                         ViewableRange<Rng2> && InputRange<Rng2> &&
                         IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
@@ -463,7 +463,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_union_cursor const &that) const ->
-                CPP_ret(bool)(
+                CPP_ret(bool)//(
                     requires ForwardRange<Rng1> && ForwardRange<Rng2>)
             {
                 // does not support comparing iterators from different ranges
@@ -509,7 +509,7 @@ namespace ranges
                 typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
+                CPP_ret(set_union_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)//(
                     requires ViewableRange<Rng1> && InputRange<Rng1> &&
                         ViewableRange<Rng2> && InputRange<Rng2> &&
                         Common<range_value_t<Rng1>, range_value_t<Rng2>> &&
@@ -656,7 +656,7 @@ namespace ranges
             }
             CPP_member
             auto equal(set_symmetric_difference_cursor const &that) const ->
-                CPP_ret(bool)(
+                CPP_ret(bool)//(
                     requires ForwardRange<R1> && ForwardRange<R2>)
             {
                 // does not support comparing iterators from different ranges:
@@ -703,7 +703,7 @@ namespace ranges
                 typename P1 = identity, typename P2 = identity>
             auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                     P2 proj2 = P2{}) const ->
-                CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)(
+                CPP_ret(set_symmetric_difference_view<all_t<Rng1>, all_t<Rng2>, C, P1, P2>)//(
                     requires ViewableRange<Rng1> && InputRange<Rng1> &&
                         ViewableRange<Rng2> && InputRange<Rng2> &&
                         Common<range_value_t<Rng1>, range_value_t<Rng2>> &&

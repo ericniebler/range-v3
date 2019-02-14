@@ -41,7 +41,7 @@ namespace ranges
             }
         public:
             template<typename Rng, typename Fun>
-            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)(
+            auto operator()(Rng &&rng, Fun fun) const -> CPP_ret(Rng)//(
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<Fun, iterator_t<Rng>> &&
                     ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)

@@ -42,7 +42,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(Rng)(
+                CPP_ret(Rng)//(
                     requires ForwardRange<Rng> &&
                         ErasableRange<Rng &, iterator_t<Rng>, iterator_t<Rng>>)
             {

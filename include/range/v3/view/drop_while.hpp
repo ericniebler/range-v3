@@ -89,7 +89,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, Pred>)(
+                CPP_ret(drop_while_view<all_t<Rng>, Pred>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>>)
             {
@@ -97,7 +97,7 @@ namespace ranges
             }
             template<typename Rng, typename Pred, typename Proj>
             auto operator()(Rng &&rng, Pred pred, Proj proj) const ->
-                CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)(
+                CPP_ret(drop_while_view<all_t<Rng>, composed<Pred, Proj>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>>)
             {

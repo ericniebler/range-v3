@@ -33,7 +33,7 @@ namespace ranges
         /// \return `begin(rng)[n]`
         template<typename Rng, typename Int>
         constexpr /*c++14*/ auto operator()(Rng &&rng, Int n) const ->
-            CPP_ret(range_reference_t<Rng>)(
+            CPP_ret(range_reference_t<Rng>)//(
                 requires RandomAccessRange<Rng> && SizedRange<Rng> && Integral<Int>)
         {
             using D = range_difference_t<Rng>;
@@ -66,7 +66,7 @@ namespace ranges
         /// \return `begin(rng)[n]`
         template<typename Rng, typename Int>
         constexpr /*c++14*/ auto operator()(Rng &&rng, Int n) const ->
-            CPP_ret(range_reference_t<Rng>)(
+            CPP_ret(range_reference_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Integral<Int>)
         {
             using D = range_difference_t<Rng>;
@@ -88,7 +88,7 @@ namespace ranges
         /// \return `*prev(end(rng))`
         template<typename Rng>
         constexpr /*c++14*/ auto operator()(Rng &&rng) const ->
-            CPP_ret(range_reference_t<Rng>)(
+            CPP_ret(range_reference_t<Rng>)//(
                 requires CommonRange<Rng> && BidirectionalRange<Rng>)
         {
             return *prev(end(rng));
@@ -105,7 +105,7 @@ namespace ranges
         /// \return `*begin(rng)`
         template<typename Rng>
         constexpr auto operator()(Rng &&rng) const ->
-            CPP_ret(range_reference_t<Rng>)(
+            CPP_ret(range_reference_t<Rng>)//(
                 requires ForwardRange<Rng>)
         {
             return *begin(rng);

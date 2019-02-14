@@ -74,7 +74,7 @@ namespace ranges
         {
             template<typename I>
             auto operator()(I & i, iter_difference_t<I> n) const ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires Iterator<I>)
             {
                 advance(i, n);
@@ -218,7 +218,7 @@ namespace ranges
                 tuple_for_each(its_, detail::inc);
             }
             CPP_member
-            auto equal(cursor const &that) const -> CPP_ret(bool)(
+            auto equal(cursor const &that) const -> CPP_ret(bool)//(
                 requires And<Sentinel<
                     iterator_t<meta::const_if_c<Const, Rngs>>,
                     iterator_t<meta::const_if_c<Const, Rngs>>>...>)
@@ -242,13 +242,13 @@ namespace ranges
                     [](bool a, bool b) { return a || b; });
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(
+            auto prev() -> CPP_ret(void)//(
                 requires And<BidirectionalRange<meta::const_if_c<Const, Rngs>>...>)
             {
                 tuple_for_each(its_, detail::dec);
             }
             CPP_member
-            auto advance(difference_type n) -> CPP_ret(void)(
+            auto advance(difference_type n) -> CPP_ret(void)//(
                 requires And<RandomAccessRange<meta::const_if_c<Const, Rngs>>...>)
             {
                 using std::placeholders::_1;
@@ -256,7 +256,7 @@ namespace ranges
             }
             CPP_member
             auto distance_to(cursor const &that) const ->
-                CPP_ret(difference_type)(
+                CPP_ret(difference_type)//(
                     requires And<SizedSentinel<
                         iterator_t<meta::const_if_c<Const, Rngs>>,
                         iterator_t<meta::const_if_c<Const, Rngs>>>...>)
@@ -306,14 +306,14 @@ namespace ranges
             return {fun_, tuple_transform(rngs_, end)};
         }
         template<bool Const = true>
-        auto begin_cursor() const -> CPP_ret(cursor<Const>)(
+        auto begin_cursor() const -> CPP_ret(cursor<Const>)//(
             requires Const && And<Range<Rngs const>...> &&
                 view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
         {
             return {fun_, tuple_transform(rngs_, begin)};
         }
         template<bool Const = true>
-        auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)(
+        auto end_cursor() const -> CPP_ret(end_cursor_t<Const>)//(
             requires Const && And<Range<Rngs const>...> &&
                 view::IterZipWithViewConcept<Fun, meta::if_c<Const, Rngs const>...>)
         {
@@ -368,7 +368,7 @@ namespace ranges
         {
             template<typename...Rngs, typename Fun>
             auto operator()(Fun fun, Rngs &&... rngs) const ->
-                CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
+                CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)//(
                     requires And<ViewableRange<Rngs>...> &&
                         IterZipWithViewConcept<Fun, Rngs...> &&
                         sizeof...(Rngs) != 0)
@@ -381,7 +381,7 @@ namespace ranges
 
             template<typename Fun>
             constexpr auto operator()(Fun) const noexcept ->
-                CPP_ret(empty_view<std::tuple<>>)(
+                CPP_ret(empty_view<std::tuple<>>)//(
                     requires IterZipWithViewConcept<Fun>)
             {
                 return {};
@@ -396,7 +396,7 @@ namespace ranges
         {
             template<typename...Rngs, typename Fun>
             auto operator()(Fun fun, Rngs &&... rngs) const ->
-                CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)(
+                CPP_ret(zip_with_view<Fun, all_t<Rngs>...>)//(
                     requires And<ViewableRange<Rngs>...> &&
                         And<InputRange<Rngs>...> &&
                         CopyConstructible<Fun> &&
@@ -411,7 +411,7 @@ namespace ranges
 
             template<typename Fun>
             constexpr auto operator()(Fun) const noexcept ->
-                CPP_ret(empty_view<std::tuple<>>)(
+                CPP_ret(empty_view<std::tuple<>>)//(
                     requires CopyConstructible<Fun> && Invocable<Fun&>)
             {
                 return {};

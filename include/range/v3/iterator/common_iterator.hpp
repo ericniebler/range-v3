@@ -102,7 +102,7 @@ namespace ranges
         }
         template<typename J, typename R = iter_reference_t<J>>
         static auto operator_arrow_(J const &j, long) noexcept ->
-            CPP_ret(meta::_t<std::add_pointer<R>>)(
+            CPP_ret(meta::_t<std::add_pointer<R>>)//(
                 requires std::is_reference<R>::value)
         {
             auto &&r = *j;
@@ -110,7 +110,7 @@ namespace ranges
         }
         template<typename J, typename V = iter_value_t<J>>
         static auto operator_arrow_(J const &j, ...) noexcept(noexcept(V(V(*j)))) ->
-            CPP_ret(arrow_proxy_)(
+            CPP_ret(arrow_proxy_)//(
                 requires Constructible<V, iter_reference_t<J>>)
         {
             return arrow_proxy_(*j);
@@ -134,7 +134,7 @@ namespace ranges
         }
         template<typename I2, typename S2>
         auto operator=(common_iterator<I2, S2> const &that) ->
-            CPP_ret(common_iterator &)(
+            CPP_ret(common_iterator &)//(
                 requires ConvertibleTo<I2, I> && ConvertibleTo<S2, S>)
         {
             detail::cidata(that).visit_i(emplace_fn{&data_});
@@ -146,7 +146,7 @@ namespace ranges
         }
         CPP_member
         auto operator*() const noexcept(noexcept(iter_reference_t<I>(*std::declval<I const &>()))) ->
-            CPP_ret(iter_reference_t<I>)(
+            CPP_ret(iter_reference_t<I>)//(
                 requires Readable<I const>)
         {
             return *ranges::get<0>(data_);
@@ -154,7 +154,7 @@ namespace ranges
         template<typename J = I>
         auto operator->() const
             noexcept(noexcept(common_iterator::operator_arrow_(std::declval<I const &>(), 42))) ->
-            CPP_ret(decltype(common_iterator::operator_arrow_(std::declval<J const &>(), 42)))(
+            CPP_ret(decltype(common_iterator::operator_arrow_(std::declval<J const &>(), 42)))//(
                 requires Readable<J>)
         {
             return common_iterator::operator_arrow_(ranges::get<0>(data_), 42);
@@ -167,7 +167,7 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_677925
         template<typename I2 = I>
         auto operator++(int) ->
-            CPP_ret(decltype(std::declval<I2 &>()++))(
+            CPP_ret(decltype(std::declval<I2 &>()++))//(
                 requires not ForwardIterator<I2>)
         {
             return ranges::get<0>(data_)++;
@@ -175,14 +175,14 @@ namespace ranges
 #else // ^^^ workaround ^^^ / vvv no workaround vvv
         CPP_member
         auto operator++(int) ->
-            CPP_ret(decltype(std::declval<I &>()++))(
+            CPP_ret(decltype(std::declval<I &>()++))//(
                 requires not ForwardIterator<I>)
         {
             return ranges::get<0>(data_)++;
         }
 #endif // RANGES_WORKAROUND_MSVC_677925
         CPP_member
-        auto operator++(int) -> CPP_ret(common_iterator)(
+        auto operator++(int) -> CPP_ret(common_iterator)//(
             requires ForwardIterator<I>)
         {
             return common_iterator(ranges::get<0>(data_)++);
@@ -193,7 +193,7 @@ namespace ranges
         friend constexpr /*c++14*/
         auto iter_move(common_iterator const &i)
             noexcept(detail::has_nothrow_iter_move_v<I>) ->
-            CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
+            CPP_broken_friend_ret(iter_rvalue_reference_t<I>)//(
                 requires InputIterator<I_>)
         {
             return ranges::iter_move(ranges::get<0>(detail::cidata(i)));
@@ -202,7 +202,7 @@ namespace ranges
         friend auto iter_swap(
             common_iterator const &x, common_iterator<I2, S2> const &y)
             noexcept(is_nothrow_indirectly_swappable<I, I2>::value) ->
-            CPP_broken_friend_ret(void)(
+            CPP_broken_friend_ret(void)//(
                 requires IndirectlySwappable<I2, I>)
         {
             return ranges::iter_swap(
@@ -220,7 +220,7 @@ namespace ranges
         constexpr /*c++14*/
         auto iter_move(common_iterator<I, S> const &i)
             noexcept(detail::has_nothrow_iter_move_v<I>) ->
-            CPP_broken_friend_ret(iter_rvalue_reference_t<I>)(
+            CPP_broken_friend_ret(iter_rvalue_reference_t<I>)//(
                 requires InputIterator<I>)
         {
             return ranges::iter_move(ranges::get<0>(detail::cidata(i)));
@@ -229,7 +229,7 @@ namespace ranges
         auto iter_swap(common_iterator<I1, S1> const &x,
                        common_iterator<I2, S2> const &y)
             noexcept(is_nothrow_indirectly_swappable<I1, I2>::value) ->
-            CPP_broken_friend_ret(void)(
+            CPP_broken_friend_ret(void)//(
                 requires IndirectlySwappable<I1, I2>)
         {
             return ranges::iter_swap(
@@ -242,7 +242,7 @@ namespace ranges
 
     template<typename I1, typename I2, typename S1, typename S2>
     auto operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
                 !EqualityComparableWith<I1, I2>)
     {
@@ -253,7 +253,7 @@ namespace ranges
 
     template<typename I1, typename I2, typename S1, typename S2>
     auto operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
                 EqualityComparableWith<I1, I2>)
     {
@@ -266,7 +266,7 @@ namespace ranges
 
     template<typename I1, typename I2, typename S1, typename S2>
     auto operator!=(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires Sentinel<S1, I2> && Sentinel<S2, I1>)
     {
         return !(x == y);
@@ -275,7 +275,7 @@ namespace ranges
     template<typename I1, typename I2, typename S1, typename S2>
     auto operator-(
         common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y) ->
-        CPP_ret(iter_difference_t<I2>)(
+        CPP_ret(iter_difference_t<I2>)//(
             requires SizedSentinel<I1, I2> && SizedSentinel<S1, I2> &&
                 SizedSentinel<S2, I1>)
     {
@@ -305,7 +305,7 @@ namespace ranges
             with_iterator_category<std::input_iterator_tag>;
         template<typename I>
         auto demote_common_iter_cat(int) ->
-            CPP_ret(with_iterator_category<std::forward_iterator_tag>)(
+            CPP_ret(with_iterator_category<std::forward_iterator_tag>)//(
                 requires DerivedFrom<
                     typename std::iterator_traits<I>::iterator_category,
                     std::forward_iterator_tag>);

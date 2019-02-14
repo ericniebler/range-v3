@@ -57,7 +57,7 @@ namespace ranges
                 Value value_;
                 template<typename T>
                 auto operator()(T &&other) const ->
-                    CPP_ret(bool)(
+                    CPP_ret(bool)//(
                         requires EqualityComparableWith<T, Value const &>)
                 {
                     return static_cast<T &&>(other) == value_;

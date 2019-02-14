@@ -138,7 +138,8 @@ struct debug_input_view
         }
         CPP_member
         friend auto operator-(sentinel const& s, iterator const& i) ->
-            CPP_ret(difference_type)(requires Sized)
+            CPP_ret(difference_type)//(
+                requires Sized)
         {
             RANGES_ENSURE(i.view_ == s.view_);
             RANGES_ENSURE(i.version_ == s.version_);
@@ -147,7 +148,8 @@ struct debug_input_view
         }
         CPP_member
         friend auto operator-(iterator const& i, sentinel const& s) ->
-            CPP_ret(difference_type)(requires Sized)
+            CPP_ret(difference_type)//(
+                requires Sized)
         {
             return -(s - i);
         }
@@ -165,7 +167,8 @@ struct debug_input_view
         return sentinel{*this};
     }
     CPP_member
-    auto size() const noexcept -> CPP_ret(std::size_t)(requires Sized)
+    auto size() const noexcept -> CPP_ret(std::size_t)//(
+        requires Sized)
     {
         RANGES_ENSURE(data_);
         RANGES_ENSURE(data_->offset_ == -1);

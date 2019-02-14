@@ -44,7 +44,7 @@ namespace ranges
         ///      of `Invocable<P, V>`
         template<typename I, typename S, typename F, typename P = identity>
         auto operator()(I begin, S end, F pred, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectUnaryPredicate<F, projected<I, P>>)
         {
@@ -57,7 +57,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename F, typename P = identity>
         auto operator()(Rng &&rng, F pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires InputRange<Rng> &&
                     IndirectUnaryPredicate<F, projected<iterator_t<Rng>, P>>)
         {

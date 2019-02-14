@@ -126,7 +126,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(subrange<I1>)(
+            CPP_ret(subrange<I1>)//(
                 requires ForwardIterator<I1> && Sentinel<S1, I1> &&
                     ForwardIterator<I2> && Sentinel<S2, I2> &&
                     IndirectlyComparable<I1, I2, C, P1, P2>)
@@ -146,7 +146,7 @@ namespace ranges
             typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(safe_subrange_t<Rng1>)(
+            CPP_ret(safe_subrange_t<Rng1>)//(
                 requires ForwardRange<Rng1> && ForwardRange<Rng2> &&
                     IndirectlyComparable<iterator_t<Rng1>, iterator_t<Rng2>, C, P1, P2>)
         {

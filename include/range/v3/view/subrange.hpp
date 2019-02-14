@@ -135,7 +135,7 @@ namespace ranges
 
         template<typename S, typename I>
         constexpr auto is_sized_sentinel_() noexcept
-            -> CPP_ret(bool)(
+            -> CPP_ret(bool)//(
                 requires Sentinel<S, I>)
         {
             return (bool) SizedSentinel<S, I>;
@@ -189,14 +189,14 @@ namespace ranges
 
         template<std::size_t N, typename I, typename S, subrange_kind K>
         constexpr auto get(subrange<I, S, K> const &r) ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires N == 0)
         {
             return r.begin();
         }
         template<std::size_t N, typename I, typename S, subrange_kind K>
         constexpr auto get(subrange<I, S, K> const &r) ->
-            CPP_ret(S)(
+            CPP_ret(S)//(
                 requires N == 1)
         {
             return r.end();
@@ -311,7 +311,7 @@ namespace ranges
 
         CPP_member
         constexpr auto size() const ->
-            CPP_ret(size_type)(
+            CPP_ret(size_type)//(
                 requires K == subrange_kind::sized)
         {
             return get_size_();
@@ -328,7 +328,7 @@ namespace ranges
         CPP_member
         RANGES_NODISCARD
         constexpr auto prev(iter_difference_t<I> n = 1) const ->
-            CPP_ret(subrange)(
+            CPP_ret(subrange)//(
                 requires BidirectionalIterator<I>)
         {
             auto tmp = *this;
@@ -366,14 +366,14 @@ namespace ranges
         }
         CPP_member
         constexpr auto get_size_() const ->
-            CPP_ret(size_type)(
+            CPP_ret(size_type)//(
                 requires SizedSentinel<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
         CPP_member
         constexpr auto get_size_() const noexcept ->
-            CPP_ret(size_type)(
+            CPP_ret(size_type)//(
                 requires detail::store_size_<K, S, I>())
         {
             return std::get<2>(data_);
@@ -382,7 +382,7 @@ namespace ranges
         {}
         CPP_member
         constexpr auto set_size_(size_type n) noexcept ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires detail::store_size_<K, S, I>())
         {
             std::get<2>(data_) = n;
@@ -420,7 +420,7 @@ namespace ranges
         }
         template<typename I, typename S>
         constexpr auto operator()(I i, S s, iter_difference_t<I> n) const ->
-            CPP_ret(subrange<I, S, subrange_kind::sized>)(
+            CPP_ret(subrange<I, S, subrange_kind::sized>)//(
                 requires Iterator<I> && Sentinel<S, I>)
         {
             return {i, s, n};
@@ -429,14 +429,14 @@ namespace ranges
         constexpr auto operator()(R &&r) const ->
             CPP_ret(subrange<iterator_t<R>, sentinel_t<R>,
                 ((bool) SizedRange<R> || (bool) SizedSentinel<sentinel_t<R>, iterator_t<R>>)
-                    ? subrange_kind::sized : subrange_kind::unsized>)(
+                    ? subrange_kind::sized : subrange_kind::unsized>)//(
                 requires ForwardingRange_<R>)
         {
             return {(R &&) r};
         }
         template<typename R>
         constexpr auto operator()(R &&r, iter_difference_t<iterator_t<R>> n) const ->
-            CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)(
+            CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)//(
                 requires ForwardingRange_<R>)
         {
             return {(R &&) r, n};

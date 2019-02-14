@@ -48,7 +48,7 @@ namespace ranges
         {
             template<typename I>
             constexpr auto operator()(I it) const ->
-                CPP_ret(unbounded_view<I>)(
+                CPP_ret(unbounded_view<I>)//(
                     requires InputIterator<I>)
             {
                 return unbounded_view<I>{detail::move(it)};

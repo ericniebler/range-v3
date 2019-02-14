@@ -48,7 +48,7 @@ namespace ranges
 
         template<typename I, typename C, typename P>
         auto sort3(I x, I y, I z, C &pred, P &proj) ->
-            CPP_ret(unsigned)(
+            CPP_ret(unsigned)//(
                 requires ForwardIterator<I> && IndirectRelation<C, projected<I, P>>)
         {
             unsigned r = 0;
@@ -84,7 +84,7 @@ namespace ranges
 
         template<typename I, typename C, typename P>
         auto selection_sort(I begin, I end, C &pred, P &proj) ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires BidirectionalIterator<I> && IndirectRelation<C, projected<I, P>>)
         {
             RANGES_EXPECT(begin != end);
@@ -104,7 +104,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, I nth, S end_, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sortable<I, C, P>)
         {
             I end = ranges::next(nth, end_), end_orig = end;
@@ -294,7 +294,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, iterator_t<Rng> nth, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             return (*this)(begin(rng), std::move(nth), end(rng), std::move(pred),

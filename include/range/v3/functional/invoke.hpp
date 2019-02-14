@@ -85,7 +85,7 @@ namespace ranges
 
         template<class T, class T1>
         constexpr static auto coerce(T1&& t1, int) noexcept ->
-            CPP_ret(T1 &&)(
+            CPP_ret(T1 &&)//(
                 requires DerivedFrom<detail::decay_t<T1>, T>)
         {
             return static_cast<T1&&>(t1);

@@ -45,7 +45,7 @@ namespace ranges
         {
             template<typename I, typename C = less, typename P = identity>
             auto operator()(I const begin_, iter_difference_t<I> const n_, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(I)(
+                CPP_ret(I)//(
                     requires RandomAccessIterator<I> &&
                         IndirectStrictWeakOrder<C, projected<I, P>>)
             {
@@ -75,7 +75,7 @@ namespace ranges
         {
             template<typename I, typename C = less, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> n, C pred = C{}, P proj = P{}) const ->
-                CPP_ret(bool)(
+                CPP_ret(bool)//(
                     requires RandomAccessIterator<I> &&
                         IndirectStrictWeakOrder<C, projected<I, P>>)
             {
@@ -93,7 +93,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, projected<I, P>>)
         {
@@ -103,7 +103,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
         {
@@ -125,7 +125,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, projected<I, P>>)
         {
@@ -135,7 +135,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires RandomAccessRange<Rng> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
         {
@@ -250,7 +250,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             auto n = distance(begin, end);
@@ -260,7 +260,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> begin = ranges::begin(rng);
@@ -288,7 +288,7 @@ namespace ranges
             template<typename I, typename C = less, typename P = identity>
             auto operator()(I begin, iter_difference_t<I> len, C pred = C{},
                 P proj = P{}) const ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires RandomAccessIterator<I> && Sortable<I, C, P>)
             {
                 if(len > 1)
@@ -309,7 +309,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             auto n = distance(begin, end);
@@ -319,7 +319,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> begin = ranges::begin(rng);
@@ -342,7 +342,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             iter_difference_t<I> const n = distance(begin, end);
@@ -355,7 +355,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> begin = ranges::begin(rng);
@@ -381,7 +381,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> && Sortable<I, C, P>)
         {
             iter_difference_t<I> const n = distance(begin, end);
@@ -392,7 +392,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng &> && Sortable<iterator_t<Rng>, C, P>)
         {
             iterator_t<Rng> begin = ranges::begin(rng);

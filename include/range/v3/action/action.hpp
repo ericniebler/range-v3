@@ -68,7 +68,7 @@ namespace ranges
             // Piping requires things are passed by value.
             template<typename Rng, typename Act>
             static auto pipe(Rng &&rng, Act &&act) ->
-                CPP_ret(invoke_result_t<Action &, Rng>)(
+                CPP_ret(invoke_result_t<Action &, Rng>)//(
                     requires Range<Rng> &&
                         Invocable<Action &, Rng> &&
                         !std::is_reference<Rng>::value)
@@ -85,7 +85,7 @@ namespace ranges
             // Calling directly requires things are passed by reference.
             template<typename Rng, typename ...Rest>
             auto operator()(Rng &rng, Rest &&... rest) const ->
-                CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)(
+                CPP_ret(invoke_result_t<Action const &, Rng &, Rest...>)//(
                     requires Range<Rng> &&
                         Invocable<Action const &, Rng &, Rest...>)
             {
@@ -106,7 +106,7 @@ namespace ranges
 
         template<typename Rng, typename Action>
         auto operator|=(Rng &rng, Action &&action) ->
-            CPP_ret(Rng &)(
+            CPP_ret(Rng &)//(
                 requires is_pipeable<Action>::value && Range<Rng &> &&
                 Invocable<bitwise_or, ref_view<Rng>, Action &> &&
                 Same<ref_view<Rng>,

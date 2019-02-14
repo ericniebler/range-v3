@@ -124,7 +124,7 @@ namespace ranges
                 }
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(
+            auto prev() -> CPP_ret(void)//(
                 requires BidirectionalRange<CRng>)
             {
                 if(it_ == ranges::begin(rng_->rng_))
@@ -136,7 +136,7 @@ namespace ranges
                 --it_;
             }
             CPP_member
-            auto advance(std::intmax_t n) -> CPP_ret(void)(
+            auto advance(std::intmax_t n) -> CPP_ret(void)//(
                 requires RandomAccessRange<CRng>)
             {
                 auto const begin = ranges::begin(rng_->rng_);
@@ -152,7 +152,7 @@ namespace ranges
             }
             CPP_member
             auto distance_to(cursor const &that) const ->
-                CPP_ret(std::intmax_t)(
+                CPP_ret(std::intmax_t)//(
                     requires SizedSentinel<iterator, iterator>)
             {
                 RANGES_EXPECT(that.rng_ == rng_);
@@ -165,13 +165,13 @@ namespace ranges
         };
 
         CPP_member
-        auto begin_cursor() -> CPP_ret(cursor<false>)(
+        auto begin_cursor() -> CPP_ret(cursor<false>)//(
                 requires (!simple_view<Rng>() || !CommonRange<Rng const>))
         {
             return {*this};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)(
+        auto begin_cursor() const -> CPP_ret(cursor<true>)//(
             requires CommonRange<Rng const>)
         {
             return {*this};
@@ -204,7 +204,7 @@ namespace ranges
             /// \pre <tt>!empty(rng)</tt>
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(cycled_view<all_t<Rng>>)(
+                CPP_ret(cycled_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng>)
             {
                 return cycled_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};

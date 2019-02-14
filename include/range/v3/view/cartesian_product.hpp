@@ -53,7 +53,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(std::intmax_t s, Rng &&rng) const ->
-                CPP_ret(std::intmax_t)(
+                CPP_ret(std::intmax_t)//(
                     requires SizedRange<Rng>)
             {
                 return s * static_cast<std::intmax_t>(ranges::size(rng));
@@ -316,19 +316,19 @@ RANGES_DIAGNOSTIC_POP
                 return equal_(that, meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto prev() -> CPP_ret(void)(
+            auto prev() -> CPP_ret(void)//(
                 requires CartesianProductViewCanBidi<IsConst, Views...>)
             {
                 prev_(meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto distance_to(cursor const &that) const -> CPP_ret(std::intmax_t)(
+            auto distance_to(cursor const &that) const -> CPP_ret(std::intmax_t)//(
                 requires CartesianProductViewCanDistance<IsConst, Views...>)
             {
                 return distance_(that, meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto advance(std::intmax_t n) -> CPP_ret(void)(
+            auto advance(std::intmax_t n) -> CPP_ret(void)//(
                 requires CartesianProductViewCanRandom<IsConst, Views...>)
             {
                 advance_(meta::size_t<sizeof...(Views)>{}, n);
@@ -339,25 +339,25 @@ RANGES_DIAGNOSTIC_POP
             return cursor<false>{begin_tag{}, *this};
         }
         CPP_member
-        auto begin_cursor() const -> CPP_ret(cursor<true>)(
+        auto begin_cursor() const -> CPP_ret(cursor<true>)//(
             requires CartesianProductViewCanConst<Views...>)
         {
             return cursor<true>{begin_tag{}, *this};
         }
         CPP_member
-        auto end_cursor() -> CPP_ret(cursor<false>)(
+        auto end_cursor() -> CPP_ret(cursor<false>)//(
             requires CartesianProductViewCanBidi<std::false_type, Views...>)
         {
             return cursor<false>{end_tag{}, *this};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(cursor<true>)(
+        auto end_cursor() const -> CPP_ret(cursor<true>)//(
             requires CartesianProductViewCanBidi<std::true_type, Views...>)
         {
             return cursor<true>{end_tag{}, *this};
         }
         CPP_member
-        auto end_cursor() const -> CPP_ret(default_sentinel_t)(
+        auto end_cursor() const -> CPP_ret(default_sentinel_t)//(
             requires !CartesianProductViewCanBidi<std::true_type, Views...>)
         {
             return {};
@@ -374,14 +374,14 @@ RANGES_DIAGNOSTIC_POP
             return std::intmax_t{my_cardinality};
         }
         CPP_member
-        auto size() const -> CPP_ret(std::intmax_t)(
+        auto size() const -> CPP_ret(std::intmax_t)//(
             requires my_cardinality < 0 &&
                 CartesianProductViewCanSize<std::true_type, Views...>)
         {
             return tuple_foldl(views_, std::intmax_t{1}, detail::cartesian_size_fn{});
         }
         CPP_member
-        auto size() -> CPP_ret(std::intmax_t)(
+        auto size() -> CPP_ret(std::intmax_t)//(
             requires my_cardinality < 0 &&
                 CartesianProductViewCanSize<std::false_type, Views...>)
         {
@@ -395,7 +395,7 @@ RANGES_DIAGNOSTIC_POP
         {
             template<typename... Rngs>
             constexpr auto operator()(Rngs &&... rngs) const ->
-                CPP_ret(cartesian_product_view<all_t<Rngs>...>)(
+                CPP_ret(cartesian_product_view<all_t<Rngs>...>)//(
                     requires (sizeof...(Rngs) != 0) &&
                         concepts::And<(ForwardRange<Rngs> && ViewableRange<Rngs>)...>)
             {

@@ -93,7 +93,7 @@ namespace ranges
         {
             template<typename G>
             auto operator()(G g, std::size_t n) const ->
-                CPP_ret(generate_n_view<G>)(
+                CPP_ret(generate_n_view<G>)//(
                     requires Invocable<G &> &&
                         CopyConstructible<G> &&
                         std::is_object<detail::decay_t<invoke_result_t<G &>>>::value &&

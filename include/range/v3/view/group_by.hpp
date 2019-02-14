@@ -115,7 +115,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
+            CPP_ret(cursor<Const>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>> &&
                     Invocable<
                         Fun const&,
@@ -147,7 +147,7 @@ namespace ranges
         public:
             template<typename Rng, typename Fun>
             auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(group_by_view<all_t<Rng>, Fun>)(
+                CPP_ret(group_by_view<all_t<Rng>, Fun>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         IndirectRelation<Fun, iterator_t<Rng>>)
             {

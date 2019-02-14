@@ -36,7 +36,7 @@ namespace ranges
     {
         template<typename O, typename S, typename F>
         auto operator()(O begin, S end, F fun) const ->
-            CPP_ret(generate_result<O, F>)(
+            CPP_ret(generate_result<O, F>)//(
                 requires Invocable<F&> && OutputIterator<O, invoke_result_t<F &>> && Sentinel<S, O>)
         {
             for(; begin != end; ++begin)
@@ -46,7 +46,7 @@ namespace ranges
 
         template<typename Rng, typename F, typename O = iterator_t<Rng>>
         auto operator()(Rng &&rng, F fun) const ->
-            CPP_ret(generate_result<safe_iterator_t<Rng>, F>)(
+            CPP_ret(generate_result<safe_iterator_t<Rng>, F>)//(
                 requires Invocable<F&> && OutputRange<Rng, invoke_result_t<F &>>)
         {
             return {(*this)(begin(rng), end(rng), ref(fun)).out,

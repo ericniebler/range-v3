@@ -45,7 +45,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred, typename Proj = identity>
             auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const ->
-                CPP_ret(Rng)(
+                CPP_ret(Rng)//(
                     requires ForwardRange<Rng> &&
                         ErasableRange<Rng, iterator_t<Rng>, sentinel_t<Rng>> &&
                         IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&

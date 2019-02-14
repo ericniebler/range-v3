@@ -83,7 +83,7 @@ namespace ranges
             }
             CPP_member
             constexpr /*c++14*/ auto prev(iterator_t<CRng> &it) const ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires BidirectionalRange<CRng>)
             {
                 auto const first = ranges::begin(rng_->base());
@@ -107,7 +107,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
+            CPP_ret(adaptor<true>)//(
                 requires detail::AdjacentFilter<Rng const, Pred const>)
         {
             return {*this};
@@ -119,7 +119,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
-            CPP_ret(adaptor<true>)(
+            CPP_ret(adaptor<true>)//(
                 requires detail::AdjacentFilter<Rng const, Pred const>)
         {
             return {*this};
@@ -148,7 +148,7 @@ namespace ranges
         public:
             template<typename Rng, typename Pred>
             constexpr /*c++14*/ auto operator()(Rng &&rng, Pred pred) const ->
-                CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)(
+                CPP_ret(adjacent_filter_view<all_t<Rng>, Pred>)//(
                     requires detail::AdjacentFilter<Rng, Pred>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};

@@ -121,7 +121,7 @@ namespace ranges
       : pipeable<ref_fn>
     {
         template<typename T>
-        auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)(
+        auto operator()(T &t) const -> CPP_ret(reference_wrapper<T>)//(
             requires (!is_reference_wrapper_v<T>))
         {
             return {t};

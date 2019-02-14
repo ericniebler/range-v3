@@ -36,7 +36,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O>
         auto operator()(I begin, S end_, O out) const ->
-            CPP_ret(copy_backward_result<I, O>)(
+            CPP_ret(copy_backward_result<I, O>)//(
                 requires BidirectionalIterator<I> && Sentinel<S, I> &&
                     BidirectionalIterator<O> && IndirectlyCopyable<I, O>)
         {
@@ -48,7 +48,7 @@ namespace ranges
 
         template<typename Rng, typename O>
         auto operator()(Rng &&rng, O out) const ->
-            CPP_ret(copy_backward_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(copy_backward_result<safe_iterator_t<Rng>, O>)//(
                 requires BidirectionalRange<Rng> && BidirectionalIterator<O> &&
                     IndirectlyCopyable<iterator_t<Rng>, O>)
         {

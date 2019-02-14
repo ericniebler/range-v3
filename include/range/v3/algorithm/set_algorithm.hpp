@@ -46,7 +46,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires InputIterator<I1> && Sentinel<S1, I1> &&
                     InputIterator<I2> && Sentinel<S2, I2> &&
                     IndirectStrictWeakOrder<C, projected<I1, P1>, projected<I2, P2>>)
@@ -65,7 +65,7 @@ namespace ranges
             typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires InputRange<Rng1> && InputRange<Rng2> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng1>, P1>,
                                                projected<iterator_t<Rng2>, P2>>)
@@ -93,7 +93,7 @@ namespace ranges
             typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_union_result<I1, I2, O>)(
+            CPP_ret(set_union_result<I1, I2, O>)//(
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -125,7 +125,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)(
+            CPP_ret(set_union_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>, O>)//(
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
@@ -150,7 +150,7 @@ namespace ranges
             typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(O)(
+            CPP_ret(O)//(
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -176,7 +176,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(O)(
+            CPP_ret(O)//(
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
@@ -203,7 +203,7 @@ namespace ranges
             typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_difference_result<I1, O>)(
+            CPP_ret(set_difference_result<I1, O>)//(
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -234,7 +234,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)(
+            CPP_ret(set_difference_result<safe_iterator_t<Rng1>, O>)//(
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {
@@ -262,7 +262,7 @@ namespace ranges
             typename C = less, typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(set_symmetric_difference_result<I1, I2, O>)(
+            CPP_ret(set_symmetric_difference_result<I1, I2, O>)//(
                 requires Sentinel<S1, I1> && Sentinel<S2, I2> &&
                     Mergeable<I1, I2, O, C, P1, P2>)
         {
@@ -301,7 +301,7 @@ namespace ranges
                 P2 proj2 = P2{}) const ->
             CPP_ret(set_symmetric_difference_result<safe_iterator_t<Rng1>,
                                                     safe_iterator_t<Rng2>,
-                                                    O>)(
+                                                    O>)//(
                 requires Range<Rng1> && Range<Rng2> &&
                     Mergeable<iterator_t<Rng1>, iterator_t<Rng2>, O, C, P1, P2>)
         {

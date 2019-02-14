@@ -129,7 +129,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin_cursor() const ->
-            CPP_ret(cursor<Const>)(
+            CPP_ret(cursor<Const>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>> &&
                     Invocable<
                         Fun const &,
@@ -165,7 +165,7 @@ namespace ranges
 
                 template<typename I, typename S>
                 auto operator()(I cur, S end) const ->
-                    CPP_ret(std::pair<bool, I>)(
+                    CPP_ret(std::pair<bool, I>)//(
                         requires Sentinel<S, I>)
                 {
                     auto where = ranges::find_if_not(cur, end, std::ref(pred_));
@@ -175,7 +175,7 @@ namespace ranges
         public:
             template<typename Rng, typename Fun>
             auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(split_when_view<all_t<Rng>, Fun>)(
+                CPP_ret(split_when_view<all_t<Rng>, Fun>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         Invocable<Fun&, iterator_t<Rng>, sentinel_t<Rng>> &&
                         Invocable<Fun&, iterator_t<Rng>, iterator_t<Rng>> &&
@@ -188,7 +188,7 @@ namespace ranges
             }
             template<typename Rng, typename Fun>
             auto operator()(Rng &&rng, Fun fun) const ->
-                CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)(
+                CPP_ret(split_when_view<all_t<Rng>, predicate_pred<Fun>>)//(
                     requires ViewableRange<Rng> && ForwardRange<Rng> &&
                         Predicate<Fun const&, range_reference_t<Rng>> &&
                         CopyConstructible<Fun>)

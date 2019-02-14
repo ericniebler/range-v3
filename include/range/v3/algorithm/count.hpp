@@ -32,7 +32,7 @@ namespace ranges
     {
         template<typename I, typename S, typename V, typename P = identity>
         auto operator()(I begin, S end, V const & val, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<I>)(
+            CPP_ret(iter_difference_t<I>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<equal_to, projected<I, P>, V const *>)
         {
@@ -45,7 +45,7 @@ namespace ranges
 
         template<typename Rng, typename V, typename P = identity>
         auto operator()(Rng &&rng, V const & val, P proj = P{}) const ->
-            CPP_ret(iter_difference_t<iterator_t<Rng>>)(
+            CPP_ret(iter_difference_t<iterator_t<Rng>>)//(
                 requires InputRange<Rng> &&
                     IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, V const *>)
         {

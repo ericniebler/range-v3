@@ -64,7 +64,7 @@ namespace ranges
             typename Gen = detail::default_random_engine &>
         auto operator()(I first, S last, O out, iter_difference_t<I> n,
                 Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<I, O>)(
+            CPP_ret(sample_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> &&
                     IndirectlyCopyable<I, O> &&
@@ -110,7 +110,7 @@ namespace ranges
             typename Gen = detail::default_random_engine &>
         auto operator()(I first, S last, ORng &&out,
                 Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<I, safe_iterator_t<ORng>>)(
+            CPP_ret(sample_result<I, safe_iterator_t<ORng>>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<iterator_t<ORng>> &&
                     IndirectlyCopyable<I, iterator_t<ORng>> &&
@@ -134,7 +134,7 @@ namespace ranges
         template<typename Rng, typename O, typename Gen = detail::default_random_engine &>
         auto operator()(Rng &&rng, O out, range_difference_t<Rng> n,
             Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(sample_result<safe_iterator_t<Rng>, O>)//(
                 requires InputRange<Rng> &&
                     WeaklyIncrementable<O> &&
                     IndirectlyCopyable<iterator_t<Rng>, O> &&
@@ -155,7 +155,7 @@ namespace ranges
 
         template<typename IRng, typename ORng, typename Gen = detail::default_random_engine &>
         auto operator()(IRng &&rng, ORng &&out, Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)(
+            CPP_ret(sample_result<safe_iterator_t<IRng>, safe_iterator_t<ORng>>)//(
                 requires InputRange<IRng> && Range<ORng> &&
                     IndirectlyCopyable<iterator_t<IRng>, iterator_t<ORng>> &&
                     UniformRandomNumberGenerator<Gen> &&

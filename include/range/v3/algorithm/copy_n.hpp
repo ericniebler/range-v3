@@ -38,7 +38,7 @@ namespace ranges
     {
         template<typename I, typename O, typename P = identity>
         auto operator()(I begin, iter_difference_t<I> n, O out) const ->
-            CPP_ret(copy_n_result<I, O>)(
+            CPP_ret(copy_n_result<I, O>)//(
                 requires InputIterator<I> && WeaklyIncrementable<O> && IndirectlyCopyable<I, O>)
         {
             RANGES_EXPECT(0 <= n);

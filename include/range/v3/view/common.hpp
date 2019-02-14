@@ -72,14 +72,14 @@ namespace ranges
         }
         template<bool Const = true>
         auto end_(std::false_type) const ->
-            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
         }
         template<bool Const = true>
         auto end_(std::true_type) const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::begin(rng_) + ranges::distance(rng_);
@@ -112,7 +112,7 @@ namespace ranges
 
         template<bool Const = true>
         auto begin() const ->
-            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Range<meta::const_if_c<Const, Rng>>)
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
@@ -120,7 +120,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto end() const ->
-            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Range<meta::const_if_c<Const, Rng>>)
         {
             return detail::common_view_iterator_t<meta::const_if_c<Const, Rng>>{
@@ -148,7 +148,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(common_view<all_t<Rng>>)(
+                CPP_ret(common_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && (!CommonRange<Rng>))
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
@@ -159,7 +159,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(common_view<all_t<Rng>>)(
+                CPP_ret(common_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng>)
             {
                 return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};

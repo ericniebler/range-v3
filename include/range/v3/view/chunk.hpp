@@ -126,7 +126,7 @@ namespace ranges
             }
             CPP_member
             constexpr /*c++14*/
-            auto prev(iterator_t<CRng> &it) -> CPP_ret(void)(
+            auto prev(iterator_t<CRng> &it) -> CPP_ret(void)//(
                 requires BidirectionalRange<CRng>)
             {
                 ranges::advance(it, -n_ + offset());
@@ -136,7 +136,7 @@ namespace ranges
             constexpr /*c++14*/
             auto distance_to(iterator_t<CRng> const &here, iterator_t<CRng> const &there,
                 adaptor const &that) const ->
-                    CPP_ret(range_difference_t<Rng>)(
+                    CPP_ret(range_difference_t<Rng>)//(
                         requires detail::can_sized_sentinel_<Rng, Const>())
             {
                 auto const delta = (there - here) + (that.offset() - offset());
@@ -148,7 +148,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/
             auto advance(iterator_t<CRng> &it, range_difference_t<Rng> n) ->
-                CPP_ret(void)(
+                CPP_ret(void)//(
                     requires RandomAccessRange<CRng>)
             {
                 using Limits = std::numeric_limits<range_difference_t<CRng>>;
@@ -176,7 +176,7 @@ namespace ranges
         }
         CPP_member
         constexpr auto begin_adaptor() const ->
-            CPP_ret(adaptor<true>)(
+            CPP_ret(adaptor<true>)//(
                 requires ForwardRange<Rng const>)
         {
             return adaptor<true>{*this};
@@ -281,7 +281,7 @@ namespace ranges
                 CPP_member
                 constexpr /*c++14*/
                 auto distance_to(default_sentinel_t) const ->
-                    CPP_ret(range_difference_t<Rng>)(
+                    CPP_ret(range_difference_t<Rng>)//(
                         requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
                 {
                     RANGES_EXPECT(rng_);
@@ -338,7 +338,7 @@ namespace ranges
             CPP_member
             constexpr /*c++14*/
             auto distance_to(default_sentinel_t) const ->
-                CPP_ret(range_difference_t<Rng>)(
+                CPP_ret(range_difference_t<Rng>)//(
                     requires SizedSentinel<sentinel_t<Rng>, iterator_t<Rng>>)
             {
                 RANGES_EXPECT(rng_);
@@ -414,7 +414,7 @@ namespace ranges
         public:
             template<typename Rng>
             auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
-                CPP_ret(chunk_view<all_t<Rng>>)(
+                CPP_ret(chunk_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), n};

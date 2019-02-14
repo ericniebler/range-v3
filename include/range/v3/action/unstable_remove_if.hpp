@@ -46,7 +46,7 @@ namespace ranges
         public:
             template<typename Rng, typename C, typename P = identity>
             auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-                CPP_ret(Rng)(
+                CPP_ret(Rng)//(
                     requires BidirectionalRange<Rng> && CommonRange<Rng> &&
                         Permutable<iterator_t<Rng>> &&
                         IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>> &&

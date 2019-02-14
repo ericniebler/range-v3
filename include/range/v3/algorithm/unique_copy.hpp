@@ -114,7 +114,7 @@ namespace ranges
         /// \pre `C` is a model of the `Relation` concept
         template<typename I, typename S, typename O, typename C = equal_to, typename P = identity>
         auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(unique_copy_result<I, O>)(
+            CPP_ret(unique_copy_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     IndirectRelation<C, projected<I, P>> &&
                     WeaklyIncrementable<O> &&
@@ -131,7 +131,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
         auto operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)//(
                 requires Range<Rng> && InputIterator<iterator_t<Rng>> &&
                     IndirectRelation<C, projected<iterator_t<Rng>, P>> &&
                     WeaklyIncrementable<O> &&

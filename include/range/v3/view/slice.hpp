@@ -136,7 +136,7 @@ namespace ranges
             }
             template<typename BaseRng = Rng>
             auto begin() const ->
-                CPP_ret(iterator_t<BaseRng const>)(
+                CPP_ret(iterator_t<BaseRng const>)//(
                     requires Range<BaseRng const>)
             {
                 return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
@@ -144,7 +144,7 @@ namespace ranges
             }
             template<typename BaseRng = Rng>
             auto end() const ->
-                CPP_ret(iterator_t<BaseRng const>)(
+                CPP_ret(iterator_t<BaseRng const>)//(
                     requires Range<BaseRng const>)
             {
                 return detail::pos_at_(rng_, from_, range_tag_of<Rng>{},
@@ -190,7 +190,7 @@ namespace ranges
             static auto impl_(Rng &&rng, range_difference_t<Rng> from,
                     range_difference_t<Rng> count, random_access_range_tag,
                     common_range_tag = {}) ->
-                CPP_ret(subrange<iterator_t<Rng>>)(
+                CPP_ret(subrange<iterator_t<Rng>>)//(
                     requires ForwardingRange_<Rng>)
             {
                 auto it = detail::pos_at_(rng, from, range_tag_of<Rng>{}, is_infinite<Rng>{});

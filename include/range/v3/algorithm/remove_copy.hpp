@@ -37,7 +37,7 @@ namespace ranges
     {
         template<typename I, typename S, typename O, typename T, typename P = identity>
         auto operator()(I begin, S end, O out, T const &val, P proj = P{}) const ->
-            CPP_ret(remove_copy_result<I, O>)(
+            CPP_ret(remove_copy_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     WeaklyIncrementable<O> &&
                     IndirectRelation<equal_to, projected<I, P>, T const *> &&
@@ -57,7 +57,7 @@ namespace ranges
 
         template<typename Rng, typename O, typename T, typename P = identity>
         auto operator()(Rng &&rng, O out, T const &val, P proj = P{}) const ->
-            CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(remove_copy_result<safe_iterator_t<Rng>, O>)//(
                 requires InputRange<Rng> && WeaklyIncrementable<O> &&
                     IndirectRelation<equal_to, projected<iterator_t<Rng>, P>, T const *> &&
                     IndirectlyCopyable<iterator_t<Rng>, O>)

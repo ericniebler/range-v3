@@ -34,7 +34,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C = less, typename P = identity>
         auto operator()(I begin, S end, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectStrictWeakOrder<C, projected<I, P>>)
         {
@@ -47,7 +47,7 @@ namespace ranges
 
         template<typename Rng, typename C = less, typename P = identity>
         auto operator()(Rng &&rng, C pred = C{}, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires ForwardRange<Rng> &&
                     IndirectStrictWeakOrder<C, projected<iterator_t<Rng>, P>>)
         {

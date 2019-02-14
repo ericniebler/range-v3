@@ -43,7 +43,7 @@ namespace ranges
         /// \pre `Pred` is a model of the `BinaryPredicate` concept.
         template<typename I, typename S, typename Pred, typename Proj = identity>
         auto operator()(I first, S last, Pred pred = {}, Proj proj = {}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires Permutable<I> && Sentinel<S, I> &&
                     IndirectRelation<Pred, projected<I, Proj>>)
         {
@@ -69,7 +69,7 @@ namespace ranges
         /// \overload
         template<typename Rng, typename Pred, typename Proj = identity>
         auto operator()(Rng &&rng, Pred pred, Proj proj = {}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires ForwardRange<Rng> &&
                     IndirectRelation<Pred, projected<iterator_t<Rng>, Proj>> &&
                     Permutable<iterator_t<Rng>>)

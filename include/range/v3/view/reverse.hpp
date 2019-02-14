@@ -74,7 +74,7 @@ namespace ranges
         }
         template<bool Const = true>
         constexpr auto begin() const ->
-            CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)(
+            CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)//(
                 requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::end(rng_));
@@ -86,7 +86,7 @@ namespace ranges
         }
         template<bool Const = true>
         constexpr auto end() const ->
-            CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)(
+            CPP_ret(reverse_iterator<iterator_t<meta::const_if_c<Const, Rng>>>)//(
                 requires Const && CommonRange<meta::const_if_c<Const, Rng>>)
         {
             return make_reverse_iterator(ranges::begin(rng_));
@@ -129,7 +129,7 @@ namespace ranges
         {
             template<typename Rng>
             constexpr /*c++14*/ auto operator()(Rng &&rng) const ->
-                CPP_ret(reverse_view<all_t<Rng>>)(
+                CPP_ret(reverse_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && BidirectionalRange<Rng>)
             {
                 return reverse_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};

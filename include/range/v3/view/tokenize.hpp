@@ -65,7 +65,7 @@ namespace ranges
             return {ranges::begin(rng), ranges::end(rng), rex_, subs_, flags_};
         }
         template<bool Const = true>
-        auto begin() const -> CPP_ret(iterator_t<Const>)(
+        auto begin() const -> CPP_ret(iterator_t<Const>)//(
             requires Range<Rng const>)
         {
             return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
@@ -75,7 +75,7 @@ namespace ranges
             return {};
         }
         template<bool Const = true>
-        auto end() const -> CPP_ret(iterator_t<Const>)(
+        auto end() const -> CPP_ret(iterator_t<Const>)//(
             requires Range<Rng const>)
         {
             return {};

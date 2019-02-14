@@ -45,7 +45,7 @@ namespace ranges
     {
         template<typename I, typename S, typename C, typename P = identity>
         auto operator()(I begin, S end, C pred, P proj = P{}) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires ForwardIterator<I> && Sentinel<S, I> &&
                     IndirectUnaryPredicate<C, projected<I, P>>)
         {
@@ -76,7 +76,7 @@ namespace ranges
 
         template<typename Rng, typename C, typename P = identity>
         auto operator()(Rng &&rng, C pred, P proj = P{}) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires ForwardRange<Rng> &&
                     IndirectUnaryPredicate<C, projected<iterator_t<Rng>, P>>)
         {

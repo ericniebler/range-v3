@@ -64,7 +64,7 @@ namespace ranges
     {
         template<typename V>
         auto operator()(V v) const ->
-            CPP_ret(single_view<V>)(
+            CPP_ret(single_view<V>)//(
                 requires CopyConstructible<V>)
         {
             return view::single(std::move(v));
@@ -79,7 +79,7 @@ namespace ranges
     {
         template<typename Rng>
         auto operator()(Rng rng) const ->
-            CPP_ret(Rng)(
+            CPP_ret(Rng)//(
                 requires View<Rng>)
         {
             return rng;
@@ -107,7 +107,7 @@ namespace ranges
     {
         template<typename F>
         auto operator()(bool b, F f) const ->
-            CPP_ret(generate_n_view<F>)(
+            CPP_ret(generate_n_view<F>)//(
                 requires Invocable<F &>)
         {
             return view::generate_n(std::move(f), b ? 1 : 0);

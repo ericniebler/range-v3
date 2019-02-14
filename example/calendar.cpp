@@ -292,7 +292,7 @@ struct interleave_view<Rngs>::cursor
             its_.begin(), its_.end(), ends.begin(), std::not_equal_to<>{}).first;
     }
     CPP_member
-    auto equal(cursor const& that) const -> CPP_ret(bool)(
+    auto equal(cursor const& that) const -> CPP_ret(bool)//(
         requires ForwardRange<range_value_t<Rngs>>)
     {
         return n_ == that.n_ && its_ == that.its_;

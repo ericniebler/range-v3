@@ -93,7 +93,7 @@ namespace ranges
     {
         template<typename F>
         auto operator()(F &&f) const ->
-            CPP_ret(protector<uncvref_t<F>>)(
+            CPP_ret(protector<uncvref_t<F>>)//(
                 requires std::is_bind_expression<uncvref_t<F>>::value)
         {
             return {static_cast<F &&>(f)};
@@ -101,7 +101,7 @@ namespace ranges
         /// \overload
         template<typename F>
         auto operator()(F &&f) const ->
-            CPP_ret(F)(
+            CPP_ret(F)//(
                 requires (!std::is_bind_expression<uncvref_t<F>>::value))
         {
             return static_cast<F &&>(f);

@@ -215,7 +215,7 @@ namespace ranges
             CPP_broken_friend_member
             friend constexpr
             auto operator==(split_inner_iterator const &x, split_inner_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+                CPP_broken_friend_ret(bool)//(
                     requires ForwardRange<Base>)
             {
                 return x.i_.curr_ == y.i_.curr_;
@@ -223,7 +223,7 @@ namespace ranges
             CPP_broken_friend_member
             friend constexpr
             auto operator!=(split_inner_iterator const &x, split_inner_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+                CPP_broken_friend_ret(bool)//(
                     requires ForwardRange<Base>)
             {
                 return x.i_.curr_ != y.i_.curr_;
@@ -269,7 +269,7 @@ namespace ranges
             friend constexpr
             auto iter_swap(split_inner_iterator const &x, split_inner_iterator const &y)
                 noexcept(noexcept(ranges::iter_swap(x.current_(), y.current_()))) ->
-                CPP_broken_friend_ret(void)(
+                CPP_broken_friend_ret(void)//(
                     requires IndirectlySwappable<iterator_t<Base>>)
             {
                 ranges::iter_swap(x.current_(), y.current_());
@@ -417,7 +417,7 @@ namespace ranges
             CPP_broken_friend_member
             friend constexpr
             auto operator==(split_outer_iterator const &x, split_outer_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+                CPP_broken_friend_ret(bool)//(
                     requires ForwardRange<Base>)
             {
                 return x.curr_ == y.curr_;
@@ -425,7 +425,7 @@ namespace ranges
             CPP_broken_friend_member
             friend constexpr
             auto operator!=(split_outer_iterator const &x, split_outer_iterator const &y) ->
-                CPP_broken_friend_ret(bool)(
+                CPP_broken_friend_ret(bool)//(
                     requires ForwardRange<Base>)
             {
                 return x.curr_ != y.curr_;
@@ -541,13 +541,13 @@ namespace ranges
 #endif
         }
         CPP_member
-        constexpr auto begin() const -> CPP_ret(outer_iterator<true>)(
+        constexpr auto begin() const -> CPP_ret(outer_iterator<true>)//(
             requires ForwardRange<V> && ForwardRange<const V>)
         {
             return {*this, ranges::begin(base_)};
         }
         CPP_member
-        constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)(
+        constexpr auto end() -> CPP_ret(outer_iterator<simple_view<V>()>)//(
             requires ForwardRange<V> && CommonRange<V>)
         {
             return outer_iterator<simple_view<V>()>{*this, ranges::end(base_)};
@@ -595,7 +595,7 @@ namespace ranges
         public:
             template<typename Rng>
             constexpr auto operator()(Rng &&rng, range_value_t<Rng> val) const ->
-                CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)(
+                CPP_ret(split_view<all_t<Rng>, single_view<range_value_t<Rng>>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectlyComparable<iterator_t<Rng>, range_value_t<Rng> const *, ranges::equal_to>)
             {
@@ -604,7 +604,7 @@ namespace ranges
 
             template<typename Rng, typename Pattern>
             constexpr auto operator()(Rng &&rng, Pattern &&pattern) const ->
-                CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)(
+                CPP_ret(split_view<all_t<Rng>, all_t<Pattern>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         ViewableRange<Pattern> && ForwardRange<Pattern> &&
                         IndirectlyComparable<iterator_t<Rng>, iterator_t<Pattern>, ranges::equal_to> &&

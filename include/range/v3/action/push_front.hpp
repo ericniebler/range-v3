@@ -41,7 +41,7 @@ namespace ranges
 
         template<typename Cont, typename T>
         auto push_front(Cont &&cont, T &&t) ->
-            CPP_ret(push_front_t<Cont, T>)(
+            CPP_ret(push_front_t<Cont, T>)//(
                 requires LvalueContainerLike<Cont> && !Range<T> &&
                     Constructible<range_value_t<Cont>, T>)
         {
@@ -50,7 +50,7 @@ namespace ranges
 
         template<typename Cont, typename Rng>
         auto push_front(Cont &&cont, Rng &&rng) ->
-            CPP_ret(insert_t<Cont, Rng>)(
+            CPP_ret(insert_t<Cont, Rng>)//(
                 requires LvalueContainerLike<Cont> && Range<Rng>)
         {
             ranges::insert(cont, begin(cont), static_cast<Rng &&>(rng));
@@ -80,7 +80,7 @@ namespace ranges
         public:
             template<typename Rng, typename T>
             auto operator()(Rng &&rng, T &&t) const ->
-                CPP_ret(Rng)(
+                CPP_ret(Rng)//(
                     requires PushFrontActionConcept<Rng, T>)
             {
                 push_front(rng, static_cast<T &&>(t));

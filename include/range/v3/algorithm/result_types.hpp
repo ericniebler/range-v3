@@ -37,14 +37,14 @@ namespace ranges
             }                                                                                   \
             CPP_broken_friend_member                                                            \
             friend constexpr auto operator==(C<T1, T2> const &x, C<T1, T2> const &y) ->         \
-                CPP_broken_friend_ret(bool)(                                                    \
+                CPP_broken_friend_ret(bool)/*(*/                                                    \
                     requires EqualityComparable<T1> && EqualityComparable<T2>)                  \
             {                                                                                   \
                 return x.M1 == y.M1 && x.M2 == y.M2;                                            \
             }                                                                                   \
             CPP_broken_friend_member                                                            \
             friend constexpr auto operator!=(C<T1, T2> const &x, C<T1, T2> const &y) ->         \
-                CPP_broken_friend_ret(bool)(                                                    \
+                CPP_broken_friend_ret(bool)/*(*/                                                    \
                     requires EqualityComparable<T1> && EqualityComparable<T2>)                  \
             {                                                                                   \
                 return !(x == y);                                                               \
@@ -68,7 +68,7 @@ namespace ranges
             }                                                                                   \
             CPP_broken_friend_member                                                            \
             friend constexpr auto operator==(C<T1, T2, T3> const &x, C<T1, T2, T3> const &y) -> \
-                CPP_broken_friend_ret(bool)(                                                    \
+                CPP_broken_friend_ret(bool)/*(*/                                                    \
                     requires EqualityComparable<T1> && EqualityComparable<T2> &&                \
                         EqualityComparable<T3>)                                                 \
             {                                                                                   \
@@ -76,7 +76,7 @@ namespace ranges
             }                                                                                   \
             CPP_broken_friend_member                                                            \
             friend constexpr auto operator!=(C<T1, T2, T3> const &x, C<T1, T2, T3> const &y) -> \
-                CPP_broken_friend_ret(bool)(                                                    \
+                CPP_broken_friend_ret(bool)/*(*/                                                    \
                     requires EqualityComparable<T1> && EqualityComparable<T2> &&                \
                         EqualityComparable<T3>)                                                 \
             {                                                                                   \

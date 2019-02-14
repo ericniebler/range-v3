@@ -188,7 +188,7 @@ namespace ranges
                 constexpr /*c++14*/ auto swap(optional_base &that)
                     noexcept(std::is_nothrow_move_constructible<T>::value &&
                         is_nothrow_swappable<T>::value) ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                         requires MoveConstructible<T> && Swappable<T>)
                 {
                     constexpr bool can_swap_trivially =
@@ -202,7 +202,7 @@ namespace ranges
                 template<typename... Args>
                 auto construct_from(Args &&... args)
                     noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
-                    CPP_ret(T &)(
+                    CPP_ret(T &)//(
                         requires Constructible<T, Args...>)
                 {
                     RANGES_EXPECT(!engaged_);
@@ -291,7 +291,7 @@ namespace ranges
                 CPP_member
                 constexpr /*c++14*/ auto swap(optional_base &that)
                     noexcept(is_nothrow_swappable<T>::value) ->
-                    CPP_ret(void)(
+                    CPP_ret(void)//(
                         requires Swappable<T>)
                 {
                     if (ptr_ && that.ptr_)
@@ -303,7 +303,7 @@ namespace ranges
                 template<typename U>
                 constexpr /*c++14*/
                 auto construct_from(U &&ref) noexcept ->
-                    CPP_ret(T &)(
+                    CPP_ret(T &)//(
                         requires ConvertibleTo<U &, T &>)
                 {
                     RANGES_EXPECT(!ptr_);
@@ -590,7 +590,7 @@ namespace ranges
         auto operator=(U &&u)
             noexcept(std::is_nothrow_constructible<T, U>::value &&
                 std::is_nothrow_assignable<T &, U>::value) ->
-            CPP_ret(optional &)(
+            CPP_ret(optional &)//(
                 requires not defer::Same<optional, detail::decay_t<U>> &&
                     !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
                     defer::Constructible<T, U> &&
@@ -606,7 +606,7 @@ namespace ranges
         template<typename U>
         constexpr /*c++14*/
         auto operator=(optional<U> const &that) ->
-            CPP_ret(optional &)(
+            CPP_ret(optional &)//(
                 requires OptionalShouldConvertAssign<U, T> &&
                     Constructible<T, const U &> &&
                     Assignable<T &, const U &>)
@@ -618,7 +618,7 @@ namespace ranges
         template<typename U>
         constexpr /*c++14*/
         auto operator=(optional<U> &&that) ->
-            CPP_ret(optional &)(
+            CPP_ret(optional &)//(
                 requires OptionalShouldConvertAssign<U, T> &&
                     Constructible<T, U> &&
                     Assignable<T &, U>)
@@ -630,7 +630,7 @@ namespace ranges
         template<typename... Args>
         auto emplace(Args &&... args)
             noexcept(std::is_nothrow_constructible<T, Args...>::value) ->
-            CPP_ret(T &)(
+            CPP_ret(T &)//(
                 requires Constructible<T, Args...>)
         {
             reset();
@@ -640,7 +640,7 @@ namespace ranges
         auto emplace(std::initializer_list<E> il, Args &&... args)
             noexcept(std::is_nothrow_constructible<
                 T, std::initializer_list<E> &, Args...>::value) ->
-            CPP_ret(T &)(
+            CPP_ret(T &)//(
                 requires Constructible<T, std::initializer_list<E> &, Args &&...>)
         {
             reset();

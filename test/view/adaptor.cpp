@@ -54,7 +54,7 @@ private:
         CPP_member
         auto advance(base_iterator_t &it,
             ranges::range_difference_t<BidiRange> n) const ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires ranges::RandomAccessRange<BidiRange>)
         {
             it -= n;
@@ -62,7 +62,7 @@ private:
         CPP_member
         auto distance_to(base_iterator_t const &here,
             base_iterator_t const &there) const ->
-            CPP_ret(ranges::range_difference_t<BidiRange>)(
+            CPP_ret(ranges::range_difference_t<BidiRange>)//(
                 requires ranges::SizedSentinel<base_iterator_t, base_iterator_t>)
         {
             return here - there;

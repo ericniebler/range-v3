@@ -95,7 +95,7 @@ namespace ranges
         CPP_member
         constexpr auto empty() const
             noexcept(noexcept(ranges::empty(*rng_))) ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires detail::CanEmpty<Rng>)
         {
             return ranges::empty(*rng_);
@@ -122,7 +122,7 @@ namespace ranges
         {
             template<typename Rng>
             constexpr auto operator()(Rng &rng) const noexcept ->
-                CPP_ret(ref_view<Rng>)(
+                CPP_ret(ref_view<Rng>)//(
                     requires Range<Rng>)
             {
                 return ref_view<Rng>(rng);

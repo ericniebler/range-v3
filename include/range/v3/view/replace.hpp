@@ -94,7 +94,7 @@ namespace ranges
         public:
             template<typename Rng, typename Val1, typename Val2>
             auto operator()(Rng &&rng, Val1 &&old_value, Val2 &&new_value) const ->
-                CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)(
+                CPP_ret(replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         Same<detail::decay_t<unwrap_reference_t<Val1>>, detail::decay_t<unwrap_reference_t<Val2>>> &&
                         EqualityComparableWith<detail::decay_t<unwrap_reference_t<Val1>>, range_value_t<Rng>> &&

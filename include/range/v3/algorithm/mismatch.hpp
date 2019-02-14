@@ -43,7 +43,7 @@ namespace ranges
             "both sequences")
         auto operator()(I1 begin1, S1 end1, I2 begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(mismatch_result<I1, I2>)(
+            CPP_ret(mismatch_result<I1, I2>)//(
                 requires InputIterator<I1> && Sentinel<S1, I1> && InputIterator<I2> &&
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
         {
@@ -57,7 +57,7 @@ namespace ranges
             typename P1 = identity, typename P2 = identity>
         auto operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(mismatch_result<I1, I2>)(
+            CPP_ret(mismatch_result<I1, I2>)//(
                 requires InputIterator<I1> && Sentinel<S1, I1> &&
                     InputIterator<I2> && Sentinel<S2, I2> &&
                     IndirectRelation<C, projected<I1, P1>, projected<I2, P2>>)
@@ -74,7 +74,7 @@ namespace ranges
             "both sequences")
         auto operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, // see below [*]
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const ->
-            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)(
+            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, uncvref_t<I2Ref>>)//(
                 requires InputRange<Rng1> && InputIterator<uncvref_t<I2Ref>> &&
                     IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
                                         projected<uncvref_t<I2Ref>, P2>>)
@@ -90,7 +90,7 @@ namespace ranges
             typename P2 = identity>
         auto operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const ->
-            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)(
+            CPP_ret(mismatch_result<safe_iterator_t<Rng1>, safe_iterator_t<Rng2>>)//(
                 requires InputRange<Rng1> && InputRange<Rng2> &&
                     IndirectRelation<C, projected<iterator_t<Rng1>, P1>,
                                         projected<iterator_t<Rng2>, P2>>)

@@ -152,7 +152,7 @@ namespace ranges
 
         template<typename Val>
         auto iota_minus_(Val const &v0, Val const &v1) ->
-            CPP_ret(iota_difference_t<Val>)(
+            CPP_ret(iota_difference_t<Val>)//(
                 requires SignedIntegral<Val>)
         {
             using D = iota_difference_t<Val>;
@@ -161,7 +161,7 @@ namespace ranges
 
         template<typename Val>
         auto iota_minus_(Val const &v0, Val const &v1) ->
-            CPP_ret(iota_difference_t<Val>)(
+            CPP_ret(iota_difference_t<Val>)//(
                 requires UnsignedIntegral<Val>)
         {
             using D = iota_difference_t<Val>;
@@ -172,7 +172,7 @@ namespace ranges
 
         template<typename Val>
         constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
+            CPP_ret(iota_difference_t<Val>)//(
                 requires SignedIntegral<Val>)
         {
             using D = iota_difference_t<Val>;
@@ -185,7 +185,7 @@ namespace ranges
 
         template<typename Val>
         constexpr /*c++14*/ auto ints_open_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
+            CPP_ret(iota_difference_t<Val>)//(
                 requires UnsignedIntegral<Val>)
         {
             using D = iota_difference_t<Val>;
@@ -214,7 +214,7 @@ namespace ranges
 
         template<typename Val>
         constexpr /*c++14*/ auto ints_closed_distance_(Val from, Val to) noexcept ->
-            CPP_ret(iota_difference_t<Val>)(
+            CPP_ret(iota_difference_t<Val>)//(
                 requires Integral<Val>)
         {
             using D = iota_difference_t<Val>;
@@ -276,13 +276,13 @@ namespace ranges
         }
         CPP_member
         auto equal(closed_iota_view const &that) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires Incrementable<From>)
         {
             return that.from_ == from_ && that.done_ == done_;
         }
         CPP_member
-        auto prev() -> CPP_ret(void)(
+        auto prev() -> CPP_ret(void)//(
             requires BidirectionalIncrementable<From>)
         {
             if(done_)
@@ -322,19 +322,19 @@ namespace ranges
         }
         CPP_member
         auto equal(iota_view const &that) const ->
-            CPP_ret(bool)(
+            CPP_ret(bool)//(
                 requires Incrementable<From>)
         {
             return that.from_ == from_;
         }
         CPP_member
-        auto prev() -> CPP_ret(void)(
+        auto prev() -> CPP_ret(void)//(
             requires BidirectionalIncrementable<From>)
         {
             --from_;
         }
         CPP_member
-        auto check_advance_(difference_type_ n) -> CPP_ret(void)(
+        auto check_advance_(difference_type_ n) -> CPP_ret(void)//(
             requires SizedIncrementableSentinel<To, From>)
         {
             detail::ignore_unused(n);
@@ -345,7 +345,7 @@ namespace ranges
         {
         }
         CPP_member
-        auto advance(difference_type_ n) -> CPP_ret(void)(
+        auto advance(difference_type_ n) -> CPP_ret(void)//(
             requires RandomAccessIncrementable<From>)
         {
             this->check_advance_(n);
@@ -353,7 +353,7 @@ namespace ranges
         }
         CPP_member
         auto distance_to(iota_view const &that) const ->
-            CPP_ret(difference_type_)(
+            CPP_ret(difference_type_)//(
                 requires RandomAccessIncrementable<From>)
         {
             return detail::iota_minus_(that.from_, from_);
@@ -389,26 +389,26 @@ namespace ranges
             return false;
         }
         CPP_member
-        auto equal(iota_view const &that) const -> CPP_ret(bool)(
+        auto equal(iota_view const &that) const -> CPP_ret(bool)//(
             requires Incrementable<From>)
         {
             return that.value_ == value_;
         }
         CPP_member
-        auto prev() -> CPP_ret(void)(
+        auto prev() -> CPP_ret(void)//(
             requires BidirectionalIncrementable<From>)
         {
             --value_;
         }
         CPP_member
-        auto advance(difference_type_ n) -> CPP_ret(void)(
+        auto advance(difference_type_ n) -> CPP_ret(void)//(
             requires RandomAccessIncrementable<From>)
         {
             value_ = detail::iota_plus(value_, n);
         }
         CPP_member
         auto distance_to(iota_view const &that) const ->
-            CPP_ret(difference_type_)(
+            CPP_ret(difference_type_)//(
                 requires RandomAccessIncrementable<From>)
         {
             return detail::iota_minus_(that.value_, value_);
@@ -441,7 +441,7 @@ namespace ranges
         public:
             template<typename From>
             auto operator()(From value) const ->
-                CPP_ret(iota_view<From>)(
+                CPP_ret(iota_view<From>)//(
                     requires WeaklyIncrementable<From>)
             {
                 return iota_view<From>{std::move(value)};
@@ -503,7 +503,7 @@ namespace ranges
 
             template<typename Val>
             auto operator()(Val value) const ->
-                CPP_ret(iota_view<Val>)(
+                CPP_ret(iota_view<Val>)//(
                     requires Integral<Val>)
             {
                 return iota_view<Val>{value};

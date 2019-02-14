@@ -41,7 +41,7 @@ namespace ranges
         constexpr /*c++14*/
         auto get_first_second_helper(T& t, std::false_type)
             noexcept(std::is_nothrow_move_constructible<T>::value) ->
-            CPP_ret(T)(
+            CPP_ret(T)//(
                 requires MoveConstructible<T>)
         {
             return std::move(t);
@@ -90,7 +90,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(keys_range_view<all_t<Rng>>)(
+                CPP_ret(keys_range_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         detail::PairLike<range_reference_t<Rng>>)
             {
@@ -102,7 +102,7 @@ namespace ranges
         {
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
-                CPP_ret(values_view<all_t<Rng>>)(
+                CPP_ret(values_view<all_t<Rng>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         detail::PairLike<range_reference_t<Rng>>)
             {

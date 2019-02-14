@@ -80,7 +80,7 @@ namespace ranges
             {}
             CPP_member
             auto operator=(indexed_datum &&that) ->
-                CPP_ret(indexed_datum &)(
+                CPP_ret(indexed_datum &)//(
                     requires Assignable<T &, T>)
             {
                 ranges::move(that.data_, data_);
@@ -88,7 +88,7 @@ namespace ranges
             }
             CPP_member
             auto operator=(indexed_datum const &that) ->
-                CPP_ret(indexed_datum &)(
+                CPP_ret(indexed_datum &)//(
                     requires Assignable<T &, T const &>)
             {
                 ranges::copy(that.data_, data_);
@@ -97,7 +97,7 @@ namespace ranges
             // \pre Requires ranges::distance(r) <= N
             template<typename R>
             auto operator=(R &&r) ->
-                CPP_ret(indexed_datum &)(
+                CPP_ret(indexed_datum &)//(
                     requires InputRange<R> &&
                         Assignable<T &, range_reference_t<R>>)
             {

@@ -79,7 +79,7 @@ namespace ranges
         };
 
         template<typename T, typename... Args>
-        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)(
+        auto make_unique(Args &&... args) -> CPP_ret(std::unique_ptr<T>)//(
             requires not std::is_array<T>::value)
         {
             return std::unique_ptr<T>{new T(static_cast<Args &&>(args)...)};
@@ -108,7 +108,7 @@ namespace ranges
         }
         CPP_member
         auto operator=(Val const & val) ->
-            CPP_ret(raw_storage_iterator &)(
+            CPP_ret(raw_storage_iterator &)//(
                 requires CopyConstructible<Val>)
         {
             ::new((void*) std::addressof(*out_)) Val(val);
@@ -116,7 +116,7 @@ namespace ranges
         }
         CPP_member
         auto operator=(Val &&val) ->
-            CPP_ret(raw_storage_iterator &)(
+            CPP_ret(raw_storage_iterator &)//(
                 requires MoveConstructible<Val>)
         {
             ::new((void*) std::addressof(*out_)) Val(std::move(val));
@@ -129,14 +129,14 @@ namespace ranges
         }
         CPP_member
         auto operator++(int) ->
-            CPP_ret(void)(
+            CPP_ret(void)//(
                 requires not ForwardIterator<O>)
         {
             ++out_;
         }
         CPP_member
         auto operator++(int) ->
-            CPP_ret(raw_storage_iterator)(
+            CPP_ret(raw_storage_iterator)//(
                 requires ForwardIterator<O>)
         {
             auto tmp = *this;
@@ -193,7 +193,7 @@ namespace ranges
 
     template<typename I>
     auto iter_ref(I &i) ->
-        CPP_ret(iterator_wrapper<I>)(
+        CPP_ret(iterator_wrapper<I>)//(
             requires Iterator<I>)
     {
         return i;

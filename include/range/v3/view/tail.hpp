@@ -63,7 +63,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto begin() const ->
-            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(iterator_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return next(ranges::begin(rng_), 1, ranges::end(rng_));
@@ -74,7 +74,7 @@ namespace ranges
         }
         template<bool Const = true>
         auto end() const ->
-            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)(
+            CPP_ret(sentinel_t<meta::const_if_c<Const, Rng>>)//(
                 requires Const && Range<meta::const_if_c<Const, Rng>>)
         {
             return ranges::end(rng_);
@@ -110,7 +110,7 @@ namespace ranges
             template<typename Rng>
             auto operator()(Rng &&rng) const ->
                 CPP_ret(meta::if_c<range_cardinality<Rng>::value == 0,
-                        all_t<Rng>, tail_view<all_t<Rng>>>)(
+                        all_t<Rng>, tail_view<all_t<Rng>>>)//(
                     requires ViewableRange<Rng> && InputRange<Rng>)
             {
                 return all(static_cast<Rng &&>(rng));

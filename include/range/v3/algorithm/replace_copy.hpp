@@ -39,7 +39,7 @@ namespace ranges
             typename P = identity>
         auto operator()(I begin, S end, O out, T1 const &old_value, T2 const &new_value,
                 P proj = {}) const ->
-            CPP_ret(replace_copy_result<I, O>)(
+            CPP_ret(replace_copy_result<I, O>)//(
                 requires InputIterator<I> && Sentinel<S, I> &&
                     OutputIterator<O, T2 const &> &&
                     IndirectlyCopyable<I, O> &&
@@ -59,7 +59,7 @@ namespace ranges
         template<typename Rng, typename O, typename T1, typename T2, typename P = identity>
         auto operator()(Rng &&rng, O out, T1 const &old_value, T2 const &new_value,
                 P proj = {}) const ->
-            CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)(
+            CPP_ret(replace_copy_result<safe_iterator_t<Rng>, O>)//(
                 requires InputRange<Rng> &&
                     OutputIterator<O, T2 const &> &&
                     IndirectlyCopyable<iterator_t<Rng>, O> &&

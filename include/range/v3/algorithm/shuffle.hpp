@@ -35,7 +35,7 @@ namespace ranges
         template<typename I, typename S, typename Gen = detail::default_random_engine&>
         auto operator()(I const begin, S const end,
                 Gen &&gen = detail::get_random_engine()) const ->
-            CPP_ret(I)(
+            CPP_ret(I)//(
                 requires RandomAccessIterator<I> && Sentinel<S, I> && Permutable<I> &&
                     UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<I>>)
@@ -55,7 +55,7 @@ namespace ranges
 
         template<typename Rng, typename Gen = detail::default_random_engine&>
         auto operator()(Rng &&rng, Gen &&rand = detail::get_random_engine()) const ->
-            CPP_ret(safe_iterator_t<Rng>)(
+            CPP_ret(safe_iterator_t<Rng>)//(
                 requires RandomAccessRange<Rng> && Permutable<iterator_t<Rng>> &&
                     UniformRandomNumberGenerator<Gen> &&
                     ConvertibleTo<invoke_result_t<Gen &>, iter_difference_t<iterator_t<Rng>>>)

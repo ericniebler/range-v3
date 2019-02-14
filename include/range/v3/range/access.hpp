@@ -47,7 +47,8 @@ namespace ranges
         void begin(std::initializer_list<T>) = delete;
 
         template<class I>
-        auto is_iterator(I) -> CPP_ret(void)(requires Iterator<I>);
+        auto is_iterator(I) -> CPP_ret(void)//(
+            requires Iterator<I>);
 
         CPP_def
         (
@@ -173,7 +174,8 @@ namespace ranges
         void end(std::initializer_list<T>) = delete;
 
         template<typename I, typename S>
-        auto is_sentinel(S) -> CPP_ret(void)(requires Sentinel<S, I>);
+        auto is_sentinel(S) -> CPP_ret(void)//(
+            requires Sentinel<S, I>);
 
         CPP_def
         (
@@ -260,7 +262,7 @@ namespace ranges
 
             template<typename Int>
             auto operator-(Int dist) const ->
-                CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
+                CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)//(
                     requires Integral<Int>)
             {
                 using SInt = meta::_t<std::make_signed<Int>>;

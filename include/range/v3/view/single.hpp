@@ -104,7 +104,7 @@ namespace ranges
         {
             template<typename Val>
             auto operator()(Val value) const ->
-                CPP_ret(single_view<Val>)(
+                CPP_ret(single_view<Val>)//(
                     requires CopyConstructible<Val>)
             {
                 return single_view<Val>{std::move(value)};

@@ -37,7 +37,7 @@ namespace
 {
     template<typename I, typename S>
     auto in_sequence(I first, I mid, S last) ->
-        CPP_ret(bool)(
+        CPP_ret(bool)//(
             requires ranges::Sentinel<S, I>)
     {
         for (; first != mid; ++first)

@@ -40,7 +40,7 @@ namespace ranges
         {}
         template<typename U>
         auto operator=(U &&value) ->
-            CPP_ret(ostream_iterator &)(
+            CPP_ret(ostream_iterator &)//(
                 requires ConvertibleTo<U, detail::if_then_t<std::is_void<T>::value, U, T> const &>)
         {
             RANGES_EXPECT(sout_);
@@ -115,7 +115,7 @@ namespace ranges
     {
         template <typename Delim, typename Char, typename Traits>
         auto operator()(std::basic_ostream<Char, Traits> &s, Delim &&d) const ->
-            CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)(
+            CPP_ret(ostream_joiner<detail::decay_t<Delim>, Char, Traits>)//(
                 requires Semiregular<detail::decay_t<Delim>>)
         {
             return {s, std::forward<Delim>(d)};
