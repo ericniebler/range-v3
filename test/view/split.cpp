@@ -41,11 +41,19 @@ namespace
         }
     };
 
+#ifdef RANGES_WORKAROUND_MSVC_790554
+    template<std::size_t N>
+    auto c_str(char const (&sz)[N])
+    {
+        return ranges::subrange<char const*>{&sz[0], &sz[N-1]};
+    }
+#else // ^^^ workaround / no workaround vvv
     template<std::size_t N>
     ranges::subrange<char const*> c_str(char const (&sz)[N])
     {
         return {&sz[0], &sz[N-1]};
     }
+#endif // RANGES_WORKAROUND_MSVC_790554
 }
 
 void moar_tests()

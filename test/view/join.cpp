@@ -158,38 +158,38 @@ int main()
         check_equal(rng, {0,1,2,3,4,5});
     }
 
-	{
-		std::vector<std::string> vs{"this","is","his","face"};
-		join_view<ref_view<std::vector<std::string>>> jv{vs};
-		check_equal(jv, {'t','h','i','s','i','s','h','i','s','f','a','c','e'});
-		CPP_assert(BidirectionalRange<decltype(jv)>);
-		CPP_assert(BidirectionalRange<const decltype(jv)>);
-		CPP_assert(CommonRange<decltype(jv)>);
-		CPP_assert(CommonRange<const decltype(jv)>);
-	}
+    {
+        std::vector<std::string> vs{"this","is","his","face"};
+        join_view<ref_view<std::vector<std::string>>> jv{vs};
+        check_equal(jv, {'t','h','i','s','i','s','h','i','s','f','a','c','e'});
+        CPP_assert(BidirectionalRange<decltype(jv)>);
+        CPP_assert(BidirectionalRange<const decltype(jv)>);
+        CPP_assert(CommonRange<decltype(jv)>);
+        CPP_assert(CommonRange<const decltype(jv)>);
+    }
 
-	{
-		auto rng = view::iota(0,4)
-			| view::transform([](int i) {return view::iota(0,i);})
-			| view::join;
-		check_equal(rng, {0,0,1,0,1,2});
-		CPP_assert(InputRange<decltype(rng)>);
-		CPP_assert(!Range<const decltype(rng)>);
-		CPP_assert(!ForwardRange<decltype(rng)>);
-		CPP_assert(!CommonRange<decltype(rng)>);
-	}
+    {
+        auto rng = view::iota(0,4)
+            | view::transform([](int i) {return view::iota(0,i);})
+            | view::join;
+        check_equal(rng, {0,0,1,0,1,2});
+        CPP_assert(InputRange<decltype(rng)>);
+        CPP_assert(!Range<const decltype(rng)>);
+        CPP_assert(!ForwardRange<decltype(rng)>);
+        CPP_assert(!CommonRange<decltype(rng)>);
+    }
 
-	{
-		auto rng = view::iota(0,4)
-			| view::transform([](int i) {return view::iota(0,i);})
-			| view::filter([](auto){ return true; })
-			| view::join;
-		check_equal(rng, {0,0,1,0,1,2});
-		CPP_assert(InputRange<decltype(rng)>);
-		CPP_assert(!Range<const decltype(rng)>);
-		CPP_assert(!ForwardRange<decltype(rng)>);
-		CPP_assert(!CommonRange<decltype(rng)>);
-	}
+    {
+        auto rng = view::iota(0,4)
+            | view::transform([](int i) {return view::iota(0,i);})
+            | view::filter([](auto){ return true; })
+            | view::join;
+        check_equal(rng, {0,0,1,0,1,2});
+        CPP_assert(InputRange<decltype(rng)>);
+        CPP_assert(!Range<const decltype(rng)>);
+        CPP_assert(!ForwardRange<decltype(rng)>);
+        CPP_assert(!CommonRange<decltype(rng)>);
+    }
 
     return ::test_result();
 }

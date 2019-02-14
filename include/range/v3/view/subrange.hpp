@@ -409,7 +409,7 @@ namespace ranges
         subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
-    // in leu of deduction guides, use make_subrange
+    // in lieu of deduction guides, use make_subrange
     struct make_subrange_fn
     {
         template<typename I, typename S>
@@ -473,18 +473,18 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std
 {
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_size<::ranges::subrange<I, S, K>>
-	  : std::integral_constant<size_t, 2>
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_size<::ranges::subrange<I, S, K>>
+      : std::integral_constant<size_t, 2>
     {};
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<0, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<0, ::ranges::subrange<I, S, K>>
+    {
         using type = I;
     };
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<1, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<1, ::ranges::subrange<I, S, K>>
+    {
         using type = S;
     };
 }

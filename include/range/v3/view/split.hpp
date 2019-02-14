@@ -228,22 +228,37 @@ namespace ranges
             {
                 return x.i_.curr_ != y.i_.curr_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(split_inner_iterator const &x, default_sentinel_t)
             {
                 return x.done_();
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(default_sentinel_t, split_inner_iterator const &x)
             {
                 return x.done_();
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(split_inner_iterator const &x, default_sentinel_t)
             {
                 return !x.done_();
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(default_sentinel_t, split_inner_iterator const &x)
             {
                 return !x.done_();
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr
             decltype(auto) iter_move(split_inner_iterator const &i)
                 noexcept(noexcept(ranges::iter_move(i.current_())))
@@ -415,18 +430,30 @@ namespace ranges
             {
                 return x.curr_ != y.curr_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(split_outer_iterator const &x, default_sentinel_t)
             {
                 return x.current_() == ranges::end(x.base_());
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(default_sentinel_t, split_outer_iterator const &x)
             {
                 return x.current_() == ranges::end(x.base_());
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(split_outer_iterator const &x, default_sentinel_t)
             {
                 return x.current_() != ranges::end(x.base_());
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(default_sentinel_t, split_outer_iterator const &x)
             {
                 return x.current_() != ranges::end(x.base_());
