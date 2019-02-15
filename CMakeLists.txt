@@ -117,17 +117,17 @@ if(NOT RANGE_V3_NEW_VERSION_HPP STREQUAL RANGE_V3_OLD_VERSION_HPP)
   )
   find_program(CONAN_EXECUTABLE NAMES conan conan.exe)
   if (NOT "x${CONAN_EXECUTABLE}" STREQUAL "xCONAN_EXECUTABLE-NOTFOUND")
-    message("Exporting conanfile for new version")
+    message(STATUS "Exporting conanfile for new version")
     execute_process(
       COMMAND ${CONAN_EXECUTABLE} create . range-v3/${RANGE_V3_VERSION}@ericniebler/stable
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
   endif()
-  message("Version updated to ${RANGE_V3_VERSION}. Don't forget to:")
-  message("  git push origin <feature-branch>")
-  message("and (after that is merged to master) then:")
-  message("  conan create ${CMAKE_CURRENT_SOURCE_DIR} range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
-  message("  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
+  message(STATUS "Version updated to ${RANGE_V3_VERSION}. Don't forget to:")
+  message(STATUS "  git push origin <feature-branch>")
+  message(STATUS "and (after that is merged to master) then:")
+  message(STATUS "  conan create ${CMAKE_CURRENT_SOURCE_DIR} range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
+  message(STATUS "  conan upload --all range-v3/${RANGE_V3_VERSION}@ericniebler/stable")
 endif()
 
 include(CMakePackageConfigHelpers)
