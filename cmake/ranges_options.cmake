@@ -25,7 +25,7 @@ if (DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS AND
 endif()
 
 if (RANGES_VERBOSE_BUILD)
-  message("[range-v3]: verbose build enabled.")
+  message(STATUS "[range-v3]: verbose build enabled.")
 endif()
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_TESTS
