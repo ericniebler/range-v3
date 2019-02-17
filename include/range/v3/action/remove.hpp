@@ -17,7 +17,8 @@
 #include <range/v3/core.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/action/action.hpp>
-#include <range/v3/action/remove_if.hpp>
+#include <range/v3/algorithm/remove.hpp>
+#include <range/v3/action/erase.hpp>
 
 
 namespace ranges
@@ -32,40 +33,51 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename V, typename P = ident, CONCEPT_REQUIRES_(!Range<V>())>
-                static auto bind(remove_fn remove, const V& value, P proj = P{})
+                template<typename V, typename P,
+                    CONCEPT_REQUIRES_(!(Range<V>() /*&& EqualityComparable<range_reference_t<P>, P>()*/))>
+                static auto bind(remove_fn remove, V &&value, P proj)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     std::bind(remove,
                         std::placeholders::_1,
-                        std::cref(value),
+                        bind_forward<V>(value),
                         protect(std::move(proj))
                     )
                 )
 
-                template<class Value>
-                struct pred
-                {
-                    const Value& value;
-
-                    template<typename T,
-                        CONCEPT_REQUIRES_(EqualityComparable<const T&, const Value&>())>
-                    bool operator()(const T& other_value) const
-                    {
-                        return other_value == value;
-                    }
-                };
+                template<typename V>
+                static auto bind(remove_fn remove, V &&value)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(remove,
+                        std::placeholders::_1,
+                        bind_forward<V>(value),
+                        ident{}
+                    )
+                )
             public:
-
-                template<typename Rng, typename Value, typename P = ident,
-                    CONCEPT_REQUIRES_(remove_if_fn::Concept<Rng, pred<Value>, P>())>
-                Rng operator()(Rng&& rng, const Value& value, P proj = P{}) const
+                struct ConceptImpl
                 {
-                    return remove_if_fn{}(
-                        static_cast<Rng&&>(rng),
-                        pred<Value>{value},
-                        std::move(proj)
-                    );
+                    template<typename Rng, typename V, typename P = ident,
+                        typename I = iterator_t<Rng>>
+                    auto requires_() -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardRange, Rng>(),
+                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
+                            concepts::is_true(Removable<I, V, P>())
+                        ));
+                };
+
+                template<typename Rng, typename V, typename P = ident>
+                using Concept = concepts::models<ConceptImpl, Rng, V, P>;
+
+                template<typename Rng, typename V, typename P = ident,
+                    CONCEPT_REQUIRES_(Concept<Rng, V, P>())>
+                Rng operator()(Rng &&rng, V const &value, P proj = {}) const
+                {
+                    auto it = ranges::remove(rng, value, std::move(proj));
+                    ranges::erase(rng, it, ranges::end(rng));
+                    return static_cast<Rng&&>(rng);
                 }
             };
 

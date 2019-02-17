@@ -10,21 +10,20 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <vector>
+#include <string>
 #include <range/v3/action/remove.hpp>
 
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-struct Data{
+using namespace ranges;
+
+struct Data
+{
     int i;
 
     Data() = default;
     explicit Data(int i) : i(i) {}
-
-    Data(const Data&) = delete;
-
-    Data(Data&&) = default;
-    Data& operator=(Data&&) = default;
 
     bool operator==(const Data& other) const {
         return other.i == i;
@@ -34,24 +33,36 @@ struct Data{
     }
 };
 
-
-int main()
+void simple_test()
 {
-    using namespace ranges;
-
     std::vector<Data> list;
     list.emplace_back(Data{1});
     list.emplace_back(Data{2});
     list.emplace_back(Data{3});
     list.emplace_back(Data{4});
 
+    Data d2{2};
 
-    list |= action::remove(Data{2});
+    const auto remove_data = action::remove(d2);
+
+    list |= remove_data;
     check_equal(list, {Data{1}, Data{3}, Data{4}});
 
     list |= action::remove(3, &Data::i);
     check_equal(list, {Data{1}, Data{4}});
+}
 
+void string_test()
+{
+    std::vector<std::string> list = {"aaa", "bbb", "ccc"};
+    list |= action::remove("bbb");
+    check_equal(list, {"aaa", "ccc"});
+}
+
+int main()
+{
+    simple_test();
+    string_test();
 
     return ::test_result();
 }
