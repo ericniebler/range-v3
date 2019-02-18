@@ -34,12 +34,12 @@ namespace ranges
                 struct pred
                 {
                     template<class V>
-                    constexpr V* operator()(V &value) const noexcept
+                    constexpr V *operator()(V &value) const noexcept
                     {
                         return std::addressof(value);
                     }
                     template<class V>
-                    constexpr const V* operator()(V const &value) const noexcept
+                    constexpr V const *operator()(V const &value) const noexcept
                     {
                         return std::addressof(value);
                     }
