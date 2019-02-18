@@ -69,4 +69,4 @@ namespace ranges
     }
 }
 
-#endif //RANGES_V3_VIEW_REMOVE_HPP
+#endif //RANGES_V3_VIEW_ADDRESSOF_HPP
