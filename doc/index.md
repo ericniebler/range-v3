@@ -505,6 +505,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and a binary predicate, return a range of ranges where each range contains contiguous elements from the source range such that the following condition holds: for each element in the range apart from the first, when that element and the first element are passed to the binary predicate, the result is true. In essence, `view::group_by` *groups* contiguous elements together with a binary predicate.</DD>
 <DT>\link ranges::v3::view::indirect_fn `view::indirect`\endlink</DT>
   <DD>Given a source range of readable values (e.g. pointers or iterators), return a new view that is the result of dereferencing each.</DD>
+<DT>\link ranges::v3::view::addressof_fn `view::addressof`\endlink</DT>
+  <DD>Given a source range of lvalue references, return a new view that is the result of taking std::addressof of each.</DD>
 <DT>\link ranges::v3::view::intersperse_fn `view::intersperse`\endlink</DT>
   <DD>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source.</DD>
 <DT>\link ranges::v3::view::ints_fn `view::ints`\endlink</DT>
