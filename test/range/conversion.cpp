@@ -10,12 +10,14 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <list>
+#include <map>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/zip.hpp>
 #include <range/v3/action/sort.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -38,9 +40,27 @@ struct vector_like : std::vector<T>
     }
 };
 
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+template<
+    typename Rng,
+    typename CI = ranges::range_common_iterator_t<Rng>,
+    typename = decltype(std::map{CI{}, CI{}})>
+void test_zip_to_map(Rng &&rng, int)
+{
+    using namespace ranges;
+    auto m = static_cast<Rng &&>(rng) | to<std::map>;
+    CPP_assert(Same<decltype(m), std::map<int, int>>);
+}
+#endif
+template<typename Rng>
+void test_zip_to_map(Rng &&, long)
+{}
+
 int main()
 {
     using namespace ranges;
+
+    //detail::from_range<std::list>::from_rng_<decltype(view::ints)>(0);
 
     {
         auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
@@ -74,10 +94,10 @@ int main()
 
 #ifndef RANGES_WORKAROUND_MSVC_779708
     {
-    auto vec2 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to<std::vector<long>> | action::sort(std::greater<long>{});
-    CPP_assert(Same<decltype(vec2), std::vector<long>>);
-    ::check_equal(vec2, {81,64,49,36,25,16,9,4,1,0});
+        auto vec2 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
+            | to<std::vector<long>> | action::sort(std::greater<long>{});
+        CPP_assert(Same<decltype(vec2), std::vector<long>>);
+        ::check_equal(vec2, {81,64,49,36,25,16,9,4,1,0});
     }
 #endif // RANGES_WORKAROUND_MSVC_779708
 
@@ -88,6 +108,8 @@ int main()
         CHECK(vl.reservation_count == std::size_t{1});
         CHECK(vl.last_reservation == N);
     }
+
+    test_zip_to_map(view::zip(view::ints, view::iota(0, 10)), 0);
 
     return ::test_result();
 }
