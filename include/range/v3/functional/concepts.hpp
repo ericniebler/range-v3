@@ -19,8 +19,9 @@
 
 namespace ranges
 {
-    /// \addtogroup group-concepts
+    /// \addtogroup group-functional
     /// @{
+
     CPP_def
     (
         template(typename Fun, typename... Args)
@@ -63,6 +64,16 @@ namespace ranges
         concept StrictWeakOrder,
             Relation<R, T, U>
     );
+
+    namespace cpp20
+    {
+        using ranges::Invocable;
+        using ranges::RegularInvocable;
+        using ranges::Predicate;
+        using ranges::Relation;
+        using ranges::StrictWeakOrder;
+    }
+    /// @}
 }
 
 #endif

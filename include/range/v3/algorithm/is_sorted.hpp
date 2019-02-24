@@ -64,6 +64,11 @@ namespace ranges
     /// \sa `is_sorted_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(is_sorted_fn, is_sorted)
+
+    namespace cpp20
+    {
+        using ranges::is_sorted;
+    }
     /// @}
 } // namespace ranges
 

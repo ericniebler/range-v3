@@ -17,7 +17,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-functional
     /// @{
     struct identity
     {
@@ -28,13 +28,18 @@ namespace ranges
         }
         using is_transparent = void;
     };
-    /// @}
 
     /// \cond
     using ident
         RANGES_DEPRECATED("Repace uses of ranges::ident with ranges::identity") =
             identity;
     /// \endcond
+
+    namespace cpp20
+    {
+        using ranges::identity;
+    }
+    /// @}
 }
 
 #endif

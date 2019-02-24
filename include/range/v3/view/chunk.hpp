@@ -102,9 +102,9 @@ namespace ranges
               , n_((RANGES_EXPECT(0 < cv.n_), cv.n_))
               , end_(ranges::end(cv.base()))
             {}
-            template<bool Other>
-            constexpr CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            constexpr adaptor(adaptor<Other> that)
               : box<offset_t<Const>>(that.offset())
               , n_(that.n_)
               , end_(that.end_)

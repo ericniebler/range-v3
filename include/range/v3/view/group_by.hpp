@@ -71,8 +71,15 @@ namespace ranges
                     return invoke(fun_, *first_, ref);
                 }
             };
+#ifdef RANGES_WORKAROUND_MSVC_787074
+            template<bool Const = IsConst>
+            auto read() const ->
+                take_while_view<subrange<iterator_t<meta::const_if_c<Const, Rng>>,
+                                         sentinel_t<meta::const_if_c<Const, Rng>>>, pred>
+#else // ^^^ workaround / no workaround vvv
             auto read() const ->
                 take_while_view<subrange<iterator_t<CRng>, sentinel_t<CRng>>, pred>
+#endif // RANGES_WORKAROUND_MSVC_787074
             {
                 return {{cur_, last_}, {cur_, fun_}};
             }
@@ -94,9 +101,9 @@ namespace ranges
             {}
         public:
             cursor() = default;
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            cursor(cursor<Other> that)
               : cur_(std::move(that.cur_))
               , last_(std::move(last_))
               , fun_(std::move(that.fun_))

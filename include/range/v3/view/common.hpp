@@ -144,6 +144,17 @@ namespace ranges
 
     namespace view
     {
+        struct cpp20_common_fn
+        {
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(common_view<all_t<Rng>>)(
+                    requires ViewableRange<Rng> && (!CommonRange<Rng>))
+            {
+                return common_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
+            }
+        };
+
         struct common_fn
         {
             template<typename Rng>
@@ -176,17 +187,25 @@ namespace ranges
         {
             RANGES_DEPRECATED("The name view::bounded is deprecated. "
                               "Please use view::common instead.")
-            constexpr auto &bounded = common;
+            RANGES_INLINE_VAR constexpr auto &bounded = common;
         }
-        /// \endcond
 
-        /// \cond
         template<typename Rng>
         using bounded_t
-            RANGES_DEPRECATED("The name view::bounded_t is deprecated. "
-                              "Please use view::common_t instead.") =
+            RANGES_DEPRECATED("The name view::bounded_t is deprecated.") =
                 decltype(common(std::declval<Rng>()));
         /// \endcond
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_common_fn>, common)
+        }
+        CPP_template(typename Rng)(
+            requires View<Rng> && (!CommonRange<Rng>))
+        using common_view = ranges::common_view<Rng>;
     }
 }
 

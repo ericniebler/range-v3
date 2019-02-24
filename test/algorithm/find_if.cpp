@@ -19,6 +19,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include "../simple_test.hpp"
@@ -35,41 +36,63 @@ int main()
 
     int ia[] = {0, 1, 2, 3, 4, 5};
     constexpr auto s = size(ia);
-    input_iterator<const int*> r = find_if(input_iterator<const int*>(ia),
-                                           input_iterator<const int*>(ia + s),
-                                           [](int i){return i == 3;});
-    CHECK(*r == 3);
-    r = find_if(input_iterator<const int*>(ia),
-                input_iterator<const int*>(ia+s),
-                [](int i){return i == 10;});
-    CHECK(r == input_iterator<const int*>(ia+s));
 
-    r = find_if(input_iterator<const int*>(ia),
-                sentinel<const int*>(ia+s),
-                [](int i){return i == 3;});
-    CHECK(*r == 3);
-    r = find_if(input_iterator<const int*>(ia),
-                sentinel<const int*>(ia+s),
-                [](int i){return i == 10;});
-    CHECK(r == input_iterator<const int*>(ia+s));
+    {
+        input_iterator<const int*> r = find_if(input_iterator<const int*>(ia),
+                                              input_iterator<const int*>(ia + s),
+                                              [](int i){return i == 3;});
+        CHECK(*r == 3);
+        r = find_if(input_iterator<const int*>(ia),
+                    input_iterator<const int*>(ia+s),
+                    [](int i){return i == 10;});
+        CHECK(r == input_iterator<const int*>(ia+s));
 
-    int *pi = find_if(ia, [](int i){return i == 3;});
-    CHECK(*pi == 3);
-    pi = find_if(ia, [](int i){return i == 10;});
-    CHECK(pi == ia+s);
+        r = find_if(input_iterator<const int*>(ia),
+                    sentinel<const int*>(ia+s),
+                    [](int i){return i == 3;});
+        CHECK(*r == 3);
+        r = find_if(input_iterator<const int*>(ia),
+                    sentinel<const int*>(ia+s),
+                    [](int i){return i == 10;});
+        CHECK(r == input_iterator<const int*>(ia+s));
+    }
 
-    auto pj = find_if(std::move(ia), [](int i){return i == 3;});
-    CHECK(::is_dangling(pj));
-    pj = find_if(std::move(ia), [](int i){return i == 10;});
-    CHECK(::is_dangling(pj));
-    auto* ignore = find_if(ranges::view::all(ia), [](int i){return i == 10;});
-    (void)ignore;
+    {
+        int *pi = find_if(ia, [](int i){return i == 3;});
+        CHECK(*pi == 3);
+        pi = find_if(ia, [](int i){return i == 10;});
+        CHECK(pi == ia+s);
+    }
 
-    S sa[] = {{0}, {1}, {2}, {3}, {4}, {5}};
-    S *ps = find_if(sa, [](int i){return i == 3;}, &S::i_);
-    CHECK(ps->i_ == 3);
-    ps = find_if(sa, [](int i){return i == 10;}, &S::i_);
-    CHECK(ps == end(sa));
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    {
+        auto pj0 = find_if(std::move(ia), [](int i){return i == 3;});
+        CHECK(::is_dangling(pj0));
+        auto pj1 = find_if(std::move(ia), [](int i){return i == 10;});
+        CHECK(::is_dangling(pj1));
+    }
+#endif // RANGES_WORKAROUND_MSVC_573728
+
+    {
+        std::vector<int> const vec(begin(ia), end(ia));
+        auto pj0 = find_if(std::move(vec), [](int i){return i == 3;});
+        CHECK(::is_dangling(pj0));
+        auto pj1 = find_if(std::move(vec), [](int i){return i == 10;});
+        CHECK(::is_dangling(pj1));
+    }
+
+    {
+        auto* ignore = find_if(ranges::view::all(ia), [](int i){return i == 10;});
+        (void)ignore;
+    }
+
+    {
+        S sa[] = {{0}, {1}, {2}, {3}, {4}, {5}};
+        S *ps = find_if(sa, [](int i){return i == 3;}, &S::i_);
+        CHECK(ps->i_ == 3);
+        ps = find_if(sa, [](int i){return i == 10;}, &S::i_);
+        CHECK(ps == end(sa));
+    }
 
     return ::test_result();
 }

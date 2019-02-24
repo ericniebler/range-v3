@@ -117,9 +117,9 @@ namespace ranges
             adaptor(fun_ref_ fun)
               : fun_(std::move(fun))
             {}
-            template<bool Other>
-            CPP_ctor(adaptor)(adaptor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst && (!Other))
+            adaptor(adaptor<Other> that)
               : fun_(std::move(that.fun_))
             {}
 
@@ -166,13 +166,13 @@ namespace ranges
         constexpr /*c++14*/ auto CPP_fun(size)() (
             requires SizedRange<Rng>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
         CPP_member
         constexpr auto CPP_fun(size)() (const
             requires SizedRange<Rng const>)
         {
-                return static_cast<range_size_type_t<Rng>>(ranges::size(this->base()));
+            return ranges::size(this->base());
         }
     };
 
@@ -222,9 +222,9 @@ namespace ranges
             sentinel(meta::const_if_c<Const, iter_transform2_view> &parent, decltype(end))
               : end1_(end(parent.rng1_)), end2_(end(parent.rng2_))
             {}
-            template<bool Other>
-            CPP_ctor(sentinel)(sentinel<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            sentinel(sentinel<Other> that)
               : end1_(std::move(that.end1_))
               , end2_(std::move(that.end2_))
             {}
@@ -259,9 +259,9 @@ namespace ranges
             cursor(meta::const_if_c<Const, iter_transform2_view> &parent, BeginEndFn begin_end)
               : fun_(parent.fun_), it1_(begin_end(parent.rng1_)), it2_(begin_end(parent.rng2_))
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other))
+            cursor(cursor<Other> that)
               : fun_(std::move(that.fun_))
               , it1_(std::move(that.end1_))
               , it2_(std::move(that.end2_))
@@ -383,9 +383,9 @@ namespace ranges
           , rng1_(std::move(rng1))
           , rng2_(std::move(rng2))
         {}
-        CPP_member
-        static constexpr auto size() -> CPP_ret(size_type_)(
+        CPP_template(int = 42)(
             requires my_cardinality >= 0)
+        static constexpr size_type_ size()
         {
             return static_cast<size_type_>(my_cardinality);
         }
@@ -512,6 +512,19 @@ namespace ranges
         /// \relates transform_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<transform_fn>, transform)
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::transform;
+        }
+        CPP_template(typename Rng, typename F)(
+            requires InputRange<Rng> && CopyConstructible<F> && View<Rng> &&
+                std::is_object<F>::value &&
+                RegularInvocable<F &, iter_reference_t<iterator_t<Rng>>>)
+        using transform_view = ranges::transform_view<Rng, F>;
     }
     /// @}
 }

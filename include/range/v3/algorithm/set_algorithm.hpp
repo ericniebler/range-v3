@@ -21,7 +21,6 @@
 #ifndef RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 #define RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 
-#include <tuple>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range/access.hpp>
@@ -80,6 +79,11 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(includes_fn, includes)
 
+    namespace cpp20
+    {
+        using ranges::includes;
+    }
+
     template<typename I1, typename I2, typename O>
     using set_union_result = detail::in1_in2_out_result<I1, I2, O>;
 
@@ -97,7 +101,7 @@ namespace ranges
             {
                 if(begin2 == end2)
                 {
-                    auto tmp = copy(begin1, end1, out);
+                    auto tmp = ranges::copy(begin1, end1, out);
                     return {tmp.in, begin2, tmp.out};
                 }
                 if(invoke(pred, invoke(proj2, *begin2), invoke(proj1, *begin1)))
@@ -113,7 +117,7 @@ namespace ranges
                     ++begin1;
                 }
             }
-            auto tmp = copy(begin2, end2, out);
+            auto tmp = ranges::copy(begin2, end2, out);
             return {begin1, tmp.in, tmp.out};
         }
 
@@ -133,6 +137,12 @@ namespace ranges
     /// \sa `set_union_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(set_union_fn, set_union)
+
+    namespace cpp20
+    {
+        using ranges::set_union_result;
+        using ranges::set_union;
+    }
 
     struct set_intersection_fn
     {
@@ -179,6 +189,11 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(set_intersection_fn, set_intersection)
 
+    namespace cpp20
+    {
+        using ranges::set_intersection;
+    }
+
     template<typename I, typename O>
     using set_difference_result = detail::in1_out_result<I, O>;
 
@@ -196,7 +211,7 @@ namespace ranges
             {
                 if(begin2 == end2)
                 {
-                    auto tmp = copy(begin1, end1, out);
+                    auto tmp = ranges::copy(begin1, end1, out);
                     return {tmp.in, tmp.out};
                 }
                 if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -232,6 +247,12 @@ namespace ranges
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(set_difference_fn, set_difference)
 
+    namespace cpp20
+    {
+        using ranges::set_difference_result;
+        using ranges::set_difference;
+    }
+
     template<typename I1, typename I2, typename O>
     using set_symmetric_difference_result = detail::in1_in2_out_result<I1, I2, O>;
 
@@ -249,7 +270,7 @@ namespace ranges
             {
                 if(begin2 == end2)
                 {
-                    auto tmp = copy(begin1, end1, out);
+                    auto tmp = ranges::copy(begin1, end1, out);
                     return {tmp.in, begin2, tmp.out};
                 }
                 if(invoke(pred, invoke(proj1, *begin1), invoke(proj2, *begin2)))
@@ -270,7 +291,7 @@ namespace ranges
                     ++begin2;
                 }
             }
-            auto tmp = copy(begin2, end2, out);
+            auto tmp = ranges::copy(begin2, end2, out);
             return {begin1, tmp.in, tmp.out};
         }
 
@@ -292,6 +313,12 @@ namespace ranges
     /// \sa `set_symmetric_difference_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(set_symmetric_difference_fn, set_symmetric_difference)
+
+    namespace cpp20
+    {
+        using ranges::set_symmetric_difference_result;
+        using ranges::set_symmetric_difference;
+    }
     /// @}
 } // namespace ranges
 

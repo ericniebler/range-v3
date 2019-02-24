@@ -22,10 +22,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <utility>
-#include <functional>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/remove_if.hpp>
 #include "../simple_test.hpp"
@@ -176,11 +177,13 @@ int main()
     }
 
     {
-        // Check rvalue range
+        // Check rvalue ranges
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         using namespace std::placeholders;
-        auto r = ranges::remove_if(std::move(ia), std::bind(std::equal_to<int>(), _1, 2), &S::i);
-        CHECK(::is_dangling(r));
+        auto r0 = ranges::remove_if(std::move(ia), std::bind(std::equal_to<int>(), _1, 2), &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        static_assert(std::is_same<decltype(r0), ranges::dangling>::value, "");
+#endif // RANGES_WORKAROUND_MSVC_573728
         CHECK(ia[0].i == 0);
         CHECK(ia[1].i == 1);
         CHECK(ia[2].i == 3);
@@ -188,7 +191,15 @@ int main()
         CHECK(ia[4].i == 3);
         CHECK(ia[5].i == 4);
 
-        static_assert(std::is_same<decltype(r), ranges::dangling>::value, "");
+        std::vector<S> vec{S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
+        auto r1 = ranges::remove_if(std::move(vec), std::bind(std::equal_to<int>(), _1, 2), &S::i);
+        static_assert(std::is_same<decltype(r1), ranges::dangling>::value, "");
+        CHECK(vec[0].i == 0);
+        CHECK(vec[1].i == 1);
+        CHECK(vec[2].i == 3);
+        CHECK(vec[3].i == 4);
+        CHECK(vec[4].i == 3);
+        CHECK(vec[5].i == 4);
     }
 
     return ::test_result();

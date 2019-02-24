@@ -44,7 +44,7 @@ namespace ranges
     }
     /// \endcond
 
-    /// \addtogroup group-concepts
+    /// \addtogroup group-range
     /// @{
 
     // std::array is a SemiContainer, native arrays are not.

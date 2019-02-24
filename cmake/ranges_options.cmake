@@ -31,27 +31,27 @@ if (DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS AND
 endif()
 
 if (RANGES_VERBOSE_BUILD)
-  message("[range-v3]: verbose build enabled.")
+  message(STATUS "[range-v3]: verbose build enabled.")
 endif()
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_TESTS
   "Build the Range-v3 tests and integrate with ctest"
-  "${BUILD_TESTING}" "${is_subproject}" OFF)
+  ON "${is_standalone}" "${BUILD_TESTING}")
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_HEADER_CHECKS
   "Build the Range-v3 header checks and integrate with ctest"
-  "${BUILD_TESTING}" "${is_subproject}" OFF)
+  ON "${is_standalone}" "${BUILD_TESTING}")
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES
   "Build the Range-v3 examples and integrate with ctest"
-  ON "${is_subproject}" OFF)
+  ON "${is_standalone}" OFF)
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_PERF
   "Build the Range-v3 performance benchmarks"
-  ON "${is_subproject}" OFF)
+  ON "${is_standalone}" OFF)
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_DOCS
   "Build the Range-v3 documentation"
-  ON "${is_subproject}" OFF)
+  ON "${is_standalone}" OFF)
 
 mark_as_advanced(RANGE_V3_PERF)

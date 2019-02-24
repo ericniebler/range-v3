@@ -56,6 +56,11 @@ namespace ranges
     /// \sa `upper_bound_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(upper_bound_fn, upper_bound)
+
+    namespace cpp20
+    {
+        using ranges::upper_bound;
+    }
     /// @}
 } // namespace ranges
 

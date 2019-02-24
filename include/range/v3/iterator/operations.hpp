@@ -16,15 +16,20 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/iterator/associated_types.hpp>
 #include <range/v3/iterator/concepts.hpp>
+#include <range/v3/iterator/traits.hpp>
 #include <range/v3/range/concepts.hpp>
 
 namespace ranges
 {
+    /// \addtogroup group-iterator
+    /// @{
+
+    /// \cond
     CPP_template(typename I)(
         requires Iterator<I>)
     struct counted_iterator;
+    /// \endcond
 
     struct advance_fn
     {
@@ -133,15 +138,15 @@ namespace ranges
         template<typename I>
         static constexpr /*c++14*/
         void n_(I &i, iter_difference_t<I> n,
-            detail::input_iterator_tag);
+            detail::input_iterator_tag_);
         template<typename I>
         static constexpr /*c++14*/
         void n_(I &i, iter_difference_t<I> n,
-            detail::bidirectional_iterator_tag);
+            detail::bidirectional_iterator_tag_);
         template<typename I>
         static constexpr /*c++14*/
         void n_(I &i, iter_difference_t<I> n,
-            detail::random_access_iterator_tag);
+            detail::random_access_iterator_tag_);
         template<typename I, typename S>
         static constexpr /*c++14*/
         void to_impl_(I &i, S s, sentinel_tag);
@@ -157,11 +162,11 @@ namespace ranges
         template<typename I, typename D, typename S>
         static constexpr /*c++14*/
         D bounded_(I &it, D n, S bound, sentinel_tag,
-            detail::input_iterator_tag);
+            detail::input_iterator_tag_);
         template<typename I, typename D>
         static constexpr /*c++14*/
         D bounded_(I &it, D n, I bound, sentinel_tag,
-            detail::bidirectional_iterator_tag);
+            detail::bidirectional_iterator_tag_);
         template<typename I, typename D, typename S, typename Concept>
         static constexpr /*c++14*/
         D bounded_(I &it, D n, S bound, sized_sentinel_tag,
@@ -204,28 +209,23 @@ namespace ranges
                 requires Iterator<I>);
     };
 
-    /// \addtogroup group-utility
-    /// @{
-
-    /// \ingroup group-utility
     /// \sa `advance_fn`
-    /// Not to spec: advance is an ADL customization point
     RANGES_INLINE_VARIABLE(advance_fn, advance)
 
 #if RANGES_CXX_IF_CONSTEXPR < RANGES_CXX_IF_CONSTEXPR_17
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
-        detail::input_iterator_tag)
+        detail::input_iterator_tag_)
     {
         RANGES_EXPECT(n >= 0);
         for(; n > 0; --n)
             ++i;
     }
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
-        detail::bidirectional_iterator_tag)
+        detail::bidirectional_iterator_tag_)
     {
         if(n > 0)
             for(; n > 0; --n)
@@ -235,21 +235,21 @@ namespace ranges
                 --i;
     }
     template<typename I>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::n_(I &i, iter_difference_t<I> n,
-        detail::random_access_iterator_tag)
+        detail::random_access_iterator_tag_)
     {
         i += n;
     }
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_impl_(I &i, S s, sentinel_tag)
     {
         while(i != s)
             ++i;
     }
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_impl_(I &i, S s, sized_sentinel_tag)
     {
         iter_difference_t<I> d = s - i;
@@ -258,7 +258,7 @@ namespace ranges
     }
     // Advance to a certain position:
     template<typename I, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     void advance_fn::to_(I &i, S s, std::true_type)
     {
         i = static_cast<S &&>(s);
@@ -270,9 +270,9 @@ namespace ranges
         advance_fn::to_impl_(i, static_cast<S &&>(s), sentinel_tag_of<S, I>());
     }
     template<typename I, typename D, typename S>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, S bound, sentinel_tag,
-        detail::input_iterator_tag)
+        detail::input_iterator_tag_)
     {
         RANGES_EXPECT(0 <= n);
         for(; 0 != n && it != bound; --n)
@@ -280,9 +280,9 @@ namespace ranges
         return n;
     }
     template<typename I, typename D>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, I bound, sentinel_tag,
-        detail::bidirectional_iterator_tag)
+        detail::bidirectional_iterator_tag_)
     {
         if(0 <= n)
             for(; 0 != n && it != bound; --n)
@@ -293,7 +293,7 @@ namespace ranges
         return n;
     }
     template<typename I, typename D, typename S, typename Concept>
-    inline constexpr /*c++14*/
+    constexpr /*c++14*/
     D advance_fn::bounded_(I &it, D n, S bound, sized_sentinel_tag,
         Concept)
     {
@@ -345,7 +345,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `next_fn`
     RANGES_INLINE_VARIABLE(next_fn, next)
 
@@ -376,7 +375,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `prev_fn`
     RANGES_INLINE_VARIABLE(prev_fn, prev)
 
@@ -424,7 +422,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `iter_enumerate_fn`
     RANGES_INLINE_VARIABLE(iter_enumerate_fn, iter_enumerate)
 
@@ -457,7 +454,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `iter_distance_fn`
     RANGES_INLINE_VARIABLE(iter_distance_fn, iter_distance)
 
@@ -500,7 +496,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `iter_distance_compare_fn`
     RANGES_INLINE_VARIABLE(iter_distance_compare_fn, iter_distance_compare)
 
@@ -521,7 +516,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-utility
     /// \sa `iter_size_fn`
     RANGES_INLINE_VARIABLE(iter_size_fn, iter_size)
 
@@ -563,16 +557,11 @@ namespace ranges
     }
     /// \endcond
 
-    /// \addtogroup group-utility
-    /// @{
     RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::uncounted_fn,
                            uncounted)
     RANGES_INLINE_VARIABLE(adl_uncounted_recounted_detail::recounted_fn,
                            recounted)
-    /// @}
 
-    /// \addtogroup group-core
-    /// @{
     struct enumerate_fn : iter_enumerate_fn
     {
     private:
@@ -605,7 +594,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
     /// \sa `enumerate_fn`
     RANGES_INLINE_VARIABLE(enumerate_fn, enumerate)
 
@@ -640,7 +628,6 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
     /// \sa `distance_fn`
     RANGES_INLINE_VARIABLE(distance_fn, distance)
 
@@ -679,9 +666,16 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
     /// \sa `distance_compare_fn`
     RANGES_INLINE_VARIABLE(distance_compare_fn, distance_compare)
+
+    namespace cpp20
+    {
+        using ranges::advance;
+        using ranges::distance;
+        using ranges::next;
+        using ranges::prev;
+    }
     /// @}
 } // namespace ranges
 

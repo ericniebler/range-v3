@@ -55,9 +55,8 @@ namespace ranges
         using ranges::erase;
     }
 
-    /// \addtogroup group-concepts
+    /// \addtogroup group-range
     /// @{
-    /// \ingroup group-concepts
     CPP_def
     (
         template(typename Rng, typename I, typename S)

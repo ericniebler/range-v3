@@ -68,9 +68,10 @@ namespace ranges
         using base_t = meta::_t<detail::tagged_chain<Base, 0, Tags...>>;
 
         template<typename Other>
-        using can_convert =
-            meta::bool_<!std::is_same<Other, Base>::value &&
-                detail::is_convertible<Other, Base>::value>;
+        struct can_convert
+          : meta::bool_<!RANGES_IS_SAME(Other, Base) &&
+                detail::is_convertible<Other, Base>::value>
+        {};
     public:
         tagged() = default;
         using base_t::base_t;

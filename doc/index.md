@@ -525,6 +525,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
 <DT>\link ranges::view::remove_if_fn `view::remove_if`\endlink</DT>
   <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
+<DT>\link ranges::view::remove_fn `view::remove`\endlink</DT>
+  <DD>Given a source range and a value, filter out those elements that do not equal value.</DD>
 <DT>\link ranges::view::repeat_fn `view::repeat`\endlink</DT>
   <DD>Given a value, create a range that is that value repeated infinitely.</DD>
 <DT>\link ranges::view::repeat_n_fn `view::repeat_n`\endlink</DT>
@@ -594,6 +596,8 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
   <DD>Appends elements before the head of the source.</DD>
 <DT>\link ranges::action::remove_if_fn `action::remove_if`\endlink</DT>
   <DD>Removes all elements from the source that satisfy the predicate.</DD>
+<DT>\link ranges::action::unstable_remove_if_fn `action::unstable_remove_if`\endlink</DT>
+  <DD>Much faster (each element remove has constant time complexity), unordered version of `remove_if`. Requires bidirectional container.</DD>
 <DT>\link ranges::action::shuffle_fn `action::shuffle`\endlink</DT>
   <DD>Shuffles the source range.</DD>
 <DT>\link ranges::action::slice_fn `action::slice`\endlink</DT>

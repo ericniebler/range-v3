@@ -23,6 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/replace.hpp>
 #include "../simple_test.hpp"
@@ -91,17 +92,31 @@ int main()
         CHECK(i == ranges::end(ia));
     }
 
-    // test rvalue range
+    // test rvalue ranges
     {
         using P = std::pair<int,std::string>;
         P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
         auto i = ranges::replace(std::move(ia), 2, std::make_pair(42,"42"), &std::pair<int,std::string>::first);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+        CHECK(::is_dangling(i));
+#endif // RANGES_WORKAROUND_MSVC_573728
         CHECK(ia[0] == P{0,"0"});
         CHECK(ia[1] == P{1,"1"});
         CHECK(ia[2] == P{42,"42"});
         CHECK(ia[3] == P{3,"3"});
         CHECK(ia[4] == P{4,"4"});
+    }
+
+    {
+        using P = std::pair<int,std::string>;
+        std::vector<P> ia{{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
+        auto i = ranges::replace(std::move(ia), 2, std::make_pair(42,"42"), &std::pair<int,std::string>::first);
         CHECK(::is_dangling(i));
+        CHECK(ia[0] == P{0,"0"});
+        CHECK(ia[1] == P{1,"1"});
+        CHECK(ia[2] == P{42,"42"});
+        CHECK(ia[3] == P{3,"3"});
+        CHECK(ia[4] == P{4,"4"});
     }
 
     return ::test_result();

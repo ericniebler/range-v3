@@ -87,7 +87,7 @@ namespace ranges
     } // namespace detail
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
     template<typename Derived, cardinality Cardinality /* = finite*/>
     struct view_interface
@@ -162,16 +162,16 @@ namespace ranges
         }
         /// If the size of the range is known at compile-time and finite,
         /// return it.
-        template<bool True = true>
+        template<bool True = true, int = 42>
         static constexpr auto size() noexcept ->
             CPP_ret(std::size_t)(
                 requires True && Cardinality >= 0)
         {
             return static_cast<std::size_t>(Cardinality);
         }
-        /// If `Sentinel<sentinel_t<Derived>, iterator_t<Derived>>` is satisfied,
-        /// and if `Derived` is a `ForwardRange`, then return `end - begin` cast
-        /// to an unsigned integer.
+        /// If `SizedSentinel<sentinel_t<Derived>, iterator_t<Derived>>` is
+        /// satisfied, and if `Derived` is a `ForwardRange`, then return
+        /// `end - begin` cast to an unsigned integer.
         template<bool True = true>
         constexpr /*c++14*/ auto size() ->
             CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(
@@ -486,6 +486,14 @@ namespace ranges
             return view_interface::print_(sout, rng);
         }
     };
+
+    namespace cpp20
+    {
+        CPP_template(typename Derived)(
+            requires std::is_class<Derived>::value &&
+                Same<Derived, meta::_t<std::remove_cv<Derived>>>)
+        using view_interface = ranges::view_interface<Derived, ranges::unknown>;
+    }
     /// @}
 }
 

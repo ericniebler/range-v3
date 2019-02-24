@@ -68,6 +68,11 @@ namespace ranges
     /// \sa `find_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(find_if_fn, find_if)
+
+    namespace cpp20
+    {
+        using ranges::find_if;
+    }
     /// @}
 } // namespace ranges
 

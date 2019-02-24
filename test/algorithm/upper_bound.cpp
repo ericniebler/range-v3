@@ -13,8 +13,8 @@
 //  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt
 //  or a copy at http://stlab.adobe.com/licenses.html)
 
-#include <vector>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include "../simple_test.hpp"
@@ -44,8 +44,10 @@ int main()
     using ranges::size;
     using ranges::less;
 
-    std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
-    const std::pair<int, int> c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    using P = std::pair<int, int>;
+
+    P a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+    P const c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
 
     CHECK(ranges::aux::upper_bound_n(begin(a), size(a), a[0]) == &a[1]);
     CHECK(ranges::aux::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2]);
@@ -64,20 +66,35 @@ int main()
     CHECK(ranges::upper_bound(a, 1, less(), &std::pair<int, int>::first) == &a[4]);
     CHECK(ranges::upper_bound(c, 1, less(), &std::pair<int, int>::first) == &c[4]);
 
+    std::vector<P> vec_a(ranges::begin(a), ranges::end(a));
+    std::vector<P> const vec_c(ranges::begin(c), ranges::end(c));
+
     CHECK(ranges::upper_bound(ranges::view::all(a), a[2]) == &a[3]);
     CHECK(ranges::upper_bound(ranges::view::all(c), c[3]) == &c[4]);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(ranges::upper_bound(std::move(a), a[2])));
     CHECK(::is_dangling(ranges::upper_bound(std::move(c), c[3])));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_a), vec_a[2])));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_c), vec_c[3])));
 
     CHECK(ranges::upper_bound(ranges::view::all(a), a[4], less()) == &a[5]);
     CHECK(ranges::upper_bound(ranges::view::all(c), c[5], less()) == &c[6]);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(ranges::upper_bound(std::move(a), a[4], less())));
     CHECK(::is_dangling(ranges::upper_bound(std::move(c), c[5], less())));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_a), vec_a[4], less())));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_c), vec_c[5], less())));
 
     CHECK(ranges::upper_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first) == &a[4]);
     CHECK(ranges::upper_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first) == &c[4]);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(ranges::upper_bound(std::move(a), 1, less(), &std::pair<int, int>::first)));
     CHECK(::is_dangling(ranges::upper_bound(std::move(c), 1, less(), &std::pair<int, int>::first)));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_a), 1, less(), &std::pair<int, int>::first)));
+    CHECK(::is_dangling(ranges::upper_bound(std::move(vec_c), 1, less(), &std::pair<int, int>::first)));
 
     return test_result();
 }

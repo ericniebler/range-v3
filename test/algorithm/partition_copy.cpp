@@ -23,6 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <tuple>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition_copy.hpp>
 #include <range/v3/view/counted.hpp>
@@ -113,16 +114,36 @@ void test_rvalue()
 {
     // Test rvalue ranges
     const S ia[] = {S{1}, S{2}, S{3}, S{4}, S{6}, S{8}, S{5}, S{7}};
-    S r1[10] = {S{0}};
-    S r2[10] = {S{0}};
+    S r1[10] = {};
+    S r2[10] = {};
     auto p = ranges::partition_copy(std::move(ia), r1, r2, is_odd(), &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(p.in));
+#endif
     CHECK(p.out1 == r1 + 4);
     CHECK(r1[0].i == 1);
     CHECK(r1[1].i == 3);
     CHECK(r1[2].i == 5);
     CHECK(r1[3].i == 7);
     CHECK(p.out2 == r2 + 4);
+    CHECK(r2[0].i == 2);
+    CHECK(r2[1].i == 4);
+    CHECK(r2[2].i == 6);
+    CHECK(r2[3].i == 8);
+
+    std::fill(r1 + 0, r1 + 10, S{});
+    std::fill(r2 + 0, r2 + 10, S{});
+    std::vector<S> vec(ranges::begin(ia), ranges::end(ia));
+    auto q = ranges::partition_copy(std::move(vec), r1, r2, is_odd(), &S::i);
+#ifndef RANGES_WORKAROUND_MSVC_573728
+    CHECK(::is_dangling(q.in));
+#endif
+    CHECK(q.out1 == r1 + 4);
+    CHECK(r1[0].i == 1);
+    CHECK(r1[1].i == 3);
+    CHECK(r1[2].i == 5);
+    CHECK(r1[3].i == 7);
+    CHECK(q.out2 == r2 + 4);
     CHECK(r2[0].i == 2);
     CHECK(r2[1].i == 4);
     CHECK(r2[2].i == 6);

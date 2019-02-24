@@ -230,15 +230,23 @@ namespace ranges
         template<typename...Args>
         constexpr auto CPP_auto_fun(operator())(Args &&...args) (const &)
         (
-            return ((T const &) data_)(static_cast<Args &&>(args)...)
+            return data_(static_cast<Args &&>(args)...)
         )
+#ifdef RANGES_WORKAROUND_MSVC_786376
+        template<typename...Args, typename U = T>
+        constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
+        (
+            return ((U &&) data_)(static_cast<Args &&>(args)...)
+        )
+#else // ^^^ workaround / no workaround vvv
         template<typename...Args>
         constexpr /*c++14*/ auto CPP_auto_fun(operator())(Args &&...args) (mutable &&)
         (
             return ((T &&) data_)(static_cast<Args &&>(args)...)
         )
+#endif // RANGES_WORKAROUND_MSVC_786376
         template<typename...Args>
-        constexpr void operator()(Args &&...args) const && = delete;
+        void operator()(Args &&...) const && = delete;
     };
 
     template<typename T>

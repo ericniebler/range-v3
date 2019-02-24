@@ -23,7 +23,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-core
+    /// \addtogroup group-views
     /// @{
     struct getlines_view
       : view_facade<getlines_view, unknown>

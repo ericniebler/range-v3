@@ -58,6 +58,11 @@ namespace ranges
     /// \sa `max_element_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(max_element_fn, max_element)
+
+    namespace cpp20
+    {
+        using ranges::max_element;
+    }
     /// @}
 } // namespace ranges
 

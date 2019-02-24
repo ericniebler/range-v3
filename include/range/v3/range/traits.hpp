@@ -30,23 +30,17 @@ namespace ranges
     {
         template<typename I, typename S>
         using common_iterator_t =
-            meta::if_c<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
+            enable_if_t<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
     }
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-range
     /// @{
     template<typename I, typename S>
     using common_iterator_t =
-        meta::if_<std::is_same<I, S>, I, detail::common_iterator_t<I, S>>;
+        detail::if_then_t<std::is_same<I, S>::value, I, detail::common_iterator_t<I, S>>;
 
     // Aliases (SFINAE-able)
-    template<typename Rng>
-    using iterator_t = decltype(begin(std::declval<Rng &>()));
-
-    template<typename Rng>
-    using sentinel_t = decltype(end(std::declval<Rng &>()));
-
     template<typename Rng>
     using range_difference_t = iter_difference_t<iterator_t<Rng>>;
 
@@ -79,7 +73,7 @@ namespace ranges
     template<typename Rng>
     using range_category_t
         RANGES_DEPRECATED("range_category_t is deprecated. Use the range concepts instead.") =
-            iterator_category_t<iterator_t<Rng>>;
+            meta::_t<detail::iterator_category<iterator_t<Rng>>>;
 
     template<typename Rng>
     using range_size_type_t
@@ -108,7 +102,7 @@ namespace ranges
     // User customization point for specifying the cardinality of ranges:
     template<typename Rng, typename Void /*= void*/>
     struct range_cardinality
-      : meta::if_<std::is_same<Rng, uncvref_t<Rng>>,
+      : detail::if_then_t<RANGES_IS_SAME(Rng, uncvref_t<Rng>),
             decltype(detail::test_cardinality(static_cast<uncvref_t<Rng> *>(nullptr))),
             range_cardinality<uncvref_t<Rng>>>
     {};

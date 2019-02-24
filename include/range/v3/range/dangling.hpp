@@ -22,7 +22,7 @@
 
 namespace ranges
 {
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// A wrapper for an iterator or a sentinel into a range that may
     /// no longer be valid.
     struct dangling
@@ -67,6 +67,12 @@ namespace ranges
         constexpr auto &sanitize = static_const<_sanitize_fn>::value;
     }
     /// \endcond
+
+    namespace cpp20
+    {
+        using ranges::dangling;
+        using ranges::safe_iterator_t;
+    }
 }
 
 #endif

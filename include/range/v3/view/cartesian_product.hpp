@@ -133,10 +133,6 @@ namespace ranges
             constify_if<cartesian_product_view> *view_;
             std::tuple<iterator_t<constify_if<Views>>...> its_;
 
-            void next_(meta::size_t<0>)
-            {
-                RANGES_EXPECT(false);
-            }
             void next_(meta::size_t<1>)
             {
                 auto &v = std::get<0>(view_->views_);
@@ -186,11 +182,6 @@ namespace ranges
                 return std::get<N - 1>(its_) == std::get<N - 1>(that.its_) &&
                     equal_(that, meta::size_t<N - 1>{});
             }
-            std::intmax_t distance_(cursor const &, meta::size_t<0>) const
-            {
-                CPP_assert(sizeof...(Views) == 0);
-                return 0;
-            }
             std::intmax_t distance_(cursor const &that, meta::size_t<1>) const
             {
                 return std::get<0>(that.its_) - std::get<0>(its_);
@@ -203,10 +194,9 @@ namespace ranges
                 d += std::get<N - 1>(that.its_) - std::get<N - 1>(its_);
                 return d;
             }
-            void advance_(meta::size_t<0>, std::intmax_t n)
+            void advance_(meta::size_t<0>, std::intmax_t)
             {
-                RANGES_EXPECT(sizeof...(Views) == 0);
-                RANGES_EXPECT(n == 0);
+                RANGES_EXPECT(false);
             }
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
@@ -260,10 +250,6 @@ RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
                 i = first + static_cast<D>(n_mod);
             }
 RANGES_DIAGNOSTIC_POP
-            void check_at_end_(meta::size_t<0>, bool = false)
-            {
-                static_assert(sizeof...(Views) == 0, "");
-            }
             void check_at_end_(meta::size_t<1>, bool at_end = false)
             {
                 if(at_end)
@@ -307,9 +293,9 @@ RANGES_DIAGNOSTIC_POP
               : cursor(end_tag{}, view,
                     meta::bool_<CommonView<meta::at_c<meta::list<Views...>, 0>>>{})
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(
+            CPP_template(bool Other)(
                 requires IsConst_ && (!Other))
+            cursor(cursor<Other> that)
               : view_(that.view_)
               , its_(std::move(that.its_))
             {}
@@ -360,40 +346,30 @@ RANGES_DIAGNOSTIC_POP
         }
         CPP_member
         auto end_cursor() -> CPP_ret(cursor<false>)(
-            requires sizeof...(Views) == 0 ||
-                CartesianProductViewCanBidi<std::false_type, Views...>)
+            requires CartesianProductViewCanBidi<std::false_type, Views...>)
         {
-            using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
-            return cursor<false>{Tag{}, *this};
+            return cursor<false>{end_tag{}, *this};
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(cursor<true>)(
-            requires sizeof...(Views) == 0 ||
-                CartesianProductViewCanBidi<std::true_type, Views...>)
+            requires CartesianProductViewCanBidi<std::true_type, Views...>)
         {
-            using Tag = meta::if_c<sizeof...(Views) == 0, begin_tag, end_tag>;
-            return cursor<true>{Tag{}, *this};
+            return cursor<true>{end_tag{}, *this};
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(default_sentinel_t)(
-            requires sizeof...(Views) != 0 &&
-                !CartesianProductViewCanBidi<std::true_type, Views...>)
+            requires !CartesianProductViewCanBidi<std::true_type, Views...>)
         {
             return {};
         }
     public:
         cartesian_product_view() = default;
-        CPP_member
-        explicit constexpr CPP_ctor(cartesian_product_view)(Views... views)(
-            requires sizeof...(Views) != 0)
+        explicit constexpr cartesian_product_view(Views... views)
           : views_{detail::move(views)...}
         {}
-        CPP_member
-#ifndef RANGES_WORKAROUND_MSVC_DC338193
-        static
-#endif // RANGES_WORKAROUND_MSVC_DC338193
-        constexpr auto size() noexcept -> CPP_ret(std::intmax_t)(
+        CPP_template(int = 42)(
             requires my_cardinality >= 0)
+        static constexpr std::intmax_t size() noexcept
         {
             return std::intmax_t{my_cardinality};
         }

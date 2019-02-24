@@ -94,6 +94,11 @@ namespace ranges
     /// \sa `partition_point_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(partition_point_fn, partition_point)
+
+    namespace cpp20
+    {
+        using ranges::partition_point;
+    }
     /// @}
 } // namespace ranges
 

@@ -27,7 +27,7 @@ namespace ranges
 {
     /// Checked indexed range access.
     ///
-    /// \ingroup group-core
+    /// \ingroup group-range
     struct at_fn
     {
         /// \return `begin(rng)[n]`
@@ -54,13 +54,13 @@ namespace ranges
 
     /// Checked indexed range access.
     ///
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \sa `at_fn`
     RANGES_INLINE_VARIABLE(at_fn, at)
 
     /// Unchecked indexed range access.
     ///
-    /// \ingroup group-core
+    /// \ingroup group-range
     struct index_fn
     {
         /// \return `begin(rng)[n]`
@@ -78,11 +78,11 @@ namespace ranges
 
     /// Unchecked indexed range access.
     ///
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \sa `index_fn`
     RANGES_INLINE_VARIABLE(index_fn, index)
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     struct back_fn
     {
         /// \return `*prev(end(rng))`
@@ -95,11 +95,11 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \sa `back_fn`
     RANGES_INLINE_VARIABLE(back_fn, back)
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     struct front_fn
     {
         /// \return `*begin(rng)`
@@ -112,7 +112,7 @@ namespace ranges
         }
     };
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     /// \sa `front_fn`
     RANGES_INLINE_VARIABLE(front_fn, front)
 }

@@ -39,7 +39,7 @@ namespace ranges
     struct sample_fn
     {
     private:
-        template<typename I, typename S, typename O, typename Gen = detail::default_random_engine &>
+        template<typename I, typename S, typename O, typename Gen>
         static auto sized_impl(I first, S last, iter_difference_t<I> pop_size, O out,
                 iter_difference_t<I> n, Gen &&gen) ->
             sample_result<I, O>
@@ -178,6 +178,13 @@ namespace ranges
     /// \sa `sample_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(sample_fn, sample)
+
+    // Not yet!
+    //  namespace cpp20
+    // {
+    //     using ranges::sample_result;
+    //     using ranges::sample;
+    // }
     /// @}
 } // namespace ranges
 

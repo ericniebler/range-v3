@@ -40,5 +40,5 @@ if (RANGES_CXX_COMPILER_GCC)
 endif()
 
 if (RANGES_VERBOSE_BUILD)
-  message("[range-v3]: test C++ flags: ${CMAKE_CXX_FLAGS}")
+  message(STATUS "[range-v3]: test C++ flags: ${CMAKE_CXX_FLAGS}")
 endif()

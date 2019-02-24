@@ -33,6 +33,8 @@
 
 namespace ranges
 {
+    /// \addtogroup group-numerics
+    /// @{
     CPP_def
     (
         template(typename I, typename O, typename BOp = minus, typename P = identity)
@@ -116,6 +118,7 @@ namespace ranges
     };
 
     RANGES_INLINE_VARIABLE(adjacent_difference_fn, adjacent_difference)
+    /// @}
 }
 
 #endif

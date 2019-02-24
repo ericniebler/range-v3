@@ -113,14 +113,6 @@ namespace ranges
     decltype(__VA_ARGS__)                                       \
     /**/
 
-#ifdef __clang__
-#define RANGES_IS_SAME(...) __is_same(__VA_ARGS__)
-#elif defined(__GNUC__) && __GNUC__ >= 6
-#define RANGES_IS_SAME(...) __is_same_as(__VA_ARGS__)
-#else
-#define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
-#endif
-
 // Non-portable forward declarations of standard containers
 #ifdef _LIBCPP_VERSION
 #define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD
@@ -222,21 +214,28 @@ namespace ranges
 #if _MSC_VER < 1920
 #define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
 #define RANGES_WORKAROUND_MSVC_401490 // conversion of constant expressions with representable values is NOT narrowing
-#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
 #define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
-#endif
+#endif // _MSC_VER < 1920
 
 #define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
-#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
+#define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references [no workaround]
+#define RANGES_WORKAROUND_MSVC_589046 // hidden friends should not be visible to qualified name lookup
+#define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function (Fix not yet live)
 #define RANGES_WORKAROUND_MSVC_677925 // Bogus C2676 "binary '++': '_Ty' does not define this operator"
 #define RANGES_WORKAROUND_MSVC_683388 // decltype(*i) is incorrectly an rvalue reference for pointer-to-array i
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control during specialization matching
-#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error
-#define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
+#define RANGES_WORKAROUND_MSVC_699982 // Nasty context-sensitive alias expansion / SFINAE error (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as alias template argument (Fix not yet live)
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected with C3615
+#define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
+#define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
+#define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
+#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
+#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
+#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent default non-type template argument
 
-// Relocate the following into the <1920 section after VS2019 Preview 2 release:
-#define RANGES_WORKAROUND_MSVC_711347
-// MSVC doesn't define __cpp_coroutines even with /await
+// 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
 #define RANGES_CXX_COROUTINES RANGES_CXX_COROUTINES_TS1
 #endif
@@ -274,6 +273,9 @@ namespace ranges
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
 #define RANGES_WORKAROUND_CLANG_37556
+#if __clang_major__ < 4
+#define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on clang-3.x
+#endif
 #else // __GNUC__
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
@@ -337,6 +339,14 @@ namespace ranges
 #else
 #define RANGES_CXX_VARIABLE_TEMPLATES RANGES_CXX_FEATURE(VARIABLE_TEMPLATES)
 #endif
+#endif
+
+#if (defined(__cpp_lib_type_trait_variable_templates) && \
+    __cpp_lib_type_trait_variable_templates > 0) || \
+    RANGES_CXX_VER >= RANGES_CXX_STD_17
+#define RANGES_CXX_TRAIT_VARIABLE_TEMPLATES 1
+#else
+#define RANGES_CXX_TRAIT_VARIABLE_TEMPLATES 0
 #endif
 
 #ifndef RANGES_CXX_ATTRIBUTE_DEPRECATED
@@ -471,12 +481,14 @@ namespace ranges
 
 #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17 &&             \
     !defined(RANGES_DOXYGEN_INVOKED)
+#define RANGES_INLINE_VAR
 #define RANGES_INLINE_VARIABLE(type, name)                                      \
     inline namespace                                                            \
     {                                                                           \
         constexpr auto &name = ::ranges::static_const<type>::value;             \
     }
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
+#define RANGES_INLINE_VAR inline
 #define RANGES_INLINE_VARIABLE(type, name)                                      \
     inline constexpr type name{};                                               \
     /**/
@@ -551,6 +563,16 @@ namespace ranges
 #define RANGES_CXX_ALIGNED_NEW 0L
 #endif
 #endif // RANGES_CXX_ALIGNED_NEW
+
+#if defined(__clang__)
+#define RANGES_IS_SAME(...) __is_same(__VA_ARGS__)
+#elif defined(__GNUC__) && __GNUC__ >= 6
+#define RANGES_IS_SAME(...) __is_same_as(__VA_ARGS__)
+#elif RANGES_CXX_TRAIT_VARIABLE_TEMPLATES
+#define RANGES_IS_SAME(...) std::is_same_v<__VA_ARGS__>
+#else
+#define RANGES_IS_SAME(...) std::is_same<__VA_ARGS__>::value
+#endif
 
 #ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \

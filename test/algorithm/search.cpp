@@ -22,6 +22,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/search.hpp>
 #include <range/v3/view/counted.hpp>
@@ -219,8 +220,15 @@ int main()
         int ie[] = {1, 2, 3};
         CHECK(ranges::search(ranges::view::all(ib), ie).begin() == ib+4);
     }
+#ifndef RANGES_WORKAROUND_MSVC_573728
     {
         int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
+        int ie[] = {1, 2, 3};
+        CHECK(::is_dangling(ranges::search(std::move(ib), ie)));
+    }
+#endif
+    {
+        std::vector<int> ib{0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
         int ie[] = {1, 2, 3};
         CHECK(::is_dangling(ranges::search(std::move(ib), ie)));
     }

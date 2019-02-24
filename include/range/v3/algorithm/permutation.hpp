@@ -296,6 +296,11 @@ namespace ranges
     /// \sa `prev_permutation_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(prev_permutation_fn, prev_permutation)
+
+    namespace cpp20
+    {
+        using ranges::prev_permutation;
+    }
     /// @}
 } // namespace ranges
 

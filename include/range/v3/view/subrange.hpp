@@ -149,7 +149,9 @@ namespace ranges
     }
     /// \endcond
 
-    template<typename I, typename S = I,
+    template<
+        typename I,
+        typename S = I,
         subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>())>
     struct subrange;
 
@@ -369,7 +371,7 @@ namespace ranges
         CPP_member
         constexpr auto get_size_() const ->
             CPP_ret(size_type)(
-                requires K == subrange_kind::sized && not detail::store_size_<K, S, I>())
+                requires SizedSentinel<S, I>)
         {
             return static_cast<size_type>(last_() - first_());
         }
@@ -411,7 +413,7 @@ namespace ranges
         subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
-    // in leu of deduction guides, use make_subrange
+    // in lieu of deduction guides, use make_subrange
     struct make_subrange_fn
     {
         template<typename I, typename S>
@@ -452,6 +454,21 @@ namespace ranges
     template<typename R>
     using safe_subrange_t =
         detail::maybe_dangling_<R, subrange<iterator_t<R>>>;
+
+    namespace cpp20
+    {
+        using ranges::subrange_kind;
+
+        CPP_template(
+            typename I,
+            typename S = I,
+            subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>()))(
+            requires Iterator<I> && Sentinel<S, I> &&
+                (K == subrange_kind::sized || !SizedSentinel<S, I>))
+        using subrange = ranges::subrange<I, S>;
+
+        using ranges::safe_subrange_t;
+    }
     /// @}
 }
 
@@ -460,18 +477,18 @@ RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 namespace std
 {
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_size<::ranges::subrange<I, S, K>>
-	  : std::integral_constant<size_t, 2>
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_size<::ranges::subrange<I, S, K>>
+      : std::integral_constant<size_t, 2>
     {};
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<0, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<0, ::ranges::subrange<I, S, K>>
+    {
         using type = I;
     };
-	template<typename I, typename S, ::ranges::subrange_kind K>
-	struct tuple_element<1, ::ranges::subrange<I, S, K>>
-	{
+    template<typename I, typename S, ::ranges::subrange_kind K>
+    struct tuple_element<1, ::ranges::subrange<I, S, K>>
+    {
         using type = S;
     };
 }

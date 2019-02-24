@@ -73,6 +73,11 @@ namespace ranges
     /// \sa `unique_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(unique_fn, unique)
+
+    namespace cpp20
+    {
+        using ranges::unique;
+    }
     /// @}
 } // namespace ranges
 

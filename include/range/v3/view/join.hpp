@@ -210,11 +210,11 @@ namespace ranges
             {
                 satisfy();
             }
-            template<bool Other>
-            constexpr CPP_ctor(cursor)(cursor<Other> that)(
-                requires Const && !Other &&
+            CPP_template(bool Other)(
+                requires Const && (!Other) &&
                     ConvertibleTo<iterator_t<Rng>, iterator_t<COuter>> &&
                     ConvertibleTo<iterator_t<range_reference_t<Rng>>, iterator_t<CInner>>)
+            constexpr cursor(cursor<Other> that)
               : rng_(that.rng_)
               , outer_it_(std::move(that.outer_it_))
               , inner_it_(std::move(that.inner_it_))
@@ -507,7 +507,19 @@ namespace ranges
         );
         /// \endcond
 
+        struct cpp20_join_fn
+        {
+            template<typename Rng>
+            auto operator()(Rng &&rng) const ->
+                CPP_ret(join_view<all_t<Rng>>)(
+                    requires JoinableRange<Rng>)
+            {
+                return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
+            }
+        };
+
         struct join_fn
+          : cpp20_join_fn
         {
         private:
            friend view_access;
@@ -520,13 +532,8 @@ namespace ranges
            template<typename Rng>
            using inner_value_t = range_value_t<range_reference_t<Rng>>;
         public:
-            template<typename Rng>
-            auto operator()(Rng &&rng) const ->
-                CPP_ret(join_view<all_t<Rng>>)(
-                    requires JoinableRange<Rng>)
-            {
-                return join_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
-            }
+            using cpp20_join_fn::operator();
+
             template<typename Rng>
             auto operator()(Rng &&rng, inner_value_t<Rng> v) const ->
                 CPP_ret(join_with_view<all_t<Rng>, single_view<inner_value_t<Rng>>>)(
@@ -560,6 +567,19 @@ namespace ranges
         join_with_view<view::all_t<Rng>, view::all_t<ValRng>>;
 #endif
 
+    namespace cpp20
+    {
+        namespace view
+        {
+            RANGES_INLINE_VARIABLE(ranges::view::view<ranges::view::cpp20_join_fn>, join)
+        }
+        CPP_template(typename Rng)(
+            requires InputRange<Rng> && View<Rng> &&
+                InputRange<iter_reference_t<iterator_t<Rng>>> &&
+                (std::is_reference<iter_reference_t<iterator_t<Rng>>>::value ||
+                View<iter_value_t<iterator_t<Rng>>>))
+        using join_view = ranges::join_view<Rng>;
+    }
 }
 
 #include <range/v3/detail/satisfy_boost_range.hpp>

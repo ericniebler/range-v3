@@ -29,7 +29,7 @@ namespace ranges
 {
     template<typename Rng>
     struct take_view
-      : view_interface<take_view<Rng>>
+      : view_interface<take_view<Rng>, finite>
     {
     private:
         CPP_assert(View<Rng>);
@@ -47,28 +47,40 @@ namespace ranges
             constexpr explicit sentinel(sentinel_t<Base> end)
               : end_(std::move(end))
             {}
-            template<bool Other>
-            constexpr CPP_ctor(sentinel)(sentinel<Other> that)(
+            CPP_template(bool Other)(
                 requires Const && (!Other) &&
                     ConvertibleTo<sentinel_t<Rng>, sentinel_t<Base>>)
+            constexpr sentinel(sentinel<Other> that)
               : end_(std::move(that.end_))
             {}
             constexpr sentinel_t<Base> base() const
             {
                 return end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(sentinel const &x, CI const &y)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator==(CI const &y, sentinel const &x)
             {
                 return y.count() == 0 || y.base() == x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(sentinel const &x, CI const &y)
             {
                 return y.count() != 0 && y.base() != x.end_;
             }
+#ifdef RANGES_WORKAROUND_MSVC_756601
+            template<typename = void>
+#endif // RANGES_WORKAROUND_MSVC_756601
             friend constexpr bool operator!=(CI const &y, sentinel const &x)
             {
                 return y.count() != 0 && y.base() != x.end_;
@@ -276,6 +288,17 @@ namespace ranges
         /// \relates take_fn
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<take_fn>, take)
+    }
+
+    namespace cpp20
+    {
+        namespace view
+        {
+            using ranges::view::take;
+        }
+        CPP_template(typename Rng)(
+            requires View<Rng>)
+        using take_view = ranges::take_view<Rng>;
     }
     /// @}
 }

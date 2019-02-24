@@ -192,7 +192,7 @@ namespace ranges
                         requires MoveConstructible<T> && Swappable<T>)
                 {
                     constexpr bool can_swap_trivially =
-                        !::concepts::adl_swap_detail::is_adl_swappable_<T>::value &&
+                        !::concepts::adl_swap_detail::is_adl_swappable_v<T> &&
                         detail::is_trivially_move_constructible<T>::value &&
                         detail::is_trivially_move_assignable<T>::value;
 
@@ -678,17 +678,15 @@ namespace ranges
                 detail::move(**this);
         }
 
-        template<typename U>
-        constexpr auto value_or(U &&u) const & ->
-            CPP_ret(T)(
-                requires CopyConstructible<T> && ConvertibleTo<U, T>)
+        CPP_template(typename U)(
+            requires CopyConstructible<T> && ConvertibleTo<U, T>)
+        constexpr T value_or(U &&u) const &
         {
             return has_value() ? **this : static_cast<T>((U &&)u);
         }
-        template<typename U>
-        constexpr auto value_or(U &&u) && ->
-            CPP_ret(T)(
-                requires MoveConstructible<T> && ConvertibleTo<U, T>)
+        CPP_template(typename U)(
+            requires MoveConstructible<T> && ConvertibleTo<U, T>)
+        constexpr T value_or(U &&u) &&
         {
             return has_value() ? detail::move(**this) : static_cast<T>((U &&)u);
         }

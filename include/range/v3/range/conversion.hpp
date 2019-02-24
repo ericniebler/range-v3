@@ -102,7 +102,7 @@ namespace ranges
                 }
 
                 template<typename Rng>
-                using container_t = meta::invoke<ToContainer, range_value_t<Rng>>;
+                using container_t = meta::invoke<ToContainer, Rng>;
 
             public:
                 template<typename Rng>
@@ -118,7 +118,7 @@ namespace ranges
             };
 
             template<typename ToContainer, typename Rng>
-            using container_t = meta::invoke<ToContainer, range_value_t<Rng>>;
+            using container_t = meta::invoke<ToContainer, Rng>;
 
             template<typename Rng, typename ToContainer>
             friend auto operator|(Rng &&rng, fn<ToContainer>(*)(to_container)) ->
@@ -132,26 +132,49 @@ namespace ranges
 
         template<typename ToContainer>
         using to_container_fn = to_container::fn<ToContainer>;
+
+        template<template<typename...> class ContT>
+        struct from_range
+        {
+#if RANGES_CXX_DEDUCTION_GUIDES >= RANGES_CXX_DEDUCTION_GUIDES_17
+            // Attempt to use a deduction guide first...
+            template<typename Rng>
+            static auto from_rng_(int) ->
+                decltype(ContT(range_common_iterator_t<Rng>{},
+                               range_common_iterator_t<Rng>{}));
+            // No deduction guide. Fallback to instantiating with the
+            // iterator's value type.
+            template<typename Rng>
+            static auto from_rng_(long) ->
+                meta::invoke<meta::quote<ContT>, range_value_t<Rng>>;
+
+            template<typename Rng>
+            using invoke = decltype(from_range::from_rng_<Rng>(0));
+#else
+            template<typename Rng>
+            using invoke = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>;
+#endif
+        };
     }
     /// \endcond
 
-    /// \addtogroup group-core
+    /// \addtogroup group-range
     /// @{
 
-    /// \ingroup group-core
+    /// \ingroup group-range
     RANGES_INLINE_VARIABLE(
-        detail::to_container_fn<meta::quote<std::vector>>,
+        detail::to_container_fn<detail::from_range<std::vector>>,
         to_vector)
 
     /// \cond
     namespace _to_
     {
-    /// \endond
+    /// \endcond
 
         /// \brief For initializing a container of the specified type with the elements of an Range
         template<template<typename...> class ContT>
         auto to(RANGES_HIDDEN_DETAIL(detail::to_container = {})) ->
-            detail::to_container_fn<meta::quote<ContT>>
+            detail::to_container_fn<detail::from_range<ContT>>
         {
             return {};
         }
@@ -163,7 +186,7 @@ namespace ranges
                 requires Range<Rng> &&
                     detail::ConvertibleToContainer<Rng, ContT<range_value_t<Rng>>>)
         {
-            return detail::to_container_fn<meta::quote<ContT>>{}(static_cast<Rng &&>(rng));
+            return detail::to_container_fn<detail::from_range<ContT>>{}(static_cast<Rng &&>(rng));
         }
 
         /// \overload
@@ -190,7 +213,7 @@ namespace ranges
             CPP_ret(ContT<T>)(
                 requires detail::ConvertibleToContainer<std::initializer_list<T>, ContT<T>>)
         {
-            return detail::to_container_fn<meta::quote<ContT>>{}(il);
+            return detail::to_container_fn<detail::from_range<ContT>>{}(il);
         }
         template<typename Cont, typename T>
         auto to(std::initializer_list<T> il) ->
@@ -215,7 +238,7 @@ namespace ranges
         template<template<typename...> class ContT>
         RANGES_DEPRECATED("Please use ranges::to (no underscore) instead.")
         auto to_(detail::to_container = {}) ->
-            detail::to_container_fn<meta::quote<ContT>>
+            detail::to_container_fn<detail::from_range<ContT>>
         {
             return {};
         }

@@ -98,7 +98,7 @@ namespace
 
         using IterTagOfBase =
             meta::if_c<ContiguousIterator<iterator_t<Base>>,
-                ranges::detail::random_access_iterator_tag,
+                ranges::detail::random_access_iterator_tag_,
                 iterator_tag_of<iterator_t<Base>>>;
 
         CPP_assert(Same<

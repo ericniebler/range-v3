@@ -13,8 +13,8 @@
 //  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt
 //  or a copy at http://stlab.adobe.com/licenses.html)
 
-#include <vector>
 #include <utility>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include "../simple_test.hpp"
@@ -66,8 +66,18 @@ int main()
 
     CHECK(ranges::lower_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first) == &a[2]);
     CHECK(ranges::lower_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first) == &c[2]);
+#ifndef RANGES_WORKAROUND_MSVC_573728
     CHECK(::is_dangling(ranges::lower_bound(std::move(a), 1, less(), &std::pair<int, int>::first)));
     CHECK(::is_dangling(ranges::lower_bound(std::move(c), 1, less(), &std::pair<int, int>::first)));
+#endif // RANGES_WORKAROUND_MSVC_573728
+    {
+        std::vector<std::pair<int, int>> vec_a(ranges::begin(a), ranges::end(a));
+        CHECK(::is_dangling(ranges::lower_bound(std::move(vec_a), 1, less(), &std::pair<int, int>::first)));
+    }
+    {
+        std::vector<std::pair<int, int>> const vec_c(ranges::begin(c), ranges::end(c));
+        CHECK(::is_dangling(ranges::lower_bound(std::move(vec_c), 1, less(), &std::pair<int, int>::first)));
+    }
 
     return test_result();
 }

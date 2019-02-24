@@ -93,8 +93,9 @@ namespace ranges
             cursor(cycled_view_t &rng)
               : rng_(&rng), it_(ranges::begin(rng.rng_))
             {}
-            template<bool Other>
-            CPP_ctor(cursor)(cursor<Other> that)(requires IsConst && (!Other))
+            CPP_template(bool Other)(
+                requires IsConst && (!Other))
+            cursor(cursor<Other> that)
               : rng_(that.rng_)
               , it_(std::move(that.it_))
             {}

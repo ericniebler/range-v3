@@ -26,6 +26,7 @@
 #include <range/v3/functional/compose.hpp>
 #include <range/v3/functional/identity.hpp>
 #include <range/v3/functional/invoke.hpp>
+#include <range/v3/functional/reference_wrapper.hpp>
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/utility/get.hpp>
@@ -494,7 +495,7 @@ namespace ranges
             void operator()(indexed_element<T, N> t) const
             {
                 using E = meta::at_c<meta::list<From...>, N>;
-                static_assert(std::is_same<T const, E const>::value,
+                static_assert(RANGES_IS_SAME(T const, E const),
                     "Is indexed_element broken?");
                 using F = meta::find<meta::list<To...>, E>;
                 static constexpr std::size_t M = sizeof...(To) - F::size();

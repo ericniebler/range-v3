@@ -29,22 +29,9 @@
 
 namespace ranges
 {
-    /// \ingroup group-concepts
-    CPP_def
-    (
-        template(typename I, typename O, typename C = equal_to, typename P = identity)
-        (concept UniqueCopyable)(I, O, C, P),
-            InputIterator<I> &&
-            IndirectRelation<C, projected<I, P>> &&
-            WeaklyIncrementable<O> &&
-            IndirectlyCopyable<I, O> && (
-                ForwardIterator<I> ||
-                ForwardIterator<O> ||
-                IndirectlyCopyableStorable<I, O>)
-    );
-
     /// \addtogroup group-algorithms
     /// @{
+
     template<typename I, typename O>
     using unique_copy_result = detail::in_out_result<I, O>;
 
@@ -53,7 +40,7 @@ namespace ranges
     private:
         template<typename I, typename S, typename O, typename C, typename P>
         static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
-            detail::input_iterator_tag, std::false_type)
+            detail::input_iterator_tag_, std::false_type)
         {
             if(begin != end)
             {
@@ -78,7 +65,7 @@ namespace ranges
 
         template<typename I, typename S, typename O, typename C, typename P>
         static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
-            detail::forward_iterator_tag, std::false_type)
+            detail::forward_iterator_tag_, std::false_type)
         {
             if(begin != end)
             {
@@ -101,7 +88,7 @@ namespace ranges
 
         template<typename I, typename S, typename O, typename C, typename P>
         static unique_copy_result<I, O> impl(I begin, S end, O out, C pred, P proj,
-            detail::input_iterator_tag, std::true_type)
+            detail::input_iterator_tag_, std::true_type)
         {
             if(begin != end)
             {
@@ -128,7 +115,13 @@ namespace ranges
         template<typename I, typename S, typename O, typename C = equal_to, typename P = identity>
         auto operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const ->
             CPP_ret(unique_copy_result<I, O>)(
-                requires UniqueCopyable<I, O, C, P> && Sentinel<S, I>)
+                requires InputIterator<I> && Sentinel<S, I> &&
+                    IndirectRelation<C, projected<I, P>> &&
+                    WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<I, O> && (
+                        ForwardIterator<I> ||
+                        ForwardIterator<O> ||
+                        IndirectlyCopyableStorable<I, O>))
         {
             return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
                 std::move(pred), std::move(proj), iterator_tag_of<I>(),
@@ -139,7 +132,13 @@ namespace ranges
         template<typename Rng, typename O, typename C = equal_to, typename P = identity>
         auto operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const ->
             CPP_ret(unique_copy_result<safe_iterator_t<Rng>, O>)(
-                requires UniqueCopyable<iterator_t<Rng>, O, C, P> && Range<Rng>)
+                requires Range<Rng> && InputIterator<iterator_t<Rng>> &&
+                    IndirectRelation<C, projected<iterator_t<Rng>, P>> &&
+                    WeaklyIncrementable<O> &&
+                    IndirectlyCopyable<iterator_t<Rng>, O> && (
+                        ForwardIterator<iterator_t<Rng>> ||
+                        ForwardIterator<O> ||
+                        IndirectlyCopyableStorable<iterator_t<Rng>, O>))
         {
             return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
                 std::move(pred), std::move(proj), iterator_tag_of<iterator_t<Rng>>(),
@@ -150,6 +149,12 @@ namespace ranges
     /// \sa `unique_copy_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(unique_copy_fn, unique_copy)
+
+    namespace cpp20
+    {
+        using ranges::unique_copy_result;
+        using ranges::unique_copy;
+    }
     /// @}
 } // namespace ranges
 

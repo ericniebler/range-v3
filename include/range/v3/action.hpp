@@ -37,5 +37,6 @@
 #include <range/v3/action/take_while.hpp>
 #include <range/v3/action/transform.hpp>
 #include <range/v3/action/unique.hpp>
+#include <range/v3/action/unstable_remove_if.hpp>
 
 #endif

@@ -25,19 +25,17 @@ RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_CXX17_COMPAT
 RANGES_DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS
 
-// constexpr invoke leads to premature function template instantiation
-// on clang-3.x
 #ifndef RANGES_CONSTEXPR_INVOKE
-#if !defined(__clang__) || __clang__ >= 4
-#define RANGES_CONSTEXPR_INVOKE 1
-#else
+#ifdef RANGES_WORKAROUND_CLANG_23135
 #define RANGES_CONSTEXPR_INVOKE 0
+#else
+#define RANGES_CONSTEXPR_INVOKE 1
 #endif
 #endif
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-functional
     /// @{
 
     /// \cond
@@ -57,14 +55,14 @@ namespace ranges
         );
 
         template<class T>
-        /*inline*/ constexpr bool is_reference_wrapper_v =
+        RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
             meta::is<T, reference_wrapper>::value ||
             meta::is<T, std::reference_wrapper>::value;
     }
     /// \endcond
 
     template<class T>
-    /*inline*/ constexpr bool is_reference_wrapper_v =
+    RANGES_INLINE_VAR constexpr bool is_reference_wrapper_v =
         detail::is_reference_wrapper_v<detail::decay_t<T>>;
 
     template<typename T>
@@ -170,6 +168,15 @@ namespace ranges
       : meta::defer<invoke_result_t, Fun, Args...>
     {};
     /// \endcond
+
+    namespace cpp20
+    {
+        using ranges::invoke;
+        using ranges::invoke_result;
+        using ranges::invoke_result_t;
+    }
+
+    /// @}
 } // namespace ranges
 
 RANGES_DIAGNOSTIC_POP

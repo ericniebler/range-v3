@@ -19,7 +19,7 @@
 
 namespace ranges
 {
-    /// \addtogroup group-utility
+    /// \addtogroup group-functional
     /// @{
     struct equal_to
     {
@@ -40,7 +40,7 @@ namespace ranges
             CPP_ret(bool)(
                 requires EqualityComparableWith<T, U>)
         {
-            return (T &&) t != (U &&) u;
+            return !equal_to{}((T &&) t, (U &&) u);
         }
         using is_transparent = void;
     };
@@ -57,10 +57,56 @@ namespace ranges
         using is_transparent = void;
     };
 
+    struct less_equal
+    {
+        template<typename T, typename U>
+        constexpr auto operator()(T &&t, U &&u) const ->
+            CPP_ret(bool)(
+                requires StrictTotallyOrderedWith<T, U>)
+        {
+            return !less{}((U &&) u, (T &&) t);
+        }
+        using is_transparent = void;
+    };
+
+    struct greater_equal
+    {
+        template<typename T, typename U>
+        constexpr auto operator()(T &&t, U &&u) const ->
+            CPP_ret(bool)(
+                requires StrictTotallyOrderedWith<T, U>)
+        {
+            return !less{}((T &&) t, (U &&) u);
+        }
+        using is_transparent = void;
+    };
+
+    struct greater
+    {
+        template<typename T, typename U>
+        constexpr auto operator()(T &&t, U &&u) const ->
+            CPP_ret(bool)(
+                requires StrictTotallyOrderedWith<T, U>)
+        {
+            return less{}((U &&) u, (T &&) t);
+        }
+        using is_transparent = void;
+    };
+
     using ordered_less
-        RANGES_DEPRECATED("Repace uses of ranges::less with ranges::less") =
+        RANGES_DEPRECATED("Repace uses of ranges::ordered_less with ranges::less") =
             less;
 
+    namespace cpp20
+    {
+        using ranges::equal_to;
+        using ranges::not_equal_to;
+        using ranges::less;
+        using ranges::less_equal;
+        using ranges::greater;
+        using ranges::greater_equal;
+    }
+    /// @}
 }
 
 #endif

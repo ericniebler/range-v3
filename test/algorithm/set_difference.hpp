@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
@@ -315,17 +316,26 @@ int main()
         static const int sr = sizeof(ir)/sizeof(ir[0]);
 
         auto res = ranges::set_difference(std::move(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+#ifndef RANGES_WORKAROUND_MSVC_573728
         CHECK(::is_dangling(res.in1));
+#endif // RANGES_WORKAROUND_MSVC_573728
         CHECK((res.out - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res.out, ir, ir+sr, std::less<int>(), &U::k) == false);
-        ranges::fill(ic, U{0});
 
+        ranges::fill(ic, U{0});
         int irr[] = {6};
         static const int srr = sizeof(irr)/sizeof(irr[0]);
         auto res2 = ranges::set_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK((res2.in1 - ib) == sb);
         CHECK((res2.out - ic) == srr);
         CHECK(ranges::lexicographical_compare(ic, res2.out, ir, irr+srr, std::less<int>(), &U::k) == false);
+
+        ranges::fill(ic, U{0});
+        std::vector<S> vec{S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
+        auto res3 = ranges::set_difference(std::move(vec), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
+        CHECK(::is_dangling(res3.in1));
+        CHECK((res3.out - ic) == sr);
+        CHECK(ranges::lexicographical_compare(ic, res3.out, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 #endif
 

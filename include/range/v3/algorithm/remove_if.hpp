@@ -67,6 +67,11 @@ namespace ranges
     /// \sa `remove_if_fn`
     /// \ingroup group-algorithms
     RANGES_INLINE_VARIABLE(remove_if_fn, remove_if)
+
+    namespace cpp20
+    {
+        using ranges::remove_if;
+    }
     /// @}
 } // namespace ranges
 
