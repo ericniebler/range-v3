@@ -8,7 +8,6 @@
 cmake_minimum_required(VERSION 3.6)
 get_directory_property(is_subproject PARENT_DIRECTORY)
 
-# Having both `is_subproject` and `is_standalone` improves readability.
 if(NOT is_subproject)
     set(is_standalone YES)
 else()
@@ -46,8 +45,6 @@ if(RANGE_V3_DOCS)
 endif()
 
 if(RANGE_V3_TESTS)
-  # The CTest module invokes enable_testing() and defines the
-  # BUILD_TESTING variable, defaulting to ON.
   include(CTest)
   add_subdirectory(test)
 endif()
