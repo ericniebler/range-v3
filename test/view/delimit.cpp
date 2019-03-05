@@ -42,5 +42,11 @@ int main()
         ::check_equal(rng, {1,2,3});
     }
 
+    {
+        int const some_ints[] = {1,2,3};
+        auto rng = view::delimit(some_ints, 0);
+        ::check_equal(rng, {1,2,3});
+    }
+
     return test_result();
 }
