@@ -38,11 +38,6 @@ namespace ranges
                     {
                         return std::addressof(value);
                     }
-                    template<class V>
-                    constexpr V const *operator()(V const &value) const noexcept
-                    {
-                        return std::addressof(value);
-                    }
                 };
 
             public:
