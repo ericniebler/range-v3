@@ -183,7 +183,7 @@ namespace ranges
     namespace view
     {
         /// \cond
-        inline namespace
+        namespace
         {
             RANGES_DEPRECATED("The name view::bounded is deprecated. "
                               "Please use view::common instead.")

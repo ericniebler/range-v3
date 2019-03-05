@@ -57,7 +57,7 @@ namespace ranges
         constexpr nullopt_t nullopt_holder<T>::nullopt;
     }
     /// \endcond
-    inline namespace
+    namespace
     {
         constexpr auto &nullopt = detail::nullopt_holder<void>::nullopt;
     }
