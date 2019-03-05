@@ -272,7 +272,6 @@ namespace ranges
 
 #define RANGES_WORKAROUND_CWG_1554
 #ifdef __clang__
-#define RANGES_WORKAROUND_CLANG_37556
 #if __clang_major__ < 4
 #define RANGES_WORKAROUND_CLANG_23135 // constexpr leads to premature instantiation on clang-3.x
 #endif
@@ -483,7 +482,7 @@ namespace ranges
     !defined(RANGES_DOXYGEN_INVOKED)
 #define RANGES_INLINE_VAR
 #define RANGES_INLINE_VARIABLE(type, name)                                      \
-    inline namespace                                                            \
+    namespace                                                                   \
     {                                                                           \
         constexpr auto &name = ::ranges::static_const<type>::value;             \
     }
@@ -500,17 +499,18 @@ namespace ranges
     /**/
 #elif RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_DEFINE_CPO(type, name)                                           \
-    inline namespace                                                            \
+    namespace                                                                   \
     {                                                                           \
         constexpr auto &name = ::ranges::static_const<type>::value;             \
     }                                                                           \
     /**/
 #else  // RANGES_CXX_INLINE_VARIABLES >= RANGES_CXX_INLINE_VARIABLES_17
 #define RANGES_DEFINE_CPO(type, name)                                           \
-    inline namespace _                                                          \
+    namespace _                                                                 \
     {                                                                           \
         inline constexpr type name{};                                           \
     }                                                                           \
+    using namespace _;                                                          \
     /**/
 #endif // RANGES_CXX_INLINE_VARIABLES
 
@@ -614,8 +614,7 @@ namespace ranges
 #endif // RANGES_CONSTEXPR_IF
 
 #if !defined(RANGES_BROKEN_CPO_LOOKUP) && !defined(RANGES_DOXYGEN_INVOKED) && \
-    (defined(RANGES_WORKAROUND_CLANG_37556) || \
-     defined(RANGES_WORKAROUND_GCC_UNFILED0) || \
+    (defined(RANGES_WORKAROUND_GCC_UNFILED0) || \
      defined(RANGES_WORKAROUND_MSVC_589046) || defined(RANGES_WORKAROUND_MSVC_620035))
 #define RANGES_BROKEN_CPO_LOOKUP 1
 #endif

@@ -55,7 +55,7 @@ namespace ranges
     /// \endcond
 
     #if RANGES_CXX_INLINE_VARIABLES < RANGES_CXX_INLINE_VARIABLES_17
-    inline namespace
+    namespace
     {
         template<std::size_t I>
         constexpr auto& emplaced_index = static_const<emplaced_index_t<I>>::value;

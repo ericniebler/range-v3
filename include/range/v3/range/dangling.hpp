@@ -61,7 +61,7 @@ namespace ranges
     using sanitize_fn RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.") =
         _sanitize_fn;
 
-    inline namespace
+    namespace
     {
         RANGES_DEPRECATED("The sanitize function is unneeded and deprecated.")
         constexpr auto &sanitize = static_const<_sanitize_fn>::value;
