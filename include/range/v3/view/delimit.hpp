@@ -65,14 +65,6 @@ namespace ranges
 
     namespace view
     {
-        CPP_def
-        (
-            template(typename Rng, typename Val)
-            concept Delimitable,
-                ViewableRange<Rng> &&
-                EqualityComparableWith<Val, range_common_reference_t<Rng>>
-        );
-
         struct delimit_impl_fn
         {
         private:
@@ -87,7 +79,9 @@ namespace ranges
             template<typename Rng, typename Val>
             auto operator()(Rng &&rng, Val value) const ->
                 CPP_ret(delimit_view<all_t<Rng>, Val>)(
-                    requires Delimitable<Rng, Val>)
+                    requires ViewableRange<Rng> && InputRange<Rng> &&
+                        Semiregular<Val> &&
+                        EqualityComparableWith<Val, range_reference_t<Rng>>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(value)};
             }
@@ -97,12 +91,14 @@ namespace ranges
         {
             using view<delimit_impl_fn>::operator();
 
-            template<typename I, typename Val>
-            auto operator()(I begin, Val value) const ->
+            template<typename I_, typename Val, typename I = detail::decay_t<I_>>
+            auto operator()(I_ &&begin_, Val value) const ->
                 CPP_ret(delimit_view<subrange<I, unreachable_sentinel_t>, Val>)(
-                    requires InputIterator<I>)
+                    requires (!Range<I_> && ConvertibleTo<I_, I> &&
+                        InputIterator<I> && Semiregular<Val> &&
+                        EqualityComparableWith<Val, iter_reference_t<I>>))
             {
-                return {{std::move(begin), {}}, std::move(value)};
+                return {{static_cast<I_ &&>(begin_), {}}, std::move(value)};
             }
         };
 
