@@ -14,6 +14,7 @@ from conans import ConanFile, CMake
 
 class Rangev3Conan(ConanFile):
     name = "range-v3"
+    version = "v1.0-beta"
     license = "Boost Software License - Version 1.0 - August 17th, 2003"
     url = "https://github.com/ericniebler/range-v3"
     description = """Experimental range library for C++11/14/17"""
