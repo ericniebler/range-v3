@@ -203,6 +203,8 @@ namespace ranges
         {
         private:
             friend range_access;
+            friend basic_adaptor_mixin<Adapt, BaseIter>;
+
             using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
             using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,

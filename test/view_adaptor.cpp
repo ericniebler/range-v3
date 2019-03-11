@@ -100,6 +100,7 @@ int main()
     ::models<concepts::RandomAccessIterator>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
     CHECK(retro.begin().mixin_int == 120);
+    CHECK(*((retro.begin()+1).base()) == 4);
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
