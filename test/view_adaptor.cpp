@@ -30,6 +30,14 @@ private:
 
     struct adaptor : ranges::adaptor_base
     {
+        template<class iter_t /* iter_t can be iterator_t<BidiRange> or sentinel_t<BidiRange> */>
+        struct mixin : ranges::basic_adaptor_mixin<adaptor, iter_t>{
+            mixin() = default;
+            using ranges::basic_adaptor_mixin<adaptor, iter_t>::basic_adaptor_mixin;
+
+            int mixin_int = 120;
+        };
+
         // Cross-wire begin and end.
         base_iterator_t begin(my_reverse_view const &rng) const
         {
@@ -91,6 +99,7 @@ int main()
     ::models<concepts::BoundedView>(aux::copy(retro));
     ::models<concepts::RandomAccessIterator>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
+    CHECK(retro.begin().mixin_int == 120);
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};

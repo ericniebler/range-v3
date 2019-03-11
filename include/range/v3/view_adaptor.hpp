@@ -181,6 +181,20 @@ namespace ranges
             }
         };
 
+        template<typename Adapt, typename BaseIter>
+        struct basic_adaptor_mixin
+            : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
+        {
+            basic_adaptor_mixin() = default;
+            using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
+            // All iterators into adapted ranges have a base() member for fetching
+            // the underlying iterator.
+            BaseIter base() const
+            {
+                return this->get().first();
+            }
+        };
+
         // Build a cursor out of an iterator into the adapted range, and an
         // adaptor that customizes behavior.
         template<typename BaseIter, typename Adapt>
@@ -193,18 +207,17 @@ namespace ranges
             using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
-            struct mixin
-              : basic_mixin<adaptor_cursor>
-            {
-                mixin() = default;
-                using basic_mixin<adaptor_cursor>::basic_mixin;
-                // All iterators into adapted ranges have a base() member for fetching
-                // the underlying iterator.
-                BaseIter base() const
-                {
-                    return this->get().first();
-                }
-            };
+
+            template<typename Adapt_, typename BaseIter_>
+            static meta::id<basic_adaptor_mixin<Adapt_, BaseIter_>> basic_adaptor_mixin_2_(long);
+            template<typename Adapt_, typename BaseIter_>
+            static meta::id<typename Adapt_::template mixin<BaseIter_>> basic_adaptor_mixin_2_(int);
+
+            struct basic_adaptor_mixin_
+                : decltype(basic_adaptor_mixin_2_<Adapt, BaseIter>(42))
+            {};
+
+            using mixin = meta::_t<basic_adaptor_mixin_>;
 
             using base_t::first;
             using base_t::second;
