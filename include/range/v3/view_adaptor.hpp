@@ -226,7 +226,6 @@ namespace ranges
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
 
-            //template<typename Adapt, typename BaseIter>
             struct basic_adaptor_mixin
                 : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
             {
