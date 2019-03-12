@@ -194,10 +194,10 @@ namespace ranges
 
         namespace detail {
             template<typename BaseSent, typename Adapt>
-            static meta::id<base_adaptor_sentinel<BaseSent, Adapt>> base_adaptor_sentinel_2_(long);
+            meta::id<base_adaptor_sentinel<BaseSent, Adapt>> base_adaptor_sentinel_2_(long);
 
             template<typename BaseSent, typename Adapt>
-            static meta::id<typename Adapt::template mixin<base_adaptor_sentinel<BaseSent, Adapt>>> base_adaptor_sentinel_2_(int);
+            meta::id<typename Adapt::template mixin<base_adaptor_sentinel<BaseSent, Adapt>>> base_adaptor_sentinel_2_(int);
 
             template<typename BaseSent, typename Adapt>
             struct base_adaptor_sentinel_
