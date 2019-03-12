@@ -95,7 +95,7 @@ namespace ranges
         struct adaptor_cursor;
 
         template<typename BaseSent, typename Adapt>
-        struct adaptor_sentinel;
+        struct base_adaptor_sentinel;
 
         struct adaptor_base
         {
@@ -161,7 +161,7 @@ namespace ranges
         // Build a sentinel out of a sentinel into the adapted range, and an
         // adaptor that customizes behavior.
         template<typename BaseSent, typename Adapt>
-        struct adaptor_sentinel
+        struct base_adaptor_sentinel
           : private compressed_pair<BaseSent, Adapt>
         {
         private:
@@ -179,6 +179,38 @@ namespace ranges
             {
                 return first();
             }
+
+        protected:
+            // Adaptor accessor
+            Adapt& adaptor()
+            {
+                return second();
+            }
+            const Adapt& adaptor() const
+            {
+                return second();
+            }
+        };
+
+        namespace detail {
+            template<typename BaseSent, typename Adapt>
+            static meta::id<base_adaptor_sentinel<BaseSent, Adapt>> base_adaptor_sentinel_2_(long);
+
+            template<typename BaseSent, typename Adapt>
+            static meta::id<typename Adapt::template mixin<base_adaptor_sentinel<BaseSent, Adapt>>> base_adaptor_sentinel_2_(int);
+
+            template<typename BaseSent, typename Adapt>
+            struct base_adaptor_sentinel_
+                : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
+            {};
+
+            template<typename BaseSent, typename Adapt>
+            using adaptor_sentinel_ = meta::_t<base_adaptor_sentinel_<BaseSent, Adapt>>;
+        }
+
+        template<typename BaseSent, typename Adapt>
+        struct adaptor_sentinel : detail::adaptor_sentinel_<BaseSent, Adapt>{
+            using detail::adaptor_sentinel_<BaseSent, Adapt>::adaptor_sentinel_;
         };
 
         template<typename Adapt, typename BaseIter>
@@ -225,7 +257,7 @@ namespace ranges
             template<typename Adapt_, typename BaseIter_>
             static meta::id<basic_adaptor_mixin<Adapt_, BaseIter_>> basic_adaptor_mixin_2_(long);
             template<typename Adapt_, typename BaseIter_>
-            static meta::id<typename Adapt_::template mixin<BaseIter_>> basic_adaptor_mixin_2_(int);
+            static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin<Adapt_, BaseIter_>>> basic_adaptor_mixin_2_(int);
 
             struct basic_adaptor_mixin_
                 : decltype(basic_adaptor_mixin_2_<Adapt, BaseIter>(42))
