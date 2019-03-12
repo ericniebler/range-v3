@@ -110,7 +110,7 @@ struct my_delimited_range
 
             int mixin_int = 120;
 
-            int base_access_test() const
+            int adaptor_access_test() const
             {
                 int y = this->adaptor().t;
                 return y;
@@ -159,7 +159,7 @@ int main()
 
     // test sentinel mixin
     CHECK(r.end().mixin_int == 120);
-    CHECK(r.end().base_access_test() == 20);
+    CHECK(r.end().adaptor_access_test() == 20);
 
     return ::test_result();
 }
