@@ -213,32 +213,6 @@ namespace ranges
             using detail::adaptor_sentinel_<BaseSent, Adapt>::adaptor_sentinel_;
         };
 
-        template<typename Adapt, typename BaseIter>
-        struct basic_adaptor_mixin
-            : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
-        {
-            basic_adaptor_mixin() = default;
-            using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
-
-            // All iterators into adapted ranges have a base() member for fetching
-            // the underlying iterator.
-            BaseIter base() const
-            {
-                return this->get().first();
-            }
-
-        protected:
-            // Adaptor accessor
-            Adapt& adaptor()
-            {
-                return this->get().second();
-            }
-            const Adapt& adaptor() const
-            {
-                return this->get().second();
-            }
-        };
-
         // Build a cursor out of an iterator into the adapted range, and an
         // adaptor that customizes behavior.
         template<typename BaseIter, typename Adapt>
@@ -247,20 +221,44 @@ namespace ranges
         {
         private:
             friend range_access;
-            friend basic_adaptor_mixin<Adapt, BaseIter>;
-
             using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
             using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
 
-            template<typename Adapt_, typename BaseIter_>
-            static meta::id<basic_adaptor_mixin<Adapt_, BaseIter_>> basic_adaptor_mixin_2_(long);
-            template<typename Adapt_, typename BaseIter_>
-            static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin<Adapt_, BaseIter_>>> basic_adaptor_mixin_2_(int);
+            //template<typename Adapt, typename BaseIter>
+            struct basic_adaptor_mixin
+                : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
+            {
+                basic_adaptor_mixin() = default;
+                using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
+
+                // All iterators into adapted ranges have a base() member for fetching
+                // the underlying iterator.
+                BaseIter base() const
+                {
+                    return this->get().first();
+                }
+
+            protected:
+                // Adaptor accessor
+                Adapt& adaptor()
+                {
+                    return this->get().second();
+                }
+                const Adapt& adaptor() const
+                {
+                    return this->get().second();
+                }
+            };
+
+            template<typename Adapt_>
+            static meta::id<basic_adaptor_mixin> basic_adaptor_mixin_2_(long);
+            template<typename Adapt_>
+            static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin>> basic_adaptor_mixin_2_(int);
 
             struct basic_adaptor_mixin_
-                : decltype(basic_adaptor_mixin_2_<Adapt, BaseIter>(42))
+                : decltype(basic_adaptor_mixin_2_<Adapt>(42))
             {};
 
             using mixin = meta::_t<basic_adaptor_mixin_>;
