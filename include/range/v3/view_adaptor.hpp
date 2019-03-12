@@ -195,6 +195,7 @@ namespace ranges
                 return this->get().first();
             }
 
+        protected:
             // Adaptor accessor
             Adapt& adaptor()
             {
