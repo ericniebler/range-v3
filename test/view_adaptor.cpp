@@ -38,11 +38,14 @@ private:
 
             int mixin_int = 120;
 
-            int base_plus_one() const
+            int base_plus_adaptor() const
             {
-                return *this->base() + 1;
+                int y = this->adaptor().t;
+                return *this->base() + y;
             }
         };
+
+        int t = 20;
 
         // Cross-wire begin and end.
         base_iterator_t begin(my_reverse_view const &rng) const
@@ -107,7 +110,7 @@ int main()
     ::check_equal(retro, {4, 3, 2, 1});
     CHECK( retro.begin().mixin_int == 120 );
     CHECK( *((retro.begin()+1).base()) == 4 );
-    CHECK( (retro.begin()+1).base_plus_one() == 5 );
+    CHECK( (retro.begin()+1).base_plus_adaptor() == 24 );
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};

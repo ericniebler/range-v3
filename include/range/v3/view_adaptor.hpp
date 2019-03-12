@@ -187,11 +187,22 @@ namespace ranges
         {
             basic_adaptor_mixin() = default;
             using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
+
             // All iterators into adapted ranges have a base() member for fetching
             // the underlying iterator.
             BaseIter base() const
             {
                 return this->get().first();
+            }
+
+            // Adaptor accessor
+            Adapt& adaptor()
+            {
+                return this->get().second();
+            }
+            const Adapt& adaptor() const
+            {
+                return this->get().second();
             }
         };
 
