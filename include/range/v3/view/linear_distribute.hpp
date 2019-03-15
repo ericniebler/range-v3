@@ -50,11 +50,13 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 bool equal(linear_distribute_view const& other) const noexcept
                 {
+                    bool const eq = n_ == other.n_;
                     RANGES_DIAGNOSTIC_PUSH
                     RANGES_DIAGNOSTIC_IGNORE_FLOAT_EQUAL
-                    RANGES_EXPECT(from_ == other.from_ && to_ == other.to_);
+                    RANGES_EXPECT(to_ == other.to_);
+                    RANGES_EXPECT(!eq || from_ == other.from_);
                     RANGES_DIAGNOSTIC_POP
-                    return n_ == other.n_;
+                    return eq;
                 }
                 RANGES_CXX14_CONSTEXPR void next() noexcept
                 {
@@ -119,4 +121,3 @@ namespace ranges
 }
 
 #endif
-
