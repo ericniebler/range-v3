@@ -60,7 +60,7 @@ int main()
                              3.0},
                             float_eq));
     }
-    {  // empty interval
+    {   // empty interval
         auto irng = linear_distribute(0, 0, 1);
         CHECK(ranges::size(irng) == std::size_t{1});
         check_equal(irng, {0});
@@ -76,6 +76,13 @@ int main()
         auto frng = linear_distribute(0., 0., 3);
         CHECK(ranges::size(frng) == std::size_t{3});
         CHECK(ranges::equal(frng, {0.,0.,0.}, float_eq));
+    }
+
+    {   // regression test for #1088
+        auto ld = linear_distribute(1, 10, 10);
+        auto const first = ranges::begin(ld);
+        auto const i = ranges::next(first, 4);
+        CHECK(ranges::distance(first, i) == 4);
     }
 
     return test_result();
