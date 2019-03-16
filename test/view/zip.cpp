@@ -109,17 +109,6 @@ int main()
         ::check_equal(expected, {"ax","by","cz"});
     }
 
-    // zip_with
-    {
-        std::vector<std::string> v0{"a","b","c"};
-        std::vector<std::string> v1{"x","y","z"};
-
-        auto rng = view::zip_with(std::plus<std::string>{}, v0, v1);
-        std::vector<std::string> expected;
-        copy(rng, ranges::back_inserter(expected));
-        ::check_equal(expected, {"ax","by","cz"});
-    }
-
     // Move from a zip view
     {
         auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
