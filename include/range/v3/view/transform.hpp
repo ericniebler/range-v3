@@ -65,36 +65,87 @@ namespace ranges
             using use_sentinel_t =
                 meta::or_<meta::not_<BoundedRange<Rng>>, SinglePass<iterator_t<Rng>>>;
 
+            struct adaptor_fun;
+
+            // Do not use empty base class optimisation here. Return Fun{} each time.
+            // Stateless lambda is default_constructible since c++20.
+            // Empty base class optimisation will work only for distinct types.
+            // Some discussion/examples :
+            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=89745 ; https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88865
+            // This means, that vec | transform(Fun{}) | transform(Fun{}) can not be optimised with EBO.
+            template<class fun_ref_>
+            struct adaptor_fun<true, fun_ref_>
+            {
+            public:
+                using fun_t  = Fun;
+
+                fun_t fun_() const noexcept
+                {
+                    return Fun();
+                }
+
+                adaptor_fun() = default;
+                adaptor_fun(fun_t&&) noexcept {}
+            };
+
+            template<class fun_ref_>
+            struct adaptor_fun<false, fun_ref_>
+            {
+            public:
+                using fun_t  = fun_ref_;
+            private:
+                fun_t fun;
+            public:
+                const fun_t& fun_() const noexcept
+                {
+                    return fun;
+                }
+
+                adaptor_fun() = default;
+                adaptor_fun(fun_t&& fun) noexcept : fun(std::move(fun)) {}
+            };
+
             template<bool IsConst>
-            struct adaptor : adaptor_base
+            using adaptor_fun_ = adaptor_fun<
+                std::is_empty<Fun>::value && std::is_default_constructible<Fun>::value,
+                semiregular_ref_or_val_t<Fun, IsConst>>;
+
+            template<bool IsConst>
+            struct adaptor : adaptor_base, adaptor_fun_<IsConst>
             {
             private:
                 friend struct adaptor<!IsConst>;
                 using CRng = meta::const_if_c<IsConst, Rng>;
-                using fun_ref_ = semiregular_ref_or_val_t<Fun, IsConst>;
-                fun_ref_ fun_;
+                using typename adaptor::adaptor_fun::fun_t;
+                using adaptor::adaptor_fun::fun_;
             public:
                 using value_type =
                     detail::decay_t<invoke_result_t<Fun&, copy_tag, iterator_t<CRng>>>;
                 adaptor() = default;
-                adaptor(fun_ref_ fun)
-                  : fun_(std::move(fun))
+                adaptor(fun_t fun)
+                  : adaptor::adaptor_fun(std::move(fun))
                 {}
                 template<bool Other,
                     CONCEPT_REQUIRES_(IsConst && (!Other))>
                 adaptor(adaptor<Other> that)
-                  : fun_(std::move(that.fun_))
+                  : adaptor::adaptor_fun(std::move(that.fun_))
                 {}
-                auto read(iterator_t<CRng> it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    invoke(fun_, it)
-                )
-                auto iter_move(iterator_t<CRng> it) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    invoke(fun_, move_tag{}, it)
-                )
+
+                using read_result =
+                    invoke_result_t<Fun&, iterator_t<CRng>>;
+
+                read_result read(iterator_t<CRng> it) const noexcept
+                {
+                    return invoke(fun_(), it);
+                }
+
+                using iter_move_result =
+                    invoke_result_t<Fun&, move_tag, iterator_t<CRng>>;
+
+                iter_move_result iter_move(iterator_t<CRng> it) const noexcept
+                {
+                    return invoke(fun_(), move_tag{}, it);
+                }
             };
 
             adaptor<false> begin_adaptor()

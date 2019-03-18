@@ -44,8 +44,36 @@ void bug_996()
     (void)rng;
 }
 
+void test_size()
+{
+    using namespace ranges;
+
+    std::vector<int> vec = {1,2,3};
+
+    // Test with functor, not lambda.
+    // Since lambda default constructible from C++20 only.
+    struct Op
+    {
+        int operator()(int a) const
+        {
+            return a > 3 ? a : 42;
+        }
+    };
+
+    auto t1 = vec | view::transform(Op{});
+    auto t2 = t1  | view::transform(Op{});
+    auto t3 = t2  | view::transform(Op{});
+
+    static_assert(
+        sizeof(t1.begin()) == sizeof(t2.begin()) &&
+        sizeof(t2.begin()) == sizeof(t3.begin()),
+        "iterators sizes should not grow!" );
+}
+
 int main()
 {
+    test_size();
+
     using namespace ranges;
 
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
