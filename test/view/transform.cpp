@@ -56,13 +56,15 @@ void test_size()
     {
         int operator()(int a) const
         {
-            return a > 3 ? a : 42;
+            return a + 1;
         }
     };
 
     auto t1 = vec | view::transform(Op{});
     auto t2 = t1  | view::transform(Op{});
     auto t3 = t2  | view::transform(Op{});
+
+    ::check_equal(t3.front(), vec.front() + 3);
 
     static_assert(
         sizeof(t1.begin()) == sizeof(t2.begin()) &&
