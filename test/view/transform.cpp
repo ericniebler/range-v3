@@ -67,8 +67,9 @@ void test_size()
     ::check_equal(t3.front(), vec.front() + 3);
 
     static_assert(
-        sizeof(t1.begin()) == sizeof(t2.begin()) &&
-        sizeof(t2.begin()) == sizeof(t3.begin()),
+        sizeof(vec.begin()) == sizeof(t1.begin()) &&
+        sizeof(t1.begin())  == sizeof(t2.begin()) &&
+        sizeof(t2.begin())  == sizeof(t3.begin()),
         "iterators sizes should not grow!" );
 }
 
