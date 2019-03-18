@@ -65,6 +65,7 @@ namespace ranges
             using use_sentinel_t =
                 meta::or_<meta::not_<BoundedRange<Rng>>, SinglePass<iterator_t<Rng>>>;
 
+            template<bool is_stateless_functor, class fun_ref_>
             struct adaptor_fun;
 
             // Do not use empty base class optimisation here. Return Fun{} each time.
