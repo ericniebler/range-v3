@@ -148,7 +148,6 @@ namespace ranges
         {
             Element value;
         public:
-            CONCEPT_ASSERT(std::is_default_constructible<Element>::value);
             constexpr box() noexcept(std::is_nothrow_default_constructible<Element>::value) = default;
 
             template<typename E,
@@ -185,7 +184,6 @@ namespace ranges
           : Element
         {
         public:
-            CONCEPT_ASSERT(std::is_default_constructible<Element>::value);
             constexpr box() noexcept(std::is_nothrow_default_constructible<Element>::value) = default;
 
             template<typename E,
