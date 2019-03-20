@@ -148,11 +148,9 @@ namespace ranges
         {
             Element value;
         public:
-            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
-            constexpr box()
-                noexcept(std::is_nothrow_default_constructible<Element>::value)
-              : value{}
-            {}
+            CONCEPT_ASSERT(std::is_default_constructible<Element>::value);
+            constexpr box() noexcept(std::is_nothrow_default_constructible<Element>::value) = default;
+
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
                     detail::is_convertible<E, Element>::value)>
@@ -187,11 +185,9 @@ namespace ranges
           : Element
         {
         public:
-            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
-            constexpr box()
-                noexcept(std::is_nothrow_default_constructible<Element>::value)
-              : Element{}
-            {}
+            CONCEPT_ASSERT(std::is_default_constructible<Element>::value);
+            constexpr box() noexcept(std::is_nothrow_default_constructible<Element>::value) = default;
+
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
                     detail::is_convertible<E, Element>::value)>
@@ -226,8 +222,8 @@ namespace ranges
         {
             static Element value;
         public:
-            constexpr box() noexcept
-            {}
+            constexpr box() noexcept = default;
+
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
                     detail::is_convertible<E, Element>::value)>
