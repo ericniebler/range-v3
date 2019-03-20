@@ -43,52 +43,21 @@
 #ifndef RANGES_V3_UTILITY_RANDOM_HPP
 #define RANGES_V3_UTILITY_RANDOM_HPP
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <array>
-#include <atomic>
-#include <chrono>
 #include <initializer_list>
-#include <mutex>
 #include <new>
 #include <random>
-#include <typeinfo>
-#include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/generate.hpp>
-#include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/invoke.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
-#if RANGES_CXX_THREAD >= RANGES_CXX_THREAD_11
-#include <thread>
-#endif
-
-// Ugly platform-specific code for auto_seeded
-
-// Clang/C2 bug: __has_builtin(__builtin_readcyclecounter) reports true, but
-// there is no corresponding builtin in C2.
-#if !(defined(__clang__) && defined(__c2__))
-#ifdef __has_builtin
-    #if __has_builtin(__builtin_readcyclecounter)
-        #define RANGES_CPU_ENTROPY __builtin_readcyclecounter()
-    #endif
-#endif
-#endif
-#ifndef RANGES_CPU_ENTROPY
-    #ifdef __i386__
-        #ifdef __GNUC__
-            #define RANGES_CPU_ENTROPY __builtin_ia32_rdtsc()
-        #else
-            #include <immintrin.h>
-            #define RANGES_CPU_ENTROPY __rdtsc()
-        #endif
-    #else
-        #define RANGES_CPU_ENTROPY 0
-    #endif
+#if !RANGES_CXX_THREAD_LOCAL
+#include <mutex>
 #endif
 
 RANGES_DIAGNOSTIC_PUSH
@@ -129,108 +98,19 @@ namespace ranges
         {
             namespace randutils
             {
-                template<typename T,
-                    CONCEPT_REQUIRES_(Integral<T>())>
-                RANGES_CXX14_CONSTEXPR std::uint32_t crushto32(T value)
-                RANGES_INTENDED_MODULAR_ARITHMETIC
-                {
-                    if(sizeof(T) <= 4)
-                        return static_cast<std::uint32_t>(value);
-                    else {
-                        auto result = static_cast<std::uint64_t>(value);
-                        result *= 0xbc2ad017d719504d;
-                        return static_cast<std::uint32_t>(result ^ (result >> 32));
-                    }
-                }
-
-                template<typename T>
-                RANGES_CXX14_CONSTEXPR std::uint32_t hash(T && value)
-                {
-                    auto hasher = std::hash<uncvref_t<T>>{};
-                    return randutils::crushto32(hasher(static_cast<T&&>(value)));
-                }
-
-                constexpr std::uint32_t fnv(std::uint32_t hash, const char* pos)
-                RANGES_INTENDED_MODULAR_ARITHMETIC
-                {
-                    return *pos == '\0' ? hash : randutils::fnv(
-                        (hash * 16777619U) ^ static_cast<unsigned char>(*pos), pos+1);
-                }
-
-                constexpr std::size_t weird_seed_sources = 11;
-                constexpr std::size_t seed_count = weird_seed_sources + 8;
 #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 6
                 inline
 #else
                 template<class = void>
 #endif
-                std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
+                std::array<std::uint32_t, 8> get_entropy()
                 {
-                    CONCEPT_ASSERT(seed_count >= weird_seed_sources);
-                    std::array<std::uint32_t, seed_count> seeds;
-                    auto it = seeds.begin();
-
-                    static std::atomic<std::uint32_t> counter;
-                    *it++ = counter.fetch_add(std::uint32_t{0xedf19156}, std::memory_order_relaxed);
-
-                    // The heap can vary from run to run as well.
-                    void* malloc_addr = std::malloc(sizeof(int));
-                    std::free(malloc_addr);
-                    *it++ = randutils::hash(malloc_addr);
-                    *it++ = randutils::hash(&malloc_addr);
-
-                    // Classic seed, the time.  It ought to change, especially since
-                    // this is (hopefully) nanosecond resolution time.
-                    auto hitime = std::chrono::high_resolution_clock::now()
-                                    .time_since_epoch().count();
-                    *it++ = randutils::crushto32(hitime);
-
-                    // Address of the thing being initialized.  That can mean that
-                    // different seed sequences in different places in memory will be
-                    // different.  Even for the same object, it may vary from run to
-                    // run in systems with ASLR, such as OS X, but on Linux it might not
-                    // unless we compile with -fPIC -pic.
-                    *it++ = s1;
-
-                    // The address of the time function.  It should hopefully be in
-                    // a system library that hopefully isn't always in the same place
-                    // (might not change until system is rebooted though)
-                    *it++ = randutils::hash(&std::chrono::high_resolution_clock::now);
-
-                    // The address of the exit function.  It should hopefully be in
-                    // a system library that hopefully isn't always in the same place
-                    // (might not change until system is rebooted though).  Hopefully
-                    // it's in a different library from time_func.
-                    {
-                        using namespace std;
-                        *it++ = randutils::hash(&_Exit);
-                    }
-
-                    // The address of a local function.  That may be in a totally
-                    // different part of memory.  On OS X it'll vary from run to run thanks
-                    // to ASLR, on Linux it might not unless we compile with -fPIC -pic.
-                    // Need the cast because it's an overloaded function and we need to
-                    // pick the right one.
-                    *it++ = randutils::hash(
-                        static_cast<std::uint32_t(*)(std::uint64_t)>(&randutils::crushto32));
-
-#if RANGES_CXX_THREAD >= RANGES_CXX_THREAD_11
-                    // Hash our thread id.  It seems to vary from run to run on OS X, not
-                    // so much on Linux.
-                    *it++ = randutils::hash(std::this_thread::get_id());
-#endif
-                    // Hash of the ID of a type.  May or may not vary, depending on
-                    // implementation.
-                    *it++ = s2;
-
-                    // Platform-specific entropy
-                    *it++ = randutils::crushto32(RANGES_CPU_ENTROPY);
-
-                    RANGES_ASSERT(static_cast<std::size_t>(it - seeds.begin()) <= weird_seed_sources);
+                    std::array<std::uint32_t, 8> seeds;
 
                     // Hopefully high-quality entropy from random_device.
                     std::random_device rd{};
-                    ranges::generate(it, seeds.end(), ranges::ref(rd));
+                    std::uniform_int_distribution<std::uint32_t> dist{};
+                    ranges::generate(seeds, [&] { return dist(rd); });
 
                     return seeds;
                 }
@@ -309,14 +189,15 @@ namespace ranges
                 *     http://www.pcg-random.org/posts/developing-a-seed_seq-alternative.html
                 */
 
-                template<std::size_t count = 4, typename IntRep = std::uint32_t,
-                    std::size_t mix_rounds = 1 + (count <= 2)>
+                template<std::size_t count, typename IntRep = std::uint32_t>
                 struct seed_seq_fe {
                 public:
                     CONCEPT_ASSERT(UnsignedIntegral<IntRep>());
                     typedef IntRep result_type;
 
                 private:
+                    static constexpr std::size_t mix_rounds = 1 + (count <= 2);
+
                     static constexpr std::uint32_t INIT_A = 0x43b0d7e5;
                     static constexpr std::uint32_t MULT_A = 0x931e8875;
 
@@ -353,22 +234,25 @@ namespace ranges
                         for(auto& elem : mixer_)
                         {
                             if(begin != end)
-                                elem = hash(static_cast<IntRep>(*begin++));
+                            {
+                                elem = hash(static_cast<IntRep>(*begin));
+                                ++begin;
+                            }
                             else
                                 elem = hash(IntRep{0});
                         }
                         for(auto& src : mixer_)
                             for(auto& dest : mixer_)
                                 if(&src != &dest)
-                                    dest = mix(dest,hash(src));
+                                    dest = mix(dest, hash(src));
                         for(; begin != end; ++begin)
                             for(auto& dest : mixer_)
-                                dest = mix(dest,hash(static_cast<IntRep>(*begin)));
+                                dest = mix(dest, hash(static_cast<IntRep>(*begin)));
                     }
 
                 public:
-                    seed_seq_fe(const seed_seq_fe&)     = delete;
-                    void operator=(const seed_seq_fe&)  = delete;
+                    seed_seq_fe(const seed_seq_fe&)    = delete;
+                    void operator=(const seed_seq_fe&) = delete;
 
                     template<typename T,
                         CONCEPT_REQUIRES_(ConvertibleTo<T const&, IntRep>())>
@@ -388,14 +272,14 @@ namespace ranges
                     // generating functions
                     template<typename I, typename S,
                         CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>())>
-                    void generate(I dest_begin, S dest_end) const
+                    void generate(I first, S const last) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
                         auto src_begin = mixer_.begin();
                         auto src_end   = mixer_.end();
                         auto src       = src_begin;
                         auto hash_const = INIT_B;
-                        for(auto dest = dest_begin; dest != dest_end; ++dest)
+                        for(; first != last; ++first)
                         {
                             auto dataval = *src;
                             if(++src == src_end)
@@ -404,7 +288,7 @@ namespace ranges
                             hash_const *= MULT_B;
                             dataval *= hash_const;
                             dataval ^= dataval >> XSHIFT;
-                            *dest = dataval;
+                            *first = dataval;
                         }
                     }
 
@@ -419,8 +303,8 @@ namespace ranges
                     void param(O dest) const
                     RANGES_INTENDED_MODULAR_ARITHMETIC
                     {
-                        const IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
-                        const IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
+                        constexpr IntRep INV_A = randutils::fast_exp(MULT_A, IntRep(-1));
+                        constexpr IntRep MIX_INV_L = randutils::fast_exp(MIX_MULT_L, IntRep(-1));
 
                         auto mixer_copy = mixer_;
                         for(std::size_t round = 0; round < mix_rounds; ++round)
@@ -445,6 +329,7 @@ namespace ranges
                                         unmixed *= MIX_INV_L;
                                         *dest = unmixed;
                                     }
+
                             for(auto i = mixer_copy.rbegin(); i != mixer_copy.rend(); ++i)
                             {
                                 IntRep unhashed = *i;
@@ -509,8 +394,7 @@ namespace ranges
                 template<typename SeedSeq>
                 struct auto_seeded : public SeedSeq {
                     auto_seeded()
-                        : auto_seeded(randutils::local_entropy(
-                            randutils::hash(this), randutils::crushto32(typeid(*this).hash_code())))
+                        : auto_seeded(randutils::get_entropy())
                     {}
                     template<std::size_t N>
                     auto_seeded(std::array<std::uint32_t, N> const& seeds)
@@ -532,8 +416,8 @@ namespace ranges
                 using auto_seed_256 = auto_seeded<seed_seq_fe256>;
             }
 
-            using default_URNG =
-                meta::if_c<(sizeof(void*) >= 8), std::mt19937_64, std::mt19937>;
+            using default_URNG = meta::if_c<(sizeof(void*) >= sizeof(long long)),
+                std::mt19937_64, std::mt19937>;
 
 #if !RANGES_CXX_THREAD_LOCAL
             template<typename URNG>
@@ -594,7 +478,5 @@ namespace ranges
 }
 
 RANGES_DIAGNOSTIC_POP
-
-#undef RANGES_CPU_ENTROPY
 
 #endif

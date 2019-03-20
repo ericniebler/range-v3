@@ -173,14 +173,6 @@ endif()
 include(CheckCXXSourceCompiles)
 
 set(CMAKE_REQUIRED_FLAGS ${RANGES_STD_FLAG})
-# Probe for <thread>
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/thread_test_code.cpp" RANGE_V3_PROBE_CODE)
-check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_THREAD_PROBE)
-unset(RANGE_V3_PROBE_CODE)
-if (NOT RANGE_V3_THREAD_PROBE)
-  add_compile_options("-DRANGES_CXX_THREAD=0")
-endif()
-
 # Probe for library and compiler support for aligned new
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/aligned_new_probe.cpp" RANGE_V3_PROBE_CODE)
 check_cxx_source_compiles("${RANGE_V3_PROBE_CODE}" RANGE_V3_ALIGNED_NEW_PROBE)
