@@ -148,8 +148,11 @@ namespace ranges
         {
             Element value;
         public:
-            constexpr box() noexcept(std::is_nothrow_default_constructible<Element>::value) = default;
-
+            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
+            constexpr box()
+                noexcept(std::is_nothrow_default_constructible<Element>::value)
+              : value{}
+            {}
             template<typename E,
                 CONCEPT_REQUIRES_(std::is_constructible<Element, E>::value &&
                     detail::is_convertible<E, Element>::value)>
