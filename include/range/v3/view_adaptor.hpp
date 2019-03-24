@@ -192,7 +192,8 @@ namespace ranges
             }
         };
 
-        namespace detail {
+        namespace detail
+        {
             template<typename BaseSent, typename Adapt>
             meta::id<base_adaptor_sentinel<BaseSent, Adapt>> base_adaptor_sentinel_2_(long);
 
