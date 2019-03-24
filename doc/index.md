@@ -314,7 +314,6 @@ to inject things into the public interface of the iterator:
         struct mixin : base_mixin
         {
               // everything inside this class will be accessible from iterator
-              mixin() = default;
               using base_mixin::base_mixin;
 
               decltype(auto) base_value() const
