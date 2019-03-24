@@ -202,7 +202,7 @@ namespace ranges
 
             template<typename BaseSent, typename Adapt>
             struct base_adaptor_sentinel_
-                : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
+              : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
             {};
 
             template<typename BaseSent, typename Adapt>
