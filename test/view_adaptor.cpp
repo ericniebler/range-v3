@@ -99,7 +99,6 @@ struct my_delimited_range
 {
     using view_adaptor::view_adaptor;
 
-
     struct adaptor : ranges::adaptor_base
     {
         template<class base_mixin>
