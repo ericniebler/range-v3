@@ -230,7 +230,7 @@ namespace ranges
                 SinglePass<BaseIter>>;
 
             struct basic_adaptor_mixin
-                : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
+              : basic_mixin<adaptor_cursor>
             {
                 basic_adaptor_mixin() = default;
                 using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
