@@ -192,7 +192,8 @@ namespace ranges
             }
         };
 
-        namespace detail {
+        namespace detail
+        {
             template<typename BaseSent, typename Adapt>
             meta::id<base_adaptor_sentinel<BaseSent, Adapt>> base_adaptor_sentinel_2_(long);
 
@@ -201,7 +202,7 @@ namespace ranges
 
             template<typename BaseSent, typename Adapt>
             struct base_adaptor_sentinel_
-                : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
+              : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
             {};
 
             template<typename BaseSent, typename Adapt>
@@ -209,7 +210,9 @@ namespace ranges
         }
 
         template<typename BaseSent, typename Adapt>
-        struct adaptor_sentinel : detail::adaptor_sentinel_<BaseSent, Adapt>{
+        struct adaptor_sentinel
+          : detail::adaptor_sentinel_<BaseSent, Adapt>
+        {
             using detail::adaptor_sentinel_<BaseSent, Adapt>::adaptor_sentinel_;
         };
 
@@ -227,7 +230,7 @@ namespace ranges
                 SinglePass<BaseIter>>;
 
             struct basic_adaptor_mixin
-                : basic_mixin<adaptor_cursor<BaseIter, Adapt>>
+              : basic_mixin<adaptor_cursor>
             {
                 basic_adaptor_mixin() = default;
                 using basic_mixin<adaptor_cursor<BaseIter, Adapt>>::basic_mixin;
@@ -256,7 +259,7 @@ namespace ranges
             static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin>> basic_adaptor_mixin_2_(int);
 
             struct basic_adaptor_mixin_
-                : decltype(basic_adaptor_mixin_2_<Adapt>(42))
+              : decltype(basic_adaptor_mixin_2_<Adapt>(42))
             {};
 
             using mixin = meta::_t<basic_adaptor_mixin_>;
