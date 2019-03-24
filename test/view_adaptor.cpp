@@ -123,7 +123,8 @@ struct my_delimited_range
     {
         return {};
     }
-    adaptor end_adaptor() const {
+    adaptor end_adaptor() const
+    {
         return {};
     }
 };
