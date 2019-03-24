@@ -210,7 +210,9 @@ namespace ranges
         }
 
         template<typename BaseSent, typename Adapt>
-        struct adaptor_sentinel : detail::adaptor_sentinel_<BaseSent, Adapt>{
+        struct adaptor_sentinel
+          : detail::adaptor_sentinel_<BaseSent, Adapt>
+        {
             using detail::adaptor_sentinel_<BaseSent, Adapt>::adaptor_sentinel_;
         };
 
