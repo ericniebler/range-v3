@@ -214,8 +214,8 @@ namespace ranges
             {
                 RANGES_EXPECT((Same<I, S>() || 0 <= n));
                 D d = bound - it;
-                RANGES_EXPECT(0 <= n ? 0 <= d : 0 >= d);
-                if(0 <= n ? n >= d : n <= d)
+                RANGES_EXPECT(0 < n ? 0 <= d : 0 >= d);
+                if(0 < n ? n >= d : n <= d)
                 {
                     ranges::advance(it, std::move(bound));
                     return n - d;
