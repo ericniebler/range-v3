@@ -208,6 +208,7 @@ int main()
 
     auto even = [](int i){ return i % 2 == 0; };
 
+#ifndef RANGES_WORKAROUND_MSVC_835948
     {
         auto rng = ::iota_generator(0, 10);
         ::models<SizedRangeConcept>(rng);
@@ -278,6 +279,7 @@ int main()
         auto rng = f(20) | view::filter(even);
         ::check_equal(rng, {0,2,4,6,8,10,12,14,16,18});
     }
+#endif // RANGES_WORKAROUND_MSVC_835948
 
     {
         auto square = [](int i) { return i * i; };
@@ -286,8 +288,6 @@ int main()
         auto rng = ::transform(::filter(debug_input_view<int const>{some_ints}, even), square);
         ::check_equal(rng, {0,4,16,36});
     }
-
-    std::cout << f(8) << '\n';
 
     return ::test_result();
 }

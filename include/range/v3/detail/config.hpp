@@ -239,6 +239,7 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call to constexpr function
 #define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE context
+#define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No workaround]
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
 #if !defined(RANGES_CXX_COROUTINES) && defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
