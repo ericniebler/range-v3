@@ -208,6 +208,15 @@ namespace ranges
 
 #define RANGES_CXX_VER _MSVC_LANG
 
+#if _MSC_VER < 1922
+#define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE context
+
+#if _MSC_VER < 1921
+#define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
+#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
+#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
+#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent default non-type template argument
+
 #if _MSC_VER < 1920
 #define RANGES_WORKAROUND_MSVC_DC338193 // https://developercommunity.visualstudio.com/content/problem/338193/sfinae-disabled-ref-qualified-function-collides-wi.html
 #define RANGES_WORKAROUND_MSVC_401490 // conversion of constant expressions with representable values is NOT narrowing
@@ -216,18 +225,13 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_701425 // Failure to deduce decltype(pointer-to-member) (gcc_bugs_bugs_bugs for MSVC)
 #define RANGES_WORKAROUND_MSVC_711347 // Assertion invoking constexpr member function as alias template argument
 #endif // _MSC_VER < 1920
+#endif // _MSC_VER < 1921
+#endif // _MSC_VER < 1922
 
 #if 1 // Fixed in 1920, but more bugs hiding behind workaround
 #define RANGES_WORKAROUND_MSVC_620035 // Error when definition-context name binding finds only deleted function
 #define RANGES_WORKAROUND_MSVC_701385 // Yet another alias expansion error
 #endif
-
-#if _MSC_VER < 1921
-#define RANGES_WORKAROUND_MSVC_785522 // SFINAE failure for error in immediate context
-#define RANGES_WORKAROUND_MSVC_786376 // Assertion casting anonymous union member in trailing-return-type
-#define RANGES_WORKAROUND_MSVC_787074 // Over-eager substitution of dependent type in non-instantiated nested class template
-#define RANGES_WORKAROUND_MSVC_790554 // Assert for return type that uses dependent default non-type template argument
-#endif // _MSC_VER < 1921
 
 #define RANGES_WORKAROUND_MSVC_249830 // constexpr and arguments that aren't subject to lvalue-to-rvalue conversion
 #define RANGES_WORKAROUND_MSVC_573728 // rvalues of array types bind to lvalue references [no workaround]
@@ -238,7 +242,6 @@ namespace ranges
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call to constexpr function
-#define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE context
 #define RANGES_WORKAROUND_MSVC_835948 // Silent bad codegen destroying sized_generator [No workaround]
 
 // 15.9 doesn't define __cpp_coroutines even with /await (Fix not yet live)
