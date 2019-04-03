@@ -309,8 +309,8 @@ The iterator returns a key/value pair, like the `zip` view.
         // to inject things into the public interface of the iterator
         struct mixin;
 
-        // This is for dereference operator.      
-        using value_type = std::pair<Key, Value>; 
+        // This is for dereference operator.
+        using value_type = std::pair<Key, Value>;
         ranges::common_pair<Key&, Value&> read() const {
             return { *key_iterator, *value_iterator };
         }
@@ -319,19 +319,19 @@ The iterator returns a key/value pair, like the `zip` view.
             return key_iterator == other.key_iterator;
         }
 
-        void next() { 
+        void next() {
             ++key_iterator;
             ++value_iterator;
         }
 
         // prev optional. Required for Bidirectional iterator
-        void prev() { 
+        void prev() {
             --key_iterator;
             --value_iterator;
         }
 
         // advance and distance_to are optional. Required for RandomAcess iterator
-        void advance(std::ptrdiff_t n) { 
+        void advance(std::ptrdiff_t n) {
             key_iterator   += n;
             value_iterator += n;
         }
@@ -364,30 +364,30 @@ The iterator returns a key/value pair, like the `zip` view.
       ValueIter value_iterator() {
         return this->get().value_iterator;
       }
-    };    
+    };
 
     using iterator = ranges::basic_iterator<cursor>;
 
     void test(){
       std::vector<Key>   keys   = {1};
       std::vector<Value> values = {10};
-      
+
       iterator iter(keys.begin(), values.begin());
       ranges::common_pair<Key&, Value&> pair = *iter;
       Key&   key   = pair.first;
       Value& value = pair.second;
 
       assert(&key   == &keys[0]);
-      assert(&value == &values[0]);      
+      assert(&value == &values[0]);
 
       auto key_iter = iter.key_iterator();
       assert(key_iter == keys.begin());
     }
 ~~~~~~~
 
-`read()` returns references. So, we explicitly specify `value_type`.  
- `ranges::common_pair` has conversions:  
-`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.  
+`read()` returns references. So, we explicitly specify `value_type`.
+ `ranges::common_pair` has conversions:
+`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.
 All `ranges::common_pair`s converts to their `std::pair` equivalents, also.
 
 For more information, see [http://wg21.link/P0186#basic-iterators-iterators.basic](http://wg21.link/P0186#basic-iterators-iterators.basic)
@@ -459,6 +459,8 @@ Below is a list of the lazy range combinators, or *views*, that Range v3
 provides, and a blurb about how each is intended to be used.
 
 <DL>
+<DT>\link ranges::view::addressof_fn `view::addressof`\endlink</DT>
+  <DD>Given a source range of lvalue references, return a new view that is the result of taking std::addressof of each.</DD>
 <DT>\link ranges::view::adjacent_filter_fn `view::adjacent_filter`\endlink</DT>
   <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the second element of the pair is removed from the result range; otherwise, it is included. The first element in the source range is always included. (For instance, `adjacent_filter` with `std::not_equal_to` filters out all the non-unique elements.)</DD>
 <DT>\link ranges::view::adjacent_remove_if_fn `view::adjacent_remove_if`\endlink</DT>

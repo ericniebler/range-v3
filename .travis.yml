@@ -35,8 +35,7 @@ matrix:
       os: osx
       compiler: clang
 
-    # ASAN disabled for clang < 3.8 builds per resolution of
-    #  https://llvm.org/bugs/show_bug.cgi?id=22757
+    # The ASAN build in install_libcxx.sh doesn't work for versions < 4
 
     # clang 3.6 C++17/14 Release libc++
     - env: CLANG_VERSION=3.6 BUILD_TYPE=Release CPP=14 LIBCXX=On HEADERS=On

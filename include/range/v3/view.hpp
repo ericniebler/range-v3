@@ -18,6 +18,7 @@
 RANGES_DISABLE_WARNINGS
 
 #include <range/v3/view/adaptor.hpp>
+#include <range/v3/view/addressof.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/all.hpp>
