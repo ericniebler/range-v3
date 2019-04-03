@@ -31,6 +31,19 @@
 #include <range/v3/iterator/default_sentinel.hpp>
 #include <range/v3/view/all.hpp>
 
+#if defined(_MSC_VER) && !defined(RANGES_SILENCE_COROUTINE_WARNING)
+#ifdef __clang__
+#pragma message("DANGER: clang doesn't (yet?) grok the MSVC coroutine ABI. " \
+    "Use at your own risk. " \
+    "(RANGES_SILENCE_COROUTINE_WARNING will silence this message.)")
+#elif defined RANGES_WORKAROUND_MSVC_835948
+#pragma message("DANGER: ranges::experimental::generator is fine, but this " \
+    "version of MSVC likely miscompiles ranges::experimental::sized_generator. " \
+    "Use the latter at your own risk. " \
+    "(RANGES_SILENCE_COROUTINE_WARNING will silence this message.)")
+#endif
+#endif // RANGES_SILENCE_COROUTINE_WARNINGS
+
 namespace ranges
 {
     /// \addtogroup group-view
