@@ -18,8 +18,10 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
+#ifdef __has_include
 #if __has_include(<string_view>)
 #include <string_view>
+#endif
 #endif
 #include <utility>
 
