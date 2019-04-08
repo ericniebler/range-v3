@@ -32,9 +32,20 @@ namespace ranges
             struct remove_fn
             {
             private:
+                struct ComparableWithRangeRef_
+                {
+                    template<typename Val, typename Rng,
+                        typename Ref = range_reference_t<Rng>>
+                    auto requires_() -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::EqualityComparable, Ref, Val>()
+                        ));
+                };
+
                 friend action_access;
                 template<typename V, typename P,
-                    CONCEPT_REQUIRES_(!(Range<V>() /*&& EqualityComparable<range_reference_t<P>, P>()*/))>
+                    CONCEPT_REQUIRES_(!(Range<V>() &&
+                        concepts::models<ComparableWithRangeRef_, P, V>()))>
                 static auto bind(remove_fn remove, V &&value, P proj)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
