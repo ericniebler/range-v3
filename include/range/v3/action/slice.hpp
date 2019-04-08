@@ -17,6 +17,8 @@
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/distance.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/utility/functional.hpp>
