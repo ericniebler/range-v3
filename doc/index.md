@@ -291,6 +291,46 @@ sentinel. That is only necessary if the underlying range's sentinel type models
 BidirectionalIterator. That's a finer point that you shouldn't worry about right
 now.)*
 
+## view_adaptor in details
+
+Each `view_adaptor` contains `base()` member in view and iterator.
+`base()` - allow to access "adapted" range/iterator:
+
+~~~~~~~{.cpp}
+    std::vector<int> vec;
+    auto list = vec | view::transfom([](int i){ return i+1; });
+
+    assert( vec.begin() == list.begin().base() );
+    assert( vec.begin() == list.base().begin() );
+~~~~~~~
+
+Like `basic_iterator`'s `cursor` - `view_adaptor`'s `adaptor` can contain mixin class too,
+to inject things into the public interface of the iterator:
+
+~~~~~~~{.cpp}
+    class adaptor : public ::ranges::adaptor_base
+    {
+        template<class base_mixin>
+        struct mixin : base_mixin
+        {
+              // everything inside this class will be accessible from iterator
+              using base_mixin::base_mixin;
+
+              decltype(auto) base_value() const
+              {
+                  return *this->base();
+              }
+
+              int get_i() const
+              {
+                  return this->get().i;
+              }
+        };
+
+        int i = 100;
+    };
+~~~~~~~
+
 ## Create Custom Iterators
 
 Here is an example of Range v3 compatible RandomAccess proxy iterator.
