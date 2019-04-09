@@ -308,7 +308,7 @@ Like `basic_iterator`'s `cursor` - `view_adaptor`'s `adaptor` can contain mixin 
 to inject things into the public interface of the iterator:
 
 ~~~~~~~{.cpp}
-    class adaptor : public ::ranges::adaptor_base
+    class adaptor : public ranges::adaptor_base
     {
         template<class base_mixin>
         struct mixin : base_mixin
@@ -330,6 +330,157 @@ to inject things into the public interface of the iterator:
         int i = 100;
     };
 ~~~~~~~
+
+From within mixin you can call:
+* `get()` - to access adaptor internals 
+* `base()` - to access adopted iterator
+
+Iterator/sentinel adaptor may "override" following members:
+~~~~~~~{.cpp}
+    class adaptor : public ranges::adaptor_base
+    {
+        // !For begin_adaptor only!
+        template<typename Rng>
+        constexpr decltype(auto) begin(Rng &rng)
+        {
+            return ranges::begin(rng.base());
+        }       
+
+        // !For end_adaptor only!
+        template<typename Rng>
+        constexpr decltype(auto) end(Rng &rng)
+        {
+            return ranges::end(rng.base());
+        }       
+
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter) const 
+        {
+            return this_iter == that_iter;
+        }   
+        // or
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter, adaptor const &that_adapt) const
+        {            
+            return 
+              *this.some_value == that_adapt.some_value
+              && this_iter == that_iter;
+        }   
+
+        // !For end_adaptor only!
+        // Same as equal, but compare iterator with sentinel.
+        // Not used, if iterator same as sentinel, and both have the same adaptor.
+        template<typename I, typename S>
+        constexpr bool empty(I const &it, S const &end) const 
+        {
+            return it == end;
+        }
+        // or
+        template<typename I, typename S, typename SA>
+        constexpr bool empty(I const &it, S const &end, SA const &end_adapt) const 
+        {
+            return 
+              *this.some_value == end_adapt.some_value
+              && it == end;
+        }
+        
+        template<typename I>
+        reference_t<I> read(I const &it)
+        {
+            return *it;
+        }
+
+        template<typename I>
+        void next(I &it)
+        {
+            ++it;
+        }
+
+        // !For BidirectionalIterator only!
+        template<typename I>
+        void prev(I &it)
+        {
+            --it;
+        }
+
+        // !For RandomAccessIterator only!
+        template<typename I>
+        void advance(I &it, difference_type_t<I> n)
+        {
+            it += n;
+        }    
+
+        // !For SizedIterator only!
+        template<typename I>
+        difference_type_t<I> distance_to(I const &this_iter, I const &that_iter)
+        {
+            return that_iter - this_iter;
+        }
+        // or
+        template<typename I>
+        difference_type_t<I> distance_to
+            (I const &this_iter, I const &that_iter, adaptor const &that_adapt)
+        {
+            return that_iter - this_iter;
+        }
+    }
+~~~~~~~
+
+As you can see, some "overrides" have effect only for `begin_adaptor` or `end_adaptor`.
+In order to use full potential of adaptor, you need to have separate adaptors for begin and end:
+
+~~~~~~~{.cpp}
+    struct adaptor : adaptor_base
+    {
+        int n = 0;
+
+        void next(iterator_t<Rng>& it) 
+        {
+            ++n;
+            ++it;
+        }
+    };
+
+    struct sentinel_adaptor : adaptor_base 
+    {
+        int stop_at;        
+        bool empty(const iterator_t<Rng>&, const adaptor& ia, const sentinel_t<Rng>& s) const 
+        {
+            return ia.n == stop_at;
+        }
+    };
+
+    adaptor begin_adaptor() const { return {}; }
+    sentinel_adaptor end_adaptor() const { return {100}; }
+~~~~~~~
+
+Sometimes, you can use the same adaptor for both `begin_adaptor` and `end_adaptor`:
+
+~~~~~~~{.cpp}
+    struct adaptor : adaptor_base
+    {
+        int n = 0;
+        void next(iterator_t<Rng>& it) 
+        {
+            ++n;
+            ++it;
+        }
+
+        // pay attention, we use equal, not empty. empty() will never trigger.
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter, adaptor const &that_adapt) const
+        {
+            return *this.n == that_adapt.n;
+        }
+    };
+
+    adaptor begin_adaptor() const { return {}; }
+    adaptor end_adaptor()   const { return {100}; }
+~~~~~~~
+
+Pay attentention that all data, that you'll store in adaptor - will become part of iterator payload.
+
+If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor - default ones will be used.
 
 ## Create Custom Iterators
 
