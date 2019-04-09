@@ -259,11 +259,7 @@ namespace ranges
             template<typename Adapt_>
             static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin>> basic_adaptor_mixin_2_(int);
 
-            struct basic_adaptor_mixin_
-              : decltype(basic_adaptor_mixin_2_<Adapt>(42))
-            {};
-
-            using mixin = meta::_t<basic_adaptor_mixin_>;
+            using mixin = meta::_t<decltype(basic_adaptor_mixin_2_<Adapt>(42))>;
 
             using base_t::first;
             using base_t::second;
