@@ -40,7 +40,7 @@ private:
 
             int base_plus_adaptor() const
             {
-                int y = this->adaptor().t;
+                int y = this->get().t;
                 return *this->base() + y;
             }
         };
@@ -111,7 +111,7 @@ struct my_delimited_range
 
             int adaptor_access_test() const
             {
-                int y = this->adaptor().t;
+                int y = this->get().t;
                 return y;
             }
         };
