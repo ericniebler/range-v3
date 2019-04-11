@@ -19,13 +19,28 @@
 #include <forward_list>
 
 #include <range/v3/view/drop_last.hpp>
+#include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/transform.hpp>
 
 using namespace ranges;
 
+struct op_all
+{
+    template<class T>
+    bool operator()(T&&) const{ return false; }
+};
+const auto filter_all = view::remove_if(op_all{});
+
 template<class Rng>
-void test_range(Rng&& src){
+void test_range(Rng&& src)
+{
     {
         auto list = src | view::drop_last(2);
+
+        //const auto& src_c = list;
+        /*auto e = src_c.begin();
+        (void)e;*/
+
         ::check_equal(list, {1,2});
     }
     {
@@ -38,50 +53,68 @@ void test_range(Rng&& src){
     }
 }
 
-void random_acccess_test(){
+template<class Rng>
+void test_size(Rng&& src)
+{
+    CHECK( (src | view::drop_last(2)).size() == std::size_t(2) );
+}
+
+void random_acccess_test()
+{
     using Src = std::vector<int>;
     static_assert(
         ranges::RandomAccessRange<Src>().value
         , "Must be exactly RA.");
-    static_assert(
+    /*static_assert(
         std::is_same<
             drop_last_view<Src>, drop_last_bidirectional_view<Src>
         >::value
-        , "Must have correct view.");
+        , "Must have correct view.");*/
 
     Src src = {1,2,3,4};
 
     test_range(src);
+    //test_range(src | view::transform([](const int& i) -> const int& {return i;}));
+    test_range(src | filter_all);
+    test_size(src);
+
+    //auto l = src | view::transform([](const int& i) -> const int& {return i;});
+    /*auto l = src | view::all;
+    auto k = l | view::drop_last(2);*/
+
 }
 
-void bidirectional_test(){
+void bidirectional_test()
+{
     using Src = std::list<int>;
     static_assert(
         !ranges::RandomAccessRange<Src>().value &&
         ranges::BidirectionalRange<Src>().value
         , "Must be exactly bidirectional.");
-    static_assert(
+    /*static_assert(
         std::is_same<
             drop_last_view<Src>, drop_last_bidirectional_view<Src>
         >::value
-        , "Must have correct view.");
+        , "Must have correct view.");*/
 
     Src src = {1,2,3,4};
 
     test_range(src);
+    test_size(src);
 }
 
-void forward_test(){
+void forward_test()
+{
     using Src = std::forward_list<int>;
     static_assert(
         !ranges::BidirectionalRange<Src>().value &&
         ranges::ForwardRange<Src>().value
         , "Must be exactly forward.");
-    static_assert(
+    /*static_assert(
         std::is_same<
             drop_last_view<Src>, drop_last_forward_view<Src>
         >::value
-        , "Must have correct view.");
+        , "Must have correct view.");*/
 
     Src src = {1,2,3,4};
 
@@ -91,8 +124,8 @@ void forward_test(){
 int main()
 {
     random_acccess_test();
-    /*bidirectional_test();
-    forward_test();*/
+    bidirectional_test();
+    forward_test();
 
     return test_result();
 }
