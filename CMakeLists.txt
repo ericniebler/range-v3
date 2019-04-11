@@ -85,8 +85,9 @@ if(RANGE_V3_HEADER_CHECKS)
   # Deprecated headers
   if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     foreach(header "${RANGE_V3_PUBLIC_HEADERS}")
-      file(STRINGS "${header}" is_deprecated LIMIT_COUNT 1
-                               REGEX ".*RANGES_DEPRECATED_HEADER.*")
+      file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/${header}" is_deprecated
+           LIMIT_COUNT 1
+           REGEX ".*RANGES_DEPRECATED_HEADER.*")
       if(is_deprecated)
         list(APPEND RANGE_V3_DEPRECATED_PUBLIC_HEADERS "${header}")
       endif()
