@@ -22,6 +22,9 @@ option(RANGES_PREFER_REAL_CONCEPTS
 option(RANGES_DEEP_STL_INTEGRATION
   "Hijacks the primary std::iterator_traits template to emulate the C++20 std::ranges:: behavior."
   OFF)
+option(RANGE_V3_HEADER_CHECKS
+  "Build the Range-v3 header checks and integrate with ctest"
+  OFF)
 set(RANGES_INLINE_THRESHOLD -1 CACHE STRING "Force a specific inlining threshold.")
 
 # Enable verbose configure when passing -Wdev to CMake
@@ -36,10 +39,6 @@ endif()
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_TESTS
   "Build the Range-v3 tests and integrate with ctest"
-  ON "${is_standalone}" OFF)
-
-CMAKE_DEPENDENT_OPTION(RANGE_V3_HEADER_CHECKS
-  "Build the Range-v3 header checks and integrate with ctest"
   ON "${is_standalone}" OFF)
 
 CMAKE_DEPENDENT_OPTION(RANGE_V3_EXAMPLES
