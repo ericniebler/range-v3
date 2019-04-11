@@ -85,7 +85,8 @@ else()
   add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
 if(RANGE_V3_TESTS)
-  add_header_test(range_v3_headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+  add_header_test(test.rangev3.headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+  target_link_dependencies(test.rangev3.headers PRIVATE range-v3)
 endif()
 set_target_properties(headers
     PROPERTIES FOLDER "test/header"
