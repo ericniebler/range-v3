@@ -46,7 +46,6 @@ function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_test(${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
 
-include(TestHeaders)
 include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
