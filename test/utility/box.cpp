@@ -33,9 +33,34 @@ void test_1093()
     CHECK(sizeof(P2) == sizeof(P));
 }
 
+void constexpr_ctr_box()
+{
+    struct Op
+    {
+        constexpr Op(){}
+    };
+    struct Op2
+    {
+        constexpr Op2(){}
+    };
+
+    struct payload { void* v; };
+    struct base_adaptor {};
+
+    struct RANGES_EMPTY_BASES A : base_adaptor, private box<Op, A> {};
+    struct RANGES_EMPTY_BASES B : base_adaptor, private box<Op2, B> {};
+
+    using P  = compressed_pair<A, payload>;
+    using P2 = compressed_pair<B, P>;
+
+    CHECK(sizeof(P) == sizeof(payload));
+    CHECK(sizeof(P2) == sizeof(P));
+}
+
 int main()
 {
     test_1093();
+    constexpr_ctr_box();
 
     return ::test_result();
 }

@@ -1,5 +1,6 @@
 set(CMAKE_FOLDER "${CMAKE_FOLDER}/utility")
 
+rv3_add_test(test.utility.is_constexpr_default_cosntructible utility.is_constexpr_default_cosntructible is_constexpr_default_cosntructible.cpp)
 rv3_add_test(test.utility.box utility.box box.cpp)
 rv3_add_test(test.utility.basic_iterator utility.basic_iterator basic_iterator.cpp)
 rv3_add_test(test.utility.concepts utility.concepts concepts.cpp)
