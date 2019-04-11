@@ -67,30 +67,25 @@ if(RANGE_V3_PERF)
   add_subdirectory(perf)
 endif()
 
-# Test all headers
-file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
-                  RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
-# This header is not meant to be included directly:
-list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
-
 # Add header files as sources to fix MSVS 2017 not finding source during debugging
 file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS_ABSOLUTE
                   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
+set_target_properties(headers PROPERTIES FOLDER "header")
 
-include(TestHeaders)
+# Test all headers
 if(RANGE_V3_HEADER_CHECKS)
-  add_custom_target(headers ALL SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
-else()
-  add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
+  include(TestHeaders)
+
+  file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS
+                    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+  # This header is not meant to be included directly:
+  list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
+
+  add_header_test(test.range.v3.headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+  target_link_libraries(test.range.v3.headers PRIVATE range-v3)
 endif()
-if(RANGE_V3_TESTS)
-  add_header_test(test.rangev3.headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
-  target_link_libraries(test.rangev3.headers PRIVATE range-v3)
-endif()
-set_target_properties(headers
-    PROPERTIES FOLDER "test/header"
-)
 
 # Grab the range-v3 version numbers:
 include(${CMAKE_CURRENT_SOURCE_DIR}/Version.cmake)
