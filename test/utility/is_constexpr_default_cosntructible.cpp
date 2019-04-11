@@ -41,6 +41,8 @@ struct constexpr_non_default_constructible_t
 };
 
 #if __cplusplus >= RANGES_CXX_STD_14
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_INVALID_CONSTEXPR
 int l = 100;
 struct false_constexpr_default_constructible_t
 {
@@ -49,6 +51,7 @@ struct false_constexpr_default_constructible_t
         ++l;
     }
 };
+RANGES_DIAGNOSTIC_POP
 #endif
 
 int main()
