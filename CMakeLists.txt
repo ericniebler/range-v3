@@ -85,7 +85,7 @@ if(RANGE_V3_HEADER_CHECKS)
 else()
   add_custom_target(headers SOURCES ${RANGE_V3_PUBLIC_HEADERS_ABSOLUTE})
 endif()
-generate_standalone_header_tests(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+add_header_test(EXCLUDE_FROM_ALL MASTER_TARGET headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
 set_target_properties(headers
     PROPERTIES FOLDER "test/header"
 )
