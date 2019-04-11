@@ -29,9 +29,7 @@ namespace ranges
         namespace details
         {
             template<class T>
-            constexpr int is_constexpr_helper(T&&)
-                noexcept/*(std::is_nothrow_default_constructible<T>::value)*/
-            { return 0; }
+            constexpr int is_constexpr_helper(T&&) { return 0; }
         }
 
         template <typename T, typename Enable = void>

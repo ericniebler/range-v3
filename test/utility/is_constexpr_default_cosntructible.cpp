@@ -40,7 +40,7 @@ struct constexpr_non_default_constructible_t
     constexpr constexpr_non_default_constructible_t(int) {}
 };
 
-#if __cplusplus >= RANGES_CXX_STD_14
+#if RANGES_CXX_VER >= RANGES_CXX_STD_14
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_INVALID_CONSTEXPR
 int l = 100;
@@ -62,7 +62,7 @@ int main()
     CHECK( is_constexpr_default_cosntructible<constexpr_default_constructible_t>::value );
     CHECK( !is_constexpr_default_cosntructible<constexpr_non_default_constructible_t>::value );
 
-    #if __cplusplus >= RANGES_CXX_STD_14
+    #if RANGES_CXX_VER >= RANGES_CXX_STD_14
     CHECK( !is_constexpr_default_cosntructible<false_constexpr_default_constructible_t>::value );
     #endif
 
