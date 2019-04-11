@@ -29,7 +29,7 @@ namespace ranges
         namespace details
         {
             template<class T>
-            constexpr int is_constexpr_helper()
+            constexpr int is_constexpr_helper(T&&)
                 noexcept/*(std::is_nothrow_default_constructible<T>::value)*/
             { return 0; }
         }
@@ -39,7 +39,7 @@ namespace ranges
 
         template <typename T>
         struct is_constexpr_default_cosntructible<T, typename std::enable_if<std::is_default_constructible<T>::value>::type >
-            : std::integral_constant<bool, noexcept(details::is_constexpr_helper<T>())> {};
+            : std::integral_constant<bool, noexcept(details::is_constexpr_helper(T{}))> {};
     }
 }
 

@@ -20,6 +20,11 @@ struct default_constructible_t
     default_constructible_t() = default;
 };
 
+struct empty_ctr_t
+{
+    empty_ctr_t(){}
+};
+
 struct non_default_constructible_t
 {
     non_default_constructible_t(int) noexcept {}
@@ -49,6 +54,7 @@ struct false_constexpr_default_constructible_t
 int main()
 {
     CHECK( is_constexpr_default_cosntructible<default_constructible_t>::value );
+    CHECK( !is_constexpr_default_cosntructible<empty_ctr_t>::value );
     CHECK( !is_constexpr_default_cosntructible<non_default_constructible_t>::value );
     CHECK( is_constexpr_default_cosntructible<constexpr_default_constructible_t>::value );
     CHECK( !is_constexpr_default_cosntructible<constexpr_non_default_constructible_t>::value );
