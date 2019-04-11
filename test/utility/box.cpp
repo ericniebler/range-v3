@@ -35,6 +35,8 @@ void test_1093()
 
 void constexpr_ctr_box()
 {
+    RANGES_DIAGNOSTIC_PUSH
+    RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_MEMBER
     struct Op
     {
         constexpr Op(){}
@@ -43,6 +45,7 @@ void constexpr_ctr_box()
     {
         constexpr Op2(){}
     };
+    RANGES_DIAGNOSTIC_POP
 
     struct payload { void* v; };
     struct base_adaptor {};
