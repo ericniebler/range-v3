@@ -84,7 +84,7 @@ if(RANGE_V3_HEADER_CHECKS)
   list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
   # Deprecated headers
   if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    foreach(header "${RANGE_V3_PUBLIC_HEADERS}")
+    foreach(header ${RANGE_V3_PUBLIC_HEADERS})
       file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/${header}" is_deprecated
            LIMIT_COUNT 1
            REGEX ".*RANGES_DEPRECATED_HEADER.*")
