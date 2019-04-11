@@ -82,8 +82,20 @@ if(RANGE_V3_HEADER_CHECKS)
                     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
   # This header is not meant to be included directly:
   list(REMOVE_ITEM RANGE_V3_PUBLIC_HEADERS std/detail/associated_types.hpp)
+  # Deprecated headers
+  if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+    foreach(header "${RANGE_V3_PUBLIC_HEADERS}")
+      file(STRINGS "${header}" is_deprecated LIMIT_COUNT 1
+                               REGEX ".*RANGES_DEPRECATED_HEADER.*")
+      if(is_deprecated)
+        list(APPEND RANGE_V3_DEPRECATED_PUBLIC_HEADERS "${header}")
+      endif()
+    endforeach()
+  endif()
 
-  add_header_test(test.range.v3.headers HEADERS ${RANGE_V3_PUBLIC_HEADERS})
+  add_header_test(test.range.v3.headers
+    EXCLUDE ${RANGE_V3_DEPRECATED_PUBLIC_HEADERS}
+    HEADERS ${RANGE_V3_PUBLIC_HEADERS})
   target_link_libraries(test.range.v3.headers PRIVATE range-v3)
 endif()
 
