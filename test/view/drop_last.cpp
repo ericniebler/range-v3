@@ -69,6 +69,12 @@ void test_size(Rng&& src)
     CHECK( (src | view::drop_last(2)).size() == std::size_t(2) );
 }
 
+template<class Rng>
+void test_non_convert_range(Rng&& src){
+    // test non-convertible const<=>non-const range
+    test_range(src | view::transform([](const int& i) -> const int& {return i;}));
+}
+
 void random_acccess_test()
 {
     using Src = std::vector<int>;
@@ -86,9 +92,7 @@ void random_acccess_test()
     test_range(src);
     test_range(non_const_only(src));
     test_size(src);
-
-    // test non-convertible const<=>non-const range
-    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
+    test_non_convert_range(src);
 }
 
 void bidirectional_test()
@@ -109,9 +113,7 @@ void bidirectional_test()
     test_range(src);
     test_range(non_const_only(src));
     test_size(src);
-
-    // test non-convertible const<=>non-const range
-    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
+    test_non_convert_range(src);
 }
 
 void forward_test()
@@ -132,9 +134,7 @@ void forward_test()
     test_range(src);
     test_range(non_const_only(src));
     test_size(src | view::take_exactly(4));
-
-    // test non-convertible const<=>non-const range
-    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
+    test_non_convert_range(src);
 }
 
 int main()
