@@ -40,8 +40,11 @@ namespace ranges
             CONCEPT_ASSERT(BidirectionalView<Rng>());
         private:
             friend range_access;
+
+            using difference_t = range_difference_type_t<Rng>;
+            using size_t = range_size_type_t<Rng>;
             Rng rng;
-            std::size_t n;
+            difference_t n;
 
             // TODO: optimise for convertible const<=>non-const sentinel?
             detail::non_propagating_cache<sentinel_t<Rng>> sentinel;
@@ -65,7 +68,7 @@ namespace ranges
 
         public:
             drop_last_view() = default;
-            drop_last_view(Rng rng, std::size_t n)
+            drop_last_view(Rng rng, difference_t n)
               : rng(std::move(rng)), n(n)
             {}
 
@@ -99,13 +102,15 @@ namespace ranges
             }
 
             template<typename CRng = Rng const,
-                    CONCEPT_REQUIRES_(SizedRange<CRng>())>
-            range_size_type_t<CRng> size() const
+                CONCEPT_REQUIRES_(SizedRange<CRng>())>
+            size_t size() const
             {
-                const auto initial_size = ranges::size(rng);
+                const size_t initial_size = ranges::size(rng);
+                const size_t n = static_cast<size_t>(this->n);
+
                 return initial_size > n
-                    ? initial_size - static_cast<range_size_type_t<CRng>>(n)
-                    : 0;
+                     ? initial_size - n
+                     : 0;
             }
 
             Rng & base()
@@ -129,7 +134,10 @@ namespace ranges
             CONCEPT_ASSERT(ranges::ForwardView<Rng>());
         private:
             friend range_access;
-            std::size_t n;
+
+            using difference_t = range_difference_type_t<Rng>;
+            using size_t = range_size_type_t<Rng>;
+            difference_t n;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -145,7 +153,7 @@ namespace ranges
                     : probe(other.probe)
                 {}
 
-                adaptor(CRng &rng, std::size_t n)
+                adaptor(CRng &rng, difference_t n)
                 {
                     probe = ranges::next(ranges::begin(rng), n, ranges::end(rng));
                 }
@@ -176,19 +184,21 @@ namespace ranges
             sentinel_adaptor end_adaptor() const { return {}; }
         public:
             drop_last_view() = default;
-            drop_last_view(Rng rng, std::size_t n)
+            drop_last_view(Rng rng, difference_t n)
               : drop_last_view::view_adaptor(std::move(rng))
               , n(n)
             {}
 
             template<typename CRng = Rng const,
                 CONCEPT_REQUIRES_(SizedRange<CRng>())>
-            range_size_type_t<CRng> size() const
+            size_t size() const
             {
-                const auto initial_size = ranges::size(this->base());
+                const size_t initial_size = ranges::size(this->base());
+                const size_t n = static_cast<size_t>(this->n);
+
                 return initial_size > n
-                       ? initial_size - static_cast<range_size_type_t<CRng>>(n)
-                       : 0;
+                     ? initial_size - n
+                     : 0;
             }
         };
 
@@ -199,8 +209,8 @@ namespace ranges
             private:
                 friend view_access;
 
-                template<typename drop_last_fn_t>
-                static auto bind(drop_last_fn_t drop_last, std::size_t n)
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(drop_last_fn drop_last, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(drop_last, std::placeholders::_1, n))
@@ -208,14 +218,14 @@ namespace ranges
 
                 template<typename Rng>
                 static drop_last_view<all_t<Rng>>
-                invoke_(Rng &&rng, std::size_t n)
+                invoke_(Rng &&rng, range_difference_type_t<Rng> n)
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
                 }
             public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
-                auto operator()(Rng &&rng, std::size_t n) const
+                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     drop_last_fn::invoke_(static_cast<Rng&&>(rng), n)
