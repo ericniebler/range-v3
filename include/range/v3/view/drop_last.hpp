@@ -16,7 +16,6 @@
 
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/utility/min_v.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
@@ -28,33 +27,45 @@ namespace ranges
 {
     inline namespace v3
     {
+        template<typename Rng, bool is_bidirectional = BidirectionalView<Rng>::value >
+        struct drop_last_view{};
+
         template<typename Rng>
-        struct drop_last_bidirectional_view
+        struct drop_last_view<Rng, true>
           : view_interface<
-              drop_last_bidirectional_view<Rng>,
+              drop_last_view<Rng, true>,
               is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best
           >
         {
-            //CONCEPT_ASSERT(ranges::BidirectionalView<Rng>());
+            CONCEPT_ASSERT(BidirectionalView<Rng>());
         private:
             friend range_access;
             Rng rng;
             std::size_t n;
-            detail::non_propagating_cache<sentinel_t<Rng>> sentinel;
-            void update_sentinel()
-            {
-                if (!sentinel)
-                {
-                    sentinel = ranges::prev(ranges::end(rng), n, ranges::begin(rng));
-                }
-            }
 
-            drop_last_bidirectional_view<Rng>& self_mut() const {
-                return const_cast<drop_last_bidirectional_view<Rng>&>(*this);
-            }
+            // TODO: optimise for convertible const<=>non-const sentinel?
+            detail::non_propagating_cache<sentinel_t<Rng>> sentinel;
+
+            // TODO: optimise with ebo.
+            template<bool may_be_const = Range<Rng const>::value, class dummy = void>
+            struct const_sentinel_{};
+
+            template<class dummy>
+            struct const_sentinel_<true, dummy>{
+                using type = detail::non_propagating_cache<sentinel_t<Rng const>>;
+            };
+
+            template<class dummy>
+            struct const_sentinel_<false, dummy>{
+                struct type{};
+            };
+
+            using   const_sentinel_t = typename const_sentinel_<>::type;
+            mutable const_sentinel_t const_sentinel;
+
         public:
-            drop_last_bidirectional_view() = default;
-            drop_last_bidirectional_view(Rng rng, std::size_t n)
+            drop_last_view() = default;
+            drop_last_view(Rng rng, std::size_t n)
               : rng(std::move(rng)), n(n)
             {}
 
@@ -64,10 +75,12 @@ namespace ranges
             }
             sentinel_t<Rng> end()
             {
-                update_sentinel();
+                if (!sentinel)
+                {
+                    sentinel = ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+                }
                 return *sentinel;
             }
-
             template<typename CRng = Rng const,
                 CONCEPT_REQUIRES_(Range<CRng>())>
             iterator_t<CRng> begin() const
@@ -78,9 +91,11 @@ namespace ranges
                 CONCEPT_REQUIRES_(Range<CRng>())>
             sentinel_t<CRng> end() const
             {
-                // const will be constructed from non-const on return
-                self_mut().update_sentinel();
-                return *sentinel;
+                if (!const_sentinel)
+                {
+                    const_sentinel = ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+                }
+                return *const_sentinel;
             }
 
             template<typename CRng = Rng const,
@@ -89,7 +104,7 @@ namespace ranges
             {
                 const auto initial_size = ranges::size(rng);
                 return initial_size > n
-                    ? initial_size - static_cast<range_size_type_t<Rng>>(n)
+                    ? initial_size - static_cast<range_size_type_t<CRng>>(n)
                     : 0;
             }
 
@@ -104,14 +119,14 @@ namespace ranges
         };
 
         template<typename Rng>
-        struct drop_last_forward_view
+        struct drop_last_view<Rng, false>
           : view_adaptor<
-              drop_last_forward_view<Rng>,
+              drop_last_view<Rng, false>,
               Rng,
-              cardinality::unknown
+              is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best (but unknown is expected)
           >
         {
-            //CONCEPT_ASSERT(ranges::ForwardView<Rng>());
+            CONCEPT_ASSERT(ranges::ForwardView<Rng>());
         private:
             friend range_access;
             std::size_t n;
@@ -130,12 +145,12 @@ namespace ranges
                     : probe(other.probe)
                 {}
 
-                adaptor(Rng const &rng, std::size_t n)
+                adaptor(CRng &rng, std::size_t n)
                 {
                     probe = ranges::next(ranges::begin(rng), n, ranges::end(rng));
                 }
 
-                void next(iterator_t<Rng>& it)
+                void next(iterator_t<CRng>& it)
                 {
                     ++it;
                     ++probe;
@@ -151,32 +166,32 @@ namespace ranges
                 }
             };
 
-            adaptor<false> begin_adaptor()       { return {this->base(), n}; }
+            adaptor<false> begin_adaptor() { return {this->base(), n}; }
+            sentinel_adaptor end_adaptor() { return {}; }
+
+            template<typename CRng = Rng const, CONCEPT_REQUIRES_(Range<CRng>())>
             adaptor<true>  begin_adaptor() const { return {this->base(), n}; }
-            sentinel_adaptor end_adaptor()       { return {}; }
+
+            template<typename CRng = Rng const, CONCEPT_REQUIRES_(Range<CRng>())>
             sentinel_adaptor end_adaptor() const { return {}; }
         public:
-            drop_last_forward_view() = default;
-            drop_last_forward_view(Rng rng, std::size_t n)
-              : drop_last_forward_view::view_adaptor(std::move(rng))
+            drop_last_view() = default;
+            drop_last_view(Rng rng, std::size_t n)
+              : drop_last_view::view_adaptor(std::move(rng))
               , n(n)
             {}
 
-            // TODO: try override size. FWD_VIEW may be sized too.
+            // forward list can be size too,
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(SizedRange<CRng>())>
+            range_size_type_t<CRng> size() const
+            {
+                const auto initial_size = ranges::size(this->base());
+                return initial_size > n
+                       ? initial_size - static_cast<range_size_type_t<CRng>>(n)
+                       : 0;
+            }
         };
-
-        //namespace details{
-            template<class Rng>
-            using drop_last_view =
-                meta::if_<BidirectionalRange<Rng>
-                    , drop_last_bidirectional_view<Rng>
-                    , drop_last_forward_view<Rng>>;
-        //}
-
-        /*template<class Rng>
-        struct drop_last_view : details::drop_last_view_<Rng>{
-            using details::drop_last_view_<Rng>::drop_last_view_;
-        };*/
 
         namespace view
         {

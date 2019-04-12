@@ -19,28 +19,39 @@
 #include <forward_list>
 
 #include <range/v3/view/drop_last.hpp>
-#include <range/v3/view/remove_if.hpp>
+//#include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
 
 using namespace ranges;
 
-struct op_all
+template<class Rng>
+class view_non_const_only
+    : public view_adaptor<view_non_const_only<Rng>, Rng>
 {
-    template<class T>
-    bool operator()(T&&) const{ return false; }
+    friend ranges::range_access;
+
+    ranges::adaptor_base begin_adaptor() { return {}; }
+    ranges::adaptor_base end_adaptor()   { return {}; }
+
+    // ???
+    ranges::adaptor_base begin_adaptor() const = delete;
+    ranges::adaptor_base end_adaptor()   const = delete;
+public:
+    using view_non_const_only::view_adaptor::view_adaptor;
 };
-const auto filter_all = view::remove_if(op_all{});
+
+template<class Rng>
+view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng){
+    return view_non_const_only<view::all_t<Rng>>{view::all(static_cast<Rng&&>(rng))};
+}
+
 
 template<class Rng>
 void test_range(Rng&& src)
 {
     {
         auto list = src | view::drop_last(2);
-
-        //const auto& src_c = list;
-        /*auto e = src_c.begin();
-        (void)e;*/
-
         ::check_equal(list, {1,2});
     }
     {
@@ -65,23 +76,20 @@ void random_acccess_test()
     static_assert(
         ranges::RandomAccessRange<Src>().value
         , "Must be exactly RA.");
-    /*static_assert(
+    static_assert(
         std::is_same<
-            drop_last_view<Src>, drop_last_bidirectional_view<Src>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, true>
         >::value
-        , "Must have correct view.");*/
+        , "Must have correct view.");
 
     Src src = {1,2,3,4};
 
     test_range(src);
-    //test_range(src | view::transform([](const int& i) -> const int& {return i;}));
-    test_range(src | filter_all);
+    test_range(non_const_only(src));
     test_size(src);
 
-    //auto l = src | view::transform([](const int& i) -> const int& {return i;});
-    /*auto l = src | view::all;
-    auto k = l | view::drop_last(2);*/
-
+    // test non-convertible const<=>non-const range
+    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
 }
 
 void bidirectional_test()
@@ -91,16 +99,20 @@ void bidirectional_test()
         !ranges::RandomAccessRange<Src>().value &&
         ranges::BidirectionalRange<Src>().value
         , "Must be exactly bidirectional.");
-    /*static_assert(
+    static_assert(
         std::is_same<
-            drop_last_view<Src>, drop_last_bidirectional_view<Src>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, true>
         >::value
-        , "Must have correct view.");*/
+        , "Must have correct view.");
 
     Src src = {1,2,3,4};
 
     test_range(src);
+    test_range(non_const_only(src));
     test_size(src);
+
+    // test non-convertible const<=>non-const range
+    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
 }
 
 void forward_test()
@@ -110,15 +122,20 @@ void forward_test()
         !ranges::BidirectionalRange<Src>().value &&
         ranges::ForwardRange<Src>().value
         , "Must be exactly forward.");
-    /*static_assert(
+    static_assert(
         std::is_same<
-            drop_last_view<Src>, drop_last_forward_view<Src>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, false>
         >::value
-        , "Must have correct view.");*/
+        , "Must have correct view.");
 
     Src src = {1,2,3,4};
 
     test_range(src);
+    test_range(non_const_only(src));
+    test_size(src | view::take_exactly(4));
+
+    // test non-convertible const<=>non-const range
+    test_range(std::move(src | view::transform([](const int& i) -> const int& {return i;})));
 }
 
 int main()
