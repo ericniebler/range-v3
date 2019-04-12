@@ -181,7 +181,6 @@ namespace ranges
               , n(n)
             {}
 
-            // forward list can be sized too,
             template<typename CRng = Rng const,
                 CONCEPT_REQUIRES_(SizedRange<CRng>())>
             range_size_type_t<CRng> size() const
@@ -200,8 +199,8 @@ namespace ranges
             private:
                 friend view_access;
 
-                template<class dummy = void>
-                static auto bind(drop_last_fn drop_last, std::size_t n)
+                template<typename drop_last_fn_t>
+                static auto bind(drop_last_fn_t drop_last, std::size_t n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(drop_last, std::placeholders::_1, n))
