@@ -181,7 +181,7 @@ namespace ranges
               , n(n)
             {}
 
-            // forward list can be size too,
+            // forward list can be sized too,
             template<typename CRng = Rng const,
                 CONCEPT_REQUIRES_(SizedRange<CRng>())>
             range_size_type_t<CRng> size() const
