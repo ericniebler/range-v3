@@ -167,8 +167,8 @@ namespace ranges
 
             struct sentinel_adaptor :  adaptor_base
             {
-                template<typename I, typename IA, typename S>
-                bool empty(I const &, IA const &ia, S const &s) const
+                template<typename I, bool is_const, typename S>
+                bool empty(I const &, adaptor<is_const> const &ia, S const &s) const
                 {
                     return ia.probe == s;
                 }
