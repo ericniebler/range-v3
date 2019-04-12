@@ -19,7 +19,6 @@
 #include <forward_list>
 
 #include <range/v3/view/drop_last.hpp>
-//#include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
 
