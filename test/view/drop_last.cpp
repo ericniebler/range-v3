@@ -32,10 +32,6 @@ class view_non_const_only
 
     ranges::adaptor_base begin_adaptor() { return {}; }
     ranges::adaptor_base end_adaptor()   { return {}; }
-
-    // ???
-    ranges::adaptor_base begin_adaptor() const = delete;
-    ranges::adaptor_base end_adaptor()   const = delete;
 public:
     using view_non_const_only::view_adaptor::view_adaptor;
 };
@@ -66,7 +62,9 @@ void test_range(Rng&& src)
 template<class Rng>
 void test_size(Rng&& src)
 {
+    CHECK( (src | view::drop_last(0)).size() == std::size_t(4) );
     CHECK( (src | view::drop_last(2)).size() == std::size_t(2) );
+    CHECK( (src | view::drop_last(4)).size() == std::size_t(0) );
 }
 
 template<class Rng>

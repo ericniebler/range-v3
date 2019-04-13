@@ -43,29 +43,21 @@ namespace ranges
 
             using difference_t = range_difference_type_t<Rng>;
             using size_t = range_size_type_t<Rng>;
+
             Rng rng;
             difference_t n;
-
-            // TODO: optimise for convertible const<=>non-const sentinel?
             detail::non_propagating_cache<sentinel_t<Rng>> sentinel;
 
-            // TODO: optimise with ebo.
-            template<bool may_be_const = Range<Rng const>::value, class dummy = void>
-            struct const_sentinel_{};
+            template<class T>
+            size_t get_size(T&& rng) const
+            {
+                const size_t initial_size = ranges::size(rng);
+                const size_t n = static_cast<size_t>(this->n);
 
-            template<class dummy>
-            struct const_sentinel_<true, dummy>{
-                using type = detail::non_propagating_cache<sentinel_t<Rng const>>;
-            };
-
-            template<class dummy>
-            struct const_sentinel_<false, dummy>{
-                struct type{};
-            };
-
-            using   const_sentinel_t = typename const_sentinel_<>::type;
-            mutable const_sentinel_t const_sentinel;
-
+                return initial_size > n
+                    ? initial_size - n
+                    : 0;
+            }
         public:
             drop_last_view() = default;
             drop_last_view(Rng rng, difference_t n)
@@ -85,32 +77,27 @@ namespace ranges
                 return *sentinel;
             }
             template<typename CRng = Rng const,
-                CONCEPT_REQUIRES_(Range<CRng>())>
+                CONCEPT_REQUIRES_(RandomAccessRange<CRng>())>
             iterator_t<CRng> begin() const
             {
                 return ranges::begin(rng);
             }
             template<typename CRng = Rng const,
-                CONCEPT_REQUIRES_(Range<CRng>())>
+                CONCEPT_REQUIRES_(RandomAccessRange<CRng>())>
             sentinel_t<CRng> end() const
             {
-                if (!const_sentinel)
-                {
-                    const_sentinel = ranges::prev(ranges::end(rng), n, ranges::begin(rng));
-                }
-                return *const_sentinel;
+                return ranges::prev(ranges::end(rng), n, ranges::begin(rng));
             }
 
-            template<typename CRng = Rng const,
-                CONCEPT_REQUIRES_(SizedRange<CRng>())>
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            size_t size()
+            {
+                return get_size(rng);
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                const size_t initial_size = ranges::size(rng);
-                const size_t n = static_cast<size_t>(this->n);
-
-                return initial_size > n
-                     ? initial_size - n
-                     : 0;
+                return get_size(rng);
             }
 
             Rng & base()
@@ -147,9 +134,9 @@ namespace ranges
 
                 adaptor() = default;
 
-                template<bool Other,
-                    CONCEPT_REQUIRES_(IsConst && !Other)>
-                adaptor(adaptor<Other> other)
+                template<bool OtherConst,
+                    CONCEPT_REQUIRES_(IsConst && !OtherConst)>
+                adaptor(adaptor<OtherConst> other)
                     : probe(other.probe)
                 {}
 
@@ -158,7 +145,7 @@ namespace ranges
                     probe = ranges::next(ranges::begin(rng), n, ranges::end(rng));
                 }
 
-                void next(iterator_t<CRng>& it)
+                void next(iterator_t<CRng> &it)
                 {
                     ++it;
                     ++probe;
@@ -177,11 +164,22 @@ namespace ranges
             adaptor<false> begin_adaptor() { return {this->base(), n}; }
             sentinel_adaptor end_adaptor() { return {}; }
 
-            template<typename CRng = Rng const, CONCEPT_REQUIRES_(Range<CRng>())>
+            CONCEPT_REQUIRES(Range<Rng const>())
             adaptor<true>  begin_adaptor() const { return {this->base(), n}; }
 
-            template<typename CRng = Rng const, CONCEPT_REQUIRES_(Range<CRng>())>
+            CONCEPT_REQUIRES(Range<Rng const>())
             sentinel_adaptor end_adaptor() const { return {}; }
+
+            template<class T>
+            size_t get_size(T &&rng) const
+            {
+                const size_t initial_size = ranges::size(rng);
+                const size_t n = static_cast<size_t>(this->n);
+
+                return initial_size > n
+                    ? initial_size - n
+                    : 0;
+            }
         public:
             drop_last_view() = default;
             drop_last_view(Rng rng, difference_t n)
@@ -189,16 +187,15 @@ namespace ranges
               , n(n)
             {}
 
-            template<typename CRng = Rng const,
-                CONCEPT_REQUIRES_(SizedRange<CRng>())>
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            size_t size()
+            {
+                return get_size(this->base());
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                const size_t initial_size = ranges::size(this->base());
-                const size_t n = static_cast<size_t>(this->n);
-
-                return initial_size > n
-                     ? initial_size - n
-                     : 0;
+                return get_size(this->base());
             }
         };
 
