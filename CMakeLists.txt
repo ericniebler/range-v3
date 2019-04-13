@@ -40,12 +40,6 @@ function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
   add_test(${TESTNAME} ${EXENAME})
 endfunction(rv3_add_test)
 
-function(rv3_add_test TESTNAME EXENAME FIRSTSOURCE)
-  add_executable(${EXENAME} ${FIRSTSOURCE} ${ARGN})
-  target_link_libraries(${EXENAME} range-v3)
-  add_test(${TESTNAME} ${EXENAME})
-endfunction(rv3_add_test)
-
 include(ranges_options)
 include(ranges_env)
 include(ranges_flags)
