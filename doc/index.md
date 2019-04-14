@@ -125,6 +125,32 @@ vector with it:
     // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}
 ~~~~~~~
 
+### View constness
+
+View is a range, pair of iterators. In order to work, and work fast, many views need to cache some data.
+In order to keep iterators small sized - this cached data stored in the view itself, and iterators holds only pointers to their view.
+Because of cache, many views have non-const only `begin()`/`end()` (though they may return const-iterators).
+Const version of `begin()`/`end()` (where provided) - are truly const, hence - tread-safe.
+But since they can't cache - const versions usually slower then non-const.
+
+Constness of view is not constness of iterators. Non-const view may hold const iterators.
+
+Use non-const views whenever possible. If you need thread-safety - work with view copies in threads, don't share.
+
+### View validity
+
+View is guaranteed to be valid, only until it adopted range remains constant all over its span.
+Iterator/sentinel validity alone is not enough.
+
+~~~~~~~{.cpp}
+    std::forward_list<int> list = {1,2,3,4,5,6};
+    auto v = list | ranges::view::drop_last(1);
+    list.erase(std::next(list.begin()));
+    // v is invalid now.
+~~~~~~~
+
+Though, sometimes view may remain valid even after mutations in adopted range, it is not safe to assume so.
+
 #### Actions
 
 When you want to mutate a container in-place, or forward it through a chain of
