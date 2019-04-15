@@ -265,7 +265,7 @@ namespace ranges
 #ifdef RANGES_WORKAROUND_MSVC_711347
             CPP_ret(adaptor<true>)(requires const_iterable)
 #else // ^^^ workaround / no workaround vvv
-            CPP_ret(adaptor<true>)(requires const_iterable())
+            CPP_ret(adaptor<true>)(requires (const_iterable()))
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
             return adaptor<true>{*this};
@@ -288,7 +288,7 @@ namespace ranges
                 requires const_iterable)
 #else // ^^^ workaround / no workaround vvv
             CPP_ret(meta::if_c<can_bound<true>(), adaptor<true>, adaptor_base>)(
-                requires const_iterable())
+                requires (const_iterable()))
 #endif // RANGES_WORKAROUND_MSVC_711347
         {
             return {*this};

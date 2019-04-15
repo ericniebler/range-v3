@@ -118,7 +118,7 @@ namespace ranges
                     // We shouldn't need to strip references to test if something
                     // is readable. https://github.com/ericniebler/stl2/issues/594
                     //Readable<range_reference_t<Rng>>)
-                    (bool) Readable<range_value_t<Rng>>) // Cast to bool needed for GCC (???)
+                    ((bool) Readable<range_value_t<Rng>>)) // Cast to bool needed for GCC (???)
             {
                 return indirect_view<all_t<Rng>>{all(static_cast<Rng &&>(rng))};
             }

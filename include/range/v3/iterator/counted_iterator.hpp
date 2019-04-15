@@ -155,12 +155,12 @@ namespace ranges
         template<typename I2 = I>
         constexpr /*c++14*/ auto operator++(int) ->
             CPP_ret(decltype(std::declval<I2 &>()++))(
-                requires not ForwardIterator<I2>)
+                requires (not ForwardIterator<I2>))
 #else // ^^^ workaround ^^^ / vvv no workaround vvv
         CPP_member
         constexpr /*c++14*/ auto operator++(int) ->
             CPP_ret(decltype(std::declval<I &>()++))(
-                requires not ForwardIterator<I>)
+                requires (not ForwardIterator<I>))
 #endif // RANGES_WORKAROUND_MSVC_677925
         {
             RANGES_EXPECT(cnt_ > 0);

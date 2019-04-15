@@ -127,7 +127,7 @@ namespace ranges
         constexpr /*c++14*/ auto operator=(U && u)
             noexcept(noexcept(std::declval<Base &>() = static_cast<U&&>(u))) ->
             CPP_ret(tagged &)(
-                requires not defer::Same<tagged, detail::decay_t<U>> &&
+                requires (not defer::Same<tagged, detail::decay_t<U>>) &&
                     defer::Satisfies<Base &, std::is_assignable, U>)
         {
             static_cast<Base &>(*this) = static_cast<U&&>(u);

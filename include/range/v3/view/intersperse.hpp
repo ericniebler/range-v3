@@ -166,14 +166,14 @@ namespace ranges
         CPP_member
         constexpr /*c++14*/ auto end_adaptor() ->
             CPP_ret(cursor_adaptor<false>)(
-                requires CommonRange<Rng> && !SinglePass<iterator_t<Rng>>)
+                requires CommonRange<Rng> && (!SinglePass<iterator_t<Rng>>))
         {
             return cursor_adaptor<false>{val_};
         }
         CPP_member
         constexpr /*c++14*/ auto end_adaptor() noexcept ->
             CPP_ret(sentinel_adaptor<false>)(
-                requires not CommonRange<Rng> || SinglePass<iterator_t<Rng>>)
+                requires (not CommonRange<Rng>) || SinglePass<iterator_t<Rng>>)
         {
             return {};
         }

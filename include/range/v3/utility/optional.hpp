@@ -522,18 +522,18 @@ namespace ranges
 
         template<typename U = T>
         constexpr CPP_ctor(optional)(U &&v)(
-            requires not defer::Same<detail::decay_t<U>, in_place_t> &&
-                !defer::Same<detail::decay_t<U>, optional> &&
+            requires (not defer::Same<detail::decay_t<U>, in_place_t>) &&
+                (!defer::Same<detail::decay_t<U>, optional>) &&
                 defer::Constructible<T, U> &&
                 defer::ConvertibleTo<U, T>)
           : base_t(in_place, static_cast<U &&>(v))
         {}
         template<typename U = T>
         explicit constexpr CPP_ctor(optional)(U &&v)(
-            requires not defer::Same<detail::decay_t<U>, in_place_t> &&
-                !defer::Same<detail::decay_t<U>, optional> &&
+            requires (not defer::Same<detail::decay_t<U>, in_place_t>) &&
+                (!defer::Same<detail::decay_t<U>, optional>) &&
                 defer::Constructible<T, U> &&
-                !defer::ConvertibleTo<U, T>)
+                (!defer::ConvertibleTo<U, T>))
           : base_t(in_place, static_cast<U &&>(v))
         {}
 
@@ -550,7 +550,7 @@ namespace ranges
         explicit CPP_ctor(optional)(optional<U> const &that)(
             requires OptionalShouldConvert<U, T> &&
                 Constructible<T, U const &> &&
-                !ConvertibleTo<U const &, T>)
+                (!ConvertibleTo<U const &, T>))
         {
             if (that.has_value())
                 base_t::construct_from(*that);
@@ -569,7 +569,7 @@ namespace ranges
         explicit CPP_ctor(optional)(optional<U> &&that)(
             requires OptionalShouldConvert<U, T> &&
                 Constructible<T, U> &&
-                !ConvertibleTo<U, T>)
+                (!ConvertibleTo<U, T>))
         {
             if (that.has_value())
                 base_t::construct_from(detail::move(*that));
@@ -591,8 +591,8 @@ namespace ranges
             noexcept(std::is_nothrow_constructible<T, U>::value &&
                 std::is_nothrow_assignable<T &, U>::value) ->
             CPP_ret(optional &)(
-                requires not defer::Same<optional, detail::decay_t<U>> &&
-                    !(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>) &&
+                requires (not defer::Same<optional, detail::decay_t<U>>) &&
+                    (!(defer::Satisfies<T, std::is_scalar> && defer::Same<T, detail::decay_t<U>>)) &&
                     defer::Constructible<T, U> &&
                     defer::Assignable<T &, U>)
         {

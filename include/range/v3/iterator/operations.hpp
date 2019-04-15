@@ -385,7 +385,7 @@ namespace ranges
         static constexpr /*c++14*/
         auto impl_i(I begin, S end, sentinel_tag) ->
             CPP_ret(std::pair<iter_difference_t<I>, I>)(
-                requires not SizedSentinel<I, I>)
+                requires (not SizedSentinel<I, I>))
         {
             iter_difference_t<I> d = 0;
             for(; begin != end; ++begin)

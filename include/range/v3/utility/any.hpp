@@ -123,7 +123,7 @@ namespace ranges
         any() noexcept = default;
         template<typename TRef, typename T = detail::decay_t<TRef>>
         CPP_ctor(any)(TRef &&t)(
-            requires Copyable<T> && !Same<T, any>)
+            requires Copyable<T> && (!Same<T, any>))
           : ptr_(new impl<T>(static_cast<TRef &&>(t)))
         {}
         any(any &&) noexcept = default;
@@ -138,7 +138,7 @@ namespace ranges
         }
         template<typename TRef, typename T = detail::decay_t<TRef>>
         auto operator=(TRef &&t) -> CPP_ret(any &)(
-            requires Copyable<T> && !Same<T, any>)
+            requires Copyable<T> && (!Same<T, any>))
         {
             any{static_cast<TRef &&>(t)}.swap(*this);
             return *this;

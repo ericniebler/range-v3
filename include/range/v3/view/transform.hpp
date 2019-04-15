@@ -390,13 +390,13 @@ namespace ranges
           , rng2_(std::move(rng2))
         {}
         CPP_template(int = 42)(
-            requires my_cardinality >= 0)
+            requires (my_cardinality >= 0))
         static constexpr std::size_t size()
         {
             return static_cast<std::size_t>(my_cardinality);
         }
         CPP_template(bool True = true)(
-            requires my_cardinality < 0 &&
+            requires (my_cardinality < 0) &&
                 SizedRange<Rng1 const> && SizedRange<Rng2 const> &&
                 Common<range_size_t<R1<True>>, range_size_t<R2<True>>>)
         constexpr auto size() const
@@ -404,7 +404,7 @@ namespace ranges
             return size_(*this);
         }
         CPP_template(bool True = true)(
-            requires my_cardinality < 0 &&
+            requires (my_cardinality < 0) &&
                 SizedRange<Rng1> && SizedRange<Rng2> &&
                 Common<range_size_t<R1<True>>, range_size_t<R2<True>>>)
         constexpr /*c++14*/ auto size()

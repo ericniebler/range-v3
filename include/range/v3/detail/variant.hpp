@@ -103,7 +103,7 @@ namespace ranges
         template<typename I, typename S, typename O>
         auto uninitialized_copy(I first, S last, O out) ->
             CPP_ret(O)(
-                requires not SizedSentinel<S, I>)
+                requires (not SizedSentinel<S, I>))
         {
             for(; first != last; ++first, ++out)
                 ::new((void *) std::addressof(*out)) iter_value_t<O>(*first);
@@ -138,7 +138,7 @@ namespace ranges
               : datum_{}
             {}
             CPP_template(typename... Ts)(
-                requires Constructible<T, Ts...> && sizeof...(Ts) != 0)
+                requires Constructible<T, Ts...> && (sizeof...(Ts) != 0))
             constexpr indexed_datum(Ts &&... ts)
                 noexcept(std::is_nothrow_constructible<T, Ts...>::value)
               : datum_(static_cast<Ts &&>(ts)...)
@@ -632,7 +632,7 @@ namespace ranges
         {}
         template<typename... Args>
         static constexpr auto all_convertible_to(int) noexcept -> CPP_ret(bool)(
-            requires sizeof...(Args) == sizeof...(Ts))
+            requires (sizeof...(Args) == sizeof...(Ts)))
         {
             return And<ConvertibleTo<Args, Ts>...>;
         }
@@ -680,7 +680,7 @@ namespace ranges
         {}
         template<typename...Args>
         CPP_ctor(variant)(variant<Args...> that)(
-            requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
+            requires (!Same<variant<Args...>, variant>) && (all_convertible_to<Args...>(0)))
           : detail::variant_data<Ts...>{}
           , index_(detail::variant_move_copy_(that.index(), data_(), std::move(that.data_())))
         {}
@@ -700,7 +700,7 @@ namespace ranges
         }
         template<typename...Args>
         auto operator=(variant<Args...> that) -> CPP_ret(variant &)(
-            requires (!Same<variant<Args...>, variant>) && all_convertible_to<Args...>(0))
+            requires (!Same<variant<Args...>, variant>) && (all_convertible_to<Args...>(0)))
         {
             // TODO do a simple copy assign when index()==that.index()
             this->clear_();

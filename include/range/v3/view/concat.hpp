@@ -148,7 +148,7 @@ namespace ranges
                 template<typename I, std::size_t N>
                 auto operator()(indexed_element<I, N> it) const ->
                     CPP_ret(void)(
-                        requires N != 0 && BidirectionalIterator<I>)
+                        requires (N != 0) && BidirectionalIterator<I>)
                 {
                     if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
                     {
@@ -344,13 +344,13 @@ namespace ranges
         {}
         CPP_member
         constexpr auto size() const -> CPP_ret(std::size_t)(
-            requires detail::concat_cardinality<Rngs...>::value >= 0)
+            requires (detail::concat_cardinality<Rngs...>::value >= 0))
         {
             return static_cast<std::size_t>(detail::concat_cardinality<Rngs...>::value);
         }
         CPP_member
         constexpr /*c++14*/ auto CPP_fun(size)() (const
-            requires detail::concat_cardinality<Rngs...>::value < 0 &&
+            requires (detail::concat_cardinality<Rngs...>::value < 0) &&
                 And<SizedRange<Rngs const>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs const>...>;
@@ -363,7 +363,7 @@ namespace ranges
         }
         CPP_member
         constexpr /*c++14*/ auto CPP_fun(size)() (
-            requires detail::concat_cardinality<Rngs...>::value < 0 &&
+            requires (detail::concat_cardinality<Rngs...>::value < 0) &&
                 And<SizedRange<Rngs>...>)
         {
             using size_type = common_type_t<range_size_t<Rngs>...>;

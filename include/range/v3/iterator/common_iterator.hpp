@@ -169,7 +169,7 @@ namespace ranges
         template<typename I2 = I>
         auto operator++(int) ->
             CPP_ret(decltype(std::declval<I2 &>()++))(
-                requires not ForwardIterator<I2>)
+                requires (not ForwardIterator<I2>))
         {
             return ranges::get<0>(data_)++;
         }
@@ -177,7 +177,7 @@ namespace ranges
         CPP_member
         auto operator++(int) ->
             CPP_ret(decltype(std::declval<I &>()++))(
-                requires not ForwardIterator<I>)
+                requires (not ForwardIterator<I>))
         {
             return ranges::get<0>(data_)++;
         }
@@ -245,7 +245,7 @@ namespace ranges
     auto operator==(common_iterator<I1, S1> const &x, common_iterator<I2, S2> const &y) ->
         CPP_ret(bool)(
             requires Sentinel<S1, I2> && Sentinel<S2, I1> &&
-                !EqualityComparableWith<I1, I2>)
+                (!EqualityComparableWith<I1, I2>))
     {
         return detail::cidata(x).index() == 1u ?
             (detail::cidata(y).index() == 1u || ranges::get<0>(detail::cidata(y)) == ranges::get<1>(detail::cidata(x))) :

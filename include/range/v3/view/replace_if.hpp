@@ -60,7 +60,7 @@ namespace ranges
             template<typename I>
             auto operator()(I const &i) ->
                 CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_reference_t<I>>)(
-                    requires not Invocable<Pred const&, iter_reference_t<I>>)
+                    requires (not Invocable<Pred const&, iter_reference_t<I>>))
             {
                 auto &&x = *i;
                 if(invoke(first(), (decltype(x) &&) x))
@@ -81,7 +81,7 @@ namespace ranges
             template<typename I>
             auto operator()(move_tag, I const &i) ->
                 CPP_ret(common_reference_t<unwrap_reference_t<Val const &>, iter_rvalue_reference_t<I>>)(
-                    requires not Invocable<Pred const&, iter_rvalue_reference_t<I>>)
+                    requires (not Invocable<Pred const&, iter_rvalue_reference_t<I>>))
             {
                 auto &&x = iter_move(i);
                 if(invoke(first(), (decltype(x) &&) x))

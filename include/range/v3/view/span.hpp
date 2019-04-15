@@ -160,7 +160,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)(
-            requires not defer::Same<span, uncvref_t<Rng>> &&
+            requires (not defer::Same<span, uncvref_t<Rng>>) &&
                 defer::SpanCompatibleRange<Rng, T> &&
                 defer::SpanDynamicConversion<Rng, N>)
         constexpr span(Rng &&rng)
@@ -169,7 +169,7 @@ namespace ranges
         {}
 
         CPP_template(typename Rng)(
-            requires not defer::Same<span, uncvref_t<Rng>> &&
+            requires (not defer::Same<span, uncvref_t<Rng>>) &&
                 defer::SpanCompatibleRange<Rng, T> &&
                 defer::SpanStaticConversion<Rng, N>)
         constexpr span(Rng &&rng)
@@ -373,7 +373,7 @@ namespace ranges
     }
     CPP_template(typename Rng)(
         requires ContiguousRange<Rng> &&
-            range_cardinality<Rng>::value < cardinality())
+            (range_cardinality<Rng>::value < cardinality()))
     constexpr span<detail::element_t<Rng>>
     make_span(Rng &&rng)
         noexcept(noexcept(ranges::data(rng), ranges::size(rng)))
@@ -383,7 +383,7 @@ namespace ranges
     }
     CPP_template(typename Rng)(
         requires ContiguousRange<Rng> &&
-            range_cardinality<Rng>::value >= cardinality())
+            (range_cardinality<Rng>::value >= cardinality()))
     constexpr span<detail::element_t<Rng>,
         static_cast<detail::span_index_t>(range_cardinality<Rng>::value)>
     make_span(Rng &&rng)
