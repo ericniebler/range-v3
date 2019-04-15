@@ -143,9 +143,10 @@ View is guaranteed to be valid, only until it adopted range remains constant all
 Iterator/sentinel validity alone is not enough.
 
 ~~~~~~~{.cpp}
-    std::forward_list<int> list = {1,2,3,4,5,6};
-    auto v = list | ranges::view::drop_last(1);
-    list.erase(std::next(list.begin()));
+    using namespace ranges;
+    std::forward_list<int> list = {1,2,3,4};
+    auto v = list | view::drop_last(1);
+    iter_swap(advance(list.begin(), 1), advance(list.begin(), 2));
     // v is invalid now.
 ~~~~~~~
 
