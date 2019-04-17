@@ -333,7 +333,7 @@ to inject things into the public interface of the iterator:
 
 From within mixin you can call:
 * `get()` - to access adaptor internals 
-* `base()` - to access adopted iterator
+* `base()` - to access adaptable iterator
 
 Iterator/sentinel adaptor may "override" following members:
 ~~~~~~~{.cpp}
