@@ -129,7 +129,7 @@ vector with it:
 
 Logically, a view is like a pair of iterators. In order to work, and work fast, many views need to cache some data.
 In order to keep iterators small, this cached data is usually stored in the view itself, and iterators hold only pointers to their view.
-Because of cache, many views have non-const only `begin()`/`end()` (though they may return const-iterators).
+Because of the cache, many views lack a `const`-qualified `begin()`/`end()`.
 Const version of `begin()`/`end()` (where provided) - are truly const, hence - tread-safe.
 But since they can't cache - const versions usually slower then non-const.
 
