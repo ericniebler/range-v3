@@ -382,11 +382,11 @@ namespace ranges
             using typename assoc_types_::const_reference_t;
             RANGES_CXX14_CONSTEXPR Cur &pos() noexcept
             {
-                return this->mixin_t::get();
+                return this->mixin_t::basic_mixin::get();
             }
             constexpr Cur const &pos() const noexcept
             {
-                return this->mixin_t::get();
+                return this->mixin_t::basic_mixin::get();
             }
 
         public:

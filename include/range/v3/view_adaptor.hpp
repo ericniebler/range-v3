@@ -182,11 +182,11 @@ namespace ranges
 
         protected:
             // Adaptor accessor
-            Adapt& adaptor()
+            Adapt& get()
             {
                 return second();
             }
-            const Adapt& adaptor() const
+            const Adapt& get() const
             {
                 return second();
             }
@@ -239,18 +239,17 @@ namespace ranges
                 // the underlying iterator.
                 BaseIter base() const
                 {
-                    return this->get().first();
+                    return basic_adaptor_mixin::basic_mixin::get().first();
                 }
 
             protected:
-                // Adaptor accessor
-                Adapt& adaptor()
+                Adapt& get()
                 {
-                    return this->get().second();
+                    return basic_adaptor_mixin::basic_mixin::get().second();
                 }
-                const Adapt& adaptor() const
+                const Adapt& get() const
                 {
-                    return this->get().second();
+                    return basic_adaptor_mixin::basic_mixin::get().second();
                 }
             };
 
