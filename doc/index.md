@@ -473,6 +473,10 @@ provides, and a blurb about how each is intended to be used.
   <DD>Enumerates the n-ary cartesian product of `n` ranges, i.e., generates all `n`-tuples `(e1, e2, ... , en)` where `e1` is an element of the first range, `e2` is an element of the second range, etc.</DD>
 <DT>\link ranges::view::chunk_fn `view::chunk`\endlink</DT>
   <DD>Given a source range and an integer *N*, produce a range of contiguous ranges where each inner range has *N* contiguous elements. The final range may have fewer than *N* elements.</DD>
+<DT>\link ranges::view::collapse_if_fn `view::collapse_if`\endlink</DT>
+  <DD>Given a source range and a unary predicate, create a new range where the tail of the adjacent elements that satisfy the predicate is removed.</DD>
+<DT>\link ranges::view::collapse_to_if_fn `view::collapse_to_if`\endlink</DT>
+  <DD>Given a source range, a unary predicate and a target value, create a new range where the adjacent elements that satisfy the predicate are replaced with the target value.</DD>
 <DT>\link ranges::view::common_fn `view::common`\endlink</DT>
   <DD>Convert the source range to a *common* range, where the type of the `end` is the same as the `begin`. Useful for calling algorithms in the `std::` namespace.</DD>
 <DT>\link ranges::view::concat_fn `view::concat`\endlink</DT>

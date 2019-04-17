@@ -550,6 +550,16 @@ namespace ranges
         struct join_fn;
     }
 
+    template<typename Rng, typename Pred>
+    struct collapse_if_view;
+
+    namespace view
+    {
+        struct collapse_if_fn;
+
+        struct collapse_to_if_fn;
+    }
+
     template<typename...Rngs>
     struct concat_view;
 
