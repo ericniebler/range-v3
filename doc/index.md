@@ -480,7 +480,7 @@ Sometimes, you can use the same adaptor for both `begin_adaptor` and `end_adapto
 
 Pay attentention that all data, that you'll store in adaptor - will become part of iterator payload.
 
-If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor - default ones will be used.
+If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor, default ones will be used.
 
 ## Create Custom Iterators
 
