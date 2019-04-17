@@ -50,7 +50,7 @@ namespace ranges
     public:
         CPP_assert(BidirectionalView<Rng> &&
             IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-            std::is_object<Pred>::value);
+            CommonRange<Rng>);
 
         trim_view() = default;
         trim_view(Rng rng, Pred pred)
@@ -112,7 +112,7 @@ namespace ranges
                 CPP_ret(trim_view<all_t<Rng>, Pred>)(
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
-                        std::is_object<Pred>::value)
+                        CommonRange<Rng>)
             {
                 return {all(static_cast<Rng &&>(rng)), std::move(pred)};
             }
@@ -121,7 +121,7 @@ namespace ranges
                 CPP_ret(trim_view<all_t<Rng>, composed<Pred, Proj>>)(
                     requires ViewableRange<Rng> && BidirectionalRange<Rng> &&
                         IndirectUnaryPredicate<composed<Pred, Proj>, iterator_t<Rng>> &&
-                        std::is_object<Pred>::value && std::is_object<Proj>::value)
+                        CommonRange<Rng>)
             {
                 return {
                     all(static_cast<Rng &&>(rng)),
