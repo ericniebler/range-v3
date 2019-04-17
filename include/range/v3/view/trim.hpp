@@ -56,12 +56,6 @@ namespace ranges
         trim_view(Rng rng, Pred pred)
           : rng_(std::move(rng)), pred_(std::move(pred))
         {}
-        CPP_template(typename R)(
-            requires BidirectionalRange<R> && ViewableRange<R> &&
-                Constructible<Rng, view::all_t<R>>)
-        trim_view(R &&rng, Pred pred)
-          : rng_(view::all(static_cast<R &&>(rng))), pred_(std::move(pred))
-        {}
 
         iterator_t<Rng> begin()
         {
