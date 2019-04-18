@@ -133,7 +133,7 @@ Because of the cache, many views lack a `const`-qualified `begin()`/`end()`.
 When `const` versions of `begin()`/`end()` are provided, they are truly `const`; that is, thread-safe.
 But since they can't cache - const versions usually slower then non-const.
 
-As with pointers and iterators (an `int* const` is a `const` pointer to a mutable `int`), the `const`-ness of a view is not related in any way to the `const`-ness of the underlying data.
+The `const`-ness of a view is not related to the `const`-ness of the underlying data. Non-const view may return const iterators. Analogous to pointers (an `int* const` is a `const` pointer to a mutable `int`).
 
 Use non-const views whenever possible. If you need thread-safety - work with view copies in threads, don't share.
 
