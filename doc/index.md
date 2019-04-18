@@ -149,7 +149,6 @@ Any operation on the underlying range, that invalidates its iterators or sentine
     // v is invalid now.
 ~~~~~~~
 
-Though, sometimes view may remain valid even after mutations in adopted range, it is not safe to assume so.
 
 #### Actions
 
