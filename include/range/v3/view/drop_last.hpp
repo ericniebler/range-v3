@@ -126,26 +126,19 @@ namespace ranges
             using size_t = range_size_type_t<Rng>;
             difference_t n;
 
-            template<bool IsConst>
+            detail::non_propagating_cache<iterator_t<Rng>> probe_begin;
+
             struct adaptor : adaptor_base
             {
-                using CRng = meta::const_if_c<IsConst, Rng>;
-                iterator_t<CRng> probe;
+                iterator_t<Rng> probe;
 
                 adaptor() = default;
 
-                template<bool OtherConst,
-                    CONCEPT_REQUIRES_(IsConst && !OtherConst)>
-                adaptor(adaptor<OtherConst> other)
-                    : probe(other.probe)
+                adaptor(iterator_t<Rng> probe_begin)
+                  : probe(std::move(probe_begin))
                 {}
 
-                adaptor(CRng &rng, difference_t n)
-                {
-                    probe = ranges::next(ranges::begin(rng), n, ranges::end(rng));
-                }
-
-                void next(iterator_t<CRng> &it)
+                void next(iterator_t<Rng> &it)
                 {
                     ++it;
                     ++probe;
@@ -154,21 +147,21 @@ namespace ranges
 
             struct sentinel_adaptor :  adaptor_base
             {
-                template<typename I, bool is_const, typename S>
-                bool empty(I const &, adaptor<is_const> const &ia, S const &s) const
+                template<typename I, typename S>
+                bool empty(I const &, adaptor const &ia, S const &s) const
                 {
                     return ia.probe == s;
                 }
             };
 
-            adaptor<false> begin_adaptor() { return {this->base(), n}; }
+            adaptor begin_adaptor() {
+                if (!probe_begin)
+                {
+                    probe_begin = ranges::next(ranges::begin(this->base()), n, ranges::end(this->base()));
+                }
+                return {*probe_begin};
+            }
             sentinel_adaptor end_adaptor() { return {}; }
-
-            CONCEPT_REQUIRES(Range<Rng const>())
-            adaptor<true>  begin_adaptor() const { return {this->base(), n}; }
-
-            CONCEPT_REQUIRES(Range<Rng const>())
-            sentinel_adaptor end_adaptor() const { return {}; }
 
             template<class T>
             size_t get_size(T &&rng) const
@@ -192,6 +185,7 @@ namespace ranges
             {
                 return get_size(this->base());
             }
+            // XXX: should we leave this?
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
@@ -212,21 +206,13 @@ namespace ranges
                 (
                     make_pipeable(std::bind(drop_last, std::placeholders::_1, n))
                 )
-
-                template<typename Rng>
-                static drop_last_view<all_t<Rng>>
-                invoke_(Rng &&rng, range_difference_type_t<Rng> n)
-                {
-                    return {all(static_cast<Rng&&>(rng)), n};
-                }
             public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ForwardRange<Rng>())>
-                auto operator()(Rng &&rng, range_difference_type_t<Rng> n) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    drop_last_fn::invoke_(static_cast<Rng&&>(rng), n)
-                )
+                drop_last_view<all_t<Rng>> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
+                {
+                    return {all(static_cast<Rng&&>(rng)), n};
+                }
             };
 
             RANGES_INLINE_VARIABLE(view<drop_last_fn>, drop_last)

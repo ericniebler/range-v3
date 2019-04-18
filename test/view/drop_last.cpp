@@ -37,7 +37,8 @@ public:
 };
 
 template<class Rng>
-view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng){
+view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng)
+{
     return view_non_const_only<view::all_t<Rng>>{view::all(static_cast<Rng&&>(rng))};
 }
 
@@ -68,7 +69,8 @@ void test_size(Rng&& src)
 }
 
 template<class Rng>
-void test_non_convert_range(Rng&& src){
+void test_non_convert_range(Rng&& src)
+{
     // test non-convertible const<=>non-const range
     test_range(src | view::transform([](const int& i) -> const int& {return i;}));
 }
