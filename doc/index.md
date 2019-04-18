@@ -139,7 +139,7 @@ Use non-const views whenever possible. If you need thread-safety - work with vie
 
 ### View validity
 
-Any operation on the underlying range that invalidates its iterators or sentinels will also invalidate any view that refers to any part of that range. Some views (_e.g._, `view::filter`) additionally are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation that may have mutated the underlying range.
+Any operation on the underlying range, that invalidates its iterators or sentinels, will also invalidate any view that refers to any part of that range. Additionally, some views (_e.g._, `view::filter`), are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation, that may have mutated the underlying range.
 Iterator/sentinel validity alone is not enough.
 
 ~~~~~~~{.cpp}
