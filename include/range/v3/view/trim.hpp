@@ -15,7 +15,6 @@
 #define RANGES_V3_VIEW_TRIM_HPP
 
 #include <functional>
-#include <type_traits>
 #include <utility>
 #include <concepts/concepts.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
