@@ -478,7 +478,7 @@ Sometimes, you can use the same adaptor for both `begin_adaptor` and `end_adapto
     adaptor end_adaptor()   const { return {100}; }
 ~~~~~~~
 
-Note that all the data that you store in the adaptor will become part of the iterator.
+Note, that all the data, that you store in the adaptor, will become part of the iterator.
 
 If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor, default ones will be used.
 
