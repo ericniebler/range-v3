@@ -72,12 +72,12 @@ namespace ranges
 
         struct _advance_
         {
-            template<typename I>
-            auto operator()(I & i, iter_difference_t<I> n) const ->
+            template<typename I, typename Diff>
+            auto operator()(I & i, Diff n) const ->
                 CPP_ret(void)(
-                    requires Iterator<I>)
+                    requires Iterator<I> && IntegerLike_<Diff>)
             {
-                advance(i, n);
+                advance(i, static_cast<iter_difference_t<I>>(n));
             }
         };
         RANGES_INLINE_VARIABLE(_advance_, advance_)

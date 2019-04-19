@@ -82,7 +82,8 @@ constexpr /*c++14*/ auto test_rit_(It beg, It end) -> bool
     auto end3 = beg;
     ranges::advance(end3, 4);
     if (end3 != end) { return false; }
-    if (ranges::iter_enumerate(beg, end) != std::pair<std::ptrdiff_t, It>{4, end})
+    using D = ranges::iter_difference_t<It>;
+    if (ranges::iter_enumerate(beg, end) != std::pair<D, It>{4, end})
     {
         return false;
     }

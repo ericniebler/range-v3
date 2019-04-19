@@ -29,7 +29,7 @@ namespace ranges
     namespace detail
     {
         template<typename I, typename S>
-        using common_iterator_t =
+        using common_iterator_impl_t =
             enable_if_t<(bool)(Iterator<I> && Sentinel<S, I>), common_iterator<I, S>>;
     }
     /// \endcond
@@ -38,7 +38,19 @@ namespace ranges
     /// @{
     template<typename I, typename S>
     using common_iterator_t =
-        detail::if_then_t<std::is_same<I, S>::value, I, detail::common_iterator_t<I, S>>;
+        detail::if_then_t<std::is_same<I, S>::value, I, detail::common_iterator_impl_t<I, S>>;
+
+    /// \cond
+    namespace detail
+    {
+        template<typename I, typename S>
+        using cpp17_iterator_t =
+            if_then_t<
+                std::is_integral<iter_difference_t<I>>::value,
+                common_iterator_t<I, S>,
+                cpp17_iterator<common_iterator_t<I, S>>>;
+    }
+    /// \endcond
 
     // Aliases (SFINAE-able)
     template<typename Rng>
@@ -78,7 +90,7 @@ namespace ranges
     template<typename Rng>
     using range_size_type_t
         RANGES_DEPRECATED("range_size_type_t is deprecated. Use range_size_t instead.") =
-            meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
+            detail::iter_size_t<iterator_t<Rng>>;
     /// \endcond
 
     template<typename Rng>
@@ -87,6 +99,10 @@ namespace ranges
     /// \cond
     namespace detail
     {
+        template<typename Rng>
+        using range_cpp17_iterator_t =
+            cpp17_iterator_t<iterator_t<Rng>, sentinel_t<Rng>>;
+
         std::integral_constant<cardinality, finite> test_cardinality(void *);
         template<cardinality Card>
         std::integral_constant<cardinality, Card> test_cardinality(basic_view<Card> *);

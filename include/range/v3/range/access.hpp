@@ -213,6 +213,13 @@ namespace ranges
                 }
             };
 
+            template<typename Int>
+            using iter_diff_t =
+                meta::_t<detail::if_then_t<
+                    std::is_integral<Int>::value,
+                    std::make_signed<Int>,
+                    meta::id<Int>>>;
+
             template<typename R>
             using impl = impl_<HasMemberEnd<R>>;
 
@@ -262,10 +269,10 @@ namespace ranges
 
             template<typename Int>
             auto operator-(Int dist) const ->
-                CPP_ret(detail::from_end_<meta::_t<std::make_signed<Int>>>)(
-                    requires Integral<Int>)
+                CPP_ret(detail::from_end_<iter_diff_t<Int>>)(
+                    requires detail::IntegerLike_<Int>)
             {
-                using SInt = meta::_t<std::make_signed<Int>>;
+                using SInt = iter_diff_t<Int>;
                 RANGES_EXPECT(0 <= dist);
                 RANGES_EXPECT(dist <= static_cast<Int>((std::numeric_limits<SInt>::max)()));
                 return detail::from_end_<SInt>{-static_cast<SInt>(dist)};

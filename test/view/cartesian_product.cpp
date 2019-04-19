@@ -126,7 +126,7 @@ void test_empty_range()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == size(rng));
+    CHECK((last - first) == (std::intmax_t) size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)
@@ -247,7 +247,7 @@ int main()
     CPP_assert(RandomAccessView<Rng>);
     CPP_assert(CommonRange<Rng>);
     CPP_assert(SizedRange<Rng>);
-    CHECK(size(rng) == static_cast<std::intmax_t>(size(some_ints) * size(some_strings)));
+    CHECK(size(rng) == size(some_ints) * size(some_strings));
 
     CPP_assert(std::is_same<
         range_value_t<Rng>,
@@ -269,7 +269,7 @@ int main()
 
     auto const first = begin(rng);
     auto const last = end(rng);
-    CHECK((last - first) == size(rng));
+    CHECK((last - first) == (std::intmax_t) size(rng));
     for(auto i = 0; i <= distance(rng); ++i)
     {
         for(auto j = 0; j <= distance(rng); ++j)

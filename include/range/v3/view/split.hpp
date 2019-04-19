@@ -36,16 +36,14 @@ namespace ranges
     /// \cond
     namespace detail
     {
-        template<typename T, T>
-        struct require_constant;
-
         CPP_def
         (
             template(typename R)
             concept tiny_range,
                 SizedRange<R> &&
-                Type<require_constant<decltype(std::remove_reference_t<R>::size()),
-                                      std::remove_reference_t<R>::size()>> &&
+                Type<std::integral_constant<
+                    decltype(std::remove_reference_t<R>::size()),
+                    std::remove_reference_t<R>::size()>> &&
                 (std::remove_reference_t<R>::size() <= 1)
         );
     } // namespace detail

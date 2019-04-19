@@ -31,10 +31,21 @@ namespace ranges
         {
             template<typename Rng>
             auto CPP_fun(operator())(Rng &&rng) (const
-                requires ViewableRange<Rng>)
+                requires ViewableRange<Rng> &&
+                    Integral<detail::iter_size_t<iterator_t<Rng>>>)
             {
-                return zip(iota(range_difference_type_t<Rng>{}),
-                        all(static_cast<Rng &&>(rng)));
+                return zip(
+                    iota(detail::iter_size_t<iterator_t<Rng>>{}),
+                    all(static_cast<Rng &&>(rng)));
+            }
+            // For iota_view<Integral>, we can ignore the difference type and
+            // use make_unsigned_t<Integral> as the index since we don't need
+            // to represent negative values.
+            template<typename Int, typename S>
+            auto CPP_fun(operator())(iota_view<Int, S> rng) (const
+                requires Integral<Int>)
+            {
+                return zip(iota(meta::_t<std::make_unsigned<Int>>{}), rng);
             }
         };
 

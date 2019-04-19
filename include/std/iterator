@@ -179,15 +179,18 @@ namespace ranges
                 decltype(*pi != *pi ? true : false)    //     "        "
             > * = nullptr)
         {
-            struct traits
+            using D = typename incrementable_traits<I>::difference_type;
+            struct yes_traits
             {
-                using difference_type = typename incrementable_traits<I>::difference_type;
+                using difference_type = D;
                 using value_type = typename readable_traits<I>::value_type;
                 using reference = decltype(cpp17_reference_type_<I>(0));
                 using pointer = decltype(cpp17_pointer_type_<I>(0));
                 using iterator_category = decltype(cpp17_iterator_category_<I>(0));
             };
-            return traits{};
+            struct no_traits
+            {};
+            return if_then_t<is_integral_<D>(0), yes_traits, no_traits>{};
         }
 
         template<typename I>

@@ -64,8 +64,6 @@ int main()
 {
     using namespace ranges;
 
-    //detail::from_range<std::list>::from_rng_<decltype(view::ints)>(0);
-
     {
         auto lst0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
             | to<std::list>();

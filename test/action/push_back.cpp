@@ -26,10 +26,10 @@ int main()
         push_back(v, {1,2,3});
         ::check_equal(v, {1,2,3});
 
-        push_back(v, view::ints(10) | view::take(3));
+        push_back(v, view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        push_back(v, view::ints(10) | view::take(3));
+        push_back(v, view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};
@@ -51,10 +51,10 @@ int main()
         v = std::move(v) | push_back({1,2,3});
         ::check_equal(v, {1,2,3});
 
-        v = std::move(v) | push_back(view::ints(10) | view::take(3));
+        v = std::move(v) | push_back(view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        v = std::move(v) | push_back(view::ints(10) | view::take(3));
+        v = std::move(v) | push_back(view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};
@@ -76,10 +76,10 @@ int main()
         v |= push_back({1,2,3});
         ::check_equal(v, {1,2,3});
 
-        v |= push_back(view::ints(10) | view::take(3));
+        v |= push_back(view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12});
 
-        v |= push_back(view::ints(10) | view::take(3));
+        v |= push_back(view::iota(10) | view::take(3));
         ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
         int rg[] = {9,8,7};

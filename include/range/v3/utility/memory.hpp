@@ -37,7 +37,7 @@ namespace ranges
     namespace detail
     {
         template<typename T>
-        std::pair<T *, std::ptrdiff_t> get_temporary_buffer(std::ptrdiff_t count) noexcept
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer_impl(std::size_t count) noexcept
         {
             RANGES_EXPECT(count >= 0);
             std::size_t n = static_cast<std::size_t>(count);
@@ -59,6 +59,13 @@ namespace ranges
             }
 
             return {static_cast<T *>(ptr), static_cast<std::ptrdiff_t>(n)};
+        }
+
+        template<typename T, typename D>
+        std::pair<T *, std::ptrdiff_t> get_temporary_buffer(D count) noexcept
+        {
+            RANGES_EXPECT(count >= 0);
+            return detail::get_temporary_buffer_impl<T>(static_cast<std::size_t>(count));
         }
 
         struct return_temporary_buffer

@@ -35,10 +35,11 @@ namespace ranges
         {
             From from;
             To to;
-            CPP_template(typename F, typename T)(
+            template<typename F, typename T>
+            constexpr CPP_ctor(slice_bounds)(F from, T to)(
                 requires ConvertibleTo<F, From> && ConvertibleTo<T, To>)
-            constexpr slice_bounds(F from, T to)
-              : from(from), to(to)
+              : from(static_cast<From>(from))
+              , to(static_cast<To>(to))
             {}
         };
 
@@ -52,7 +53,7 @@ namespace ranges
             {}
 
             CPP_template(typename Other)(
-                requires Integral<Other> && ExplicitlyConvertibleTo<Other, Int>)
+                requires IntegerLike_<Other> && ExplicitlyConvertibleTo<Other, Int>)
             constexpr operator from_end_<Other> () const
             {
                 return from_end_<Other>{static_cast<Other>(dist_)};
@@ -173,23 +174,23 @@ namespace ranges
         /// `end - begin` cast to an unsigned integer.
         template<bool True = true>
         constexpr /*c++14*/ auto size() ->
-            CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(
+            CPP_ret(detail::iter_size_t<iterator_t<D<True>>>)(
                 requires True && Cardinality < 0 &&
                     SizedSentinel<sentinel_t<D<True>>, iterator_t<D<True>>> &&
                     ForwardRange<D<True>>)
         {
-            using size_type = meta::_t<std::make_unsigned<range_difference_t<D<True>>>>;
+            using size_type = detail::iter_size_t<iterator_t<D<True>>>;
             return static_cast<size_type>(derived().end() - derived().begin());
         }
         /// \overload
         template<bool True = true>
         constexpr auto size() const ->
-            CPP_ret(meta::_t<std::make_unsigned<range_difference_t<D<True>>>>)(
+            CPP_ret(detail::iter_size_t<iterator_t<D<True>>>)(
                 requires True && (Cardinality < 0) &&
                     SizedSentinel<sentinel_t<D<True> const>, iterator_t<D<True> const>> &&
                     ForwardRange<D<True> const>)
         {
-            using size_type = meta::_t<std::make_unsigned<range_difference_t<D<True>>>>;
+            using size_type = detail::iter_size_t<iterator_t<D<True>>>;
             return static_cast<size_type>(derived().end() - derived().begin());
         }
         /// Access the first element in a range:

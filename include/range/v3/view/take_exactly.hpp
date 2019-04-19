@@ -74,8 +74,7 @@ namespace ranges
             }
             auto size() const
             {
-                using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
-                return static_cast<size_type>(n_);
+                return static_cast<detail::iter_size_t<iterator_t<Rng>>>(n_);
             }
             Rng base() const
             {
@@ -118,10 +117,9 @@ namespace ranges
             {
                 return ranges::begin(rng_) + n_;
             }
-            meta::_t<std::make_unsigned<range_difference_t<Rng>>> size() const
+            detail::iter_size_t<iterator_t<Rng>> size() const
             {
-                using size_type = meta::_t<std::make_unsigned<range_difference_t<Rng>>>;
-                return static_cast<size_type>(n_);
+                return static_cast<detail::iter_size_t<iterator_t<Rng>>>(n_);
             }
             Rng base() const
             {
@@ -143,6 +141,13 @@ namespace ranges
         private:
             friend view_access;
 
+            template<typename Int>
+            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
+                requires Integral<Int>)
+            {
+                return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
+            }
+
             template<typename Rng>
             static take_exactly_view<all_t<Rng>>
             impl_(Rng &&rng, range_difference_t<Rng> n, input_range_tag)
@@ -156,13 +161,6 @@ namespace ranges
                     requires ForwardingRange_<Rng>)
             {
                 return {begin(rng), next(begin(rng), n)};
-            }
-
-            template<typename Int>
-            static auto CPP_fun(bind)(take_exactly_fn take_exactly, Int n)(
-                requires Integral<Int>)
-            {
-                return make_pipeable(std::bind(take_exactly, std::placeholders::_1, n));
             }
 
         public:

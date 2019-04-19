@@ -118,12 +118,12 @@ namespace ranges
                 return;
             // The first call to merge_sort_loop moves into raw storage. Construct on-demand
             // and keep track of how many objects we need to destroy.
-            V *buffer_end = buffer + len;
+            V *buffer_end = buffer + static_cast<std::ptrdiff_t>(len);
             auto tmpbuf = make_raw_buffer(buffer);
             stable_sort_fn::merge_sort_loop(begin, end, tmpbuf.begin(), step_size, pred, proj);
             step_size *= 2;
         loop:
-            stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, step_size, pred, proj);
+            stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, (std::ptrdiff_t) step_size, pred, proj);
             step_size *= 2;
             if(step_size >= len)
                 return;
@@ -133,10 +133,10 @@ namespace ranges
         }
 
         // buffer points to raw memory
-        template<typename I, typename V, typename D, typename C, typename P>
-        static void stable_sort_adaptive(I begin, I end, V *buffer, D buffer_size, C &pred, P &proj)
+        template<typename I, typename V, typename C, typename P>
+        static void stable_sort_adaptive(I begin, I end, V *buffer, std::ptrdiff_t buffer_size, C &pred, P &proj)
         {
-            D len = (end - begin + 1) / 2;
+            iter_difference_t<I> len = (end - begin + 1) / 2;
             I middle = begin + len;
             if(len > buffer_size)
             {
@@ -167,7 +167,7 @@ namespace ranges
             if(buf.first == nullptr)
                 stable_sort_fn::inplace_stable_sort(begin, end, pred, proj);
             else
-                stable_sort_fn::stable_sort_adaptive(begin, end, buf.first, D(buf.second), pred, proj);
+                stable_sort_fn::stable_sort_adaptive(begin, end, buf.first, buf.second, pred, proj);
             return end;
         }
 

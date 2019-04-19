@@ -64,10 +64,9 @@ namespace ranges
             return value;
         }
     };
-    /// \endcond
 
     template<typename T, T v>
-    struct constant
+    struct RANGES_DEPRECATED("The ranges::constant class template is deprecated") constant
     {
         constant() = default;
         constexpr explicit constant(T const &)
@@ -89,14 +88,14 @@ namespace ranges
             return v;
         }
     };
-
-    static_assert(std::is_trivial<constant<int, 0>>::value, "Expected constant to be trivial");
+    /// \endcond
 
     /// \cond
     namespace detail
     {
         // "box" has three different implementations that store a T differently:
-        enum class box_compress {
+        enum class box_compress
+        {
             none,       // Nothing special: get() returns a reference to a T member subobject
             ebo,        // Apply Empty Base Optimization: get() returns a reference to a T base subobject
             coalesce    // Coalesce all Ts into one T: get() returns a reference to a static T singleton

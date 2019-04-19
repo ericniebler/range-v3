@@ -51,12 +51,14 @@ namespace ranges
 
         struct cartesian_size_fn
         {
-            template<typename Rng>
-            auto operator()(std::intmax_t s, Rng &&rng) const ->
-                CPP_ret(std::intmax_t)(
-                    requires SizedRange<Rng>)
+            template<typename Size, typename Rng>
+            auto operator()(Size s, Rng &&rng) const ->
+                CPP_ret(common_type_t<Size, range_size_t<Rng>>)(
+                    requires IntegerLike_<Size> && SizedRange<Rng> &&
+                        Common<Size, range_size_t<Rng>>)
             {
-                return s * static_cast<std::intmax_t>(ranges::size(rng));
+                using S = common_type_t<Size, range_size_t<Rng>>;
+                return static_cast<S>(s) * static_cast<S>(ranges::size(rng));
             }
         };
 
@@ -79,7 +81,8 @@ namespace ranges
     (
         template(typename IsConst, typename...Views)
         (concept CartesianProductViewCanSize)(IsConst, Views...),
-            And<SizedRange<meta::const_if<IsConst, Views>>...>
+            And<SizedRange<meta::const_if<IsConst, Views>>...> &&
+                Type<common_type_t<std::uintmax_t, range_size_t<meta::const_if<IsConst, Views>>...>>
     );
     CPP_def
     (
@@ -182,36 +185,37 @@ namespace ranges
                 return std::get<N - 1>(its_) == std::get<N - 1>(that.its_) &&
                     equal_(that, meta::size_t<N - 1>{});
             }
-            std::intmax_t distance_(cursor const &that, meta::size_t<1>) const
+            auto distance_(cursor const &that, meta::size_t<1>) const
             {
-                return std::get<0>(that.its_) - std::get<0>(its_);
+                return (std::get<0>(that.its_) - std::get<0>(its_)) + std::intmax_t(0);
             }
             template<std::size_t N>
-            std::intmax_t distance_(cursor const &that, meta::size_t<N>) const
+            auto distance_(cursor const &that, meta::size_t<N>) const
             {
                 auto d = distance_(that, meta::size_t<N - 1>{});
                 d *= ranges::distance(std::get<N - 2>(view_->views_));
                 d += std::get<N - 1>(that.its_) - std::get<N - 1>(its_);
                 return d;
             }
-            void advance_(meta::size_t<0>, std::intmax_t)
+            template<typename Diff>
+            void advance_(meta::size_t<0>, Diff)
             {
                 RANGES_EXPECT(false);
             }
 RANGES_DIAGNOSTIC_PUSH
 RANGES_DIAGNOSTIC_IGNORE_DIVIDE_BY_ZERO
-            template<std::size_t N>
-            void advance_(meta::size_t<N>, std::intmax_t n)
+            template<std::size_t N, typename Diff>
+            void advance_(meta::size_t<N>, Diff n)
             {
                 if(n == 0)
                     return;
 
                 auto &i = std::get<N - 1>(its_);
-                auto const my_size = static_cast<std::intmax_t>(
+                auto const my_size = static_cast<Diff>(
                     ranges::size(std::get<N - 1>(view_->views_)));
                 auto const first = ranges::begin(std::get<N - 1>(view_->views_));
 
-                std::intmax_t const idx = i - first;
+                Diff const idx = static_cast<Diff>(i - first);
                 RANGES_EXPECT(0 <= idx);
                 RANGES_EXPECT(idx < my_size || (N == 1 && idx == my_size && n < 0));
                 RANGES_EXPECT(n < INTMAX_MAX - idx);
@@ -322,14 +326,15 @@ RANGES_DIAGNOSTIC_POP
                 prev_(meta::size_t<sizeof...(Views)>{});
             }
             CPP_member
-            auto distance_to(cursor const &that) const -> CPP_ret(std::intmax_t)(
+            auto CPP_fun(distance_to)(cursor const &that) (const
                 requires CartesianProductViewCanDistance<IsConst, Views...>)
             {
                 return distance_(that, meta::size_t<sizeof...(Views)>{});
             }
-            CPP_member
-            auto advance(std::intmax_t n) -> CPP_ret(void)(
-                requires CartesianProductViewCanRandom<IsConst, Views...>)
+            template<typename Diff>
+            auto advance(Diff n) -> CPP_ret(void)(
+                requires CartesianProductViewCanRandom<IsConst, Views...> &&
+                    detail::IntegerLike_<Diff>)
             {
                 advance_(meta::size_t<sizeof...(Views)>{}, n);
             }
@@ -369,23 +374,23 @@ RANGES_DIAGNOSTIC_POP
         {}
         CPP_template(int = 42)(
             requires my_cardinality >= 0)
-        static constexpr std::intmax_t size() noexcept
+        static constexpr std::size_t size() noexcept
         {
-            return std::intmax_t{my_cardinality};
+            return std::size_t{my_cardinality};
         }
         CPP_member
-        auto size() const -> CPP_ret(std::intmax_t)(
+        auto CPP_fun(size)() (const
             requires my_cardinality < 0 &&
                 CartesianProductViewCanSize<std::true_type, Views...>)
         {
-            return tuple_foldl(views_, std::intmax_t{1}, detail::cartesian_size_fn{});
+            return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
         CPP_member
-        auto size() -> CPP_ret(std::intmax_t)(
+        auto CPP_fun(size)() (
             requires my_cardinality < 0 &&
                 CartesianProductViewCanSize<std::false_type, Views...>)
         {
-            return tuple_foldl(views_, std::intmax_t{1}, detail::cartesian_size_fn{});
+            return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
     };
 
