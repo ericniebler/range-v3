@@ -702,6 +702,14 @@ namespace ranges
         struct replace_if_fn;
     }
 
+    template<typename Rng, typename Pred>
+    struct trim_view;
+
+    namespace view
+    {
+        struct trim_fn;
+    }
+
     template<typename I>
     struct unbounded_view;
 
