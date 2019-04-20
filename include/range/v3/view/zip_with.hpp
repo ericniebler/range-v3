@@ -371,7 +371,7 @@ namespace ranges
                 CPP_ret(iter_zip_with_view<Fun, all_t<Rngs>...>)(
                     requires And<ViewableRange<Rngs>...> &&
                         IterZipWithViewConcept<Fun, Rngs...> &&
-                        sizeof...(Rngs) != 0)
+                        (sizeof...(Rngs) != 0))
             {
                 return iter_zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun),
@@ -401,7 +401,7 @@ namespace ranges
                         And<InputRange<Rngs>...> &&
                         CopyConstructible<Fun> &&
                         Invocable<Fun&, range_reference_t<Rngs> &&...> &&
-                        sizeof...(Rngs) != 0)
+                        (sizeof...(Rngs) != 0))
             {
                 return zip_with_view<Fun, all_t<Rngs>...>{
                     std::move(fun),

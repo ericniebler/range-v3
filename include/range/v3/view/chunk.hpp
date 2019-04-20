@@ -161,7 +161,7 @@ namespace ranges
             auto distance_to(iterator_t<CRng> const &here, iterator_t<CRng> const &there,
                 adaptor const &that) const ->
                     CPP_ret(range_difference_t<Rng>)(
-                        requires detail::can_sized_sentinel_<Rng, Const>())
+                        requires (detail::can_sized_sentinel_<Rng, Const>()))
             {
                 auto const delta = (there - here) + (that.offset() - offset());
                 // This can fail for cyclic base ranges when the chunk size does not divide the

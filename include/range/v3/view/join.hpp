@@ -152,8 +152,8 @@ namespace ranges
         // Not to spec
         CPP_member
         constexpr /*c++14*/ auto CPP_fun(size)() (
-            requires detail::join_cardinality<Rng>() < 0 &&
-                range_cardinality<Rng>::value >= 0 &&
+            requires (detail::join_cardinality<Rng>() < 0) &&
+                (range_cardinality<Rng>::value >= 0) &&
                 ForwardRange<Rng> &&
                 SizedRange<range_reference_t<Rng>>)
         {
@@ -356,14 +356,14 @@ namespace ranges
         {}
         CPP_member
         static constexpr auto size() -> CPP_ret(std::size_t)(
-            requires detail::join_cardinality<Rng, ValRng>() >= 0)
+            requires (detail::join_cardinality<Rng, ValRng>() >= 0))
         {
             return static_cast<std::size_t>(detail::join_cardinality<Rng, ValRng>());
         }
         CPP_member
         auto CPP_fun(size)() (const
-            requires detail::join_cardinality<Rng, ValRng>() < 0 &&
-                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng> &&
+            requires (detail::join_cardinality<Rng, ValRng>() < 0) &&
+                (range_cardinality<Rng>::value >= 0) && ForwardRange<Rng> &&
                 SizedRange<range_reference_t<Rng>> && SizedRange<ValRng>)
         {
             range_size_t<range_reference_t<Rng>> n = 0;

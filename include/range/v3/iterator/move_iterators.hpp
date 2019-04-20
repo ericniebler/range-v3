@@ -70,7 +70,7 @@ namespace ranges
         CPP_member
         auto operator++(int) ->
             CPP_ret(void)(
-                requires not ForwardIterator<I>)
+                requires (not ForwardIterator<I>))
         {
             ++current_;
         }
@@ -279,7 +279,7 @@ namespace ranges
         template<typename S>
         constexpr auto operator()(S s) const ->
             CPP_ret(move_sentinel<S>)(
-                requires Semiregular<S> && !InputIterator<S>)
+                requires Semiregular<S> && (!InputIterator<S>))
         {
             return move_sentinel<S>{detail::move(s)};
         }

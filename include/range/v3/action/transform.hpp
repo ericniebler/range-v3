@@ -35,7 +35,7 @@ namespace ranges
             friend action_access;
             template<typename F, typename P = identity>
             static auto CPP_fun(bind)(transform_fn transform, F fun, P proj = P{})(
-                requires not Range<F>)
+                requires (not Range<F>))
             {
                 return std::bind(transform, std::placeholders::_1, protect(std::move(fun)),
                     protect(std::move(proj)));

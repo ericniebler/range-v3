@@ -71,7 +71,7 @@ namespace ranges
                 CPP_ret(invoke_result_t<Action &, Rng>)(
                     requires Range<Rng> &&
                         Invocable<Action &, Rng> &&
-                        !std::is_reference<Rng>::value)
+                        (!std::is_reference<Rng>::value))
             {
                 return invoke(act.action_, detail::move(rng));
             }

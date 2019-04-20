@@ -363,7 +363,7 @@ RANGES_DIAGNOSTIC_POP
         }
         CPP_member
         auto end_cursor() const -> CPP_ret(default_sentinel_t)(
-            requires !CartesianProductViewCanBidi<std::true_type, Views...>)
+            requires (!CartesianProductViewCanBidi<std::true_type, Views...>))
         {
             return {};
         }
@@ -373,21 +373,21 @@ RANGES_DIAGNOSTIC_POP
           : views_{detail::move(views)...}
         {}
         CPP_template(int = 42)(
-            requires my_cardinality >= 0)
+            requires (my_cardinality >= 0))
         static constexpr std::size_t size() noexcept
         {
             return std::size_t{my_cardinality};
         }
         CPP_member
         auto CPP_fun(size)() (const
-            requires my_cardinality < 0 &&
+            requires (my_cardinality < 0) &&
                 CartesianProductViewCanSize<std::true_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});
         }
         CPP_member
         auto CPP_fun(size)() (
-            requires my_cardinality < 0 &&
+            requires (my_cardinality < 0) &&
                 CartesianProductViewCanSize<std::false_type, Views...>)
         {
             return tuple_foldl(views_, std::uintmax_t{1}, detail::cartesian_size_fn{});

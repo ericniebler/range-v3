@@ -62,7 +62,7 @@ namespace ranges
             static constexpr auto impl_(R &&r, int) noexcept(noexcept(((R &&) r).size())) ->
                 CPP_ret(member_size_t<R>)(
                     requires Integral<member_size_t<R>> &&
-                        !disable_sized_range<uncvref_t<R>>)
+                        (!disable_sized_range<uncvref_t<R>>))
             {
                 return ((R &&) r).size();
             }
@@ -72,7 +72,7 @@ namespace ranges
             static constexpr auto impl_(R &&r, long) noexcept(noexcept(size((R &&) r))) ->
                 CPP_ret(non_member_size_t<R>)(
                     requires Integral<non_member_size_t<R>> &&
-                        !disable_sized_range<uncvref_t<R>>)
+                        (!disable_sized_range<uncvref_t<R>>))
             {
                 return size((R &&) r);
             }

@@ -119,7 +119,7 @@ namespace ranges
         CPP_member
         constexpr auto empty() const noexcept ->
             CPP_ret(bool)(
-                requires detail::has_fixed_size_(Cardinality))
+                requires (detail::has_fixed_size_(Cardinality)))
         {
             return Cardinality == 0;
         }
@@ -140,7 +140,7 @@ namespace ranges
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> const &>()) ==
                 ranges::end(std::declval<D<True> const &>())))) ->
             CPP_ret(bool)(
-                requires True && not detail::has_fixed_size_(Cardinality) &&
+                requires True && (not detail::has_fixed_size_(Cardinality)) &&
                     ForwardRange<D<True> const>)
         {
             return bool(ranges::begin(derived()) == ranges::end(derived()));
@@ -165,7 +165,7 @@ namespace ranges
         template<bool True = true, int = 42>
         static constexpr auto size() noexcept ->
             CPP_ret(std::size_t)(
-                requires True && Cardinality >= 0)
+                requires True && (Cardinality >= 0))
         {
             return static_cast<std::size_t>(Cardinality);
         }
@@ -175,7 +175,7 @@ namespace ranges
         template<bool True = true>
         constexpr /*c++14*/ auto size() ->
             CPP_ret(detail::iter_size_t<iterator_t<D<True>>>)(
-                requires True && Cardinality < 0 &&
+                requires True && (Cardinality < 0) &&
                     SizedSentinel<sentinel_t<D<True>>, iterator_t<D<True>>> &&
                     ForwardRange<D<True>>)
         {

@@ -387,7 +387,7 @@ namespace ranges
             any_cursor() = default;
             template<typename Rng>
             explicit CPP_ctor(any_cursor)(Rng &&rng)(
-                requires not ranges::defer::Same<detail::decay_t<Rng>, any_cursor> &&
+                requires (not ranges::defer::Same<detail::decay_t<Rng>, any_cursor>) &&
                     ranges::defer::ForwardRange<Rng> &&
                     defer::AnyCompatibleRange<Rng, Ref>)
               : ptr_{detail::make_unique<impl_t<Rng>>(begin(rng))}
@@ -424,21 +424,21 @@ namespace ranges
             }
             CPP_member
             auto prev() -> CPP_ret(void)(
-                requires category::bidirectional == (Cat & category::bidirectional))
+                requires (category::bidirectional == (Cat & category::bidirectional)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->prev();
             }
             CPP_member
             auto advance(std::ptrdiff_t n) -> CPP_ret(void)(
-                requires category::random_access == (Cat & category::random_access))
+                requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(ptr_);
                 ptr_->advance(n);
             }
             CPP_member
             auto distance_to(any_cursor const &that) const -> CPP_ret(std::ptrdiff_t)(
-                requires category::random_access == (Cat & category::random_access))
+                requires (category::random_access == (Cat & category::random_access)))
             {
                 RANGES_EXPECT(!ptr_ == !that.ptr_);
                 return !ptr_ ? 0 : ptr_->distance_to(*that.ptr_);
@@ -518,7 +518,7 @@ namespace ranges
         any_view() = default;
         template<typename Rng>
         CPP_ctor(any_view)(Rng &&rng)(
-            requires not defer::Same<detail::decay_t<Rng>, any_view> &&
+            requires (not defer::Same<detail::decay_t<Rng>, any_view>) &&
                 defer::InputRange<Rng> &&
                 detail::defer::AnyCompatibleRange<Rng, Ref>)
           : any_view(static_cast<Rng &&>(rng),
@@ -537,7 +537,7 @@ namespace ranges
 
         CPP_member
         auto size() const -> CPP_ret(std::size_t)(
-            requires category::sized == (Cat & category::sized))
+            requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }
@@ -577,7 +577,7 @@ namespace ranges
         any_view() = default;
         template<typename Rng>
         CPP_ctor(any_view)(Rng &&rng)(
-            requires not defer::Same<detail::decay_t<Rng>, any_view> &&
+            requires (not defer::Same<detail::decay_t<Rng>, any_view>) &&
                 defer::InputRange<Rng> &&
                 detail::defer::AnyCompatibleRange<Rng, Ref>)
           : ptr_{std::make_shared<impl_t<Rng>>(view::all(static_cast<Rng &&>(rng)))}
@@ -585,7 +585,7 @@ namespace ranges
 
         CPP_member
         auto size() const -> CPP_ret(std::size_t)(
-            requires category::sized == (Cat & category::sized))
+            requires (category::sized == (Cat & category::sized)))
         {
             return ptr_ ? ptr_->size() : 0;
         }

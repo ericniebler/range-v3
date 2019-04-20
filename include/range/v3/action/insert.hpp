@@ -49,7 +49,7 @@ namespace ranges
                 Cont&,
                 detail::cpp17_iterator_t<I, S>,
                 detail::cpp17_iterator_t<I, S>>)(
-            requires LvalueContainerLike<Cont> && Sentinel<S, I> && !Range<S>)
+            requires LvalueContainerLike<Cont> && Sentinel<S, I> && (!Range<S>))
         {
             return unwrap_reference(cont).insert(
                 detail::cpp17_iterator_t<I, S>{i},
@@ -121,7 +121,7 @@ namespace ranges
                 CPP_ret(decltype(unwrap_reference(cont).
                     insert(p, cpp17_iterator_t<I, S>{i},
                               cpp17_iterator_t<I, S>{j})))(
-                requires Sentinel<S, I> && !Range<S>)
+                requires Sentinel<S, I> && (!Range<S>))
             {
                 using C = cpp17_iterator_t<I, S>;
                 return unwrap_reference(cont).insert(p, C{i}, C{j});
@@ -133,7 +133,7 @@ namespace ranges
                     ranges::begin(unwrap_reference(cont_)),
                     cpp17_iterator_t<I, S>{i},
                     cpp17_iterator_t<I, S>{j})))(
-                requires SizedSentinel<S, I> && RandomAccessReservable<Cont> && !Range<S>)
+                requires SizedSentinel<S, I> && RandomAccessReservable<Cont> && (!Range<S>))
             {
                 using C = cpp17_iterator_t<I, S>;
                 auto &&cont = unwrap_reference(cont_);
@@ -181,7 +181,7 @@ namespace ranges
                 std::move(j),
                 meta::bool_<RandomAccessReservable<Cont> && SizedSentinel<S, I>>{})))(
             requires LvalueContainerLike<Cont> && Iterator<P> &&
-                Sentinel<S, I> && !Range<S>)
+                Sentinel<S, I> && (!Range<S>))
         {
             return detail::insert_impl(
                 static_cast<Cont &&>(cont),
@@ -216,7 +216,7 @@ namespace ranges
             template<typename Rng, typename T>
             auto operator()(Rng &&rng, T &&t) const ->
                 CPP_ret(insert_result_t<Rng, T>)(
-                    requires Range<Rng> && !Range<T> &&
+                    requires Range<Rng> && (!Range<T>) &&
                         Constructible<range_value_t<Rng>, T>)
             {
                 return insert(static_cast<Rng &&>(rng), static_cast<T &&>(t));
@@ -243,7 +243,7 @@ namespace ranges
             template<typename Rng, typename I, typename S>
             auto operator()(Rng &&rng, I i, S j) const ->
                 CPP_ret(insert_result_t<Rng, I, S>)(
-                    requires Range<Rng> && Sentinel<S, I> && !Range<S>)
+                    requires Range<Rng> && Sentinel<S, I> && (!Range<S>))
             {
                 return insert(static_cast<Rng &&>(rng), std::move(i), std::move(j));
             }
@@ -251,7 +251,7 @@ namespace ranges
             template<typename Rng, typename I, typename T>
             auto operator()(Rng &&rng, I p, T &&t) const ->
                 CPP_ret(insert_result_t<Rng, I, T>)(
-                    requires Range<Rng> && Iterator<I> && !Range<T> &&
+                    requires Range<Rng> && Iterator<I> && (!Range<T>) &&
                         Constructible<range_value_t<Rng>, T>)
             {
                 return insert(static_cast<Rng &&>(rng), std::move(p), static_cast<T &&>(t));
@@ -278,7 +278,7 @@ namespace ranges
             template<typename Rng, typename I, typename N, typename T>
             auto operator()(Rng &&rng, I p, N n, T &&t) const ->
                 CPP_ret(insert_result_t<Rng, I, N, T>)(
-                    requires Range<Rng> && Iterator<I> && Integral<N> && !Range<T> &&
+                    requires Range<Rng> && Iterator<I> && Integral<N> && (!Range<T>) &&
                         Constructible<range_value_t<Rng>, T>)
             {
                 return insert(static_cast<Rng &&>(rng), std::move(p), n, static_cast<T &&>(t));
@@ -287,7 +287,7 @@ namespace ranges
             template<typename Rng, typename P, typename I, typename S>
             auto operator()(Rng &&rng, P p, I i, S j) const ->
                 CPP_ret(insert_result_t<Rng, P, I, S>)(
-                requires Range<Rng> && Iterator<P> && Sentinel<S, I> && !Range<S>)
+                requires Range<Rng> && Iterator<P> && Sentinel<S, I> && (!Range<S>))
             {
                 return insert(static_cast<Rng &&>(rng), std::move(p), std::move(i),
                     std::move(j));

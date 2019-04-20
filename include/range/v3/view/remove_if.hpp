@@ -87,7 +87,7 @@ namespace ranges
         CPP_member
         constexpr auto end_adaptor() const noexcept ->
             CPP_ret(adaptor_base)(
-                requires not CommonRange<Rng>)
+                requires (not CommonRange<Rng>))
         {
             return {};
         }

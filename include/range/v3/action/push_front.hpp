@@ -42,7 +42,7 @@ namespace ranges
         template<typename Cont, typename T>
         auto push_front(Cont &&cont, T &&t) ->
             CPP_ret(push_front_t<Cont, T>)(
-                requires LvalueContainerLike<Cont> && !Range<T> &&
+                requires LvalueContainerLike<Cont> && (!Range<T>) &&
                     Constructible<range_value_t<Cont>, T>)
         {
             unwrap_reference(cont).push_front(static_cast<T &&>(t));

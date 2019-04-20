@@ -38,7 +38,7 @@ namespace ranges
             template<typename ...Its>
             [[noreturn]] auto operator()(copy_tag, Its...) const ->
                 CPP_ret(std::tuple<iter_value_t<Its>...>)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+                    requires And<Readable<Its>...> && (sizeof...(Its) != 2))
             {
                 RANGES_EXPECT(false);
             }
@@ -48,7 +48,7 @@ namespace ranges
             auto operator()(Its const &...its) const
                 noexcept(meta::and_c<noexcept(iter_reference_t<Its>(*its))...>::value) ->
                 CPP_ret(common_tuple<iter_reference_t<Its>...>)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+                    requires And<Readable<Its>...> && (sizeof...(Its) != 2))
             {
                 return common_tuple<iter_reference_t<Its>...>{*its...};
             }
@@ -59,7 +59,7 @@ namespace ranges
                 noexcept(meta::and_c<
                     noexcept(iter_rvalue_reference_t<Its>(iter_move(its)))...>::value) ->
                 CPP_ret(common_tuple<iter_rvalue_reference_t<Its>...>)(
-                    requires And<Readable<Its>...> && sizeof...(Its) != 2)
+                    requires And<Readable<Its>...> && (sizeof...(Its) != 2))
             {
                 return common_tuple<iter_rvalue_reference_t<Its>...>{iter_move(its)...};
             }
@@ -121,7 +121,7 @@ namespace ranges
             auto operator()(Rngs &&... rngs) const ->
                 CPP_ret(zip_view<all_t<Rngs>...>)(
                     requires And<ViewableRange<Rngs>...> &&
-                        And<InputRange<Rngs>...> && sizeof...(Rngs) != 0)
+                        And<InputRange<Rngs>...> && (sizeof...(Rngs) != 0))
             {
                 return zip_view<all_t<Rngs>...>{all(static_cast<Rngs &&>(rngs))...};
             }

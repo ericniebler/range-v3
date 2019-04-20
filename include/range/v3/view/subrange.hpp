@@ -190,14 +190,14 @@ namespace ranges
         template<std::size_t N, typename I, typename S, subrange_kind K>
         constexpr auto get(subrange<I, S, K> const &r) ->
             CPP_ret(I)(
-                requires N == 0)
+                requires (N == 0))
         {
             return r.begin();
         }
         template<std::size_t N, typename I, typename S, subrange_kind K>
         constexpr auto get(subrange<I, S, K> const &r) ->
             CPP_ret(S)(
-                requires N == 1)
+                requires (N == 1))
         {
             return r.end();
         }
@@ -236,7 +236,7 @@ namespace ranges
         template <typename I2>
         constexpr CPP_ctor(subrange)(I2&& i, S s, size_type n)(
             requires detail::ConvertibleToNotSlicing_<I2, I> &&
-                detail::store_size_<K, S, I>())
+                (detail::store_size_<K, S, I>()))
           : data_{static_cast<I2&&>(i), std::move(s), n}
         {
             if RANGES_CONSTEXPR_IF ((bool) RandomAccessIterator<I>)
@@ -316,7 +316,7 @@ namespace ranges
         CPP_member
         constexpr auto size() const ->
             CPP_ret(size_type)(
-                requires K == subrange_kind::sized)
+                requires (K == subrange_kind::sized))
         {
             return get_size_();
         }
@@ -378,7 +378,7 @@ namespace ranges
         CPP_member
         constexpr auto get_size_() const noexcept ->
             CPP_ret(size_type)(
-                requires detail::store_size_<K, S, I>())
+                requires (detail::store_size_<K, S, I>()))
         {
             return std::get<2>(data_);
         }
@@ -387,7 +387,7 @@ namespace ranges
         CPP_member
         constexpr auto set_size_(size_type n) noexcept ->
             CPP_ret(void)(
-                requires detail::store_size_<K, S, I>())
+                requires (detail::store_size_<K, S, I>()))
         {
             std::get<2>(data_) = n;
         }
