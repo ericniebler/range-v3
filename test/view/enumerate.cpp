@@ -10,8 +10,9 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <range/v3/view/enumerate.hpp>
-
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/indices.hpp>
+#include <range/v3/view/transform.hpp>
 
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -88,5 +89,16 @@ int main()
 
         auto range2 = ranges::view::iota((std::intmax_t) -10000, (std::intmax_t) 10000);
         test_enumerate_with(range2);
+    }
+
+    // https://github.com/ericniebler/range-v3/issues/1141
+    {
+        using namespace ranges;
+        auto x = view::indices( std::uintmax_t( 100 ) )
+          | view::transform([](std::uintmax_t) { return "";})
+          | view::enumerate;
+        using X = decltype(x);
+        CPP_assert(Same<range_difference_t<X>, detail::diffmax_t>);
+        CPP_assert(Same<range_value_t<X>, std::pair<detail::diffmax_t, char const*>>);
     }
 }
