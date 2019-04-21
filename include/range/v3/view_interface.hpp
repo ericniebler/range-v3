@@ -91,6 +91,26 @@ namespace ranges
                 return Cardinality == 0;
             }
             template<typename D = Derived,
+                CONCEPT_REQUIRES_(
+                    Cardinality < 0 && Cardinality != infinite &&
+                    !ForwardRange<D>() &&
+                    SizedRange<D>())>
+            RANGES_CXX14_CONSTEXPR bool empty()
+                noexcept(noexcept(bool(ranges::size(std::declval<D &>()) == 0)))
+            {
+                return ranges::size(derived()) == 0;
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(
+                    Cardinality < 0 && Cardinality != infinite &&
+                    !ForwardRange<D const>() &&
+                    SizedRange<D const>())>
+            RANGES_CXX14_CONSTEXPR bool empty() const
+                noexcept(noexcept(bool(ranges::size(std::declval<D const &>()) == 0)))
+            {
+                return ranges::size(derived()) == 0;
+            }
+            template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() &&
                     Cardinality < 0 && Cardinality != infinite &&
                     ForwardRange<D>())>
