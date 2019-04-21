@@ -14,6 +14,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#include <type_traits>
 #include <vector>
 #include <list>
 #include <forward_list>
@@ -21,6 +22,7 @@
 #include <range/v3/view/drop_last.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/generate_n.hpp>
 
 using namespace ranges;
 
@@ -34,6 +36,12 @@ class view_non_const_only
     ranges::adaptor_base end_adaptor()   { return {}; }
 public:
     using view_non_const_only::view_adaptor::view_adaptor;
+
+    CONCEPT_REQUIRES(SizedRange<Rng>())
+    std::size_t size()
+    {
+        return ranges::size(this->base());
+    }
 };
 
 template<class Rng>
@@ -46,16 +54,24 @@ view_non_const_only<view::all_t<Rng>> non_const_only(Rng &&rng)
 template<class Rng>
 void test_range(Rng&& src)
 {
+    // additional src copy for InputStream
     {
-        auto list = src | view::drop_last(2);
+        auto src_ = src;
+        ::check_equal(src_, {1,2,3,4});
+    }
+    {
+        auto src_ = src;
+        auto list = src_ | view::drop_last(2);
         ::check_equal(list, {1,2});
     }
     {
-        auto list = src | view::drop_last(0);
+        auto src_ = src;
+        auto list = src_ | view::drop_last(0);
         ::check_equal(list, {1,2,3,4});
     }
     {
-        auto list = src | view::drop_last(4);
+        auto src_ = src;
+        auto list = src_ | view::drop_last(4);
         CHECK(list.empty());
     }
 }
@@ -83,7 +99,7 @@ void random_acccess_test()
         , "Must be exactly RA.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, true>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::bidi>
         >::value
         , "Must have correct view.");
 
@@ -104,7 +120,10 @@ void bidirectional_test()
         , "Must be exactly bidirectional.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, true>
+            /* mode::sized for max_pefrormance profile.
+             * mode::bidi  for compatible profile.
+             * See aux::drop_last::get_mode */
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::bidi>
         >::value
         , "Must have correct view.");
 
@@ -125,7 +144,7 @@ void forward_test()
         , "Must be exactly forward.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, false>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::forward>
         >::value
         , "Must have correct view.");
 
@@ -137,11 +156,47 @@ void forward_test()
     test_non_convert_range(src);
 }
 
+void sized_test()
+{
+    int i = 0;
+    auto src  = view::generate_n([i]() mutable -> int { return ++i;}, 4);
+    using Src = decltype(src);
+    static_assert(
+        !ranges::ForwardRange<Src>().value &&
+        ranges::InputRange<Src>().value
+        , "Must be exactly input.");
+
+    static_assert(
+        std::is_same<
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::sized>
+        >::value
+        , "Must have correct view.");
+
+    {
+        // always non-const
+        auto src_ = src;
+        test_range(src_);
+    }
+    {
+        auto src_ = src;
+        test_size(src_);
+    }
+    {
+        auto src_ = src;
+        test_range(non_const_only(std::move(src_)));
+    }
+    {
+        auto src_ = src;
+        test_non_convert_range(src_);
+    }
+}
+
 int main()
 {
     random_acccess_test();
     bidirectional_test();
     forward_test();
+    sized_test();
 
     return test_result();
 }

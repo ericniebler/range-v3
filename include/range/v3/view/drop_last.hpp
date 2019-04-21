@@ -22,22 +22,66 @@
 #include <range/v3/view_interface.hpp>
 #include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/counted_iterator.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng, bool is_bidirectional = BidirectionalView<Rng>::value >
+        namespace aux{ namespace drop_last_view {
+            template<class Rng, class I, typename size_t = range_size_type_t<Rng>>
+            size_t get_size(Rng&& rng, I i)
+            {
+                const size_t initial_size = ranges::size(rng);
+                const size_t n = static_cast<size_t>(i);
+
+                return initial_size > n
+                       ? initial_size - n
+                       : 0;
+            }
+
+            enum class mode{bidi, forward, sized, invalid};
+
+            template<class Rng>
+            constexpr mode get_mode(){
+                // keep range bound
+                return (RandomAccessRange<Rng>::value && SizedRange<Rng>::value) ||
+                       (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
+                       ? aux::drop_last_view::mode::bidi
+                       : SizedView<Rng>::value
+                         ? aux::drop_last_view::mode::sized
+                         : ForwardView<Rng>::value
+                           ? aux::drop_last_view::mode::forward
+                           : aux::drop_last_view::mode::invalid;
+
+                // max performance
+                // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
+                /*return (RandomAccessRange<Rng>::value && SizedRange<Rng>::value) ||
+                       (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
+                       ? aux::drop_last_view::mode::bidi
+                       : SizedView<Rng>::value
+                         ? aux::drop_last_view::mode::sized
+                         : BidirectionalView<Rng>::value && BoundedView<Rng>::value
+                           ? aux::drop_last_view::mode::bidi
+                           : ForwardView<Rng>::value
+                             ? aux::drop_last_view::mode::forward
+                             : aux::drop_last_view::mode::invalid;*/
+            }
+        }}
+
+        template<typename Rng, aux::drop_last_view::mode mode = aux::drop_last_view::get_mode<Rng>()>
         struct drop_last_view{};
 
         template<typename Rng>
-        struct drop_last_view<Rng, true>
+        struct drop_last_view<Rng, aux::drop_last_view::mode::bidi>
           : view_interface<
-              drop_last_view<Rng, true>,
+              drop_last_view<Rng, aux::drop_last_view::mode::bidi>,
               is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best
           >
         {
-            CONCEPT_ASSERT(BidirectionalView<Rng>());
+            CONCEPT_ASSERT(
+                (RandomAccessRange<Rng>() && SizedRange<Rng>()) ||
+                (BidirectionalView<Rng>() && BoundedRange<Rng>()));
         private:
             friend range_access;
 
@@ -48,21 +92,36 @@ namespace ranges
             difference_t n;
             detail::non_propagating_cache<sentinel_t<Rng>> sentinel;
 
-            template<class T>
-            size_t get_size(T&& rng) const
-            {
-                const size_t initial_size = ranges::size(rng);
-                const size_t n = static_cast<size_t>(this->n);
+            template<typename R>
+            using RAS = meta::strict_and<RandomAccessRange<R>, SizedRange<R>>;
 
-                return initial_size > n
-                    ? initial_size - n
-                    : 0;
+            CONCEPT_REQUIRES(RAS<Rng>())
+            sentinel_t<Rng> get_sentinel(){
+                return ranges::begin(rng) + size();
             }
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(RAS<CRng>())>
+            sentinel_t<CRng> get_sentinel() const {
+                return ranges::begin(rng) + size();
+            }
+
+            CONCEPT_REQUIRES(!RAS<Rng>() && BoundedRange<Rng>())
+            sentinel_t<Rng> get_sentinel(){
+                return ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+            }
+            template<typename CRng = Rng const,
+                CONCEPT_REQUIRES_(!RAS<CRng>() && BoundedRange<CRng>())>
+            sentinel_t<CRng> get_sentinel() const {
+                return ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+            }
+
         public:
             drop_last_view() = default;
             drop_last_view(Rng rng, difference_t n)
               : rng(std::move(rng)), n(n)
-            {}
+            {
+                RANGES_EXPECT(n >= 0);
+            }
 
             iterator_t<Rng> begin()
             {
@@ -72,7 +131,7 @@ namespace ranges
             {
                 if (!sentinel)
                 {
-                    sentinel = ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+                    sentinel = get_sentinel();
                 }
                 return *sentinel;
             }
@@ -86,18 +145,18 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessRange<CRng>())>
             sentinel_t<CRng> end() const
             {
-                return ranges::prev(ranges::end(rng), n, ranges::begin(rng));
+                return get_sentinel();
             }
 
             CONCEPT_REQUIRES(SizedRange<Rng>())
             size_t size()
             {
-                return get_size(rng);
+                return aux::drop_last_view::get_size(rng, n);
             }
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                return get_size(rng);
+                return aux::drop_last_view::get_size(rng, n);
             }
 
             Rng & base()
@@ -111,9 +170,9 @@ namespace ranges
         };
 
         template<typename Rng>
-        struct drop_last_view<Rng, false>
+        struct drop_last_view<Rng, aux::drop_last_view::mode::forward>
           : view_adaptor<
-              drop_last_view<Rng, false>,
+              drop_last_view<Rng, aux::drop_last_view::mode::forward>,
               Rng,
               is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best (but unknown is expected)
           >
@@ -163,33 +222,92 @@ namespace ranges
             }
             sentinel_adaptor end_adaptor() { return {}; }
 
-            template<class T>
-            size_t get_size(T &&rng) const
-            {
-                const size_t initial_size = ranges::size(rng);
-                const size_t n = static_cast<size_t>(this->n);
-
-                return initial_size > n
-                    ? initial_size - n
-                    : 0;
-            }
         public:
             drop_last_view() = default;
             drop_last_view(Rng rng, difference_t n)
               : drop_last_view::view_adaptor(std::move(rng))
               , n(n)
-            {}
+            {
+                RANGES_EXPECT(n >= 0);
+            }
 
             CONCEPT_REQUIRES(SizedRange<Rng>())
             size_t size()
             {
-                return get_size(this->base());
+                return aux::drop_last_view::get_size(this->base(), n);
             }
-            // XXX: should we leave this?
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                return get_size(this->base());
+                return aux::drop_last_view::get_size(this->base(), n);
+            }
+        };
+
+        template<typename Rng>
+        struct drop_last_view<Rng, aux::drop_last_view::mode::sized>
+           : view_interface<
+               drop_last_view<Rng, aux::drop_last_view::mode::sized>,
+               finite
+           >
+        {
+            CONCEPT_ASSERT(ranges::SizedView<Rng>());
+        private:
+            friend range_access;
+
+            using difference_t = range_difference_type_t<Rng>;
+            using size_t = range_size_type_t<Rng>;
+            Rng rng;
+            difference_t n;
+
+        public:
+            drop_last_view() = default;
+            drop_last_view(Rng rng, difference_t n)
+               : rng(std::move(rng)), n(n)
+            {
+                RANGES_EXPECT(n >= 0);
+            }
+
+            counted_iterator<iterator_t<Rng>> begin()
+            {
+                return {ranges::begin(rng), static_cast<difference_t>(size())};
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            counted_iterator<iterator_t<Rng>> begin() const
+            {
+                return {ranges::begin(rng), static_cast<difference_t>(size())};
+            }
+            default_sentinel end() const
+            {
+                return {};
+            }
+            size_t size()
+            {
+                return aux::drop_last_view::get_size(this->base(), n);
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            size_t size() const
+            {
+                return aux::drop_last_view::get_size(this->base(), n);
+            }
+
+            // TODO: fix view_interface #https://github.com/ericniebler/range-v3/issues/1147. This should be auto-generated.
+            bool empty()
+            {
+                return this->size() == 0;
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
+            bool empty() const
+            {
+                return this->size() == 0;
+            }
+
+            Rng & base()
+            {
+                return rng;
+            }
+            Rng const & base() const
+            {
+                return rng;
             }
         };
 
@@ -208,7 +326,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(ForwardRange<Rng>())>
+                    CONCEPT_REQUIRES_(SizedRange<Rng>() || ForwardRange<Rng>())>
                 drop_last_view<all_t<Rng>> operator()(Rng &&rng, range_difference_type_t<Rng> n) const
                 {
                     return {all(static_cast<Rng&&>(rng)), n};
