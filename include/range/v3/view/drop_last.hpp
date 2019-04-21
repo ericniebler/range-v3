@@ -35,6 +35,7 @@ namespace ranges
                 RANGES_EXPECT(i >= 0);
                 const size_t initial_size = ranges::size(rng);
                 const size_t n = static_cast<size_t>(i);
+                RANGES_EXPECT(initial_size >= n);
 
                 return initial_size > n
                        ? initial_size - n
