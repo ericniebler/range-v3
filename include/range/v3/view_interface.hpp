@@ -105,7 +105,7 @@ namespace ranges
                     Cardinality < 0 && Cardinality != infinite &&
                     !ForwardRange<D const>() &&
                     SizedRange<D const>())>
-            RANGES_CXX14_CONSTEXPR bool empty() const
+            constexpr bool empty() const
                 noexcept(noexcept(bool(ranges::size(std::declval<D const &>()) == 0)))
             {
                 return ranges::size(derived()) == 0;
