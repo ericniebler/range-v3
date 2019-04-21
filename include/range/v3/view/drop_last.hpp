@@ -47,7 +47,7 @@ namespace ranges
             template<class Rng>
             constexpr mode get_mode(){
                 // keep range bound
-                return (RandomAccessRange<Rng>::value && SizedRange<Rng>::value) ||
+                return (RandomAccessView<Rng>::value  && SizedView<Rng>::value) ||
                        (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
                        ? aux::drop_last_view::mode::bidi
                        : SizedView<Rng>::value
@@ -58,7 +58,7 @@ namespace ranges
 
                 // max performance
                 // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
-                /*return (RandomAccessRange<Rng>::value && SizedRange<Rng>::value) ||
+                /*return (RandomAccessView<Rng>::value && SizedView<Rng>::value) ||
                        (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
                        ? aux::drop_last_view::mode::bidi
                        : SizedView<Rng>::value
@@ -82,8 +82,8 @@ namespace ranges
           >
         {
             CONCEPT_ASSERT(
-                (RandomAccessRange<Rng>() && SizedRange<Rng>()) ||
-                (BidirectionalView<Rng>() && BoundedRange<Rng>()));
+                (RandomAccessView<Rng>()  && SizedView<Rng>()) ||
+                (BidirectionalView<Rng>() && BoundedView<Rng>()));
         private:
             friend range_access;
 
