@@ -32,6 +32,7 @@ namespace ranges
             template<class Rng, class I, typename size_t = range_size_type_t<Rng>>
             size_t get_size(Rng&& rng, I i)
             {
+                RANGES_EXPECT(i >= 0);
                 const size_t initial_size = ranges::size(rng);
                 const size_t n = static_cast<size_t>(i);
 
@@ -97,12 +98,12 @@ namespace ranges
 
             CONCEPT_REQUIRES(RAS<Rng>())
             sentinel_t<Rng> get_sentinel(){
-                return ranges::begin(rng) + size();
+                return ranges::begin(rng) + static_cast<difference_t>(size());
             }
             template<typename CRng = Rng const,
                 CONCEPT_REQUIRES_(RAS<CRng>())>
             sentinel_t<CRng> get_sentinel() const {
-                return ranges::begin(rng) + size();
+                return ranges::begin(rng) + static_cast<difference_t>(size());
             }
 
             CONCEPT_REQUIRES(!RAS<Rng>() && BoundedRange<Rng>())
