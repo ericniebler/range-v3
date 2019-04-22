@@ -1,5 +1,7 @@
 set(CMAKE_FOLDER "${CMAKE_FOLDER}/view")
 
+# in alphabet order
+rv3_add_test(test.view.addressof view.addressof addressof.cpp)
 rv3_add_test(test.view.adjacent_remove_if view.adjacent_remove_if adjacent_remove_if.cpp)
 rv3_add_test(test.view.all view.all all.cpp)
 rv3_add_test(test.view.any_view view.any_view any_view.cpp)
@@ -8,6 +10,7 @@ rv3_add_test(test.view.cartesian_product view.cartesian_product cartesian_produc
 rv3_add_test(test.view.chunk view.chunk chunk.cpp)
 rv3_add_test(test.view.concat view.concat concat.cpp)
 rv3_add_test(test.view.const view.const const.cpp)
+rv3_add_test(test.view.compose view.compose compose.cpp)
 rv3_add_test(test.view.counted view.counted counted.cpp)
 rv3_add_test(test.view.cycle view.cycle cycle.cpp)
 rv3_add_test(test.view.delimit view.delimit delimit.cpp)
@@ -20,7 +23,6 @@ rv3_add_test(test.view.generate view.generate generate.cpp)
 rv3_add_test(test.view.generate_n view.generate_n generate_n.cpp)
 rv3_add_test(test.view.group_by view.group_by group_by.cpp)
 rv3_add_test(test.view.indirect view.indirect indirect.cpp)
-rv3_add_test(test.view.addressof view.addressof addressof.cpp)
 rv3_add_test(test.view.intersperse view.intersperse intersperse.cpp)
 rv3_add_test(test.view.iota view.iota iota.cpp)
 rv3_add_test(test.view.join view.join join.cpp)
