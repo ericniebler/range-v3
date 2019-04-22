@@ -31,6 +31,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/subrange.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -66,7 +67,7 @@ namespace ranges
         {
             if(!end_)
             {
-                auto rbase = view::reverse(rng_);
+                auto rbase = view::reverse(make_subrange(begin(), ranges::end(rng_)));
                 end_= find_if_not(rbase, std::ref(pred_)).base();
             }
             return *end_;
