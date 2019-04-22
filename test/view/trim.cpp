@@ -14,7 +14,6 @@
 
 #include <range/v3/range/concepts.hpp>
 #include <range/v3/utility/copy.hpp>
-#include <range/v3/view/counted.hpp>
 #include <range/v3/view/trim.hpp>
 
 #include "../test_utils.hpp"
@@ -35,9 +34,6 @@ int main()
     std::list<char> l;
     models<BidirectionalViewConcept>(view::trim(l, is_space));
     models_not<RandomAccessViewConcept>(view::trim(l, is_space));
-    // Always models `CommonRange`.
-    models<CommonRangeConcept>(aux::copy(_42));
-    models<CommonRangeConcept>(view::trim(view::counted("", 0), is_space));
     // Never models `SizedRange`.
     models_not<SizedRangeConcept>(aux::copy(_42));
 
