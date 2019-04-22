@@ -335,7 +335,7 @@ namespace ranges
         {
             using size_type = common_type_t<range_size_t<Rngs const>...>;
             return range_cardinality<iter_zip_with_view>::value >= 0 ?
-                (size_type)range_cardinality<iter_zip_with_view>::value :
+                size_type{(std::size_t)range_cardinality<iter_zip_with_view>::value} :
                 tuple_foldl(
                     tuple_transform(
                         rngs_,
