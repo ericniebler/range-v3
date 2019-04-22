@@ -22,7 +22,6 @@
 #include <range/v3/iterator/concepts.hpp>
 #include <range/v3/functional/bind.hpp>
 #include <range/v3/functional/compose.hpp>
-#include <range/v3/functional/invoke.hpp>
 #include <range/v3/functional/pipeable.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
@@ -31,6 +30,7 @@
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/interface.hpp>
+#include <range/v3/view/reverse.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -66,12 +66,8 @@ namespace ranges
         {
             if(!end_)
             {
-                auto const first = begin();
-                auto last = ranges::end(rng_);
-
-                while (last != first && invoke(pred_, *--last))
-                {}
-                end_ = ++last;
+                auto rbase = view::reverse(rng_);
+                end_= find_if_not(rbase, std::ref(pred_)).base();
             }
             return *end_;
         }
