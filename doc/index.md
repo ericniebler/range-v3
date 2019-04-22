@@ -141,15 +141,6 @@ Use non-const views whenever possible. If you need thread-safety - work with vie
 
 Any operation on the underlying range, that invalidates its iterators or sentinels, will also invalidate any view that refers to any part of that range. Additionally, some views (_e.g._, `view::filter`), are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation, that may have mutated the underlying range.
 
-~~~~~~~{.cpp}
-    using namespace ranges;
-    std::forward_list<int> list = {1,2,3,4};
-    auto v = list | view::drop_last(1);
-    iter_swap(advance(list.begin(), 1), advance(list.begin(), 2));
-    // v is invalid now.
-~~~~~~~
-
-
 #### Actions
 
 When you want to mutate a container in-place, or forward it through a chain of
