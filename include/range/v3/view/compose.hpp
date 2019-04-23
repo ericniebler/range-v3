@@ -20,20 +20,101 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<template<class...> class View, class ...Args>
+        /*template<template<class...> class T>
+        struct class_template_wrapper{
+            template<class R>
+            using type = T<R>;
+        };
+
+        template<class binding>
+        constexpr class_template_wrapper<binding::template view_t> unwrap_bind_probe(){
+            return {};
+        }
+
+        template<template<class...> class view>
+        constexpr class_template_wrapper<view> unwrap_bind_probe(){
+            return {};
+        }*/
+
+        template<template<class...> class View, class Arg>
         struct compose_bind{
             template<class Rng>
-            using view_t = View<Rng, Args...>;
+            using type = View<Rng, Arg>;
         };
 
-        template<class Src, template<class...> class Transformation, template<class...> class ...Transformations>
-        struct compose_view{
-            using type = Transformation< typename compose_view<Src, Transformations...>::type >;
-        };
+        namespace details{ namespace compose_view{
+            template<int n, template<class> class Transformation, template<class> class ...Transformations>
+            struct get_n{
+                template<class Arg>
+                using type = typename get_n<n-1, Transformations...>::template type<Arg>;
+            };
+            template<template<class> class Transformation, template<class> class ...Transformations>
+            struct get_n<0, Transformation, Transformations...>{
+                template<class Arg>
+                using type = Transformation<Arg>;
+            };
 
-        template<class Src, template<class...> class Transformation>
-        struct compose_view<Src, Transformation>{
-            using type = Transformation< view::all_t<Src> >;
+            template<int n /* last index */, class Src, template<class> class ...Transformations>
+            struct compose_view_{
+                template<class T>
+                using last = typename get_n<n, Transformations...>::template type<T>;
+
+                using prev_compose_view = compose_view_<n-1, Src, Transformations...>;
+
+                using type = last< typename prev_compose_view::type >;
+
+                template<class Rng>
+                static type build(Rng&& rng){
+                    return type(prev_compose_view::build( std::forward<Rng>(rng) ));
+                }
+            };
+
+            template<class Src, template<class> class ...Transformations>
+            struct compose_view_<0, Src, Transformations...>{
+                template<class T>
+                using last = typename get_n<0, Transformations...>::template type<T>;
+
+                using type = last<view::all_t<Src>>;
+
+                template<class Rng>
+                static type build(Rng&& rng){
+                    return type(view::all(std::forward<Rng>(rng)));
+                }
+            };
+
+            template<class Src, template<class> class ...Transformations>
+            using compose_view = compose_view_<sizeof...(Transformations)-1, Src, Transformations...>;
+        }}
+
+
+        template<class Src, template<class> class ...Transformations>
+        using compose_view_t = typename details::compose_view::compose_view<Src, Transformations...>::type;
+
+
+        template<class Src, template<class> class ...Transformations>
+        struct compose_view : compose_view_t<Src, Transformations...>{
+        private:
+            using Base          = compose_view_t<Src, Transformations...>;
+            using composed_view = details::compose_view::compose_view<Src, Transformations...>;
+        public:
+            using type = composed_view;
+
+            compose_view() = default;
+
+            // implicit conversion constructor
+            compose_view(Base other)
+                : Base(std::move(other))
+            {}
+
+            explicit compose_view(Src&& src)
+                : Base( composed_view::build(std::move(src)) )
+            {}
+            explicit compose_view(const Src& src)
+                : Base( composed_view::build(src) )
+            {}
+            explicit compose_view(Src& src)
+                : Base( composed_view::build(src) )
+            {}
         };
 
     }
