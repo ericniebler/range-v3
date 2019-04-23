@@ -77,6 +77,7 @@ namespace ranges
             using compose_view = compose_view_<sizeof...(Transformations)-1, Src, Transformations...>;
         }}
 
+        // hide this?
         template<class Src, template<class> class ...Transformations>
         using compose_view_t = typename details::compose_view::compose_view<Src, Transformations...>::type;
 
@@ -87,7 +88,7 @@ namespace ranges
             using Base          = compose_view_t<Src, Transformations...>;
             using composed_view = details::compose_view::compose_view<Src, Transformations...>;
         public:
-            using type = composed_view;
+            using type = Base;
 
             compose_view() = default;
 

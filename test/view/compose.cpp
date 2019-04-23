@@ -55,7 +55,7 @@ struct binding_test
         const int& operator()(const int& i) const { return i; }
     };
 
-    using Get = compose_view_t< List, indirect_view, compose_bind<transform_view, Fn>::type >;
+    using Get = compose_view< List, indirect_view, compose_bind<transform_view, Fn>::type >;
 
     Get get()
     {
@@ -69,7 +69,7 @@ struct binding_test
     }
 
     using sample = transform_view<indirect_view<view::all_t<List>>, Fn>;
-    static_assert( std::is_same<Get, sample>::value, "" );
+    static_assert( std::is_same<Get::type, sample>::value, "" );
 
     void test()
     {
@@ -80,7 +80,7 @@ struct binding_test
 int main()
 {
     nullary_test().test();
-    binding_test().get();
+    binding_test().test();
 
     return test_result();
 }
