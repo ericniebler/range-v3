@@ -15,6 +15,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/indices.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/zip.hpp>
@@ -109,6 +110,16 @@ int main()
         CPP_assert(Same<decltype(vl), vector_like<int>>);
         CHECK(vl.reservation_count == std::size_t{1});
         CHECK(vl.last_reservation == N);
+    }
+
+    // https://github.com/ericniebler/range-v3/issues/1145
+    {
+        auto r1 = view::indices( std::uintmax_t{ 100 } );
+        auto r2 = view::zip( r1, r1 );
+
+        std::map<std::uintmax_t, std::uintmax_t> m = r2;
+        (void) m;
+        (void)(r2 | ranges::to<std::map<std::uintmax_t, std::uintmax_t>>);
     }
 
     test_zip_to_map(view::zip(view::ints, view::iota(0, 10)), 0);

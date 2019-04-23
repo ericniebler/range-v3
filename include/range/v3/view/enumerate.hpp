@@ -97,7 +97,7 @@ namespace ranges
             {
                 using D = range_difference_t<Rng>;
                 using S = detail::iter_size_t<iterator_t<Rng>>;
-                return zip(detail::index_view<S, D>{}, all(static_cast<Rng &&>(rng)));
+                return zip(detail::index_view<S, D>(), all(static_cast<Rng &&>(rng)));
             }
         };
 
