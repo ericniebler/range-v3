@@ -73,12 +73,17 @@ struct binding_test
 
     void test()
     {
-        get();
+        check_equal(get(), list | view::indirect);
     }
 };
 
 int main()
 {
+    list.emplace_back(new int(1));
+    list.emplace_back(new int(2));
+    list.emplace_back(new int(3));
+    list.emplace_back(new int(4));
+
     nullary_test().test();
     binding_test().test();
 
