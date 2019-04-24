@@ -213,6 +213,8 @@ namespace ranges
 #define RANGES_CXX_VER _MSVC_LANG
 
 #if _MSC_VER < 1922
+#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously rejected
+                                      // with C3615
 #define RANGES_WORKAROUND_MSVC_793042 // T[0] sometimes accepted as a valid type in SFINAE
                                       // context
 
@@ -257,8 +259,6 @@ namespace ranges
                                       // for pointer-to-array i
 #define RANGES_WORKAROUND_MSVC_688606 // SFINAE failing to account for access control
                                       // during specialization matching
-#define RANGES_WORKAROUND_MSVC_756601 // constexpr friend non-template erroneously
-                                      // rejected with C3615
 #define RANGES_WORKAROUND_MSVC_779708 // ADL for operands of function type [No workaround]
 #define RANGES_WORKAROUND_MSVC_786312 // Yet another mixed-pack-expansion failure
 #define RANGES_WORKAROUND_MSVC_792338 // Failure to match specialization enabled via call
