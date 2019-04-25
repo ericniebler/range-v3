@@ -127,7 +127,7 @@ int main()
         ::check_equal(rng, {"hello","bye"});
         ::check_equal(view::reverse(rng), {"bye","hello"});
     }
-    
+
     {
         int const rgi[] = {-1, 1, -1, 2, 3, 4, -4, 42, 7};
         auto rng0 = view::delimit(rgi, 42) | view::reverse;
