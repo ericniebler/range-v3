@@ -399,17 +399,17 @@ namespace ranges
 
     CPP_template(typename I, typename S)(
         requires Iterator<I> && Sentinel<S, I>)
-    subrange(I, S, iter_difference_t<I>) -> subrange<I, S, subrange_kind::sized>;
+    subrange(I, S, detail::iter_size_t<I>) -> subrange<I, S, subrange_kind::sized>;
 
     CPP_template(typename R)(
         requires ForwardingRange_<R>)
     subrange(R &&) -> subrange<iterator_t<R>, sentinel_t<R>,
-        ((bool) SizedRange<R> || (bool) SizedSentinel<sentinel_t<R>, iterator_t<R>>)
+        (SizedRange<R> || SizedSentinel<sentinel_t<R>, iterator_t<R>>)
             ? subrange_kind::sized : subrange_kind::unsized>;
 
     CPP_template(typename R)(
         requires ForwardingRange_<R>)
-    subrange(R &&, iter_difference_t<iterator_t<R>>) ->
+    subrange(R &&, detail::iter_size_t<iterator_t<R>>) ->
         subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>;
 #endif
 
@@ -423,7 +423,7 @@ namespace ranges
             return {i, s};
         }
         template<typename I, typename S>
-        constexpr auto operator()(I i, S s, iter_difference_t<I> n) const ->
+        constexpr auto operator()(I i, S s, detail::iter_size_t<I> n) const ->
             CPP_ret(subrange<I, S, subrange_kind::sized>)(
                 requires Iterator<I> && Sentinel<S, I>)
         {
@@ -432,14 +432,14 @@ namespace ranges
         template<typename R>
         constexpr auto operator()(R &&r) const ->
             CPP_ret(subrange<iterator_t<R>, sentinel_t<R>,
-                ((bool) SizedRange<R> || (bool) SizedSentinel<sentinel_t<R>, iterator_t<R>>)
+                (SizedRange<R> || SizedSentinel<sentinel_t<R>, iterator_t<R>>)
                     ? subrange_kind::sized : subrange_kind::unsized>)(
                 requires ForwardingRange_<R>)
         {
             return {(R &&) r};
         }
         template<typename R>
-        constexpr auto operator()(R &&r, iter_difference_t<iterator_t<R>> n) const ->
+        constexpr auto operator()(R &&r, detail::iter_size_t<iterator_t<R>> n) const ->
             CPP_ret(subrange<iterator_t<R>, sentinel_t<R>, subrange_kind::sized>)(
                 requires ForwardingRange_<R>)
         {
@@ -462,7 +462,8 @@ namespace ranges
         CPP_template(
             typename I,
             typename S = I,
-            subrange_kind K = static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>()))(
+            subrange_kind K =
+                static_cast<subrange_kind>(detail::is_sized_sentinel_<S, I>()))(
             requires Iterator<I> && Sentinel<S, I> &&
                 (K == subrange_kind::sized || !SizedSentinel<S, I>))
         using subrange = ranges::subrange<I, S>;
