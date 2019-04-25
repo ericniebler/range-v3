@@ -26,8 +26,12 @@
 
 using namespace ranges;
 
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_EXIT_TIME_DESTRUCTORS
 using List = std::vector<std::unique_ptr<int>>;
-List& list = *(new List());
+List list;
+RANGES_DIAGNOSTIC_POP
 
 struct nullary_test
 {
