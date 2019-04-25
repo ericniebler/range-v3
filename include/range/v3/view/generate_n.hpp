@@ -57,7 +57,7 @@ namespace ranges
             result_t &&read() const
             {
                 if (!rng_->val_)
-                    rng_->val_ = rng_->gen_();
+                    rng_->val_.emplace(rng_->gen_());
                 return static_cast<result_t &&>(
                     static_cast<result_t &>(*rng_->val_));
             }

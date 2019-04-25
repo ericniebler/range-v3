@@ -193,6 +193,15 @@ void test_845()
     ranges::advance(itr, 1); // Should not create ambiguity
 }
 
+// Test for https://github.com/ericniebler/range-v3/issues/1110
+void test_1110()
+{
+    // this should not trigger assertation error
+    std::vector<int> v = {1,2,3};
+    auto e = ranges::end(v);
+    ranges::advance(e, 0, ranges::begin(v));
+}
+
 // Test the deep integration with the STL
 #if defined(RANGES_DEEP_STL_INTEGRATION) && RANGES_DEEP_STL_INTEGRATION
 
@@ -425,6 +434,7 @@ int main()
     test_move_iterator();
     test_ostream_joiner();
     issue_420_regression();
+    test_1110();
 
     {
         struct S { using value_type = int; };

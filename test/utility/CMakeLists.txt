@@ -1,5 +1,6 @@
 set(CMAKE_FOLDER "${CMAKE_FOLDER}/utility")
 
+rv3_add_test(test.utility.box utility.box box.cpp)
 rv3_add_test(test.utility.concepts utility.concepts concepts.cpp)
 rv3_add_test(test.utility.concepts2 utility.concepts2 concepts2.cpp)
 check_cxx_compiler_flag("-std=gnu++2a" RANGES_HAS_CXX2A)

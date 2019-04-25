@@ -87,6 +87,8 @@ namespace ranges
         {
             if constexpr(SizedSentinel<S, I>)
             {
+                if(0 == n)
+                    return 0;
                 const auto d = bound - i;
                 if constexpr(BidirectionalIterator<I> && Same<I, S>)
                 {
@@ -298,6 +300,8 @@ namespace ranges
         Concept)
     {
         RANGES_EXPECT(((bool)Same<I, S> || 0 <= n));
+        if(n == 0)
+            return 0;
         iter_difference_t<I> d = bound - it;
         RANGES_EXPECT(0 <= n ? 0 <= d : 0 >= d);
         if(0 <= n ? n >= d : n <= d)
