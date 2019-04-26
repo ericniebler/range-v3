@@ -108,11 +108,11 @@ namespace ranges
             {}
         };
 
-        template<template<class...> class View, class Arg>
+        template<template<class...> class View, class ...Args>
         struct compose_bind
         {
             template<class Rng>
-            using type = View<Rng, Arg>;
+            using type = View<Rng, Args...>;
         };
     }
 }
