@@ -130,8 +130,7 @@ vector with it:
 Logically, a view is like a pair of iterators. In order to work, and work fast, many views need to cache some data.
 In order to keep iterators small, this cached data is usually stored in the view itself, and iterators hold only pointers to their view.
 Because of the cache, many views lack a `const`-qualified `begin()`/`end()`.
-When `const` versions of `begin()`/`end()` are provided, they are truly `const`; that is, thread-safe.
-But since they can't cache - const versions usually slower then non-const.
+When `const` versions of `begin()`/`end()` are provided, they are truly `const`; that is, thread-safe. `const` versions don't cache. But since they don't cache - const versions may be slower then non-const.
 
 The `const`-ness of a view is not related to the `const`-ness of the underlying data. Non-const view may return const iterators. Analogous to pointers (an `int* const` is a `const` pointer to a mutable `int`).
 
