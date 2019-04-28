@@ -8,6 +8,7 @@ rv3_add_test(test.view.cartesian_product view.cartesian_product cartesian_produc
 rv3_add_test(test.view.chunk view.chunk chunk.cpp)
 rv3_add_test(test.view.concat view.concat concat.cpp)
 rv3_add_test(test.view.const view.const const.cpp)
+rv3_add_test(test.view.compose view.compose compose.cpp)
 rv3_add_test(test.view.counted view.counted counted.cpp)
 rv3_add_test(test.view.cycle view.cycle cycle.cpp)
 rv3_add_test(test.view.delimit view.delimit delimit.cpp)

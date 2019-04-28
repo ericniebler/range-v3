@@ -2,6 +2,8 @@ include(../cmake/ranges_diagnostics.cmake)
 
 set(CMAKE_FOLDER "test")
 
+set (CMAKE_CXX_STANDARD 17)
+
 add_subdirectory(action)
 add_subdirectory(algorithm)
 add_subdirectory(numeric)
