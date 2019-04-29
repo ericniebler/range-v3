@@ -99,5 +99,13 @@ int main()
         CHECK(i == 2);
     }
 
+    // Test view_interaface sized()-based empty()
+    // https://github.com/ericniebler/range-v3/issues/1147
+    {
+        int i = 0;
+        auto rng = view::generate_n([&i]{return ++i;}, 2);
+        CHECK(!rng.empty());
+    }
+
     return test_result();
 }
