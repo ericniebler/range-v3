@@ -65,16 +65,64 @@ struct binding_test
     {
         return list | view::indirect | view::transform(Fn{});
     }
-
     Get get_b()
     {
         return Get{list};
     }
+    Get get_c()
+    {
+        return Get{list, view::transform(Fn{})};
+    }
+
+    using Get2 = compose_view<List, compose_bind<view::drop, int>>;
+    Get2 get2_a()
+    {
+        return list | view::drop(1);
+    }
+    Get2 get2_b()
+    {
+        return Get2{list, view::drop(1)};
+    }
+    Get2 get2_c()
+    {
+        return Get2{list, 1};
+    }
+
+
+    using Get3 = compose_view<List, view::indirect, compose_bind<view::drop, int>>;
+    Get3 get3_a()
+    {
+        return Get3{list, 1};
+    }
+    Get3 get3_b()
+    {
+        return Get3{list, view::drop(1)};
+    }
+
+
+    using Get4 = compose_view<
+        List,
+        view::indirect,
+        compose_bind<view::transform, Fn>,
+        compose_bind<view::drop, int>>;
+    Get4 get4_a()
+    {
+        //return Get4{list, Fn{}, 1};
+        return Get4{list, view::drop(1), view::transform(Fn{})};    // BUG!!!!
+    }
+
+
 
     void test()
     {
         check_equal(get_a(), list | view::indirect);
         check_equal(get_a(), get_b());
+        check_equal(get_b(), get_c());
+
+        check_equal(get2_a(), get2_b());
+        check_equal(get2_b(), get2_c());
+
+        check_equal(get3_a(), get3_b());
     }
 };
 
