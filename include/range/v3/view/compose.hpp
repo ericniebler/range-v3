@@ -25,10 +25,11 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace details{ namespace compose_view{
+        namespace detail{ namespace compose_view{
 
 
 
+            // Source:
             namespace detail
             {
                 template <std::size_t Ofst, class Tuple, std::size_t... I>
@@ -38,7 +39,6 @@ namespace ranges
                         std::get<I + Ofst>(std::forward<Tuple>(t))...);
                 }
             }
-
             template <std::size_t I1, std::size_t I2, class Cont>
             constexpr auto tuple_slice(Cont&& t)
             {
@@ -74,7 +74,6 @@ namespace ranges
 
             template<class T, bool is_wrapped = std::is_base_of_v<type_wrapper_base, T> >
             struct unwrap;
-
             template<class T>
             struct unwrap<T, true>
             {
@@ -88,97 +87,82 @@ namespace ranges
 
             struct compose_bind_base{};
 
+            template<auto i>
+            static const constexpr std::integral_constant<decltype(i), i> integral_constant{};
+
+
             template<int n /* last index */, class Src, auto&...Transformations>
             struct compose_view_
             {
+                CONCEPT_ASSERT(Range<Src>());
+
                 constexpr static auto &last = get_n<n, Transformations...>::functor;
 
                 using prev_compose_view = compose_view_<n-1, Src, Transformations...>;
 
-                using type_ = std::invoke_result_t<decltype(last), typename prev_compose_view::type>;
+                template<int j, class dummy = void>
+                struct get_type{
+                    using type = std::invoke_result_t<decltype(last), typename prev_compose_view::type>;
+                };
+                template<class dummy>
+                struct get_type<0, dummy>{
+                    using type = std::invoke_result_t<decltype(last), Src&>;
+                };
+
+                using type_ = typename get_type<n>::type;
                 using type  = typename unwrap<type_>::type;
 
                 CONCEPT_ASSERT(View<type>());
 
-                template<class Rng, class Arg, class ...Args>
-                static type build(Rng &&rng, Arg&& arg, Args&&...args)
+
+                template<auto arg_index /*= std::tuple_size_v<ArgsTuple>-1*/, class Rng, class ArgsTuple >
+                static type build(Rng &&rng, ArgsTuple&& args_tuple)
                 {
                     using last_t = std::decay_t<decltype(last)>;
                     constexpr const bool is_binding = std::is_base_of_v<compose_bind_base, last_t>;
 
-                    if constexpr (is_binding){
-                        if constexpr(!is_pipeable<std::decay_t<Arg>>::value){
+                    auto prev_compose_view_build = [&](auto index_t) -> decltype(auto) {
+                        if constexpr (n<=0){
+                            return std::forward<Rng>(rng);
+                        } else {
+                            constexpr const auto index = decltype(index_t)::value;
+                            return prev_compose_view::template build<index>(std::forward<Rng>(rng),std::forward<ArgsTuple>(args_tuple));
+                        }
+                    };
+
+                    if constexpr (is_binding && std::tuple_size_v<ArgsTuple> > 0){
+                        static_assert(arg_index >= 0);
+                        auto&& first_arg = std::get<arg_index>(args_tuple);
+                        using  FirstArg  = decltype(first_arg);
+
+                        if constexpr(!is_pipeable<std::decay_t<FirstArg>>::value){
                             // make binding
 
-                            auto args_tuple = std::forward_as_tuple(std::forward<Arg>(arg), std::forward<Args>(args)...);
-                            constexpr const std::size_t tuple_size = sizeof...(Args)+1;
-
-                            auto binded_view = std::apply(last_t::view, tuple_slice<0, last_t::args_size>(args_tuple));
-
-                            auto prev_build = [](auto&&...args) -> decltype(auto) {
-                                return prev_compose_view::build( std::forward<decltype(args)>(args)... );
-                            };
+                            constexpr const auto from = arg_index+1-last_t::args_size;
+                            constexpr const auto to   = arg_index+1;
+                            auto binded_view = std::apply(last_t::view, tuple_slice<from, to>(args_tuple));
 
                             return std::invoke(std::move(binded_view),
-                               //prev_compose_view::build( std::forward<Rng>(rng), std::forward<Args>(args)... )
-                                std::apply(prev_build,
-                                    std::tuple_cat(
-                                        std::forward_as_tuple(std::forward<Rng>(rng)),
-                                        tuple_slice<last_t::args_size, tuple_size>(args_tuple)
-                                    )
-                                )
+                               prev_compose_view_build(integral_constant<arg_index-last_t::args_size>)
                             );
                         } else {
-                            return std::invoke(std::forward<Arg>(arg),
-                               prev_compose_view::build( std::forward<Rng>(rng), std::forward<Args>(args)... )
+                            return std::invoke(std::forward<FirstArg>(first_arg),
+                               prev_compose_view_build(integral_constant<arg_index-1>)
                             );
                         }
                     } else {
                         return std::invoke(last,
-                           prev_compose_view::build( std::forward<Rng>(rng), std::forward<Arg>(arg), std::forward<Args>(args)... )
+                           prev_compose_view_build(integral_constant<arg_index>)
                         );
                     }
                 }
 
-                template<class Rng>
-                static type build(Rng &&rng)
-                {
-                    return std::invoke(last,
-                        prev_compose_view::build( std::forward<Rng>(rng) )
+                template<class Rng, class... Bindings>
+                static type build(Rng &&rng, Bindings&& ...bindings){
+                    return build<int(sizeof...(Bindings))-1>(
+                        std::forward<Rng>(rng),
+                        std::forward_as_tuple(std::forward<Bindings>(bindings)...)
                     );
-                }
-            };
-
-            template<class Src, auto&...Transformations>
-            struct compose_view_<0, Src, Transformations...>
-            {
-                CONCEPT_ASSERT(Range<Src>());
-
-                constexpr static auto &last = get_n<0, Transformations...>::functor;
-
-                using type_ = std::invoke_result_t<decltype(last), Src&>;
-                using type  = typename unwrap<type_>::type;
-
-                CONCEPT_ASSERT(View<type>());
-
-                template<class Rng, class Arg>
-                static type build(Rng &&rng, Arg&& arg)
-                {
-                    using last_t = std::decay_t<decltype(last)>;
-                    constexpr const bool is_binding = std::is_base_of_v<compose_bind_base, last_t>;
-                    static_assert(is_binding);
-                    if constexpr(!is_pipeable<std::decay_t<Arg>>::value){
-                        static_assert(last_t::args_size == 1);
-                        auto binded_view = last_t::view(std::forward<Arg>(arg));
-                        return std::invoke(std::move(binded_view), std::forward<Rng>(rng));
-                    } else {
-                        return std::invoke(std::forward<Arg>(arg), std::forward<Rng>(rng));
-                    }
-                }
-                template<class Rng>
-                static type build(Rng &&rng)
-                {
-                    return std::invoke(last, std::forward<Rng>(rng));
                 }
             };
 
@@ -203,7 +187,7 @@ namespace ranges
         }}
 
         template<class Src, auto& ...Transformations>
-        using compose_view_t = typename details::compose_view::compose_view<Src, Transformations...>::type;
+        using compose_view_t = typename detail::compose_view::compose_view<Src, Transformations...>::type;
 
 
         template<class Src, auto& ...Transformations>
@@ -211,7 +195,7 @@ namespace ranges
         {
         private:
             using Base          = compose_view_t<Src, Transformations...>;
-            using composed_view = details::compose_view::compose_view<Src, Transformations...>;
+            using composed_view = detail::compose_view::compose_view<Src, Transformations...>;
         public:
             using type = Base;
 
@@ -222,20 +206,22 @@ namespace ranges
                 : Base(std::move(other))
             {}
 
-            explicit compose_view(Src&& src)
-                : Base( composed_view::build(std::move(src)) )
+            template<class...Bindings>
+            explicit compose_view(Src&& src, Bindings&& ...bindings)
+                : Base(composed_view::build(std::move(src), std::forward<Bindings>(bindings)...))
             {}
-            explicit compose_view(const Src& src)
-                : Base( composed_view::build(src) )
+            template<class...Bindings>
+            explicit compose_view(const Src& src, Bindings&& ...bindings)
+                : Base(composed_view::build(src, std::forward<Bindings>(bindings)...))
             {}
             template<class...Bindings>
             explicit compose_view(Src& src, Bindings&& ...bindings)
-                : Base( composed_view::build(src, std::forward<Bindings>(bindings)...) )
+                : Base(composed_view::build(src, std::forward<Bindings>(bindings)...))
             {}
         };
 
         template<auto& View, class ...Args>
-        constexpr details::compose_view::compose_bind_fn<View, Args...> compose_bind{};
+        constexpr detail::compose_view::compose_bind_fn<View, Args...> compose_bind{};
     }
 }
 #endif //RANGES_CXX_VER >= RANGES_CXX_STD_17

@@ -17,6 +17,7 @@
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop.hpp>
+#include <range/v3/view/slice.hpp>
 #include <range/v3/view/transform.hpp>
 
 #include "../simple_test.hpp"
@@ -67,12 +68,19 @@ struct binding_test
     }
     Get get_b()
     {
+        // Is it safe to do so?
+        // Or remove this feature?
         return Get{list};
     }
     Get get_c()
     {
         return Get{list, view::transform(Fn{})};
     }
+    Get get_d()
+    {
+        return Get{list, Fn()};
+    }
+
 
     using Get2 = compose_view<List, compose_bind<view::drop, int>>;
     Get2 get2_a()
@@ -89,14 +97,23 @@ struct binding_test
     }
 
 
-    using Get3 = compose_view<List, view::indirect, compose_bind<view::drop, int>>;
+    using Get3 = compose_view<
+        List,
+        view::indirect,
+        compose_bind<view::slice, int, int>,
+        compose_bind<view::transform, Fn>>;
     Get3 get3_a()
     {
-        return Get3{list, 1};
+        return Get3{list, 1, 3, Fn{}};
     }
     Get3 get3_b()
     {
-        return Get3{list, view::drop(1)};
+        return Get3{list, view::slice(1, 3), view::transform(Fn{})};
+    }
+    Get3 get3_c()
+    {
+        // is this dangerous or not?
+        return Get3{};
     }
 
 
@@ -107,10 +124,12 @@ struct binding_test
         compose_bind<view::drop, int>>;
     Get4 get4_a()
     {
-        //return Get4{list, Fn{}, 1};
-        return Get4{list, view::drop(1), view::transform(Fn{})};    // BUG!!!!
+        return Get4{list, Fn{}, 1};
     }
-
+    Get4 get4_b()
+    {
+        return Get4{list, view::transform(Fn{}), view::drop(1)};
+    }
 
 
     void test()
@@ -118,11 +137,14 @@ struct binding_test
         check_equal(get_a(), list | view::indirect);
         check_equal(get_a(), get_b());
         check_equal(get_b(), get_c());
+        check_equal(get_c(), get_d());
 
         check_equal(get2_a(), get2_b());
         check_equal(get2_b(), get2_c());
 
         check_equal(get3_a(), get3_b());
+
+        check_equal(get4_a(), get4_b());
     }
 };
 
