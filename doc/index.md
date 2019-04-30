@@ -565,10 +565,10 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range, return a new range where each element has been has been cast to an rvalue reference.</DD>
 <DT>\link ranges::view::partial_sum_fn `view::partial_sum`\endlink</DT>
   <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
-<DT>\link ranges::view::remove_if_fn `view::remove_if`\endlink</DT>
-  <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
 <DT>\link ranges::view::remove_fn `view::remove`\endlink</DT>
   <DD>Given a source range and a value, filter out those elements that do not equal value.</DD>
+<DT>\link ranges::view::remove_if_fn `view::remove_if`\endlink</DT>
+  <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
 <DT>\link ranges::view::repeat_fn `view::repeat`\endlink</DT>
   <DD>Given a value, create a range that is that value repeated infinitely.</DD>
 <DT>\link ranges::view::repeat_n_fn `view::repeat_n`\endlink</DT>
