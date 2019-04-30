@@ -28,56 +28,64 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace aux{ namespace drop_last_view {
-            template<class Rng, class I, typename size_t = range_size_type_t<Rng>>
-            size_t get_size(Rng&& rng, I i)
+        /// \cond
+        namespace detail
+        {
+            namespace drop_last_view
             {
-                RANGES_EXPECT(i >= 0);
-                const size_t initial_size = ranges::size(rng);
-                const size_t n = static_cast<size_t>(i);
-                RANGES_EXPECT(initial_size >= n);
+                template<class Rng, class I, typename size_t = range_size_type_t<Rng>>
+                size_t get_size(Rng&& rng, I i)
+                {
+                    RANGES_EXPECT(i >= 0);
+                    const size_t initial_size = ranges::size(rng);
+                    const size_t n = static_cast<size_t>(i);
+                    RANGES_EXPECT(initial_size >= n);
 
-                return initial_size > n
-                       ? initial_size - n
-                       : 0;
-            }
+                    return initial_size > n
+                           ? initial_size - n
+                           : 0;
+                }
 
-            enum class mode{bidi, forward, sized, invalid};
+                enum class mode{bidi, forward, sized, invalid};
 
-            template<class Rng>
-            constexpr mode get_mode(){
-                // keep range bound
-                return (RandomAccessView<Rng>::value  && SizedView<Rng>::value) ||
-                       (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
-                       ? aux::drop_last_view::mode::bidi
-                       : SizedView<Rng>::value
-                         ? aux::drop_last_view::mode::sized
-                         : ForwardView<Rng>::value
-                           ? aux::drop_last_view::mode::forward
-                           : aux::drop_last_view::mode::invalid;
+                template<class Rng>
+                constexpr mode get_mode(){
+                    // keep range bound
+                    // Sized Bidi O(N)
+                    return (RandomAccessView<Rng>::value  && SizedView<Rng>::value) ||
+                           (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
+                           ? mode::bidi
+                           : SizedView<Rng>::value
+                             ? mode::sized
+                             : ForwardView<Rng>::value
+                               ? mode::forward
+                               : mode::invalid;
 
-                // max performance
-                // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
-                /*return (RandomAccessView<Rng>::value && SizedView<Rng>::value) ||
-                       (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
-                       ? aux::drop_last_view::mode::bidi
-                       : SizedView<Rng>::value
-                         ? aux::drop_last_view::mode::sized
-                         : BidirectionalView<Rng>::value && BoundedView<Rng>::value
-                           ? aux::drop_last_view::mode::bidi
-                           : ForwardView<Rng>::value
-                             ? aux::drop_last_view::mode::forward
-                             : aux::drop_last_view::mode::invalid;*/
-            }
-        }}
+                    // max performance
+                    // Sized Bidi O(1)
+                    // Sized Bidi use mode::sized instead of mode::bidi - thus become unbound.
+                    /*return (RandomAccessView<Rng>::value && SizedView<Rng>::value) ||
+                           (BidirectionalView<Rng>::value && BoundedView<Rng>::value)
+                           ? mode::bidi
+                           : SizedView<Rng>::value
+                             ? mode::sized
+                             : BidirectionalView<Rng>::value && BoundedView<Rng>::value
+                               ? mode::bidi
+                               : ForwardView<Rng>::value
+                                 ? mode::forward
+                                 : mode::invalid;*/
+                }
+            }  // namespace drop_last_view
+        } // namespace detail
+        /// \endcond
 
-        template<typename Rng, aux::drop_last_view::mode mode = aux::drop_last_view::get_mode<Rng>()>
+        template<typename Rng, detail::drop_last_view::mode mode = detail::drop_last_view::get_mode<Rng>()>
         struct drop_last_view{};
 
         template<typename Rng>
-        struct drop_last_view<Rng, aux::drop_last_view::mode::bidi>
+        struct drop_last_view<Rng, detail::drop_last_view::mode::bidi>
           : view_interface<
-              drop_last_view<Rng, aux::drop_last_view::mode::bidi>,
+              drop_last_view<Rng, detail::drop_last_view::mode::bidi>,
               is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best
           >
         {
@@ -153,12 +161,12 @@ namespace ranges
             CONCEPT_REQUIRES(SizedRange<Rng>())
             size_t size()
             {
-                return aux::drop_last_view::get_size(rng, n);
+                return detail::drop_last_view::get_size(rng, n);
             }
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                return aux::drop_last_view::get_size(rng, n);
+                return detail::drop_last_view::get_size(rng, n);
             }
 
             Rng & base()
@@ -172,9 +180,9 @@ namespace ranges
         };
 
         template<typename Rng>
-        struct drop_last_view<Rng, aux::drop_last_view::mode::forward>
+        struct drop_last_view<Rng, detail::drop_last_view::mode::forward>
           : view_adaptor<
-              drop_last_view<Rng, aux::drop_last_view::mode::forward>,
+              drop_last_view<Rng, detail::drop_last_view::mode::forward>,
               Rng,
               is_finite<Rng>::value ? finite : range_cardinality<Rng>::value   // finite at best (but unknown is expected)
           >
@@ -236,19 +244,19 @@ namespace ranges
             CONCEPT_REQUIRES(SizedRange<Rng>())
             size_t size()
             {
-                return aux::drop_last_view::get_size(this->base(), n);
+                return detail::drop_last_view::get_size(this->base(), n);
             }
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                return aux::drop_last_view::get_size(this->base(), n);
+                return detail::drop_last_view::get_size(this->base(), n);
             }
         };
 
         template<typename Rng>
-        struct drop_last_view<Rng, aux::drop_last_view::mode::sized>
+        struct drop_last_view<Rng, detail::drop_last_view::mode::sized>
            : view_interface<
-               drop_last_view<Rng, aux::drop_last_view::mode::sized>,
+               drop_last_view<Rng, detail::drop_last_view::mode::sized>,
                finite
            >
         {
@@ -284,12 +292,12 @@ namespace ranges
             }
             size_t size()
             {
-                return aux::drop_last_view::get_size(this->base(), n);
+                return detail::drop_last_view::get_size(this->base(), n);
             }
             CONCEPT_REQUIRES(SizedRange<Rng const>())
             size_t size() const
             {
-                return aux::drop_last_view::get_size(this->base(), n);
+                return detail::drop_last_view::get_size(this->base(), n);
             }
 
             // TODO: fix view_interface #https://github.com/ericniebler/range-v3/issues/1147. This should be auto-generated.

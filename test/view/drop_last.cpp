@@ -99,7 +99,7 @@ void random_acccess_test()
         , "Must be exactly RA.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::bidi>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::bidi>
         >::value
         , "Must have correct view.");
 
@@ -123,7 +123,7 @@ void bidirectional_test()
             /* mode::sized for max_pefrormance profile.
              * mode::bidi  for compatible profile.
              * See aux::drop_last::get_mode */
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::bidi>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::bidi>
         >::value
         , "Must have correct view.");
 
@@ -144,7 +144,7 @@ void forward_test()
         , "Must be exactly forward.");
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::forward>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::forward>
         >::value
         , "Must have correct view.");
 
@@ -168,7 +168,7 @@ void sized_test()
 
     static_assert(
         std::is_same<
-            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, aux::drop_last_view::mode::sized>
+            drop_last_view<view::all_t<Src>>, drop_last_view<view::all_t<Src>, detail::drop_last_view::mode::sized>
         >::value
         , "Must have correct view.");
 
