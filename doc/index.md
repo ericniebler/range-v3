@@ -48,6 +48,7 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2
 - GCC 4.9.1
+- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive-`
 
 \section tutorial-quick-start Quick Start
 
@@ -290,6 +291,46 @@ from having to deal with a host of niggly detail when implementing iterators.
 sentinel. That is only necessary if the underlying range's sentinel type models
 BidirectionalIterator. That's a finer point that you shouldn't worry about right
 now.)*
+
+## view_adaptor in details
+
+Each `view_adaptor` contains `base()` member in view and iterator.
+`base()` - allow to access "adapted" range/iterator:
+
+~~~~~~~{.cpp}
+    std::vector<int> vec;
+    auto list = vec | view::transfom([](int i){ return i+1; });
+
+    assert( vec.begin() == list.begin().base() );
+    assert( vec.begin() == list.base().begin() );
+~~~~~~~
+
+Like `basic_iterator`'s `cursor` - `view_adaptor`'s `adaptor` can contain mixin class too,
+to inject things into the public interface of the iterator:
+
+~~~~~~~{.cpp}
+    class adaptor : public ::ranges::adaptor_base
+    {
+        template<class base_mixin>
+        struct mixin : base_mixin
+        {
+              // everything inside this class will be accessible from iterator
+              using base_mixin::base_mixin;
+
+              decltype(auto) base_value() const
+              {
+                  return *this->base();
+              }
+
+              int get_i() const
+              {
+                  return this->get().i;
+              }
+        };
+
+        int i = 100;
+    };
+~~~~~~~
 
 ## Create Custom Iterators
 
@@ -598,6 +639,8 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
   <DD>Appends elements before the head of the source.</DD>
 <DT>\link ranges::v3::action::remove_if_fn `action::remove_if`\endlink</DT>
   <DD>Removes all elements from the source that satisfy the predicate.</DD>
+<DT>\link ranges::v3::action::remove_fn `action::remove`\endlink</DT>
+  <DD>Removes all elements from the source that are equal to value.</DD>
 <DT>\link ranges::v3::action::unstable_remove_if_fn `action::unstable_remove_if`\endlink</DT>
   <DD>Much faster (each element remove has constant time complexity), unordered version of `remove_if`. Requires bidirectional container.</DD>
 <DT>\link ranges::v3::action::shuffle_fn `action::shuffle`\endlink</DT>

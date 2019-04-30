@@ -30,6 +30,23 @@ private:
 
     struct adaptor : ranges::adaptor_base
     {
+        template<class base_mixin>
+        struct mixin : base_mixin
+        {
+            mixin() = default;
+            using base_mixin::base_mixin;
+
+            int mixin_int = 120;
+
+            int base_plus_adaptor() const
+            {
+                int y = this->get().t;
+                return *this->base() + y;
+            }
+        };
+
+        int t = 20;
+
         // Cross-wire begin and end.
         base_iterator_t begin(my_reverse_view const &rng) const
         {
@@ -81,6 +98,34 @@ struct my_delimited_range
         ranges::delimit_view<ranges::istream_range<int>, int>>
 {
     using view_adaptor::view_adaptor;
+
+    struct adaptor : ranges::adaptor_base
+    {
+        template<class base_mixin>
+        struct mixin : base_mixin
+        {
+            mixin() = default;
+            using base_mixin::base_mixin;
+
+            int mixin_int = 120;
+
+            int adaptor_access_test() const
+            {
+                int y = this->get().t;
+                return y;
+            }
+        };
+
+        int t = 20;
+    };
+    adaptor begin_adaptor() const
+    {
+        return {};
+    }
+    adaptor end_adaptor() const
+    {
+        return {};
+    }
 };
 
 int main()
@@ -91,6 +136,11 @@ int main()
     ::models<concepts::BoundedView>(aux::copy(retro));
     ::models<concepts::RandomAccessIterator>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
+
+    // test cursor mixin
+    CHECK( retro.begin().mixin_int == 120 );
+    CHECK( *((retro.begin()+1).base()) == 4 );
+    CHECK( (retro.begin()+1).base_plus_adaptor() == 24 );
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
@@ -106,6 +156,10 @@ int main()
     ::models<concepts::InputIterator>(r.begin());
     ::models_not<concepts::ForwardIterator>(r.begin());
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
+
+    // test sentinel mixin
+    CHECK(r.end().mixin_int == 120);
+    CHECK(r.end().adaptor_access_test() == 20);
 
     return ::test_result();
 }
