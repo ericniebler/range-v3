@@ -48,6 +48,7 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2
 - GCC 4.9.1
+- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive-`
 
 \section tutorial-quick-start Quick Start
 
