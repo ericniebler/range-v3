@@ -1,6 +1,6 @@
 var structranges_1_1v3_1_1ostream__iterator =
 [
-    [ "operator*", "structranges_1_1v3_1_1ostream__iterator.html#a392c7aab16d48df093c7275bb432e701", null ],
+    [ "operator *", "structranges_1_1v3_1_1ostream__iterator.html#aadbf93390e06bdd257f5d0e8e2b7626b", null ],
     [ "operator++", "structranges_1_1v3_1_1ostream__iterator.html#a14594a6e71f75685f5aa1f4930866671", null ],
     [ "operator++", "structranges_1_1v3_1_1ostream__iterator.html#a2bcaf0b4db98af45ccbb7baef375036d", null ],
     [ "operator=", "structranges_1_1v3_1_1ostream__iterator.html#a067a40db7d2a2ba6ed5eaa87e3b1655d", null ],

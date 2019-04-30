@@ -1,7 +1,7 @@
 var structranges_1_1v3_1_1iterator__wrapper =
 [
     [ "base", "structranges_1_1v3_1_1iterator__wrapper.html#a5e13fd88e129476fa6bbf5ed97dd8399", null ],
-    [ "operator*", "structranges_1_1v3_1_1iterator__wrapper.html#a7ffa6abb3c995f5af8ce2526a2a62e1d", null ],
+    [ "operator *", "structranges_1_1v3_1_1iterator__wrapper.html#aa8118259c3f62a650e623bed5aa3b6fc", null ],
     [ "operator++", "structranges_1_1v3_1_1iterator__wrapper.html#a5ec4099b82e94500ea8b5a3394fd8373", null ],
     [ "operator++", "structranges_1_1v3_1_1iterator__wrapper.html#a7e44e72d9ffe2f94841abe06c9f263e7", null ],
     [ "operator=", "structranges_1_1v3_1_1iterator__wrapper.html#a844fdfea16d6958d16be930e495269b5", null ],

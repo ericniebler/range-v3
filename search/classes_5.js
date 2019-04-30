@@ -2,8 +2,6 @@ var searchData=
 [
   ['fill_5ffn',['fill_fn',['../structranges_1_1v3_1_1fill__fn.html',1,'ranges::v3']]],
   ['fill_5fn_5ffn',['fill_n_fn',['../structranges_1_1v3_1_1fill__n__fn.html',1,'ranges::v3']]],
-  ['filter_5ffn',['filter_fn',['../structranges_1_1v3_1_1view_1_1filter__fn.html',1,'ranges::v3::view']]],
-  ['filter_5fview',['filter_view',['../structranges_1_1v3_1_1filter__view.html',1,'ranges::v3']]],
   ['find_5fend_5ffn',['find_end_fn',['../structranges_1_1v3_1_1find__end__fn.html',1,'ranges::v3']]],
   ['find_5ffirst_5fof_5ffn',['find_first_of_fn',['../structranges_1_1v3_1_1find__first__of__fn.html',1,'ranges::v3']]],
   ['find_5ffn',['find_fn',['../structranges_1_1v3_1_1find__fn.html',1,'ranges::v3']]],

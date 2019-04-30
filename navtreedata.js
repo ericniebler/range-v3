@@ -61,21 +61,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"common__tuple_8hpp.html#aac525d8dc5c56939e5ba4319b8e97127",
-"group__group-algorithms.html#ga97b82a20c332217b2703e47be2b093ca",
-"group__group-views.html#gaeab874f67edfb948c2a004e514ae14c4",
-"inner__product_8hpp.html#a8a4d59ad08b655e60c621128b3606679",
-"meta_8hpp.html#ga92d2a7a8db96f187d73e1242a3a4ee0c",
-"semiregular_8hpp.html",
-"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1iter__take__while__view_3_01_ts_8_8_8_01_4_01_4.html",
-"structranges_1_1v3_1_1action_1_1slice__fn.html#a3d15dbac738d6501270ea27d7f969662",
-"structranges_1_1v3_1_1common__tuple.html#a28e7c0a8977da4d4d02bfe0c1fcf7233",
-"structranges_1_1v3_1_1counted__iterator.html#add1bb91f3e75ce5779255012195da691",
-"structranges_1_1v3_1_1indirect__view.html#ae7d16f55b3229def4e031c1a8d7358a3",
-"structranges_1_1v3_1_1move__iterator.html#a0ad119f163cd6cf0ff34a9930997359d",
-"structranges_1_1v3_1_1replace__fn.html#ae0e256d041a6e297a38a30574084b7eb",
-"structranges_1_1v3_1_1tuple__for__each__fn.html",
-"structranges_1_1v3_1_1view__facade.html"
+"common__tuple_8hpp.html#a54bd2e0cafb960892d4250cb58a654df",
+"group__group-algorithms.html#ga46dc29289a10772b9505424cd25797a6",
+"group__group-views.html#gaadcb7b54d680a4069d98c275cbd67c4e",
+"index.html#tutorial-installation",
+"meta_8hpp.html#ga90ea080c869ea76ffbbbec8f0104c301",
+"replace__copy__if_8hpp.html#ga4362625e37683a8ba9dca11815e3febc",
+"structboost_1_1range__size_3_01_1_1ranges_1_1v3_1_1drop__view_3_01_ts_8_8_8_01_4_01const_01_4.html",
+"structranges_1_1v3_1_1action_1_1remove__fn_1_1_concept_impl.html",
+"structranges_1_1v3_1_1coerce.html#af5cd2f4abd6375afcce06ea8e5c07335",
+"structranges_1_1v3_1_1copy__n__fn.html",
+"structranges_1_1v3_1_1getlines__range.html#a9bbcb72e47a064ef0b4735063c2c13e9",
+"structranges_1_1v3_1_1mismatch__fn.html#a4051298bc40f151b2645a155dbc0be71",
+"structranges_1_1v3_1_1remove__if__view.html#add5ddea2ca6da9889cb081ee50c97eb2",
+"structranges_1_1v3_1_1transform__fn.html#a8f55fb08d2231ec0bcad110e0782585d",
+"structranges_1_1v3_1_1view_1_1view__access_1_1impl.html",
+"view_2view_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

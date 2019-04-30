@@ -6,7 +6,7 @@ var searchData=
   ['range_5ffor_2ehpp',['range_for.hpp',['../range__for_8hpp.html',1,'']]],
   ['range_5ffwd_2ehpp',['range_fwd.hpp',['../range__fwd_8hpp.html',1,'']]],
   ['range_5ftraits_2ehpp',['range_traits.hpp',['../range__traits_8hpp.html',1,'']]],
-  ['remove_2ehpp',['remove.hpp',['../remove_8hpp.html',1,'']]],
+  ['remove_2ehpp',['remove.hpp',['../action_2remove_8hpp.html',1,'(Global Namespace)'],['../algorithm_2remove_8hpp.html',1,'(Global Namespace)'],['../view_2remove_8hpp.html',1,'(Global Namespace)']]],
   ['remove_5fcopy_2ehpp',['remove_copy.hpp',['../remove__copy_8hpp.html',1,'']]],
   ['remove_5fcopy_5fif_2ehpp',['remove_copy_if.hpp',['../remove__copy__if_8hpp.html',1,'']]],
   ['remove_5fif_2ehpp',['remove_if.hpp',['../action_2remove__if_8hpp.html',1,'(Global Namespace)'],['../algorithm_2remove__if_8hpp.html',1,'(Global Namespace)'],['../view_2remove__if_8hpp.html',1,'(Global Namespace)']]],
