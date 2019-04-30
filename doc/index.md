@@ -316,7 +316,7 @@ to inject things into the public interface of the iterator:
               // everything inside this class will be accessible from iterator
               using base_mixin::base_mixin;
 
-              decltype(auto) base_value() const
+              auto& base_value() const
               {
                   return *this->base();
               }
@@ -341,14 +341,14 @@ Iterator/sentinel adaptor may "override" following members:
     {
         // !For begin_adaptor only!
         template<typename Rng>
-        constexpr decltype(auto) begin(Rng &rng)
+        constexpr auto begin(Rng &rng)
         {
             return ranges::begin(rng.base());
         }       
 
         // !For end_adaptor only!
         template<typename Rng>
-        constexpr decltype(auto) end(Rng &rng)
+        constexpr auto end(Rng &rng)
         {
             return ranges::end(rng.base());
         }       
