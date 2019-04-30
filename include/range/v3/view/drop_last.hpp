@@ -300,17 +300,6 @@ namespace ranges
                 return detail::drop_last_view::get_size(this->base(), n);
             }
 
-            // TODO: fix view_interface #https://github.com/ericniebler/range-v3/issues/1147. This should be auto-generated.
-            bool empty()
-            {
-                return this->size() == 0;
-            }
-            CONCEPT_REQUIRES(SizedRange<Rng const>())
-            bool empty() const
-            {
-                return this->size() == 0;
-            }
-
             Rng & base()
             {
                 return rng;
