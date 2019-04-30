@@ -113,7 +113,7 @@ struct binding_test
     Get3 get3_c()
     {
         // is this dangerous or not?
-        return Get3{};
+        return Get3{list};
     }
 
 
