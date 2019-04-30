@@ -132,6 +132,15 @@ struct binding_test
     }
 
 
+    // interesting example
+    inline static auto fn = view::transform(Fn{}) | view::drop(1);
+    using Get5 = compose_view<List, view::indirect, fn>;
+    Get5 get5_a()
+    {
+        return Get5{list};  // (can't be done with types)
+    }
+
+
     void test()
     {
         check_equal(get_a(), list | view::indirect);
@@ -145,6 +154,8 @@ struct binding_test
         check_equal(get3_a(), get3_b());
 
         check_equal(get4_a(), get4_b());
+
+        check_equal(get4_a(), get5_a());
     }
 };
 

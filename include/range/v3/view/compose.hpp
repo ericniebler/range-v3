@@ -14,12 +14,11 @@
 #ifndef RANGE_V3_VIEW_COMPOSE_HPP
 #define RANGE_V3_VIEW_COMPOSE_HPP
 
-#if RANGES_CXX_VER >= RANGES_CXX_STD_17
-
 #include <type_traits>
+#include <utility>
 #include <range/v3/view/all.hpp>
 
-#include <iostream>
+#if RANGES_CXX_VER >= RANGES_CXX_STD_17
 
 namespace ranges
 {
@@ -28,28 +27,25 @@ namespace ranges
         namespace detail{ namespace compose_view{
 
 
-
-            // Source:
             namespace detail
             {
-                template <std::size_t Ofst, class Tuple, std::size_t... I>
-                constexpr auto slice_impl(Tuple&& t, std::index_sequence<I...>)
+                template <std::size_t Offset, class Tuple, std::size_t... Is>
+                constexpr auto tuple_slice_(Tuple&& tuple, std::index_sequence<Is...>)
                 {
                     return std::forward_as_tuple(
-                        std::get<I + Ofst>(std::forward<Tuple>(t))...);
+                        std::get<Is + Offset>(std::forward<Tuple>(tuple))...);
                 }
             }
-            template <std::size_t I1, std::size_t I2, class Cont>
-            constexpr auto tuple_slice(Cont&& t)
+            // [From;To)
+            template <std::size_t From, std::size_t To, class Tuple>
+            constexpr auto tuple_slice(Tuple&& tuple)
             {
-                static_assert(I2 >= I1, "invalid slice");
-                static_assert(std::tuple_size<std::decay_t<Cont>>::value >= I2,
-                    "slice index out of bounds");
+                static_assert(From <= To);
+                static_assert(To   <= std::tuple_size_v<std::decay_t<Tuple>>);
 
-                return detail::slice_impl<I1>(std::forward<Cont>(t),
-                    std::make_index_sequence<I2 - I1>{});
+                return detail::tuple_slice_<From>(std::forward<Tuple>(tuple),
+                    std::make_index_sequence<From - To>{});
             }
-
 
 
 
@@ -90,7 +86,7 @@ namespace ranges
             template<auto i>
             static const constexpr std::integral_constant<decltype(i), i> integral_constant{};
 
-
+            // compose in reverse order
             template<int n /* last index */, class Src, auto&...Transformations>
             struct compose_view_
             {
@@ -109,11 +105,9 @@ namespace ranges
                     using type = std::invoke_result_t<decltype(last), Src&>;
                 };
 
-                using type_ = typename get_type<n>::type;
-                using type  = typename unwrap<type_>::type;
+                using type  = typename unwrap<typename get_type<n>::type>::type;
 
                 CONCEPT_ASSERT(View<type>());
-
 
                 template<auto arg_index /*= std::tuple_size_v<ArgsTuple>-1*/, class Rng, class ArgsTuple >
                 static type build(Rng &&rng, ArgsTuple&& args_tuple)
