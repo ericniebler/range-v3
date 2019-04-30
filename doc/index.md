@@ -509,6 +509,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
 <DT>\link ranges::any_view `any_view<T>(rng)`\endlink</DT>
   <DD>Type-erased range of elements with value type `T`; can store _any_ range with this value type.</DD>
+<DT>\link ranges::view::c_str_fn `view::c_str`\endlink</DT>
+  <DD>View a `\0`-terminated C string (e.g. from a `const char*`) as a range.</DD>
 <DT>\link ranges::view::cartesian_product_fn `view::cartesian_product`\endlink</DT>
   <DD>Enumerates the n-ary cartesian product of `n` ranges, i.e., generates all `n`-tuples `(e1, e2, ... , en)` where `e1` is an element of the first range, `e2` is an element of the second range, etc.</DD>
 <DT>\link ranges::view::chunk_fn `view::chunk`\endlink</DT>
@@ -523,8 +525,6 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given an iterator `it` and a count `n`, create a range that starts at `it` and includes the next `n` elements.</DD>
 <DT>\link ranges::view::cycle_fn `view::cycle`\endlink</DT>
   <DD>Returns an infinite range that endlessly repeats the source range.</DD>
-<DT>\link ranges::view::c_str_fn `view::c_str`\endlink</DT>
-  <DD>View a `\0`-terminated C string (e.g. from a `const char*`) as a range.</DD>
 <DT>\link ranges::view::delimit_fn `view::delimit`\endlink</DT>
   <DD>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, `view::delimit` can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value.</DD>
 <DT>\link ranges::view::drop_fn `view::drop`\endlink</DT>
