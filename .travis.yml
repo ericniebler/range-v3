@@ -251,8 +251,13 @@ install:
   # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
   # It is fixed in valgrind 3.10 so this won't be necessary if someone
   # replaces the current valgrind (3.7) with valgrind-3.10
-  - if [ "$USE_VALGRIND" == "On" ]; then sed -i 's/march=native/msse4.2/' cmake/ranges_flags.cmake; fi
-
+  - |
+    if [ "$USE_VALGRIND" == "On" ]; then
+      sed -i 's/march=native/msse4.2/' cmake/ranges_flags.cmake
+      # We need to explicitly initialize std::random_device on libstdc++ to avoid using RDRAND
+      # since valgrind doesn't understand the instruction.
+      CXX_FLAGS="${CXX_FLAGS} -DRANGES_WORKAROUND_VALGRIND_RDRAND"
+    fi
   - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
   - |
     if [ "$LIBCXX" == "On" ]; then

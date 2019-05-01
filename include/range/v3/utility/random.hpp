@@ -108,7 +108,11 @@ namespace ranges
                     std::array<std::uint32_t, 8> seeds;
 
                     // Hopefully high-quality entropy from random_device.
-                    std::random_device rd{};
+#if defined(__GLIBCXX__) && defined(RANGES_WORKAROUND_VALGRIND_RDRAND)
+                    std::random_device rd{"/dev/urandom"};
+#else
+                    std::random_device rd;
+#endif
                     std::uniform_int_distribution<std::uint32_t> dist{};
                     ranges::generate(seeds, [&] { return dist(rd); });
 
