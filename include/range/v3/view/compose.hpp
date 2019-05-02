@@ -48,18 +48,14 @@ namespace ranges
             }
 
 
-
             template<int n, auto &Transformation, auto&...Transformations>
-            struct get_n
-            {
-                constexpr static auto &functor = get_n<n-1, Transformations...>::functor;
-            };
-
-            template<auto &Transformation, auto&...Transformations>
-            struct get_n<0, Transformation, Transformations...>
-            {
-                constexpr static auto &functor = Transformation;
-            };
+            constexpr auto& get_n(){
+                if constexpr(n==0){
+                    return Transformation;
+                } else {
+                    return get_n<n-1,Transformations...>();
+                }
+            }
 
             struct type_wrapper_base {};
             template<class T>
@@ -92,7 +88,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(Range<Src>());
 
-                constexpr static auto &last = get_n<n, Transformations...>::functor;
+                constexpr static auto &last = get_n<n, Transformations...>();
 
                 using prev_compose_view = compose_view_<n-1, Src, Transformations...>;
 
@@ -109,7 +105,7 @@ namespace ranges
 
                 CONCEPT_ASSERT(View<type>());
 
-                template<auto arg_index /*= std::tuple_size_v<ArgsTuple>-1*/, class Rng, class ArgsTuple >
+                template<int arg_index /*= std::tuple_size_v<ArgsTuple>-1*/, class Rng, class ArgsTuple >
                 static type build(Rng &&rng, ArgsTuple&& args_tuple)
                 {
                     using last_t = std::decay_t<decltype(last)>;
@@ -131,15 +127,15 @@ namespace ranges
 
                         if constexpr(!is_pipeable<std::decay_t<FirstArg>>::value){
                             // make binding
-
-                            constexpr const auto from = arg_index+1-last_t::args_size;
+                            constexpr const auto from = arg_index+1-last_t::args_count;
                             constexpr const auto to   = arg_index+1;
                             auto binded_view = std::apply(last_t::view, tuple_slice<from, to>(args_tuple));
 
                             return std::invoke(std::move(binded_view),
-                               prev_compose_view_build(integral_constant<arg_index-last_t::args_size>)
+                               prev_compose_view_build(integral_constant<arg_index - last_t::args_count>)
                             );
                         } else {
+                            // already binded
                             return std::invoke(std::forward<FirstArg>(first_arg),
                                prev_compose_view_build(integral_constant<arg_index-1>)
                             );
@@ -165,7 +161,7 @@ namespace ranges
 
             template<auto& View, class ...Args>
             struct compose_bind_fn : compose_bind_base {
-                static constexpr const auto args_size = sizeof...(Args);
+                static constexpr const auto args_count = sizeof...(Args);
                 static constexpr auto& view = View;
 
                 template<class Rng>
@@ -182,7 +178,6 @@ namespace ranges
 
         template<class Src, auto& ...Transformations>
         using compose_view_t = typename detail::compose_view::compose_view<Src, Transformations...>::type;
-
 
         template<class Src, auto& ...Transformations>
         struct compose_view : compose_view_t<Src, Transformations...>
