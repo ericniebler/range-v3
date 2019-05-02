@@ -162,6 +162,8 @@ struct binding_test
 
 int main()
 {
+    std::cout << "compose_view exists. Start tests." << std::endl;
+
     list.emplace_back(new int(1));
     list.emplace_back(new int(2));
     list.emplace_back(new int(3));
@@ -174,5 +176,9 @@ int main()
 }
 
 #else
-int main() { return 0;}
+int main()
+{
+    std::cout << "compose_view does not exists. Skip tests." << std::endl;
+    return 0;
+}
 #endif //RANGES_CXX_VER >= RANGES_CXX_STD_17
