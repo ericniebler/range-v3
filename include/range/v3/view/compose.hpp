@@ -93,12 +93,12 @@ namespace ranges
                     template<int j, class dummy = void>
                     struct get_type
                     {
-                        using type = std::invoke_result_t<decltype(last), typename prev_compose_view::type>;
+                        using type = invoke_result_t<decltype(last), typename prev_compose_view::type>;
                     };
                     template<class dummy>
                     struct get_type<0, dummy>
                     {
-                        using type = std::invoke_result_t<decltype(last), Src&>;
+                        using type = invoke_result_t<decltype(last), Src&>;
                     };
 
                     using type  = typename unwrap<typename get_type<n>::type>::type;
