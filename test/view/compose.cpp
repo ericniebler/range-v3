@@ -54,7 +54,6 @@ struct nullary_test
     }
 };
 
-
 struct binding_test
 {
     struct Fn
@@ -69,15 +68,9 @@ struct binding_test
     }
     Get get_b()
     {
-        // Is it safe to do so?
-        // Or remove this feature?
-        return Get{list};
-    }
-    Get get_c()
-    {
         return Get{list, view::transform(Fn{})};
     }
-    Get get_d()
+    Get get_c()
     {
         return Get{list, Fn()};
     }
@@ -109,11 +102,6 @@ struct binding_test
     {
         return Get3{list, view::slice(1, 3), view::transform(Fn{})};
     }
-    Get3 get3_c()
-    {
-        // is this dangerous or not?
-        return Get3{list};
-    }
 
     using Get4 = compose_view<
         List,
@@ -132,12 +120,21 @@ struct binding_test
     // interesting example
     RANGES_DIAGNOSTIC_PUSH
     RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
-    inline static const auto fn = view::transform(Fn{}) | view::drop(1);
+    inline static auto fn = view::transform(Fn{}) | view::drop(1);
     RANGES_DIAGNOSTIC_POP
     using Get5 = compose_view<List, view::indirect, fn>;
     Get5 get5_a()
     {
-        return Get5{list};  // (can't be done with types)
+        return Get5{list};
+    }
+
+    using Get6 = compose_view<
+        List,
+        view::indirect,
+        compose_bind_static<view::drop, 1>>;
+    Get6 get6_a()
+    {
+        return Get6{list};
     }
 
     void test()
@@ -145,20 +142,19 @@ struct binding_test
         check_equal(get_a(), list | view::indirect);
         check_equal(get_a(), get_b());
         check_equal(get_b(), get_c());
-        check_equal(get_c(), get_d());
 
         check_equal(get2_a(), get2_b());
         check_equal(get2_b(), get2_c());
 
         check_equal(get3_a(), get3_b());
-        check_equal(get3_c(), Get3{list, 0, 0, Fn()});
 
         check_equal(get4_a(), get4_b());
 
         check_equal(get4_a(), get5_a());
+
+        check_equal(get5_a(), get6_a());
     }
 };
-
 
 int main()
 {
