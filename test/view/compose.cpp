@@ -63,7 +63,6 @@ struct binding_test
     };
 
     using Get = compose_view<List, view::indirect, compose_bind<view::transform, Fn>>;
-
     Get get_a()
     {
         return list | view::indirect | view::transform(Fn{});
@@ -83,7 +82,6 @@ struct binding_test
         return Get{list, Fn()};
     }
 
-
     using Get2 = compose_view<List, compose_bind<view::drop, int>>;
     Get2 get2_a()
     {
@@ -97,7 +95,6 @@ struct binding_test
     {
         return Get2{list, 1};
     }
-
 
     using Get3 = compose_view<
         List,
@@ -118,7 +115,6 @@ struct binding_test
         return Get3{list};
     }
 
-
     using Get4 = compose_view<
         List,
         view::indirect,
@@ -133,7 +129,6 @@ struct binding_test
         return Get4{list, view::transform(Fn{}), view::drop(1)};
     }
 
-
     // interesting example
     RANGES_DIAGNOSTIC_PUSH
     RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
@@ -144,7 +139,6 @@ struct binding_test
     {
         return Get5{list};  // (can't be done with types)
     }
-
 
     void test()
     {
@@ -157,6 +151,7 @@ struct binding_test
         check_equal(get2_b(), get2_c());
 
         check_equal(get3_a(), get3_b());
+        check_equal(get3_c(), Get3{list, 0, 0, Fn()});
 
         check_equal(get4_a(), get4_b());
 

@@ -44,7 +44,7 @@ namespace ranges
                 static_assert(To   <= std::tuple_size_v<std::decay_t<Tuple>>);
 
                 return detail::tuple_slice_<From>(std::forward<Tuple>(tuple),
-                    std::make_index_sequence<From - To>{});
+                    std::make_index_sequence<To - From>{});
             }
 
 
@@ -126,21 +126,22 @@ namespace ranges
                         using  FirstArg  = decltype(first_arg);
 
                         if constexpr(!is_pipeable<std::decay_t<FirstArg>>::value){
-                            // make binding
-                            constexpr const auto from = arg_index+1-last_t::args_count;
-                            constexpr const auto to   = arg_index+1;
+                            // make binding from arguments
+                            constexpr const int from = arg_index+1-last_t::args_count;
+                            constexpr const int to   = arg_index+1;
                             auto binded_view = std::apply(last_t::view, tuple_slice<from, to>(args_tuple));
 
                             return std::invoke(std::move(binded_view),
                                prev_compose_view_build(integral_constant<arg_index - last_t::args_count>)
                             );
                         } else {
-                            // already binded
+                            // argument is a bind
                             return std::invoke(std::forward<FirstArg>(first_arg),
                                prev_compose_view_build(integral_constant<arg_index-1>)
                             );
                         }
                     } else {
+                        // just compose
                         return std::invoke(last,
                            prev_compose_view_build(integral_constant<arg_index>)
                         );
@@ -161,7 +162,7 @@ namespace ranges
 
             template<auto& View, class ...Args>
             struct compose_bind_fn : compose_bind_base {
-                static constexpr const auto args_count = sizeof...(Args);
+                static constexpr const int args_count = sizeof...(Args);
                 static constexpr auto& view = View;
 
                 template<class Rng>
