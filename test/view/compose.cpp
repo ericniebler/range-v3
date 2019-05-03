@@ -61,10 +61,10 @@ struct binding_test
         const int& operator()(const int& i) const { return i; }
     };
 
-    using Get = compose_view<List, view::indirect, compose_bind<view::transform, Fn>>;
+    using Get = compose_view<List, view::indirect, compose_bind<view::transform, Fn>, compose_bind_static<view::drop, 1>>;
     Get get_a()
     {
-        return list | view::indirect | view::transform(Fn{});
+        return list | view::indirect | view::transform(Fn{}) | view::drop(1);
     }
     Get get_b()
     {
@@ -139,7 +139,7 @@ struct binding_test
 
     void test()
     {
-        check_equal(get_a(), list | view::indirect);
+        check_equal(get_a(), list | view::indirect | view::drop(1));
         check_equal(get_a(), get_b());
         check_equal(get_b(), get_c());
 
@@ -149,9 +149,7 @@ struct binding_test
         check_equal(get3_a(), get3_b());
 
         check_equal(get4_a(), get4_b());
-
         check_equal(get4_a(), get5_a());
-
         check_equal(get5_a(), get6_a());
     }
 };
