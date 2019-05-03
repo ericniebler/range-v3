@@ -45,7 +45,7 @@ int main()
     using namespace ranges;
 
     constexpr int x = 1729;
-    auto collapse_below_5_with_x = view::collapse_to_if(is_below_5(), x);
+    auto collapse_below_5_with_x = view::collapse_to_if(x, is_below_5());
 
     auto && rng = view::empty<int> | collapse_below_5_with_x;
     static_assert(range_cardinality<decltype(rng)>{} == cardinality(0), "");

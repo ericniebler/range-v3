@@ -41,23 +41,24 @@ namespace ranges
         {
         private:
             friend view_access;
-            template<typename Pred, typename Val>
-            static auto bind(collapse_to_if_fn collapse_to_if, Pred pred, Val value)
+            template<typename Val, typename Pred>
+            static auto bind(collapse_to_if_fn collapse_to_if, Val value, Pred pred)
             {
                 return make_pipeable(
-                    std::bind(collapse_to_if, std::placeholders::_1, protect(std::move(pred)),
-                    protect(std::move(value))));
+                    std::bind(collapse_to_if, std::placeholders::_1, protect(std::move(value)),
+                    protect(std::move(pred))
+                    ));
             }
-            template<typename Pred, typename Proj, typename Val>
-            static auto bind(collapse_to_if_fn collapse_to_if, Pred pred, Proj proj, Val value)
+            template<typename Val, typename Pred, typename Proj>
+            static auto bind(collapse_to_if_fn collapse_to_if, Val value, Pred pred, Proj proj)
             {
                 return make_pipeable(
-                    std::bind(collapse_to_if, std::placeholders::_1, protect(std::move(pred)),
-                    protect(std::move(proj)), protect(std::move(value))));
+                    std::bind(collapse_to_if, std::placeholders::_1, protect(std::move(value)),
+                    protect(std::move(pred)), protect(std::move(proj))));
             }
         public:
-            template<typename Rng, typename Pred, typename Val>
-            auto operator()(Rng &&rng, Pred pred, Val value) const ->
+            template<typename Rng, typename Val, typename Pred>
+            auto operator()(Rng &&rng, Val value, Pred pred) const ->
                 CPP_ret(replace_if_view<collapse_if_view<all_t<Rng>, Pred>, Pred, Val>)(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
                         IndirectUnaryPredicate<Pred, iterator_t<Rng>> &&
@@ -68,8 +69,8 @@ namespace ranges
             {
                 return {{static_cast<Rng &&>(rng), pred}, {std::move(pred), std::move(value)}};
             }
-            template<typename Rng, typename Pred, typename Proj, typename Val>
-            auto operator()(Rng &&rng, Pred pred, Proj proj, Val value) const ->
+            template<typename Rng, typename Val, typename Pred, typename Proj>
+            auto operator()(Rng &&rng, Val value, Pred pred, Proj proj) const ->
                 CPP_ret(replace_if_view<collapse_if_view<all_t<Rng>, composed<Pred, Proj>>,
                         composed<Pred, Proj>, Val>)(
                     requires ViewableRange<Rng> && InputRange<Rng> &&
