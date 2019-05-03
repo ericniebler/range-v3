@@ -18,6 +18,7 @@
 #include <utility>
 #include <tuple>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/detail/config.hpp>
 
 #if RANGES_CXX_VER >= RANGES_CXX_STD_17
 
