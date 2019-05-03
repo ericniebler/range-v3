@@ -179,7 +179,7 @@ namespace ranges
                     static constexpr auto& view = View;
 
                     template<class Rng>
-                    using result_t = std::invoke_result_t<decltype(View), Rng, Args...>;
+                    using result_t = invoke_result_t<decltype(View), Rng, Args...>;
 
                     template<class Rng>
                     type_wrapper< result_t<Rng> >
