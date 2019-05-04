@@ -46,6 +46,7 @@ namespace ranges
                     template<typename Rng, class ...Args>
                     auto operator()(Rng &&rng, Args &&...args) const
                     {
+                        RANGES_ASSERT(Range<Rng>());
                         // >=C++17 Class template argument deduction (CTAD)
                         // could be just:
                         // return V(std::forward<Rng>(rng), std::forward<Args>(args)...);
