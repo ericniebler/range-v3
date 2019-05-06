@@ -78,6 +78,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/tokenize.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/trim.hpp>
 #include <range/v3/view/unbounded.hpp>
 #include <range/v3/view/unique.hpp>
 #include <range/v3/view/view.hpp>

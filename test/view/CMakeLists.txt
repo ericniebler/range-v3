@@ -58,6 +58,7 @@ rv3_add_test(test.view.take_exactly view.take_exactly take_exactly.cpp)
 rv3_add_test(test.view.take_while view.take_while take_while.cpp)
 rv3_add_test(test.view.tokenize view.tokenize tokenize.cpp)
 rv3_add_test(test.view.transform view.transform transform.cpp)
+rv3_add_test(test.view.trim view.trim trim.cpp)
 rv3_add_test(test.view.unique view.unique unique.cpp)
 rv3_add_test(test.view.zip view.zip zip.cpp)
 

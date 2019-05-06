@@ -605,6 +605,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and optionally a submatch specifier and a `std::regex_constants::match_flag_type`, return a `std::regex_token_iterator` to step through the regex submatches of the source range. The submatch specifier may be either a plain `int`, a `std::vector<int>`, or a `std::initializer_list<int>`.</DD>
 <DT>\link ranges::view::transform_fn `view::transform`\endlink</DT>
   <DD>Given a source range and a unary function, return a new range where each result element is the result of applying the unary function to a source element.</DD>
+<DT>\link ranges::view::trim_fn `view::trim`\endlink</DT>
+  <DD>Remove elements from the front and back of a bidirectional range that satisfy a unary predicate.</DD>
 <DT>\link ranges::view::unbounded_fn `view::unbounded`\endlink</DT>
   <DD>Given an iterator, return an infinite range that begins at that position.</DD>
 <DT>\link ranges::view::unique_fn `view::unique`\endlink</DT>
