@@ -9,6 +9,7 @@ add_subdirectory(utility)
 add_subdirectory(view)
 add_subdirectory(experimental)
 
+rv3_add_test(test.base base base.cpp)
 rv3_add_test(test.config config config.cpp)
 rv3_add_test(test.container_conversion container_conversion container_conversion.cpp)
 rv3_add_test(test.constexpr_core constexpr_core constexpr_core.cpp)
