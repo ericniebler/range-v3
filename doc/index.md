@@ -130,15 +130,15 @@ vector with it:
 Logically, a view is like a pair of iterators. In order to work, and work fast, many views need to cache some data.
 In order to keep iterators small, this cached data is usually stored in the view itself, and iterators hold only pointers to their view.
 Because of the cache, many views lack a `const`-qualified `begin()`/`end()`.
-When `const` versions of `begin()`/`end()` are provided, they are truly `const`(don't cache); that is, thread-safe.
+When `const` versions of `begin()`/`end()` are provided, they are truly `const` (don't cache); that is, thread-safe.
 
-The `const`-ness of a view is not related to the `const`-ness of the underlying data. Non-const view may return const iterators. Analogous to pointers (an `int* const` is a `const` pointer to a mutable `int`).
+The `const`-ness of a view is not related to the `const`-ness of the underlying data. Non-`const` view may return `const` iterators. This is analogous to pointers; an `int* const` is a `const` pointer to a mutable `int`.
 
 Use non-`const` views whenever possible. If you need thread-safety, work with view copies in threads; don't share.
 
 ### View validity
 
-Any operation on the underlying range, that invalidates its iterators or sentinels, will also invalidate any view that refers to any part of that range. Additionally, some views (_e.g._, `view::filter`), are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation, that may have mutated the underlying range.
+Any operation on the underlying range that invalidates its iterators or sentinels will also invalidate any view that refers to any part of that range. Additionally, some views (_e.g._, `view::filter`), are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation that may have mutated the underlying range.
 
 #### Actions
 
