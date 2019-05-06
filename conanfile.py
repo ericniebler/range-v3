@@ -27,10 +27,11 @@ class Rangev3Conan(ConanFile):
 
     def package(self):
         cmake = CMake(self)
-        cmake.definitions["BUILD_TESTING"] = "OFF"
+        cmake.definitions["RANGE_V3_TESTS"] = "OFF"
         cmake.definitions["RANGE_V3_EXAMPLES"] = "OFF"
         cmake.definitions["RANGE_V3_PERF"] = "OFF"
         cmake.definitions["RANGE_V3_DOCS"] = "OFF"
+        cmake.definitions["RANGE_V3_HEADER_CHECKS"] = "OFF"
         cmake.configure()
         cmake.install()
 
