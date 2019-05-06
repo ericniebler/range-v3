@@ -109,7 +109,11 @@ void logic_test()
 class fuzzy_test_fn
 {
     int size;
+#if defined(__GLIBCXX__) && defined(RANGES_WORKAROUND_VALGRIND_RDRAND)
+    std::random_device rd{"/dev/urandom"};
+#else
     std::random_device rd;
+#endif
     std::mt19937 eng{rd()};
     std::uniform_int_distribution<int> distr;
 

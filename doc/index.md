@@ -48,6 +48,7 @@ The code is known to work on the following compilers:
 
 - clang 3.6.2
 - GCC 4.9.1
+- MSVC VS2017 15.9 (`_MSC_VER >= 1916`), with `/std:c++17 /permissive-`
 
 \section tutorial-quick-start Quick Start
 
@@ -640,6 +641,8 @@ Below is a list of the eager range combinators, or *actions*, that Range v3 prov
   <DD>Appends elements before the head of the source.</DD>
 <DT>\link ranges::action::remove_if_fn `action::remove_if`\endlink</DT>
   <DD>Removes all elements from the source that satisfy the predicate.</DD>
+<DT>\link ranges::action::remove_fn `action::remove`\endlink</DT>
+  <DD>Removes all elements from the source that are equal to value.</DD>
 <DT>\link ranges::action::unstable_remove_if_fn `action::unstable_remove_if`\endlink</DT>
   <DD>Much faster (each element remove has constant time complexity), unordered version of `remove_if`. Requires bidirectional container.</DD>
 <DT>\link ranges::action::shuffle_fn `action::shuffle`\endlink</DT>
