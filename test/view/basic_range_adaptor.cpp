@@ -12,11 +12,11 @@
 //
 
 #include <range/v3/detail/config.hpp>
+#include <iostream>
 
 #if RANGES_CXX_VER >= RANGES_CXX_STD_17
 
 #include <vector>
-#include <iostream>
 
 #include <range/v3/view/basic_range_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
