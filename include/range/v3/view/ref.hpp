@@ -135,6 +135,13 @@ namespace ranges
         /// \ingroup group-views
         RANGES_INLINE_VARIABLE(view<ref_fn>, ref)
     }
+
+    namespace cpp20
+    {
+        CPP_template(typename Rng)(
+            requires std::is_object<Rng>::value)
+        using ref_view = ranges::ref_view<Rng>;
+    }
 }
 
 RANGES_RE_ENABLE_WARNINGS
