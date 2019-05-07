@@ -67,6 +67,25 @@ The code is known to work on the following compilers:
 
 Release Notes:
 --------------
+* **0.5.0** Apr 30, 2019
+  * **NEW:** MSVC support, from @CaseyCarter :tada: (See the docs for the list of supported compilers.)
+  * **NEW:** `view::enumerate`, from @MikeGitb
+  * **NEW:** `view::addressof`, from @tower120
+  * **NEW:** `unstable_remove_if` algorithm and action, from @tower120
+  * **NEW:** `adjacent_remove_if` algorithm and action, from @cjdb
+  * **NEW:** `ostream_joiner`, from @sv1990
+  * `view::drop_while` and `view::take_while` get projection support, from @mrpi
+  * `view::filter` and `view::remove_if` get projection support, from @mrpi
+  * `view::unique` accepts optional comparison operator, from @tete17
+  * `action::slice` supports sliding from the end, from @tete17
+  * Support coroutines on MSVC, from @CaseyCarter
+  * Faster `view::generate_n`, from GitHub user @tower120
+  * Improved aligned new detection for libc++ on iOS, from @mtak-
+  * Various CMake improvements, from @johelegp
+  * `view_adaptor` supports `basic_iterator`-style mixins, from @tower120
+  * Fix `ranges::advance` for random-access iterators for `n==0`, from @tower120
+  * Bugs fixed: [#755](https://github.com/ericniebler/range-v3/issues/755), [#759](https://github.com/ericniebler/range-v3/issues/759), [#942](https://github.com/ericniebler/range-v3/issues/942), [#946](https://github.com/ericniebler/range-v3/issues/946), [#952](https://github.com/ericniebler/range-v3/issues/952), [#975](https://github.com/ericniebler/range-v3/issues/975), [#978](https://github.com/ericniebler/range-v3/issues/978), [#986](https://github.com/ericniebler/range-v3/issues/986), [#996](https://github.com/ericniebler/range-v3/issues/996), [#1041](https://github.com/ericniebler/range-v3/issues/1041), [#1047](https://github.com/ericniebler/range-v3/issues/1047), [#1088](https://github.com/ericniebler/range-v3/issues/1088), [#1094](https://github.com/ericniebler/range-v3/issues/1094), [#1107](https://github.com/ericniebler/range-v3/issues/1107), [#1129](https://github.com/ericniebler/range-v3/issues/1129)
+
 * **0.4.0** Oct 18, 2018
   - Minor interface-breaking changes:
     * `single_view` returns by `const &` (see [#817](https://github.com/ericniebler/range-v3/issues/817)).
