@@ -16,6 +16,12 @@
 
 #if RANGES_CXX_DEDUCTION_GUIDES
 
+#if defined(__clang__) && __clang_major__ < 6
+// Workaround https://bugs.llvm.org/show_bug.cgi?id=33314
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_FUNC_TEMPLATE
+#endif
+
 #include <vector>
 
 #include <range/v3/view/basic_range_adaptor.hpp>
@@ -47,7 +53,11 @@ int main()
     return test_result();
 }
 
-#else
+#if defined(__clang__) && __clang_major__ < 6
+RANGES_DIAGNOSTIC_POP
+#endif // clang bug workaround
+
+#else // RANGES_CXX_DEDUCTION_GUIDES
 
 int main()
 {
@@ -55,5 +65,4 @@ int main()
     return 0;
 }
 
-#endif // RANGES_CXX_VER >= RANGES_CXX_STD_17
-
+#endif // RANGES_CXX_DEDUCTION_GUIDES

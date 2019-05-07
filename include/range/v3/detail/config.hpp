@@ -444,9 +444,8 @@ namespace ranges
 #endif // RANGES_CXX_INLINE_VARIABLES
 
 #ifndef RANGES_CXX_DEDUCTION_GUIDES
-#if defined(__clang__) && (defined(__apple_build_version__)  || (__clang_major__ <= 5))
+#if defined(__clang__) && defined(__apple_build_version__)
 // Apple's clang version doesn't do deduction guides very well.
-// Clang 5.0 does not support CTAD
 #define RANGES_CXX_DEDUCTION_GUIDES 0
 #elif defined(__cpp_deduction_guides)
 #define RANGES_CXX_DEDUCTION_GUIDES __cpp_deduction_guides
