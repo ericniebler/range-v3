@@ -14,7 +14,7 @@
 #include <range/v3/detail/config.hpp>
 #include <iostream>
 
-#if RANGES_CXX_VER >= RANGES_CXX_STD_17
+#if RANGES_CXX_DEDUCTION_GUIDES
 
 #include <vector>
 

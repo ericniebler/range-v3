@@ -16,7 +16,7 @@
 
 #include <range/v3/detail/config.hpp>
 
-#if RANGES_CXX_VER >= RANGES_CXX_STD_17
+#if RANGES_CXX_DEDUCTION_GUIDES
 
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
@@ -66,6 +66,6 @@ namespace ranges
     }
 }
 
-#endif // RANGES_CXX_VER >= RANGES_CXX_STD_17
+#endif
 
 #endif //RANGE_V3_VIEW_BASIC_RANGE_ADAPTOR_HPP
