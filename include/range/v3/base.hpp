@@ -86,16 +86,8 @@ namespace ranges
 
         // iterators
 
-        // TODO: remove as unneeded?
-        template<typename I,
-            CONCEPT_REQUIRES_(Iterator<I>())>
-        RANGES_CXX14_CONSTEXPR auto base(I&& iter, std::true_type)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            iter.base()
-        )
         // TODO: static_assert(N > 0)
-        template<int N, typename I,
+        template<int N = 1, typename I,
             CONCEPT_REQUIRES_(Iterator<I>())>
         RANGES_CXX14_CONSTEXPR auto base(I&& iter)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -105,7 +97,7 @@ namespace ranges
 
         template<typename BaseIterator, typename I,
             CONCEPT_REQUIRES_(Iterator<BaseIterator>() && Iterator<I>())>
-        RANGES_CXX14_CONSTEXPR auto base(I&& iter, std::false_type)
+        RANGES_CXX14_CONSTEXPR auto base(I&& iter)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
             base<
@@ -132,15 +124,7 @@ namespace ranges
 
         // ranges
 
-        // remove?
-        template<typename R,
-            CONCEPT_REQUIRES_(Range<R>())>
-        RANGES_CXX14_CONSTEXPR auto base(R&& range, std::true_type)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            range.base()
-        )
-        template<int N, typename R,
+        template<int N = 1, typename R,
             CONCEPT_REQUIRES_(Range<R>())>
         RANGES_CXX14_CONSTEXPR auto base(R&& range)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -149,24 +133,13 @@ namespace ranges
         )
         template<typename BaseRange, typename R,
             CONCEPT_REQUIRES_(Range<R>() && Range<BaseRange>())>
-        RANGES_CXX14_CONSTEXPR auto base(R&& range, std::false_type)
+        RANGES_CXX14_CONSTEXPR auto base(R&& range/*, std::false_type*/)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
             base<
                 detail::base_distance<R, view::all_t<BaseRange>>::value
             >(view::all(std::forward<R>(range)))
         )
-
-        // workaround for unambigious call
-        // base<iterator_t<Vec>>(vec.begin)
-        // base<Vec>(vec)
-        template<typename ...Args, typename Arg>
-        RANGES_CXX14_CONSTEXPR auto base(Arg&& arg)
-        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-        (
-            base<Args...>(std::forward<Arg>(arg), std::integral_constant<bool, sizeof...(Args) == 0>{})
-        )
-
     }
 }
 
