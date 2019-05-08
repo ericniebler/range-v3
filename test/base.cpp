@@ -73,7 +73,10 @@ void test_base_of()
 {
     Vec vec = { {1}, {2}, {3}, {4} };
 
-    auto list = vec | view::transform(&Data::i) | view::take_exactly(3);
+    auto repeat = [](const int& i) -> const int& { return i; };
+
+    auto list  = vec | view::transform(&Data::i) | view::take_exactly(3);
+    auto list2 = list | view::transform(repeat) | view::transform(repeat) | view::transform(repeat);
 
     // Not every view introduce new iterator, so:
     // list.begin().base().base() != vec.begin()
@@ -81,13 +84,22 @@ void test_base_of()
     // ITERATOR
     {
         check_equal( vec.begin(), ranges::base<Iter>(list.begin()) );
+        check_equal( vec.begin(), ranges::base<Iter>(list2.begin()) );
+        check_equal( list.begin(), ranges::base<decltype(list.begin())>(list2.begin()) );
+
+        // 0-base
+        check_equal( list.begin(), ranges::base<decltype(list.begin())>(list.begin()) );
         check_equal( vec.begin(), ranges::base<Vec>(list.begin()) );
-        check_equal( vec.begin(), ranges::base(list.begin(), vec) );
     }
 
     // RANGE
     {
         check_equal( vec, ranges::base<Vec>(list) );
+        check_equal( vec, ranges::base<Vec>(list2) );
+        check_equal( list, ranges::base<decltype(list)>(list2) );
+
+        // 0-base
+        check_equal( list, ranges::base<decltype(list)>(list) );
     }
 }
 

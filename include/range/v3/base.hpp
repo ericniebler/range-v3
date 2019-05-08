@@ -21,8 +21,14 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace details
+        namespace detail
         {
+            template<class V>
+            RANGES_CXX14_CONSTEXPR auto base_loop(V&& v, std::integral_constant<int, 0>)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                std::forward<V>(v)
+            )
             template<class V>
             RANGES_CXX14_CONSTEXPR auto base_loop(V&& v, std::integral_constant<int, 1>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -42,84 +48,94 @@ namespace ranges
                 base_loop(std::forward<V>(v), std::integral_constant<int, N>{})
             )
 
-            template<typename Target, bool found>
-            struct loop_to_t;
+            template<typename... Ts> struct make_void { typedef void type;};
+            template<typename... Ts> using void_t = typename make_void<Ts...>::type;
 
-            template<typename Target, class V>
-            RANGES_CXX14_CONSTEXPR auto loop_to(V&& v)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                loop_to_t<
-                    Target,
-                    std::is_same< detail::decay_t<V>, detail::decay_t<Target> >::value
-                >{}(std::forward<V>(v))
-            )
+            template<class T>
+            using remove_reference_t = typename std::remove_reference<T>::type;
 
-            template<typename Target>
-            struct loop_to_t<Target, true>
-            {
-                template<class V>
-                RANGES_CXX14_CONSTEXPR auto operator()(V&& v)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    std::forward<V>(v)
-                )
+            template<class From, class To, int I = 0, bool is_same = std::is_same< remove_reference_t<From>, remove_reference_t<To> >::value>
+            struct base_distance;
+
+            template<class From, class To, int I>
+            struct base_distance<From, To, I, true>{
+                static const constexpr int value = I;
             };
 
-            template<typename Target>
-            struct loop_to_t<Target, false>
-            {
-                template<class V>
-                RANGES_CXX14_CONSTEXPR auto operator()(V&& v)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    loop_to<Target>(v.base())
-                )
+            template<class From, class To, int I>
+            struct base_distance<From, To, I, false>{
+                template< class, class = void_t<> >
+                struct has_base {
+                    static const constexpr int value = -1;
+                };
+                template<class T>
+                struct has_base<T, void_t<decltype(std::declval<T>().base())>> {
+                    static const constexpr int value = base_distance<decltype(std::declval<From>().base()), To, I+1>::value;
+                };
+
+                static const constexpr int value = has_base<From>::value;
+            };
+
+            template<class I, class BaseRange>
+            struct iterator_or_sentinel_base_distance{
+                static const constexpr int iterator_n = detail::base_distance<I, iterator_t<BaseRange>>::value;
+                static const constexpr int value = iterator_n >= 0 ? iterator_n : detail::base_distance<I, sentinel_t<BaseRange>>::value;
+                static_assert(value >= 0 , "");
             };
         }
 
-        // for iterators
+        // iterators
+
+        // TODO: remove as unneeded?
         template<typename I,
             CONCEPT_REQUIRES_(Iterator<I>())>
-        RANGES_CXX14_CONSTEXPR auto base(I&& iter)
+        RANGES_CXX14_CONSTEXPR auto base(I&& iter, std::true_type)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
             iter.base()
         )
-
-        // TODO: static_assert(N >= 1)
+        // TODO: static_assert(N > 0)
         template<int N, typename I,
             CONCEPT_REQUIRES_(Iterator<I>())>
         RANGES_CXX14_CONSTEXPR auto base(I&& iter)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
-            details::base_loop<N>(std::forward<I>(iter))
+            detail::base_loop<N>(std::forward<I>(iter))
         )
+
         template<typename BaseIterator, typename I,
-            CONCEPT_REQUIRES_(Iterator<I>() && Iterator<BaseIterator>())>
-        RANGES_CXX14_CONSTEXPR BaseIterator base(I&& iter)
-        {
-            return details::loop_to<BaseIterator>(std::forward<I>(iter));
-        }
+            CONCEPT_REQUIRES_(Iterator<BaseIterator>() && Iterator<I>())>
+        RANGES_CXX14_CONSTEXPR auto base(I&& iter, std::false_type)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            base<
+                detail::base_distance<I, BaseIterator>::value
+            >(std::forward<I>(iter))
+        )
+
         template<typename BaseRange, typename I,
             CONCEPT_REQUIRES_(Iterator<I>() && Range<BaseRange>())>
         RANGES_CXX14_CONSTEXPR auto base(I&& iter)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
-            base<iterator_t<BaseRange>>(std::forward<I>(iter))
+            base<
+                detail::iterator_or_sentinel_base_distance<I, BaseRange>::value
+            >(std::forward<I>(iter))
         )
-        template<typename BaseRange, typename I,
+        /*template<typename BaseRange, typename I,
             CONCEPT_REQUIRES_(Iterator<I>() && Range<BaseRange>())>
         RANGES_CXX14_CONSTEXPR auto base(I&& iter, BaseRange&&)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
             base<iterator_t<BaseRange>>(std::forward<I>(iter))
-        )
+        )*/
 
-        // for ranges
+        // ranges
+
+        // remove?
         template<typename R,
             CONCEPT_REQUIRES_(Range<R>())>
-        RANGES_CXX14_CONSTEXPR auto base(R&& range)
+        RANGES_CXX14_CONSTEXPR auto base(R&& range, std::true_type)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
             range.base()
@@ -129,15 +145,28 @@ namespace ranges
         RANGES_CXX14_CONSTEXPR auto base(R&& range)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
-            details::base_loop<N>(std::forward<R>(range))
+            detail::base_loop<N>(std::forward<R>(range))
         )
         template<typename BaseRange, typename R,
             CONCEPT_REQUIRES_(Range<R>() && Range<BaseRange>())>
-        RANGES_CXX14_CONSTEXPR auto base(R&& range)
+        RANGES_CXX14_CONSTEXPR auto base(R&& range, std::false_type)
         RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
         (
-            details::loop_to<view::all_t<BaseRange>>(view::all(std::forward<R>(range)))
+            base<
+                detail::base_distance<R, view::all_t<BaseRange>>::value
+            >(view::all(std::forward<R>(range)))
         )
+
+        // workaround for unambigious call
+        // base<iterator_t<Vec>>(vec.begin)
+        // base<Vec>(vec)
+        template<typename ...Args, typename Arg>
+        RANGES_CXX14_CONSTEXPR auto base(Arg&& arg)
+        RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+        (
+            base<Args...>(std::forward<Arg>(arg), std::integral_constant<bool, sizeof...(Args) == 0>{})
+        )
+
     }
 }
 
