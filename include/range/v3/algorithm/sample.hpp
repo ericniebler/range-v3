@@ -20,7 +20,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/distance.hpp>
-#include <range/v3/algorithm/min.hpp>
+#include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/utility/random.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -36,135 +36,144 @@ namespace ranges
     {
         /// \addtogroup group-algorithms
         /// @{
-        class sample_fn
+        struct sample_fn
         {
+        private:
             template<typename I, typename S, typename O, typename Gen>
             using Constraint = meta::strict_and<
                 InputIterator<I>, Sentinel<S, I>, WeaklyIncrementable<O>,
-                IndirectlyCopyable<I, O>, UniformRandomNumberGenerator<Gen>,
-                ConvertibleTo<concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                    difference_type_t<I>>>;
+                IndirectlyCopyable<I, O>, UniformRandomNumberGenerator<Gen>>;
 
             template<typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(Constraint<I, S, O, Gen>())>
             static tagged_pair<tag::in(I), tag::out(O)>
             sized_impl(I first, S last, difference_type_t<I> pop_size,
-                O out, difference_type_t<I> n, Gen && gen)
+                O out, difference_type_t<O> sample_size, Gen &&gen)
             {
-                std::uniform_int_distribution<difference_type_t<I>> dist;
-                using param_t = typename decltype(dist)::param_type;
-                n = ranges::min(pop_size, n);
-                for(; n > 0 && first != last; ++first)
+                if(pop_size > 0 && sample_size > 0)
                 {
-                    if(dist(gen, param_t{0, --pop_size}) < n)
+                    std::uniform_int_distribution<difference_type_t<I>> dist;
+                    using param_t = typename decltype(dist)::param_type;
+                    for(; first != last; ++first)
                     {
-                        --n;
-                        *out = *first;
-                        ++out;
+                        if(sample_size >= pop_size)
+                            return copy_n(std::move(first), pop_size, std::move(out));
+
+                        if(dist(gen, param_t{0, --pop_size}) < sample_size)
+                        {
+                            *out = *first;
+                            ++out;
+                            if(--sample_size == 0)
+                                break;
+                        }
                     }
                 }
+
                 return {std::move(first), std::move(out)};
             }
         public:
             template<typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(
                     (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, O out, difference_type_t<O> const n,
+                Gen &&gen = detail::get_random_engine()) const
             {
-                auto k = distance(first, last);
+                auto const k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, std::move(out), n, static_cast<Gen&&>(gen));
+                    k, std::move(out), n, static_cast<Gen &&>(gen));
             }
             template<typename I, typename S, typename O,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(RandomAccessIterator<O>() &&
                     !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
             tagged_pair<tag::in(I), tag::out(O)>
-            operator()(I first, S last, O out, difference_type_t<I> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, O out, difference_type_t<O> const n,
+                Gen &&gen = detail::get_random_engine()) const
             {
-                if(n <= 0)
-                    goto done;
-                for(difference_type_t<I> i = 0; i < n; (void)++i, ++first)
+                if(n > 0)
                 {
-                    if(first == last)
+                    for(difference_type_t<O> i = 0; i < n; (void)++i, ++first)
                     {
-                        out += i;
-                        goto done;
-                    }
-                    out[i] = *first;
-                }
-                std::uniform_int_distribution<difference_type_t<I>> dist;
-                using param_t = typename decltype(dist)::param_type;
-                for(auto pop_size = n; first != last; (void)++first, ++pop_size)
-                {
-                    auto const i = dist(gen, param_t{0, pop_size});
-                    if(i < n)
+                        if(first == last)
+                        {
+                            out += i;
+                            goto done;
+                        }
                         out[i] = *first;
+                    }
+
+                    std::uniform_int_distribution<difference_type_t<O>> dist;
+                    using param_t = typename decltype(dist)::param_type;
+                    for(auto pop_size = n; first != last; (void)++first, ++pop_size)
+                    {
+                        auto const i = dist(gen, param_t{0, pop_size});
+                        if(i < n)
+                            out[i] = *first;
+                    }
+
+                    out += n;
                 }
-                out += n;
             done:
                 return {std::move(first), std::move(out)};
             }
             template<typename I, typename S, typename ORng,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(
                     (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, iterator_t<ORng>, Gen>())>
             tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>
-            operator()(I first, S last, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, begin(out), distance(out), static_cast<Gen&&>(gen));
+                    k, begin(out), distance(out), static_cast<Gen &&>(gen));
             }
             template<typename I, typename S, typename ORng,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(RandomAccessIterator<iterator_t<ORng>>() &&
                     !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, iterator_t<ORng>, Gen>())>
             tagged_pair<tag::in(I), tag::out(safe_iterator_t<ORng>)>
-            operator()(I first, S last, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(I first, S last, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(std::move(first), std::move(last), begin(out),
-                    distance(out), static_cast<Gen&&>(gen));
+                    distance(out), static_cast<Gen &&>(gen));
             }
             template<typename Rng, typename O,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(RandomAccessIterator<O>() &&
                     !(ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())>
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng && rng, O out, range_difference_type_t<Rng> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(Rng &&rng, O out, difference_type_t<O> const n,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    std::move(out), n, static_cast<Gen&&>(gen));
+                    std::move(out), n, static_cast<Gen &&>(gen));
             }
             template<typename Rng, typename O,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(
                     (ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<iterator_t<Rng>, sentinel_t<Rng>, O, Gen>())>
             tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
-            operator()(Rng && rng, O out, range_difference_type_t<Rng> n,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(Rng &&rng, O out, difference_type_t<O> const n,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    std::move(out), n, static_cast<Gen&&>(gen));
+                    std::move(out), n, static_cast<Gen &&>(gen));
             }
             template<typename IRng, typename ORng,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(RandomAccessIterator<iterator_t<ORng>>() &&
                     !(ForwardRange<IRng>() || SizedRange<IRng>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
@@ -173,14 +182,14 @@ namespace ranges
             tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>
-            operator()(IRng && rng, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(IRng &&rng, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
-                    begin(out), distance(out), static_cast<Gen&&>(gen));
+                    begin(out), distance(out), static_cast<Gen &&>(gen));
             }
             template<typename IRng, typename ORng,
-                typename Gen = detail::default_random_engine&,
+                typename Gen = detail::default_random_engine &,
                 CONCEPT_REQUIRES_(
                     (ForwardRange<IRng>() || SizedRange<IRng>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
@@ -189,11 +198,11 @@ namespace ranges
             tagged_pair<
                 tag::in(safe_iterator_t<IRng>),
                 tag::out(safe_iterator_t<ORng>)>
-            operator()(IRng && rng, ORng && out,
-                Gen && gen = detail::get_random_engine()) const
+            operator()(IRng &&rng, ORng &&out,
+                Gen &&gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
-                    begin(out), distance(out), static_cast<Gen&&>(gen));
+                    begin(out), distance(out), static_cast<Gen &&>(gen));
             }
         };
 
