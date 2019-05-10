@@ -90,6 +90,11 @@ namespace ranges
             template<typename R>
             using impl = impl_<HasMemberBegin<R>>;
 
+#ifdef RANGES_WORKAROUND_GCC_89953
+            template<typename R>
+            static constexpr impl<R> impl_v{};
+#endif
+
         public:
             template<typename R, std::size_t N>
             void operator()(R (&&)[N]) const = delete;
@@ -101,9 +106,15 @@ namespace ranges
             }
 
             template<typename R>
+#ifdef RANGES_WORKAROUND_GCC_89953
+            constexpr auto CPP_fun(operator())(R &&r) (const
+                noexcept(noexcept(impl_v<R>((R &&) r)))
+                requires (HasMemberBegin<R> || HasNonMemberBegin<R>))
+#else
             constexpr auto CPP_fun(operator())(R &&r) (const
                 noexcept(noexcept(impl<R>{}((R &&) r)))
                 requires (HasMemberBegin<R> || HasNonMemberBegin<R>))
+#endif
             {
                 return impl<R>{}((R &&) r);
             }
@@ -223,6 +234,11 @@ namespace ranges
             template<typename R>
             using impl = impl_<HasMemberEnd<R>>;
 
+#ifdef RANGES_WORKAROUND_GCC_89953
+            template<typename R>
+            static constexpr impl<R> impl_v{};
+#endif
+
         public:
             template<typename R, std::size_t N>
             void operator()(R (&&)[N]) const = delete;
@@ -234,9 +250,15 @@ namespace ranges
             }
 
             template<typename R>
+#ifdef RANGES_WORKAROUND_GCC_89953
+            constexpr auto CPP_fun(operator())(R &&r) (const
+                noexcept(noexcept(impl_v<R>((R &&) r)))
+                requires (HasMemberEnd<R> || HasNonMemberEnd<R>))
+#else
             constexpr auto CPP_fun(operator())(R &&r) (const
                 noexcept(noexcept(impl<R>{}((R &&) r)))
                 requires (HasMemberEnd<R> || HasNonMemberEnd<R>))
+#endif
             {
                 return impl<R>{}((R &&) r);
             }
