@@ -161,8 +161,7 @@ public:
     {
         using S = meta::_t<sentinel_type<I>>;
         using R = decltype(algo_(begin, end, rest...));
-        Algo algo = algo_;
-        auto check_algo = [=](function_ref<void(R)> const & check)
+        auto check_algo = [algo = algo_, begin, end, rest...](function_ref<void(R)> const & check)
         {
             check(algo(begin, end, rest...));
             check(algo(begin, S{base(end)}, rest...));
@@ -195,8 +194,7 @@ public:
         using S1 = meta::_t<sentinel_type<I1>>;
         using S2 = meta::_t<sentinel_type<I2>>;
         using R = decltype(algo_(begin1, end1, begin2, end2, rest...));
-        Algo algo = algo_;
-        return checker<R>{[=](function_ref<void(R)> const & check)
+        return checker<R>{[algo = algo_, begin1, end1, begin2, end2, rest...](function_ref<void(R)> const & check)
         {
             check(algo(begin1, end1, begin2, end2, rest...));
             check(algo(begin1, S1{base(end1)}, begin2, S2{base(end2)}, rest...));
