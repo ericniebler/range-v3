@@ -85,7 +85,7 @@ namespace ranges
                 template<typename Fun>
                 view<Fun> operator()(Fun fun) const
                 {
-                    return {std::move(fun)};
+                    return view<Fun>{std::move(fun)};
                 }
             };
 

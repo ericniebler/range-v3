@@ -49,7 +49,7 @@ namespace ranges
                 template<typename Fun>
                 action<Fun> operator()(Fun fun) const
                 {
-                    return {detail::move(fun)};
+                    return action<Fun>{detail::move(fun)};
                 }
             };
 
