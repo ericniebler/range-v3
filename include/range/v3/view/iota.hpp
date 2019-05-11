@@ -129,12 +129,12 @@ namespace ranges
                 i -= static_cast<Int>(-n);
         }
 
-        template<typename I, typename S>
-        auto iota_distance_(I const &i, S const &s) ->
+        template<typename I>
+        auto iota_distance_(I const &i, I const &s) ->
             CPP_ret(iota_difference_t<I>)(
-                requires SizedSentinel<S, I>)
+                requires Advanceable_<I> && (!Integral<I>))
         {
-            return s - i;
+            return static_cast<iota_difference_t<I>>(s - i);
         }
 
         template<typename Int>
