@@ -288,6 +288,9 @@ namespace ranges
 #if __GNUC__ < 6
 #define RANGES_WORKAROUND_GCC_UNFILED0 /* Workaround old GCC name lookup bug */
 #endif
+#if __GNUC__ >=9 && defined(__cpp_concepts)
+#define RANGES_WORKAROUND_GCC_89953
+#endif
 #endif
 
 #else
@@ -557,7 +560,8 @@ namespace ranges
 
 // Its not enough for the compiler to support this; the stdlib must support it too.
 #ifndef RANGES_CXX_ALIGNED_NEW
-#if (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 4000) && \
+#if (!defined(_LIBCPP_VERSION) || \
+		(_LIBCPP_VERSION >= 4000 && !defined(_LIBCPP_HAS_NO_ALIGNED_ALLOCATION))) && \
     (!defined(__GLIBCXX__) || (defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE >= 7))
 #if defined(__cpp_aligned_new)
 #define RANGES_CXX_ALIGNED_NEW __cpp_aligned_new

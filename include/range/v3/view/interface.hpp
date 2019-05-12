@@ -126,6 +126,26 @@ namespace ranges
         /// \overload
         template<bool True = true>
         constexpr /*c++14*/ auto empty()
+            noexcept(noexcept(bool(ranges::size(std::declval<D<True> &>()) == 0))) ->
+            CPP_ret(bool)(
+                requires True && (Cardinality < 0) && (Cardinality != infinite) &&
+                    (!ForwardRange<D<True>>) && SizedRange<D<True>>)
+        {
+            return ranges::size(derived()) == 0;
+        }
+        /// \overload
+        template<bool True = true>
+        constexpr auto empty() const
+            noexcept(noexcept(bool(ranges::size(std::declval<D<True> const &>()) == 0))) ->
+            CPP_ret(bool)(
+                requires True && (Cardinality < 0) && (Cardinality != infinite) &&
+                    (!ForwardRange<D<True> const>) && SizedRange<D<True> const>)
+        {
+            return ranges::size(derived()) == 0;
+        }
+        /// \overload
+        template<bool True = true>
+        constexpr /*c++14*/ auto empty()
             noexcept(noexcept(bool(ranges::begin(std::declval<D<True> &>()) ==
                 ranges::end(std::declval<D<True> &>())))) ->
             CPP_ret(bool)(

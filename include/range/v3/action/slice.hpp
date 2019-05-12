@@ -23,6 +23,7 @@
 #include <range/v3/iterator/traits.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/view/interface.hpp>
 
 namespace ranges
 {

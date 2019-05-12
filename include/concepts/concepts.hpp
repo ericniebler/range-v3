@@ -224,13 +224,13 @@ CPP_PP_IGNORE_CXX2A_COMPAT_BEGIN
 #ifdef CPP_DOXYGEN_INVOKED
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
     CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                             \
-    concept bool NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__)              \
+    META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__)              \
     /**/
 #else
 #define CPP_PP_DECL_DEF_IMPL(TPARAM, NAME, ARGS, ...)                           \
     inline namespace _eager_ {                                                  \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \
-        concept bool NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
+        META_CONCEPT NAME = CPP_PP_DEF_IMPL(__VA_ARGS__,)(__VA_ARGS__);         \
     }                                                                           \
     struct CPP_PP_CAT(NAME, Concept) {                                          \
         CPP_PP_CAT(CPP_PP_DEF_, TPARAM)                                         \

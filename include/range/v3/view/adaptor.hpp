@@ -101,7 +101,7 @@ namespace ranges
     struct adaptor_cursor;
 
     template<typename BaseSent, typename Adapt>
-    struct adaptor_sentinel;
+    struct base_adaptor_sentinel;
 
     struct adaptor_base
     {
@@ -179,15 +179,15 @@ namespace ranges
     // Build a sentinel out of a sentinel into the adapted range, and an
     // adaptor that customizes behavior.
     template<typename BaseSent, typename Adapt>
-    struct adaptor_sentinel
+    struct base_adaptor_sentinel
     {
     private:
         template<typename, typename>
         friend struct adaptor_cursor;
         RANGES_NO_UNIQUE_ADDRESS compressed_pair<BaseSent, Adapt> data_;
     public:
-        adaptor_sentinel() = default;
-        adaptor_sentinel(BaseSent sent, Adapt adapt)
+        base_adaptor_sentinel() = default;
+        base_adaptor_sentinel(BaseSent sent, Adapt adapt)
           : data_{std::move(sent), std::move(adapt)}
         {}
 
@@ -197,6 +197,45 @@ namespace ranges
         {
             return data_.first();
         }
+
+    protected:
+        // Adaptor accessor
+        Adapt &get()
+        {
+            return data_.second();
+        }
+        Adapt const &get() const
+        {
+            return data_.second();
+        }
+    };
+
+    /// \cond
+    namespace detail
+    {
+        template<typename BaseSent, typename Adapt>
+        meta::id<base_adaptor_sentinel<BaseSent, Adapt>>
+        base_adaptor_sentinel_2_(long);
+
+        template<typename BaseSent, typename Adapt>
+        meta::id<typename Adapt::template mixin<base_adaptor_sentinel<BaseSent, Adapt>>>
+        base_adaptor_sentinel_2_(int);
+
+        template<typename BaseSent, typename Adapt>
+        struct base_adaptor_sentinel_
+          : decltype(base_adaptor_sentinel_2_<BaseSent, Adapt>(42))
+        {};
+
+        template<typename BaseSent, typename Adapt>
+        using adaptor_sentinel_ = meta::_t<base_adaptor_sentinel_<BaseSent, Adapt>>;
+    }
+    /// \endcond
+
+    template<typename BaseSent, typename Adapt>
+    struct adaptor_sentinel
+      : detail::adaptor_sentinel_<BaseSent, Adapt>
+    {
+        using detail::adaptor_sentinel_<BaseSent, Adapt>::adaptor_sentinel_;
     };
 
     // Build a cursor out of an iterator into the adapted range, and an
@@ -210,18 +249,40 @@ namespace ranges
         using base_t = detail::adaptor_value_type_<BaseIter, Adapt>;
         using single_pass = meta::bool_<
             (bool)range_access::single_pass_t<Adapt>() || (bool)SinglePass<BaseIter>>;
-        struct mixin
+
+        struct basic_adaptor_mixin
           : basic_mixin<adaptor_cursor>
         {
-            mixin() = default;
+            basic_adaptor_mixin() = default;
             using basic_mixin<adaptor_cursor>::basic_mixin;
             // All iterators into adapted ranges have a base() member for fetching
             // the underlying iterator.
             BaseIter base() const
             {
-                return this->get().data_.first();
+                return basic_adaptor_mixin::basic_mixin::get().data_.first();
+            }
+
+        protected:
+            // Adaptor accessor
+            Adapt& get()
+            {
+                return basic_adaptor_mixin::basic_mixin::get().data_.second();
+            }
+            const Adapt& get() const
+            {
+                return basic_adaptor_mixin::basic_mixin::get().data_.second();
             }
         };
+
+        template<typename Adapt_>
+        static meta::id<basic_adaptor_mixin>
+        basic_adaptor_mixin_2_(long);
+
+        template<typename Adapt_>
+        static meta::id<typename Adapt_::template mixin<basic_adaptor_mixin>>
+        basic_adaptor_mixin_2_(int);
+
+        using mixin = meta::_t<decltype(basic_adaptor_mixin_2_<Adapt>(42))>;
 
         template<typename A = Adapt, typename R = decltype(
             std::declval<A const &>().read(std::declval<BaseIter const &>()))>
