@@ -85,7 +85,7 @@ namespace ranges
                 template<typename Fun>
                 view<Fun> operator()(Fun fun) const
                 {
-                    return {std::move(fun)};
+                    return view<Fun>{std::move(fun)};
                 }
             };
 
@@ -132,7 +132,9 @@ namespace ranges
 
             public:
                 view() = default;
-                view(View a)
+
+                constexpr explicit view(View a)
+                noexcept(std::is_nothrow_move_constructible<View>::value)
                   : view_(std::move(a))
                 {}
 
