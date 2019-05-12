@@ -73,13 +73,13 @@ namespace ranges
                 Cont impl(Rng &&rng, std::true_type) const
                 {
                     Cont c;
-                    auto const size = ranges::size(rng);
+                    auto const rng_size = ranges::size(rng);
                     using size_type = decltype(c.max_size());
                     using C = common_type_t<
-                        meta::_t<std::make_unsigned<decltype(size)>>,
+                        meta::_t<std::make_unsigned<decltype(rng_size)>>,
                         meta::_t<std::make_unsigned<size_type>>>;
-                    RANGES_EXPECT(static_cast<C>(size) <= static_cast<C>(c.max_size()));
-                    c.reserve(static_cast<size_type>(size));
+                    RANGES_EXPECT(static_cast<C>(rng_size) <= static_cast<C>(c.max_size()));
+                    c.reserve(static_cast<size_type>(rng_size));
                     using I = range_common_iterator_t<Rng>;
                     c.assign(I{ranges::begin(rng)}, I{ranges::end(rng)});
                     return c;
