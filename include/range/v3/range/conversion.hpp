@@ -26,8 +26,10 @@
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
+RANGES_BEGIN_NAMESPACE_CONTAINER
     template<typename Value, typename Alloc /*= allocator<Value>*/>
     class vector;
+RANGES_END_NAMESPACE_CONTAINER
 RANGES_END_NAMESPACE_STD
 #else
 #include <vector>

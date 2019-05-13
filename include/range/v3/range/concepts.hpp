@@ -30,6 +30,7 @@
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
+RANGES_BEGIN_NAMESPACE_CONTAINER
     template<typename Key, typename Compare /*= less<Key>*/, typename Alloc /*= allocator<Key>*/>
     class set;
 
@@ -41,6 +42,7 @@ RANGES_BEGIN_NAMESPACE_STD
 
     template<typename Key, typename Hash /*= hash<Key>*/, typename Pred /*= equal_to<Key>*/, typename Alloc /*= allocator<Key>*/>
     class unordered_multiset;
+RANGES_END_NAMESPACE_CONTAINER
 RANGES_END_NAMESPACE_STD
 #else
 #include <set>

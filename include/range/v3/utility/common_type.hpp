@@ -29,8 +29,10 @@
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
 RANGES_BEGIN_NAMESPACE_STD
+RANGES_BEGIN_NAMESPACE_VERSION
     template<typename...Ts>
     class tuple;
+RANGES_END_NAMESPACE_VERSION
 RANGES_END_NAMESPACE_STD
 #else
 #include <tuple>
