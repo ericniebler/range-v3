@@ -3751,7 +3751,7 @@ namespace meta
 } // namespace meta
 
 /// \cond
-#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 5000
+#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 6000
 #if _LIBCPP_VERSION >= 4000
 #define META_LIBCPP_TEMPLATE_VIS _LIBCPP_TEMPLATE_VIS
 #else
