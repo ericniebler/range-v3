@@ -34,6 +34,9 @@ namespace ranges
             constexpr explicit unbounded_view(I it)
               : it_(detail::move(it))
             {}
+            constexpr explicit unbounded_view(I it, unreachable)
+              : unbounded_view(detail::move(it))
+            {}
             constexpr I begin() const
             {
                 return it_;
