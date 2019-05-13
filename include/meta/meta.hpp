@@ -3751,53 +3751,57 @@ namespace meta
 } // namespace meta
 
 /// \cond
-#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 1101
-
+#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION <= 5000
+#if _LIBCPP_VERSION >= 4000
+#define META_LIBCPP_TEMPLATE_VIS _LIBCPP_TEMPLATE_VIS
+#else
+#define META_LIBCPP_TEMPLATE_VIS _LIBCPP_TYPE_VIS_ONLY
+#endif
 _LIBCPP_BEGIN_NAMESPACE_STD
 template <class>
-class _LIBCPP_TYPE_VIS_ONLY allocator;
+class META_LIBCPP_TEMPLATE_VIS allocator;
 template <class, class>
-struct _LIBCPP_TYPE_VIS_ONLY pair;
+struct META_LIBCPP_TEMPLATE_VIS pair;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY hash;
+struct META_LIBCPP_TEMPLATE_VIS hash;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY less;
+struct META_LIBCPP_TEMPLATE_VIS less;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY equal_to;
+struct META_LIBCPP_TEMPLATE_VIS equal_to;
 template <class>
-struct _LIBCPP_TYPE_VIS_ONLY char_traits;
+struct META_LIBCPP_TEMPLATE_VIS char_traits;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY list;
+class META_LIBCPP_TEMPLATE_VIS list;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY forward_list;
+class META_LIBCPP_TEMPLATE_VIS forward_list;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY vector;
+class META_LIBCPP_TEMPLATE_VIS vector;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY deque;
+class META_LIBCPP_TEMPLATE_VIS deque;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY basic_string;
+class META_LIBCPP_TEMPLATE_VIS basic_string;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY map;
+class META_LIBCPP_TEMPLATE_VIS map;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY multimap;
+class META_LIBCPP_TEMPLATE_VIS multimap;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY set;
+class META_LIBCPP_TEMPLATE_VIS set;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY multiset;
+class META_LIBCPP_TEMPLATE_VIS multiset;
 template <class, class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_map;
+class META_LIBCPP_TEMPLATE_VIS unordered_map;
 template <class, class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_multimap;
+class META_LIBCPP_TEMPLATE_VIS unordered_multimap;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_set;
+class META_LIBCPP_TEMPLATE_VIS unordered_set;
 template <class, class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY unordered_multiset;
+class META_LIBCPP_TEMPLATE_VIS unordered_multiset;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY queue;
+class META_LIBCPP_TEMPLATE_VIS queue;
 template <class, class, class>
-class _LIBCPP_TYPE_VIS_ONLY priority_queue;
+class META_LIBCPP_TEMPLATE_VIS priority_queue;
 template <class, class>
-class _LIBCPP_TYPE_VIS_ONLY stack;
+class META_LIBCPP_TEMPLATE_VIS stack;
 _LIBCPP_END_NAMESPACE_STD
 
 namespace meta
