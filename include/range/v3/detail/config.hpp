@@ -60,6 +60,8 @@ namespace ranges
 #endif
 #endif
 
+#include <meta/meta_fwd.hpp>
+
 #ifndef RANGES_ASSUME
 #if defined(__clang__) || defined(__GNUC__)
 #define RANGES_ASSUME(COND) static_cast<void>((COND) ? void(0) : __builtin_unreachable())
@@ -114,20 +116,12 @@ namespace ranges
     /**/
 
 // Non-portable forward declarations of standard containers
-#ifdef _LIBCPP_VERSION
-#define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD
-#define RANGES_END_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
-#elif defined(_MSVC_STL_VERSION)
-#define RANGES_BEGIN_NAMESPACE_STD _STD_BEGIN
-#define RANGES_END_NAMESPACE_STD _STD_END
-#elif defined(_GLIBCXX_DEBUG)
-#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
-#define RANGES_NO_STD_FORWARD_DECLARATIONS
-#endif
-#else
-#define RANGES_BEGIN_NAMESPACE_STD namespace std {
-#define RANGES_END_NAMESPACE_STD }
-#endif
+#define RANGES_BEGIN_NAMESPACE_STD META_BEGIN_NAMESPACE_STD
+#define RANGES_END_NAMESPACE_STD META_END_NAMESPACE_STD
+#define RANGES_BEGIN_NAMESPACE_VERSION META_BEGIN_NAMESPACE_VERSION
+#define RANGES_END_NAMESPACE_VERSION META_END_NAMESPACE_VERSION
+#define RANGES_BEGIN_NAMESPACE_CONTAINER META_BEGIN_NAMESPACE_CONTAINER
+#define RANGES_END_NAMESPACE_CONTAINER META_END_NAMESPACE_CONTAINER
 
 // Database of feature versions
 #define RANGES_CXX_STATIC_ASSERT_11 200410L

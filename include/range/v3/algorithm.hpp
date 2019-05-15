@@ -86,6 +86,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/stable_partition.hpp>
 #include <range/v3/algorithm/stable_sort.hpp>
+#include <range/v3/algorithm/starts_with.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
 #include <range/v3/algorithm/transform.hpp>
 #include <range/v3/algorithm/unique.hpp>
