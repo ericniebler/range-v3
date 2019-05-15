@@ -71,7 +71,7 @@ Release Notes:
   * **NEW:** `view::enumerate`, from @MikeGitb
   * **NEW:** `view::addressof`, from @tower120
   * **NEW:** `unstable_remove_if` algorithm and action, from @tower120
-  * **NEW:** `adjacent_remove_if` algorithm and action, from @tower120
+  * **NEW:** `adjacent_remove_if` algorithm and action, from @cjdb
   * **NEW:** `ostream_joiner`, from @sv1990
   * `view::drop_while` and `view::take_while` get projection support, from @mrpi
   * `view::filter` and `view::remove_if` get projection support, from @mrpi
