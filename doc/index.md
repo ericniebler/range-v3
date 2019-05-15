@@ -441,7 +441,7 @@ The iterator returns a key/value pair, like the `zip` view.
     }
 ~~~~~~~
 
-`read()` returns references. So, we explicitly specify `value_type`.  
+`read()` returns references. Default `value_type = decay_t<decltype(read())> = common_pair<Key&, Value&>`, which is not correct in our case. It should be `pair<Key, Value>`, so we explicitly specify `value_type`.  
  `ranges::common_pair` has conversions:  
 `ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.  
 All `ranges::common_pair`s converts to their `std::pair` equivalents, also.
