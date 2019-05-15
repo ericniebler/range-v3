@@ -692,6 +692,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, `view::delimit` can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value.</DD>
 <DT>\link ranges::v3::view::drop_fn `view::drop`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of all but the first *count* elements from the source range, or an empty range if it has fewer elements.</DD>
+<DT>\link ranges::v3::view::drop_last_fn `view::drop_last`\endlink</DT>
+  <DD>Given a source range and an integral count, return a range consisting of all but the last *count* elements from the source range, or an empty range if it has fewer elements.</DD>  
 <DT>\link ranges::v3::view::drop_exactly_fn `view::drop_exactly`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of all but the first *count* elements from the source range. The source range must have at least that many elements.</DD>
 <DT>\link ranges::v3::view::drop_while_fn `view::drop_while`\endlink</DT>
