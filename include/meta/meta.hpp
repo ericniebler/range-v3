@@ -3751,58 +3751,71 @@ namespace meta
 } // namespace meta
 
 /// \cond
-#if defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 6000
-#if _LIBCPP_VERSION >= 4000
-#define META_LIBCPP_TEMPLATE_VIS _LIBCPP_TEMPLATE_VIS
-#else
-#define META_LIBCPP_TEMPLATE_VIS _LIBCPP_TYPE_VIS_ONLY
+// Non-portable forward declarations of standard containers
+#ifndef META_NO_STD_FORWARD_DECLARATIONS
+#if defined(__apple_build_version__) || (defined(__clang__) && __clang_major__ < 6)
+META_BEGIN_NAMESPACE_STD
+META_BEGIN_NAMESPACE_VERSION
+template <class>
+class META_TEMPLATE_VIS allocator;
+template <class, class>
+struct META_TEMPLATE_VIS pair;
+template <class>
+struct META_TEMPLATE_VIS hash;
+template <class>
+struct META_TEMPLATE_VIS less;
+template <class>
+struct META_TEMPLATE_VIS equal_to;
+template <class>
+struct META_TEMPLATE_VIS char_traits;
+#if defined(_GLIBCXX_USE_CXX11_ABI) && _GLIBCXX_USE_CXX11_ABI
+inline namespace __cxx11 {
 #endif
-_LIBCPP_BEGIN_NAMESPACE_STD
-template <class>
-class META_LIBCPP_TEMPLATE_VIS allocator;
-template <class, class>
-struct META_LIBCPP_TEMPLATE_VIS pair;
-template <class>
-struct META_LIBCPP_TEMPLATE_VIS hash;
-template <class>
-struct META_LIBCPP_TEMPLATE_VIS less;
-template <class>
-struct META_LIBCPP_TEMPLATE_VIS equal_to;
-template <class>
-struct META_LIBCPP_TEMPLATE_VIS char_traits;
-template <class, class>
-class META_LIBCPP_TEMPLATE_VIS list;
-template <class, class>
-class META_LIBCPP_TEMPLATE_VIS forward_list;
-template <class, class>
-class META_LIBCPP_TEMPLATE_VIS vector;
-template <class, class>
-class META_LIBCPP_TEMPLATE_VIS deque;
 template <class, class, class>
-class META_LIBCPP_TEMPLATE_VIS basic_string;
+class META_TEMPLATE_VIS basic_string;
+#if defined(_GLIBCXX_USE_CXX11_ABI) && _GLIBCXX_USE_CXX11_ABI
+}
+#endif
+META_END_NAMESPACE_VERSION
+META_BEGIN_NAMESPACE_CONTAINER
+#if defined(__GLIBCXX__)
+inline namespace __cxx11 {
+#endif
+template <class, class>
+class META_TEMPLATE_VIS list;
+#if defined(__GLIBCXX__)
+}
+#endif
+template <class, class>
+class META_TEMPLATE_VIS forward_list;
+template <class, class>
+class META_TEMPLATE_VIS vector;
+template <class, class>
+class META_TEMPLATE_VIS deque;
 template <class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS map;
+class META_TEMPLATE_VIS map;
 template <class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS multimap;
+class META_TEMPLATE_VIS multimap;
 template <class, class, class>
-class META_LIBCPP_TEMPLATE_VIS set;
+class META_TEMPLATE_VIS set;
 template <class, class, class>
-class META_LIBCPP_TEMPLATE_VIS multiset;
+class META_TEMPLATE_VIS multiset;
 template <class, class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS unordered_map;
+class META_TEMPLATE_VIS unordered_map;
 template <class, class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS unordered_multimap;
+class META_TEMPLATE_VIS unordered_multimap;
 template <class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS unordered_set;
+class META_TEMPLATE_VIS unordered_set;
 template <class, class, class, class>
-class META_LIBCPP_TEMPLATE_VIS unordered_multiset;
+class META_TEMPLATE_VIS unordered_multiset;
 template <class, class>
-class META_LIBCPP_TEMPLATE_VIS queue;
+class META_TEMPLATE_VIS queue;
 template <class, class, class>
-class META_LIBCPP_TEMPLATE_VIS priority_queue;
+class META_TEMPLATE_VIS priority_queue;
 template <class, class>
-class META_LIBCPP_TEMPLATE_VIS stack;
-_LIBCPP_END_NAMESPACE_STD
+class META_TEMPLATE_VIS stack;
+META_END_NAMESPACE_CONTAINER
+META_END_NAMESPACE_STD
 
 namespace meta
 {
@@ -3917,6 +3930,7 @@ namespace meta
     };
 } // namespace meta
 
+#endif
 #endif
 /// \endcond
 
