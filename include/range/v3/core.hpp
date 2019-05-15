@@ -25,6 +25,7 @@
 #include <range/v3/range_for.hpp>
 #include <range/v3/index.hpp>
 #include <range/v3/at.hpp>
+#include <range/v3/base.hpp>
 #include <range/v3/back.hpp>
 #include <range/v3/front.hpp>
 #include <range/v3/istream_range.hpp>
