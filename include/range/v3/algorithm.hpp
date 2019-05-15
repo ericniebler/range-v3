@@ -30,6 +30,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/equal_range.hpp>
+#include <range/v3/algorithm/ends_with.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/fill_n.hpp>
 #include <range/v3/algorithm/find.hpp>
