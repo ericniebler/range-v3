@@ -126,6 +126,21 @@ vector with it:
     // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}
 ~~~~~~~
 
+### View constness
+
+Logically, a view is like a pair of iterators. In order to work, and work fast, many views need to cache some data.
+In order to keep iterators small, this cached data is usually stored in the view itself, and iterators hold only pointers to their view.
+Because of the cache, many views lack a `const`-qualified `begin()`/`end()`.
+When `const` versions of `begin()`/`end()` are provided, they are truly `const` (don't cache); that is, thread-safe.
+
+The `const`-ness of a view is not related to the `const`-ness of the underlying data. Non-`const` view may return `const` iterators. This is analogous to pointers; an `int* const` is a `const` pointer to a mutable `int`.
+
+Use non-`const` views whenever possible. If you need thread-safety, work with view copies in threads; don't share.
+
+### View validity
+
+Any operation on the underlying range that invalidates its iterators or sentinels will also invalidate any view that refers to any part of that range. Additionally, some views (_e.g._, `view::filter`), are invalidated when the underlying elements of the range are mutated. It is best to recreate a view after any operation that may have mutated the underlying range.
+
 #### Actions
 
 When you want to mutate a container in-place, or forward it through a chain of
@@ -309,7 +324,7 @@ Like `basic_iterator`'s `cursor` - `view_adaptor`'s `adaptor` can contain mixin 
 to inject things into the public interface of the iterator:
 
 ~~~~~~~{.cpp}
-    class adaptor : public ::ranges::adaptor_base
+    class adaptor : public ranges::adaptor_base
     {
         template<class base_mixin>
         struct mixin : base_mixin
@@ -317,7 +332,7 @@ to inject things into the public interface of the iterator:
               // everything inside this class will be accessible from iterator
               using base_mixin::base_mixin;
 
-              decltype(auto) base_value() const
+              auto& base_value() const
               {
                   return *this->base();
               }
@@ -331,6 +346,157 @@ to inject things into the public interface of the iterator:
         int i = 100;
     };
 ~~~~~~~
+
+From within mixin you can call:
+* `get()` - to access adaptor internals 
+* `base()` - to access adaptable iterator
+
+Iterator/sentinel adaptor may "override" following members:
+~~~~~~~{.cpp}
+    class adaptor : public ranges::adaptor_base
+    {
+        // !For begin_adaptor only!
+        template<typename Rng>
+        constexpr auto begin(Rng &rng)
+        {
+            return ranges::begin(rng.base());
+        }       
+
+        // !For end_adaptor only!
+        template<typename Rng>
+        constexpr auto end(Rng &rng)
+        {
+            return ranges::end(rng.base());
+        }       
+
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter) const 
+        {
+            return this_iter == that_iter;
+        }   
+        // or
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter, adaptor const &that_adapt) const
+        {            
+            return 
+              *this.some_value == that_adapt.some_value
+              && this_iter == that_iter;
+        }   
+
+        // !For end_adaptor only!
+        // Same as equal, but compare iterator with sentinel.
+        // Not used, if iterator same as sentinel, and both have the same adaptor.
+        template<typename I, typename S>
+        constexpr bool empty(I const &it, S const &end) const 
+        {
+            return it == end;
+        }
+        // or
+        template<typename I, typename S, typename SA>
+        constexpr bool empty(I const &it, S const &end, SA const &end_adapt) const 
+        {
+            return 
+              *this.some_value == end_adapt.some_value
+              && it == end;
+        }
+        
+        template<typename I>
+        reference_t<I> read(I const &it)
+        {
+            return *it;
+        }
+
+        template<typename I>
+        void next(I &it)
+        {
+            ++it;
+        }
+
+        // !For BidirectionalIterator only!
+        template<typename I>
+        void prev(I &it)
+        {
+            --it;
+        }
+
+        // !For RandomAccessIterator only!
+        template<typename I>
+        void advance(I &it, difference_type_t<I> n)
+        {
+            it += n;
+        }    
+
+        // !For SizedIterator only!
+        template<typename I>
+        difference_type_t<I> distance_to(I const &this_iter, I const &that_iter)
+        {
+            return that_iter - this_iter;
+        }
+        // or
+        template<typename I>
+        difference_type_t<I> distance_to
+            (I const &this_iter, I const &that_iter, adaptor const &that_adapt)
+        {
+            return that_iter - this_iter;
+        }
+    }
+~~~~~~~
+
+As you can see, some "overrides" have effect only for `begin_adaptor` or `end_adaptor`.
+In order to use full potential of adaptor, you need to have separate adaptors for begin and end:
+
+~~~~~~~{.cpp}
+    struct adaptor : adaptor_base
+    {
+        int n = 0;
+
+        void next(iterator_t<Rng>& it) 
+        {
+            ++n;
+            ++it;
+        }
+    };
+
+    struct sentinel_adaptor : adaptor_base 
+    {
+        int stop_at;        
+        bool empty(const iterator_t<Rng>&, const adaptor& ia, const sentinel_t<Rng>& s) const 
+        {
+            return ia.n == stop_at;
+        }
+    };
+
+    adaptor begin_adaptor() const { return {}; }
+    sentinel_adaptor end_adaptor() const { return {100}; }
+~~~~~~~
+
+Sometimes, you can use the same adaptor for both `begin_adaptor` and `end_adaptor`:
+
+~~~~~~~{.cpp}
+    struct adaptor : adaptor_base
+    {
+        int n = 0;
+        void next(iterator_t<Rng>& it) 
+        {
+            ++n;
+            ++it;
+        }
+
+        // pay attention, we use equal, not empty. empty() will never trigger.
+        template<typename I>
+        bool equal(I const &this_iter, I const &that_iter, adaptor const &that_adapt) const
+        {
+            return *this.n == that_adapt.n;
+        }
+    };
+
+    adaptor begin_adaptor() const { return {}; }
+    adaptor end_adaptor()   const { return {100}; }
+~~~~~~~
+
+Note, that all the data, that you store in the adaptor, will become part of the iterator.
+
+If you will not "override" `begin_adaptor()` or/and `end_adaptor()` in your view_adaptor, default ones will be used.
 
 ## Create Custom Iterators
 
@@ -426,13 +592,13 @@ The iterator returns a key/value pair, like the `zip` view.
     }
 ~~~~~~~
 
-`read()` returns references. So, we explicitly specify `value_type`.
- `ranges::common_pair` has conversions:
-`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.
+`read()` returns references. But the default for `value_type`, which is `decay_t<decltype(read())>`, is `common_pair<Key&, Value&>`. That is not correct in our case. It should be `pair<Key, Value>`, so we explicitly specify `value_type`.
+
+ `ranges::common_pair` has conversions:  
+`ranges::common_pair<Key&, Value&>` <=> `ranges::common_pair<Key, Value>`.  
 All `ranges::common_pair`s converts to their `std::pair` equivalents, also.
 
 For more information, see [http://wg21.link/P0186#basic-iterators-iterators.basic](http://wg21.link/P0186#basic-iterators-iterators.basic)
-
 
 ## Constrain Functions with Concepts
 
@@ -471,9 +637,9 @@ two overloads are guaranteed to not be ambiguous. When compiling with C++20
 concepts support, this uses real concept checks. On legacy compilers, it falls
 back to using `std::enable_if`.
 
-## Range v3 and the Future
+## Range-v3 and the Future
 
-Range v3 forms the basis for a proposal to add ranges to the standard library
+Range-v3 forms the basis for a proposal to add ranges to the standard library
 ([N4128](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)),
 and is also be the basis for a Technical Specification on Ranges. The Technical
 Specification contains many of Range v3's concept definitions (translated into
@@ -530,6 +696,8 @@ provides, and a blurb about how each is intended to be used.
   <DD>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, `view::delimit` can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value.</DD>
 <DT>\link ranges::view::drop_fn `view::drop`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of all but the first *count* elements from the source range, or an empty range if it has fewer elements.</DD>
+<DT>\link ranges::view::drop_last_fn `view::drop_last`\endlink</DT>
+  <DD>Given a source range and an integral count, return a range consisting of all but the last *count* elements from the source range, or an empty range if it has fewer elements.</DD>  
 <DT>\link ranges::view::drop_exactly_fn `view::drop_exactly`\endlink</DT>
   <DD>Given a source range and an integral count, return a range consisting of all but the first *count* elements from the source range. The source range must have at least that many elements.</DD>
 <DT>\link ranges::view::drop_while_fn `view::drop_while`\endlink</DT>

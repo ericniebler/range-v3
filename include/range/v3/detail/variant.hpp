@@ -522,8 +522,8 @@ namespace ranges
             {
                 using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
                 elem_t *elem = nullptr;
-                auto &data = detail::variant_core_access::data(var);
-                detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                auto &data_var = detail::variant_core_access::data(var);
+                detail::variant_visit_(var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 return detail::variant_deref_(elem);
             }
             template<std::size_t N>
@@ -532,8 +532,8 @@ namespace ranges
             {
                 using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N> const>>;
                 elem_t *elem = nullptr;
-                auto &data = detail::variant_core_access::data(var);
-                detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                auto &data_var = detail::variant_core_access::data(var);
+                detail::variant_visit_(var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 return detail::variant_deref_(elem);
             }
             template<std::size_t N>
@@ -542,8 +542,8 @@ namespace ranges
             {
                 using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::as_list<Variant>, N>>>;
                 elem_t *elem = nullptr;
-                auto &data = detail::variant_core_access::data(var);
-                detail::variant_visit_(var.index(), data, detail::get_fn<elem_t, N>{&elem});
+                auto &data_var = detail::variant_core_access::data(var);
+                detail::variant_visit_(var.index(), data_var, detail::get_fn<elem_t, N>{&elem});
                 using res_t = meta::_t<std::add_rvalue_reference<meta::at_c<meta::as_list<Variant>, N>>>;
                 return static_cast<res_t>(detail::variant_deref_(elem));
             }
